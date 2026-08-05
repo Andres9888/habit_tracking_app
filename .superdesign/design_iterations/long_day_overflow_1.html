@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Long-day overflow — header stat ideas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f0e8;
+        --card: #ffffff;
+        --ink: #1a1a1a;
+        --muted: #707070;
+        --tertiary: #9a9a9a;
+        --copper-50: #fbe9d8;
+        --copper-200: #f5d0aa;
+        --copper-400: #e89a55;
+        --copper-500: #d97a30;
+        --green: #2f6b4f;
+        --gray-200: #e6e3df;
+        --gray-300: #cfcac3;
+      }
+      html,
+      body {
+        background: #ece6dc;
+        font-family: 'DM Sans', system-ui, sans-serif;
+      }
+      .mono {
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+      }
+      .iphone {
+        width: 320px;
+        height: 640px;
+        border-radius: 38px;
+        background: var(--bg);
+        box-shadow:
+          0 1px 0 rgba(0, 0, 0, 0.06),
+          0 14px 40px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        position: relative;
+        border: 8px solid #1a1a1a;
+      }
+      .notch {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 86px;
+        height: 22px;
+        background: #1a1a1a;
+        border-radius: 999px;
+        z-index: 10;
+      }
+      .status-row {
+        height: 40px;
+      }
+      .pill {
+        background: #efeae1;
+        color: var(--ink);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .icon-square {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        background: var(--copper-200);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        box-shadow: 0 6px 16px rgba(217, 122, 48, 0.28);
+      }
+      .stat-dot {
+        width: 3px;
+        height: 3px;
+        border-radius: 999px;
+        background: var(--gray-300);
+      }
+      .label {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .num {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .tab {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        padding: 8px 0;
+      }
+      .tab.active {
+        color: var(--green);
+        border-bottom: 2px solid var(--green);
+      }
+      .card {
+        background: white;
+        border-radius: 16px;
+        padding: 14px;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+      }
+      .stat-chip {
+        flex: 1;
+        text-align: center;
+        padding: 8px 6px;
+      }
+      .truncate {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+      }
+      .badge {
+        display: inline-block;
+        background: #1a1a1a;
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 4px 8px;
+        border-radius: 999px;
+        text-transform: uppercase;
+      }
+      .pro {
+        background: #2f6b4f;
+      }
+      .bad {
+        background: #b3331a;
+      }
+      .neutral {
+        background: #707070;
+      }
+      h2.kicker {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .legend strong {
+        color: var(--ink);
+      }
+      .device-cap {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen p-8">
+    <header class="mx-auto mb-10 max-w-6xl">
+      <div class="flex items-baseline justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-bold text-[#1a1a1a]">Habit detail header — long-day overflow</h1>
+          <p class="mt-1 max-w-2xl text-sm text-[#555]">
+            Today the row reads <code class="mono">🔥 132 streak · ⭐ 132 best · ✓ 132 total</code> and "total" already truncates to "tota" at 3 digits on iPhone 16 Pro Max. Below: the current state, then four ways to fix it. All mockups show a <strong>1,234-day streak</strong> (worst realistic case for a long-running habit) on a 320pt-wide phone column to stress-test the layout.
+        </p>
+        <div class="legend mt-3 flex flex-wrap gap-2 text-xs text-[#555]">
+          <span class="badge bad">Current — truncates</span>
+          <span class="badge pro">Recommended</span>
+          <span class="badge neutral">Alternative</span>
+        </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+      <!-- ============= CURRENT (BROKEN) ============= -->
+      <div>
+        <div class="mb-3 flex items-center gap-2">
+          <span class="badge bad">Current</span>
+          <h2 class="text-base font-bold text-[#1a1a1a]">Today's behavior at 1,234 days</h2>
+        </div>
+        <div class="iphone mx-auto">
+          <div class="notch"></div>
+          <div class="status-row flex items-center justify-between px-6 pt-3 text-xs font-semibold">
+            <span>12:33</span><span>•••</span>
+          </div>
+          <div class="flex items-center justify-between px-5 pt-2">
+            <span class="text-xl">✕</span>
+            <span class="pill">✎ Edit Habit</span>
+          </div>
+          <!-- header row -->
+          <div class="flex items-center gap-3 px-5 py-3">
+            <div class="icon-square">🧘</div>
+            <div class="min-w-0 flex-1">
+              <div class="truncate text-[18px] font-bold leading-tight text-[#1a1a1a]">10 min meditation</div>
+              <div class="mt-1 flex items-center gap-[10px]" style="overflow: hidden; white-space: nowrap;">
+                <span class="text-[12px]">🔥</span><span class="num mono">1234</span><span class="label">streak</span>
+                <span class="stat-dot"></span>
+                <span class="text-[12px]">⭐</span><span class="num mono">1234</span><span class="label">best</span>
+                <span class="stat-dot"></span>
+                <span class="text-[12px]">✓</span><span class="num mono">1234</span><span class="label" style="display:inline-block; max-width:24px; overflow:hidden; text-overflow:clip;">tota</span>
+              </div>
+            </div>
+          </div>
+          <!-- tabs -->
+          <div class="flex items-center justify-around border-b border-[#e6e3df] px-5">
+            <span class="tab active">Calendar</span><span class="tab">Strength</span><span class="tab">Goals</span><span class="tab">Why</span>
+          </div>
+          <!-- year card preview -->
+          <div class="px-5 py-4">
+            <div class="card">
+              <div class="text-[13px] font-bold">Year Overview</div>
+              <div class="mt-3 grid grid-cols-12 gap-[3px]">
+                <!-- 12 cols × 7 rows of cells -->
+                <!-- prettier-ignore -->
+                <span></span>
+              </div>
+              <div class="grid grid-cols-12 gap-[3px]">
+                <!-- ascii heatmap simulated -->
+              </div>
+              <div class="mt-2 flex flex-wrap gap-[3px]">
+                <!-- 84 dots -->
+                <!-- generated with template literals would be nicer; static here -->
+                <!-- 6 weeks shown -->
+                <span class="block h-[10px] w-[10px] rounded-[2px] bg-[#e6e3df]"></span>
+                <span class="block h-[10px] w-[10px] rounded-[2px] bg-[#e89a55]"></span>
+                <span class="block h-[10px] w-[10px] rounded-[2px] bg-[#e89a55]"></span>
+                <span class="block h-[10px] w-[10px] rounded-[2px] bg-[#e89a55]"></span>
+                <span class="block h-[10px] w-[10px] rounded-[2px] bg-[#e89a55]"></span>
+                <span class="block h-[10px] w-[10px] rounded-[2px] bg-[#e89a55]"></span>
+                <span class="block h-[10px] w-[10px] rounded-[2px] bg-[#e6e3df]"></span>
+                <span class="block h-[10px] w-[10px] rounded-[2px] bg-[#e6e3df]"></span>
+                <span class="block h-[10px] w-[10px] rounded-[2px] bg-[#e89a55]"></span>
+                <span class="block h-[10px] w-[10px] rounded-[2px] bg-[#e89a55]"></span>
+                <span class="block h-[10px] w-[10px] rounded-[2px] bg-[#e89a55]"></span>
+                <span class="block h-[10px] w-[10px] rounded-[2px] bg-[#e89a55]"></span>
+                <span class="block h-[10px] w-[10px] rounded-[2px] bg-[#e89a55]"></span>
+                <span class="block h-[10px] w-[10px] rounded-[2px] bg-[#e89a55]"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="device-cap text-center"><strong>Problem:</strong> "total" → "tota". Best case loses one letter; longer phrases (5-digit values) lose multiple stats entirely.</p>
+      </div>
+
+      <!-- ============= OPTION A ============= -->
+      <div>
+        <div class="mb-3 flex items-center gap-2">
+          <span class="badge pro">A · Recommended</span>
+          <h2 class="text-base font-bold text-[#1a1a1a]">Drop labels + commas</h2>
+        </div>
+        <div class="iphone mx-auto">
+          <div class="notch"></div>
+          <div class="status-row flex items-center justify-between px-6 pt-3 text-xs font-semibold">
+            <span>12:33</span><span>•••</span>
+          </div>
+          <div class="flex items-center justify-between px-5 pt-2">
+            <span class="text-xl">✕</span>
+            <span class="pill">✎ Edit Habit</span>
+          </div>
+          <div class="flex items-center gap-3 px-5 py-3">
+            <div class="icon-square">🧘</div>
+            <div class="min-w-0 flex-1">
+              <div class="truncate text-[18px] font-bold leading-tight text-[#1a1a1a]">10 min meditation</div>
+              <div class="mt-1 flex items-center gap-[14px]">
+                <span class="flex items-center gap-[5px]"><span class="text-[12px]">🔥</span><span class="num mono">1,234</span></span>
+                <span class="stat-dot"></span>
+                <span class="flex items-center gap-[5px]"><span class="text-[12px]">⭐</span><span class="num mono">1,234</span></span>
+                <span class="stat-dot"></span>
+                <span class="flex items-center gap-[5px]"><span class="text-[12px]">✓</span><span class="num mono">1,234</span></span>
+              </div>
+              <div class="mt-[2px] text-[11px] text-[#9a9a9a]">Daily · 10 minutes</div>
+            </div>
+          </div>
+          <div class="flex items-center justify-around border-b border-[#e6e3df] px-5">
+            <span class="tab active">Calendar</span><span class="tab">Strength</span><span class="tab">Goals</span><span class="tab">Why</span>
+          </div>
+          <div class="px-5 py-4">
+            <div class="card">
+              <div class="text-[13px] font-bold">Year Overview</div>
+              <p class="mt-2 text-[11px] text-[#9a9a9a]">Same content as today; only the header row changed.</p>
+            </div>
+          </div>
+        </div>
+        <p class="device-cap text-center"><strong>Wins:</strong> ~108pt saved by dropping "streak/best/total". Commas keep big numbers readable. Emoji is the label. Smallest possible diff (~2 files).</p>
+      </div>
+
+      <!-- ============= OPTION B ============= -->
+      <div>
+        <div class="mb-3 flex items-center gap-2">
+          <span class="badge neutral">B</span>
+          <h2 class="text-base font-bold text-[#1a1a1a]">Abbreviate to 1.2K</h2>
+        </div>
+        <div class="iphone mx-auto">
+          <div class="notch"></div>
+          <div class="status-row flex items-center justify-between px-6 pt-3 text-xs font-semibold">
+            <span>12:33</span><span>•••</span>
+          </div>
+          <div class="flex items-center justify-between px-5 pt-2">
+            <span class="text-xl">✕</span>
+            <span class="pill">✎ Edit Habit</span>
+          </div>
+          <div class="flex items-center gap-3 px-5 py-3">
+            <div class="icon-square">🧘</div>
+            <div class="min-w-0 flex-1">
+              <div class="truncate text-[18px] font-bold leading-tight text-[#1a1a1a]">10 min meditation</div>
+              <div class="mt-1 flex items-center gap-[10px]">
+                <span class="flex items-center gap-[4px]"><span class="text-[12px]">🔥</span><span class="num mono">1.2K</span><span class="label">streak</span></span>
+                <span class="stat-dot"></span>
+                <span class="flex items-center gap-[4px]"><span class="text-[12px]">⭐</span><span class="num mono">1.2K</span><span class="label">best</span></span>
+                <span class="stat-dot"></span>
+                <span class="flex items-center gap-[4px]"><span class="text-[12px]">✓</span><span class="num mono">1.2K</span><span class="label">total</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-around border-b border-[#e6e3df] px-5">
+            <span class="tab active">Calendar</span><span class="tab">Strength</span><span class="tab">Goals</span><span class="tab">Why</span>
+          </div>
+          <div class="px-5 py-4">
+            <div class="card">
+              <div class="text-[13px] font-bold">Year Overview</div>
+            </div>
+          </div>
+        </div>
+        <p class="device-cap text-center"><strong>Tradeoff:</strong> width is bounded forever, but 1,234-day streak displays as "1.2K" — loses the emotional precision of "I'm on day 1,234".</p>
+      </div>
+
+      <!-- ============= OPTION C ============= -->
+      <div>
+        <div class="mb-3 flex items-center gap-2">
+          <span class="badge neutral">C</span>
+          <h2 class="text-base font-bold text-[#1a1a1a]">3-column stat card below name</h2>
+        </div>
+        <div class="iphone mx-auto">
+          <div class="notch"></div>
+          <div class="status-row flex items-center justify-between px-6 pt-3 text-xs font-semibold">
+            <span>12:33</span><span>•••</span>
+          </div>
+          <div class="flex items-center justify-between px-5 pt-2">
+            <span class="text-xl">✕</span>
+            <span class="pill">✎ Edit Habit</span>
+          </div>
+          <div class="flex items-center gap-3 px-5 py-2">
+            <div class="icon-square">🧘</div>
+            <div class="min-w-0 flex-1">
+              <div class="truncate text-[18px] font-bold leading-tight text-[#1a1a1a]">10 min meditation</div>
+              <div class="text-[11px] text-[#9a9a9a]">Daily · 10 minutes</div>
+            </div>
+          </div>
+          <!-- new stat card -->
+          <div class="px-5 pb-2">
+            <div class="flex items-stretch rounded-2xl bg-white px-2 py-3 shadow-sm">
+              <div class="stat-chip">
+                <div class="text-[14px]">🔥</div>
+                <div class="num mono mt-1">1,234</div>
+                <div class="label mt-[1px]">streak</div>
+              </div>
+              <div class="my-1 w-[1px] bg-[#e6e3df]"></div>
+              <div class="stat-chip">
+                <div class="text-[14px]">⭐</div>
+                <div class="num mono mt-1">1,234</div>
+                <div class="label mt-[1px]">best</div>
+              </div>
+              <div class="my-1 w-[1px] bg-[#e6e3df]"></div>
+              <div class="stat-chip">
+                <div class="text-[14px]">✓</div>
+                <div class="num mono mt-1">1,234</div>
+                <div class="label mt-[1px]">total</div>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-around border-b border-[#e6e3df] px-5">
+            <span class="tab active">Calendar</span><span class="tab">Strength</span><span class="tab">Goals</span><span class="tab">Why</span>
+          </div>
+          <div class="px-5 py-3">
+            <div class="card">
+              <div class="text-[13px] font-bold">Year Overview</div>
+            </div>
+          </div>
+        </div>
+        <p class="device-cap text-center"><strong>Tradeoff:</strong> ~36pt taller header pushes tabs down. Scales to 5+ digits. Closest to Strava/Strong patterns. Bigger redesign.</p>
+      </div>
+
+      <!-- ============= OPTION D ============= -->
+      <div>
+        <div class="mb-3 flex items-center gap-2">
+          <span class="badge neutral">D</span>
+          <h2 class="text-base font-bold text-[#1a1a1a]">A + B combined (emoji + abbreviated)</h2>
+        </div>
+        <div class="iphone mx-auto">
+          <div class="notch"></div>
+          <div class="status-row flex items-center justify-between px-6 pt-3 text-xs font-semibold">
+            <span>12:33</span><span>•••</span>
+          </div>
+          <div class="flex items-center justify-between px-5 pt-2">
+            <span class="text-xl">✕</span>
+            <span class="pill">✎ Edit Habit</span>
+          </div>
+          <div class="flex items-center gap-3 px-5 py-3">
+            <div class="icon-square">🧘</div>
+            <div class="min-w-0 flex-1">
+              <div class="truncate text-[18px] font-bold leading-tight text-[#1a1a1a]">10 min meditation</div>
+              <div class="mt-1 flex items-center gap-[14px]">
+                <span class="flex items-center gap-[5px]"><span class="text-[12px]">🔥</span><span class="num mono">1.2K</span></span>
+                <span class="stat-dot"></span>
+                <span class="flex items-center gap-[5px]"><span class="text-[12px]">⭐</span><span class="num mono">1.2K</span></span>
+                <span class="stat-dot"></span>
+                <span class="flex items-center gap-[5px]"><span class="text-[12px]">✓</span><span class="num mono">1.2K</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-around border-b border-[#e6e3df] px-5">
+            <span class="tab active">Calendar</span><span class="tab">Strength</span><span class="tab">Goals</span><span class="tab">Why</span>
+          </div>
+          <div class="px-5 py-4">
+            <div class="card">
+              <div class="text-[13px] font-bold">Year Overview</div>
+            </div>
+          </div>
+        </div>
+        <p class="device-cap text-center"><strong>Tradeoff:</strong> never breaks at any value — even 100K — but compounds two compromises (no labels + no precise numbers).</p>
+      </div>
+
+      <!-- ============= COMPARISON TABLE ============= -->
+      <div class="md:col-span-2 xl:col-span-1">
+        <div class="mb-3 flex items-center gap-2">
+          <span class="badge neutral">Side-by-side</span>
+          <h2 class="text-base font-bold text-[#1a1a1a]">Header rows compared</h2>
+        </div>
+        <div class="space-y-3 rounded-2xl bg-white p-4 shadow-sm">
+          <div>
+            <div class="kicker mb-1 text-[10px] font-bold uppercase tracking-wider text-[#b3331a]">Current (1,234 days)</div>
+            <div class="flex items-center gap-[10px] text-[12px]">🔥 <span class="mono font-semibold">1234</span> <span class="text-[#707070]">streak</span> · ⭐ <span class="mono font-semibold">1234</span> <span class="text-[#707070]">best</span> · ✓ <span class="mono font-semibold">1234</span> <span class="text-[#707070]">tota…</span></div>
+          </div>
+          <div>
+            <div class="kicker mb-1 text-[10px] font-bold uppercase tracking-wider text-[#2f6b4f]">A · Drop labels + commas</div>
+            <div class="flex items-center gap-[14px] text-[12px]">🔥 <span class="mono font-semibold">1,234</span> · ⭐ <span class="mono font-semibold">1,234</span> · ✓ <span class="mono font-semibold">1,234</span></div>
+          </div>
+          <div>
+            <div class="kicker mb-1 text-[10px] font-bold uppercase tracking-wider text-[#707070]">B · Abbreviated</div>
+            <div class="flex items-center gap-[10px] text-[12px]">🔥 <span class="mono font-semibold">1.2K</span> <span class="text-[#707070]">streak</span> · ⭐ <span class="mono font-semibold">1.2K</span> <span class="text-[#707070]">best</span> · ✓ <span class="mono font-semibold">1.2K</span> <span class="text-[#707070]">total</span></div>
+          </div>
+          <div>
+            <div class="kicker mb-1 text-[10px] font-bold uppercase tracking-wider text-[#707070]">D · Combined</div>
+            <div class="flex items-center gap-[14px] text-[12px]">🔥 <span class="mono font-semibold">1.2K</span> · ⭐ <span class="mono font-semibold">1.2K</span> · ✓ <span class="mono font-semibold">1.2K</span></div>
+          </div>
+          <hr class="my-2 border-[#e6e3df]" />
+          <p class="text-[11px] leading-[1.5] text-[#555]">
+            Only Option C (3-column card) survives 5-digit values like <span class="mono">12,345</span> without compromise. Option A handles 4 digits comfortably and 5 digits at the edge of the row width.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="mx-auto mt-12 max-w-3xl text-center text-xs text-[#666]">
+      <p>320pt phone column simulates the narrowest realistic case. iPhone 16 Pro Max is wider (~440pt logical), so Options A &amp; D have even more breathing room there.</p>
+    </footer>
+  </body>
+</html>

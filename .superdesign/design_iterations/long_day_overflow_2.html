@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Long-day overflow — drop dots only</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f0e8;
+        --ink: #1a1a1a;
+        --muted: #707070;
+        --tertiary: #9a9a9a;
+        --copper-200: #f5d0aa;
+        --copper-500: #d97a30;
+        --green: #2f6b4f;
+        --gray-200: #e6e3df;
+        --gray-300: #cfcac3;
+      }
+      html,
+      body {
+        background: #ece6dc;
+        font-family: 'DM Sans', system-ui, sans-serif;
+      }
+      .mono {
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+      }
+      .iphone {
+        background: var(--bg);
+        border-radius: 38px;
+        box-shadow:
+          0 1px 0 rgba(0, 0, 0, 0.06),
+          0 14px 40px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        position: relative;
+        border: 8px solid #1a1a1a;
+        margin: 0 auto;
+      }
+      .iphone.narrow {
+        width: 320px;
+      }
+      .iphone.wide {
+        width: 440px;
+      }
+      .iphone .frame {
+        height: 220px;
+      }
+      .notch {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 86px;
+        height: 22px;
+        background: #1a1a1a;
+        border-radius: 999px;
+        z-index: 10;
+      }
+      .pill {
+        background: #efeae1;
+        color: var(--ink);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .icon-square {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        background: var(--copper-200);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        box-shadow: 0 6px 16px rgba(217, 122, 48, 0.28);
+      }
+      .label {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .num {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .tab {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        padding: 8px 0;
+      }
+      .tab.active {
+        color: var(--green);
+        border-bottom: 2px solid var(--green);
+      }
+      .badge {
+        display: inline-block;
+        background: #1a1a1a;
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 4px 8px;
+        border-radius: 999px;
+        text-transform: uppercase;
+      }
+      .pro {
+        background: #2f6b4f;
+      }
+      .bad {
+        background: #b3331a;
+      }
+      .neutral {
+        background: #707070;
+      }
+      .stat-dot {
+        width: 3px;
+        height: 3px;
+        border-radius: 999px;
+        background: var(--gray-300);
+      }
+      h2.kicker {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .device-cap {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 6px;
+        text-align: center;
+      }
+      .colhead {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+      .verdict {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        padding: 2px 8px;
+        border-radius: 999px;
+        text-transform: uppercase;
+      }
+      .verdict.ok {
+        background: #d6e9dd;
+        color: #1f5239;
+      }
+      .verdict.fail {
+        background: #f5d6cf;
+        color: #82231a;
+      }
+      .verdict.tight {
+        background: #fce6cb;
+        color: #7c4c1a;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen p-8">
+    <header class="mx-auto mb-8 max-w-[1320px]">
+      <h1 class="text-2xl font-bold text-[#1a1a1a]">Drop the dots — keep labels, no commas</h1>
+      <p class="mt-1 max-w-3xl text-sm text-[#555]">
+        Andres's pick: remove the 3px dot separators, keep "streak / best / total" labels, render numbers as raw integers (<span class="mono">1234</span>, not <span class="mono">1,234</span>). Same row spacing otherwise. Saves ~26pt of inline width per stat row (2 dots × 3pt + 4 surrounding gaps reduced to 2). Below: stress-tested at <strong>132</strong>, <strong>1,234</strong>, and <strong>12,345</strong> on both a 320pt phone (iPhone 13 mini / SE class) and a 440pt iPhone 16 Pro Max.
+      </p>
+    </header>
+
+    <!-- ==================== 320pt column (smallest) ==================== -->
+    <section class="mx-auto mb-12 max-w-[1320px]">
+      <h2 class="kicker mb-3">320pt phone (mini / SE)</h2>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <!-- 132 -->
+        <div>
+          <div class="mb-2 flex items-center justify-between">
+            <span class="colhead">value: 132</span>
+            <span class="verdict ok">fits</span>
+          </div>
+          <div class="iphone narrow">
+            <div class="notch"></div>
+            <div class="flex items-center justify-between px-6 pt-3 text-xs font-semibold"><span>12:33</span><span>•••</span></div>
+            <div class="flex items-center justify-between px-5 pt-2"><span class="text-xl">✕</span><span class="pill">✎ Edit Habit</span></div>
+            <div class="flex items-center gap-3 px-5 py-3">
+              <div class="icon-square">🧘</div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[18px] font-bold leading-tight text-[#1a1a1a]" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">10 min meditation</div>
+                <div class="mt-1 flex items-center" style="gap:10px;white-space:nowrap;overflow:hidden;">
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">🔥</span><span class="num mono">132</span><span class="label">streak</span></span>
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">⭐</span><span class="num mono">132</span><span class="label">best</span></span>
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">✓</span><span class="num mono">132</span><span class="label">total</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-around border-b border-[#e6e3df] px-5"><span class="tab active">Calendar</span><span class="tab">Strength</span><span class="tab">Goals</span><span class="tab">Why</span></div>
+          </div>
+        </div>
+        <!-- 1234 -->
+        <div>
+          <div class="mb-2 flex items-center justify-between">
+            <span class="colhead">value: 1,234</span>
+            <span class="verdict tight">tight</span>
+          </div>
+          <div class="iphone narrow">
+            <div class="notch"></div>
+            <div class="flex items-center justify-between px-6 pt-3 text-xs font-semibold"><span>12:33</span><span>•••</span></div>
+            <div class="flex items-center justify-between px-5 pt-2"><span class="text-xl">✕</span><span class="pill">✎ Edit Habit</span></div>
+            <div class="flex items-center gap-3 px-5 py-3">
+              <div class="icon-square">🧘</div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[18px] font-bold leading-tight text-[#1a1a1a]" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">10 min meditation</div>
+                <div class="mt-1 flex items-center" style="gap:10px;white-space:nowrap;overflow:hidden;">
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">🔥</span><span class="num mono">1234</span><span class="label">streak</span></span>
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">⭐</span><span class="num mono">1234</span><span class="label">best</span></span>
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">✓</span><span class="num mono">1234</span><span class="label">total</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-around border-b border-[#e6e3df] px-5"><span class="tab active">Calendar</span><span class="tab">Strength</span><span class="tab">Goals</span><span class="tab">Why</span></div>
+          </div>
+        </div>
+        <!-- 12345 -->
+        <div>
+          <div class="mb-2 flex items-center justify-between">
+            <span class="colhead">value: 12,345</span>
+            <span class="verdict fail">overflows</span>
+          </div>
+          <div class="iphone narrow">
+            <div class="notch"></div>
+            <div class="flex items-center justify-between px-6 pt-3 text-xs font-semibold"><span>12:33</span><span>•••</span></div>
+            <div class="flex items-center justify-between px-5 pt-2"><span class="text-xl">✕</span><span class="pill">✎ Edit Habit</span></div>
+            <div class="flex items-center gap-3 px-5 py-3">
+              <div class="icon-square">🧘</div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[18px] font-bold leading-tight text-[#1a1a1a]" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">10 min meditation</div>
+                <div class="mt-1 flex items-center" style="gap:10px;white-space:nowrap;overflow:hidden;">
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">🔥</span><span class="num mono">12345</span><span class="label">streak</span></span>
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">⭐</span><span class="num mono">12345</span><span class="label">best</span></span>
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">✓</span><span class="num mono">12345</span><span class="label">total</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-around border-b border-[#e6e3df] px-5"><span class="tab active">Calendar</span><span class="tab">Strength</span><span class="tab">Goals</span><span class="tab">Why</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 440pt Pro Max ==================== -->
+    <section class="mx-auto mb-12 max-w-[1320px]">
+      <h2 class="kicker mb-3">440pt phone (iPhone 16 Pro Max)</h2>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <!-- 132 -->
+        <div>
+          <div class="mb-2 flex items-center justify-between">
+            <span class="colhead">value: 132</span>
+            <span class="verdict ok">fits comfortably</span>
+          </div>
+          <div class="iphone wide">
+            <div class="notch"></div>
+            <div class="flex items-center justify-between px-6 pt-3 text-xs font-semibold"><span>12:33</span><span>•••</span></div>
+            <div class="flex items-center justify-between px-5 pt-2"><span class="text-xl">✕</span><span class="pill">✎ Edit Habit</span></div>
+            <div class="flex items-center gap-3 px-5 py-3">
+              <div class="icon-square">🧘</div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[18px] font-bold leading-tight text-[#1a1a1a]" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">10 min meditation</div>
+                <div class="mt-1 flex items-center" style="gap:10px;white-space:nowrap;overflow:hidden;">
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">🔥</span><span class="num mono">132</span><span class="label">streak</span></span>
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">⭐</span><span class="num mono">132</span><span class="label">best</span></span>
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">✓</span><span class="num mono">132</span><span class="label">total</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-around border-b border-[#e6e3df] px-5"><span class="tab active">Calendar</span><span class="tab">Strength</span><span class="tab">Goals</span><span class="tab">Why</span></div>
+          </div>
+        </div>
+        <!-- 1234 -->
+        <div>
+          <div class="mb-2 flex items-center justify-between">
+            <span class="colhead">value: 1,234</span>
+            <span class="verdict ok">fits</span>
+          </div>
+          <div class="iphone wide">
+            <div class="notch"></div>
+            <div class="flex items-center justify-between px-6 pt-3 text-xs font-semibold"><span>12:33</span><span>•••</span></div>
+            <div class="flex items-center justify-between px-5 pt-2"><span class="text-xl">✕</span><span class="pill">✎ Edit Habit</span></div>
+            <div class="flex items-center gap-3 px-5 py-3">
+              <div class="icon-square">🧘</div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[18px] font-bold leading-tight text-[#1a1a1a]" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">10 min meditation</div>
+                <div class="mt-1 flex items-center" style="gap:10px;white-space:nowrap;overflow:hidden;">
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">🔥</span><span class="num mono">1234</span><span class="label">streak</span></span>
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">⭐</span><span class="num mono">1234</span><span class="label">best</span></span>
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">✓</span><span class="num mono">1234</span><span class="label">total</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-around border-b border-[#e6e3df] px-5"><span class="tab active">Calendar</span><span class="tab">Strength</span><span class="tab">Goals</span><span class="tab">Why</span></div>
+          </div>
+        </div>
+        <!-- 12345 -->
+        <div>
+          <div class="mb-2 flex items-center justify-between">
+            <span class="colhead">value: 12,345</span>
+            <span class="verdict tight">tight (5-digit edge case)</span>
+          </div>
+          <div class="iphone wide">
+            <div class="notch"></div>
+            <div class="flex items-center justify-between px-6 pt-3 text-xs font-semibold"><span>12:33</span><span>•••</span></div>
+            <div class="flex items-center justify-between px-5 pt-2"><span class="text-xl">✕</span><span class="pill">✎ Edit Habit</span></div>
+            <div class="flex items-center gap-3 px-5 py-3">
+              <div class="icon-square">🧘</div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[18px] font-bold leading-tight text-[#1a1a1a]" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">10 min meditation</div>
+                <div class="mt-1 flex items-center" style="gap:10px;white-space:nowrap;overflow:hidden;">
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">🔥</span><span class="num mono">12345</span><span class="label">streak</span></span>
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">⭐</span><span class="num mono">12345</span><span class="label">best</span></span>
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">✓</span><span class="num mono">12345</span><span class="label">total</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-around border-b border-[#e6e3df] px-5"><span class="tab active">Calendar</span><span class="tab">Strength</span><span class="tab">Goals</span><span class="tab">Why</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== Before / After comparison ==================== -->
+    <section class="mx-auto max-w-[1320px]">
+      <h2 class="kicker mb-3">Before vs after, same value</h2>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div>
+          <div class="mb-2 flex items-center gap-2"><span class="badge bad">Before</span><span class="text-sm font-semibold">320pt · 1,234 days · with dots</span></div>
+          <div class="iphone narrow">
+            <div class="notch"></div>
+            <div class="flex items-center justify-between px-6 pt-3 text-xs font-semibold"><span>12:33</span><span>•••</span></div>
+            <div class="flex items-center justify-between px-5 pt-2"><span class="text-xl">✕</span><span class="pill">✎ Edit Habit</span></div>
+            <div class="flex items-center gap-3 px-5 py-3">
+              <div class="icon-square">🧘</div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[18px] font-bold leading-tight text-[#1a1a1a]" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">10 min meditation</div>
+                <div class="mt-1 flex items-center" style="gap:10px;white-space:nowrap;overflow:hidden;">
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">🔥</span><span class="num mono">1234</span><span class="label">streak</span></span>
+                  <span class="stat-dot"></span>
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">⭐</span><span class="num mono">1234</span><span class="label">best</span></span>
+                  <span class="stat-dot"></span>
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">✓</span><span class="num mono">1234</span><span class="label" style="display:inline-block;max-width:24px;overflow:hidden;text-overflow:clip;">tota</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-around border-b border-[#e6e3df] px-5"><span class="tab active">Calendar</span><span class="tab">Strength</span><span class="tab">Goals</span><span class="tab">Why</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="mb-2 flex items-center gap-2"><span class="badge pro">After</span><span class="text-sm font-semibold">320pt · 1,234 days · no dots</span></div>
+          <div class="iphone narrow">
+            <div class="notch"></div>
+            <div class="flex items-center justify-between px-6 pt-3 text-xs font-semibold"><span>12:33</span><span>•••</span></div>
+            <div class="flex items-center justify-between px-5 pt-2"><span class="text-xl">✕</span><span class="pill">✎ Edit Habit</span></div>
+            <div class="flex items-center gap-3 px-5 py-3">
+              <div class="icon-square">🧘</div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[18px] font-bold leading-tight text-[#1a1a1a]" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">10 min meditation</div>
+                <div class="mt-1 flex items-center" style="gap:10px;white-space:nowrap;overflow:hidden;">
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">🔥</span><span class="num mono">1234</span><span class="label">streak</span></span>
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">⭐</span><span class="num mono">1234</span><span class="label">best</span></span>
+                  <span class="flex items-center" style="gap:4px"><span class="text-[12px]">✓</span><span class="num mono">1234</span><span class="label">total</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-around border-b border-[#e6e3df] px-5"><span class="tab active">Calendar</span><span class="tab">Strength</span><span class="tab">Goals</span><span class="tab">Why</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="mx-auto mt-10 max-w-3xl text-center text-xs text-[#666]">
+      Stress test summary: <strong>132</strong> fits everywhere · <strong>1,234</strong> fits Pro Max comfortably and 320pt tightly · <strong>12,345</strong> fits Pro Max but overflows 320pt — at that point we'd revisit (abbreviation or restack).
+    </footer>
+  </body>
+</html>
