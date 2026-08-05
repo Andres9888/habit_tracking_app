@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emoji Browse & Spacing - Design Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #111;
+    color: #fff;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+  }
+
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    color: #fff;
+  }
+  h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .comparison-row {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .version-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-align: center;
+    margin-bottom: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: inline-block;
+  }
+  .version-label.current { background: #333; color: #888; }
+  .version-label.proposed { background: #1a3a2a; color: #4ade80; }
+  .label-wrap { text-align: center; margin-bottom: 12px; }
+
+  /* Phone frame */
+  .phone {
+    width: 375px;
+    background: #fff;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    position: relative;
+  }
+  .phone-inner {
+    padding: 60px 24px 40px;
+  }
+
+  /* Form elements */
+  .section-label {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #9ca3af;
+    text-align: center;
+  }
+  .name-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 14px;
+    font-size: 16px;
+    color: #111;
+    background: #fafafa;
+    font-family: inherit;
+  }
+  .name-label {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111;
+    text-align: center;
+  }
+
+  /* Emoji grid - 5-4 triangle */
+  .emoji-grid-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+  .emoji-chip {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    border: 1.5px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .emoji-chip:hover {
+    border-color: #d1d5db;
+    transform: scale(1.05);
+  }
+  .emoji-chip.selected {
+    border: 2px solid #059669;
+    background: #D1FAE5;
+    box-shadow: 0 2px 4px rgba(5, 150, 105, 0.25);
+  }
+
+  /* Browse more link */
+  .browse-more {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2563eb;
+    cursor: pointer;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .browse-more:hover { text-decoration: underline; }
+
+  /* Browse more as chip */
+  .browse-more-chip {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2563eb;
+    cursor: pointer;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 16px;
+    border: 1.5px solid #dbeafe;
+    border-radius: 100px;
+    background: #eff6ff;
+    transition: all 0.15s;
+  }
+  .browse-more-chip:hover {
+    background: #dbeafe;
+    border-color: #93c5fd;
+  }
+  .browse-more-chip svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Color picker */
+  .color-row {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+  }
+  .color-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.15s;
+  }
+  .color-dot:hover { transform: scale(1.1); }
+  .color-dot.selected {
+    border-color: #111;
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #111;
+  }
+
+  /* Spacing markers */
+  .spacing-marker {
+    position: relative;
+    width: 100%;
+  }
+  .spacing-marker::before {
+    content: attr(data-spacing);
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%) translateX(100%);
+    font-size: 10px;
+    font-weight: 600;
+    color: #ef4444;
+    background: #fef2f2;
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    border: 1px solid #fecaca;
+  }
+  .spacing-marker.good::before {
+    color: #059669;
+    background: #ecfdf5;
+    border-color: #a7f3d0;
+  }
+  .spacing-vis {
+    width: 100%;
+    border-left: 2px dashed #ef4444;
+    border-right: 2px dashed #ef4444;
+    background: rgba(239, 68, 68, 0.05);
+  }
+  .spacing-vis.good {
+    border-color: #059669;
+    background: rgba(5, 150, 105, 0.05);
+  }
+
+  /* Reminder section */
+  .reminder-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+  }
+  .reminder-label {
+    font-size: 15px;
+    color: #374151;
+    font-weight: 500;
+  }
+  .toggle {
+    width: 44px;
+    height: 26px;
+    border-radius: 13px;
+    background: #e5e7eb;
+    position: relative;
+  }
+  .toggle::after {
+    content: '';
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  /* ===== BROWSE MORE SHEET ===== */
+  .sheet-frame {
+    width: 375px;
+    height: 680px;
+    background: #fff;
+    border-radius: 24px 24px 40px 40px;
+    overflow: hidden;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.15), 0 20px 60px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sheet-handle-area {
+    padding: 16px 0 8px;
+    display: flex;
+    justify-content: center;
+  }
+  .sheet-handle {
+    width: 40px;
+    height: 4px;
+    border-radius: 4px;
+    background: #d1d5db;
+  }
+
+  /* Search bar */
+  .search-bar {
+    margin: 0 20px 16px;
+    height: 48px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 8px;
+  }
+  .search-bar.improved {
+    border-color: #d1d5db;
+  }
+  .search-icon { color: #9ca3af; font-size: 18px; }
+  .search-placeholder { color: #9ca3af; font-size: 15px; flex: 1; }
+
+  /* Suggestions */
+  .suggestions-box {
+    margin: 0 20px 16px;
+    padding: 12px;
+    background: #fefce8;
+    border: 1px solid #fde68a;
+    border-radius: 14px;
+  }
+  .suggestions-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .sparkle { font-size: 16px; }
+  .suggestions-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #a16207;
+  }
+  .suggestions-emojis {
+    display: flex;
+    gap: 8px;
+  }
+  .suggestion-cell {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 0.15s;
+  }
+  .suggestion-cell:hover { background: rgba(255,255,255,1); }
+  .suggestion-cell.selected {
+    border-color: #2563eb;
+    background: #eff6ff;
+  }
+
+  /* Category pills */
+  .category-pills {
+    display: flex;
+    gap: 8px;
+    padding: 0 20px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    flex-shrink: 0;
+  }
+  .category-pill {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    border-radius: 100px;
+    background: #f3f4f6;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .category-pill:hover { background: #e5e7eb; }
+  .category-pill.active {
+    background: #111;
+    color: #fff;
+  }
+  .category-pill .pill-icon { font-size: 13px; }
+
+  /* Emoji grid in sheet */
+  .emoji-sheet-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    padding: 0 20px 12px;
+    flex: 1;
+    overflow-y: auto;
+    align-content: start;
+  }
+  .grid-cell {
+    aspect-ratio: 1;
+    border-radius: 10px;
+    background: #f9fafb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    cursor: pointer;
+    transition: all 0.1s;
+    min-height: 44px;
+  }
+  .grid-cell:hover { background: #f3f4f6; transform: scale(1.05); }
+  .grid-cell.selected {
+    background: #eff6ff;
+    border: 2px solid #3b82f6;
+  }
+  .grid-header {
+    grid-column: 1 / -1;
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    letter-spacing: 0.5px;
+    padding: 8px 0 4px;
+  }
+
+  /* No icon button */
+  .no-icon-btn {
+    border-top: 1px solid #f3f4f6;
+    padding: 16px 20px 20px;
+    flex-shrink: 0;
+  }
+  .no-icon-inner {
+    height: 48px;
+    background: #f3f4f6;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .no-icon-inner:hover { background: #e5e7eb; }
+
+  /* No-icon as pill */
+  .no-icon-pill {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    border-radius: 100px;
+    background: #f3f4f6;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    border: 1.5px dashed #d1d5db;
+  }
+  .no-icon-pill:hover { background: #e5e7eb; }
+
+  /* Section divider between form sections */
+  .section-divider {
+    width: 40px;
+    height: 1px;
+    background: #e5e7eb;
+    margin: 0 auto;
+  }
+
+  /* Callout annotation */
+  .annotation {
+    position: absolute;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .annotation.issue {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+  }
+  .annotation.fix {
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+  }
+
+  /* Section */
+  .section-block {
+    margin-bottom: 48px;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #9ca3af;
+  }
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .legend-dot.red { background: #ef4444; }
+  .legend-dot.green { background: #059669; }
+</style>
+</head>
+<body>
+
+<!-- ============ SECTION 1: FORM SPACING ============ -->
+<div class="section-block">
+  <h1>1. Form Spacing: "Choose Icon" → "Pick a Color"</h1>
+  <h2>Adding breathing room between sections</h2>
+
+  <div class="comparison-row">
+
+    <!-- CURRENT -->
+    <div>
+      <div class="label-wrap"><span class="version-label current">Current</span></div>
+      <div class="phone" style="position: relative;">
+        <div class="phone-inner">
+          <div style="margin-bottom: 20px;">
+            <div class="name-label" style="margin-bottom: 12px;">Name your habit</div>
+            <input class="name-input" value="Morning Meditation" readonly />
+          </div>
+
+          <div class="section-label" style="margin-bottom: 12px;">Choose an icon</div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 0;">
+            <div class="emoji-grid-row">
+              <div class="emoji-chip selected">🧘</div>
+              <div class="emoji-chip">🙏</div>
+              <div class="emoji-chip">☮️</div>
+              <div class="emoji-chip">🕯️</div>
+              <div class="emoji-chip">🌿</div>
+            </div>
+            <div class="emoji-grid-row">
+              <div class="emoji-chip">💆</div>
+              <div class="emoji-chip">🌅</div>
+              <div class="emoji-chip">🔔</div>
+              <div class="emoji-chip">✨</div>
+            </div>
+          </div>
+
+          <!-- Current: mt-2 = 8px -->
+          <div style="height: 8px;"></div>
+          <div class="browse-more">Browse more emojis →</div>
+          <!-- Current: mb-4 = 16px total gap -->
+          <div class="spacing-marker" data-spacing="16px gap" style="margin-top: 0;">
+            <div class="spacing-vis" style="height: 16px;"></div>
+          </div>
+
+          <div class="section-label" style="margin-bottom: 12px;">Pick a color</div>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div class="color-row">
+              <div class="color-dot" style="background: #ef4444;"></div>
+              <div class="color-dot selected" style="background: #f97316;"></div>
+              <div class="color-dot" style="background: #eab308;"></div>
+              <div class="color-dot" style="background: #22c55e;"></div>
+              <div class="color-dot" style="background: #06b6d4;"></div>
+              <div class="color-dot" style="background: #3b82f6;"></div>
+            </div>
+            <div class="color-row">
+              <div class="color-dot" style="background: #8b5cf6;"></div>
+              <div class="color-dot" style="background: #ec4899;"></div>
+              <div class="color-dot" style="background: #78716c;"></div>
+              <div class="color-dot" style="background: #334155;"></div>
+            </div>
+          </div>
+
+          <div class="reminder-row" style="margin-top: 20px;">
+            <div class="reminder-label">⏰ Daily reminder</div>
+            <div class="toggle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROPOSED -->
+    <div>
+      <div class="label-wrap"><span class="version-label proposed">Proposed</span></div>
+      <div class="phone">
+        <div class="phone-inner">
+          <div style="margin-bottom: 20px;">
+            <div class="name-label" style="margin-bottom: 12px;">Name your habit</div>
+            <input class="name-input" value="Morning Meditation" readonly />
+          </div>
+
+          <div class="section-label" style="margin-bottom: 12px;">Choose an icon</div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 0;">
+            <div class="emoji-grid-row">
+              <div class="emoji-chip selected">🧘</div>
+              <div class="emoji-chip">🙏</div>
+              <div class="emoji-chip">☮️</div>
+              <div class="emoji-chip">🕯️</div>
+              <div class="emoji-chip">🌿</div>
+            </div>
+            <div class="emoji-grid-row">
+              <div class="emoji-chip">💆</div>
+              <div class="emoji-chip">🌅</div>
+              <div class="emoji-chip">🔔</div>
+              <div class="emoji-chip">✨</div>
+            </div>
+          </div>
+
+          <!-- Proposed: mt-3 = 12px -->
+          <div style="height: 12px;"></div>
+
+          <!-- Chip style instead of plain link -->
+          <div style="text-align: center;">
+            <div class="browse-more-chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              Browse more emojis
+            </div>
+          </div>
+
+          <!-- Proposed: mb-6 + mt-4 = 40px total gap with divider -->
+          <div class="spacing-marker good" data-spacing="32px gap" style="margin-top: 0;">
+            <div class="spacing-vis good" style="height: 14px;"></div>
+            <div class="section-divider" style="margin: 0 auto;"></div>
+            <div class="spacing-vis good" style="height: 14px;"></div>
+          </div>
+
+          <div class="section-label" style="margin-bottom: 12px;">Pick a color</div>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div class="color-row">
+              <div class="color-dot" style="background: #ef4444;"></div>
+              <div class="color-dot selected" style="background: #f97316;"></div>
+              <div class="color-dot" style="background: #eab308;"></div>
+              <div class="color-dot" style="background: #22c55e;"></div>
+              <div class="color-dot" style="background: #06b6d4;"></div>
+              <div class="color-dot" style="background: #3b82f6;"></div>
+            </div>
+            <div class="color-row">
+              <div class="color-dot" style="background: #8b5cf6;"></div>
+              <div class="color-dot" style="background: #ec4899;"></div>
+              <div class="color-dot" style="background: #78716c;"></div>
+              <div class="color-dot" style="background: #334155;"></div>
+            </div>
+          </div>
+
+          <div class="reminder-row" style="margin-top: 20px;">
+            <div class="reminder-label">⏰ Daily reminder</div>
+            <div class="toggle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot red"></div> Current spacing (tight)</div>
+    <div class="legend-item"><div class="legend-dot green"></div> Proposed spacing (breathing room)</div>
+  </div>
+</div>
+
+<!-- ============ SECTION 2: BROWSE MORE SHEET ============ -->
+<div class="section-block">
+  <h1>2. "Browse More Emojis" Sheet</h1>
+  <h2>Current design with improvement annotations</h2>
+
+  <div class="comparison-row">
+
+    <!-- CURRENT SHEET -->
+    <div>
+      <div class="label-wrap"><span class="version-label current">Current</span></div>
+      <div class="sheet-frame">
+        <div class="sheet-handle-area">
+          <div class="sheet-handle"></div>
+        </div>
+
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <span class="search-placeholder">Search or type habit name...</span>
+        </div>
+
+        <div class="suggestions-box">
+          <div class="suggestions-header">
+            <span class="sparkle">✨</span>
+            <span class="suggestions-text">Perfect for "Meditation"</span>
+          </div>
+          <div class="suggestions-emojis">
+            <div class="suggestion-cell selected">🧘</div>
+            <div class="suggestion-cell">🙏</div>
+            <div class="suggestion-cell">☮️</div>
+            <div class="suggestion-cell">🕯️</div>
+            <div class="suggestion-cell">🌿</div>
+          </div>
+        </div>
+
+        <div class="category-pills">
+          <div class="category-pill active"><span class="pill-icon">😊</span> Smileys</div>
+          <div class="category-pill"><span class="pill-icon">🏋️</span> Activity</div>
+          <div class="category-pill"><span class="pill-icon">🍎</span> Food</div>
+          <div class="category-pill"><span class="pill-icon">🌍</span> Travel</div>
+          <div class="category-pill"><span class="pill-icon">💡</span> Objects</div>
+        </div>
+
+        <div class="emoji-sheet-grid">
+          <div class="grid-header">SMILEYS & PEOPLE</div>
+          <div class="grid-cell">😀</div>
+          <div class="grid-cell">😃</div>
+          <div class="grid-cell">😄</div>
+          <div class="grid-cell">😁</div>
+          <div class="grid-cell">😆</div>
+          <div class="grid-cell">😅</div>
+          <div class="grid-cell">🤣</div>
+          <div class="grid-cell">😂</div>
+          <div class="grid-cell">🙂</div>
+          <div class="grid-cell">😊</div>
+          <div class="grid-cell">😇</div>
+          <div class="grid-cell">🥰</div>
+          <div class="grid-cell">😍</div>
+          <div class="grid-cell">🤩</div>
+          <div class="grid-cell">😘</div>
+          <div class="grid-cell">😗</div>
+          <div class="grid-cell">😚</div>
+          <div class="grid-cell">😙</div>
+        </div>
+
+        <div class="no-icon-btn">
+          <div class="no-icon-inner">No icon</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROPOSED SHEET -->
+    <div>
+      <div class="label-wrap"><span class="version-label proposed">Proposed</span></div>
+      <div class="sheet-frame">
+        <div class="sheet-handle-area">
+          <div class="sheet-handle"></div>
+        </div>
+
+        <!-- Improved: slightly more visible border -->
+        <div class="search-bar improved">
+          <span class="search-icon">🔍</span>
+          <span class="search-placeholder">Search or type habit name...</span>
+        </div>
+
+        <div class="suggestions-box">
+          <div class="suggestions-header">
+            <span class="sparkle">✨</span>
+            <span class="suggestions-text">Perfect for "Meditation"</span>
+          </div>
+          <div class="suggestions-emojis">
+            <div class="suggestion-cell selected">🧘</div>
+            <div class="suggestion-cell">🙏</div>
+            <div class="suggestion-cell">☮️</div>
+            <div class="suggestion-cell">🕯️</div>
+            <div class="suggestion-cell">🌿</div>
+          </div>
+        </div>
+
+        <!-- "No icon" moved into category pills row -->
+        <div class="category-pills">
+          <div class="no-icon-pill">🚫 None</div>
+          <div class="category-pill active"><span class="pill-icon">😊</span> Smileys</div>
+          <div class="category-pill"><span class="pill-icon">🏋️</span> Activity</div>
+          <div class="category-pill"><span class="pill-icon">🍎</span> Food</div>
+          <div class="category-pill"><span class="pill-icon">🌍</span> Travel</div>
+          <div class="category-pill"><span class="pill-icon">💡</span> Objects</div>
+        </div>
+
+        <div class="emoji-sheet-grid">
+          <div class="grid-header">SMILEYS & PEOPLE</div>
+          <div class="grid-cell">😀</div>
+          <div class="grid-cell">😃</div>
+          <div class="grid-cell">😄</div>
+          <div class="grid-cell">😁</div>
+          <div class="grid-cell">😆</div>
+          <div class="grid-cell">😅</div>
+          <div class="grid-cell">🤣</div>
+          <div class="grid-cell">😂</div>
+          <div class="grid-cell">🙂</div>
+          <div class="grid-cell">😊</div>
+          <div class="grid-cell">😇</div>
+          <div class="grid-cell">🥰</div>
+          <div class="grid-cell">😍</div>
+          <div class="grid-cell">🤩</div>
+          <div class="grid-cell">😘</div>
+          <div class="grid-cell">😗</div>
+          <div class="grid-cell">😚</div>
+          <div class="grid-cell">😙</div>
+          <div class="grid-cell">🤗</div>
+          <div class="grid-cell">🤭</div>
+          <div class="grid-cell">🫢</div>
+          <div class="grid-cell">🤫</div>
+          <div class="grid-cell">🤔</div>
+          <div class="grid-cell">🫡</div>
+        </div>
+
+        <!-- No "No icon" button at bottom = more grid space -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ SECTION 3: SUMMARY ============ -->
+<div class="section-block" style="max-width: 700px;">
+  <h1>Changes Summary</h1>
+  <div style="background: #1a1a2e; border-radius: 16px; padding: 24px; margin-top: 20px;">
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr style="border-bottom: 1px solid #333;">
+        <td style="padding: 12px 8px; color: #9ca3af; font-size: 13px; font-weight: 600;">#</td>
+        <td style="padding: 12px 8px; color: #9ca3af; font-size: 13px; font-weight: 600;">Change</td>
+        <td style="padding: 12px 8px; color: #9ca3af; font-size: 13px; font-weight: 600;">Impact</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #222;">
+        <td style="padding: 12px 8px; color: #4ade80; font-size: 14px;">1</td>
+        <td style="padding: 12px 8px; color: #fff; font-size: 14px;">EmojiPicker bottom margin: <code style="background:#333;padding:2px 6px;border-radius:4px;font-size:12px;">mb-4</code> → <code style="background:#1a3a2a;padding:2px 6px;border-radius:4px;font-size:12px;color:#4ade80;">mb-6</code></td>
+        <td style="padding: 12px 8px; color: #6b7280; font-size: 13px;">16px → 24px</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #222;">
+        <td style="padding: 12px 8px; color: #4ade80; font-size: 14px;">2</td>
+        <td style="padding: 12px 8px; color: #fff; font-size: 14px;">Add <code style="background:#1a3a2a;padding:2px 6px;border-radius:4px;font-size:12px;color:#4ade80;">mt-4</code> above "Pick a color" label</td>
+        <td style="padding: 12px 8px; color: #6b7280; font-size: 13px;">+16px top</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #222;">
+        <td style="padding: 12px 8px; color: #4ade80; font-size: 14px;">3</td>
+        <td style="padding: 12px 8px; color: #fff; font-size: 14px;">Browse more link: <code style="background:#333;padding:2px 6px;border-radius:4px;font-size:12px;">mt-2</code> → <code style="background:#1a3a2a;padding:2px 6px;border-radius:4px;font-size:12px;color:#4ade80;">mt-3</code></td>
+        <td style="padding: 12px 8px; color: #6b7280; font-size: 13px;">8px → 12px</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #222;">
+        <td style="padding: 12px 8px; color: #60a5fa; font-size: 14px;">4</td>
+        <td style="padding: 12px 8px; color: #fff; font-size: 14px;">Style "Browse more" as subtle chip with search icon</td>
+        <td style="padding: 12px 8px; color: #6b7280; font-size: 13px;">Optional</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #222;">
+        <td style="padding: 12px 8px; color: #60a5fa; font-size: 14px;">5</td>
+        <td style="padding: 12px 8px; color: #fff; font-size: 14px;">Add subtle divider between icon & color sections</td>
+        <td style="padding: 12px 8px; color: #6b7280; font-size: 13px;">Optional</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px 8px; color: #60a5fa; font-size: 14px;">6</td>
+        <td style="padding: 12px 8px; color: #fff; font-size: 14px;">Move "No icon" into category pills as first item</td>
+        <td style="padding: 12px 8px; color: #6b7280; font-size: 13px;">Optional</td>
+      </tr>
+    </table>
+    <div style="margin-top: 16px; display: flex; gap: 16px;">
+      <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #9ca3af;">
+        <div style="width: 8px; height: 8px; border-radius: 50%; background: #4ade80;"></div> Recommended
+      </div>
+      <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #9ca3af;">
+        <div style="width: 8px; height: 8px; border-radius: 50%; background: #60a5fa;"></div> Optional enhancement
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

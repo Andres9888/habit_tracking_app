@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browse More Emojis - Button Alternatives</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #111;
+    color: #fff;
+    padding: 40px 20px 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+  }
+  h1 { font-size: 24px; font-weight: 700; text-align: center; }
+  h2 { font-size: 14px; font-weight: 500; color: #888; text-align: center; }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 32px;
+    max-width: 1200px;
+    width: 100%;
+  }
+
+  .option-card {
+    background: #1a1a1a;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #333;
+    transition: border-color 0.2s;
+  }
+  .option-card:hover { border-color: #555; }
+
+  .option-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #222;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .option-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .option-tag {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 20px;
+  }
+  .option-tag.minimal { background: #1e293b; color: #60a5fa; }
+  .option-tag.creative { background: #1a2e1a; color: #4ade80; }
+  .option-tag.bold { background: #2e1a2e; color: #c084fc; }
+
+  /* Phone preview area */
+  .phone-preview {
+    background: #fff;
+    padding: 24px 20px;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .section-label {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #9ca3af;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  /* Emoji grid */
+  .emoji-grid-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .emoji-chip {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    border: 1.5px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    background: #fff;
+  }
+  .emoji-chip.selected {
+    border: 2px solid #059669;
+    background: #D1FAE5;
+  }
+
+  /* ====== OPTION STYLES ====== */
+
+  /* Option A: Simple underlined text */
+  .browse-underline {
+    text-align: center;
+    margin-top: 12px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .browse-underline span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+    text-decoration: underline;
+    text-decoration-color: #d1d5db;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  .browse-underline span:hover {
+    color: #374151;
+    text-decoration-color: #9ca3af;
+  }
+
+  /* Option B: +More chip in the grid */
+  .more-chip {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    border: 1.5px dashed #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #9ca3af;
+    background: #f9fafb;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .more-chip:hover {
+    border-color: #9ca3af;
+    background: #f3f4f6;
+    color: #6b7280;
+  }
+  .more-chip .plus {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  /* Option C: Faded overflow peek row */
+  .peek-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+    position: relative;
+    cursor: pointer;
+  }
+  .peek-emoji {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    border: 1.5px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    background: #fff;
+    opacity: 0.3;
+  }
+  .peek-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.2), rgba(255,255,255,0.85));
+    border-radius: 14px;
+  }
+  .peek-overlay span {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    background: #fff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  /* Option D: Ghost text with animated dots */
+  .browse-ghost {
+    text-align: center;
+    margin-top: 12px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  .browse-ghost-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #9ca3af;
+    letter-spacing: 0.3px;
+  }
+  .browse-ghost-dots {
+    display: flex;
+    gap: 3px;
+  }
+  .browse-ghost-dots span {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #d1d5db;
+    animation: dotPulse 1.4s ease-in-out infinite;
+  }
+  .browse-ghost-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .browse-ghost-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dotPulse {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1.2); }
+  }
+
+  /* Option E: Inline expand bar */
+  .expand-bar {
+    margin-top: 10px;
+    height: 36px;
+    border-radius: 12px;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .expand-bar:hover {
+    background: #e5e7eb;
+  }
+  .expand-bar span {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+  }
+  .expand-bar .chevron {
+    font-size: 14px;
+    color: #9ca3af;
+    transition: transform 0.2s;
+  }
+  .expand-bar:hover .chevron {
+    transform: translateY(2px);
+  }
+
+  /* Option F: Icon-only circle button */
+  .browse-circle {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+  }
+  .browse-circle-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid #e5e7eb;
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .browse-circle-btn:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+    transform: scale(1.05);
+  }
+  .browse-circle-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: #6b7280;
+  }
+
+  /* Color section spacer */
+  .spacer { height: 32px; }
+  .color-label {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #9ca3af;
+    text-align: center;
+  }
+
+  .desc {
+    padding: 12px 20px 16px;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+    background: #111;
+  }
+</style>
+</head>
+<body>
+
+<div>
+  <h1>Browse More Emojis — Button Alternatives</h1>
+  <h2>6 options from minimal to creative. Pick what fits the vibe.</h2>
+</div>
+
+<div class="options-grid">
+
+  <!-- OPTION A: Simple underlined text -->
+  <div class="option-card">
+    <div class="option-header">
+      <span class="option-name">A. Quiet underline link</span>
+      <span class="option-tag minimal">Minimal</span>
+    </div>
+    <div class="phone-preview">
+      <div class="section-label">Choose an icon</div>
+      <div class="emoji-grid-row">
+        <div class="emoji-chip selected">🧘</div>
+        <div class="emoji-chip">🙏</div>
+        <div class="emoji-chip">☮️</div>
+        <div class="emoji-chip">🕯️</div>
+        <div class="emoji-chip">🌿</div>
+      </div>
+      <div class="emoji-grid-row">
+        <div class="emoji-chip">💆</div>
+        <div class="emoji-chip">🌅</div>
+        <div class="emoji-chip">🔔</div>
+        <div class="emoji-chip">✨</div>
+      </div>
+      <div class="browse-underline"><span>see more emojis</span></div>
+      <div class="spacer"></div>
+      <div class="color-label">Pick a color</div>
+    </div>
+    <div class="desc">Understated text link with a subtle underline. Gets out of the way. Feels native iOS.</div>
+  </div>
+
+  <!-- OPTION B: +More chip in the grid -->
+  <div class="option-card">
+    <div class="option-header">
+      <span class="option-name">B. "More" chip in the grid</span>
+      <span class="option-tag creative">Creative</span>
+    </div>
+    <div class="phone-preview">
+      <div class="section-label">Choose an icon</div>
+      <div class="emoji-grid-row">
+        <div class="emoji-chip selected">🧘</div>
+        <div class="emoji-chip">🙏</div>
+        <div class="emoji-chip">☮️</div>
+        <div class="emoji-chip">🕯️</div>
+        <div class="emoji-chip">🌿</div>
+      </div>
+      <div class="emoji-grid-row">
+        <div class="emoji-chip">💆</div>
+        <div class="emoji-chip">🌅</div>
+        <div class="emoji-chip">🔔</div>
+        <div class="more-chip">
+          <span class="plus">+</span>
+          more
+        </div>
+      </div>
+      <div class="spacer"></div>
+      <div class="color-label">Pick a color</div>
+    </div>
+    <div class="desc">Replaces the last emoji in the 4-row with a dashed "+more" tile. Feels integrated — like part of the grid, not a separate element. Clean.</div>
+  </div>
+
+  <!-- OPTION C: Peek row with overlay -->
+  <div class="option-card">
+    <div class="option-header">
+      <span class="option-name">C. Faded peek row</span>
+      <span class="option-tag creative">Creative</span>
+    </div>
+    <div class="phone-preview">
+      <div class="section-label">Choose an icon</div>
+      <div class="emoji-grid-row">
+        <div class="emoji-chip selected">🧘</div>
+        <div class="emoji-chip">🙏</div>
+        <div class="emoji-chip">☮️</div>
+        <div class="emoji-chip">🕯️</div>
+        <div class="emoji-chip">🌿</div>
+      </div>
+      <div class="emoji-grid-row">
+        <div class="emoji-chip">💆</div>
+        <div class="emoji-chip">🌅</div>
+        <div class="emoji-chip">🔔</div>
+        <div class="emoji-chip">✨</div>
+      </div>
+      <div class="peek-row">
+        <div class="peek-emoji">🎯</div>
+        <div class="peek-emoji">💪</div>
+        <div class="peek-emoji">🌸</div>
+        <div class="peek-emoji">⭐</div>
+        <div class="peek-emoji">🎵</div>
+        <div class="peek-overlay"><span>Browse all emojis</span></div>
+      </div>
+      <div class="spacer"></div>
+      <div class="color-label">Pick a color</div>
+    </div>
+    <div class="desc">Shows a faded "teaser" row of more emojis behind a gradient overlay. Tapping reveals the full sheet. Communicates "there's more" visually.</div>
+  </div>
+
+  <!-- OPTION D: Ghost text with dots -->
+  <div class="option-card">
+    <div class="option-header">
+      <span class="option-name">D. Subtle text + animated dots</span>
+      <span class="option-tag minimal">Minimal</span>
+    </div>
+    <div class="phone-preview">
+      <div class="section-label">Choose an icon</div>
+      <div class="emoji-grid-row">
+        <div class="emoji-chip selected">🧘</div>
+        <div class="emoji-chip">🙏</div>
+        <div class="emoji-chip">☮️</div>
+        <div class="emoji-chip">🕯️</div>
+        <div class="emoji-chip">🌿</div>
+      </div>
+      <div class="emoji-grid-row">
+        <div class="emoji-chip">💆</div>
+        <div class="emoji-chip">🌅</div>
+        <div class="emoji-chip">🔔</div>
+        <div class="emoji-chip">✨</div>
+      </div>
+      <div class="browse-ghost">
+        <span class="browse-ghost-text">more emojis</span>
+        <div class="browse-ghost-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="spacer"></div>
+      <div class="color-label">Pick a color</div>
+    </div>
+    <div class="desc">Quiet gray text with gentle pulsing dots. Draws the eye without being loud. The animation hints at interactivity.</div>
+  </div>
+
+  <!-- OPTION E: Expand bar -->
+  <div class="option-card">
+    <div class="option-header">
+      <span class="option-name">E. Expand bar</span>
+      <span class="option-tag bold">Bold</span>
+    </div>
+    <div class="phone-preview">
+      <div class="section-label">Choose an icon</div>
+      <div class="emoji-grid-row">
+        <div class="emoji-chip selected">🧘</div>
+        <div class="emoji-chip">🙏</div>
+        <div class="emoji-chip">☮️</div>
+        <div class="emoji-chip">🕯️</div>
+        <div class="emoji-chip">🌿</div>
+      </div>
+      <div class="emoji-grid-row">
+        <div class="emoji-chip">💆</div>
+        <div class="emoji-chip">🌅</div>
+        <div class="emoji-chip">🔔</div>
+        <div class="emoji-chip">✨</div>
+      </div>
+      <div class="expand-bar">
+        <span>Browse all emojis</span>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="spacer"></div>
+      <div class="color-label">Pick a color</div>
+    </div>
+    <div class="desc">Full-width subtle bar with a down chevron. Clear affordance, feels like a collapsible section. More prominent but not flashy.</div>
+  </div>
+
+  <!-- OPTION F: Circle icon button -->
+  <div class="option-card">
+    <div class="option-header">
+      <span class="option-name">F. Circle icon button</span>
+      <span class="option-tag minimal">Minimal</span>
+    </div>
+    <div class="phone-preview">
+      <div class="section-label">Choose an icon</div>
+      <div class="emoji-grid-row">
+        <div class="emoji-chip selected">🧘</div>
+        <div class="emoji-chip">🙏</div>
+        <div class="emoji-chip">☮️</div>
+        <div class="emoji-chip">🕯️</div>
+        <div class="emoji-chip">🌿</div>
+      </div>
+      <div class="emoji-grid-row">
+        <div class="emoji-chip">💆</div>
+        <div class="emoji-chip">🌅</div>
+        <div class="emoji-chip">🔔</div>
+        <div class="emoji-chip">✨</div>
+      </div>
+      <div class="browse-circle">
+        <div class="browse-circle-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+        </div>
+      </div>
+      <div class="spacer"></div>
+      <div class="color-label">Pick a color</div>
+    </div>
+    <div class="desc">Just a search icon in a subtle circle. Maximum minimalism. Relies on icon recognition — might need a label for first-time users.</div>
+  </div>
+
+</div>
+
+</body>
+</html>
