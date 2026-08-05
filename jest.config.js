@@ -30,6 +30,8 @@ export default {
     '<rootDir>/tests/e2e/.*\\.e2e\\.test\\.tsx$',
     '/worktrees/',
     '/\\.worktrees/',
+    // Stray tool-created checkouts of this repo living inside the repo.
+    '/\\.clonk-worktrees/',
     '/\\.next/',
     '<rootDir>/worktrees/',
     '<rootDir>/.worktrees/',
@@ -40,6 +42,8 @@ export default {
   modulePathIgnorePatterns: [
     '/worktrees/',
     '/\\.worktrees/',
+    // Stray tool-created checkouts of this repo living inside the repo.
+    '/\\.clonk-worktrees/',
     '/\\.next/',
     '<rootDir>/worktrees/',
     '<rootDir>/.worktrees/',
@@ -48,6 +52,8 @@ export default {
   watchPathIgnorePatterns: [
     '/worktrees/',
     '/\\.worktrees/',
+    // Stray tool-created checkouts of this repo living inside the repo.
+    '/\\.clonk-worktrees/',
     '/\\.next/',
     '<rootDir>/worktrees/',
     '<rootDir>/.worktrees/',
