@@ -25,8 +25,8 @@ export function PaywallStep({ answers, onNext }: StepComponentProps) {
     <View style={{ flex: 1, justifyContent: 'space-between' }}>
       <View>
         <HeroHeader
-          headline="Try ChainDay free."
-          sub="Enough time to see your first habit hit iron."
+          headline='Try ChainDay free.'
+          sub='Enough time to see your first habit hit iron.'
         />
         <View style={{ gap: 10, marginTop: 20 }}>
           {[
@@ -36,11 +36,22 @@ export function PaywallStep({ answers, onNext }: StepComponentProps) {
           ].map((line) => (
             <View
               key={line}
-              style={{ alignItems: 'flex-start', flexDirection: 'row', gap: 10 }}
+              style={{
+                alignItems: 'flex-start',
+                flexDirection: 'row',
+                gap: 10,
+              }}
             >
-              <Text style={{ color: colors.primary[600], fontSize: 16 }}>✓</Text>
+              <Text style={{ color: colors.primary[600], fontSize: 16 }}>
+                ✓
+              </Text>
               <Text
-                style={{ color: colors.text.primary, flex: 1, fontSize: 14, lineHeight: 20 }}
+                style={{
+                  color: colors.text.primary,
+                  flex: 1,
+                  fontSize: 14,
+                  lineHeight: 20,
+                }}
               >
                 {line}
               </Text>
@@ -49,7 +60,7 @@ export function PaywallStep({ answers, onNext }: StepComponentProps) {
         </View>
       </View>
       <View style={{ paddingTop: 12 }}>
-        {failedCount > 0 && (
+        {failedCount > 0 ? (
           <View
             style={{
               alignItems: 'center',
@@ -71,11 +82,11 @@ export function PaywallStep({ answers, onNext }: StepComponentProps) {
               Retry
             </Text>
           </View>
-        )}
+        ) : null}
         <PrimaryCTA
-          label="See pricing"
+          label='See pricing'
           onPress={() => setPaywallVisible(true)}
-          variant="brand"
+          variant='brand'
         />
         <View style={{ alignItems: 'center', paddingTop: 12 }}>
           <Text

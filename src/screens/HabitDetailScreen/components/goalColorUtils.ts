@@ -6,10 +6,7 @@ function normalizeHexColor(color: string): string | null {
 
   const hex =
     match[1].length === 3
-      ? match[1]
-          .split('')
-          .map((channel) => channel + channel)
-          .join('')
+      ? [...match[1]].map((channel) => channel + channel).join('')
       : match[1];
 
   return `#${hex.toLowerCase()}`;
@@ -17,7 +14,7 @@ function normalizeHexColor(color: string): string | null {
 
 function toLinear(channel: number): number {
   const value = channel / 255;
-  return value <= 0.03928
+  return value <= 0.039_28
     ? value / 12.92
     : Math.pow((value + 0.055) / 1.055, 2.4);
 }
@@ -26,11 +23,13 @@ function luminance(hexColor: string): number | null {
   const hex = normalizeHexColor(hexColor);
   if (!hex) return null;
 
-  const red = parseInt(hex.slice(1, 3), 16);
-  const green = parseInt(hex.slice(3, 5), 16);
-  const blue = parseInt(hex.slice(5, 7), 16);
+  const red = Number.parseInt(hex.slice(1, 3), 16);
+  const green = Number.parseInt(hex.slice(3, 5), 16);
+  const blue = Number.parseInt(hex.slice(5, 7), 16);
 
-  return 0.2126 * toLinear(red) + 0.7152 * toLinear(green) + 0.0722 * toLinear(blue);
+  return (
+    0.2126 * toLinear(red) + 0.7152 * toLinear(green) + 0.0722 * toLinear(blue)
+  );
 }
 
 function contrastRatio(colorA: string, colorB: string): number | null {

@@ -39,12 +39,14 @@ const ConnectorArmsComponent: React.FC<ConnectorArmsProps> = ({
     [strengthPercent]
   );
   const tierAnim = useAnimatedTier(strengthPercent);
-  const { colorStyle, ghostColorStyle, glowStyle } = useConnectorArmsTierStyles({
-    tierAnim,
-    streakConnectorColor,
-    ghostConnectorColor,
-    glow: strength.glow,
-  });
+  const { colorStyle, ghostColorStyle, glowStyle } = useConnectorArmsTierStyles(
+    {
+      tierAnim,
+      streakConnectorColor,
+      ghostConnectorColor,
+      glow: strength.glow,
+    }
+  );
 
   const hasGhost = (ghostLeft && !connectLeft) || (ghostRight && !connectRight);
   const ghostPulseStyle = useGhostPulse(hasGhost, reduceMotion);
@@ -73,23 +75,21 @@ const ConnectorArmsComponent: React.FC<ConnectorArmsProps> = ({
 
   return (
     <>
-      {(connectLeft || ghostLeft) ? (
+      {connectLeft || ghostLeft ? (
         <ConnectorArm
           {...shared}
-          colorStyle={
-            ghostLeft && !connectLeft ? ghostColorStyle : colorStyle
-          }
-          isGhost={ghostLeft && !connectLeft}
+          colorStyle={ghostLeft && !connectLeft ? ghostColorStyle : colorStyle}
+          isGhost={Boolean(ghostLeft && !connectLeft)}
           side='left'
         />
       ) : null}
-      {(connectRight || ghostRight) ? (
+      {connectRight || ghostRight ? (
         <ConnectorArm
           {...shared}
           colorStyle={
             ghostRight && !connectRight ? ghostColorStyle : colorStyle
           }
-          isGhost={ghostRight && !connectRight}
+          isGhost={Boolean(ghostRight && !connectRight)}
           side='right'
         />
       ) : null}

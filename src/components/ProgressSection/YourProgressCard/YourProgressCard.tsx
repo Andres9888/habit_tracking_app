@@ -4,8 +4,8 @@
  * @deprecated This component is deprecated. Use `ProgressSectionConsolidated` instead.
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, Pressable, AccessibilityInfo } from 'react-native';
+import React, { useMemo } from 'react';
+import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Info } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
@@ -24,6 +24,7 @@ import { ProgressBar } from './ProgressBar';
 import { ActionableTip } from './ActionableTip';
 import { useProgressAnimations } from './useProgressAnimations';
 import { triggerHaptic } from '@/utils/haptics';
+import { useProgressReduceMotion } from './useProgressReduceMotion';
 
 export function YourProgressCard({
   strength,
@@ -35,16 +36,7 @@ export function YourProgressCard({
   const clampedStrength = Math.max(0, Math.min(100, strength));
   const level = getStrengthLevel(clampedStrength);
   const nextLevel = getNextLevel(clampedStrength);
-  const [reduceMotion, setReduceMotion] = useState(false);
-
-  useEffect(() => {
-    void AccessibilityInfo.isReduceMotionEnabled()
-      .then(setReduceMotion)
-      .catch((error) => {
-        if (__DEV__) console.warn('Error checking reduce motion setting:', error);
-        setReduceMotion(false);
-      });
-  }, []);
+  const reduceMotion = useProgressReduceMotion();
 
   const { animatedStrength, emojiAnimatedStyle } = useProgressAnimations(
     clampedStrength,
@@ -72,15 +64,25 @@ export function YourProgressCard({
     >
       <LinearGradient
         className='absolute inset-0'
-        colors={['rgba(240, 253, 250, 0.3)', themeColors.card, 'rgba(236, 253, 245, 0.3)']}
+        colors={[
+          'rgba(240, 253, 250, 0.3)',
+          themeColors.card,
+          'rgba(236, 253, 245, 0.3)',
+        ]}
         end={{ x: 1, y: 1 }}
         start={{ x: 0, y: 0 }}
       />
-      <View className='absolute inset-0 rounded-2xl border' style={{ borderColor: themeColors.status.successLight }} />
+      <View
+        className='absolute inset-0 rounded-2xl border'
+        style={{ borderColor: themeColors.status.successLight }}
+      />
 
       <View className='p-4'>
         <View className='mb-3 flex-row items-center justify-between'>
-          <Text className='text-sm font-semibold' style={{ color: themeColors.text.primary }}>
+          <Text
+            className='text-sm font-semibold'
+            style={{ color: themeColors.text.primary }}
+          >
             Your Progress
           </Text>
           <Pressable

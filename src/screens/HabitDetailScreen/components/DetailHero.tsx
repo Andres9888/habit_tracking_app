@@ -13,6 +13,7 @@ import { DetailCompleteButton } from './DetailCompleteButton';
 import { getHabitDisplayName } from './DetailHero.utils';
 import { DetailHeroContext } from './DetailHeroContext';
 import { DetailHeroIcon } from './DetailHeroIcon';
+import { DetailHeroTotal } from './DetailHeroTotal';
 
 interface DetailHeroProps {
   habit: Habit;
@@ -85,34 +86,12 @@ export function DetailHero({
           />
         </View>
 
-        <View style={{ alignItems: 'flex-end' }}>
-          <Text
-            style={{
-              color: colors.text.primary,
-              fontFamily: fontFamilies.primary.display,
-              fontSize: 22,
-              fontWeight: fontWeights.bold,
-              lineHeight: 22,
-            }}
-          >
-            {totalCompletions}
-          </Text>
-          <Text
-            style={{
-              color: colors.text.tertiary,
-              fontSize: 10.5,
-              fontWeight: fontWeights.semibold,
-              letterSpacing: 0.8,
-              marginTop: 2,
-              textTransform: 'uppercase',
-            }}
-          >
-            total
-          </Text>
-        </View>
+        <DetailHeroTotal colors={colors} totalCompletions={totalCompletions} />
       </View>
 
-      <View style={{ paddingHorizontal: spacing.base, paddingBottom: spacing.base }}>
+      <View
+        style={{ paddingHorizontal: spacing.base, paddingBottom: spacing.base }}
+      >
         <DetailCompleteButton
           disabled={isToggling}
           isCompletedToday={isCompletedToday}

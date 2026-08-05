@@ -28,6 +28,8 @@ import type * as auth from "../auth.js";
 import type * as categories from "../categories.js";
 import type * as config_apiConstants from "../config/apiConstants.js";
 import type * as crons from "../crons.js";
+import type * as deleteCurrentUserData from "../deleteCurrentUserData.js";
+import type * as deleteUserStorage from "../deleteUserStorage.js";
 import type * as habitStrength_algorithmConfig from "../habitStrength/algorithmConfig.js";
 import type * as habitStrength_allHabitsStats from "../habitStrength/allHabitsStats.js";
 import type * as habitStrength_compliance from "../habitStrength/compliance.js";
@@ -56,6 +58,7 @@ import type * as habits_getTracking from "../habits/getTracking.js";
 import type * as habits_list from "../habits/list.js";
 import type * as habits_listHabitValidator from "../habits/listHabitValidator.js";
 import type * as habits_pause from "../habits/pause.js";
+import type * as habits_pauseRecalculation from "../habits/pauseRecalculation.js";
 import type * as habits_recalcStaleArgs from "../habits/recalcStaleArgs.js";
 import type * as habits_recalcStaleHelpers from "../habits/recalcStaleHelpers.js";
 import type * as habits_recalculateStaleStrength from "../habits/recalculateStaleStrength.js";
@@ -66,6 +69,7 @@ import type * as habits_toggle from "../habits/toggle.js";
 import type * as habits_types from "../habits/types.js";
 import type * as habits_update from "../habits/update.js";
 import type * as habits_utils from "../habits/utils.js";
+import type * as habits_validateHabitUpdateFields from "../habits/validateHabitUpdateFields.js";
 import type * as habits_validation from "../habits/validation.js";
 import type * as habits_validators from "../habits/validators.js";
 import type * as habits from "../habits.js";
@@ -103,6 +107,8 @@ import type * as templates_curation from "../templates/curation.js";
 import type * as templates_enrichTemplates from "../templates/enrichTemplates.js";
 import type * as templates_helpers from "../templates/helpers.js";
 import type * as templates_importTemplate from "../templates/importTemplate.js";
+import type * as templates_importTemplateCustomizations from "../templates/importTemplateCustomizations.js";
+import type * as templates_importTemplateHandler from "../templates/importTemplateHandler.js";
 import type * as templates_popularity from "../templates/popularity.js";
 import type * as templates_queries from "../templates/queries.js";
 import type * as templates_seedCurationTemplates from "../templates/seedCurationTemplates.js";
@@ -118,7 +124,9 @@ import type * as tracking_strengthUpdater from "../tracking/strengthUpdater.js";
 import type * as tracking from "../tracking.js";
 import type * as users from "../users.js";
 import type * as usersProfileImage from "../usersProfileImage.js";
+import type * as webhooks_handleRevenueCatWebhook from "../webhooks/handleRevenueCatWebhook.js";
 import type * as webhooks_revenuecat from "../webhooks/revenuecat.js";
+import type * as webhooks_revenuecatEvent from "../webhooks/revenuecatEvent.js";
 import type * as webhooks_revenuecatSignature from "../webhooks/revenuecatSignature.js";
 
 /**
@@ -145,6 +153,8 @@ declare const fullApi: ApiFromModules<{
   categories: typeof categories;
   "config/apiConstants": typeof config_apiConstants;
   crons: typeof crons;
+  deleteCurrentUserData: typeof deleteCurrentUserData;
+  deleteUserStorage: typeof deleteUserStorage;
   "habitStrength/algorithmConfig": typeof habitStrength_algorithmConfig;
   "habitStrength/allHabitsStats": typeof habitStrength_allHabitsStats;
   "habitStrength/compliance": typeof habitStrength_compliance;
@@ -173,6 +183,7 @@ declare const fullApi: ApiFromModules<{
   "habits/list": typeof habits_list;
   "habits/listHabitValidator": typeof habits_listHabitValidator;
   "habits/pause": typeof habits_pause;
+  "habits/pauseRecalculation": typeof habits_pauseRecalculation;
   "habits/recalcStaleArgs": typeof habits_recalcStaleArgs;
   "habits/recalcStaleHelpers": typeof habits_recalcStaleHelpers;
   "habits/recalculateStaleStrength": typeof habits_recalculateStaleStrength;
@@ -183,6 +194,7 @@ declare const fullApi: ApiFromModules<{
   "habits/types": typeof habits_types;
   "habits/update": typeof habits_update;
   "habits/utils": typeof habits_utils;
+  "habits/validateHabitUpdateFields": typeof habits_validateHabitUpdateFields;
   "habits/validation": typeof habits_validation;
   "habits/validators": typeof habits_validators;
   habits: typeof habits;
@@ -220,6 +232,8 @@ declare const fullApi: ApiFromModules<{
   "templates/enrichTemplates": typeof templates_enrichTemplates;
   "templates/helpers": typeof templates_helpers;
   "templates/importTemplate": typeof templates_importTemplate;
+  "templates/importTemplateCustomizations": typeof templates_importTemplateCustomizations;
+  "templates/importTemplateHandler": typeof templates_importTemplateHandler;
   "templates/popularity": typeof templates_popularity;
   "templates/queries": typeof templates_queries;
   "templates/seedCurationTemplates": typeof templates_seedCurationTemplates;
@@ -235,7 +249,9 @@ declare const fullApi: ApiFromModules<{
   tracking: typeof tracking;
   users: typeof users;
   usersProfileImage: typeof usersProfileImage;
+  "webhooks/handleRevenueCatWebhook": typeof webhooks_handleRevenueCatWebhook;
   "webhooks/revenuecat": typeof webhooks_revenuecat;
+  "webhooks/revenuecatEvent": typeof webhooks_revenuecatEvent;
   "webhooks/revenuecatSignature": typeof webhooks_revenuecatSignature;
 }>;
 export declare const api: FilterApi<

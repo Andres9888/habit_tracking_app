@@ -45,7 +45,7 @@ export function useTemplatePreview({
   );
   const [progressEmojis, setProgressEmojis] = useState<
     ProgressEmojiSet | undefined
-  >(undefined);
+  >();
   const [streakGoal, setStreakGoal] = useState<number>(DEFAULT_STREAK_GOAL);
 
   // Reset customization when template changes

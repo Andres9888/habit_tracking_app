@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 /**
  * Frame Monitor - Tracks frame timing and FPS for animation performance analysis.
  */

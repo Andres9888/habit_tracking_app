@@ -16,47 +16,9 @@ import {
   MAX_LONG_TEXT_LENGTH,
   MAX_SHORT_TEXT_LENGTH,
 } from '../lib/inputValidation';
-
-/** Habit creation/update arguments */
-interface HabitArgs {
-  name?: string;
-  notes?: string;
-  cueTime?: string;
-  cueLocation?: string;
-  cueAfterBehavior?: string;
-  icon?: string;
-  color?: string;
-  iconColor?: string;
-  preferredTime?: string;
-  reminderTime?: string;
-  reminderSound?: string;
-  identity?: string;
-  why?: string;
-  frequency?: string;
-  goalUnit?: string;
-}
-
-/** Validated habit fields */
-interface ValidatedHabitFields {
-  name: string;
-  notes?: string;
-  cueTime?: string;
-  cueLocation?: string;
-  cueAfterBehavior?: string;
-  icon?: string;
-  color?: string;
-  iconColor?: string;
-  preferredTime?: string;
-  reminderTime?: string;
-  reminderSound?: string;
-  identity?: string;
-  why?: string;
-  frequency?: string;
-  goalUnit?: string;
-}
-
-const MIN_EFFORT_MINUTES = 1;
-const MAX_EFFORT_MINUTES = 480;
+import type { HabitArgs, ValidatedHabitFields } from './validation.types';
+export { validateHabitUpdateFields } from './validateHabitUpdateFields';
+export { validateEffortMinutes } from './validateEffortMinutes';
 
 /**
  * Validate all habit fields and return sanitized values.
@@ -71,7 +33,11 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
   }
 
   // Optional: notes (long text)
-  const notesResult = validateLongText(args.notes, MAX_LONG_TEXT_LENGTH, 'Notes');
+  const notesResult = validateLongText(
+    args.notes,
+    MAX_LONG_TEXT_LENGTH,
+    'Notes'
+  );
   const notes = requireValid(notesResult, args.notes);
 
   // Optional: cue fields (short text)
@@ -90,7 +56,10 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
     MAX_SHORT_TEXT_LENGTH,
     'Cue behavior'
   );
-  const cueAfterBehavior = requireValid(cueAfterBehaviorResult, args.cueAfterBehavior);
+  const cueAfterBehavior = requireValid(
+    cueAfterBehaviorResult,
+    args.cueAfterBehavior
+  );
 
   // Optional: icon and color
   const iconResult = validateEmoji(args.icon, 'Icon');
@@ -103,18 +72,33 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
   const iconColor = requireValid(iconColorResult, args.iconColor);
 
   // Optional: preferredTime is a phase identifier (e.g. "phase1_push", "morning"), not a time string
-  const preferredTimeResult = validateShortText(args.preferredTime, MAX_SHORT_TEXT_LENGTH, 'Preferred time');
+  const preferredTimeResult = validateShortText(
+    args.preferredTime,
+    MAX_SHORT_TEXT_LENGTH,
+    'Preferred time'
+  );
   const preferredTime = requireValid(preferredTimeResult, args.preferredTime);
 
-  const reminderTimeResult = validateTimeFormat(args.reminderTime, 'Reminder time');
+  const reminderTimeResult = validateTimeFormat(
+    args.reminderTime,
+    'Reminder time'
+  );
   const reminderTime = requireValid(reminderTimeResult, args.reminderTime);
 
   // Optional: reminder sound (identifier)
-  const reminderSoundResult = validateIdentifier(args.reminderSound, 100, 'Reminder sound');
+  const reminderSoundResult = validateIdentifier(
+    args.reminderSound,
+    100,
+    'Reminder sound'
+  );
   const reminderSound = requireValid(reminderSoundResult, args.reminderSound);
 
   // Optional: identity statement (short text)
-  const identityResult = validateShortText(args.identity, MAX_SHORT_TEXT_LENGTH, 'Identity');
+  const identityResult = validateShortText(
+    args.identity,
+    MAX_SHORT_TEXT_LENGTH,
+    'Identity'
+  );
   const identity = requireValid(identityResult, args.identity);
 
   // Optional: why statement (long text)
@@ -163,119 +147,4 @@ export function validateDaysOfWeek(days: number[] | undefined): void {
       throw new Error('daysOfWeek entries must be integers between 0 and 6');
     }
   }
-}
-
-/**
- * Validate a per-completion effort estimate.
- *
- * The first UI exposes 5/15/30-minute presets, while the wider integer range
- * keeps the stored field compatible with a later custom-duration control.
- */
-export function validateEffortMinutes(
-  effortMinutes: number | null | undefined
-): void {
-  if (effortMinutes == null) return;
-  if (
-    !Number.isInteger(effortMinutes) ||
-    effortMinutes < MIN_EFFORT_MINUTES ||
-    effortMinutes > MAX_EFFORT_MINUTES
-  ) {
-    throw new Error(
-      `effortMinutes must be an integer between ${MIN_EFFORT_MINUTES} and ${MAX_EFFORT_MINUTES}`
-    );
-  }
-}
-
-/**
- * Validate habit update fields (all optional).
- */
-export function validateHabitUpdateFields(
-  args: Partial<HabitArgs>
-): Partial<ValidatedHabitFields> {
-  const result: Partial<ValidatedHabitFields> = {};
-
-  if (args.name !== undefined) {
-    const nameResult = validateHabitName(args.name);
-    result.name = requireValid(nameResult, args.name);
-  }
-
-  if (args.notes !== undefined) {
-    const notesResult = validateLongText(args.notes, MAX_LONG_TEXT_LENGTH, 'Notes');
-    result.notes = requireValid(notesResult, args.notes);
-  }
-
-  if (args.cueTime !== undefined) {
-    const cueTimeResult = validateTimeFormat(args.cueTime, 'Cue time');
-    result.cueTime = requireValid(cueTimeResult, args.cueTime);
-  }
-
-  if (args.cueLocation !== undefined) {
-    const cueLocationResult = validateShortText(
-      args.cueLocation,
-      MAX_SHORT_TEXT_LENGTH,
-      'Cue location'
-    );
-    result.cueLocation = requireValid(cueLocationResult, args.cueLocation);
-  }
-
-  if (args.cueAfterBehavior !== undefined) {
-    const cueAfterBehaviorResult = validateShortText(
-      args.cueAfterBehavior,
-      MAX_SHORT_TEXT_LENGTH,
-      'Cue behavior'
-    );
-    result.cueAfterBehavior = requireValid(cueAfterBehaviorResult, args.cueAfterBehavior);
-  }
-
-  if (args.icon !== undefined) {
-    const iconResult = validateEmoji(args.icon, 'Icon');
-    result.icon = requireValid(iconResult, args.icon);
-  }
-
-  if (args.color !== undefined) {
-    const colorResult = validateColor(args.color, 'Habit color');
-    result.color = requireValid(colorResult, args.color);
-  }
-
-  if (args.iconColor !== undefined) {
-    const iconColorResult = validateColor(args.iconColor, 'Icon color');
-    result.iconColor = requireValid(iconColorResult, args.iconColor);
-  }
-
-  if (args.preferredTime !== undefined) {
-    const preferredTimeResult = validateShortText(args.preferredTime, MAX_SHORT_TEXT_LENGTH, 'Preferred time');
-    result.preferredTime = requireValid(preferredTimeResult, args.preferredTime);
-  }
-
-  if (args.reminderTime !== undefined) {
-    const reminderTimeResult = validateTimeFormat(args.reminderTime, 'Reminder time');
-    result.reminderTime = requireValid(reminderTimeResult, args.reminderTime);
-  }
-
-  if (args.reminderSound !== undefined) {
-    const reminderSoundResult = validateIdentifier(args.reminderSound, 100, 'Reminder sound');
-    result.reminderSound = requireValid(reminderSoundResult, args.reminderSound);
-  }
-
-  if (args.identity !== undefined) {
-    const identityResult = validateShortText(args.identity, MAX_SHORT_TEXT_LENGTH, 'Identity');
-    result.identity = requireValid(identityResult, args.identity);
-  }
-
-  if (args.why !== undefined) {
-    const whyResult = validateLongText(args.why, MAX_LONG_TEXT_LENGTH, 'Why');
-    result.why = requireValid(whyResult, args.why);
-  }
-
-  if (args.frequency !== undefined) {
-    const frequencyResult = validateIdentifier(args.frequency, 50, 'Frequency');
-    result.frequency = requireValid(frequencyResult, args.frequency);
-  }
-
-  if (args.goalUnit !== undefined) {
-    const goalUnitResult = validateShortText(args.goalUnit, 50, 'Goal unit');
-    result.goalUnit = requireValid(goalUnitResult, args.goalUnit);
-  }
-
-  return result;
 }

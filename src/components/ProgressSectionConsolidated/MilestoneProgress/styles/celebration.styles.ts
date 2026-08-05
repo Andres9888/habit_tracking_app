@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme';
-import { typography, fontWeights, fontFamilies } from '@/theme/typography';
+import { typography, fontWeights } from '@/theme/typography';
 
 export const celebrationStyles = StyleSheet.create({
   celebrationContainer: {

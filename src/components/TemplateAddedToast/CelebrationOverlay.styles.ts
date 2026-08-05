@@ -5,7 +5,7 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { colors } from '@/theme';
 import { borderRadius } from '@/theme/spacing';
-import { fontFamilies, fontWeights, typography } from '@/theme/typography';
+import { fontWeights, typography } from '@/theme/typography';
 
 const { width: SCREEN_W } = Dimensions.get('window');
 

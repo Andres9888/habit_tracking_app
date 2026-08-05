@@ -10,14 +10,13 @@ import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { useExpandAnimation } from '@/hooks/useExpandAnimation';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { AdvancedAlgorithmBody } from './AdvancedAlgorithmBody';
-import { ALGORITHM_COPY, type AlgorithmMode } from './algorithmCopy';
+import { ALGORITHM_COPY } from './algorithmCopy';
+import type { AdvancedAlgorithmDisclosureProps } from './AdvancedAlgorithmDisclosure.types';
 
-interface Props {
-  selected: AlgorithmMode;
-  onSelect: (mode: AlgorithmMode) => void;
-}
-
-export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
+export function AdvancedAlgorithmDisclosure({
+  selected,
+  onSelect,
+}: AdvancedAlgorithmDisclosureProps) {
   const { colors } = useThemeColors();
   const reduceMotion = useReduceMotion();
   const [expanded, setExpanded] = useState(false);
@@ -42,8 +41,7 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
     [expanded, hasContentMeasured]
   );
 
-  const activeMode: AlgorithmMode = selected;
-  const subtitle = `Using ${ALGORITHM_COPY[activeMode].name}`;
+  const subtitle = `Using ${ALGORITHM_COPY[selected].name}`;
 
   const toggle = () => {
     void triggerHaptic('selection');
@@ -101,7 +99,7 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
         style={contentAnimatedStyle}
       >
         <View onLayout={handleContentLayout}>
-          <AdvancedAlgorithmBody activeMode={activeMode} onSelect={onSelect} />
+          <AdvancedAlgorithmBody activeMode={selected} onSelect={onSelect} />
         </View>
       </Animated.View>
     </View>

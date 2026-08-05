@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 /**
  * Batch Resolution Helpers
  */

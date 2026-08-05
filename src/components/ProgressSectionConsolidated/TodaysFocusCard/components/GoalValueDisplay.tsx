@@ -54,7 +54,7 @@ export const GoalValueDisplay = React.memo(function GoalValueDisplay({
     return () => clearInterval(timer);
   }, [targetValue, reduceMotion]);
 
-  return <>{displayValue}</>;
+  return displayValue;
 });
 
 export default GoalValueDisplay;

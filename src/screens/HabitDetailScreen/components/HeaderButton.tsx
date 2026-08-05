@@ -1,6 +1,6 @@
 /** HeaderButton - Animated button with scale + haptic feedback */
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -9,10 +9,10 @@ import Animated, {
 import { triggerHaptic } from '@/utils/haptics';
 import { withAlpha } from '@/theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { typography, fontWeights } from '../../../theme/typography';
-import { borderRadius, spacing, componentSpacing } from '../../../theme/spacing';
+import { fontWeights } from '../../../theme/typography';
 import { OPACITY } from '../../../constants/ui-values';
 import { springs } from '@/theme/animations';
+import { headerButtonStyles as s } from './HeaderButton.styles';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -58,7 +58,9 @@ export function HeaderButton({
 }: HeaderButtonProps) {
   const scale = useSharedValue(1);
   const { colors, isDark } = useThemeColors();
-  const animStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+  const animStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
   const { bg, border, fg } = toneColors(tone, isDark, colors);
   const showText = Boolean(text) && !compact;
 
@@ -89,7 +91,9 @@ export function HeaderButton({
       {...pressHandlers}
     >
       <View style={{ opacity: tone === 'accent' ? 1 : OPACITY.high }}>
-        {React.cloneElement(icon as React.ReactElement<{ color: string }>, { color: fg })}
+        {React.cloneElement(icon as React.ReactElement<{ color: string }>, {
+          color: fg,
+        })}
       </View>
       {showText ? (
         <Text
@@ -97,7 +101,8 @@ export function HeaderButton({
             s.textLabel,
             {
               color: fg,
-              fontWeight: tone === 'accent' ? fontWeights.semibold : fontWeights.medium,
+              fontWeight:
+                tone === 'accent' ? fontWeights.semibold : fontWeights.medium,
             },
           ]}
         >
@@ -107,28 +112,3 @@ export function HeaderButton({
     </AnimatedPressable>
   );
 }
-
-const s = StyleSheet.create({
-  compactButton: {
-    alignItems: 'center',
-    borderRadius: borderRadius.xl,
-    borderWidth: 1,
-    height: 40,
-    justifyContent: 'center',
-    width: 40,
-  },
-  textButton: {
-    alignItems: 'center',
-    borderRadius: borderRadius.xl,
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: spacing.sm,
-    height: componentSpacing.button.height,
-    paddingHorizontal: spacing.base,
-  },
-  textLabel: {
-    ...typography.bodySmall,
-    fontWeight: fontWeights.medium,
-    letterSpacing: -0.2,
-  },
-});

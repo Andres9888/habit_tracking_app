@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 /**
  * Resolve Single Operation
  * Implements US4 (Graceful Conflict Resolution) and FR-010 (completion wins).

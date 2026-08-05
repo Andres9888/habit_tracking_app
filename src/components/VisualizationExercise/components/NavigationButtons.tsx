@@ -7,7 +7,6 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import { clsx } from 'clsx';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { triggerHaptic } from '@/utils/haptics';
 
@@ -38,14 +37,21 @@ export function NavigationButtons({
           onBack();
         }}
       >
-        <Text className='text-sm font-medium' style={{ color: colors.text.secondary }}>Back</Text>
+        <Text
+          className='text-sm font-medium'
+          style={{ color: colors.text.secondary }}
+        >
+          Back
+        </Text>
       </Pressable>
       <Pressable
         accessibilityLabel='Continue'
         accessibilityRole='button'
         className='flex-1 flex-row items-center justify-center gap-2 rounded-xl py-3.5'
         disabled={!canContinue}
-        style={{ backgroundColor: canContinue ? activeColorValue : colors.border }}
+        style={{
+          backgroundColor: canContinue ? activeColorValue : colors.border,
+        }}
         onPress={() => {
           triggerHaptic('toggle');
           onNext();
@@ -53,7 +59,9 @@ export function NavigationButtons({
       >
         <Text
           className='text-sm font-semibold'
-          style={{ color: canContinue ? colors.text.inverse : colors.text.tertiary }}
+          style={{
+            color: canContinue ? colors.text.inverse : colors.text.tertiary,
+          }}
         >
           Continue
         </Text>

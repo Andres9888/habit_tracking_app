@@ -11,16 +11,35 @@ import { shadows } from '@/theme/spacing';
 import type { AnimatedHabitCardProps } from '../types';
 
 export function AnimatedHabitCard({
-  habit, index, reducedMotion, selectionMode, isSelected,
-  hasReachedLimit, onRestore, onDelete, onToggleSelect, onUpgradePress,
+  habit,
+  index,
+  reducedMotion,
+  selectionMode,
+  isSelected,
+  hasReachedLimit,
+  onRestore,
+  onDelete,
+  onToggleSelect,
+  onUpgradePress,
 }: AnimatedHabitCardProps) {
   const { colors, isDark } = useThemeColors();
   const {
-    isRestoring, showSuccess, animatedStyle, successIconStyle, handleRestorePress,
-  } = useAnimatedHabitCard({ habitId: habit._id, habitName: habit.name, index, onRestore, reducedMotion });
+    isRestoring,
+    showSuccess,
+    animatedStyle,
+    successIconStyle,
+    handleRestorePress,
+  } = useAnimatedHabitCard({
+    habitId: habit._id,
+    habitName: habit.name,
+    index,
+    onRestore,
+    reducedMotion,
+  });
 
   const strength = (habit.strength ?? 0) * 100;
-  const accentBarColor = habit.color || habit.iconColor || pickAccentColor(habit.name);
+  const accentBarColor =
+    habit.color || habit.iconColor || pickAccentColor(habit.name);
   const archiveDate = habit.archivedAt || habit._creationTime;
   const selected = isSelected && selectionMode;
 
@@ -33,29 +52,53 @@ export function AnimatedHabitCard({
         <View
           style={{
             backgroundColor: colors.card,
-            borderRadius: 20, overflow: 'hidden',
+            borderRadius: 20,
+            overflow: 'hidden',
             borderWidth: selected ? 1.5 : 1,
-            borderColor: selected ? colors.status.success + '40' : colors.border,
+            borderColor: selected
+              ? colors.status.success + '40'
+              : colors.border,
             ...shadows.card,
           }}
         >
           {/* Accent strip */}
-          <View style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 4, borderTopLeftRadius: 20, borderBottomLeftRadius: 20, backgroundColor: accentBarColor }} />
-          <View style={{ paddingVertical: 20, paddingRight: 20, paddingLeft: 24 }}>
-            {selectionMode && <SelectionCheckbox isDark={isDark} isSelected={isSelected} />}
+          <View
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: 4,
+              borderTopLeftRadius: 20,
+              borderBottomLeftRadius: 20,
+              backgroundColor: accentBarColor,
+            }}
+          />
+          <View
+            style={{ paddingVertical: 20, paddingRight: 20, paddingLeft: 24 }}
+          >
+            {selectionMode ? (
+              <SelectionCheckbox isDark={isDark} isSelected={isSelected} />
+            ) : null}
             <HabitCardHeader
-              accentColor={accentBarColor} archiveDate={archiveDate}
-              icon={habit.icon} iconColor={habit.iconColor} name={habit.name}
+              accentColor={accentBarColor}
+              archiveDate={archiveDate}
+              icon={habit.icon}
+              iconColor={habit.iconColor}
+              name={habit.name}
               showDelete={!selectionMode}
               onDeletePress={() => onDelete(habit._id, habit.name)}
             />
             <HabitStatsBadges habit={habit} strength={strength} />
-            {!selectionMode && (
+            {selectionMode ? null : (
               <ActionButtons
-                habitName={habit.name} hasReachedLimit={hasReachedLimit}
-                isRestoring={isRestoring} showSuccess={showSuccess}
+                habitName={habit.name}
+                hasReachedLimit={hasReachedLimit}
+                isRestoring={isRestoring}
+                showSuccess={showSuccess}
                 successIconStyle={successIconStyle}
-                onRestorePress={handleRestorePress} onUpgradePress={onUpgradePress}
+                onRestorePress={handleRestorePress}
+                onUpgradePress={onUpgradePress}
               />
             )}
           </View>

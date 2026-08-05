@@ -45,7 +45,11 @@ export const QuickTimeButton = ({
         accessibilityLabel={`Set reminder to ${label} at ${time}`}
         accessibilityRole='button'
         className='items-center rounded-xl py-3'
-        style={{ backgroundColor: isSelected ? themeColors.status.info : themeColors.background }}
+        style={{
+          backgroundColor: isSelected
+            ? themeColors.status.info
+            : themeColors.background,
+        }}
         onPress={() => {
           triggerSelection();
           onPress();
@@ -54,16 +58,18 @@ export const QuickTimeButton = ({
         onPressOut={handlePressOut}
       >
         <Text
-          className={`text-xs font-semibold ${
-            isSelected ? 'text-white' : ''
-          }`}
-          style={!isSelected ? { color: themeColors.text.secondary } : undefined}
+          className={`text-xs font-semibold ${isSelected ? 'text-white' : ''}`}
+          style={isSelected ? undefined : { color: themeColors.text.secondary }}
         >
           {label}
         </Text>
         <Text
           className='mt-0.5 text-[10px]'
-          style={{ color: isSelected ? 'rgba(255,255,255,0.8)' : themeColors.text.tertiary }}
+          style={{
+            color: isSelected
+              ? 'rgba(255,255,255,0.8)'
+              : themeColors.text.tertiary,
+          }}
         >
           {time}
         </Text>

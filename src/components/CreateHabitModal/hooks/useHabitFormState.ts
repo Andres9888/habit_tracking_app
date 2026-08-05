@@ -4,27 +4,22 @@
 
 import { useMemo, useState } from 'react';
 import { DEFAULT_COLOR } from '../constants';
-import type { HabitDoc } from '../types';
 import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
-import { parseHabitName, parseReminderTime } from '../utils';
+import { parseHabitName } from '../utils';
 import {
   type HubermanPhase,
   getPhaseFromPreferredTime,
 } from '../../../constants/hubermanPhases';
-import type { ReminderOption } from '../components/ReminderSelector';
-import { getReminderOptionFromTime } from './reminderUtils';
-
-const DEFAULT_SOUND = 'Default';
-
-interface UseHabitFormStateOptions {
-  habitToEdit?: HabitDoc | null;
-}
+import { useHabitReminderState } from './useHabitReminderState';
+import type { UseHabitFormStateOptions } from './useHabitFormState.types';
 
 export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
   const parsed = useMemo(
     () => parseHabitName(habitToEdit?.name ?? ''),
     [habitToEdit?.name]
   );
+
+  const reminder = useHabitReminderState({ habitToEdit });
 
   const [habitName, setHabitName] = useState(parsed.name);
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>(
@@ -34,16 +29,6 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     habitToEdit?.color ?? habitToEdit?.iconColor ?? DEFAULT_COLOR
   );
   const [isColorPickerVisible, setColorPickerVisible] = useState(false);
-  const [remindersEnabled, setRemindersEnabled] = useState(
-    habitToEdit?.remindersEnabled ?? false
-  );
-  const [reminderTime, setReminderTime] = useState(() =>
-    parseReminderTime(habitToEdit?.reminderTime)
-  );
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const [reminderSound, setReminderSound] = useState(
-    habitToEdit?.reminderSound ?? DEFAULT_SOUND
-  );
   const [frequency, setFrequency] = useState<string>(
     habitToEdit?.frequency ?? ''
   );
@@ -55,12 +40,6 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
   );
   const [dayPhase, setDayPhase] = useState<HubermanPhase | null>(
     getPhaseFromPreferredTime(habitToEdit?.preferredTime)
-  );
-  const [reminderOption, setReminderOptionState] = useState<ReminderOption>(
-    getReminderOptionFromTime(
-      habitToEdit?.remindersEnabled,
-      habitToEdit?.reminderTime
-    )
   );
   const [strengthAlgorithm, setStrengthAlgorithm] = useState<
     'forgiving' | 'balanced' | 'strict'
@@ -78,16 +57,13 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
   );
 
   return {
+    ...reminder,
     dayPhase,
     effortMinutes,
     frequency,
     habitName,
     isColorPickerVisible,
     parsed,
-    reminderOption,
-    remindersEnabled,
-    reminderSound,
-    reminderTime,
     selectedColor,
     selectedDays,
     selectedEmoji,
@@ -96,18 +72,12 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     setEffortMinutes,
     setFrequency,
     setHabitName,
-    setReminderOptionState,
-    setRemindersEnabled,
-    setReminderSound,
-    setReminderTime,
     setSelectedColor,
     setSelectedDays,
     setSelectedEmoji,
-    setShowTimePicker,
     setStrengthAlgorithm,
     setProgressEmojis,
     setStreakGoal,
-    showTimePicker,
     strengthAlgorithm,
     progressEmojis,
     streakGoal,

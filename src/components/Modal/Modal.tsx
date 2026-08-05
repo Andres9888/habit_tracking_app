@@ -3,11 +3,9 @@
  * Variants: Bottom Sheet, Full Screen, Center Alert
  */
 
-import React, { useEffect, useState } from 'react';
-import { Modal as RNModal, StyleSheet, View } from 'react-native';
+import React from 'react';
+import { Modal as RNModal } from 'react-native';
 import type { ModalProps } from './Modal.types';
-import { styles } from './Modal.styles';
-import { EXIT_DURATIONS } from './Modal.constants';
 import { useReduceMotion } from './useReduceMotion';
 import { useModalAnimations } from './useModalAnimations';
 import { useModalStyles } from './useModalStyles';
@@ -15,6 +13,9 @@ import { useModalGestures } from './useModalGestures';
 import { ModalBackdrop } from './ModalBackdrop';
 import { ModalContent } from './ModalContent';
 import { ModalWarmMountHost } from './ModalWarmMountHost';
+import { getInlineModalStyles } from './getInlineModalStyles';
+import { useModalRenderState } from './useModalRenderState';
+import { ModalContainer } from './ModalContainer';
 
 export function Modal({
   visible,
@@ -33,23 +34,7 @@ export function Modal({
 }: ModalProps) {
   const reduceMotionPref = useReduceMotion(respectReduceMotion);
   const reduceMotion = skipAnimation || reduceMotionPref;
-  const [shouldRender, setShouldRender] = useState(visible);
-
-  useEffect(() => {
-    if (visible) {
-      setShouldRender(true);
-      return;
-    }
-    if (reduceMotion) {
-      setShouldRender(false);
-      return;
-    }
-    const timeout = setTimeout(
-      () => setShouldRender(false),
-      EXIT_DURATIONS[variant]
-    );
-    return () => clearTimeout(timeout);
-  }, [visible, reduceMotion, variant]);
+  const shouldRender = useModalRenderState(visible, reduceMotion, variant);
   const animationValues = useModalAnimations({
     backdropOpacity,
     reduceMotion,
@@ -67,18 +52,7 @@ export function Modal({
     variant,
   });
   const inlineAnimatedStyles = inline
-    ? {
-        backdropStyle: { opacity: backdropOpacity },
-        bottomSheetStyle: { transform: [{ translateY: 0 }] },
-        centerAlertStyle: {
-          opacity: 1,
-          transform: [{ scale: 1 }],
-        },
-        fullScreenStyle: {
-          opacity: 1,
-          transform: [{ translateY: 0 }, { scale: 1 }],
-        },
-      }
+    ? getInlineModalStyles(backdropOpacity)
     : animatedStyles;
   const resolvedAnimatedStyles = inline ? inlineAnimatedStyles : animatedStyles;
 
@@ -109,20 +83,9 @@ export function Modal({
 
   if (inline) {
     return (
-      <View
-        pointerEvents='box-none'
-        style={[StyleSheet.absoluteFill, { elevation: 9999, zIndex: 9999 }]}
-      >
-        <View
-          style={[
-            styles.container,
-            variant === 'fullScreen' && styles.containerFullScreen,
-            variant === 'centerAlert' && styles.containerCenterAlert,
-          ]}
-        >
-          {modalBody}
-        </View>
-      </View>
+      <ModalContainer inline variant={variant}>
+        {modalBody}
+      </ModalContainer>
     );
   }
 
@@ -135,15 +98,7 @@ export function Modal({
       visible={shouldRender}
       onRequestClose={onClose}
     >
-      <View
-        style={[
-          styles.container,
-          variant === 'fullScreen' && styles.containerFullScreen,
-          variant === 'centerAlert' && styles.containerCenterAlert,
-        ]}
-      >
-        {modalBody}
-      </View>
+      <ModalContainer variant={variant}>{modalBody}</ModalContainer>
     </RNModal>
   );
 }

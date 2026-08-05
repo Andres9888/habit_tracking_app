@@ -17,7 +17,7 @@ export function PlanPreviewStep({ answers, onNext }: StepComponentProps) {
   const picked = all
     ? answers.pickedTemplateIds
         .map((id) => all.find((t) => t._id === id))
-        .filter((t): t is NonNullable<typeof t> => Boolean(t))
+        .filter((template) => template !== undefined)
     : [];
 
   return (
@@ -28,7 +28,7 @@ export function PlanPreviewStep({ answers, onNext }: StepComponentProps) {
         style={{ flex: 1 }}
       >
         <HeroHeader
-          headline="Your first chain."
+          headline='Your first chain.'
           sub="Three habits. One chain each. You'll see strength build as you go."
         />
         <View style={{ marginTop: 20 }}>
@@ -51,13 +51,15 @@ export function PlanPreviewStep({ answers, onNext }: StepComponentProps) {
             padding: 14,
           }}
         >
-          <Text style={{ color: colors.primary[700], fontSize: 13, lineHeight: 19 }}>
+          <Text
+            style={{ color: colors.primary[700], fontSize: 13, lineHeight: 19 }}
+          >
             Average time to iron tier: 45 days. That&rsquo;s the honest number.
           </Text>
         </View>
       </ScrollView>
       <View style={{ paddingTop: 12 }}>
-        <PrimaryCTA label="Keep going" onPress={onNext} />
+        <PrimaryCTA label='Keep going' onPress={onNext} />
       </View>
     </View>
   );

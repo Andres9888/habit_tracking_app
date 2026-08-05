@@ -15,6 +15,7 @@ import { ThemedTextInput } from '@/components/ui/TextInput';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import type { HeroNameInputProps } from './types';
 import { MAX_LENGTH } from './types';
+import { getValidationColor } from './getValidationColor';
 import { useHeroNameInputAnimations } from './useHeroNameInputAnimations';
 
 export const HeroNameInput = ({
@@ -41,20 +42,6 @@ export const HeroNameInput = ({
     previousCount.current = charCount;
   }, [charCount, triggerWarning]);
 
-  const getValidationColor = () => {
-    switch (validation?.type) {
-      case 'success': {
-        return themeColors.primary[600];
-      }
-      case 'warning': {
-        return '#D97706';
-      }
-      default: {
-        return themeColors.text.secondary;
-      }
-    }
-  };
-
   return (
     <View className='mb-4'>
       <Animated.Text
@@ -74,12 +61,15 @@ export const HeroNameInput = ({
           className='h-16 rounded-2xl bg-white px-5 pr-16 text-lg font-medium'
           maxLength={MAX_LENGTH}
           returnKeyType='done'
-          style={[{
-            borderColor:
-              value.length > 0 ? colors.secondary[500] : colors.border,
-            borderWidth: value.length > 0 ? 2 : 1,
-            color: themeColors.text.primary,
-          }, shadows.card]}
+          style={[
+            {
+              borderColor:
+                value.length > 0 ? colors.secondary[500] : colors.border,
+              borderWidth: value.length > 0 ? 2 : 1,
+              color: themeColors.text.primary,
+            },
+            shadows.card,
+          ]}
           value={value}
           placeholder={isPlaceholderReady ? habitNamePlaceholder : ''}
           onChangeText={onChange}
@@ -109,7 +99,9 @@ export const HeroNameInput = ({
         >
           <Text
             className='text-sm font-medium'
-            style={{ color: getValidationColor() }}
+            style={{
+              color: getValidationColor(validation.type, themeColors),
+            }}
           >
             {validation.message}
           </Text>

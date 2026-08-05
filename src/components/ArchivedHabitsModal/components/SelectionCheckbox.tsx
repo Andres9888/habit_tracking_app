@@ -21,7 +21,13 @@ export function SelectionCheckbox({ isSelected }: SelectionCheckboxProps) {
         backgroundColor: isSelected ? colors.status.success : colors.card,
       }}
     >
-      {isSelected && <Check color={colors.text.inverse} size={iconSizes.small} strokeWidth={3} />}
+      {isSelected ? (
+        <Check
+          color={colors.text.inverse}
+          size={iconSizes.small}
+          strokeWidth={3}
+        />
+      ) : null}
     </View>
   );
 }

@@ -5,13 +5,10 @@
  */
 
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
-import { useMutation } from 'convex/react';
-import { api } from '../../../../convex/_generated/api';
 import { useNetworkStatus } from '../../../contexts/NetworkStatusContext/hooks';
-import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
 import { getOfflineQueueManager } from '../queueManager';
-import { createSyncExecutor } from './createSyncExecutor';
 import { getSyncOrchestrator } from './singleton';
+import { useSyncExecutor } from './useSyncExecutor';
 import type { SyncOrchestratorState, SyncProgressCallback } from './types';
 import type {
   UseSyncOrchestratorOptions,
@@ -23,34 +20,10 @@ export function useSyncOrchestrator(
 ): UseSyncOrchestratorReturn {
   const { config, autoStart = true, onSyncComplete, onSyncError } = options;
   const { isOnline, onOnline } = useNetworkStatus();
-  const toggleMutation = useToggleHabitWithTimezone();
-  const createHabit = useMutation(api.habits.create);
-  const updateHabit = useMutation(api.habits.update);
-  const archiveHabit = useMutation(api.habits.archive);
-  const pauseHabit = useMutation(api.habits.pause);
-  const removeHabit = useMutation(api.habits.remove);
+  const executor = useSyncExecutor();
 
   const orchestratorRef = useRef(getSyncOrchestrator(config));
   const orchestrator = orchestratorRef.current;
-  const executor = useMemo(
-    () =>
-      createSyncExecutor({
-        archiveHabit,
-        createHabit,
-        pauseHabit,
-        removeHabit,
-        toggleHabit: toggleMutation,
-        updateHabit,
-      }),
-    [
-      archiveHabit,
-      createHabit,
-      pauseHabit,
-      removeHabit,
-      toggleMutation,
-      updateHabit,
-    ]
-  );
 
   const [state, setState] = useState<SyncOrchestratorState>(
     orchestrator.getState()

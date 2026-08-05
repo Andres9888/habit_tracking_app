@@ -19,9 +19,9 @@ export const useHabitChainVisualizerLogic = (
 
   const completedIndices = useMemo(() => {
     const set = new Set<number>();
-    weekStatus.forEach((status, index) => {
+    for (const [index, status] of weekStatus.entries()) {
       if (status === 'done') set.add(index);
-    });
+    }
     return set;
   }, [weekStatus]);
 

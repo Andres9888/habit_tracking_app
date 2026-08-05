@@ -1,22 +1,27 @@
 import { Image, Pressable, Text, View } from 'react-native';
+import type { ImageSourcePropType } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import CHAIN_ICON from '../../../assets/onboarding/chainday-welcome-icon.png';
 
 import { StepComponentProps } from '../types';
 
-const CHAIN_ICON = require('../../../assets/onboarding/chainday-welcome-icon.png');
 const ICON_SIZE = 96;
 
 export function SolutionIntroStep({ onNext }: StepComponentProps) {
   const { colors } = useThemeColors();
 
   return (
-    <Pressable accessibilityRole="button" onPress={onNext} style={{ flex: 1 }}>
-      <View style={{ flex: 1, justifyContent: 'space-between', paddingTop: 24 }}>
-        <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+    <Pressable accessibilityRole='button' onPress={onNext} style={{ flex: 1 }}>
+      <View
+        style={{ flex: 1, justifyContent: 'space-between', paddingTop: 24 }}
+      >
+        <View
+          style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}
+        >
           <Image
-            accessibilityLabel="ChainDay icon"
-            accessibilityRole="image"
-            source={CHAIN_ICON}
+            accessibilityLabel='ChainDay icon'
+            accessibilityRole='image'
+            source={CHAIN_ICON as ImageSourcePropType}
             style={{
               borderRadius: 20,
               height: ICON_SIZE,
@@ -29,7 +34,7 @@ export function SolutionIntroStep({ onNext }: StepComponentProps) {
             }}
           />
           <Text
-            accessibilityRole="header"
+            accessibilityRole='header'
             style={{
               color: colors.text.primary,
               fontSize: 40,
@@ -51,7 +56,8 @@ export function SolutionIntroStep({ onNext }: StepComponentProps) {
               textAlign: 'center',
             }}
           >
-            Miss a day, the chain shows it. But your strength holds. Your tier holds. You don&rsquo;t start over.
+            Miss a day, the chain shows it. But your strength holds. Your tier
+            holds. You don&rsquo;t start over.
           </Text>
         </View>
         <View style={{ alignItems: 'center', paddingBottom: 16 }}>

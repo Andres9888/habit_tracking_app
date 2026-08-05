@@ -10,6 +10,7 @@ import { styles } from './BinaryHeatmapNew.styles';
 import { createDayLookupMap } from './cellHelpers';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { colors as palette } from '@/theme/colors';
+import { DEFAULT_TOOLTIP_POSITION } from './constants';
 
 export const BinaryHeatmap = memo(function BinaryHeatmap({
   habitId: _habitId,
@@ -25,7 +26,9 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
 }: BinaryHeatmapProps) {
   const { colors, isDark } = useThemeColors();
   const [tooltipDay, setTooltipDay] = useState<BinaryDay | null>(null);
-  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [tooltipPosition, setTooltipPosition] = useState(
+    DEFAULT_TOOLTIP_POSITION
+  );
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
   const gridData = useMemo(
@@ -48,7 +51,7 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
       const day = dayLookupMapRef.current.get(date);
       if (day) {
         setTooltipDay(day);
-        setTooltipPosition(position ?? { x: 100, y: 50 });
+        setTooltipPosition(position ?? DEFAULT_TOOLTIP_POSITION);
         setTooltipVisible(true);
       }
       onDayPressRef.current?.(date, completed);

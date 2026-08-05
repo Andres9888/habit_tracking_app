@@ -19,14 +19,22 @@ export function ActionItemIcon({
   return (
     <View
       className='h-10 w-10 items-center justify-center rounded-xl'
-      style={destructive ? { backgroundColor: colors.status.errorLight } : !highlighted ? { backgroundColor: colors.background } : undefined}
+      style={
+        destructive
+          ? { backgroundColor: colors.status.errorLight }
+          : highlighted
+            ? undefined
+            : { backgroundColor: colors.background }
+      }
     >
-      {highlighted ? <LinearGradient
+      {highlighted ? (
+        <LinearGradient
           className='absolute inset-0 rounded-xl'
           colors={['#7c3aed', '#4f46e5']}
           end={{ x: 1, y: 1 }}
           start={{ x: 0, y: 0 }}
-        /> : null}
+        />
+      ) : null}
       {icon}
     </View>
   );

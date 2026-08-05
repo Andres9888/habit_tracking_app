@@ -5,26 +5,11 @@
 
 import React, { useRef, useEffect } from 'react';
 import { Text, Pressable, Animated } from 'react-native';
-import type { Swipeable } from 'react-native-gesture-handler';
 import { styles } from './styles';
-import type { SwipeColors } from './types';
+import type { SwipeActionsProps } from './types';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
-
-interface SwipeActionsProps {
-  dragX: Animated.AnimatedInterpolation<number>;
-  swipeColors: SwipeColors;
-  swipeLabel: string;
-  label: string;
-  swipeableRef: React.RefObject<Swipeable | null>;
-  onSwipeAction?: () => void;
-  SwipeIcon: React.ComponentType<{
-    color: string;
-    size: number;
-    strokeWidth: number;
-  }>;
-}
 
 export function SwipeActions({
   dragX,
@@ -112,7 +97,11 @@ export function SwipeActions({
             },
           ]}
         >
-          <SwipeIcon color={swipeColors.text} size={iconSizes.medium} strokeWidth={2} />
+          <SwipeIcon
+            color={swipeColors.text}
+            size={iconSizes.medium}
+            strokeWidth={2}
+          />
         </Animated.View>
         <Text style={[styles.swipeLabel, { color: swipeColors.text }]}>
           {swipeLabel}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, Pressable, Text, View } from 'react-native';
+import { Animated, Pressable, Text } from 'react-native';
 import { Archive } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { colors } from '@/theme';
@@ -15,7 +15,11 @@ interface SwipeActionsProps {
   onDelete: () => void;
 }
 
-export function SwipeActions({ dragX, onArchive, onDelete }: SwipeActionsProps) {
+export function SwipeActions({
+  dragX,
+  onArchive,
+  onDelete,
+}: SwipeActionsProps) {
   const { isDark } = useThemeColors();
   const { triggerWarning } = useHapticFeedback();
   const handleArchive = () => {
@@ -46,14 +50,14 @@ export function SwipeActions({ dragX, onArchive, onDelete }: SwipeActionsProps) 
 
   return (
     <Animated.View
-      className="flex-row items-center justify-end"
+      className='flex-row items-center justify-end'
       style={{ transform: [{ translateX: trans }] }}
     >
       <DeleteAction dragX={dragX} onPress={handleDelete} />
       <Pressable
-        accessibilityLabel="Archive habit"
-        accessibilityRole="button"
-        testID="archive-habit-action"
+        accessibilityLabel='Archive habit'
+        accessibilityRole='button'
+        testID='archive-habit-action'
         onPress={handleArchive}
         style={{
           alignItems: 'center',
@@ -73,7 +77,7 @@ export function SwipeActions({ dragX, onArchive, onDelete }: SwipeActionsProps) 
             transform: [{ scale: archiveIconScale }],
           }}
         >
-          <Archive color="white" size={iconSizes.large} strokeWidth={2} />
+          <Archive color='white' size={iconSizes.large} strokeWidth={2} />
           <Text
             style={{
               color: 'white',

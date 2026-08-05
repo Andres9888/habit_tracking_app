@@ -6,20 +6,9 @@
  */
 
 import { mutation, query } from './_generated/server';
-import type { MutationCtx } from './_generated/server';
 import { v } from 'convex/values';
 import { enforceRateLimit } from './lib/rateLimit';
-
-async function deleteDocuments(
-  ctx: MutationCtx,
-  ids: Array<Parameters<MutationCtx['db']['delete']>[0]>
-): Promise<number> {
-  for (const id of ids) {
-    await ctx.db.delete(id);
-  }
-
-  return ids.length;
-}
+import { deleteCurrentUserDataHandler } from './deleteCurrentUserData';
 
 /**
  * Get or create user based on Clerk authentication
@@ -85,117 +74,7 @@ export const currentUser = query({
 
 export const deleteCurrentUserData = mutation({
   args: {},
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error('Not authenticated');
-    }
-
-    const userId = identity.subject;
-    const habits = await ctx.db
-      .query('habits')
-      .withIndex('by_userId', (q) => q.eq('userId', userId))
-      .collect();
-    const tracking = await ctx.db
-      .query('tracking')
-      .withIndex('by_user_and_date', (q) => q.eq('userId', userId))
-      .collect();
-    const settings = await ctx.db
-      .query('userSettings')
-      .withIndex('by_userId', (q) => q.eq('userId', userId))
-      .collect();
-    const subscriptions = await ctx.db
-      .query('subscriptions')
-      .withIndex('by_clerk_id', (q) => q.eq('clerkId', userId))
-      .collect();
-    const users = await ctx.db
-      .query('users')
-      .withIndex('by_clerk_id', (q) => q.eq('clerkId', userId))
-      .collect();
-    const ownedStorage = await ctx.db
-      .query('storageOwnership')
-      .withIndex('by_user_id', (q) => q.eq('userId', userId))
-      .collect();
-    const deletedHabits = await ctx.db
-      .query('deletedHabits')
-      .withIndex('by_userId', (q) => q.eq('userId', userId))
-      .collect();
-    const templateUsage = await ctx.db
-      .query('templateUsage')
-      .withIndex('by_user', (q) => q.eq('userId', userId))
-      .collect();
-    // SR-2026-04-17-09 follow-up: keep GDPR delete complete when the
-    // rate-limits table was added. Purge all per-user throttle rows.
-    const rateLimits = await ctx.db
-      .query('rateLimits')
-      .withIndex('by_user_and_action', (q) => q.eq('userId', userId))
-      .collect();
-
-    const deletedTemplateUsage = await deleteDocuments(
-      ctx,
-      templateUsage.map((entry) => entry._id)
-    );
-    const deletedRateLimits = await deleteDocuments(
-      ctx,
-      rateLimits.map((entry) => entry._id)
-    );
-    const deletedTracking = await deleteDocuments(
-      ctx,
-      tracking.map((entry) => entry._id)
-    );
-    const deletedHabitsCount = await deleteDocuments(
-      ctx,
-      habits.map((entry) => entry._id)
-    );
-    const deletedSettings = await deleteDocuments(
-      ctx,
-      settings.map((entry) => entry._id)
-    );
-    const deletedSubscriptions = await deleteDocuments(
-      ctx,
-      subscriptions.map((entry) => entry._id)
-    );
-    const deletedUsers = await deleteDocuments(
-      ctx,
-      users.map((entry) => entry._id)
-    );
-    const deletedUndoRecords = await deleteDocuments(
-      ctx,
-      deletedHabits.map((entry) => entry._id)
-    );
-
-    const profileStorageIds = new Set(
-      users
-        .map((user) => user.profileImageStorageId)
-        .filter(
-          (storageId): storageId is NonNullable<typeof storageId> =>
-            storageId !== undefined
-        )
-    );
-    for (const ownership of ownedStorage) {
-      profileStorageIds.add(ownership.storageId);
-      await ctx.db.delete(ownership._id);
-    }
-    for (const storageId of profileStorageIds) {
-      try {
-        await ctx.storage.delete(storageId);
-      } catch {
-        // The database deletion must remain complete if a blob was already
-        // removed by an earlier cleanup attempt.
-      }
-    }
-
-    return {
-      deletedHabits: deletedHabitsCount,
-      deletedRateLimits,
-      deletedSettings,
-      deletedSubscriptions,
-      deletedTemplateUsage,
-      deletedTracking,
-      deletedUndoRecords,
-      deletedUsers,
-    };
-  },
+  handler: deleteCurrentUserDataHandler,
   returns: v.object({
     deletedHabits: v.number(),
     deletedRateLimits: v.number(),

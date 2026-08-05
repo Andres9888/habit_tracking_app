@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-redundant-type-constituents -- RevenueCat types resolve to any at build time */
 /**
  * Types for premium subscription management
  */
@@ -56,7 +55,8 @@ export interface PremiumSubscriptionInfo {
 }
 
 export interface UsePremiumReturn
-  extends PremiumState,
+  extends
+    PremiumState,
     PremiumOfferings,
     PremiumActions,
     PremiumSubscriptionInfo {}
