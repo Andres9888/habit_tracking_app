@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { TextLayoutEvent } from 'react-native';
 
 export const HABIT_NAME_INPUT_HORIZONTAL_PADDING = 20;
+export const HABIT_NAME_PLACEHOLDER_CARET_GAP = 1;
 
 /** Centered text while empty, with the caret at the first visible placeholder glyph. */
 export function useCenteredPlaceholderCaretInset(
@@ -36,7 +37,14 @@ export function useCenteredPlaceholderCaretInset(
   const onPlaceholderTextLayout = (event: TextLayoutEvent) => {
     const line = event.nativeEvent.lines[0];
     if (!line) return;
-    setCaretInset(HABIT_NAME_INPUT_HORIZONTAL_PADDING + line.x);
+    setCaretInset(
+      Math.max(
+        HABIT_NAME_INPUT_HORIZONTAL_PADDING,
+        HABIT_NAME_INPUT_HORIZONTAL_PADDING +
+          line.x -
+          HABIT_NAME_PLACEHOLDER_CARET_GAP
+      )
+    );
   };
 
   return {
