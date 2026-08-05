@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Habit Create — Edit Button Options</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --card: #FFFFFF;
+    --ink: #1A1A1A;
+    --ink-2: #4B5563;
+    --ink-3: #9CA3AF;
+    --line: #E5E7EB;
+    --primary-50: #ECFDF5;
+    --primary-100: #D1FAE5;
+    --primary-200: #A7F3D0;
+    --primary-500: #10B981;
+    --primary-600: #059669;
+    --primary-700: #047857;
+    --shadow-card: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    --shadow-btn: 0 1px 2px rgba(0,0,0,.08);
+  }
+  body { background: var(--bg); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; }
+  .phone {
+    width: 360px;
+    background: var(--card);
+    border-radius: 28px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.04);
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .row:last-child { border-bottom: none; }
+  .row-label { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--ink-3); font-weight: 600; }
+  .row-value { font-size: 15px; color: var(--ink); font-weight: 500; margin-top: 2px; }
+  .left { display: flex; flex-direction: column; gap: 2px; }
+  .stamp { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .6px; color: #6B7280; text-transform: uppercase; }
+  .header { padding: 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); background: #FBFBF8; }
+  .header h2 { font-size: 16px; font-weight: 700; }
+  .pill-current {
+    display: inline-flex; align-items: center; gap: 2px;
+    background: var(--primary-100); color: var(--primary-700);
+    border-radius: 9999px; padding: 4px 8px; font-size: 11px; font-weight: 600; letter-spacing: .3px; text-transform: uppercase;
+  }
+  .opt-A {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--primary-100); color: var(--primary-700);
+    border: 1.5px solid var(--primary-200);
+    border-radius: 9999px; padding: 7px 12px; font-size: 12px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase;
+    box-shadow: var(--shadow-btn);
+  }
+  .opt-B {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--primary-600); color: #fff;
+    border-radius: 9999px; padding: 8px 14px; font-size: 12px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase;
+    box-shadow: 0 2px 6px rgba(5,150,105,.25);
+  }
+  .opt-C {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #fff; color: var(--primary-700);
+    border: 1.5px solid var(--primary-600);
+    border-radius: 10px; padding: 7px 12px; font-size: 12px; font-weight: 700;
+  }
+  .opt-D {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #F3F4F6; color: var(--ink);
+    border-radius: 12px; padding: 8px 12px; font-size: 12px; font-weight: 600;
+  }
+  .opt-D .chev { color: var(--primary-600); }
+  .opt-E {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px;
+    background: var(--primary-50);
+    border: 1.5px solid var(--primary-200);
+    border-radius: 9999px;
+    color: var(--primary-700);
+    box-shadow: var(--shadow-btn);
+  }
+  .opt-F {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+    color: #fff;
+    border-radius: 10px; padding: 7px 12px; font-size: 12px; font-weight: 700; letter-spacing: .3px;
+    box-shadow: 0 3px 8px rgba(5,150,105,.30);
+  }
+  .row-tappable {
+    background: linear-gradient(180deg, #ffffff 0%, #F9FAFB 100%);
+  }
+  .row-tappable:hover { background: #F3F4F6; cursor: pointer; }
+  .card-section { padding: 20px; background: var(--bg); }
+  .card-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--ink-3); margin-bottom: 10px; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; padding: 24px; }
+  @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+  .opt-caption { font-size: 13px; color: var(--ink-2); margin-top: 12px; }
+  .opt-caption b { color: var(--ink); }
+  .legend { font-size: 11px; color: var(--ink-3); }
+  .current-strip {
+    background: #FFF7ED; border: 1px dashed #FDBA74; color: #9A3412;
+    padding: 10px 16px; font-size: 12px; border-radius: 12px; margin: 16px;
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="max-w-6xl mx-auto p-6">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold">Habit Create — Edit Button Affordance Options</h1>
+    <p class="text-sm text-gray-500 mt-1">Mocks for the “EDIT” pill on Advanced Options rows. Hover each pill to see press state.</p>
+  </div>
+
+  <div class="grid">
+
+    <!-- OPTION A -->
+    <div>
+      <div class="phone">
+        <div class="header"><h2>Option A · Bordered pill</h2><span class="stamp">current+</span></div>
+        <div class="row">
+          <div class="left">
+            <span class="row-label">Strength Curve</span>
+            <span class="row-value">Linear</span>
+          </div>
+          <button class="opt-A">EDIT <i data-lucide="chevron-right" class="w-3 h-3"></i></button>
+        </div>
+        <div class="row">
+          <div class="left">
+            <span class="row-label">Growth Icons</span>
+            <span class="row-value">Seedling → Tree</span>
+          </div>
+          <button class="opt-A">EDIT <i data-lucide="chevron-right" class="w-3 h-3"></i></button>
+        </div>
+        <div class="row">
+          <div class="left">
+            <span class="row-label">Streak Goal</span>
+            <span class="row-value">21 days</span>
+          </div>
+          <button class="opt-A">EDIT <i data-lucide="chevron-right" class="w-3 h-3"></i></button>
+        </div>
+      </div>
+      <p class="opt-caption"><b>A · Bordered pill.</b> Minimal change from today: same green pill + border + shadow + larger text. Familiar, safer.</p>
+    </div>
+
+    <!-- OPTION B -->
+    <div>
+      <div class="phone">
+        <div class="header"><h2>Option B · Solid CTA</h2><span class="stamp">high contrast</span></div>
+        <div class="row">
+          <div class="left">
+            <span class="row-label">Strength Curve</span>
+            <span class="row-value">Linear</span>
+          </div>
+          <button class="opt-B"><i data-lucide="pencil" class="w-3 h-3"></i> EDIT</button>
+        </div>
+        <div class="row">
+          <div class="left">
+            <span class="row-label">Growth Icons</span>
+            <span class="row-value">Seedling → Tree</span>
+          </div>
+          <button class="opt-B"><i data-lucide="pencil" class="w-3 h-3"></i> EDIT</button>
+        </div>
+        <div class="row">
+          <div class="left">
+            <span class="row-label">Streak Goal</span>
+            <span class="row-value">21 days</span>
+          </div>
+          <button class="opt-B"><i data-lucide="pencil" class="w-3 h-3"></i> EDIT</button>
+        </div>
+      </div>
+      <p class="opt-caption"><b>B · Solid green CTA.</b> Looks like a real button — pencil icon, white text on forest green. Most obviously tappable but loud.</p>
+    </div>
+
+    <!-- OPTION C -->
+    <div>
+      <div class="phone">
+        <div class="header"><h2>Option C · Outline button</h2><span class="stamp">balanced</span></div>
+        <div class="row">
+          <div class="left">
+            <span class="row-label">Strength Curve</span>
+            <span class="row-value">Linear</span>
+          </div>
+          <button class="opt-C"><i data-lucide="pencil" class="w-3 h-3"></i> Edit</button>
+        </div>
+        <div class="row">
+          <div class="left">
+            <span class="row-label">Growth Icons</span>
+            <span class="row-value">Seedling → Tree</span>
+          </div>
+          <button class="opt-C"><i data-lucide="pencil" class="w-3 h-3"></i> Edit</button>
+        </div>
+        <div class="row">
+          <div class="left">
+            <span class="row-label">Streak Goal</span>
+            <span class="row-value">21 days</span>
+          </div>
+          <button class="opt-C"><i data-lucide="pencil" class="w-3 h-3"></i> Edit</button>
+        </div>
+      </div>
+      <p class="opt-caption"><b>C · Outlined button.</b> Pencil + “Edit” in title case, green outline on white. Reads as a button without competing with primary CTAs.</p>
+    </div>
+
+    <!-- OPTION D -->
+    <div>
+      <div class="phone">
+        <div class="header"><h2>Option D · Tappable row</h2><span class="stamp">whole-row hit</span></div>
+        <div class="row row-tappable">
+          <div class="left">
+            <span class="row-label">Strength Curve</span>
+            <span class="row-value">Linear</span>
+          </div>
+          <span class="opt-D">Tap to edit <i data-lucide="chevron-right" class="w-4 h-4 chev"></i></span>
+        </div>
+        <div class="row row-tappable">
+          <div class="left">
+            <span class="row-label">Growth Icons</span>
+            <span class="row-value">Seedling → Tree</span>
+          </div>
+          <span class="opt-D">Tap to edit <i data-lucide="chevron-right" class="w-4 h-4 chev"></i></span>
+        </div>
+        <div class="row row-tappable">
+          <div class="left">
+            <span class="row-label">Streak Goal</span>
+            <span class="row-value">21 days</span>
+          </div>
+          <span class="opt-D">Tap to edit <i data-lucide="chevron-right" class="w-4 h-4 chev"></i></span>
+        </div>
+      </div>
+      <p class="opt-caption"><b>D · Whole row tappable.</b> Subtle row-gradient + “Tap to edit” hint + green chevron. The biggest hit target; cleanest visually.</p>
+    </div>
+
+    <!-- OPTION E -->
+    <div>
+      <div class="phone">
+        <div class="header"><h2>Option E · Icon button</h2><span class="stamp">pencil only</span></div>
+        <div class="row">
+          <div class="left">
+            <span class="row-label">Strength Curve</span>
+            <span class="row-value">Linear</span>
+          </div>
+          <button class="opt-E"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+        </div>
+        <div class="row">
+          <div class="left">
+            <span class="row-label">Growth Icons</span>
+            <span class="row-value">Seedling → Tree</span>
+          </div>
+          <button class="opt-E"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+        </div>
+        <div class="row">
+          <div class="left">
+            <span class="row-label">Streak Goal</span>
+            <span class="row-value">21 days</span>
+          </div>
+          <button class="opt-E"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+      <p class="opt-caption"><b>E · Circular icon button.</b> Mirrors the HabitDetail header pattern. Familiar to users; cheaper than a full pill; no text needed.</p>
+    </div>
+
+    <!-- OPTION F -->
+    <div>
+      <div class="phone">
+        <div class="header"><h2>Option F · Gradient pill</h2><span class="stamp">premium feel</span></div>
+        <div class="row">
+          <div class="left">
+            <span class="row-label">Strength Curve</span>
+            <span class="row-value">Linear</span>
+          </div>
+          <button class="opt-F"><i data-lucide="pencil" class="w-3 h-3"></i> Edit</button>
+        </div>
+        <div class="row">
+          <div class="left">
+            <span class="row-label">Growth Icons</span>
+            <span class="row-value">Seedling → Tree</span>
+          </div>
+          <button class="opt-F"><i data-lucide="pencil" class="w-3 h-3"></i> Edit</button>
+        </div>
+        <div class="row">
+          <div class="left">
+            <span class="row-label">Streak Goal</span>
+            <span class="row-value">21 days</span>
+          </div>
+          <button class="opt-F"><i data-lucide="pencil" class="w-3 h-3"></i> Edit</button>
+        </div>
+      </div>
+      <p class="opt-caption"><b>F · Gradient pill.</b> Linear-gradient + soft glow shadow. Reads as a polished CTA without going full solid; differentiates Edit from primary Save.</p>
+    </div>
+
+  </div>
+
+  <div class="bg-white rounded-2xl border border-gray-200 p-5 mt-4 max-w-3xl mx-auto">
+    <h3 class="font-bold mb-2">Quick comparison</h3>
+    <table class="w-full text-sm">
+      <thead class="text-left text-gray-500">
+        <tr><th class="py-1">Option</th><th>Clickability signal</th><th>Visual weight</th><th>Hit target</th><th>Best when…</th></tr>
+      </thead>
+      <tbody class="text-gray-700">
+        <tr class="border-t"><td class="py-2 font-semibold">A · Bordered pill</td><td>Medium</td><td>Light</td><td>Small</td><td>Minimal disruption to today’s look</td></tr>
+        <tr class="border-t"><td class="py-2 font-semibold">B · Solid CTA</td><td>Highest</td><td>Heavy</td><td>Medium</td><td>You want edit to feel like a primary action</td></tr>
+        <tr class="border-t"><td class="py-2 font-semibold">C · Outline button</td><td>High</td><td>Medium</td><td>Medium</td><td>Reads as button, doesn’t compete with Save</td></tr>
+        <tr class="border-t"><td class="py-2 font-semibold">D · Tappable row</td><td>High (whole row)</td><td>Light</td><td>Largest</td><td>Mobile-first, fewer micro-targets</td></tr>
+        <tr class="border-t"><td class="py-2 font-semibold">E · Icon button</td><td>Medium-High</td><td>Light</td><td>Medium</td><td>Consistency with HabitDetail header</td></tr>
+        <tr class="border-t"><td class="py-2 font-semibold">F · Gradient pill</td><td>High</td><td>Medium</td><td>Medium</td><td>You want a polished, premium feel</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

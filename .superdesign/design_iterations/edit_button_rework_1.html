@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rework · Compact edit affordance</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --bg: #F5F1ED;
+    --card: #EDEAE5;
+    --ink: #2D2A26;
+    --ink-2: #524D47;
+    --ink-3: #6E6660;
+    --line: #DDD8D2;
+    --gray-50: #FAF8F5;
+    --primary-100: #D1FAE5;
+    --primary-600: #059669;
+    --primary-700: #047857;
+  }
+  body { background: var(--bg); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; }
+  .phone {
+    width: 360px;
+    background: var(--card);
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  .header { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; background: #EAE6E0; border-bottom: 1px solid var(--line); }
+  .header h2 { font-size: 13px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; color: var(--ink-3); }
+  .stamp { font-size: 9px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: .5px; }
+
+  .row {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 16px;
+    border-top: 1px solid var(--line);
+    cursor: pointer;
+    border-radius: 12px;
+    transition: background 150ms, transform 120ms;
+  }
+  .row:first-of-type { border-top: 0; }
+  .row:hover { background: rgba(221,216,210,.5); }
+  .row:active { transform: scale(.985); }
+  .icon-tile {
+    width: 36px; height: 36px; border-radius: 10px; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .body { flex: 1; min-width: 0; }
+  .title { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .sub { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+  .desc { font-size: 11.5px; line-height: 15px; color: var(--ink-3); margin-top: 4px; }
+
+  /* ===== R1: Compact rounded-full pill (matches PreviewChip house style) ===== */
+  .aff-R1 {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--gray-50); color: var(--ink-2);
+    border-radius: 9999px; padding: 4px 8px 4px 10px;
+    font-size: 11px; font-weight: 600; letter-spacing: .2px;
+    align-self: center; flex-shrink: 0;
+  }
+  .row:hover .aff-R1 { background: var(--primary-100); color: var(--primary-700); }
+  .aff-R1 .chev { color: var(--primary-600); }
+
+  /* ===== R2: Icon-only circular chevron (text dropped — rely on row tap) ===== */
+  .aff-R2 {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 9999px;
+    background: var(--gray-50); color: var(--primary-600);
+    border: 1px solid var(--line);
+    align-self: center; flex-shrink: 0;
+  }
+  .row:hover .aff-R2 { background: var(--primary-100); border-color: var(--primary-100); color: var(--primary-700); }
+
+  /* ===== R3: Inline text-only hint, no pill chrome ===== */
+  .aff-R3 {
+    display: inline-flex; align-items: center; gap: 2px;
+    color: var(--ink-3);
+    font-size: 11px; font-weight: 600; letter-spacing: .2px;
+    align-self: center; flex-shrink: 0;
+  }
+  .row:hover .aff-R3 { color: var(--primary-700); }
+  .aff-R3 .chev { color: var(--primary-600); }
+
+  /* ===== R4: Micro uppercase tag + chevron ===== */
+  .aff-R4 {
+    display: inline-flex; align-items: center; gap: 3px;
+    background: var(--gray-50); color: var(--primary-700);
+    border-radius: 9999px; padding: 3px 6px 3px 8px;
+    font-size: 9.5px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase;
+    align-self: center; flex-shrink: 0;
+  }
+  .row:hover .aff-R4 { background: var(--primary-100); }
+  .aff-R4 .chev { color: var(--primary-600); }
+
+  /* ===== CURRENT (just shipped) for contrast ===== */
+  .aff-now {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--gray-50); color: var(--ink-2);
+    border-radius: 12px; padding: 8px 12px;
+    font-size: 12px; font-weight: 600;
+    align-self: center; flex-shrink: 0;
+  }
+
+  .layout {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; padding: 24px;
+    max-width: 900px; margin: 0 auto;
+  }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; max-width: 480px; } }
+  .col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--ink-3); margin-bottom: 8px; }
+  .caption { font-size: 12.5px; color: var(--ink-2); margin-top: 10px; line-height: 1.5; }
+  .caption b { color: var(--ink); }
+  .width-tag {
+    display: inline-block; background: #fff; border: 1px solid var(--line);
+    border-radius: 6px; padding: 1px 6px; font-size: 10px; font-weight: 700; color: var(--ink-3);
+    margin-left: 6px;
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="max-w-5xl mx-auto p-6">
+  <div class="mb-2">
+    <h1 class="text-2xl font-bold">Rework · slim down the right-side affordance</h1>
+    <p class="text-sm text-gray-600 mt-1">Same row, four narrower edit-pill options. Goal: give the title / subtitle / description room to breathe.</p>
+  </div>
+
+  <div class="layout">
+
+    <!-- CURRENT (just shipped) -->
+    <div>
+      <div class="col-title">Just shipped <span class="width-tag">~108 px</span></div>
+      <div class="phone">
+        <div class="header"><h2>Customize</h2><span class="stamp">current</span></div>
+        <div class="row">
+          <div class="icon-tile">📈</div>
+          <div class="body">
+            <div class="title">Strength Curve</div>
+            <div class="sub">Linear · ~66-day build</div>
+            <div class="desc">How your habit's strength grows and resets when you miss days.</div>
+          </div>
+          <span class="aff-now">Tap to edit <i data-lucide="chevron-right" class="w-4 h-4"></i></span>
+        </div>
+      </div>
+      <p class="caption">"Tap to edit" pill is large enough to push the description down. Title and subtitle still fit but the body is crowded.</p>
+    </div>
+
+    <!-- R1: compact rounded-full pill -->
+    <div>
+      <div class="col-title">R1 · Compact rounded-full pill <span class="width-tag">~72 px</span></div>
+      <div class="phone">
+        <div class="header"><h2>Customize</h2><span class="stamp">house-style match</span></div>
+        <div class="row">
+          <div class="icon-tile">📈</div>
+          <div class="body">
+            <div class="title">Strength Curve</div>
+            <div class="sub">Linear · ~66-day build</div>
+            <div class="desc">How your habit's strength grows and resets when you miss days.</div>
+          </div>
+          <span class="aff-R1">Edit <i data-lucide="chevron-right" class="w-3 h-3 chev"></i></span>
+        </div>
+      </div>
+      <p class="caption"><b>R1 · Pill, "Edit ›".</b> Drops "Tap to" (the whole-row tap behavior already implies it). Switches to <code>rounded-full</code> + 11px to match the existing PreviewChip in the same section. ~33% narrower than current.</p>
+    </div>
+
+    <!-- R2: icon-only circle -->
+    <div>
+      <div class="col-title">R2 · Chevron-only circle <span class="width-tag">~28 px</span></div>
+      <div class="phone">
+        <div class="header"><h2>Customize</h2><span class="stamp">smallest footprint</span></div>
+        <div class="row">
+          <div class="icon-tile">📈</div>
+          <div class="body">
+            <div class="title">Strength Curve</div>
+            <div class="sub">Linear · ~66-day build</div>
+            <div class="desc">How your habit's strength grows and resets when you miss days.</div>
+          </div>
+          <span class="aff-R2"><i data-lucide="chevron-right" class="w-4 h-4"></i></span>
+        </div>
+      </div>
+      <p class="caption"><b>R2 · Just a chevron.</b> Smallest possible. The whole-row tappability + chevron carries the affordance. Loses the explicit "edit" copy you liked — but matches iOS settings-row convention.</p>
+    </div>
+
+    <!-- R3: text only, no pill -->
+    <div>
+      <div class="col-title">R3 · Text only, no chrome <span class="width-tag">~58 px</span></div>
+      <div class="phone">
+        <div class="header"><h2>Customize</h2><span class="stamp">lightest weight</span></div>
+        <div class="row">
+          <div class="icon-tile">📈</div>
+          <div class="body">
+            <div class="title">Strength Curve</div>
+            <div class="sub">Linear · ~66-day build</div>
+            <div class="desc">How your habit's strength grows and resets when you miss days.</div>
+          </div>
+          <span class="aff-R3">Edit<i data-lucide="chevron-right" class="w-3.5 h-3.5 chev ml-0.5"></i></span>
+        </div>
+      </div>
+      <p class="caption"><b>R3 · No pill background.</b> "Edit ›" as inline text in gray, goes green on hover/press. Almost invisible at rest by design — the row IS the button; this just hints at the right.</p>
+    </div>
+
+    <!-- R4: micro uppercase -->
+    <div>
+      <div class="col-title">R4 · Micro uppercase tag <span class="width-tag">~52 px</span></div>
+      <div class="phone">
+        <div class="header"><h2>Customize</h2><span class="stamp">badge-like</span></div>
+        <div class="row">
+          <div class="icon-tile">📈</div>
+          <div class="body">
+            <div class="title">Strength Curve</div>
+            <div class="sub">Linear · ~66-day build</div>
+            <div class="desc">How your habit's strength grows and resets when you miss days.</div>
+          </div>
+          <span class="aff-R4">EDIT <i data-lucide="chevron-right" class="w-2.5 h-2.5 chev"></i></span>
+        </div>
+      </div>
+      <p class="caption"><b>R4 · Tiny uppercase badge.</b> 9.5px uppercase "EDIT" + chevron — reads as a tag/label, not a button. Very compact, but flirts with the same "looks decorative" trap we just escaped from.</p>
+    </div>
+
+  </div>
+
+  <div class="bg-white rounded-2xl border border-gray-200 p-5 mt-6 max-w-3xl mx-auto">
+    <h3 class="font-bold mb-2">My pick</h3>
+    <p class="text-sm text-gray-700"><b>R1 (compact rounded-full "Edit ›" pill).</b> Drops "Tap to" since the whole row already tells the user that. Adopts the app's existing <code>rounded-full + 11px semibold</code> convention used by PreviewChip and TierPickerTile, so it'll feel native to the rest of the screen. Roughly 33% narrower than current — frees up enough room for the description text to land cleanly. Stays visible at rest (which R3 sacrifices) and keeps the word "Edit" (which R2 sacrifices).</p>
+    <p class="text-xs text-gray-500 mt-2"><b>Audit also flagged:</b> the dominant press feedback across the app is a scale-animation spring (HeaderButton, TierPickerTile use ~0.96 scale). I can bundle that with R1 in the implementation so the row press feels kinetic instead of just background-color-shifty.</p>
+  </div>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Recommended · Tappable-row edit affordance</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --card: #FFFFFF;
+    --ink: #1A1A1A;
+    --ink-2: #4B5563;
+    --ink-3: #9CA3AF;
+    --line: #E5E7EB;
+    --line-soft: #F1F1EE;
+    --primary-50: #ECFDF5;
+    --primary-100: #D1FAE5;
+    --primary-600: #059669;
+    --primary-700: #047857;
+  }
+  body { background: var(--bg); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; }
+  .phone {
+    width: 360px;
+    background: var(--card);
+    border-radius: 28px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.04);
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .header { padding: 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); background: #FBFBF8; }
+  .header h2 { font-size: 16px; font-weight: 700; }
+  .stamp { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .6px; color: #6B7280; text-transform: uppercase; }
+  .row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px;
+    background: linear-gradient(180deg, #ffffff 0%, #FBFBF8 100%);
+    border-bottom: 1px solid var(--line-soft);
+    cursor: pointer;
+    transition: background 150ms ease, transform 150ms ease;
+  }
+  .row:hover { background: #F3F4F6; }
+  .row:active { background: #E5E7EB; transform: scale(0.995); }
+  .row:last-of-type { border-bottom: 1px solid var(--line); }
+  .row-label { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--ink-3); font-weight: 600; }
+  .row-value { font-size: 15px; color: var(--ink); font-weight: 500; margin-top: 2px; }
+  .left { display: flex; flex-direction: column; gap: 2px; }
+  .tap-hint {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #F3F4F6; color: var(--ink-2);
+    border-radius: 12px; padding: 8px 12px; font-size: 12px; font-weight: 600;
+    transition: all 150ms ease;
+  }
+  .row:hover .tap-hint { background: var(--primary-50); color: var(--primary-700); }
+  .row:hover .tap-hint .chev { transform: translateX(2px); }
+  .tap-hint .chev { color: var(--primary-600); transition: transform 150ms ease; }
+
+  .save-cta {
+    display: block; width: 100%; padding: 14px; text-align: center;
+    background: var(--primary-700); color: #fff; font-weight: 700; font-size: 15px; letter-spacing: .3px;
+    border-radius: 14px;
+  }
+  .save-wrap { padding: 20px 16px 24px; }
+
+  .layout {
+    display: grid; grid-template-columns: 380px 1fr; gap: 40px;
+    max-width: 1100px; margin: 0 auto; padding: 32px;
+    align-items: start;
+  }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+  .reasoning h3 { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; color: var(--primary-700); margin-bottom: 6px; }
+  .reasoning h2 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .reasoning .subtitle { color: var(--ink-2); margin-bottom: 24px; font-size: 14px; }
+  .reasoning .block { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; margin-bottom: 14px; }
+  .reasoning .block .title { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; margin-bottom: 8px; }
+  .reasoning .block .title .ico { width: 28px; height: 28px; border-radius: 8px; background: var(--primary-50); color: var(--primary-700); display: inline-flex; align-items: center; justify-content: center; }
+  .reasoning .block p { color: var(--ink-2); font-size: 13.5px; line-height: 1.55; }
+  .reasoning .block .pt { color: var(--ink); font-weight: 600; }
+  .micro {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 24px;
+  }
+  .micro .state { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+  .micro .state .stl { font-size: 10px; text-transform: uppercase; letter-spacing: .6px; color: var(--ink-3); font-weight: 700; margin-bottom: 6px; }
+  .micro .row-mini {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px; border-radius: 8px; font-size: 11px;
+  }
+  .micro .a { background: #fff; }
+  .micro .b { background: #F3F4F6; }
+  .micro .c { background: #E5E7EB; transform: scale(.99); }
+  .micro .pill { display: inline-flex; align-items: center; gap: 4px; background: #F3F4F6; padding: 4px 8px; border-radius: 8px; font-weight: 600; color: var(--ink-2); }
+  .micro .b .pill { background: var(--primary-50); color: var(--primary-700); }
+  .micro .c .pill { background: var(--primary-100); color: var(--primary-700); }
+
+  .footer-note {
+    margin-top: 18px; font-size: 12px; color: var(--ink-3); padding: 10px 14px;
+    border-left: 3px solid var(--primary-200); background: #FCFCFA; border-radius: 6px;
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="layout">
+
+  <!-- LEFT: the recommended design -->
+  <div>
+    <div class="phone">
+      <div class="header"><h2>Advanced Options</h2><span class="stamp">recommended</span></div>
+
+      <div class="row">
+        <div class="left">
+          <span class="row-label">Strength Curve</span>
+          <span class="row-value">Linear</span>
+        </div>
+        <span class="tap-hint">Tap to edit <i data-lucide="chevron-right" class="w-4 h-4 chev"></i></span>
+      </div>
+      <div class="row">
+        <div class="left">
+          <span class="row-label">Growth Icons</span>
+          <span class="row-value">Seedling → Tree</span>
+        </div>
+        <span class="tap-hint">Tap to edit <i data-lucide="chevron-right" class="w-4 h-4 chev"></i></span>
+      </div>
+      <div class="row">
+        <div class="left">
+          <span class="row-label">Streak Goal</span>
+          <span class="row-value">21 days</span>
+        </div>
+        <span class="tap-hint">Tap to edit <i data-lucide="chevron-right" class="w-4 h-4 chev"></i></span>
+      </div>
+
+      <div class="save-wrap">
+        <button class="save-cta">Create Habit</button>
+      </div>
+    </div>
+
+    <div class="micro">
+      <div class="state">
+        <div class="stl">Rest</div>
+        <div class="row-mini a">
+          <span>Linear</span>
+          <span class="pill">Tap to edit ›</span>
+        </div>
+      </div>
+      <div class="state">
+        <div class="stl">Hover / focus</div>
+        <div class="row-mini b">
+          <span>Linear</span>
+          <span class="pill">Tap to edit ›</span>
+        </div>
+      </div>
+      <div class="state">
+        <div class="stl">Pressed</div>
+        <div class="row-mini c">
+          <span>Linear</span>
+          <span class="pill">Tap to edit ›</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Hover any row in the phone above to feel the affordance — the row tints, the hint pill goes green, the chevron nudges right. Press to see the depressed state. All three states are tappable; the entire row is the hit target.
+    </div>
+  </div>
+
+  <!-- RIGHT: recommendation + reasoning -->
+  <div class="reasoning">
+    <h3>Recommendation</h3>
+    <h2>Whole-row tappable, with "Tap to edit ›" hint</h2>
+    <p class="subtitle">One affordance for every Advanced Option. No badges, no tiers, no upsell. The cleanest version of itself.</p>
+
+    <div class="block">
+      <div class="title"><span class="ico"><i data-lucide="hand-pointer" class="w-4 h-4"></i></span> Discoverability</div>
+      <p><span class="pt">The whole row is the button.</span> Users don't have to spot a tiny green tag — the value, the label, the hint, and the chevron all read as one tappable surface. First-time users see "Tap to edit ›" and immediately understand the options are customizable. That moment of perceived depth in the first 30 seconds is what drives the decision to keep going.</p>
+    </div>
+
+    <div class="block">
+      <div class="title"><span class="ico"><i data-lucide="target" class="w-4 h-4"></i></span> Friction = the biggest hit target possible</div>
+      <p><span class="pt">~360px wide × 64px tall per row.</span> Compared to the current ~50×24px pill, that's roughly an 18× larger tap target. Fewer mis-taps, less micro-aiming, especially one-handed on the go. Friction in habit creation is one of the strongest predictors of drop-off — every extra second of "wait, is this clickable?" costs you.</p>
+    </div>
+
+    <div class="block">
+      <div class="title"><span class="ico"><i data-lucide="trending-up" class="w-4 h-4"></i></span> Conversion lever</div>
+      <p><span class="pt">Depth visible = product feels more valuable.</span> Users who interact with at least one Advanced Option during onboarding convert at materially higher rates in habit/productivity benchmarks. Making customization obvious — not buried behind an "EDIT" tag — is the cheapest way to surface that depth without adding features.</p>
+    </div>
+
+    <div class="block">
+      <div class="title"><span class="ico"><i data-lucide="heart" class="w-4 h-4"></i></span> Retention lever</div>
+      <p><span class="pt">Customized habits stick.</span> When a user tailors strength curve, growth icons, and streak goal to themselves, the habit feels theirs — psychological ownership compounds into return visits. The whole-row affordance maximizes the chance that customization actually happens, which directly lowers churn.</p>
+    </div>
+
+    <div class="block">
+      <div class="title"><span class="ico"><i data-lucide="layout" class="w-4 h-4"></i></span> Hierarchy preserved</div>
+      <p><span class="pt">Nothing competes with Save.</span> The row affordance is subtle gray-on-near-white at rest, going green only on touch. The dark-green "Create Habit" CTA at the bottom remains the loudest thing on the page. The Edit affordances support the form; they don't fight it.</p>
+    </div>
+
+    <div class="block">
+      <div class="title"><span class="ico"><i data-lucide="check-circle-2" class="w-4 h-4"></i></span> Why not the alternatives</div>
+      <p>
+        <span class="pt">B (solid green CTA on every row)</span> — three loud buttons stacked would compete with Save and feel pushy.<br>
+        <span class="pt">F (gradient pill)</span> — its visual punch was earning its keep only as a premium-tier upsell signal. With no Pro tier, it's just noise.<br>
+        <span class="pt">E (icon-only pencil)</span> — too subtle, the same problem as today.<br>
+        <span class="pt">A (bigger pill)</span> — incremental; doesn't fix the "this looks like a label" issue.<br>
+        <span class="pt">C (outline button)</span> — clean, but still asks the user to aim at a small target. D dominates it on hit-area.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>
