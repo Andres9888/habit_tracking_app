@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Custom Growth Icons — Change Summary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --background: #ede ae5;
+        --surface: #faf7f2;
+        --card: #ffffff;
+        --border: #e6dfd1;
+        --text-primary: #1f2937;
+        --text-secondary: #4b5563;
+        --text-tertiary: #9ca3af;
+        --text-inverse: #ffffff;
+        --primary-500: #6366f1;
+        --primary-600: #4f46e5;
+        --primary-100: #e0e7ff;
+        --streak-light: #fef3c7;
+        --streak-text: #b45309;
+      }
+      body {
+        font-family: 'Inter', system-ui, sans-serif !important;
+        background: #edeae5;
+        color: var(--text-primary);
+        -webkit-font-smoothing: antialiased;
+      }
+      .mono {
+        font-family: 'JetBrains Mono', monospace;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 8px 12px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+        color: var(--text-primary);
+      }
+      .chip-active {
+        background: var(--primary-500);
+        color: var(--text-inverse);
+        border-color: var(--primary-500);
+      }
+      .chip-new {
+        position: relative;
+      }
+      .chip-new::after {
+        content: 'NEW';
+        position: absolute;
+        top: -8px;
+        right: -6px;
+        background: #22c55e;
+        color: white;
+        font-size: 9px;
+        font-weight: 700;
+        padding: 2px 5px;
+        border-radius: 6px;
+        letter-spacing: 0.5px;
+      }
+      .chip-emoji {
+        font-size: 15px;
+        letter-spacing: -0.5px;
+      }
+      .fade-right::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 28px;
+        background: linear-gradient(to left, #edeae5, transparent);
+        pointer-events: none;
+      }
+      .slot-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+      }
+      .slot-emoji {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: white;
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+        border: 1px solid var(--border);
+      }
+      .kbd {
+        display: inline-block;
+        padding: 1px 6px;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+      .arrow {
+        display: grid;
+        place-items: center;
+        color: var(--text-tertiary);
+      }
+      .section-title {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+      }
+      .badge-before {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+      .badge-after {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .badge {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 2px 8px;
+        border-radius: 6px;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen py-10 px-6">
+    <div class="max-w-6xl mx-auto">
+      <!-- Header -->
+      <div class="mb-10">
+        <div class="flex items-center gap-3 mb-2">
+          <span class="mono text-sm text-gray-500">branch:</span>
+          <span class="mono text-sm font-semibold">custom-growth-icons</span>
+        </div>
+        <h1 class="text-3xl font-bold mb-2">
+          "Custom" growth-icons preset
+        </h1>
+        <p class="text-base text-gray-600 max-w-2xl">
+          A 6th chip in the preset row that remembers YOUR emoji set.
+          Survives switching to Fitness/Space/etc — tap Custom and your
+          handpicked emojis come right back.
+        </p>
+      </div>
+
+      <!-- Before / After comparison -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        <!-- BEFORE -->
+        <div class="card p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="badge badge-before">Before</span>
+            <span class="section-title">5 built-in presets</span>
+          </div>
+          <div class="relative fade-right overflow-hidden">
+            <div class="flex gap-2 overflow-x-auto pb-2" style="scrollbar-width: none">
+              <div class="chip chip-active">
+                <span class="chip-emoji">🌱🌳⚡</span><span>Plants</span>
+              </div>
+              <div class="chip">
+                <span class="chip-emoji">💧🏋️🏆</span><span>Fitness</span>
+              </div>
+              <div class="chip">
+                <span class="chip-emoji">🌑🌕🌌</span><span>Space</span>
+              </div>
+              <div class="chip">
+                <span class="chip-emoji">💭🎓✨</span><span>Mind</span>
+              </div>
+              <div class="chip">
+                <span class="chip-emoji">🪵🌋👑</span><span>Fire</span>
+              </div>
+            </div>
+          </div>
+          <p class="mt-6 text-sm text-gray-600 leading-relaxed">
+            Edit a slot to build your own set → tap
+            <span class="kbd">Fitness</span> → your custom emojis are
+            <span class="text-red-600 font-semibold">gone.</span>
+            No way back unless you remember them.
+          </p>
+        </div>
+
+        <!-- AFTER -->
+        <div class="card p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="badge badge-after">After</span>
+            <span class="section-title">6th chip: Custom</span>
+          </div>
+          <div class="relative fade-right overflow-hidden">
+            <div class="flex gap-2 overflow-x-auto pb-2" style="scrollbar-width: none">
+              <div class="chip">
+                <span class="chip-emoji">🌱🌳⚡</span><span>Plants</span>
+              </div>
+              <div class="chip">
+                <span class="chip-emoji">💧🏋️🏆</span><span>Fitness</span>
+              </div>
+              <div class="chip">
+                <span class="chip-emoji">🌑🌕🌌</span><span>Space</span>
+              </div>
+              <div class="chip">
+                <span class="chip-emoji">💭🎓✨</span><span>Mind</span>
+              </div>
+              <div class="chip">
+                <span class="chip-emoji">🪵🌋👑</span><span>Fire</span>
+              </div>
+              <div class="chip chip-active chip-new">
+                <span class="chip-emoji">⭐🎯🏆</span><span>Custom</span>
+              </div>
+            </div>
+          </div>
+          <p class="mt-6 text-sm text-gray-600 leading-relaxed">
+            Edit any slot → Custom chip auto-saves your set.
+            Tap <span class="kbd">Fitness</span> → Custom chip
+            <span class="text-green-600 font-semibold">still there.</span>
+            Tap <span class="kbd">Custom</span> → your exact set restored.
+          </p>
+        </div>
+      </div>
+
+      <!-- Flow -->
+      <div class="card p-6 mb-10">
+        <div class="section-title mb-5">The flow</div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <!-- Step 1 -->
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <div
+                class="w-6 h-6 rounded-full bg-indigo-500 text-white grid place-items-center text-xs font-bold"
+              >
+                1
+              </div>
+              <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                Edit a slot
+              </span>
+            </div>
+            <div class="space-y-2">
+              <div class="slot-row">
+                <div class="flex items-center gap-3">
+                  <div class="slot-emoji">⭐</div>
+                  <div>
+                    <div class="text-xs font-semibold">Starting</div>
+                    <div class="text-[10px] text-gray-500">was 🌱</div>
+                  </div>
+                </div>
+              </div>
+              <p class="text-xs text-gray-600 mt-2">
+                Swap any emoji → Convex writes both
+                <span class="mono">progressEmojis</span> AND
+                <span class="mono">customProgressEmojis</span>.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <div
+                class="w-6 h-6 rounded-full bg-indigo-500 text-white grid place-items-center text-xs font-bold"
+              >
+                2
+              </div>
+              <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                Custom appears
+              </span>
+            </div>
+            <div class="flex gap-1.5 flex-wrap">
+              <div class="chip chip-active" style="padding: 6px 10px; font-size: 11px">
+                <span>⭐🌳⚡</span><span>Custom</span>
+              </div>
+            </div>
+            <p class="text-xs text-gray-600 mt-2">
+              6th chip materialises, lit up because your current set matches it.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <div
+                class="w-6 h-6 rounded-full bg-indigo-500 text-white grid place-items-center text-xs font-bold"
+              >
+                3
+              </div>
+              <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                Try Fitness
+              </span>
+            </div>
+            <div class="flex gap-1.5 flex-wrap">
+              <div class="chip chip-active" style="padding: 6px 10px; font-size: 11px">
+                <span>💧🏋️🏆</span><span>Fitness</span>
+              </div>
+              <div class="chip" style="padding: 6px 10px; font-size: 11px">
+                <span>⭐🌳⚡</span><span>Custom</span>
+              </div>
+            </div>
+            <p class="text-xs text-gray-600 mt-2">
+              Active preset swaps — Custom chip stays parked, holding your set.
+            </p>
+          </div>
+
+          <!-- Step 4 -->
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <div
+                class="w-6 h-6 rounded-full bg-green-500 text-white grid place-items-center text-xs font-bold"
+              >
+                4
+              </div>
+              <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                Tap Custom
+              </span>
+            </div>
+            <div class="flex gap-1.5 flex-wrap">
+              <div class="chip" style="padding: 6px 10px; font-size: 11px">
+                <span>💧🏋️🏆</span><span>Fitness</span>
+              </div>
+              <div class="chip chip-active" style="padding: 6px 10px; font-size: 11px">
+                <span>⭐🌳⚡</span><span>Custom</span>
+              </div>
+            </div>
+            <p class="text-xs text-gray-600 mt-2">
+              Instantly back to your set. Never lost.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Changes summary -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+        <div class="card p-5">
+          <div class="section-title mb-3">Schema</div>
+          <div class="mono text-xs leading-relaxed space-y-1">
+            <div class="text-gray-500">// userSettings table</div>
+            <div>progressEmojis: v.optional(...)</div>
+            <div class="text-green-600 font-semibold">
+              + customProgressEmojis: v.optional(...)
+            </div>
+          </div>
+          <p class="text-xs text-gray-600 mt-4">
+            One new optional field. No migration needed.
+          </p>
+        </div>
+
+        <div class="card p-5">
+          <div class="section-title mb-3">Picker row</div>
+          <div class="mono text-xs leading-relaxed space-y-1">
+            <div>{PRESETS.map(...)}</div>
+            <div class="text-green-600 font-semibold">+ customPreset && &lt;Chip /&gt;</div>
+          </div>
+          <p class="text-xs text-gray-600 mt-4">
+            Reuses the existing <span class="mono">ProgressEmojiPresetChip</span>.
+            No new visual component.
+          </p>
+        </div>
+
+        <div class="card p-5">
+          <div class="section-title mb-3">Auto-save</div>
+          <div class="mono text-xs leading-relaxed space-y-1">
+            <div>handleChange(next) {</div>
+            <div>&nbsp;&nbsp;progressEmojis: next,</div>
+            <div class="text-green-600 font-semibold">
+              &nbsp;&nbsp;+ if (slot-edit)<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;customProgressEmojis: next
+            </div>
+            <div>}</div>
+          </div>
+          <p class="text-xs text-gray-600 mt-4">
+            Only fires in Settings. Per-habit edits never overwrite your global Custom.
+          </p>
+        </div>
+      </div>
+
+      <!-- File list -->
+      <div class="card p-6">
+        <div class="section-title mb-4">Files touched (+96 / −9)</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1 mono text-xs">
+          <div>convex/schema.ts</div>
+          <div>src/hooks/useProgressEmojis.ts</div>
+          <div>convex/settings/settings.ts</div>
+          <div>src/components/AdvancedOptions/AdvancedOptionsSection.tsx</div>
+          <div>convex/settings/validators.ts</div>
+          <div>src/components/AdvancedOptions/GrowthIconsSheetBody.tsx</div>
+          <div>src/utils/progressEmojis.ts</div>
+          <div>src/components/ProgressEmojiPicker/ProgressEmojiPicker.tsx</div>
+          <div>src/components/SettingsModal/GrowthIconsSettingsRow.tsx</div>
+          <div>src/components/ProgressEmojiPicker/ProgressEmojiPicker.types.ts</div>
+          <div></div>
+          <div>src/components/ProgressEmojiPicker/ProgressEmojiPresetRow.tsx</div>
+        </div>
+      </div>
+
+      <!-- Footer note -->
+      <div class="mt-6 text-xs text-gray-500 text-center">
+        Schema pushed to <span class="mono">dev:valuable-guineapig-979</span> at 18:24:40.
+        Test in-app: Settings → Default growth icons → edit a slot.
+      </div>
+    </div>
+  </body>
+</html>
