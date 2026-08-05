@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Month Calendar — Chain Toggle Mock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f7f7f8;
+        --card: #ffffff;
+        --border: #e5e7eb;
+        --text-primary: #111827;
+        --text-tertiary: #9ca3af;
+        --muted: #d1d5db;
+        --habit: #10b981;
+        --habit-soft: rgba(16, 185, 129, 0.12);
+        --today-ring: #10b981;
+      }
+      body {
+        font-family:
+          'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+        background: var(--bg);
+        color: var(--text-primary);
+      }
+      .calendar-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow:
+          0 1px 3px rgba(0, 0, 0, 0.04),
+          0 1px 2px rgba(0, 0, 0, 0.02);
+      }
+      .week-row {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+      }
+      .day-wrapper {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        max-width: 44px;
+        margin: 2px auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 2;
+      }
+      .day-cell {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition:
+          background 180ms ease,
+          border-color 180ms ease;
+      }
+      .day-cell.completed {
+        background: var(--habit-soft);
+      }
+      .day-cell.today {
+        border: 2px solid var(--today-ring);
+      }
+      .day-cell.today.completed {
+        background: var(--habit);
+        color: #ffffff !important;
+      }
+      .day-cell.today.completed .day-num {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+      }
+      .day-num {
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .day-cell.completed:not(.today) .day-num {
+        font-weight: 600;
+      }
+      .day-cell.outside .day-num {
+        color: var(--muted);
+      }
+      .day-cell.future .day-num {
+        color: var(--text-tertiary);
+      }
+      .streak-dot {
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+      }
+      .streak-dot.filled {
+        background: var(--habit);
+      }
+      .streak-dot.hollow {
+        background: transparent;
+        border: 1.5px solid var(--habit);
+      }
+      /* Chain connector layer */
+      .connector-layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .connector {
+        position: absolute;
+        height: 4px;
+        background: var(--habit);
+        opacity: 0.85;
+        border-radius: 2px;
+        transform-origin: left center;
+        transform: scaleX(0);
+        transition: transform 220ms ease-out;
+      }
+      .chain-on .connector {
+        transform: scaleX(1);
+      }
+      .chain-on .connector[data-delay='1'] {
+        transition-delay: 30ms;
+      }
+      .chain-on .connector[data-delay='2'] {
+        transition-delay: 60ms;
+      }
+      .chain-on .connector[data-delay='3'] {
+        transition-delay: 90ms;
+      }
+      .chain-on .connector[data-delay='4'] {
+        transition-delay: 120ms;
+      }
+      /* Toggle */
+      .toggle {
+        display: inline-flex;
+        background: #f3f4f6;
+        border-radius: 999px;
+        padding: 3px;
+        gap: 2px;
+      }
+      .toggle button {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 999px;
+        color: #6b7280;
+        transition: all 180ms ease;
+      }
+      .toggle button.active {
+        background: #ffffff;
+        color: var(--habit);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+      }
+      .header-cell {
+        text-align: center;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        padding: 8px 0;
+      }
+      .legend-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        vertical-align: middle;
+        margin-right: 6px;
+      }
+      .nav-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #6b7280;
+        background: transparent;
+        transition: background 150ms ease;
+      }
+      .nav-btn:hover {
+        background: #f3f4f6;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen p-8">
+    <div class="max-w-6xl mx-auto">
+      <header class="mb-8">
+        <div class="flex items-center gap-3 mb-2">
+          <div
+            class="w-2.5 h-2.5 rounded-full"
+            style="background: var(--habit)"
+          ></div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-gray-500"
+            >Habit Detail · Calendar Tab · Mock</span
+          >
+        </div>
+        <h1 class="text-2xl font-bold">Month Calendar — Chain Toggle</h1>
+        <p class="text-gray-600 mt-1 text-sm">
+          Same data, two render modes. Toggle the right panel to see the
+          connector animation. Connectors link consecutive completed days
+          within the same week row only.
+        </p>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- LEFT: PLAIN MODE -->
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-sm font-semibold text-gray-700">Plain mode</div>
+            <div class="toggle">
+              <button class="active">Plain</button>
+              <button>Chain</button>
+            </div>
+          </div>
+          <div class="calendar-card p-4" id="cal-plain">
+            <!-- nav + grid injected by JS -->
+          </div>
+          <div class="mt-3 text-xs text-gray-500 flex items-center gap-4">
+            <span><span class="legend-dot" style="background: var(--habit)"></span>completed</span>
+            <span
+              ><span
+                class="legend-dot"
+                style="background: transparent; border: 1.5px solid var(--habit)"
+              ></span
+              >missed</span
+            >
+            <span><span class="legend-dot" style="border: 2px solid var(--habit); background: transparent"></span>today</span>
+          </div>
+        </div>
+
+        <!-- RIGHT: CHAIN MODE -->
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-sm font-semibold text-gray-700">Chain mode</div>
+            <div class="toggle" id="toggle-right">
+              <button data-mode="plain">Plain</button>
+              <button data-mode="chain" class="active">Chain</button>
+            </div>
+          </div>
+          <div class="calendar-card p-4 chain-on" id="cal-chain">
+            <!-- nav + grid injected by JS -->
+          </div>
+          <div class="mt-3 text-xs text-gray-500">
+            Chain links consecutive completions within a single week. Missed days
+            and week boundaries break the chain.
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-10 text-xs text-gray-500 max-w-3xl">
+        <strong class="text-gray-700">Behavior notes:</strong> Connector is a
+        4px habit-colored bar at vertical center of the day cells, drawn
+        between the right edge of one completed cell and the left edge of the
+        next. ~85% opacity so day numbers remain readable. Animates in
+        left-to-right with a 30ms stagger. Today's ring still renders on top.
+      </div>
+    </div>
+
+    <script>
+      // Sample month data — same dataset rendered both panels
+      const MONTH_LABEL = 'May 2026';
+      const DAYS = (() => {
+        const completed = new Set([
+          1, 2, 3, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 23,
+        ]);
+        const missed = new Set([4, 9, 12, 18, 22]);
+        const today = 23;
+        const lastDay = 31;
+        // May 2026 starts on Friday → 4 leading blanks (Mon-Thu of prev month)
+        const leading = [27, 28, 29, 30];
+        const cells = [];
+        leading.forEach((d) =>
+          cells.push({ num: d, outside: true })
+        );
+        for (let d = 1; d <= lastDay; d++) {
+          cells.push({
+            num: d,
+            completed: completed.has(d),
+            missed: missed.has(d),
+            today: d === today,
+            future: d > today,
+          });
+        }
+        // pad to 42 cells (6 rows)
+        let tail = 1;
+        while (cells.length < 42) {
+          cells.push({ num: tail++, outside: true });
+        }
+        return cells;
+      })();
+
+      function buildCalendar(rootId, withChain) {
+        const root = document.getElementById(rootId);
+        root.innerHTML = `
+          <div class="flex items-center justify-between mb-3">
+            <button class="nav-btn" aria-label="prev">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <div class="text-sm font-semibold">${MONTH_LABEL}</div>
+            <button class="nav-btn" aria-label="next">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+          <div class="grid grid-cols-7">
+            ${['MON','TUE','WED','THU','FRI','SAT','SUN'].map((d) => `<div class="header-cell">${d}</div>`).join('')}
+          </div>
+          <div id="${rootId}-weeks"></div>
+        `;
+
+        const weeksRoot = document.getElementById(`${rootId}-weeks`);
+        for (let w = 0; w < 6; w++) {
+          const weekCells = DAYS.slice(w * 7, w * 7 + 7);
+          const weekDiv = document.createElement('div');
+          weekDiv.className = 'week-row';
+          weekDiv.innerHTML = weekCells
+            .map((c, i) => renderCell(c))
+            .join('');
+          if (withChain) {
+            const connectorLayer = document.createElement('div');
+            connectorLayer.className = 'connector-layer';
+            // for each adjacent pair within this week where both are completed
+            let chainIdx = 0;
+            for (let i = 0; i < 6; i++) {
+              const a = weekCells[i];
+              const b = weekCells[i + 1];
+              const aOk =
+                a && a.completed && !a.outside && !a.future;
+              const bOk =
+                b && b.completed && !b.outside && !b.future;
+              if (aOk && bOk) {
+                const seg = document.createElement('div');
+                seg.className = 'connector';
+                seg.dataset.delay = String(chainIdx % 5);
+                chainIdx++;
+                // place between columns i and i+1
+                const leftPct = ((i + 0.5) / 7) * 100;
+                const widthPct = (1 / 7) * 100;
+                seg.style.left = `calc(${leftPct}% + 18px)`;
+                seg.style.width = `calc(${widthPct}% - 36px)`;
+                seg.style.top = 'calc(50% - 2px)';
+                connectorLayer.appendChild(seg);
+              }
+            }
+            weekDiv.appendChild(connectorLayer);
+          }
+          weeksRoot.appendChild(weekDiv);
+        }
+      }
+
+      function renderCell(c) {
+        if (c.outside) {
+          return `
+            <div class="day-wrapper">
+              <div class="day-cell outside"><span class="day-num">${c.num}</span></div>
+            </div>`;
+        }
+        const classes = ['day-cell'];
+        if (c.completed) classes.push('completed');
+        if (c.today) classes.push('today');
+        if (c.future) classes.push('future');
+        let dot = '';
+        if (c.completed && !c.today) {
+          dot = '<span class="streak-dot filled"></span>';
+        } else if (c.missed) {
+          dot = '<span class="streak-dot hollow"></span>';
+        }
+        return `
+          <div class="day-wrapper">
+            <div class="${classes.join(' ')}">
+              <span class="day-num">${c.num}</span>
+              ${dot}
+            </div>
+          </div>`;
+      }
+
+      buildCalendar('cal-plain', false);
+      buildCalendar('cal-chain', true);
+
+      // Toggle interaction on the right panel
+      document
+        .getElementById('toggle-right')
+        .addEventListener('click', (e) => {
+          const btn = e.target.closest('button');
+          if (!btn) return;
+          const mode = btn.dataset.mode;
+          const card = document.getElementById('cal-chain');
+          document
+            .querySelectorAll('#toggle-right button')
+            .forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          if (mode === 'chain') {
+            card.classList.add('chain-on');
+          } else {
+            card.classList.remove('chain-on');
+          }
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "rating": 3,
+  "summary": "Clear dissatisfaction; user correcting evasive behavior",
+  "detailed_context": "User expresses frustration with the assistant's approach, telling it to 'not be a mask in the browser'—likely meaning: stop being evasive, stop hiding behind abstractions (plan mode discussions), and do the actual work directly. The cryptic phrasing suggests the user feels the assistant is obfuscating or avoiding direct action. This is a direct correction/redirect requiring a pivot in approach, not enthusiasm or approval.",
+  "session_id": "e5e3370e-4c63-440a-80ac-998ca2466716",
+  "captured_at": "2026-05-23T12:13:09.420Z",
+  "transcript_source": "e5e3370e-4c63-440a-80ac-998ca2466716.jsonl"
+}

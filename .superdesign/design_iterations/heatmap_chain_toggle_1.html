@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Year Heatmap — Chain Treatment Mock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f7f7f8;
+        --card: #ffffff;
+        --border: #e5e7eb;
+        --text-primary: #111827;
+        --text-tertiary: #9ca3af;
+        --empty: #ebedf0;
+        --habit: #10b981;
+        --habit-soft: rgba(16, 185, 129, 0.35);
+        --habit-mid: rgba(16, 185, 129, 0.65);
+        --today-ring: #f59e0b;
+      }
+      body {
+        font-family:
+          'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+        background: var(--bg);
+        color: var(--text-primary);
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow:
+          0 1px 3px rgba(0, 0, 0, 0.04),
+          0 1px 2px rgba(0, 0, 0, 0.02);
+        overflow-x: auto;
+      }
+      .grid-wrap {
+        position: relative;
+        display: inline-block;
+      }
+      .grid {
+        display: grid;
+        grid-template-rows: repeat(7, 14px);
+        grid-auto-flow: column;
+        grid-auto-columns: 14px;
+        gap: 3px;
+        position: relative;
+        z-index: 2;
+      }
+      .cell {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        background: var(--empty);
+        position: relative;
+      }
+      .cell.c1 { background: var(--habit-soft); }
+      .cell.c2 { background: var(--habit-mid); }
+      .cell.c3 { background: var(--habit); }
+      .cell.future { background: transparent; }
+      .cell.today {
+        outline: 2px solid var(--today-ring);
+        outline-offset: 1px;
+        z-index: 3;
+      }
+
+      .day-labels {
+        display: grid;
+        grid-template-rows: repeat(7, 14px);
+        gap: 3px;
+        font-size: 9px;
+        color: var(--text-tertiary);
+        padding-right: 6px;
+        text-align: right;
+        line-height: 14px;
+      }
+      .month-labels {
+        position: relative;
+        height: 14px;
+        font-size: 10px;
+        color: var(--text-tertiary);
+        margin-bottom: 4px;
+      }
+      .month-labels span {
+        position: absolute;
+        top: 0;
+        font-weight: 500;
+      }
+
+      /* Connector overlays */
+      .overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 4;
+      }
+      .v-conn {
+        position: absolute;
+        width: 4px;
+        background: var(--habit);
+        opacity: 0;
+        border-radius: 2px;
+        transition: opacity 220ms ease-out;
+      }
+      .d-conn {
+        position: absolute;
+        height: 4px;
+        background: var(--habit);
+        opacity: 0;
+        border-radius: 2px;
+        transform-origin: left center;
+        transition: opacity 220ms ease-out;
+      }
+      .literal-on .v-conn,
+      .literal-on .d-conn { opacity: 0.85; }
+
+      .halo {
+        position: absolute;
+        border: 2px solid var(--habit);
+        border-radius: 6px;
+        opacity: 0;
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.18);
+        transition: opacity 220ms ease-out;
+        pointer-events: none;
+      }
+      .halo-on .halo { opacity: 1; }
+
+      .toggle {
+        display: inline-flex;
+        background: #f3f4f6;
+        border-radius: 999px;
+        padding: 3px;
+        gap: 2px;
+      }
+      .toggle button {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 5px 12px;
+        border-radius: 999px;
+        color: #6b7280;
+        transition: all 180ms ease;
+      }
+      .toggle button.active {
+        background: #ffffff;
+        color: var(--habit);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+      }
+
+      .legend-cell {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        vertical-align: middle;
+        margin: 0 2px;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen p-8">
+    <div class="max-w-7xl mx-auto">
+      <header class="mb-8">
+        <div class="flex items-center gap-3 mb-2">
+          <div
+            class="w-2.5 h-2.5 rounded-full"
+            style="background: var(--habit)"
+          ></div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-gray-500"
+            >Habit Detail · Year Heatmap · Chain Treatment Mock</span
+          >
+        </div>
+        <h1 class="text-2xl font-bold">
+          Heatmap chains — three visual options
+        </h1>
+        <p class="text-gray-600 mt-1 text-sm max-w-3xl">
+          Heatmap rows are days-of-week, columns are weeks. A streak runs
+          top-to-bottom within a column then jumps to the top of the next.
+          Same dataset in all three panels — a 32-day streak in the middle,
+          then a few short streaks broken by missed days. Pick the treatment
+          that lands.
+        </p>
+      </header>
+
+      <div class="flex flex-col gap-8">
+        <!-- PANEL 1: PLAIN (CURRENT) -->
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-sm font-semibold text-gray-700">A · Plain (current)</div>
+            <div class="text-xs text-gray-400">no overlay</div>
+          </div>
+          <div class="card p-5" id="panel-a"></div>
+          <p class="mt-3 text-xs text-gray-500">
+            Today's behavior. Streak readable from cell continuity alone.
+          </p>
+        </div>
+
+        <!-- PANEL 2: LITERAL CHAIN -->
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-sm font-semibold text-gray-700">B · Literal chain</div>
+            <div class="toggle" id="tog-b">
+              <button data-mode="off">Off</button>
+              <button class="active" data-mode="on">On</button>
+            </div>
+          </div>
+          <div class="card p-5 literal-on" id="panel-b"></div>
+          <p class="mt-3 text-xs text-gray-500">
+            Vertical bars within a column (Mon→Sun) and diagonal jumps from
+            Sun of week N to Mon of week N+1. Most explicit; the diagonals
+            can read busy.
+          </p>
+        </div>
+
+        <!-- PANEL 3: HALO OUTLINE -->
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-sm font-semibold text-gray-700">C · Halo outline</div>
+            <div class="toggle" id="tog-c">
+              <button data-mode="off">Off</button>
+              <button class="active" data-mode="on">On</button>
+            </div>
+          </div>
+          <div class="card p-5 halo-on" id="panel-c"></div>
+          <p class="mt-3 text-xs text-gray-500">
+            Gestural — a colored outline hugs each continuous streak block.
+            Less literal, less noisy, still says "this run is one chain."
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-10 text-xs text-gray-500 max-w-3xl">
+        <strong class="text-gray-700">My take:</strong> Option C (halo) reads
+        cleanest at a glance and scales — a 60-day streak becomes one large
+        outlined region instead of 60 bars. Option B is more explicit but the
+        diagonals get noisy with multiple streaks. A is the baseline.
+      </div>
+    </div>
+
+    <script>
+      // Build a 26-week (6mo) dataset with a long streak and short ones
+      const WEEKS = 26;
+      const TODAY_COL = 24; // today is near the right edge
+      const TODAY_ROW = 3; // Thursday-ish
+
+      // Build calendar grid: for each (col, row) decide completion
+      // Streak design:
+      // - weeks 0-2: sparse, short streaks
+      // - weeks 8-12: a continuous 32-day streak
+      // - weeks 14-16: a short 8-day streak
+      // - weeks 20-23: building up
+      function isCompleted(col, row) {
+        // future
+        if (col > TODAY_COL || (col === TODAY_COL && row > TODAY_ROW)) return null;
+
+        // sparse early
+        if (col <= 2) {
+          if ((col + row) % 3 === 0) return true;
+          if ((col + row) % 4 === 0) return true;
+          return false;
+        }
+        // gap
+        if (col >= 3 && col <= 7) {
+          return (col * 7 + row) % 5 === 0;
+        }
+        // 32-day continuous streak: weeks 8 through 12 plus a few days
+        if (col >= 8 && col <= 12) return true;
+        if (col === 13 && row <= 3) return true; // tail of streak
+        // missed days break it
+        if (col === 13 && row === 4) return false;
+        if (col === 13 && row > 4) return false;
+        // 8-day mini streak
+        if (col === 14 && row >= 3) return true;
+        if (col === 15 && row <= 3) return true;
+        // gap with sporadic
+        if (col >= 16 && col <= 19) {
+          return (col + row * 2) % 4 === 0;
+        }
+        // building up to today
+        if (col >= 20 && col <= 22) return row >= 1 && row <= 5;
+        if (col === 23) return true;
+        if (col === 24 && row <= TODAY_ROW) return true;
+        return false;
+      }
+
+      // For variation in shade: completed=c3, lightly-completed sometimes c2/c1
+      function shadeFor(col, row, completed) {
+        if (completed === null) return 'future';
+        if (!completed) return '';
+        // long streak gets darkest
+        if (col >= 8 && col <= 13) return 'c3';
+        if (col === 14 || col === 15) return 'c3';
+        if (col >= 20) return 'c3';
+        // earlier scattered ones get lighter shades
+        const seed = (col * 31 + row * 7) % 3;
+        return seed === 0 ? 'c1' : seed === 1 ? 'c2' : 'c3';
+      }
+
+      const MONTHS = ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'];
+      const MONTH_COLS = [0, 5, 9, 13, 18, 22];
+
+      function buildPanel(rootId, overlayKind) {
+        const root = document.getElementById(rootId);
+        const cells = [];
+        for (let col = 0; col < WEEKS; col++) {
+          for (let row = 0; row < 7; row++) {
+            const completed = isCompleted(col, row);
+            cells.push({ col, row, completed });
+          }
+        }
+
+        // month label divs
+        const monthSpans = MONTHS.map(
+          (m, i) =>
+            `<span style="left:${MONTH_COLS[i] * 17}px">${m}</span>`
+        ).join('');
+
+        root.innerHTML = `
+          <div class="flex items-start">
+            <div class="day-labels mt-[18px]">
+              <div>Mon</div><div></div><div>Wed</div><div></div><div>Fri</div><div></div><div>Sun</div>
+            </div>
+            <div>
+              <div class="month-labels" style="width:${WEEKS * 17}px">${monthSpans}</div>
+              <div class="grid-wrap">
+                <div class="grid" id="${rootId}-grid"></div>
+                <div class="overlay" id="${rootId}-overlay"></div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 flex items-center justify-end text-[10px] text-gray-500 gap-2">
+            <span>Less</span>
+            <span class="legend-cell" style="background:var(--empty)"></span>
+            <span class="legend-cell" style="background:var(--habit-soft)"></span>
+            <span class="legend-cell" style="background:var(--habit-mid)"></span>
+            <span class="legend-cell" style="background:var(--habit)"></span>
+            <span>More</span>
+          </div>
+        `;
+
+        const gridEl = document.getElementById(`${rootId}-grid`);
+        cells.forEach((c) => {
+          const div = document.createElement('div');
+          const shade = shadeFor(c.col, c.row, c.completed);
+          div.className = `cell ${shade}`;
+          if (c.col === TODAY_COL && c.row === TODAY_ROW) {
+            div.classList.add('today');
+          }
+          gridEl.appendChild(div);
+        });
+
+        const overlay = document.getElementById(`${rootId}-overlay`);
+        if (overlayKind === 'literal') {
+          drawLiteralConnectors(overlay, cells);
+        } else if (overlayKind === 'halo') {
+          drawHaloOutlines(overlay, cells);
+        }
+      }
+
+      // cell pitch: 14 + 3 = 17 px
+      const PITCH = 17;
+      const CELL = 14;
+
+      function isDone(cells, col, row) {
+        if (col < 0 || col >= WEEKS || row < 0 || row >= 7) return false;
+        const c = cells.find((x) => x.col === col && x.row === row);
+        return c && c.completed === true;
+      }
+
+      function drawLiteralConnectors(overlay, cells) {
+        // Vertical: between (col,row) and (col,row+1) if both done
+        for (let col = 0; col < WEEKS; col++) {
+          for (let row = 0; row < 6; row++) {
+            if (isDone(cells, col, row) && isDone(cells, col, row + 1)) {
+              const v = document.createElement('div');
+              v.className = 'v-conn';
+              v.style.left = `${col * PITCH + CELL / 2 - 2}px`;
+              v.style.top = `${row * PITCH + CELL - 1}px`;
+              v.style.height = `${PITCH - CELL + 2}px`;
+              overlay.appendChild(v);
+            }
+          }
+        }
+        // Diagonal: Sun(row=6) of col N → Mon(row=0) of col N+1
+        for (let col = 0; col < WEEKS - 1; col++) {
+          if (isDone(cells, col, 6) && isDone(cells, col + 1, 0)) {
+            const startX = col * PITCH + CELL / 2;
+            const startY = 6 * PITCH + CELL / 2;
+            const endX = (col + 1) * PITCH + CELL / 2;
+            const endY = 0 + CELL / 2;
+            const dx = endX - startX;
+            const dy = endY - startY;
+            const len = Math.sqrt(dx * dx + dy * dy);
+            const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+            const d = document.createElement('div');
+            d.className = 'd-conn';
+            d.style.left = `${startX}px`;
+            d.style.top = `${startY - 2}px`;
+            d.style.width = `${len}px`;
+            d.style.transform = `rotate(${angle}deg)`;
+            overlay.appendChild(d);
+          }
+        }
+      }
+
+      // Find continuous streaks (calendar-day consecutive) and outline each as a polygon-ish halo
+      function drawHaloOutlines(overlay, cells) {
+        // Sort by linear day index: col*7 + row
+        const done = cells
+          .filter((c) => c.completed === true)
+          .map((c) => ({ ...c, idx: c.col * 7 + c.row }))
+          .sort((a, b) => a.idx - b.idx);
+
+        // Group into runs of consecutive idx
+        const runs = [];
+        let cur = [];
+        for (const c of done) {
+          if (cur.length === 0 || c.idx === cur[cur.length - 1].idx + 1) {
+            cur.push(c);
+          } else {
+            if (cur.length >= 3) runs.push(cur);
+            cur = [c];
+          }
+        }
+        if (cur.length >= 3) runs.push(cur);
+
+        // For each run, draw one outline rect per column segment, joined visually
+        for (const run of runs) {
+          // group by col
+          const byCol = {};
+          for (const c of run) {
+            if (!byCol[c.col]) byCol[c.col] = { col: c.col, rows: [] };
+            byCol[c.col].rows.push(c.row);
+          }
+          Object.values(byCol).forEach((segment) => {
+            const rows = segment.rows.sort((a, b) => a - b);
+            const minR = rows[0];
+            const maxR = rows[rows.length - 1];
+            const halo = document.createElement('div');
+            halo.className = 'halo';
+            const pad = 2;
+            halo.style.left = `${segment.col * PITCH - pad}px`;
+            halo.style.top = `${minR * PITCH - pad}px`;
+            halo.style.width = `${CELL + pad * 2}px`;
+            halo.style.height = `${
+              (maxR - minR) * PITCH + CELL + pad * 2
+            }px`;
+            overlay.appendChild(halo);
+          });
+        }
+      }
+
+      buildPanel('panel-a', 'none');
+      buildPanel('panel-b', 'literal');
+      buildPanel('panel-c', 'halo');
+
+      function wireToggle(togId, panelId, cls) {
+        document.getElementById(togId).addEventListener('click', (e) => {
+          const btn = e.target.closest('button');
+          if (!btn) return;
+          document
+            .querySelectorAll(`#${togId} button`)
+            .forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          const panel = document.getElementById(panelId);
+          if (btn.dataset.mode === 'on') panel.classList.add(cls);
+          else panel.classList.remove(cls);
+        });
+      }
+      wireToggle('tog-b', 'panel-b', 'literal-on');
+      wireToggle('tog-c', 'panel-c', 'halo-on');
+    </script>
+  </body>
+</html>

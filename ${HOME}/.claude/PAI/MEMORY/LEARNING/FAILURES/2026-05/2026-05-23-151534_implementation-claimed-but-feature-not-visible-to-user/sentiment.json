@@ -1,0 +1,8 @@
+{
+  "rating": 3,
+  "summary": "Implementation claimed but feature not visible to user.",
+  "detailed_context": "The AI reported completing 4 files including ChainConnectors.tsx overlay, claiming all files were 'implemented and within the 100-line limit.' However, the user has now checked the monthly calendar and reports the chain is not visible. This indicates the implementation either didn't actually get deployed, isn't rendering properly, or was incomplete despite the confident assertion. The user's polite phrasing ('Maybe I'm missing something') masks clear dissatisfaction—they expected to see a result and don't. This is a significant miss: promising delivery without functional output.",
+  "session_id": "e5e3370e-4c63-440a-80ac-998ca2466716",
+  "captured_at": "2026-05-23T22:15:34.656Z",
+  "transcript_source": "e5e3370e-4c63-440a-80ac-998ca2466716.jsonl"
+}
