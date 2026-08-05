@@ -30,22 +30,70 @@ export function useMainBrowseData({
   isPremiumUser,
   userHabitCount,
 }: UseMainBrowseDataOptions) {
-  const popularTemplates = useMemo(() => {
-    if (!allTemplates) return [];
-    const sorted = [...allTemplates].sort(
+  const templateAggregates = useMemo(() => {
+    if (!allTemplates) {
+      return {
+        categories: new Map<
+          string,
+          {
+            count: number;
+            popularityScore: number;
+            previewTemplates: Doc<'templates'>[];
+          }
+        >(),
+        popularTemplates: [] as Doc<'templates'>[],
+      };
+    }
+
+    const categories = new Map<
+      string,
+      {
+        count: number;
+        popularityScore: number;
+        previewTemplates: Doc<'templates'>[];
+      }
+    >();
+
+    const popularTemplates = [...allTemplates].sort(
       (a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0)
     );
-    return sortTemplatesByImportState(sorted, importedTemplateIds).slice(
+
+    for (const template of popularTemplates) {
+      const categoryId = template.category;
+      const existing = categories.get(categoryId);
+
+      if (existing) {
+        existing.count += 1;
+        existing.popularityScore += template.popularityScore ?? 0;
+        if (existing.previewTemplates.length < PREVIEW_EMOJI_LIMIT) {
+          existing.previewTemplates.push(template);
+        }
+        continue;
+      }
+
+      categories.set(categoryId, {
+        count: 1,
+        popularityScore: template.popularityScore ?? 0,
+        previewTemplates: [template],
+      });
+    }
+
+    return { categories, popularTemplates };
+  }, [allTemplates]);
+
+  const popularTemplates = useMemo(() => {
+    return sortTemplatesByImportState(
+      templateAggregates.popularTemplates,
+      importedTemplateIds
+    ).slice(
       0,
       POPULAR_LIMIT
     );
-  }, [allTemplates, importedTemplateIds]);
+  }, [importedTemplateIds, templateAggregates.popularTemplates]);
 
   const categoryList = useMemo(() => {
-    if (!allTemplates) return [];
-    const ids = [...new Set(allTemplates.map((t) => t.category))].sort();
-    return ids
-      .map((id) => {
+    return [...templateAggregates.categories.entries()]
+      .map(([id, aggregate]) => {
         const meta: CategoryMeta = CATEGORY_META[id] ?? {
           bgColor: '#F3F4F6',
           borderColor: '#E5E7EB',
@@ -54,22 +102,13 @@ export function useMainBrowseData({
           label: id,
           textColor: '#374151',
         };
-        const catTemplates = allTemplates.filter((t) => t.category === id);
-        const previewEmojis = [...catTemplates]
-          .sort((a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0))
-          .slice(0, PREVIEW_EMOJI_LIMIT)
-          .map((t) => t.icon);
-        const popularityScore = catTemplates.reduce(
-          (sum, template) => sum + (template.popularityScore ?? 0),
-          0
-        );
 
         return {
           ...meta,
           categoryId: id,
-          count: catTemplates.length,
-          popularityScore,
-          previewEmojis,
+          count: aggregate.count,
+          popularityScore: aggregate.popularityScore,
+          previewEmojis: aggregate.previewTemplates.map((t) => t.icon),
         };
       })
       .sort((a, b) => {
@@ -82,7 +121,7 @@ export function useMainBrowseData({
         return a.label.localeCompare(b.label);
       })
       .map(({ popularityScore: _popularityScore, ...category }) => category);
-  }, [allTemplates]);
+  }, [templateAggregates.categories]);
 
   const quickFilterCategories = useMemo(
     () =>

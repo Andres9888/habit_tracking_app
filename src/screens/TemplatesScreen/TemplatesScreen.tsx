@@ -83,23 +83,51 @@ function TemplatesScreenContent({
   );
 
   const featuredGoalId = useMemo(() => getFeaturedGoalId(), []);
-  const habitCountsByGoalId = useMemo(() => {
-    const counts: Record<string, number> = {};
-    GOAL_COLLECTIONS.forEach((goal) => {
-      counts[goal.id] =
-        data.allTemplates?.filter((t) => goal.categories.includes(t.category))
-          .length ?? 0;
-    });
-    return counts;
-  }, [data.allTemplates]);
-  const featuredStarterTemplates = useMemo(() => {
+  const goalAggregates = useMemo(() => {
+    const countsByGoalId = Object.fromEntries(
+      GOAL_COLLECTIONS.map((goal) => [goal.id, 0])
+    ) as Record<string, number>;
+    const featuredTemplates: Doc<'templates'>[] = [];
     const featured = GOAL_COLLECTIONS.find((g) => g.id === featuredGoalId);
-    if (!featured || !data.allTemplates) return [];
-    return [...data.allTemplates]
-      .filter((t) => featured.categories.includes(t.category))
-      .sort((a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0))
-      .slice(0, 3);
+    const featuredCategories = featured ? new Set(featured.categories) : null;
+    const goalIdsByCategory = new Map<string, string[]>();
+
+    for (const goal of GOAL_COLLECTIONS) {
+      for (const category of goal.categories) {
+        const existing = goalIdsByCategory.get(category);
+        if (existing) {
+          existing.push(goal.id);
+        } else {
+          goalIdsByCategory.set(category, [goal.id]);
+        }
+      }
+    }
+
+    if (data.allTemplates) {
+      for (const template of data.allTemplates) {
+        const goalIds = goalIdsByCategory.get(template.category);
+        if (goalIds) {
+          for (const goalId of goalIds) {
+            countsByGoalId[goalId] = (countsByGoalId[goalId] ?? 0) + 1;
+          }
+        }
+
+        if (featuredCategories?.has(template.category)) {
+          featuredTemplates.push(template);
+        }
+      }
+    }
+
+    featuredTemplates.sort(
+      (a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0)
+    );
+
+    return {
+      featuredStarterTemplates: featuredTemplates.slice(0, 3),
+      habitCountsByGoalId: countsByGoalId,
+    };
   }, [data.allTemplates, featuredGoalId]);
+  const featuredStarterTemplates = goalAggregates.featuredStarterTemplates;
 
   const handleImport = (template: Doc<'templates'>) => {
     state.setPreviewTemplate(template);
@@ -209,7 +237,7 @@ function TemplatesScreenContent({
             onViewHabit={handleViewHabit}
           />
         }
-        habitCountsByGoalId={habitCountsByGoalId}
+        habitCountsByGoalId={goalAggregates.habitCountsByGoalId}
         importedTemplateIds={state.importedTemplateIds}
         importingTemplateId={state.importingTemplateId}
         isSearchActive={state.isSearchActive}
