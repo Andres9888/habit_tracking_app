@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Final — scrollbar flash + tiny chevron</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --primary-500: #10B981;
+      --gray-50: #faf9f7; --gray-100: #f5f5f4; --gray-200: #e7e5e4;
+      --gray-300: #d6d3d1; --gray-400: #a8a29e; --gray-500: #78716c;
+      --gray-600: #57534e; --gray-700: #44403c; --gray-900: #1c1917;
+    }
+    * { font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif !important; -webkit-font-smoothing: antialiased; box-sizing: border-box; }
+    body { background: #111827; padding: 24px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+
+    .header { color: #f9fafb; text-align: center; margin-bottom: 24px; }
+    .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+    .header p { color: #9ca3af; font-size: 14px; max-width: 560px; margin: 0 auto; line-height: 1.5; }
+
+    .stage { display: flex; gap: 32px; align-items: flex-start; }
+
+    .phone {
+      width: 380px; height: 760px; background: var(--gray-50); border-radius: 36px;
+      border: 8px solid #0f172a; box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+      overflow: hidden; position: relative; display: flex; flex-direction: column;
+    }
+    .phone-header {
+      flex: 0 0 auto; padding: 16px 20px 12px; background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex; align-items: center; justify-content: space-between; z-index: 5;
+    }
+    .phone-scroll {
+      flex: 1 1 auto; overflow-y: auto; position: relative; padding: 16px 16px 80px;
+      scroll-behavior: smooth;
+    }
+    .phone-scroll::-webkit-scrollbar { width: 0; }
+
+    .card { background: white; border-radius: 16px; border: 1px solid var(--gray-200); padding: 16px; margin-bottom: 14px; }
+    .label { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: var(--gray-500); text-transform: uppercase; margin-bottom: 8px; }
+    .input { height: 52px; border: 2px solid var(--gray-200); border-radius: 12px; padding: 0 16px; font-size: 17px; font-weight: 500; color: var(--gray-900); width: 100%; background: white; }
+    .swatch { width: 32px; height: 32px; border-radius: 9999px; }
+
+    .more-header {
+      background: white; border-radius: 16px; border: 1px solid var(--gray-200);
+      padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer;
+    }
+    .more-header .left { display: flex; align-items: center; gap: 10px; }
+    .more-header .right { display: flex; align-items: center; gap: 8px; color: var(--gray-500); font-size: 13px; font-weight: 600; }
+    .more-content { padding: 4px 12px 12px; display: none; }
+    .more-content.open { display: block; }
+    .opt-row {
+      background: white; border-radius: 12px; border: 1px solid var(--gray-200);
+      padding: 10px 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+    }
+    .opt-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; }
+
+    /* iOS scrollbar (flashes once on load + on scroll) */
+    .ios-scrollbar {
+      position: absolute; right: 4px;
+      width: 3px; background: rgba(0,0,0,0.32);
+      border-radius: 9999px; z-index: 6; opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+    .ios-scrollbar.flashing { opacity: 1; }
+    .ios-scrollbar.scrolling { opacity: 1; }
+
+    /* Tiny persistent chevron at bottom-center */
+    .scroll-hint {
+      position: absolute; left: 0; right: 0; bottom: 8px;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none; z-index: 5;
+      transition: opacity 0.18s linear;
+    }
+    .scroll-hint i {
+      width: 14px; height: 14px; color: var(--gray-500);
+    }
+
+    .controls { display: flex; flex-direction: column; gap: 14px; min-width: 280px; }
+    .ctrl {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; padding: 14px 16px; color: #e5e7eb;
+    }
+    .ctrl h3 { font-size: 13px; font-weight: 700; color: #f9fafb; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .ctrl p { color: #9ca3af; font-size: 12px; line-height: 1.5; }
+    .ctrl button {
+      margin-top: 10px; background: #1f2937; border: 1px solid #374151; color: #f3f4f6;
+      padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .ctrl button:hover { background: #374151; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Final — scrollbar flash + tiny static chevron</h1>
+    <p>Open the modal → iOS scrollbar flashes once on the right. Then a faint 14px chevron sits at bottom-center as a persistent reminder. Both fade out as you reach the bottom.</p>
+  </div>
+
+  <div class="stage">
+    <div class="phone" id="phone">
+      <div class="phone-header">
+        <button><i data-lucide="x" style="width:22px;height:22px;color:var(--gray-500)"></i></button>
+        <div style="font-size:17px;font-weight:700;color:var(--gray-900)">New habit</div>
+        <button style="font-size:15px;font-weight:600;color:var(--gray-400)">Save</button>
+      </div>
+
+      <div class="phone-scroll" id="scroll">
+        <div class="card">
+          <div class="label">Habit name</div>
+          <input class="input" value="Morning run" />
+        </div>
+
+        <div class="card">
+          <div class="label">Choose an icon</div>
+          <div style="display:flex; gap:8px; margin-top:4px; flex-wrap:wrap">
+            <span style="font-size:22px">🏃</span>
+            <span style="font-size:22px;opacity:0.5">📖</span>
+            <span style="font-size:22px;opacity:0.5">🧘</span>
+            <span style="font-size:22px;opacity:0.5">💧</span>
+            <span style="font-size:22px;opacity:0.5">☕️</span>
+            <span style="font-size:22px;opacity:0.5">🎯</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="label">Pick a color</div>
+          <div style="display:flex; gap:10px; margin-top:4px">
+            <div class="swatch" style="background:#10B981; outline: 2px solid #10B981; outline-offset: 2px"></div>
+            <div class="swatch" style="background:#3B82F6"></div>
+            <div class="swatch" style="background:#F59E0B"></div>
+            <div class="swatch" style="background:#EF4444"></div>
+            <div class="swatch" style="background:#8B5CF6"></div>
+            <div class="swatch" style="background:#EC4899"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex; align-items:center; justify-content:space-between">
+            <div>
+              <div style="font-weight:600; color:var(--gray-900); font-size:15px">Daily reminder</div>
+              <div style="color:var(--gray-500); font-size:13px; margin-top:2px">7:30 AM</div>
+            </div>
+            <div style="width:48px; height:28px; background:var(--primary-500); border-radius:9999px; position:relative">
+              <div style="width:24px; height:24px; background:white; border-radius:9999px; position:absolute; top:2px; right:2px"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collapsed "More to customize" section header -->
+        <div class="more-header" id="more-toggle">
+          <span class="left">
+            <i data-lucide="sliders-horizontal" style="width:18px;height:18px;color:var(--gray-700)"></i>
+            <span style="font-weight:600; color:var(--gray-900); font-size:15px">More to customize</span>
+          </span>
+          <span class="right">
+            3
+            <i data-lucide="chevron-down" id="more-chev" style="width:16px;height:16px;transition:transform .18s"></i>
+          </span>
+        </div>
+        <div class="more-content" id="more-content">
+          <div class="opt-row">
+            <div class="opt-icon"><i data-lucide="activity" style="width:16px;height:16px;color:var(--gray-600)"></i></div>
+            <div style="flex:1">
+              <div style="font-size:14px; font-weight:600; color:var(--gray-900)">Strength curve</div>
+              <div style="font-size:12px; color:var(--gray-500)">Balanced · ~30-day build</div>
+            </div>
+            <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--gray-400)"></i>
+          </div>
+          <div class="opt-row">
+            <div class="opt-icon" style="background:#FEF3C7"><span style="font-size:14px">🌱</span></div>
+            <div style="flex:1">
+              <div style="font-size:14px; font-weight:600; color:var(--gray-900)">Growth icons</div>
+              <div style="font-size:12px; color:var(--gray-500)">Seedling · 5 stages</div>
+            </div>
+            <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--gray-400)"></i>
+          </div>
+          <div class="opt-row">
+            <div class="opt-icon" style="background:#FEE2E2"><i data-lucide="target" style="width:16px;height:16px;color:#B45309"></i></div>
+            <div style="flex:1">
+              <div style="font-size:14px; font-weight:600; color:var(--gray-900)">Streak goal</div>
+              <div style="font-size:12px; color:var(--gray-500)">No target set</div>
+            </div>
+            <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--gray-400)"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- iOS scrollbar -->
+      <div class="ios-scrollbar" id="scrollbar"></div>
+
+      <!-- Tiny static chevron at bottom-center -->
+      <div class="scroll-hint" id="hint">
+        <i data-lucide="chevron-down"></i>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="ctrl">
+        <h3><i data-lucide="zap" style="width:14px;height:14px"></i> Native scrollbar flash</h3>
+        <p>Fires once when the modal opens (350ms after mount, ~1s flash). Use the button below to replay — that's the equivalent of closing and reopening Add Habit.</p>
+        <button onclick="flashScrollbar()"><i data-lucide="refresh-cw" style="width:14px;height:14px"></i> Replay flash</button>
+      </div>
+      <div class="ctrl">
+        <h3><i data-lucide="chevron-down" style="width:14px;height:14px"></i> Tiny static chevron</h3>
+        <p>14px, no motion, no background. Max 50% opacity. Sits at bottom-center while there's still content below the fold. Fades to 0 as you reach the end.</p>
+      </div>
+      <div class="ctrl">
+        <h3><i data-lucide="layers" style="width:14px;height:14px"></i> Try it</h3>
+        <p>Scroll inside the phone — chevron should fade out as you approach the bottom. Tap "More to customize" to expand the section.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const scroll = document.getElementById('scroll');
+    const scrollbar = document.getElementById('scrollbar');
+    const hint = document.getElementById('hint');
+    const moreToggle = document.getElementById('more-toggle');
+    const moreContent = document.getElementById('more-content');
+    const moreChev = document.getElementById('more-chev');
+
+    // Position the scrollbar based on content
+    function updateScrollbar() {
+      const visible = scroll.clientHeight;
+      const total = scroll.scrollHeight;
+      const ratio = visible / total;
+      const barHeight = Math.max(40, visible * ratio);
+      const top = (scroll.scrollTop / (total - visible)) * (visible - barHeight);
+      scrollbar.style.height = barHeight + 'px';
+      scrollbar.style.top = (top + 80) + 'px'; // +80 for header
+    }
+
+    function updateHint() {
+      const remaining = scroll.scrollHeight - scroll.scrollTop - scroll.clientHeight;
+      // remaining 8 → 0 opacity, 48+ → 0.5 opacity
+      const t = Math.max(0, Math.min(1, (remaining - 8) / 40));
+      hint.style.opacity = String(t * 0.5);
+    }
+
+    function flashScrollbar() {
+      updateScrollbar();
+      scrollbar.classList.add('flashing');
+      setTimeout(() => scrollbar.classList.remove('flashing'), 1100);
+    }
+
+    let scrollTimer;
+    scroll.addEventListener('scroll', () => {
+      updateScrollbar();
+      updateHint();
+      scrollbar.classList.add('scrolling');
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => scrollbar.classList.remove('scrolling'), 700);
+    });
+
+    moreToggle.addEventListener('click', () => {
+      const open = moreContent.classList.toggle('open');
+      moreChev.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
+      setTimeout(() => { updateScrollbar(); updateHint(); }, 50);
+    });
+
+    // Initial setup — flash on load (mimics modal mount)
+    setTimeout(() => {
+      updateScrollbar();
+      updateHint();
+      setTimeout(flashScrollbar, 350);
+    }, 200);
+  </script>
+</body>
+</html>

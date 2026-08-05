@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subtle scroll cues — final candidates</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --primary-500: #10B981;
+      --gray-50: #faf9f7; --gray-100: #f5f5f4; --gray-200: #e7e5e4;
+      --gray-300: #d6d3d1; --gray-400: #a8a29e; --gray-500: #78716c;
+      --gray-600: #57534e; --gray-700: #44403c; --gray-900: #1c1917;
+    }
+    * { font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif !important; -webkit-font-smoothing: antialiased; box-sizing: border-box; }
+    body { background: #111827; padding: 24px; }
+
+    .phone {
+      width: 380px; height: 760px; background: var(--gray-50); border-radius: 36px;
+      border: 8px solid #0f172a; box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+      overflow: hidden; position: relative; display: flex; flex-direction: column;
+    }
+    .phone-header {
+      flex: 0 0 auto; padding: 16px 20px 12px; background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex; align-items: center; justify-content: space-between; z-index: 5;
+    }
+    .phone-scroll { flex: 1 1 auto; overflow-y: auto; position: relative; padding: 16px 16px 80px; }
+    .phone-scroll::-webkit-scrollbar { width: 0; }
+
+    .card { background: white; border-radius: 16px; border: 1px solid var(--gray-200); padding: 16px; margin-bottom: 14px; }
+    .label { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: var(--gray-500); text-transform: uppercase; margin-bottom: 8px; }
+    .input { height: 52px; border: 2px solid var(--gray-200); border-radius: 12px; padding: 0 16px; font-size: 17px; font-weight: 500; color: var(--gray-900); width: 100%; background: white; }
+    .swatch { width: 32px; height: 32px; border-radius: 9999px; }
+
+    .more-header {
+      background: white; border-radius: 16px; border: 1px solid var(--gray-200);
+      padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .more-header .left { display: flex; align-items: center; gap: 10px; }
+    .more-header .right { display: flex; align-items: center; gap: 8px; color: var(--gray-500); font-size: 13px; font-weight: 600; }
+
+    /* === A: Fade gradient only === */
+    .fade-gradient {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 40px;
+      background: linear-gradient(to top, var(--gray-50) 5%, rgba(250,249,247,0.7) 50%, rgba(250,249,247,0));
+      pointer-events: none; z-index: 4;
+    }
+
+    /* === C: iOS-style native scroll indicator === */
+    .ios-scrollbar {
+      position: absolute; top: 80px; right: 5px; width: 3px;
+      height: 280px; /* arbitrary visible portion */
+      background: rgba(0,0,0,0.30);
+      border-radius: 9999px;
+      z-index: 6;
+      animation: fadeFlash 1.4s ease-in 0.3s 1 both;
+    }
+    @keyframes fadeFlash {
+      0%   { opacity: 0; }
+      20%  { opacity: 1; }
+      70%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    .variant-label { color: #f3f4f6; font-size: 14px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .variant-note { color: #9ca3af; font-size: 12px; margin-top: 10px; max-width: 380px; line-height: 1.5; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1320px; margin: 0 auto; }
+    .header { color: #f9fafb; text-align: center; margin-bottom: 24px; }
+    .header h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+    .header p { color: #9ca3af; font-size: 14px; max-width: 760px; margin: 0 auto; }
+
+    .replay-btn {
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+      color: #d1d5db; border-radius: 9999px; font-size: 11px; font-weight: 600;
+      margin-top: 8px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Subtle scroll cues — final candidates</h1>
+    <p>Three quiet approaches. No icon motion competing with the form. Daily reminder above the fold in all three.</p>
+  </div>
+
+  <div class="grid">
+
+    <!-- ============ A: Bottom fade gradient ============ -->
+    <div>
+      <div class="variant-label"><i data-lucide="droplet"></i>A — Bottom fade gradient (no icon)</div>
+      <div class="phone">
+        <div class="phone-header">
+          <button class="text-stone-500"><i data-lucide="x" style="width:22px;height:22px"></i></button>
+          <div style="font-size:17px;font-weight:700;color:var(--gray-900)">New habit</div>
+          <button style="font-size:15px;font-weight:600;color:var(--gray-400)">Save</button>
+        </div>
+        <div class="phone-scroll">
+          <div class="card">
+            <div class="label">Habit name</div>
+            <input class="input" value="Morning run" />
+          </div>
+          <div class="card">
+            <div class="label">Pick a color</div>
+            <div style="display:flex; gap:10px; margin-top:4px">
+              <div class="swatch" style="background:#10B981"></div>
+              <div class="swatch" style="background:#3B82F6"></div>
+              <div class="swatch" style="background:#F59E0B"></div>
+              <div class="swatch" style="background:#EF4444"></div>
+              <div class="swatch" style="background:#8B5CF6"></div>
+              <div class="swatch" style="background:#EC4899"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div style="display:flex; align-items:center; justify-content:space-between">
+              <div>
+                <div style="font-weight:600; color:var(--gray-900); font-size:15px">Daily reminder</div>
+                <div style="color:var(--gray-500); font-size:13px; margin-top:2px">7:30 AM</div>
+              </div>
+              <div style="width:48px; height:28px; background:var(--primary-500); border-radius:9999px; position:relative">
+                <div style="width:24px; height:24px; background:white; border-radius:9999px; position:absolute; top:2px; right:2px"></div>
+              </div>
+            </div>
+          </div>
+          <div class="more-header">
+            <span class="left">
+              <i data-lucide="sliders-horizontal" style="width:18px;height:18px;color:var(--gray-700)"></i>
+              <span style="font-weight:600; color:var(--gray-900); font-size:15px">More to customize</span>
+            </span>
+            <span class="right">3 <i data-lucide="chevron-down" style="width:16px;height:16px"></i></span>
+          </div>
+        </div>
+        <div class="fade-gradient"></div>
+      </div>
+      <div class="variant-note">Soft 40px gradient fades the form background to transparent at the bottom edge. Static — no motion competing with the form. Only shows when section is below the fold (logic already wired). Subliminal "content continues past this edge" signal.</div>
+    </div>
+
+    <!-- ============ B: Peek the section header ============ -->
+    <div>
+      <div class="variant-label"><i data-lucide="layers"></i>B — Section header peeks above the fold</div>
+      <div class="phone">
+        <div class="phone-header">
+          <button class="text-stone-500"><i data-lucide="x" style="width:22px;height:22px"></i></button>
+          <div style="font-size:17px;font-weight:700;color:var(--gray-900)">New habit</div>
+          <button style="font-size:15px;font-weight:600;color:var(--gray-400)">Save</button>
+        </div>
+        <div class="phone-scroll">
+          <div class="card" style="margin-bottom: 10px">
+            <div class="label">Habit name</div>
+            <input class="input" value="Morning run" />
+          </div>
+          <div class="card" style="margin-bottom: 10px">
+            <div class="label">Pick a color</div>
+            <div style="display:flex; gap:10px; margin-top:4px">
+              <div class="swatch" style="background:#10B981"></div>
+              <div class="swatch" style="background:#3B82F6"></div>
+              <div class="swatch" style="background:#F59E0B"></div>
+              <div class="swatch" style="background:#EF4444"></div>
+              <div class="swatch" style="background:#8B5CF6"></div>
+              <div class="swatch" style="background:#EC4899"></div>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom: 10px">
+            <div style="display:flex; align-items:center; justify-content:space-between">
+              <div>
+                <div style="font-weight:600; color:var(--gray-900); font-size:15px">Daily reminder</div>
+                <div style="color:var(--gray-500); font-size:13px; margin-top:2px">7:30 AM</div>
+              </div>
+              <div style="width:48px; height:28px; background:var(--primary-500); border-radius:9999px; position:relative">
+                <div style="width:24px; height:24px; background:white; border-radius:9999px; position:absolute; top:2px; right:2px"></div>
+              </div>
+            </div>
+          </div>
+          <div class="more-header" style="margin-top: 4px">
+            <span class="left">
+              <i data-lucide="sliders-horizontal" style="width:18px;height:18px;color:var(--gray-700)"></i>
+              <span style="font-weight:600; color:var(--gray-900); font-size:15px">More to customize</span>
+            </span>
+            <span class="right">3 <i data-lucide="chevron-down" style="width:16px;height:16px"></i></span>
+          </div>
+          <!-- spacer so scroll exists -->
+          <div style="height: 400px"></div>
+        </div>
+      </div>
+      <div class="variant-note">No cue at all — instead, layout is tuned so the collapsed "More to customize" header sits right at the bottom of the visible area. Its own chevron + "3" tells you there's content inside. Cleanest design; the cue IS the destination. Brittle to large-text accessibility or small phones.</div>
+    </div>
+
+    <!-- ============ C: Native scrollbar flash ============ -->
+    <div>
+      <div class="variant-label"><i data-lucide="more-vertical"></i>C — Native scroll indicator flash</div>
+      <div class="phone" id="phone-c">
+        <div class="phone-header">
+          <button class="text-stone-500"><i data-lucide="x" style="width:22px;height:22px"></i></button>
+          <div style="font-size:17px;font-weight:700;color:var(--gray-900)">New habit</div>
+          <button style="font-size:15px;font-weight:600;color:var(--gray-400)">Save</button>
+        </div>
+        <div class="phone-scroll">
+          <div class="card">
+            <div class="label">Habit name</div>
+            <input class="input" value="Morning run" />
+          </div>
+          <div class="card">
+            <div class="label">Pick a color</div>
+            <div style="display:flex; gap:10px; margin-top:4px">
+              <div class="swatch" style="background:#10B981"></div>
+              <div class="swatch" style="background:#3B82F6"></div>
+              <div class="swatch" style="background:#F59E0B"></div>
+              <div class="swatch" style="background:#EF4444"></div>
+              <div class="swatch" style="background:#8B5CF6"></div>
+              <div class="swatch" style="background:#EC4899"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div style="display:flex; align-items:center; justify-content:space-between">
+              <div>
+                <div style="font-weight:600; color:var(--gray-900); font-size:15px">Daily reminder</div>
+                <div style="color:var(--gray-500); font-size:13px; margin-top:2px">7:30 AM</div>
+              </div>
+              <div style="width:48px; height:28px; background:var(--primary-500); border-radius:9999px; position:relative">
+                <div style="width:24px; height:24px; background:white; border-radius:9999px; position:absolute; top:2px; right:2px"></div>
+              </div>
+            </div>
+          </div>
+          <div class="more-header">
+            <span class="left">
+              <i data-lucide="sliders-horizontal" style="width:18px;height:18px;color:var(--gray-700)"></i>
+              <span style="font-weight:600; color:var(--gray-900); font-size:15px">More to customize</span>
+            </span>
+            <span class="right">3 <i data-lucide="chevron-down" style="width:16px;height:16px"></i></span>
+          </div>
+          <div style="height: 400px"></div>
+        </div>
+        <div class="ios-scrollbar" id="scrollbar-c"></div>
+      </div>
+      <button class="replay-btn" onclick="replayScrollbar()">↻ Replay flash</button>
+      <div class="variant-note">On modal open, the standard iOS scroll indicator flashes briefly (~1.4s) — that's the platform's built-in "you can scroll here" signal. RN calls <code>flashScrollIndicators()</code>. Zero custom UI. Familiar to every iOS user. Risk: easy to miss if you don't look. Combines well with A.</div>
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+    function replayScrollbar() {
+      const el = document.getElementById('scrollbar-c');
+      const clone = el.cloneNode(true);
+      el.replaceWith(clone);
+    }
+  </script>
+</body>
+</html>

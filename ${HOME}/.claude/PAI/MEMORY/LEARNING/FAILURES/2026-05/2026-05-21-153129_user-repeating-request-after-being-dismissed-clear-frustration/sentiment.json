@@ -1,0 +1,8 @@
+{
+  "rating": 3,
+  "summary": "User repeating request after being dismissed, clear frustration",
+  "detailed_context": "The user asked to 'merge to main' in their previous message. The AI responded with 'No response requested,' which dismisses or ignores the request. The user is now repeating the same command curtly, indicating frustration at not being understood or helped. This is a repeated request scenario after the AI failed to address it. The user likely wants Git/repository help but the AI's previous response was unhelpful and confusing.",
+  "session_id": "f11d4520-2eaa-4f2d-9dce-8197bc1c5888",
+  "captured_at": "2026-05-21T22:31:29.355Z",
+  "transcript_source": "f11d4520-2eaa-4f2d-9dce-8197bc1c5888.jsonl"
+}

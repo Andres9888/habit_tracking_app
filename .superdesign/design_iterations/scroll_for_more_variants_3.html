@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scroll affordance — above the fold</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --primary-500: #10B981;
+      --gray-50: #faf9f7; --gray-100: #f5f5f4; --gray-200: #e7e5e4;
+      --gray-300: #d6d3d1; --gray-400: #a8a29e; --gray-500: #78716c;
+      --gray-600: #57534e; --gray-700: #44403c; --gray-900: #1c1917;
+    }
+    * { font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif !important; -webkit-font-smoothing: antialiased; box-sizing: border-box; }
+    body { background: #111827; padding: 24px; }
+
+    .phone {
+      width: 380px; height: 760px; background: var(--gray-50); border-radius: 36px;
+      border: 8px solid #0f172a; box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+      overflow: hidden; position: relative; display: flex; flex-direction: column;
+    }
+    .phone-header {
+      flex: 0 0 auto; padding: 16px 20px 12px; background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex; align-items: center; justify-content: space-between; z-index: 5;
+    }
+    .phone-scroll { flex: 1 1 auto; overflow-y: auto; position: relative; padding: 16px 16px 80px; }
+    .phone-scroll::-webkit-scrollbar { width: 0; }
+
+    .card { background: white; border-radius: 16px; border: 1px solid var(--gray-200); padding: 16px; margin-bottom: 14px; }
+    .label { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: var(--gray-500); text-transform: uppercase; margin-bottom: 8px; }
+    .input { height: 52px; border: 2px solid var(--gray-200); border-radius: 12px; padding: 0 16px; font-size: 17px; font-weight: 500; color: var(--gray-900); width: 100%; background: white; }
+    .swatch { width: 32px; height: 32px; border-radius: 9999px; }
+
+    .more-divider {
+      display: flex; align-items: center; gap: 10px; margin: 18px 4px 8px; color: var(--gray-500);
+      font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .more-divider .line { flex: 1; height: 1px; background: var(--gray-300); }
+    .more-cta {
+      width: 100%; background: white; border: 1.5px dashed var(--gray-300); border-radius: 14px;
+      padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;
+      color: var(--gray-700); font-weight: 600; font-size: 14px;
+    }
+    .more-cta .left { display:inline-flex; align-items:center; gap: 10px; }
+    .more-cta .right { display:inline-flex; align-items:center; gap: 6px; color: var(--gray-500); font-size: 12px; font-weight: 500; }
+    .bounce-chev { display: inline-block; animation: chevBob 1.6s ease-in-out infinite; }
+    @keyframes chevBob { 0%,100% { transform: translateY(0); opacity:1 } 50% { transform: translateY(3px); opacity:0.5 } }
+
+    .wave-arrows { display: flex; flex-direction: column; align-items: center; margin: 4px 0 0; color: var(--gray-400); }
+    .wave-arrows i { display:block; margin-top:-8px; animation: waveBob 1.4s ease-in-out infinite; }
+    .wave-arrows i:nth-child(1){ animation-delay: 0s; }
+    .wave-arrows i:nth-child(2){ animation-delay: .15s; }
+    .wave-arrows i:nth-child(3){ animation-delay: .30s; }
+    @keyframes waveBob { 0%,100% { opacity: .25; transform: translateY(-2px); } 50% { opacity: 1; transform: translateY(2px); } }
+
+    /* ===== VIEWPORT-ANCHORED CUE (H1) ===== */
+    .viewport-fade {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 90px;
+      background: linear-gradient(to top, var(--gray-50) 10%, rgba(250,249,247,0.85) 45%, rgba(250,249,247,0));
+      pointer-events: none; z-index: 4;
+    }
+    .scroll-hint-pill {
+      position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%);
+      background: white; color: var(--gray-700); padding: 8px 14px; border-radius: 9999px;
+      font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;
+      border: 1px solid var(--gray-200);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      z-index: 5; animation: bob 1.8s ease-in-out infinite;
+    }
+    .scroll-hint-pill i { animation: chevBob 1.4s ease-in-out infinite; }
+    @keyframes bob { 0%,100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -3px); } }
+
+    /* ===== PEEKED CARD (H2) ===== */
+    /* No special CSS — handled by content positioning */
+
+    .variant-label { color: #f3f4f6; font-size: 14px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .variant-note { color: #9ca3af; font-size: 12px; margin-top: 10px; max-width: 420px; line-height: 1.5; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; max-width: 880px; margin: 0 auto; }
+    .header { color: #f9fafb; text-align: center; margin-bottom: 24px; }
+    .header h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+    .header p { color: #9ca3af; font-size: 14px; max-width: 760px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Above-the-fold scroll affordance</h1>
+    <p>Both keep the V3 "More to customize" CTA below — but each shows a different way to make the page <em>obviously scrollable</em> on first paint, before the user has interacted.</p>
+  </div>
+
+  <div class="grid">
+
+    <!-- ============ H1: Viewport-anchored hint pill + fade ============ -->
+    <div>
+      <div class="variant-label"><i data-lucide="arrow-down-circle"></i>H1 — Viewport-anchored pill (always visible)</div>
+      <div class="phone">
+        <div class="phone-header">
+          <button class="text-stone-500"><i data-lucide="x" style="width:22px;height:22px"></i></button>
+          <div style="font-size:17px;font-weight:700;color:var(--gray-900)">New habit</div>
+          <button style="font-size:15px;font-weight:600;color:var(--gray-400)">Save</button>
+        </div>
+        <div class="phone-scroll">
+          <div class="card">
+            <div class="label">Habit name</div>
+            <input class="input" value="Morning run" />
+          </div>
+          <div class="card">
+            <div class="label">Pick a color</div>
+            <div style="display:flex; gap:10px; margin-top:4px">
+              <div class="swatch" style="background:#10B981"></div>
+              <div class="swatch" style="background:#3B82F6"></div>
+              <div class="swatch" style="background:#F59E0B"></div>
+              <div class="swatch" style="background:#EF4444"></div>
+              <div class="swatch" style="background:#8B5CF6"></div>
+              <div class="swatch" style="background:#EC4899"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div style="display:flex; align-items:center; justify-content:space-between">
+              <div>
+                <div style="font-weight:600; color:var(--gray-900); font-size:15px">Daily reminder</div>
+                <div style="color:var(--gray-500); font-size:13px; margin-top:2px">7:30 AM</div>
+              </div>
+              <div style="width:48px; height:28px; background:var(--primary-500); border-radius:9999px; position:relative">
+                <div style="width:24px; height:24px; background:white; border-radius:9999px; position:absolute; top:2px; right:2px"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hidden below the fold initially -->
+          <div class="wave-arrows">
+            <i data-lucide="chevron-down" style="width:18px;height:18px"></i>
+            <i data-lucide="chevron-down" style="width:18px;height:18px"></i>
+            <i data-lucide="chevron-down" style="width:18px;height:18px"></i>
+          </div>
+          <div class="more-divider">
+            <span class="line"></span><span>More to customize</span><span class="line"></span>
+          </div>
+          <button class="more-cta">
+            <span class="left">
+              <i data-lucide="sliders-horizontal" style="width:18px;height:18px;color:var(--gray-700)"></i>
+              Strength, growth icons, streak goal
+            </span>
+            <span class="right">3 <span class="bounce-chev"><i data-lucide="chevron-down" style="width:14px;height:14px"></i></span></span>
+          </button>
+        </div>
+
+        <!-- The fade and pill are anchored to the PHONE viewport, not the scroll content -->
+        <div class="viewport-fade"></div>
+        <div class="scroll-hint-pill">
+          <i data-lucide="chevron-down" style="width:14px;height:14px"></i>
+          Scroll for more
+        </div>
+      </div>
+      <div class="variant-note">A subtle fade at the bottom edge + a small "Scroll for more" pill anchored to the viewport (not the content). The pill bobs gently. As soon as the user starts scrolling it fades out — leaving the in-content wave and CTA to take over. <strong>Always visible on first paint.</strong></div>
+    </div>
+
+    <!-- ============ H2: Peeked CTA above the fold ============ -->
+    <div>
+      <div class="variant-label"><i data-lucide="layers"></i>H2 — Peek the CTA above the fold</div>
+      <div class="phone">
+        <div class="phone-header">
+          <button class="text-stone-500"><i data-lucide="x" style="width:22px;height:22px"></i></button>
+          <div style="font-size:17px;font-weight:700;color:var(--gray-900)">New habit</div>
+          <button style="font-size:15px;font-weight:600;color:var(--gray-400)">Save</button>
+        </div>
+        <div class="phone-scroll">
+          <div class="card" style="margin-bottom: 10px">
+            <div class="label">Habit name</div>
+            <input class="input" value="Morning run" />
+          </div>
+          <div class="card" style="margin-bottom: 10px">
+            <div class="label">Pick a color</div>
+            <div style="display:flex; gap:10px; margin-top:4px">
+              <div class="swatch" style="background:#10B981"></div>
+              <div class="swatch" style="background:#3B82F6"></div>
+              <div class="swatch" style="background:#F59E0B"></div>
+              <div class="swatch" style="background:#EF4444"></div>
+              <div class="swatch" style="background:#8B5CF6"></div>
+              <div class="swatch" style="background:#EC4899"></div>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom: 10px">
+            <div style="display:flex; align-items:center; justify-content:space-between">
+              <div>
+                <div style="font-weight:600; color:var(--gray-900); font-size:15px">Daily reminder</div>
+                <div style="color:var(--gray-500); font-size:13px; margin-top:2px">7:30 AM</div>
+              </div>
+              <div style="width:48px; height:28px; background:var(--primary-500); border-radius:9999px; position:relative">
+                <div style="width:24px; height:24px; background:white; border-radius:9999px; position:absolute; top:2px; right:2px"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Wave intentionally placed so it peeks above the fold -->
+          <div class="wave-arrows" style="margin-top: 6px">
+            <i data-lucide="chevron-down" style="width:20px;height:20px"></i>
+            <i data-lucide="chevron-down" style="width:20px;height:20px"></i>
+            <i data-lucide="chevron-down" style="width:20px;height:20px"></i>
+          </div>
+          <div class="more-divider"><span class="line"></span><span>More to customize</span><span class="line"></span></div>
+
+          <button class="more-cta">
+            <span class="left">
+              <i data-lucide="sliders-horizontal" style="width:18px;height:18px;color:var(--gray-700)"></i>
+              Strength, growth icons, streak goal
+            </span>
+            <span class="right">3 <span class="bounce-chev"><i data-lucide="chevron-down" style="width:14px;height:14px"></i></span></span>
+          </button>
+        </div>
+
+        <!-- Light fade at the bottom — no pill, just a soft visual nudge -->
+        <div class="viewport-fade" style="height: 50px; background: linear-gradient(to top, var(--gray-50), rgba(250,249,247,0));"></div>
+      </div>
+      <div class="variant-note">The bouncing chevron wave is positioned so it <em>peeks above the fold</em> right under the reminder card. User sees animated arrows pointing down + a partial CTA — unmistakably "more is here." Achieved by tightening card spacing so the next section starts higher.</div>
+    </div>
+
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>
