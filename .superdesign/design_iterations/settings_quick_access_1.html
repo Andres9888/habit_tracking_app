@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Settings — Value Ranking + Quick Access Proposal</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono&family=Lora:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0F0D; --page:#15170F; --card:#1B1D16; --card-soft:#20231B;
+    --hairline:rgba(255,255,255,0.08); --text:#F2F1EA; --text2:#B7B6AC; --text3:#8A8A80;
+    --green:#7CB68A; --green-dim:#4E6E56; --amber:#D9A857; --red:#E0665A;
+    --shadow:0 8px 24px rgba(0,0,0,0.35);
+  }
+  *{font-family:'DM Sans',sans-serif !important;}
+  .mono{font-family:'Space Mono',monospace !important;}
+  .serif{font-family:'Lora',serif !important;}
+  body{background:var(--bg);} h1,h2,h3,p,span,div{margin:0;}
+  .phone{background:var(--page);border-radius:44px;border:1px solid rgba(255,255,255,0.06);box-shadow:var(--shadow);overflow:hidden;width:390px;}
+  .inner{padding:22px 16px 24px;}
+  .row{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--hairline);padding:11px 14px;}
+  .row:last-child{border-bottom:none;}
+  .tile{display:flex;align-items:center;justify-content:center;background:var(--card-soft);color:var(--text2);flex-shrink:0;width:36px;height:36px;border-radius:11px;}
+  .card{background:var(--card);border-radius:24px;box-shadow:var(--shadow);}
+  .chip{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--hairline);border-radius:14px;padding:10px 12px;box-shadow:var(--shadow);}
+  .seg{display:flex;background:var(--card-soft);border-radius:10px;padding:2px;}
+  .seg span{font-size:11px;padding:4px 9px;border-radius:8px;color:var(--text3);}
+  .seg .on{background:var(--green-dim);color:#fff;font-weight:600;}
+  .heat{width:34px;text-align:center;border-radius:6px;font-size:10px;font-weight:700;padding:2px 0;}
+  .h3{background:var(--green);color:#10120C;}
+  .h2c{background:rgba(124,182,138,0.35);color:var(--text);}
+  .h1c{background:rgba(124,182,138,0.12);color:var(--text3);}
+  td,th{padding:7px 10px;font-size:12.5px;color:var(--text2);text-align:left;vertical-align:top;}
+  th{color:var(--text3);font-size:10.5px;text-transform:uppercase;letter-spacing:1px;font-family:'Space Mono',monospace !important;}
+  tr{border-bottom:1px solid var(--hairline);}
+</style>
+</head>
+<body class="min-h-screen py-10 px-6">
+<div class="max-w-6xl mx-auto">
+
+  <p class="mono text-xs uppercase tracking-widest" style="color:var(--green);">Settings UX — value &amp; frequency analysis</p>
+  <h1 class="text-2xl font-semibold mt-1" style="color:var(--text);">Which settings matter, which get changed, what deserves one-tap access</h1>
+
+  <!-- RANKING TABLE -->
+  <div class="mt-8 grid lg:grid-cols-2 gap-8 items-start">
+    <div class="card" style="padding:20px;">
+      <p class="mono" style="font-size:11px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:10px;">Ranking (no analytics in app — heuristic: habit-app norms)</p>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr><th>Setting</th><th>Benefit</th><th>Change freq</th><th>Today's friction</th></tr>
+        <tr>
+          <td style="color:var(--text);font-weight:600;">Reminder time</td>
+          <td><span class="heat h3">HIGH</span><br>retention driver — reminders keep streaks alive</td>
+          <td><span class="heat h3">HIGH</span><br>shifts with schedule</td>
+          <td>Buried: Reminders → toggle ON → inset card → picker (3 levels)</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text);font-weight:600;">Streak Reminders on/off</td>
+          <td><span class="heat h3">HIGH</span><br>same retention lever + premium conversion surface</td>
+          <td><span class="heat h2c">MED</span></td>
+          <td>Fine — top of Reminders section</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text);font-weight:600;">Theme</td>
+          <td><span class="heat h2c">MED</span><br>comfort</td>
+          <td><span class="heat h2c">MED</span><br>most-toggled appearance knob</td>
+          <td>Mid Look &amp; Feel; inline picker OK</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text);font-weight:600;">Sort order</td>
+          <td><span class="heat h2c">MED</span><br>grows with habit count</td>
+          <td><span class="heat h2c">MED</span></td>
+          <td>Wrong home — list-view concern living in Settings, far from the list</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text);font-weight:600;">Archived habits</td>
+          <td><span class="heat h2c">MED</span><br>restore = re-activation</td>
+          <td><span class="heat h1c">LOW</span></td>
+          <td>OK behind Habits section</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text);font-weight:600;">Completion sound</td>
+          <td><span class="heat h1c">LOW</span><br>delight, set-once</td>
+          <td><span class="heat h1c">LOW</span></td>
+          <td>Fine</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text);font-weight:600;">Calendar look / compact cards / growth icons / dyslexic font</td>
+          <td><span class="heat h2c">MED</span> (a11y high for its users)</td>
+          <td><span class="heat h1c">LOW</span><br>set once, forget</td>
+          <td>Fine where they are</td>
+        </tr>
+        <tr style="border-bottom:none;">
+          <td style="color:var(--text);font-weight:600;">Export / account / support</td>
+          <td><span class="heat h1c">LOW</span></td>
+          <td><span class="heat h1c">LOW</span><br>rare</td>
+          <td>Correctly demoted</td>
+        </tr>
+      </table>
+      <p class="mt-4 text-xs" style="color:var(--text2);line-height:1.6;">
+        Takeaway: only <span style="color:var(--text);font-weight:600;">reminder time + streak-reminder toggle + theme</span> combine
+        high benefit with recurring change. Everything else is set-once. So the fix is small: a
+        <span style="color:var(--green);font-weight:600;">quick-controls strip</span> under the profile hero — not a re-architecture.
+        Sort order's real fix is a sort button on the habit list itself (out of settings entirely).
+      </p>
+    </div>
+
+    <!-- PROPOSED MOCK -->
+    <div>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="w-2.5 h-2.5 rounded-full" style="background:var(--green);"></span>
+        <p class="text-sm font-semibold" style="color:var(--text);">Proposal — quick-controls strip (1 tap from opening Settings)</p>
+      </div>
+      <div class="phone mx-auto">
+        <div class="inner">
+          <!-- header -->
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:14px;">
+            <div>
+              <p class="mono" style="font-size:10px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;">Account</p>
+              <h2 style="font-size:27px;line-height:30px;font-weight:700;color:var(--text);margin-top:2px;">Settings</h2>
+            </div>
+            <div class="tile"><i data-lucide="x" style="width:18px;height:18px;"></i></div>
+          </div>
+
+          <!-- hero (unchanged) -->
+          <div class="card" style="padding:16px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="tile" style="width:52px;height:52px;border-radius:999px;background:var(--green-dim);color:#fff;font-weight:700;font-size:18px;">A</div>
+              <div>
+                <p style="font-size:16px;font-weight:600;color:var(--text);">Andres Rodriguez</p>
+                <div style="display:flex;align-items:baseline;gap:4px;margin-top:2px;">
+                  <span style="font-size:27px;line-height:29px;font-weight:700;color:var(--green);">128</span>
+                  <span style="font-size:14px;">🔥</span>
+                  <span class="mono" style="font-size:12.5px;color:var(--text3);">day streak</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- NEW: quick controls strip -->
+          <div style="margin-top:12px;position:relative;">
+            <div style="position:absolute;top:-8px;left:12px;background:var(--green);color:#10120C;font-size:9px;font-weight:700;border-radius:5px;padding:1.5px 6px;z-index:5;" class="mono">NEW</div>
+            <div style="display:flex;gap:8px;">
+              <!-- reminder time chip -->
+              <div class="chip" style="flex:1.2;border-color:rgba(124,182,138,0.35);">
+                <i data-lucide="bell-ring" style="width:15px;height:15px;color:var(--green);"></i>
+                <div style="min-width:0;">
+                  <p class="mono" style="font-size:8.5px;letter-spacing:1px;color:var(--text3);text-transform:uppercase;">Reminder</p>
+                  <p style="font-size:13.5px;font-weight:700;color:var(--text);white-space:nowrap;">8:00 PM</p>
+                </div>
+              </div>
+              <!-- theme segmented -->
+              <div class="chip" style="flex:1.6;justify-content:center;">
+                <div class="seg">
+                  <span><i data-lucide="sun" style="width:12px;height:12px;"></i></span>
+                  <span class="on"><i data-lucide="moon" style="width:12px;height:12px;"></i></span>
+                  <span style="font-size:10px;">Auto</span>
+                </div>
+              </div>
+              <!-- streak reminders toggle -->
+              <div class="chip" style="flex:1;justify-content:space-between;">
+                <i data-lucide="flame" style="width:15px;height:15px;color:var(--amber);"></i>
+                <div style="width:38px;height:22px;background:var(--green-dim);border-radius:999px;position:relative;">
+                  <div style="width:18px;height:18px;background:var(--text);border-radius:999px;position:absolute;top:2px;left:18px;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></div>
+                </div>
+              </div>
+            </div>
+            <p class="mono" style="font-size:9px;color:var(--text3);margin-top:6px;padding-left:4px;">tap time → picker sheet · rows below stay canonical (chips mirror, not replace)</p>
+          </div>
+
+          <!-- rest of settings, unchanged, dimmed -->
+          <div style="opacity:0.45;">
+            <p class="mono" style="font-size:14px;letter-spacing:1px;color:var(--text3);text-transform:uppercase;margin-top:20px;margin-bottom:6px;">Look &amp; Feel</p>
+            <div class="card">
+              <div class="row"><div style="display:flex;gap:12px;align-items:center;"><div class="tile"><i data-lucide="calendar" style="width:18px;height:18px;"></i></div><p style="font-size:15px;color:var(--text);">Calendar Look</p></div><i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text3);"></i></div>
+              <div class="row"><div style="display:flex;gap:12px;align-items:center;"><div class="tile"><i data-lucide="moon" style="width:18px;height:18px;"></i></div><p style="font-size:15px;color:var(--text);">Theme</p></div><span style="font-size:14px;color:var(--text3);">Dark</span></div>
+              <div class="row"><div style="display:flex;gap:12px;align-items:center;"><div class="tile"><i data-lucide="sprout" style="width:18px;height:18px;"></i></div><p style="font-size:15px;color:var(--text);">Default Growth Icons</p></div><i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text3);"></i></div>
+            </div>
+            <p class="mono" style="font-size:14px;letter-spacing:1px;color:var(--text3);text-transform:uppercase;margin-top:20px;margin-bottom:6px;">Reminders</p>
+            <div class="card">
+              <div class="row"><div style="display:flex;gap:12px;align-items:center;"><div class="tile"><i data-lucide="bell-ring" style="width:18px;height:18px;"></i></div><p style="font-size:15px;color:var(--text);">Streak Reminders</p></div><div style="width:48px;height:28px;background:var(--green-dim);border-radius:999px;position:relative;"><div style="width:24px;height:24px;background:var(--text);border-radius:999px;position:absolute;top:2px;left:22px;"></div></div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="mt-4 text-xs space-y-1" style="color:var(--text2);max-width:390px;margin-left:auto;margin-right:auto;">
+        <p><span style="color:var(--green);">●</span> Strip = 3 highest freq×value controls: reminder time, theme, streak-reminder toggle.</p>
+        <p><span style="color:var(--green);">●</span> Chips mirror existing state — sections below unchanged, so no relearning, no row removal.</p>
+        <p><span style="color:var(--amber);">●</span> Companion (separate change): sort control moves onto habit-list header, out of Settings.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>

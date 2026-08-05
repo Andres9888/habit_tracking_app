@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Settings §3 — Small-Screen Scaling: Before / After</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0E0F0D;
+    --page: #15170F;
+    --card: #1B1D16;
+    --card-soft: #20231B;
+    --hairline: rgba(255,255,255,0.08);
+    --text: #F2F1EA;
+    --text-secondary: #B7B6AC;
+    --text-tertiary: #8A8A80;
+    --green: #7CB68A;
+    --green-dim: #4E6E56;
+    --amber: #D9A857;
+    --shadow: 0 8px 24px rgba(0,0,0,0.35);
+  }
+  * { font-family: 'DM Sans', sans-serif !important; }
+  .mono { font-family: 'Space Mono', monospace !important; }
+  body { background: var(--bg); }
+  h1,h2,h3,p,span,div { margin: 0; }
+
+  .phone {
+    background: var(--page);
+    border-radius: 44px;
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    position: relative;
+  }
+  .phone-inner { padding: 0 16px 24px; overflow: hidden; }
+
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .row:last-child { border-bottom: none; }
+
+  .tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--card-soft);
+    color: var(--text-secondary);
+    flex-shrink: 0;
+  }
+
+  .toggle-track { background: var(--green-dim); border-radius: 999px; position: relative; flex-shrink: 0; }
+  .toggle-thumb { background: var(--text); border-radius: 999px; position: absolute; box-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+
+  .badge-collide {
+    outline: 2px dashed #E0665A;
+    outline-offset: 2px;
+  }
+  .flag {
+    position: absolute;
+    background: #E0665A;
+    color: white;
+    font-weight: 700;
+    border-radius: 6px;
+    padding: 2px 6px;
+    white-space: nowrap;
+    z-index: 20;
+  }
+  .flag-ok {
+    background: var(--green);
+  }
+</style>
+</head>
+<body class="min-h-screen py-10 px-6">
+
+  <div class="max-w-6xl mx-auto">
+    <div class="mb-8">
+      <p class="mono text-xs uppercase tracking-widest" style="color: var(--green);">design_handoff_settings_final &middot; §3</p>
+      <h1 class="text-2xl font-semibold mt-1" style="color: var(--text);">Small-Screen Scaling — Before / After</h1>
+      <p class="text-sm mt-2 max-w-2xl" style="color: var(--text-secondary);">
+        <span class="mono">useSettingsScale()</span>: <span class="mono">factor = clamp(min(1, width / 390), 0.9, 1)</span>,
+        <span class="mono">k(v) = round(v &times; factor &times; 2) / 2</span>. Shown at 360pt (iPhone SE-class) — factor &asymp; 0.923.
+        At width &ge; 390 both renders are pixel-identical.
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-10 justify-center items-start">
+
+      <!-- BEFORE -->
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-2.5 h-2.5 rounded-full" style="background:#E0665A;"></span>
+          <p class="text-sm font-semibold" style="color: var(--text);">Before — unscaled (360pt viewport)</p>
+        </div>
+        <div class="phone" style="width:360px;">
+          <div class="phone-inner" style="padding-top: 22px;">
+
+            <!-- Header -->
+            <div class="row" style="padding: 6px 0 14px; position:relative;">
+              <div>
+                <p class="mono" style="font-size:10px; letter-spacing:1.5px; color: var(--text-tertiary); text-transform:uppercase;">Account</p>
+                <h2 style="font-size:27px; line-height:30px; font-weight:700; color: var(--text); margin-top:2px;">Settings</h2>
+              </div>
+              <div class="tile" style="width:36px; height:36px; border-radius:12px;">
+                <i data-lucide="x" style="width:18px;height:18px;"></i>
+              </div>
+            </div>
+
+            <!-- Profile Hero -->
+            <div style="background: var(--card); border-radius:24px; padding:16px; margin-top:14px; box-shadow: var(--shadow);">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div style="position:relative;">
+                  <div class="tile" style="width:52px; height:52px; border-radius:999px; background: var(--green-dim); color:white; font-weight:700; font-size:18px;">A</div>
+                  <svg width="60" height="60" style="position:absolute; top:-4px; left:-4px;" viewBox="0 0 60 60">
+                    <circle cx="30" cy="30" r="27" fill="none" stroke="var(--hairline)" stroke-width="4.5"/>
+                    <circle cx="30" cy="30" r="27" fill="none" stroke="var(--green)" stroke-width="4.5" stroke-dasharray="120 170" stroke-linecap="round" transform="rotate(-90 30 30)"/>
+                  </svg>
+                </div>
+                <div style="flex:1; min-width:0;">
+                  <p style="font-size:16px; line-height:20px; font-weight:600; color: var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Andres Rodriguez</p>
+                  <div class="badge-collide" style="display:flex; align-items:baseline; gap:4px; margin-top:4px; white-space:nowrap;">
+                    <span style="font-size:27px; line-height:29px; font-weight:700; color: var(--green);">128</span>
+                    <span style="font-size:14px;">🔥</span>
+                    <span class="mono" style="font-size:12.5px; color: var(--text-tertiary);">day streak &mdash; personal best</span>
+                  </div>
+                </div>
+              </div>
+              <div class="badge-collide" style="display:flex; justify-content:space-between; margin-top:16px; white-space:nowrap; overflow:hidden;">
+                <div>
+                  <p style="font-size:15.5px; line-height:20px; font-weight:700; color: var(--text);">94%</p>
+                  <p class="mono" style="font-size:10.5px; letter-spacing:1px; color: var(--text-tertiary); text-transform:uppercase;">CONSISTENCY</p>
+                </div>
+                <div>
+                  <p style="font-size:15.5px; line-height:20px; font-weight:700; color: var(--text);">42</p>
+                  <p class="mono" style="font-size:10.5px; letter-spacing:1px; color: var(--text-tertiary); text-transform:uppercase;">COMPLETED</p>
+                </div>
+                <div>
+                  <p style="font-size:15.5px; line-height:20px; font-weight:700; color: var(--text);">7</p>
+                  <p class="mono" style="font-size:10.5px; letter-spacing:1px; color: var(--text-tertiary); text-transform:uppercase;">ACTIVE HABITS</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trial Card -->
+            <div class="badge-collide" style="background: linear-gradient(135deg, #2A2416, #1B1D16); border-radius:24px; padding:15px; margin-top:20px; display:flex; gap:12px; align-items:flex-start; overflow:hidden;">
+              <div class="tile" style="width:40px; height:40px; border-radius:12px; background: rgba(217,168,87,0.15); color: var(--amber);">
+                <i data-lucide="crown" style="width:20px;height:20px;"></i>
+              </div>
+              <div style="flex:1; min-width:0;">
+                <p style="font-size:13px; line-height:18px; font-weight:600; color: var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">7-day free trial &mdash; Premium unlocked</p>
+                <div style="background: var(--amber); color:#1B1D16; text-align:center; font-weight:700; font-size:13px; padding:11px 0; border-radius:10px; margin-top:10px;">Manage subscription</div>
+              </div>
+            </div>
+
+            <!-- Section -->
+            <p class="mono" style="font-size:14px; letter-spacing:1px; color: var(--text-tertiary); text-transform:uppercase; margin-top:20px; margin-bottom:6px;">Notifications</p>
+            <div style="background: var(--card); border-radius:24px; box-shadow: var(--shadow);">
+              <div class="row badge-collide" style="padding: 10px 14px; overflow:hidden;">
+                <div style="display:flex; align-items:center; gap:12px; min-width:0;">
+                  <div class="tile" style="width:36px; height:36px; border-radius:11px;"><i data-lucide="bell-ring" style="width:18px;height:18px;"></i></div>
+                  <div style="min-width:0;">
+                    <p style="font-size:15px; line-height:20px; color: var(--text); white-space:nowrap;">Streak Reminders</p>
+                    <p style="font-size:12px; line-height:16px; color: var(--text-tertiary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Nudge me before I lose a streak</p>
+                  </div>
+                </div>
+                <div class="toggle-track" style="width:48px; height:28px;">
+                  <div class="toggle-thumb" style="width:24px; height:24px; top:2px; left:22px;"></div>
+                </div>
+              </div>
+              <div class="row" style="padding: 10px 14px;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <div class="tile" style="width:36px; height:36px; border-radius:11px;"><i data-lucide="moon" style="width:18px;height:18px;"></i></div>
+                  <p style="font-size:15px; line-height:20px; color: var(--text);">Daily Summary</p>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span style="font-size:14px; color: var(--text-tertiary);">8:00 PM</span>
+                  <i data-lucide="chevron-right" style="width:16px;height:16px; color: var(--text-tertiary);"></i>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="mt-3 space-y-1">
+          <p class="text-xs" style="color:#E0665A;">&#9679; Streak line + stat row wrap/clip at 360pt (dashed = collision)</p>
+          <p class="text-xs" style="color:#E0665A;">&#9679; Trial card copy truncates; section card feels oversized for viewport</p>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-2.5 h-2.5 rounded-full" style="background: var(--green);"></span>
+          <p class="text-sm font-semibold" style="color: var(--text);">After — k()-scaled (360pt, factor &asymp; 0.923)</p>
+        </div>
+        <div class="phone" style="width:360px;">
+          <div class="phone-inner" style="padding-top: 22px;">
+
+            <!-- Header -->
+            <div class="row" style="padding: 6px 0 14px;">
+              <div>
+                <p class="mono" style="font-size:9px; letter-spacing:1.5px; color: var(--text-tertiary); text-transform:uppercase;">Account</p>
+                <h2 style="font-size:25px; line-height:27.5px; font-weight:700; color: var(--text); margin-top:2px;">Settings</h2>
+              </div>
+              <div class="tile" style="width:33px; height:33px; border-radius:11px;">
+                <i data-lucide="x" style="width:17px;height:17px;"></i>
+              </div>
+            </div>
+
+            <!-- Profile Hero -->
+            <div style="background: var(--card); border-radius:24px; padding:14px; margin-top:9px; box-shadow: var(--shadow);">
+              <div style="display:flex; align-items:center; gap:11px;">
+                <div style="position:relative;">
+                  <div class="tile" style="width:48px; height:48px; border-radius:999px; background: var(--green-dim); color:white; font-weight:700; font-size:16.5px;">A</div>
+                  <svg width="55.5" height="55.5" style="position:absolute; top:-3.75px; left:-3.75px;" viewBox="0 0 60 60">
+                    <circle cx="30" cy="30" r="27" fill="none" stroke="var(--hairline)" stroke-width="4.5"/>
+                    <circle cx="30" cy="30" r="27" fill="none" stroke="var(--green)" stroke-width="4.5" stroke-dasharray="120 170" stroke-linecap="round" transform="rotate(-90 30 30)"/>
+                  </svg>
+                </div>
+                <div style="flex:1; min-width:0;">
+                  <p style="font-size:15px; line-height:18.5px; font-weight:600; color: var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Andres Rodriguez</p>
+                  <div class="flag flag-ok" style="position:static; display:inline-flex; align-items:baseline; gap:3.5px; margin-top:4px; white-space:nowrap; padding:0; background:transparent; color:inherit;">
+                    <span style="font-size:25px; line-height:27px; font-weight:700; color: var(--green);">128</span>
+                    <span style="font-size:13px;">🔥</span>
+                    <span class="mono" style="font-size:11.5px; color: var(--text-tertiary);">day streak &mdash; personal best</span>
+                  </div>
+                </div>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-top:14px; white-space:nowrap;">
+                <div>
+                  <p style="font-size:14.5px; line-height:18.5px; font-weight:700; color: var(--text);">94%</p>
+                  <p class="mono" style="font-size:9.5px; letter-spacing:0.8px; color: var(--text-tertiary); text-transform:uppercase;">CONSISTENCY</p>
+                </div>
+                <div>
+                  <p style="font-size:14.5px; line-height:18.5px; font-weight:700; color: var(--text);">42</p>
+                  <p class="mono" style="font-size:9.5px; letter-spacing:0.8px; color: var(--text-tertiary); text-transform:uppercase;">COMPLETED</p>
+                </div>
+                <div>
+                  <p style="font-size:14.5px; line-height:18.5px; font-weight:700; color: var(--text);">7</p>
+                  <p class="mono" style="font-size:9.5px; letter-spacing:0.8px; color: var(--text-tertiary); text-transform:uppercase;">ACTIVE HABITS</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trial Card -->
+            <div style="background: linear-gradient(135deg, #2A2416, #1B1D16); border-radius:24px; padding:14px; margin-top:18.5px; display:flex; gap:11px; align-items:flex-start;">
+              <div class="tile" style="width:37px; height:37px; border-radius:11px; background: rgba(217,168,87,0.15); color: var(--amber);">
+                <i data-lucide="crown" style="width:18.5px;height:18.5px;"></i>
+              </div>
+              <div style="flex:1; min-width:0;">
+                <p style="font-size:12px; line-height:16.5px; font-weight:600; color: var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">7-day free trial &mdash; Premium unlocked</p>
+                <div style="background: var(--amber); color:#1B1D16; text-align:center; font-weight:700; font-size:12px; padding:10px 0; border-radius:10px; margin-top:9px;">Manage subscription</div>
+              </div>
+            </div>
+
+            <!-- Section -->
+            <p class="mono" style="font-size:13px; letter-spacing:0.8px; color: var(--text-tertiary); text-transform:uppercase; margin-top:18.5px; margin-bottom:6px;">Notifications</p>
+            <div style="background: var(--card); border-radius:24px; box-shadow: var(--shadow);">
+              <div class="row" style="padding: 9px 13px;">
+                <div style="display:flex; align-items:center; gap:11px; min-width:0;">
+                  <div class="tile" style="width:33.5px; height:33.5px; border-radius:10px;"><i data-lucide="bell-ring" style="width:16.5px;height:16.5px;"></i></div>
+                  <div style="min-width:0;">
+                    <p style="font-size:14px; line-height:18.5px; color: var(--text); white-space:nowrap;">Streak Reminders</p>
+                    <p style="font-size:11px; line-height:15px; color: var(--text-tertiary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Nudge me before I lose a streak</p>
+                  </div>
+                </div>
+                <div class="toggle-track" style="width:44.5px; height:26px;">
+                  <div class="toggle-thumb" style="width:22px; height:22px; top:2px; left:20.5px;"></div>
+                </div>
+              </div>
+              <div class="row" style="padding: 9px 13px;">
+                <div style="display:flex; align-items:center; gap:11px;">
+                  <div class="tile" style="width:33.5px; height:33.5px; border-radius:10px;"><i data-lucide="moon" style="width:16.5px;height:16.5px;"></i></div>
+                  <p style="font-size:14px; line-height:18.5px; color: var(--text);">Daily Summary</p>
+                </div>
+                <div style="display:flex; align-items:center; gap:5.5px;">
+                  <span style="font-size:13px; color: var(--text-tertiary);">8:00 PM</span>
+                  <i data-lucide="chevron-right" style="width:15px;height:15px; color: var(--text-tertiary);"></i>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="mt-3 space-y-1">
+          <p class="text-xs" style="color: var(--green);">&#9679; Streak line + stat row fit on one line, no clipping</p>
+          <p class="text-xs" style="color: var(--green);">&#9679; Trial copy + section card breathe at 360pt; at &ge;390pt, k(v)=v (bit-identical to shipped)</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-10 max-w-3xl mx-auto text-xs mono" style="color: var(--text-tertiary); line-height:1.6;">
+      Not a pixel-exact re-render of the claude.ai/design "settings-final.jsx" source (that file isn't reachable from this repo/connector) —
+      this reconstructs the §3 spec from the plan's literal table (round(v&times;factor&times;2)/2 at factor&asymp;0.923) against the already-shipped
+      §1/§2 layout, to make the scaling delta legible before implementation.
+    </div>
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>
