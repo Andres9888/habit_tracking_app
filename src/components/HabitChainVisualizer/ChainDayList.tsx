@@ -64,22 +64,24 @@ function ChainDayListComponent(props: ChainDayListProps) {
               props.todayLabel,
               completed
             )}
-            activeBurst={props.activeBurst}
-            celebrationsEnabled={props.celebrationsEnabled}
+            burstActive={
+              props.activeBurst === dateString
+                ? props.celebrationsEnabled
+                : false
+            }
             completed={completed}
             completionIcon={props.completionIcon}
             strengthPercent={props.strengthPercent}
             dateString={dateString}
             disabled={disabled}
+            index={index}
             isToday={props.isToday(index)}
             missed={props.isStreakBreak(index)}
             shape={props.shape}
             shouldReduceMotion={props.shouldReduceMotion}
             showConnector={showConnector}
             onBurstComplete={props.onBurstComplete}
-            onPress={() =>
-              props.handleToggleDay(dateString, completed, disabled, index)
-            }
+            onToggle={props.handleToggleDay}
           />
         );
       })}

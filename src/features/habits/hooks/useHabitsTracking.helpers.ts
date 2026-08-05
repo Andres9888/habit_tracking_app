@@ -1,9 +1,7 @@
-import { computeCurrentStreakFromDates } from '../../../utils/streak';
 import { validateDateString } from '../../../utils/validation';
 import type { HabitStatus } from '../types';
 
 type PlannedStatus = Exclude<HabitStatus, 'done'>;
-type TrackingEntry = { completed: boolean; date: string; habitId: string };
 type TrackingQueryArgs = { endDate: string; startDate: string };
 export type DateStatusInfo = { isValid: boolean; status: PlannedStatus };
 
@@ -23,45 +21,6 @@ export function buildTrackingQueryArgs(
   return ascending
     ? { endDate: last, startDate: first }
     : { endDate: first, startDate: last };
-}
-
-export function buildCompletedDatesByHabit(
-  tracking: TrackingEntry[],
-  pendingToggles: Map<string, boolean>
-) {
-  const completedDatesByHabit = new Map<string, Set<string>>();
-  for (const entry of tracking) {
-    if (!entry.completed) continue;
-    if (!completedDatesByHabit.has(entry.habitId)) {
-      completedDatesByHabit.set(entry.habitId, new Set<string>());
-    }
-    completedDatesByHabit.get(entry.habitId)?.add(entry.date);
-  }
-
-  for (const [key, toCompleted] of pendingToggles) {
-    const [habitId = '', date = ''] = key.split(':');
-    if (!completedDatesByHabit.has(habitId)) {
-      completedDatesByHabit.set(habitId, new Set<string>());
-    }
-    if (toCompleted) {
-      completedDatesByHabit.get(habitId)?.add(date);
-    } else {
-      completedDatesByHabit.get(habitId)?.delete(date);
-    }
-  }
-
-  return completedDatesByHabit;
-}
-
-export function buildStreakByHabit(
-  completedDatesByHabit: Map<string, Set<string>>,
-  stableToday: Date
-) {
-  const streakByHabit = new Map<string, number>();
-  for (const [habitId, completedDates] of completedDatesByHabit) {
-    streakByHabit.set(habitId, computeCurrentStreakFromDates(completedDates, stableToday));
-  }
-  return streakByHabit;
 }
 
 export function computeDateStatusInfo(dateString: string, today: Date): DateStatusInfo {

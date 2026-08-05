@@ -1,7 +1,5 @@
-import {
-  buildCompletedDatesByHabit,
-  buildTrackingQueryArgs,
-} from '../useHabitsTracking.helpers';
+import { buildCompletedDatesByHabit } from '../useHabitsTracking.completions';
+import { buildTrackingQueryArgs } from '../useHabitsTracking.helpers';
 
 describe('buildTrackingQueryArgs', () => {
   it('keeps ascending endpoints as-is', () => {

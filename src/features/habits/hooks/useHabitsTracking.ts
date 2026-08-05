@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 
 import { api } from '../../../../convex/_generated/api';
 import { useCachedQuery } from '../../../lib/queryCache';
@@ -7,8 +7,10 @@ import { usePendingToggles } from '../../../lib/optimistic';
 import type { HabitStatus } from '../types';
 import {
   buildCompletedDatesByHabit,
-  buildDateStatusCache,
   buildStreakByHabit,
+} from './useHabitsTracking.completions';
+import {
+  buildDateStatusCache,
   buildTrackingQueryArgs,
   getDateStatusInfo,
   normalizeToday,
@@ -35,8 +37,20 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
       entryName: 'habits.getTracking',
     }) ?? [];
   const pendingToggles = usePendingToggles();
+  // Feeding the previous result back in lets unchanged habits keep their Set
+  // identity, which is what makes the streak cache hit for everything except
+  // the habit that was actually toggled.
+  const previousCompletedDatesRef = useRef<
+    Map<string, Set<string>> | undefined
+  >(undefined);
   const completedDatesByHabit = useMemo(() => {
-    return buildCompletedDatesByHabit(tracking, pendingToggles);
+    const next = buildCompletedDatesByHabit(
+      tracking,
+      pendingToggles,
+      previousCompletedDatesRef.current
+    );
+    previousCompletedDatesRef.current = next;
+    return next;
   }, [pendingToggles, tracking]);
   const streakByHabit = useMemo(
     () => buildStreakByHabit(completedDatesByHabit, stableToday),
