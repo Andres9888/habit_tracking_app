@@ -31,7 +31,11 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
       const parsedName = parseHabitName(habit.name ?? '');
       const selectedIcon = habit.icon ?? parsedName.emoji;
 
-      setHabitName(parsedName.name || habit.name || '');
+      let cleanName = parsedName.name;
+      if (!parsedName.emoji && habit.icon && cleanName.startsWith(habit.icon)) {
+        cleanName = cleanName.slice(habit.icon.length).trim();
+      }
+      setHabitName(cleanName);
       setSelectedEmoji(selectedIcon || defaultEmoji);
       setSelectedColor(habit.color || habit.iconColor || '#10B981');
       setRemindersEnabled(habit.remindersEnabled ?? false);
