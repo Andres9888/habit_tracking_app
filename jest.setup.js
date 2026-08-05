@@ -15,6 +15,102 @@ if (typeof global.structuredClone === 'undefined') {
 // Mock Expo modules
 jest.mock('expo-font');
 jest.mock('expo-asset');
+jest.mock('expo-background-task', () => ({
+  BackgroundTaskResult: {
+    Failed: 'failed',
+    Success: 'success',
+  },
+  BackgroundTaskStatus: {
+    Available: 'available',
+    Restricted: 'restricted',
+  },
+  getStatusAsync: jest.fn(async () => 'available'),
+  registerTaskAsync: jest.fn(async () => undefined),
+  unregisterTaskAsync: jest.fn(async () => undefined),
+}));
+jest.mock('expo-task-manager', () => ({
+  defineTask: jest.fn(),
+  isTaskRegisteredAsync: jest.fn(async () => false),
+}));
+jest.mock('expo-av', () => {
+  const createSound = () => ({
+    getStatusAsync: jest.fn(async () => ({ isLoaded: true })),
+    pauseAsync: jest.fn(async () => undefined),
+    playAsync: jest.fn(async () => undefined),
+    replayAsync: jest.fn(async () => undefined),
+    setIsLoopingAsync: jest.fn(async () => undefined),
+    setOnPlaybackStatusUpdate: jest.fn(),
+    setPositionAsync: jest.fn(async () => undefined),
+    setRateAsync: jest.fn(async () => undefined),
+    setVolumeAsync: jest.fn(async () => undefined),
+    stopAsync: jest.fn(async () => undefined),
+    unloadAsync: jest.fn(async () => undefined),
+  });
+  return {
+    Audio: {
+      AndroidAudioEncoder: { AAC: 'aac' },
+      AndroidOutputFormat: { MPEG_4: 'mpeg4' },
+      IOSAudioQuality: { HIGH: 'high' },
+      IOSOutputFormat: { MPEG4AAC: 'mpeg4aac' },
+      Recording: {
+        createAsync: jest.fn(async () => ({
+          recording: {
+            getStatusAsync: jest.fn(async () => ({ isRecording: true })),
+            getURI: jest.fn(() => 'file:///recording.m4a'),
+            pauseAsync: jest.fn(async () => undefined),
+            setOnRecordingStatusUpdate: jest.fn(),
+            startAsync: jest.fn(async () => undefined),
+            stopAndUnloadAsync: jest.fn(async () => undefined),
+          },
+        })),
+      },
+      Sound: {
+        createAsync: jest.fn(async () => ({ sound: createSound() })),
+      },
+      requestPermissionsAsync: jest.fn(async () => ({ granted: true })),
+      setAudioModeAsync: jest.fn(async () => undefined),
+    },
+  };
+});
+jest.mock('@sentry/react-native', () => {
+  const createSpan = () => ({
+    end: jest.fn(),
+    setAttribute: jest.fn(),
+    setStatus: jest.fn(),
+  });
+  return {
+    addBreadcrumb: jest.fn(),
+    captureException: jest.fn(() => 'mock-event-id'),
+    captureMessage: jest.fn(() => 'mock-event-id'),
+    init: jest.fn(),
+    reactNavigationIntegration: jest.fn(() => ({})),
+    setTag: jest.fn(),
+    setUser: jest.fn(),
+    startSpan: jest.fn((_options, callback) => {
+      const span = createSpan();
+      return typeof callback === 'function' ? callback(span) : span;
+    }),
+  };
+});
+jest.mock('react-native-safe-area-context', () => {
+  const React = require('react');
+  const insets = { bottom: 0, left: 0, right: 0, top: 0 };
+  const frame = { height: 844, width: 390, x: 0, y: 0 };
+  const SafeAreaInsetsContext = React.createContext(insets);
+  const SafeAreaFrameContext = React.createContext(frame);
+  return {
+    SafeAreaProvider: ({ children }) => children,
+    SafeAreaView: require('react-native').View,
+    SafeAreaInsetsContext,
+    SafeAreaFrameContext,
+    initialWindowMetrics: {
+      frame,
+      insets,
+    },
+    useSafeAreaFrame: () => frame,
+    useSafeAreaInsets: () => insets,
+  };
+});
 // expo-status-bar may not be installed; safe to skip
 try {
   require.resolve('expo-status-bar');
@@ -27,14 +123,22 @@ try {
 
 // Mock expo-network
 jest.mock('expo-network', () => ({
-  getNetworkStateAsync: jest.fn(async () => ({
-    isConnected: true,
-    isInternetReachable: true,
-    type: 'WIFI',
-  })),
-  addNetworkStateListener: jest.fn((cb) => ({
-    remove: jest.fn(),
-  })),
+  // Keep the legacy NetInfo test controls wired to the production
+  // expo-network API while the remaining suites migrate their imports.
+  getNetworkStateAsync: jest.fn(() => {
+    const NetInfo = require('@react-native-community/netinfo');
+    return NetInfo.fetch();
+  }),
+  addNetworkStateListener: jest.fn((callback) => {
+    const NetInfo = require('@react-native-community/netinfo');
+    const subscription = NetInfo.addEventListener(callback);
+    return {
+      remove:
+        typeof subscription === 'function'
+          ? subscription
+          : (subscription?.remove ?? jest.fn()),
+    };
+  }),
   NetworkStateType: {
     NONE: 'NONE',
     WIFI: 'WIFI',
@@ -53,22 +157,21 @@ jest.mock('react-native-gesture-handler', () => {
   const View = require('react-native').View;
 
   // Mock gesture builder for Gesture.Pan() etc.
-  const createMockGesture = () => ({
-    activeOffsetX: jest.fn().mockReturnThis(),
-    activeOffsetY: jest.fn().mockReturnThis(),
-    failOffsetX: jest.fn().mockReturnThis(),
-    failOffsetY: jest.fn().mockReturnThis(),
-    onBegin: jest.fn().mockReturnThis(),
-    onStart: jest.fn().mockReturnThis(),
-    onUpdate: jest.fn().mockReturnThis(),
-    onEnd: jest.fn().mockReturnThis(),
-    onFinalize: jest.fn().mockReturnThis(),
-    enabled: jest.fn().mockReturnThis(),
-    minDistance: jest.fn().mockReturnThis(),
-    minVelocity: jest.fn().mockReturnThis(),
-    runOnJS: jest.fn().mockReturnThis(),
-    withRef: jest.fn().mockReturnThis(),
-  });
+  const createMockGesture = () => {
+    let gesture;
+    gesture = new Proxy(
+      {},
+      {
+        get: (target, property) => {
+          if (!(property in target)) {
+            target[property] = jest.fn(() => gesture);
+          }
+          return target[property];
+        },
+      }
+    );
+    return gesture;
+  };
 
   return {
     Swipeable: View,
@@ -249,16 +352,20 @@ jest.mock('react-native-reanimated', () => {
       View: AnimatedView,
       Text: AnimatedText,
       ScrollView: AnimatedScrollView,
+      Pressable,
       createAnimatedComponent,
       addWhitelistedNativeProps: jest.fn(),
+      addWhitelistedUIProps: jest.fn(),
     },
 
     // Also export as named
     View: AnimatedView,
     Text: AnimatedText,
     ScrollView: AnimatedScrollView,
+    Pressable,
     createAnimatedComponent,
     addWhitelistedNativeProps: jest.fn(),
+    addWhitelistedUIProps: jest.fn(),
 
     // Animation functions
     makeMutable: (initial) => ({ value: initial }),
@@ -433,10 +540,11 @@ jest.mock('react-native-reanimated', () => {
   };
 });
 
-// Mock reanimated-color-picker (may not be installed)
-try {
-  require.resolve('reanimated-color-picker');
-  jest.mock('reanimated-color-picker', () => {
+// Mock reanimated-color-picker. It is an optional native dependency and several
+// component tests intentionally exercise the picker without installing it.
+jest.mock(
+  'reanimated-color-picker',
+  () => {
     const View = require('react-native').View;
     return {
       __esModule: true,
@@ -450,10 +558,9 @@ try {
       Preview: View,
       ColorPicker: View,
     };
-  });
-} catch {
-  // not installed
-}
+  },
+  { virtual: true }
+);
 
 // Mock @shopify/react-native-skia if needed
 jest.mock(

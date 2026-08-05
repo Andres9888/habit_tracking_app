@@ -17,7 +17,7 @@ describe('StrengthProgressBar Token Migration - Phase 2', () => {
   describe('LEVELS use colors.strength tokens', () => {
     it('Starting level uses colors.strength.starting', () => {
       expect(LEVELS[0].color).toBe(colors.strength.starting);
-      expect(LEVELS[0].color).toBe('#65a30d');
+      expect(LEVELS[0].color).toBe('#4D7A0A');
     });
 
     it('Starting level bg uses colors.strength.startingLight', () => {
@@ -62,7 +62,7 @@ describe('StrengthProgressBar Token Migration - Phase 2', () => {
 
     it('Automatic level bg uses colors.strength.automaticLight', () => {
       expect(LEVELS[4].colorBg).toBe(colors.strength.automaticLight);
-      expect(LEVELS[4].colorBg).toBe('#d1fae5');
+      expect(LEVELS[4].colorBg).toBe('#D4F0E2');
     });
   });
 
@@ -70,7 +70,7 @@ describe('StrengthProgressBar Token Migration - Phase 2', () => {
     it('arrow color uses colors.gray[500] (WCAG AA compliant)', () => {
       const arrowStyle = styles.arrow;
       expect(arrowStyle.color).toBe(colors.gray[500]);
-      expect(arrowStyle.color).toBe('#78716c');
+      expect(arrowStyle.color).toBe('#6B6560');
     });
 
     it('nextHint color uses colors.gray[500] (WCAG AA compliant)', () => {

@@ -442,7 +442,7 @@ describe('useNotificationResponse', () => {
       };
     }
 
-    it('calls onLetterNotificationTap when letter unlock notification is tapped', () => {
+    it('routes a legacy letter notification through its habitId', () => {
       const { result } = renderHook(() =>
         useNotificationResponse(mockHandlers)
       );
@@ -456,13 +456,8 @@ describe('useNotificationResponse', () => {
         result.current._triggerResponse(mockResponse);
       });
 
-      expect(mockOnLetterNotificationTap).toHaveBeenCalledTimes(1);
-      expect(mockOnLetterNotificationTap).toHaveBeenCalledWith(
-        'letter-abc123',
-        'habit-xyz789'
-      );
-      // Should NOT call habit handler
-      expect(mockOnHabitNotificationTap).not.toHaveBeenCalled();
+      expect(mockOnHabitNotificationTap).toHaveBeenCalledWith('habit-xyz789');
+      expect(mockOnLetterNotificationTap).not.toHaveBeenCalled();
     });
 
     it('handles initial letter notification on cold start', async () => {
@@ -476,8 +471,7 @@ describe('useNotificationResponse', () => {
       renderHook(() => useNotificationResponse(mockHandlers));
 
       await waitFor(() => {
-        expect(mockOnLetterNotificationTap).toHaveBeenCalledWith(
-          'letter-cold-start',
+        expect(mockOnHabitNotificationTap).toHaveBeenCalledWith(
           'habit-cold-start'
         );
       });
@@ -505,8 +499,7 @@ describe('useNotificationResponse', () => {
         });
       }).not.toThrow();
 
-      // Neither handler should be called
-      expect(mockOnHabitNotificationTap).not.toHaveBeenCalled();
+      expect(mockOnHabitNotificationTap).toHaveBeenCalledWith('habit-456');
     });
 
     it('ignores letter notifications with empty letterId', () => {
@@ -704,11 +697,8 @@ describe('useNotificationResponse', () => {
         result.current._triggerResponse(letterResponse);
       });
 
-      expect(mockOnLetterNotificationTap).toHaveBeenCalledWith(
-        'letter-999',
-        'habit-888'
-      );
-      expect(mockOnHabitNotificationTap).not.toHaveBeenCalled();
+      expect(mockOnHabitNotificationTap).toHaveBeenCalledWith('habit-888');
+      expect(mockOnLetterNotificationTap).not.toHaveBeenCalled();
 
       jest.clearAllMocks();
 

@@ -6,46 +6,42 @@
 
 import { colors } from '@/theme/colors';
 import { lightColors } from '@/theme/darkColors';
-import {
-  DEFAULT_COLORS,
-  getSettingsColors,
-} from '@/components/SettingsModal/colors';
 import { getSettingsRowColors } from '@/components/SettingsModal/SettingsRow/SettingsRow.colors';
 
 describe('SettingsModal Token Migration - Phase 2', () => {
-  describe('DEFAULT_COLORS use theme tokens', () => {
-    it('accent uses colors.text.primary', () => {
-      expect(DEFAULT_COLORS.accent).toBe(colors.text.primary);
+  describe('active light palette uses shared semantic tokens', () => {
+    it('accent uses the current primary accent', () => {
+      expect(lightColors.accent).toBe(colors.primary[600]);
     });
 
     it('background uses colors.light.background', () => {
-      expect(DEFAULT_COLORS.background).toBe(colors.light.background);
+      expect(lightColors.background).toBe(colors.light.background);
     });
 
     it('card uses colors.light.card', () => {
-      expect(DEFAULT_COLORS.card).toBe(colors.light.card);
+      expect(lightColors.card).toBe(colors.light.card);
     });
 
-    it('cardBorder uses colors.gray[100]', () => {
-      expect(DEFAULT_COLORS.cardBorder).toBe(colors.gray[100]);
+    it('cardBorder uses the light border token', () => {
+      expect(lightColors.cardBorder).toBe(lightColors.border);
     });
 
     it('headerText uses colors.text.primary', () => {
-      expect(DEFAULT_COLORS.headerText).toBe(colors.text.primary);
+      expect(lightColors.text.primary).toBe(colors.text.primary);
     });
 
     it('mutedText uses colors.gray[500]', () => {
-      expect(DEFAULT_COLORS.mutedText).toBe(colors.gray[500]);
+      expect(lightColors.text.secondary).toBe(colors.text.secondary);
     });
 
     it('versionText uses colors.gray[500]', () => {
-      expect(DEFAULT_COLORS.versionText).toBe(colors.gray[500]);
+      expect(lightColors.text.tertiary).toBe(colors.text.tertiary);
     });
   });
 
-  describe('getSettingsColors returns correct palette', () => {
-    it('returns DEFAULT_COLORS in light mode', () => {
-      expect(getSettingsColors(false)).toBe(DEFAULT_COLORS);
+  describe('Settings rows consume the active palette', () => {
+    it('returns light row colors in light mode', () => {
+      expect(getSettingsRowColors(false).background).toBe(lightColors.card);
     });
   });
 

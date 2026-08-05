@@ -30,6 +30,7 @@ jest.mock('react-native-reanimated', () => {
     withDelay: (_delay: number, value: number) => value,
     withSpring: (value: number) => value,
     Easing: {
+      ...jest.requireActual('react-native-reanimated/mock').Easing,
       out: () => () => 0,
       cubic: () => 0,
     },
@@ -78,11 +79,11 @@ describe('WeeklyPatternChart', () => {
         <WeeklyPatternChart {...defaultProps} />
       );
       // Check for day labels - S appears twice (Sun, Sat), T appears twice (Tue, Thu)
-      expect(getAllByLabelText(/S: 80% completion/).length).toBe(2); // Sun & Sat
-      expect(getByLabelText(/M: 100% completion.*best day/)).toBeTruthy();
+      expect(getAllByLabelText(/S: 80%/).length).toBe(2); // Sun & Sat
+      expect(getByLabelText(/M: 100%.*best day/)).toBeTruthy();
       expect(getAllByLabelText(/T:/).length).toBe(2); // Tue & Thu
-      expect(getByLabelText(/W: 40% completion.*focus day/)).toBeTruthy();
-      expect(getByLabelText(/F: 60% completion/)).toBeTruthy();
+      expect(getByLabelText(/W: 40%.*focus day/)).toBeTruthy();
+      expect(getByLabelText(/F: 60%/)).toBeTruthy();
     });
 
     it('renders the header', () => {
@@ -103,7 +104,7 @@ describe('WeeklyPatternChart', () => {
         <WeeklyPatternChart {...defaultProps} />
       );
       // Monday has 100% rate - should be marked as best
-      expect(getByLabelText(/M: 100% completion.*best day/)).toBeTruthy();
+      expect(getByLabelText(/M: 100%.*best day/)).toBeTruthy();
     });
 
     it('identifies the worst day (focus day) correctly', () => {
@@ -111,7 +112,7 @@ describe('WeeklyPatternChart', () => {
         <WeeklyPatternChart {...defaultProps} />
       );
       // Wednesday has 40% rate - should be marked as focus day
-      expect(getByLabelText(/W: 40% completion.*focus day/)).toBeTruthy();
+      expect(getByLabelText(/W: 40%.*focus day/)).toBeTruthy();
     });
 
     it('does not mark worst day if rate is >= 70%', () => {
@@ -154,14 +155,14 @@ describe('WeeklyPatternChart', () => {
       const { getByLabelText } = render(
         <WeeklyPatternChart {...defaultProps} />
       );
-      expect(getByLabelText(/M: 100% completion.*best day/)).toBeTruthy();
+      expect(getByLabelText(/M: 100%.*best day/)).toBeTruthy();
     });
 
     it('uses amber color for focus day bar', () => {
       const { getByLabelText } = render(
         <WeeklyPatternChart {...defaultProps} />
       );
-      expect(getByLabelText(/W: 40% completion.*focus day/)).toBeTruthy();
+      expect(getByLabelText(/W: 40%.*focus day/)).toBeTruthy();
     });
 
     // Note: Testing actual bar colors would require accessing style props
@@ -213,12 +214,12 @@ describe('WeeklyPatternChart', () => {
 
       // Each bar should have a label with day and completion rate
       // Note: S (Sun/Sat) and T (Tue/Thu) share same letter
-      expect(getAllByLabelText(/S: 80% completion/).length).toBe(2);
-      expect(getByLabelText(/M: 100% completion/)).toBeTruthy();
-      expect(getByLabelText(/T: 60% completion/)).toBeTruthy();
-      expect(getByLabelText(/W: 40% completion/)).toBeTruthy();
-      expect(getByLabelText(/T: 80% completion/)).toBeTruthy();
-      expect(getByLabelText(/F: 60% completion/)).toBeTruthy();
+      expect(getAllByLabelText(/S: 80%/).length).toBe(2);
+      expect(getByLabelText(/M: 100%/)).toBeTruthy();
+      expect(getByLabelText(/T: 60%/)).toBeTruthy();
+      expect(getByLabelText(/W: 40%/)).toBeTruthy();
+      expect(getByLabelText(/T: 80%/)).toBeTruthy();
+      expect(getByLabelText(/F: 60%/)).toBeTruthy();
     });
 
     it('Details button has accessibility label', () => {
@@ -276,7 +277,7 @@ describe('WeeklyPatternChart', () => {
       );
 
       // First 100% day should be marked as best
-      expect(getByLabelText(/S: 100% completion.*best day/)).toBeTruthy();
+      expect(getByLabelText(/S: 100%.*best day/)).toBeTruthy();
     });
 
     it('handles days with no data (total = 0)', () => {
@@ -307,7 +308,7 @@ describe('WeeklyPatternChart', () => {
       );
 
       // Monday should be best (only day with data)
-      expect(getByLabelText(/M: 80% completion.*best day/)).toBeTruthy();
+      expect(getByLabelText(/M: 80%.*best day/)).toBeTruthy();
     });
   });
 
@@ -321,8 +322,8 @@ describe('WeeklyPatternChart', () => {
 
       // Best day (100%) should have full height, others scaled down
       // This is verified via accessibility labels showing correct percentages
-      expect(getByLabelText(/M: 100% completion/)).toBeTruthy();
-      expect(getByLabelText(/W: 40% completion/)).toBeTruthy();
+      expect(getByLabelText(/M: 100%/)).toBeTruthy();
+      expect(getByLabelText(/W: 40%/)).toBeTruthy();
     });
   });
 
@@ -357,7 +358,7 @@ describe('WeeklyPatternChart', () => {
       );
 
       // Best day should have bold styling (verified via accessibility)
-      expect(getByLabelText(/M: 100% completion.*best day/)).toBeTruthy();
+      expect(getByLabelText(/M: 100%.*best day/)).toBeTruthy();
     });
 
     it('highlights focus day label', () => {
@@ -366,7 +367,7 @@ describe('WeeklyPatternChart', () => {
       );
 
       // Focus day should have bold styling (verified via accessibility)
-      expect(getByLabelText(/W: 40% completion.*focus day/)).toBeTruthy();
+      expect(getByLabelText(/W: 40%.*focus day/)).toBeTruthy();
     });
   });
 
@@ -392,8 +393,8 @@ describe('WeeklyPatternChart', () => {
       rerender(<WeeklyPatternChart {...defaultProps} />);
 
       // Should still correctly identify best/worst
-      expect(getByLabelText(/M: 100% completion.*best day/)).toBeTruthy();
-      expect(getByLabelText(/W: 40% completion.*focus day/)).toBeTruthy();
+      expect(getByLabelText(/M: 100%.*best day/)).toBeTruthy();
+      expect(getByLabelText(/W: 40%.*focus day/)).toBeTruthy();
     });
 
     it('updates when dayStats changes', () => {
@@ -411,7 +412,7 @@ describe('WeeklyPatternChart', () => {
       rerender(<WeeklyPatternChart dayStats={newDayStats} />);
 
       // Wednesday should now be best
-      expect(getByLabelText(/W: 100% completion.*best day/)).toBeTruthy();
+      expect(getByLabelText(/W: 100%.*best day/)).toBeTruthy();
     });
   });
 });

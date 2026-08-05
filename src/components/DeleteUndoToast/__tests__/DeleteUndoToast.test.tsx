@@ -19,7 +19,7 @@ jest.mock('react-native-reanimated', () => {
     withSpring: (toValue: number) => toValue,
     withTiming: (toValue: number) => toValue,
     runOnJS: (fn: () => void) => fn,
-    Easing: { linear: 'linear' },
+    Easing: Reanimated.Easing,
   };
 });
 
@@ -43,10 +43,7 @@ describe('DeleteUndoToast', () => {
   it('renders nothing when not visible', () => {
     const { queryByText } = render(
       <TestWrapper>
-        <DeleteUndoToast
-          visible={false}
-          itemName="Test Habit"
-        />
+        <DeleteUndoToast visible={false} itemName='Test Habit' />
       </TestWrapper>
     );
 
@@ -57,10 +54,7 @@ describe('DeleteUndoToast', () => {
   it('renders correctly when visible', () => {
     const { getByText } = render(
       <TestWrapper>
-        <DeleteUndoToast
-          visible={true}
-          itemName="Test Habit"
-        />
+        <DeleteUndoToast visible={true} itemName='Test Habit' />
       </TestWrapper>
     );
 
@@ -73,11 +67,7 @@ describe('DeleteUndoToast', () => {
     const onUndo = jest.fn();
     const { getByLabelText } = render(
       <TestWrapper>
-        <DeleteUndoToast
-          visible={true}
-          itemName="Test Habit"
-          onUndo={onUndo}
-        />
+        <DeleteUndoToast visible={true} itemName='Test Habit' onUndo={onUndo} />
       </TestWrapper>
     );
 
@@ -95,7 +85,7 @@ describe('DeleteUndoToast', () => {
       <TestWrapper>
         <DeleteUndoToast
           visible={true}
-          itemName="Test Habit"
+          itemName='Test Habit'
           duration={duration}
           onConfirm={onConfirm}
         />
@@ -118,14 +108,13 @@ describe('DeleteUndoToast', () => {
   it('has correct accessibility attributes', () => {
     const { getByLabelText, getByRole } = render(
       <TestWrapper>
-        <DeleteUndoToast
-          visible={true}
-          itemName="My Habit"
-        />
+        <DeleteUndoToast visible={true} itemName='My Habit' />
       </TestWrapper>
     );
 
-    const toast = getByLabelText('My Habit will be deleted. Tap undo to cancel.');
+    const toast = getByLabelText(
+      'My Habit will be deleted. Tap undo to cancel.'
+    );
     expect(toast).toBeTruthy();
     expect(toast.props.accessibilityRole).toBe('alert');
     expect(toast.props.accessibilityLiveRegion).toBe('polite');
@@ -137,7 +126,7 @@ describe('DeleteUndoToast', () => {
       <TestWrapper>
         <DeleteUndoToast
           visible={true}
-          itemName="Test Habit"
+          itemName='Test Habit'
           duration={5000}
           onConfirm={onConfirm}
         />
@@ -163,7 +152,7 @@ describe('DeleteUndoToast', () => {
       <TestWrapper>
         <DeleteUndoToast
           visible={false}
-          itemName="Test Habit"
+          itemName='Test Habit'
           duration={duration}
           onConfirm={onConfirm}
         />
@@ -175,7 +164,7 @@ describe('DeleteUndoToast', () => {
       <TestWrapper>
         <DeleteUndoToast
           visible={true}
-          itemName="Test Habit"
+          itemName='Test Habit'
           duration={duration}
           onConfirm={onConfirm}
         />

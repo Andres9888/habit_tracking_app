@@ -14,24 +14,24 @@ describe('Font Family Token Migration - Phase 4', () => {
       expect(statusStyles.streakText.fontFamily).toBe(
         fontFamilies.primary.text
       );
-      expect(statusStyles.streakText.fontFamily).toBe('SF Pro Text');
+      expect(statusStyles.streakText.fontFamily).toBe('DMSans');
     });
   });
 
   describe('HabitCard.styles uses fontFamilies tokens', () => {
     it('habitMeta fontFamily should use fontFamilies.primary.text', () => {
       expect(styles.habitMeta.fontFamily).toBe(fontFamilies.primary.text);
-      expect(styles.habitMeta.fontFamily).toBe('SF Pro Text');
+      expect(styles.habitMeta.fontFamily).toBe('DMSans');
     });
 
     it('habitName fontFamily should use fontFamilies.primary.text', () => {
       expect(styles.habitName.fontFamily).toBe(fontFamilies.primary.text);
-      expect(styles.habitName.fontFamily).toBe('SF Pro Text');
+      expect(styles.habitName.fontFamily).toBe('DMSans');
     });
 
     it('streakText fontFamily should use fontFamilies.primary.text', () => {
       expect(styles.streakText.fontFamily).toBe(fontFamilies.primary.text);
-      expect(styles.streakText.fontFamily).toBe('SF Pro Text');
+      expect(styles.streakText.fontFamily).toBe('DMSans');
     });
 
     it('should not contain any hardcoded System or Roboto font families', () => {
@@ -52,20 +52,20 @@ describe('Font Family Token Migration - Phase 4', () => {
   });
 
   describe('fontFamilies theme tokens exist', () => {
-    it('primary.text should be SF Pro Text', () => {
-      expect(fontFamilies.primary.text).toBe('SF Pro Text');
+    it('primary.text should be DM Sans', () => {
+      expect(fontFamilies.primary.text).toBe('DMSans');
     });
 
-    it('primary.display should be SF Pro Display', () => {
-      expect(fontFamilies.primary.display).toBe('SF Pro Display');
+    it('primary.display should be Literata', () => {
+      expect(fontFamilies.primary.display).toBe('Literata');
     });
 
-    it('monospace should be SF Mono', () => {
-      expect(fontFamilies.monospace).toBe('SF Mono');
+    it('monospace should be JetBrains Mono', () => {
+      expect(fontFamilies.monospace).toBe('JetBrainsMono');
     });
 
-    it('serif should be Georgia', () => {
-      expect(fontFamilies.serif).toBe('Georgia');
+    it('serif should be Literata', () => {
+      expect(fontFamilies.serif).toBe('Literata');
     });
 
     it('system should be -apple-system', () => {

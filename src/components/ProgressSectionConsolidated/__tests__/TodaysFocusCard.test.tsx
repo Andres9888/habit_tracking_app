@@ -28,8 +28,9 @@ jest.mock('react-native-reanimated', () => {
     View,
     Text,
     createAnimatedComponent: (Component: React.ComponentType) => {
-      const AnimatedComponent = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) =>
-        React.createElement(Component, { ...props, ref })
+      const AnimatedComponent = React.forwardRef(
+        (props: Record<string, unknown>, ref: React.Ref<unknown>) =>
+          React.createElement(Component, { ...props, ref })
       );
       AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`;
       return AnimatedComponent;
@@ -50,6 +51,7 @@ jest.mock('react-native-reanimated', () => {
     interpolate: (value: number, input: number[], output: number[]) =>
       output[0],
     Easing: {
+      ...jest.requireActual('react-native-reanimated/mock').Easing,
       out: () => () => 0,
       inOut: () => () => 0,
       cubic: () => 0,
@@ -106,9 +108,8 @@ jest.mock('lucide-react-native', () => {
   const React = require('react');
   const { View } = require('react-native');
 
-  const createIcon =
-    (name: string) => (props: Record<string, unknown>) =>
-      React.createElement(View, { testID: `lucide-${name}`, ...props });
+  const createIcon = (name: string) => (props: Record<string, unknown>) =>
+    React.createElement(View, { testID: `lucide-${name}`, ...props });
 
   return {
     Crosshair: createIcon('Crosshair'),
@@ -219,9 +220,7 @@ describe('TodaysFocusCard', () => {
         <TodaysFocusCard {...thrivingProps} />
       );
       // Icon is inside an accessibility-hidden container
-      expect(
-        UNSAFE_getByProps({ testID: 'lucide-Crosshair' })
-      ).toBeTruthy();
+      expect(UNSAFE_getByProps({ testID: 'lucide-Crosshair' })).toBeTruthy();
     });
   });
 
@@ -235,9 +234,7 @@ describe('TodaysFocusCard', () => {
       const { UNSAFE_getByProps } = render(
         <TodaysFocusCard {...thrivingProps} />
       );
-      expect(
-        UNSAFE_getByProps({ testID: 'lucide-Crosshair' })
-      ).toBeTruthy();
+      expect(UNSAFE_getByProps({ testID: 'lucide-Crosshair' })).toBeTruthy();
     });
 
     it('calculates next milestone correctly for thriving', () => {
@@ -258,9 +255,7 @@ describe('TodaysFocusCard', () => {
       const { UNSAFE_getByProps } = render(
         <TodaysFocusCard {...buildingProps} />
       );
-      expect(
-        UNSAFE_getByProps({ testID: 'lucide-TrendingUp' })
-      ).toBeTruthy();
+      expect(UNSAFE_getByProps({ testID: 'lucide-TrendingUp' })).toBeTruthy();
     });
   });
 
@@ -274,9 +269,7 @@ describe('TodaysFocusCard', () => {
       const { UNSAFE_getByProps } = render(
         <TodaysFocusCard {...startingProps} />
       );
-      expect(
-        UNSAFE_getByProps({ testID: 'lucide-Sparkles' })
-      ).toBeTruthy();
+      expect(UNSAFE_getByProps({ testID: 'lucide-Sparkles' })).toBeTruthy();
     });
   });
 
@@ -292,9 +285,7 @@ describe('TodaysFocusCard', () => {
       const { UNSAFE_getByProps } = render(
         <TodaysFocusCard {...strugglingProps} />
       );
-      expect(
-        UNSAFE_getByProps({ testID: 'lucide-Heart' })
-      ).toBeTruthy();
+      expect(UNSAFE_getByProps({ testID: 'lucide-Heart' })).toBeTruthy();
     });
   });
 
@@ -312,9 +303,7 @@ describe('TodaysFocusCard', () => {
       const { UNSAFE_getByProps } = render(
         <TodaysFocusCard {...recoveringProps} />
       );
-      expect(
-        UNSAFE_getByProps({ testID: 'lucide-RefreshCw' })
-      ).toBeTruthy();
+      expect(UNSAFE_getByProps({ testID: 'lucide-RefreshCw' })).toBeTruthy();
     });
   });
 
@@ -330,9 +319,7 @@ describe('TodaysFocusCard', () => {
       const { UNSAFE_getByProps } = render(
         <TodaysFocusCard {...completedProps} />
       );
-      expect(
-        UNSAFE_getByProps({ testID: 'lucide-CheckCircle2' })
-      ).toBeTruthy();
+      expect(UNSAFE_getByProps({ testID: 'lucide-CheckCircle2' })).toBeTruthy();
     });
 
     it('completed state takes priority over other states (when not on milestone)', () => {
@@ -512,9 +499,7 @@ describe('TodaysFocusCard', () => {
       };
       const { UNSAFE_getByProps } = render(<TodaysFocusCard {...props} />);
       // Should show completed icon, not celebration badge
-      expect(
-        UNSAFE_getByProps({ testID: 'lucide-CheckCircle2' })
-      ).toBeTruthy();
+      expect(UNSAFE_getByProps({ testID: 'lucide-CheckCircle2' })).toBeTruthy();
     });
 
     it('starting state triggers for new habits over other states', () => {
@@ -527,9 +512,7 @@ describe('TodaysFocusCard', () => {
         bestStreak: 0,
       };
       const { UNSAFE_getByProps } = render(<TodaysFocusCard {...props} />);
-      expect(
-        UNSAFE_getByProps({ testID: 'lucide-Sparkles' })
-      ).toBeTruthy();
+      expect(UNSAFE_getByProps({ testID: 'lucide-Sparkles' })).toBeTruthy();
     });
 
     it('recovering takes priority over struggling when bestStreak > 7', () => {
@@ -543,9 +526,7 @@ describe('TodaysFocusCard', () => {
       };
       const { UNSAFE_getByProps } = render(<TodaysFocusCard {...props} />);
       // Recovering should take priority
-      expect(
-        UNSAFE_getByProps({ testID: 'lucide-RefreshCw' })
-      ).toBeTruthy();
+      expect(UNSAFE_getByProps({ testID: 'lucide-RefreshCw' })).toBeTruthy();
     });
   });
 
@@ -652,9 +633,7 @@ describe('TodaysFocusCard', () => {
       );
       // Should show badge, not checkmark icon
       expect(getByText('⭐')).toBeTruthy();
-      expect(
-        UNSAFE_queryByProps({ testID: 'lucide-CheckCircle2' })
-      ).toBeNull();
+      expect(UNSAFE_queryByProps({ testID: 'lucide-CheckCircle2' })).toBeNull();
     });
 
     it('calls onMilestoneCelebrated when dismiss is pressed', () => {
@@ -731,7 +710,7 @@ describe('TodaysFocusCard', () => {
       };
       const { getByText } = render(<TodaysFocusCard {...props} />);
       expect(getByText('⚡')).toBeTruthy();
-      expect(getByText(/You're building momentum!/)).toBeTruthy();
+      expect(getByText(/You're building real momentum!/)).toBeTruthy();
     });
 
     it('shows 30-day milestone celebration', () => {
@@ -745,7 +724,7 @@ describe('TodaysFocusCard', () => {
       };
       const { getByText } = render(<TodaysFocusCard {...props} />);
       expect(getByText('🏆')).toBeTruthy();
-      expect(getByText(/A full month - incredible!/)).toBeTruthy();
+      expect(getByText(/A full month — incredible!/)).toBeTruthy();
     });
 
     it('shows 100-day milestone celebration', () => {

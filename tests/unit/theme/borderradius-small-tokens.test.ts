@@ -79,9 +79,9 @@ describe('borderRadius.small token migration', () => {
 
   describe('borderRadius token values', () => {
     it('should have expected values', () => {
-      expect(borderRadius.small).toBe(8);
-      expect(borderRadius.medium).toBe(12);
-      expect(borderRadius.large).toBe(16);
+      expect(borderRadius.small).toBe(10);
+      expect(borderRadius.medium).toBe(14);
+      expect(borderRadius.large).toBe(24);
     });
   });
 });

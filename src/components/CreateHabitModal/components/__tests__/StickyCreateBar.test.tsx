@@ -64,7 +64,7 @@ describe('StickyCreateBar - V9 Redesign', () => {
 
       // Both elements should exist
       const motivationText = getByText('Start your streak today');
-      const ctaButton = getByText('Create habit');
+      const ctaButton = getByText('Create Habit');
 
       expect(motivationText).toBeDefined();
       expect(ctaButton).toBeDefined();
@@ -72,14 +72,14 @@ describe('StickyCreateBar - V9 Redesign', () => {
   });
 
   describe('CTA Button Rendering', () => {
-    it('should render the "Create habit" button', () => {
+    it('should render the "Create Habit" button', () => {
       const { getByText } = render(<StickyCreateBar {...defaultProps} />);
-      expect(getByText('Create habit')).toBeDefined();
+      expect(getByText('Create Habit')).toBeDefined();
     });
 
-    it('should have accessibility label "Create habit"', () => {
+    it('should have accessibility label "Create Habit"', () => {
       const { getByLabelText } = render(<StickyCreateBar {...defaultProps} />);
-      expect(getByLabelText('Create habit')).toBeDefined();
+      expect(getByLabelText('Create Habit')).toBeDefined();
     });
 
     it('should have role="button"', () => {
@@ -90,22 +90,22 @@ describe('StickyCreateBar - V9 Redesign', () => {
 
   describe('Button State', () => {
     it('should be enabled when disabled prop is false', () => {
-      const { getByLabelText } = render(<StickyCreateBar {...defaultProps} />);
-      const button = getByLabelText('Create habit');
+      const { getByRole } = render(<StickyCreateBar {...defaultProps} />);
+      const button = getByRole('button');
       expect(button.props.accessibilityState?.disabled).toBe(false);
     });
 
     it('should be disabled when disabled prop is true', () => {
-      const { getByLabelText } = render(
+      const { getByRole } = render(
         <StickyCreateBar {...defaultProps} disabled={true} />
       );
-      const button = getByLabelText('Create habit');
+      const button = getByRole('button');
       expect(button.props.accessibilityState?.disabled).toBe(true);
     });
 
     it('should call onPress when button is pressed and not disabled', () => {
-      const { getByLabelText } = render(<StickyCreateBar {...defaultProps} />);
-      const button = getByLabelText('Create habit');
+      const { getByRole } = render(<StickyCreateBar {...defaultProps} />);
+      const button = getByRole('button');
 
       fireEvent.press(button);
 
@@ -113,10 +113,10 @@ describe('StickyCreateBar - V9 Redesign', () => {
     });
 
     it('should NOT call onPress when button is disabled', () => {
-      const { getByLabelText } = render(
+      const { getByRole } = render(
         <StickyCreateBar {...defaultProps} disabled={true} />
       );
-      const button = getByLabelText('Create habit');
+      const button = getByRole('button');
 
       fireEvent.press(button);
 
@@ -126,19 +126,19 @@ describe('StickyCreateBar - V9 Redesign', () => {
 
   describe('Color Customization', () => {
     it('should accept selectedColor prop for button gradient', () => {
-      const { getByLabelText } = render(
+      const { getByRole } = render(
         <StickyCreateBar {...defaultProps} selectedColor='#EF4444' />
       );
 
       // Button should render without errors
-      expect(getByLabelText('Create habit')).toBeDefined();
+      expect(getByRole('button')).toBeDefined();
     });
 
     it('should use default green when no color is selected', () => {
-      const { getByLabelText } = render(<StickyCreateBar {...defaultProps} />);
+      const { getByRole } = render(<StickyCreateBar {...defaultProps} />);
 
       // Button should render without errors
-      expect(getByLabelText('Create habit')).toBeDefined();
+      expect(getByRole('button')).toBeDefined();
     });
   });
 

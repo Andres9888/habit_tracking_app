@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Hook for handling recording status updates from expo-av
  *
@@ -26,12 +27,14 @@ export function useRecordingStatusHandler(
   } = options;
 
   const durationRef = useRef<number>(0);
+  const currentStateRef = useRef(currentState);
   const warningFiredRef = useRef<boolean>(false);
   const wasRecordingBeforeInterruptionRef = useRef<boolean>(false);
+  currentStateRef.current = currentState;
 
   const handleInterruption = useCallback(
     (reason: 'phone-call' | 'other-app' | 'system') => {
-      if (currentState !== 'recording') return;
+      if (currentStateRef.current !== 'recording') return;
       wasRecordingBeforeInterruptionRef.current = true;
       setStatus((prev) => ({
         ...prev,
@@ -41,7 +44,7 @@ export function useRecordingStatusHandler(
       }));
       onInterrupted?.(reason);
     },
-    [currentState, onInterrupted, setStatus]
+    [onInterrupted, setStatus]
   );
 
   const onRecordingStatusUpdate = useCallback(
@@ -51,7 +54,7 @@ export function useRecordingStatusHandler(
         !recordingStatus.isRecording &&
         recordingStatus.durationMillis &&
         recordingStatus.durationMillis > 0 &&
-        currentState === 'recording'
+        currentStateRef.current === 'recording'
       ) {
         handleInterruption('system');
         return;
@@ -97,7 +100,6 @@ export function useRecordingStatusHandler(
       if (durationSeconds >= maxDurationSeconds) onMaxDurationReached?.();
     },
     [
-      currentState,
       maxDurationSeconds,
       warningThresholdSeconds,
       onMaxDurationReached,

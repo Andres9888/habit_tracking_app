@@ -4,12 +4,26 @@
  */
 
 import React from 'react';
-import { render, waitFor } from '@testing-library/react-native';
-import { View } from 'react-native';
-import DraggableHabit from '../src/components/DraggableHabit';
-import type { Id } from '../convex/_generated/dataModel';
+import { render } from '@testing-library/react-native';
+import { Animated } from 'react-native';
+import DraggableHabit from '../../../src/components/DraggableHabit';
+import type { Id } from '../../../convex/_generated/dataModel';
 
-// No mocks needed for component-level integration tests
+jest.mock('react-native-gesture-handler', () => {
+  const React = jest.requireActual('react');
+  const View = jest.requireActual('react-native').View;
+  return {
+    Swipeable: ({ children, ...props }: { children: React.ReactNode }) =>
+      React.createElement(View, { ...props, testID: 'swipeable' }, children),
+  };
+});
+
+function triggerArchive(getByTestId: ReturnType<typeof render>['getByTestId']) {
+  const swipeable = getByTestId('swipeable');
+  const dragX = new Animated.Value(-100);
+  const archiveActions = swipeable.props.renderRightActions(dragX, dragX);
+  archiveActions.props.onArchive();
+}
 
 describe('Swipe to Archive Integration', () => {
   const testHabit = {
@@ -32,7 +46,7 @@ describe('Swipe to Archive Integration', () => {
     const mockOnArchive = jest.fn();
     const mockToggleHabit = jest.fn();
 
-    const { UNSAFE_getByType } = render(
+    const { getByTestId } = render(
       <DraggableHabit
         habit={testHabit}
         streak={5}
@@ -43,20 +57,11 @@ describe('Swipe to Archive Integration', () => {
       />
     );
 
-    // Find the Swipeable component
-    const Swipeable = require('react-native-gesture-handler').Swipeable;
-    const swipeableComponent = UNSAFE_getByType(Swipeable);
-
-    // Simulate swipe open (triggers onSwipeableOpen)
-    await waitFor(() => {
-      swipeableComponent.props.onSwipeableOpen();
-    });
+    triggerArchive(getByTestId);
 
     // Verify archive callback was called with correct habitId
-    await waitFor(() => {
-      expect(mockOnArchive).toHaveBeenCalledWith(testHabit._id);
-      expect(mockOnArchive).toHaveBeenCalledTimes(1);
-    });
+    expect(mockOnArchive).toHaveBeenCalledWith(testHabit._id);
+    expect(mockOnArchive).toHaveBeenCalledTimes(1);
   });
 
   it('passes correct habitId when swiping different habits', async () => {
@@ -70,7 +75,7 @@ describe('Swipe to Archive Integration', () => {
     };
 
     // Test first habit
-    const { UNSAFE_getByType: getSwipeable1, unmount: unmount1 } = render(
+    const { getByTestId: getSwipeable1, unmount: unmount1 } = render(
       <DraggableHabit
         habit={habit1}
         streak={3}
@@ -81,12 +86,7 @@ describe('Swipe to Archive Integration', () => {
       />
     );
 
-    const Swipeable = require('react-native-gesture-handler').Swipeable;
-    const swipeable1 = getSwipeable1(Swipeable);
-
-    await waitFor(() => {
-      swipeable1.props.onSwipeableOpen();
-    });
+    triggerArchive(getSwipeable1);
 
     expect(mockOnArchive).toHaveBeenCalledWith('habit_1');
     unmount1();
@@ -99,7 +99,7 @@ describe('Swipe to Archive Integration', () => {
       name: 'Habit 2',
     };
 
-    const { UNSAFE_getByType: getSwipeable2 } = render(
+    const { getByTestId: getSwipeable2 } = render(
       <DraggableHabit
         habit={habit2}
         streak={7}
@@ -110,11 +110,7 @@ describe('Swipe to Archive Integration', () => {
       />
     );
 
-    const swipeable2 = getSwipeable2(Swipeable);
-
-    await waitFor(() => {
-      swipeable2.props.onSwipeableOpen();
-    });
+    triggerArchive(getSwipeable2);
 
     expect(mockOnArchive).toHaveBeenCalledWith('habit_2');
   });
@@ -148,7 +144,7 @@ describe('Swipe to Archive Integration', () => {
       strengthLevel: 'strong' as const,
     };
 
-    const { UNSAFE_getByType, toJSON } = render(
+    const { getByTestId, toJSON } = render(
       <DraggableHabit
         habit={habitWithStrength}
         streak={12}
@@ -162,15 +158,10 @@ describe('Swipe to Archive Integration', () => {
     // Verify component renders
     expect(toJSON()).toBeTruthy();
 
-    // Verify Swipeable is present
-    const Swipeable = require('react-native-gesture-handler').Swipeable;
-    const swipeableComponent = UNSAFE_getByType(Swipeable);
-    expect(swipeableComponent).toBeTruthy();
+    expect(getByTestId('swipeable')).toBeTruthy();
 
     // Verify swipe still works with strength indicator
-    await waitFor(() => {
-      swipeableComponent.props.onSwipeableOpen();
-    });
+    triggerArchive(getByTestId);
 
     expect(mockOnArchive).toHaveBeenCalledWith(habitWithStrength._id);
   });
@@ -179,7 +170,7 @@ describe('Swipe to Archive Integration', () => {
     const mockOnArchive = jest.fn();
     const mockToggleHabit = jest.fn();
 
-    const { UNSAFE_getByType } = render(
+    const { getByTestId } = render(
       <DraggableHabit
         habit={testHabit}
         streak={5}
@@ -191,13 +182,8 @@ describe('Swipe to Archive Integration', () => {
       />
     );
 
-    const Swipeable = require('react-native-gesture-handler').Swipeable;
-    const swipeableComponent = UNSAFE_getByType(Swipeable);
-
     // Simulate swipe in compact mode
-    await waitFor(() => {
-      swipeableComponent.props.onSwipeableOpen();
-    });
+    triggerArchive(getByTestId);
 
     // Verify archive works the same in compact mode
     expect(mockOnArchive).toHaveBeenCalledWith(testHabit._id);

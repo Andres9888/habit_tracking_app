@@ -117,15 +117,14 @@ export function isFutureDate(dateStr: string, timezone?: string): boolean {
     return dateStr > getTodayForTimezone(timezone);
   }
   const [yearStr, monthStr, dayStr] = dateStr.split('-');
-  const inputDate = new Date(
+  const inputDate = new Date(Date.UTC(
     Number(yearStr),
     Number(monthStr) - 1,
     Number(dayStr)
-  );
+  ));
   const today = new Date();
   // Allow dates up to 24 hours ahead to accommodate timezone differences
   const gracePeriodMs = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-  today.setHours(0, 0, 0, 0);
-  inputDate.setHours(0, 0, 0, 0);
+  today.setUTCHours(0, 0, 0, 0);
   return inputDate.getTime() > today.getTime() + gracePeriodMs;
 }

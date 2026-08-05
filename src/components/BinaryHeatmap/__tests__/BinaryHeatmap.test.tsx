@@ -75,22 +75,22 @@ describe('BinaryHeatmap', () => {
   describe('Header completion stat', () => {
     it('shows the percentage and day count by default', () => {
       const { getByText } = render(<BinaryHeatmap {...defaultProps} />);
-      expect(getByText(/^\d+%$/)).toBeTruthy();
-      expect(getByText(/^\d+\/\d+ days$/)).toBeTruthy();
+      expect(getByText(/^\d+% complete$/)).toBeTruthy();
+      expect(getByText(/^\d+ days$/)).toBeTruthy();
     });
 
     it('hides the stat when showCompletionRate is false', () => {
       const { queryByText } = render(
         <BinaryHeatmap {...defaultProps} showCompletionRate={false} />
       );
-      expect(queryByText(/^\d+\/\d+ days$/)).toBeNull();
+      expect(queryByText(/^\d+ days$/)).toBeNull();
     });
 
     it('shows 0% for an empty completion set', () => {
       const { getByText } = render(
         <BinaryHeatmap {...defaultProps} completedDates={new Set()} />
       );
-      expect(getByText('0%')).toBeTruthy();
+      expect(getByText('0% complete')).toBeTruthy();
     });
   });
 

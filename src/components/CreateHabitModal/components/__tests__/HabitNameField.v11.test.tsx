@@ -29,11 +29,6 @@ jest.mock('../../../../hooks/useHapticFeedback', () => ({
 }));
 
 // Mock react-native-reanimated
-const mockWithTiming = jest.fn((value, config, callback) => {
-  if (callback) callback();
-  return value;
-});
-
 jest.mock('react-native-reanimated', () => {
   const { TextInput, View } = require('react-native');
   return {
@@ -45,9 +40,15 @@ jest.mock('react-native-reanimated', () => {
     },
     useAnimatedStyle: () => ({}),
     useSharedValue: (initial: number) => ({ value: initial }),
-    withTiming: mockWithTiming,
+    withTiming: jest.fn((value, _config, callback) => {
+      if (callback) callback();
+      return value;
+    }),
   };
 });
+
+const mockWithTiming = jest.requireMock('react-native-reanimated')
+  .withTiming as jest.Mock;
 
 describe('HabitNameField - V11 Validation Logic', () => {
   const mockOnChange = jest.fn();

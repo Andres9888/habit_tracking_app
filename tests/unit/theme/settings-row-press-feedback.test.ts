@@ -14,11 +14,16 @@ function readSource(relativePath: string): string {
 }
 
 describe('SettingsRow uses AnimatedPressable', () => {
-  const source = readSource('components/SettingsModal/SettingsRow.tsx');
+  const source = readSource(
+    'components/SettingsModal/SettingsRow/SettingsRow.tsx'
+  );
+  const hooksSource = readSource(
+    'components/SettingsModal/SettingsRow/SettingsRow.hooks.ts'
+  );
 
   it('imports AnimatedPressable from ui/AnimatedPressable', () => {
     expect(source).toMatch(
-      /import\s+\{[^}]*AnimatedPressable[^}]*\}\s+from\s+['"]\.\.\/ui\/AnimatedPressable['"]/
+      /import\s+\{[^}]*AnimatedPressable[^}]*\}\s+from\s+['"]\.\.\/\.\.\/ui\/AnimatedPressable['"]/
     );
   });
 
@@ -59,7 +64,7 @@ describe('SettingsRow uses AnimatedPressable', () => {
   it('still returns non-pressable content for toggle type', () => {
     expect(source).toMatch(/type\s*===\s*['"]toggle['"]/);
     expect(source).toMatch(
-      /if\s*\(\s*type\s*===\s*['"]toggle['"]\s*\|\|\s*type\s*===\s*['"]info['"]\s*\)/
+      /if\s*\(\s*type\s*===\s*['"]toggle['"]\s*\|\|\s*\(type\s*===\s*['"]info['"][\s\S]*?!onPress\)\)/
     );
   });
 
@@ -68,7 +73,7 @@ describe('SettingsRow uses AnimatedPressable', () => {
   });
 
   it('still uses haptic feedback on press', () => {
-    expect(source).toContain('Haptics.impactAsync');
-    expect(source).toContain('Haptics.ImpactFeedbackStyle.Light');
+    expect(hooksSource).toContain('triggerHaptic');
+    expect(hooksSource).toContain("light: 'tap'");
   });
 });

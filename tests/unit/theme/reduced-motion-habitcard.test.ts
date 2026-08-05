@@ -44,6 +44,7 @@ describe('HabitCard reduced motion — celebration', () => {
     const cardScale = makeMockSharedValue(1);
     const setShowConfetti = jest.fn();
     const setShowFloatingXP = jest.fn();
+    const scheduleFloatingXPHide = jest.fn();
     const setXPPosition = jest.fn();
 
     const trigger = createCelebrationTrigger({
@@ -51,6 +52,7 @@ describe('HabitCard reduced motion — celebration', () => {
       checkmarkRotate: checkmarkRotate as unknown,
       checkmarkScale: checkmarkScale as unknown,
       reduceMotion: true,
+      scheduleFloatingXPHide,
       rippleOpacity: rippleOpacity as unknown,
       rippleScale: rippleScale as unknown,
       setShowConfetti,
@@ -78,6 +80,7 @@ describe('HabitCard reduced motion — celebration', () => {
     const cardScale = makeMockSharedValue(1);
     const setShowConfetti = jest.fn();
     const setShowFloatingXP = jest.fn();
+    const scheduleFloatingXPHide = jest.fn();
     const setXPPosition = jest.fn();
 
     const { withTiming } = require('react-native-reanimated');
@@ -87,6 +90,7 @@ describe('HabitCard reduced motion — celebration', () => {
       checkmarkRotate: checkmarkRotate as unknown,
       checkmarkScale: checkmarkScale as unknown,
       reduceMotion: false,
+      scheduleFloatingXPHide,
       rippleOpacity: rippleOpacity as unknown,
       rippleScale: rippleScale as unknown,
       setShowConfetti,

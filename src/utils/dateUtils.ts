@@ -53,9 +53,21 @@ function parseToUTCMidnight(date: Date | string): Date {
     date = new Date(date);
   }
 
-  // Convert Date object to UTC midnight
+  if (Number.isNaN(date.getTime())) {
+    throw new TypeError('Invalid date');
+  }
+
+  // Date objects represent instants, so normalize their UTC calendar date.
   return new Date(
-    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
+    Date.UTC(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate(),
+      0,
+      0,
+      0,
+      0
+    )
   );
 }
 
@@ -95,12 +107,14 @@ export function formatDateString(date: Date | string): string {
     // Try to parse and format
     const parsed = new Date(date);
     if (Number.isNaN(parsed.getTime())) {
-      if (__DEV__) console.warn(`Invalid date string: ${date}`);
-      // Return today's date as safe fallback instead of crashing
-      date = new Date();
+      throw new TypeError(`Invalid date string: ${date}`);
     } else {
       date = parsed;
     }
+  }
+
+  if (Number.isNaN(date.getTime())) {
+    throw new TypeError('Invalid date');
   }
 
   const year = date.getFullYear();

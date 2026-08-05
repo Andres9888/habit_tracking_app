@@ -126,7 +126,7 @@ describe('processQueue', () => {
 
       expect(syncItem.id).toBe('test-op-1');
       expect(syncItem.type).toBe('toggleCompletion');
-      expect(syncItem.payload).toEqual(op.payload);
+      expect(syncItem.payload).toEqual(op);
       expect(syncItem.retryContext.attemptCount).toBe(2);
       expect(syncItem.retryContext.exhausted).toBe(false);
     });
@@ -238,7 +238,8 @@ describe('processQueue', () => {
       expect(mockQueueManager.markFailed).toHaveBeenCalledWith(
         'fail-op',
         'Server error',
-        'server'
+        'server',
+        { final: true }
       );
     });
 

@@ -22,7 +22,7 @@ import {
   borderRadius,
   shadows,
   componentSpacing,
-} from '../index';
+} from '../../../src/theme';
 
 // Test component that uses useAppTheme hook
 function TestComponent() {
@@ -82,8 +82,8 @@ describe('Theme Integration - Phase 1', () => {
   describe('React Native Paper Integration', () => {
     it('should have Paper theme colors configured', () => {
       expect(theme.colors.primary).toBe('#10B981'); // Brand green
-      expect(theme.colors.background).toBe('#FFFFFF');
-      expect(theme.colors.surface).toBe('#F9FAFB');
+      expect(theme.colors.background).toBe('#F5F1ED');
+      expect(theme.colors.surface).toBe('#EDEAE5');
     });
 
     it('should have custom fonts configured', () => {
@@ -94,8 +94,8 @@ describe('Theme Integration - Phase 1', () => {
       expect(theme.fonts.bodyLarge).toBeDefined();
     });
 
-    it('should have roundness set to medium (12pt)', () => {
-      expect(theme.roundness).toBe(12);
+    it('should have roundness set to the airy medium token', () => {
+      expect(theme.roundness).toBe(14);
       expect(theme.roundness).toBe(borderRadius.medium);
     });
 
@@ -177,18 +177,18 @@ describe('Theme Integration - Phase 1', () => {
   describe('Typography Mappings', () => {
     it('should map display typography correctly', () => {
       expect(theme.fonts.displayLarge.fontSize).toBe(34);
-      expect(theme.fonts.displayMedium.fontSize).toBe(28);
+      expect(theme.fonts.displayMedium.fontSize).toBe(22);
     });
 
     it('should map heading typography correctly', () => {
-      expect(theme.fonts.headlineLarge.fontSize).toBe(28);
+      expect(theme.fonts.headlineLarge.fontSize).toBe(22);
       expect(theme.fonts.headlineMedium.fontSize).toBe(22);
-      expect(theme.fonts.headlineSmall.fontSize).toBe(17);
+      expect(theme.fonts.headlineSmall.fontSize).toBe(20);
     });
 
     it('should map body typography correctly', () => {
       expect(theme.fonts.bodyLarge.fontSize).toBe(17);
-      expect(theme.fonts.bodyMedium.fontSize).toBe(15);
+      expect(theme.fonts.bodyMedium.fontSize).toBe(14);
       expect(theme.fonts.bodySmall.fontSize).toBe(13);
     });
 
@@ -198,9 +198,9 @@ describe('Theme Integration - Phase 1', () => {
       expect(theme.fonts.labelSmall.fontSize).toBe(10);
     });
 
-    it('should use SF Pro font family', () => {
-      expect(theme.fonts.displayLarge.fontFamily).toBe('SF Pro Display');
-      expect(theme.fonts.bodyLarge.fontFamily).toBe('SF Pro Text');
+    it('should use the branded Literata and DM Sans font families', () => {
+      expect(theme.fonts.displayLarge.fontFamily).toBe('Literata');
+      expect(theme.fonts.bodyLarge.fontFamily).toBe('DMSans');
     });
   });
 
@@ -222,7 +222,7 @@ describe('Theme Integration - Phase 1', () => {
     it('✅ All hex values match UX spec', () => {
       expect(colors.primary[500]).toBe('#10B981');
       expect(colors.secondary[500]).toBe('#3B82F6');
-      expect(colors.error).toBe('#EF4444');
+      expect(colors.error).toBe('#B53030');
     });
 
     it('✅ Typography scales with iOS Dynamic Type (Paper integration)', () => {

@@ -12,7 +12,8 @@ export default {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': '<rootDir>/__mocks__/styleMock.js',
-    '^react-native-reanimated/mock$': '<rootDir>/__mocks__/react-native-reanimated-mock.js',
+    '^react-native-reanimated/mock$':
+      '<rootDir>/__mocks__/react-native-reanimated-mock.js',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^~/(.*)$': '<rootDir>/src/$1',
   },
@@ -24,6 +25,9 @@ export default {
   ],
   testPathIgnorePatterns: [
     '/node_modules/',
+    // Device-driven E2E specs are not part of the unit Jest project.
+    // The supported device boundary is Maestro (see tests/e2e/README.md).
+    '<rootDir>/tests/e2e/.*\\.e2e\\.test\\.tsx$',
     '/worktrees/',
     '/\\.worktrees/',
     '/\\.next/',

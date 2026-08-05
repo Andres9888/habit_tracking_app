@@ -4,8 +4,10 @@ describe('buildProfileStats', () => {
   it('returns zeros when there are no active habits', () => {
     expect(buildProfileStats([], [])).toEqual({
       activeHabits: 0,
+      currentStreak: 0,
       flawlessDays: 0,
       lifetimeCompletions: 0,
+      weeklyCompletionRate: 0,
     });
   });
 
@@ -21,8 +23,10 @@ describe('buildProfileStats', () => {
 
     expect(buildProfileStats(habits, tracking)).toEqual({
       activeHabits: 2,
+      currentStreak: 0,
       flawlessDays: 1,
       lifetimeCompletions: 4,
+      weeklyCompletionRate: 0,
     });
   });
 });

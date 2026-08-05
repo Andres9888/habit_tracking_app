@@ -9,12 +9,13 @@ import { PersonalBestsCard } from '../PersonalBestsCard';
 import type { StreakRecord, DayStats } from '../types';
 
 // Mock AccessibilityInfo
-jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockImplementation(
-  () => Promise.resolve(false)
-);
+jest
+  .spyOn(AccessibilityInfo, 'isReduceMotionEnabled')
+  .mockImplementation(() => Promise.resolve(false));
 
 // Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {
+  const Reanimated = require('react-native-reanimated/mock');
   const { View } = require('react-native');
 
   return {
@@ -26,6 +27,7 @@ jest.mock('react-native-reanimated', () => {
     withSequence: (value: number) => value,
     withTiming: (value: number) => value,
     Easing: {
+      ...Reanimated.Easing,
       inOut: () => () => 0,
       ease: () => 0,
     },
@@ -83,14 +85,20 @@ describe('PersonalBestsCard', () => {
   });
 
   it('displays current streak when active', () => {
-    const { getByText } = render(<PersonalBestsCard {...defaultProps} currentStreak={5} />);
-    expect(getByText('5 days')).toBeTruthy();
-    expect(getByText('Current Streak')).toBeTruthy();
-    expect(getByText('NOW 🔥')).toBeTruthy();
+    const { getByLabelText, queryByText } = render(
+      <PersonalBestsCard {...defaultProps} currentStreak={5} />
+    );
+    expect(
+      getByLabelText('Personal bests, current streak 5 days')
+    ).toBeTruthy();
+    expect(queryByText('Current Streak')).toBeNull();
+    expect(queryByText('NOW 🔥')).toBeNull();
   });
 
   it('hides current streak section when streak is 0', () => {
-    const { queryByText } = render(<PersonalBestsCard {...defaultProps} currentStreak={0} />);
+    const { queryByText } = render(
+      <PersonalBestsCard {...defaultProps} currentStreak={0} />
+    );
     expect(queryByText('Current Streak')).toBeNull();
     expect(queryByText('NOW 🔥')).toBeNull();
   });
@@ -115,7 +123,9 @@ describe('PersonalBestsCard', () => {
       streakRecords: [createStreakRecord(7, '2024-11-01')],
     };
 
-    const { getAllByText } = render(<PersonalBestsCard {...propsWithFewRecords} />);
+    const { getAllByText } = render(
+      <PersonalBestsCard {...propsWithFewRecords} />
+    );
     // Should show one real medal and two hints with '-'
     const dashes = getAllByText('-');
     expect(dashes.length).toBe(2);
@@ -147,16 +157,18 @@ describe('PersonalBestsCard', () => {
     expect(mockOnPress).toHaveBeenCalledTimes(1);
   });
 
-  it('hides best/worst cards when worstDay rate >= bestDay rate', () => {
+  it('keeps best/worst cards visible when rates are equal', () => {
     const propsWithSameRates = {
       ...defaultProps,
       bestDay: createDayStats('Mon', 1, 80),
       worstDay: createDayStats('Sat', 6, 80), // Same as best
     };
 
-    const { queryByText } = render(<PersonalBestsCard {...propsWithSameRates} />);
-    expect(queryByText('Best Day')).toBeNull();
-    expect(queryByText('Focus On')).toBeNull();
+    const { queryByText } = render(
+      <PersonalBestsCard {...propsWithSameRates} />
+    );
+    expect(queryByText('Best Day')).toBeTruthy();
+    expect(queryByText('Focus On')).toBeTruthy();
   });
 
   it('shows empty state when no records and no streak', () => {
@@ -167,7 +179,9 @@ describe('PersonalBestsCard', () => {
     };
 
     const { getByText } = render(<PersonalBestsCard {...emptyProps} />);
-    expect(getByText('Complete 2+ consecutive days to start tracking streaks')).toBeTruthy();
+    expect(
+      getByText('Complete 2+ consecutive days to start tracking streaks')
+    ).toBeTruthy();
   });
 
   it('has proper accessibility labels for streak records', () => {
@@ -181,21 +195,40 @@ describe('PersonalBestsCard', () => {
   it('has proper accessibility for worst day card', () => {
     const { getByRole } = render(<PersonalBestsCard {...defaultProps} />);
     const worstDayButton = getByRole('button');
-    expect(worstDayButton.props.accessibilityHint).toBe('Opens tips to improve this day');
+    expect(worstDayButton.props.accessibilityHint).toBe(
+      'Opens tips to improve this day'
+    );
   });
 
   it('marks current streak in medal row when it matches a record', () => {
     const propsWithCurrentRecord = {
       ...defaultProps,
       streakRecords: [
-        { days: 14, startDate: '2024-11-01', endDate: '2024-11-14', isCurrent: false },
-        { days: 10, startDate: '2024-10-01', endDate: '2024-10-10', isCurrent: false },
-        { days: 5, startDate: '2024-12-01', endDate: '2024-12-05', isCurrent: true },
+        {
+          days: 14,
+          startDate: '2024-11-01',
+          endDate: '2024-11-14',
+          isCurrent: false,
+        },
+        {
+          days: 10,
+          startDate: '2024-10-01',
+          endDate: '2024-10-10',
+          isCurrent: false,
+        },
+        {
+          days: 5,
+          startDate: '2024-12-01',
+          endDate: '2024-12-05',
+          isCurrent: true,
+        },
       ],
       currentStreak: 5,
     };
 
-    const { getAllByLabelText } = render(<PersonalBestsCard {...propsWithCurrentRecord} />);
+    const { getAllByLabelText } = render(
+      <PersonalBestsCard {...propsWithCurrentRecord} />
+    );
     // Should have at least one element with "current streak" in label
     const currentStreakElements = getAllByLabelText(/current streak/i);
     expect(currentStreakElements.length).toBeGreaterThan(0);

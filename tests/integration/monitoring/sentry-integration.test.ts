@@ -61,15 +61,13 @@ describe('Sentry Configuration', () => {
     });
 
     it('returns config when DSN is provided', () => {
-      process.env.EXPO_PUBLIC_SENTRY_DSN = 'https://test@sentry.io/123';
-      const config = buildSentryConfig();
+      const config = buildSentryConfig('https://test@sentry.io/123');
       expect(config).not.toBeNull();
       expect(config?.dsn).toBe('https://test@sentry.io/123');
     });
 
     it('sets environment to development in __DEV__ mode', () => {
-      process.env.EXPO_PUBLIC_SENTRY_DSN = 'https://test@sentry.io/123';
-      const config = buildSentryConfig();
+      const config = buildSentryConfig('https://test@sentry.io/123');
       expect(config?.environment).toBe('development');
     });
   });
@@ -81,8 +79,7 @@ describe('Sentry Configuration', () => {
     });
 
     it('returns true when DSN is configured', () => {
-      process.env.EXPO_PUBLIC_SENTRY_DSN = 'https://test@sentry.io/123';
-      expect(isSentryEnabled()).toBe(true);
+      expect(isSentryEnabled('https://test@sentry.io/123')).toBe(true);
     });
   });
 });

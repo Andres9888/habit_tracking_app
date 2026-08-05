@@ -15,8 +15,6 @@
 import { renderHook, act, waitFor } from '@testing-library/react-native';
 
 // Mock expo-av
-const mockRequestPermissionsAsync = jest.fn();
-const mockSetAudioModeAsync = jest.fn();
 const mockStopAndUnloadAsync = jest.fn();
 const mockPauseAsync = jest.fn();
 const mockStartAsync = jest.fn();
@@ -29,14 +27,12 @@ const mockRecording = {
   getURI: mockGetURI,
 };
 
-const mockCreateAsync = jest.fn();
-
 jest.mock('expo-av', () => ({
   Audio: {
-    requestPermissionsAsync: mockRequestPermissionsAsync,
-    setAudioModeAsync: mockSetAudioModeAsync,
+    requestPermissionsAsync: jest.fn(),
+    setAudioModeAsync: jest.fn(),
     Recording: {
-      createAsync: mockCreateAsync,
+      createAsync: jest.fn(),
     },
     AndroidOutputFormat: {
       MPEG_4: 'MPEG_4',
@@ -51,12 +47,19 @@ jest.mock('expo-av', () => ({
       HIGH: 'HIGH',
     },
   },
+  InterruptionModeAndroid: { DoNotMix: 1 },
+  InterruptionModeIOS: { DoNotMix: 1 },
 }));
 
 // Note: Linking, Alert, and Platform mocking is not possible with TurboModules in RN 0.76+
 // The Open Settings functionality tests are skipped but the core logic is tested elsewhere
 
+import { Audio } from 'expo-av';
 import { useAudioRecording } from '../useAudioRecording';
+
+const mockRequestPermissionsAsync = Audio.requestPermissionsAsync as jest.Mock;
+const mockSetAudioModeAsync = Audio.setAudioModeAsync as jest.Mock;
+const mockCreateAsync = Audio.Recording.createAsync as jest.Mock;
 
 describe('useAudioRecording', () => {
   beforeEach(() => {
