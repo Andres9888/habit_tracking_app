@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Library Improvements - Items 7-11 Mock</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif !important; background: #0a0a0a; color: #fff; overflow-x: hidden; }
+
+  /* Phone frame */
+  .phone-frame {
+    width: 390px; height: 844px; background: #111; border-radius: 44px;
+    border: 3px solid #333; overflow: hidden; position: relative;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.6);
+  }
+  .phone-screen { width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; padding-bottom: 34px; }
+  .phone-screen::-webkit-scrollbar { display: none; }
+
+  /* Nav tabs */
+  .nav-pill { display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .nav-pill.active { background: rgba(255,255,255,0.12); color: #fff; }
+  .nav-pill:not(.active) { color: #888; }
+
+  /* Cards */
+  .template-card {
+    background: #1a1a1a; border-radius: 16px; padding: 14px; border: 1px solid #2a2a2a;
+    transition: all 0.3s; cursor: pointer;
+  }
+  .template-card:hover { border-color: #444; transform: translateY(-1px); }
+  .template-card.imported { opacity: 0.65; }
+  .template-card.imported .accent-bar { background: #22c55e !important; }
+
+  .trending-card {
+    min-width: 165px; max-width: 165px; background: #1a1a1a; border-radius: 16px;
+    padding: 14px; border: 1px solid #2a2a2a; cursor: pointer; transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .trending-card:hover { border-color: #444; }
+  .trending-card.imported { opacity: 0.6; border-color: #22c55e40; }
+
+  /* Added badge */
+  .added-badge {
+    display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px;
+    background: rgba(34,197,94,0.15); border-radius: 10px; font-size: 10px;
+    font-weight: 600; color: #22c55e; letter-spacing: 0.3px;
+  }
+
+  /* Hero gradient */
+  .hero-card {
+    border-radius: 20px; padding: 24px; position: relative; overflow: hidden;
+    cursor: pointer; transition: transform 0.2s;
+  }
+  .hero-card:hover { transform: scale(0.98); }
+  .hero-card::before {
+    content: ''; position: absolute; top: -30px; right: -30px;
+    width: 120px; height: 120px; border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+  .hero-card::after {
+    content: ''; position: absolute; bottom: -40px; left: -20px;
+    width: 100px; height: 100px; border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+
+  /* Chips */
+  .chip {
+    display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 500; background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.9); gap: 2px;
+  }
+
+  /* Filter chips */
+  .filter-chip {
+    padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; border: 1px solid transparent;
+  }
+  .filter-chip.active { background: rgba(255,255,255,0.12); color: #fff; border-color: #555; }
+  .filter-chip:not(.active) { background: transparent; color: #888; border-color: #333; }
+
+  /* Pack card */
+  .pack-card {
+    border-radius: 16px; padding: 18px; cursor: pointer; transition: all 0.2s;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .pack-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+
+  /* Science badge */
+  .science-badge {
+    display: inline-flex; align-items: center; gap: 3px; font-size: 10px;
+    color: #60a5fa; font-weight: 500;
+  }
+
+  /* Popularity pill */
+  .popularity-pill {
+    font-size: 10px; color: #888; display: flex; align-items: center; gap: 3px;
+  }
+
+  /* Section headers */
+  .section-header { font-size: 16px; font-weight: 700; color: #fff; }
+  .section-subtext { font-size: 12px; color: #888; }
+
+  /* Toggle switch */
+  .toggle-track {
+    width: 40px; height: 22px; border-radius: 11px; background: #333;
+    position: relative; cursor: pointer; transition: background 0.2s;
+  }
+  .toggle-track.on { background: #22c55e; }
+  .toggle-track .toggle-thumb {
+    width: 18px; height: 18px; border-radius: 50%; background: #fff;
+    position: absolute; top: 2px; left: 2px; transition: transform 0.2s;
+  }
+  .toggle-track.on .toggle-thumb { transform: translateX(18px); }
+
+  /* View transitions */
+  .view { display: none; }
+  .view.active { display: block; animation: slideIn 0.3s ease-out; }
+  @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Annotations */
+  .annotation {
+    position: absolute; z-index: 50; background: #f59e0b; color: #000;
+    font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px;
+    white-space: nowrap; pointer-events: none;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+  /* Import all button */
+  .import-all-btn {
+    background: #fff; color: #000; font-weight: 700; font-size: 14px;
+    padding: 12px 24px; border-radius: 12px; border: none; cursor: pointer;
+    transition: all 0.2s; width: 100%;
+  }
+  .import-all-btn:hover { background: #e5e5e5; transform: scale(0.98); }
+
+  /* Tab bar at bottom of mock selector */
+  .mock-tabs {
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    margin-bottom: 32px;
+  }
+  .mock-tab {
+    padding: 10px 20px; border-radius: 12px; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; border: 1px solid #333;
+    background: #1a1a1a; color: #aaa;
+  }
+  .mock-tab.active { background: #fff; color: #000; border-color: #fff; }
+  .mock-tab:hover:not(.active) { border-color: #555; color: #fff; }
+
+  /* Category tile */
+  .category-tile {
+    border-radius: 14px; padding: 14px; cursor: pointer; transition: all 0.2s;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .category-tile:hover { transform: scale(0.97); }
+
+  /* Stagger animation */
+  .stagger > * { animation: fadeIn 0.4s ease-out both; }
+  .stagger > *:nth-child(1) { animation-delay: 0s; }
+  .stagger > *:nth-child(2) { animation-delay: 0.08s; }
+  .stagger > *:nth-child(3) { animation-delay: 0.16s; }
+  .stagger > *:nth-child(4) { animation-delay: 0.24s; }
+  .stagger > *:nth-child(5) { animation-delay: 0.32s; }
+  .stagger > *:nth-child(6) { animation-delay: 0.4s; }
+  .stagger > *:nth-child(7) { animation-delay: 0.48s; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 20px;">
+  <h1 style="font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 4px;">Habit Library Improvements</h1>
+  <p style="font-size: 14px; color: #888; margin-bottom: 24px;">Items 7-11 &mdash; Interactive mock showing all planned changes</p>
+
+  <div class="mock-tabs" id="mockTabs">
+    <div class="mock-tab active" onclick="showView('main')">Main Browse<br><span style="font-size:10px;color:#888;">Items 7, 9</span></div>
+    <div class="mock-tab" onclick="showView('curated')">Curated View<br><span style="font-size:10px;color:#888;">Item 8</span></div>
+    <div class="mock-tab" onclick="showView('packDetail')">Pack Detail<br><span style="font-size:10px;color:#888;">Item 10</span></div>
+    <div class="mock-tab" onclick="showView('seeAll')">See All + Filter<br><span style="font-size:10px;color:#888;">Item 7</span></div>
+    <div class="mock-tab" onclick="showView('dynamic')">Dynamic Popularity<br><span style="font-size:10px;color:#888;">Item 11</span></div>
+  </div>
+</div>
+
+<!-- Phone mocks container -->
+<div style="display: flex; justify-content: center; padding: 0 24px 60px; position: relative;">
+
+  <!-- ============ MAIN BROWSE VIEW (Items 7 + 9) ============ -->
+  <div class="view active" id="view-main" style="display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; justify-content: center;">
+    <div class="phone-frame">
+      <div class="phone-screen" style="padding: 56px 16px 40px;">
+        <div class="stagger">
+
+          <!-- Screen Header -->
+          <div style="margin-bottom: 20px;">
+            <h2 style="font-size: 24px; font-weight: 800;">Habit Library</h2>
+            <p style="font-size: 13px; color: #888;">Science-backed templates to kickstart your routine</p>
+          </div>
+
+          <!-- Search bar -->
+          <div style="background: #1a1a1a; border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; gap: 8px; margin-bottom: 20px; border: 1px solid #2a2a2a;">
+            <i data-lucide="search" style="width: 16px; height: 16px; color: #666;"></i>
+            <span style="color: #555; font-size: 14px;">Search habits or keywords...</span>
+          </div>
+
+          <!-- Hero Card (Item 8 - clickable) -->
+          <div class="hero-card" style="background: linear-gradient(135deg, #065F46, #059669, #34D399); margin-bottom: 24px; position: relative;" onclick="showView('curated')">
+            <div style="position: relative; z-index: 1;">
+              <span style="font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.7); letter-spacing: 1px;">🌅 MORNING PICK</span>
+              <h3 style="font-size: 20px; font-weight: 800; margin: 6px 0 4px;">Morning Mastery</h3>
+              <p style="font-size: 12px; color: rgba(255,255,255,0.75); margin-bottom: 12px;">Start your day with science-backed habits for energy and focus</p>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;">
+                <span class="chip">🌅 Wake Early</span>
+                <span class="chip">💧 Hydrate</span>
+                <span class="chip">📝 Journal</span>
+                <span class="chip">🧘 Meditate</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px; font-size: 12px; color: rgba(255,255,255,0.8); font-weight: 600;">
+                View 4 curated templates →
+              </div>
+            </div>
+            <div class="annotation" style="top: -8px; right: 12px;">ITEM 8: Opens curated view →</div>
+          </div>
+
+          <!-- ★ NEW: Recommended For You (Item 9) -->
+          <div style="margin-bottom: 24px; position: relative;">
+            <div class="annotation" style="top: -10px; left: 8px;">ITEM 9: Personalized section</div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; padding-top: 8px;">
+              <div>
+                <span class="section-header">✨ Recommended for You</span>
+                <p class="section-subtext" style="margin-top: 2px;">Based on your habits</p>
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch;">
+              <!-- Rec card 1 - from unexplored category -->
+              <div class="trending-card" style="border-left: 3px solid #f59e0b;">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: #7C3AED20; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 8px;">🎨</div>
+                <p style="font-size: 13px; font-weight: 600; margin-bottom: 2px; line-height: 1.3;">Creative Practice</p>
+                <p style="font-size: 10px; color: #888; margin-bottom: 6px;">Daily</p>
+                <div class="science-badge">🔬 Research-backed</div>
+                <div style="margin-top: 8px;">
+                  <span style="font-size: 9px; color: #f59e0b; font-weight: 600; background: #f59e0b15; padding: 2px 6px; border-radius: 6px;">New category for you</span>
+                </div>
+                <div style="margin-top: 8px;">
+                  <button style="width: 100%; padding: 6px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer;">+ Add</button>
+                </div>
+              </div>
+              <!-- Rec card 2 -->
+              <div class="trending-card" style="border-left: 3px solid #f59e0b;">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: #059669 20; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 8px;">💰</div>
+                <p style="font-size: 13px; font-weight: 600; margin-bottom: 2px; line-height: 1.3;">Budget Review</p>
+                <p style="font-size: 10px; color: #888; margin-bottom: 6px;">Weekly</p>
+                <div class="science-badge">🔬 Research-backed</div>
+                <div style="margin-top: 8px;">
+                  <span style="font-size: 9px; color: #f59e0b; font-weight: 600; background: #f59e0b15; padding: 2px 6px; border-radius: 6px;">New category for you</span>
+                </div>
+                <div style="margin-top: 8px;">
+                  <button style="width: 100%; padding: 6px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer;">+ Add</button>
+                </div>
+              </div>
+              <!-- Rec card 3 -->
+              <div class="trending-card" style="border-left: 3px solid #f59e0b;">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: #EF444420; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 8px;">📚</div>
+                <p style="font-size: 13px; font-weight: 600; margin-bottom: 2px; line-height: 1.3;">Daily Reading</p>
+                <p style="font-size: 10px; color: #888; margin-bottom: 6px;">Daily</p>
+                <div class="science-badge">🔬 Research-backed</div>
+                <div style="margin-top: 8px;">
+                  <span style="font-size: 9px; color: #f59e0b; font-weight: 600; background: #f59e0b15; padding: 2px 6px; border-radius: 6px;">New category for you</span>
+                </div>
+                <div style="margin-top: 8px;">
+                  <button style="width: 100%; padding: 6px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer;">+ Add</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trending Now (Item 7 - imported visual) -->
+          <div style="margin-bottom: 24px; position: relative;">
+            <div class="annotation" style="top: -10px; right: 8px;">ITEM 7: Imported cards dimmed</div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+              <span class="section-header">🔥 Trending Now</span>
+              <span style="font-size: 12px; color: #60a5fa; cursor: pointer; font-weight: 600;" onclick="showView('seeAll')">See all →</span>
+            </div>
+            <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch;">
+              <!-- Normal card -->
+              <div class="trending-card">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: #EF444420; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 8px;">🏃</div>
+                <p style="font-size: 13px; font-weight: 600; margin-bottom: 2px;">7-Min Workout</p>
+                <p style="font-size: 10px; color: #888; margin-bottom: 6px;">Daily</p>
+                <div class="science-badge" style="margin-bottom: 6px;">🔬 ACSM 2013</div>
+                <div class="popularity-pill">🔥 98</div>
+                <div style="margin-top: 8px;">
+                  <button style="width: 100%; padding: 6px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer;">+ Add</button>
+                </div>
+              </div>
+              <!-- IMPORTED card (Item 7) -->
+              <div class="trending-card imported">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: #10B98120; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 8px;">🧘</div>
+                <p style="font-size: 13px; font-weight: 600; margin-bottom: 2px;">5-Min Meditation</p>
+                <p style="font-size: 10px; color: #888; margin-bottom: 6px;">Daily</p>
+                <div class="science-badge" style="margin-bottom: 6px;">🔬 Goyal 2014</div>
+                <div class="popularity-pill">🔥 95</div>
+                <div style="margin-top: 8px;">
+                  <div style="width: 100%; padding: 6px; border-radius: 8px; background: #22c55e20; color: #22c55e; font-size: 11px; font-weight: 600; text-align: center;">✓ Added</div>
+                </div>
+              </div>
+              <!-- Normal card -->
+              <div class="trending-card">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: #7C3AED20; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 8px;">🧠</div>
+                <p style="font-size: 13px; font-weight: 600; margin-bottom: 2px;">Deep Work</p>
+                <p style="font-size: 10px; color: #888; margin-bottom: 6px;">Daily</p>
+                <div class="science-badge" style="margin-bottom: 6px;">🔬 Newport 2016</div>
+                <div class="popularity-pill">🔥 96</div>
+                <div style="margin-top: 8px;">
+                  <button style="width: 100%; padding: 6px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer;">+ Add</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Grid -->
+          <div style="margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+              <span class="section-header">Browse by Category</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="category-tile" style="background: linear-gradient(135deg, #EF444415, #EF444408);">
+                <div style="font-size: 22px; margin-bottom: 6px;">💪</div>
+                <p style="font-size: 13px; font-weight: 600;">Health & Fitness</p>
+                <p style="font-size: 11px; color: #888;">64 templates</p>
+                <div style="display: flex; gap: 2px; margin-top: 6px; font-size: 14px;">🏃🏋️🧘💧</div>
+              </div>
+              <div class="category-tile" style="background: linear-gradient(135deg, #7C3AED15, #7C3AED08);">
+                <div style="font-size: 22px; margin-bottom: 6px;">🧠</div>
+                <p style="font-size: 13px; font-weight: 600;">Productivity</p>
+                <p style="font-size: 11px; color: #888;">30 templates</p>
+                <div style="display: flex; gap: 2px; margin-top: 6px; font-size: 14px;">🎯📝⏰📊</div>
+              </div>
+              <div class="category-tile" style="background: linear-gradient(135deg, #059669 15, #05966908);">
+                <div style="font-size: 22px; margin-bottom: 6px;">🧘</div>
+                <p style="font-size: 13px; font-weight: 600;">Mindfulness</p>
+                <p style="font-size: 11px; color: #888;">31 templates</p>
+                <div style="display: flex; gap: 2px; margin-top: 6px; font-size: 14px;">🧘🌬️🙏✨</div>
+              </div>
+              <div class="category-tile" style="background: linear-gradient(135deg, #f59e0b15, #f59e0b08);">
+                <div style="font-size: 22px; margin-bottom: 6px;">📚</div>
+                <p style="font-size: 13px; font-weight: 600;">Learning</p>
+                <p style="font-size: 11px; color: #888;">22 templates</p>
+                <div style="display: flex; gap: 2px; margin-top: 6px; font-size: 14px;">📖🎓✍️🔬</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Premium Packs (Item 10 - clickable) -->
+          <div style="margin-bottom: 24px; position: relative;">
+            <div class="annotation" style="top: -10px; left: 8px;">ITEM 10: Opens pack detail →</div>
+            <div style="margin-bottom: 12px;">
+              <span class="section-header">Curated Packs</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div class="pack-card" style="background: linear-gradient(135deg, #7C3AED, #4F46E5);" onclick="showView('packDetail')">
+                <div style="display: flex; gap: 4px; font-size: 18px; margin-bottom: 8px;">🔬🧠💪🧬</div>
+                <p style="font-size: 15px; font-weight: 700;">Huberman Essentials</p>
+                <p style="font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 8px;">Science-backed protocols for peak performance</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 11px; color: rgba(255,255,255,0.6);">5 habits</span>
+                  <span style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.9);">View details →</span>
+                </div>
+              </div>
+              <div class="pack-card" style="background: linear-gradient(135deg, #059669, #047857);">
+                <div style="display: flex; gap: 4px; font-size: 18px; margin-bottom: 8px;">🌅📝🧘💧</div>
+                <p style="font-size: 15px; font-weight: 700;">Morning Mastery</p>
+                <p style="font-size: 12px; color: rgba(255,255,255,0.7);">Build an unshakeable morning foundation</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+                  <span style="font-size: 11px; color: rgba(255,255,255,0.6);">4 habits</span>
+                  <span style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.9);">View details →</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Side legend -->
+    <div style="max-width: 320px; padding-top: 20px;">
+      <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: #fff;">What's New on This Screen</h3>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px; border-left: 3px solid #f59e0b;">
+          <p style="font-size: 12px; font-weight: 700; color: #f59e0b; margin-bottom: 4px;">ITEM 9</p>
+          <p style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">"Recommended for You" Section</p>
+          <p style="font-size: 12px; color: #888;">Personalized carousel between hero and trending. Analyzes user's existing habit categories, suggests templates from unexplored categories. Falls back to "Popular to Get Started" for new users.</p>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px; border-left: 3px solid #22c55e;">
+          <p style="font-size: 12px; font-weight: 700; color: #22c55e; margin-bottom: 4px;">ITEM 7</p>
+          <p style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">Imported Cards Visual Treatment</p>
+          <p style="font-size: 12px; color: #888;">Imported templates show 65% opacity + green "Added" button replacement. Instant at-a-glance recognition without opening each card.</p>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px; border-left: 3px solid #60a5fa;">
+          <p style="font-size: 12px; font-weight: 700; color: #60a5fa; margin-bottom: 4px;">ITEM 8</p>
+          <p style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">Hero Opens Curated View</p>
+          <p style="font-size: 12px; color: #888;">Tapping the featured hero card now opens a focused view of 4 specific templates instead of dumping into the full category (30-64 templates).</p>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px; border-left: 3px solid #a855f7;">
+          <p style="font-size: 12px; font-weight: 700; color: #a855f7; margin-bottom: 4px;">ITEM 10</p>
+          <p style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">Pack Cards Open Detail View</p>
+          <p style="font-size: 12px; color: #888;">Pack cards now open a detail view showing each habit with descriptions instead of immediately showing a confirm modal.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CURATED VIEW (Item 8) ============ -->
+  <div class="view" id="view-curated" style="display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; justify-content: center;">
+    <div class="phone-frame">
+      <div class="phone-screen" style="padding: 56px 16px 40px;">
+        <div class="stagger">
+
+          <!-- Back + Header -->
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; cursor: pointer;" onclick="showView('main')">
+            <i data-lucide="arrow-left" style="width: 20px; height: 20px; color: #888;"></i>
+            <span style="font-size: 13px; color: #888;">Back</span>
+          </div>
+          <div style="margin-bottom: 20px;">
+            <h2 style="font-size: 22px; font-weight: 800;">Morning Mastery</h2>
+            <p style="font-size: 13px; color: #888;">4 curated templates &middot; Science-backed</p>
+          </div>
+
+          <!-- Curated template cards -->
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+
+            <div class="template-card">
+              <div style="display: flex; gap: 12px;">
+                <div style="width: 48px; height: 48px; border-radius: 14px; background: #10B98120; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0;">🌅</div>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
+                    <p style="font-size: 15px; font-weight: 600;">Consistent Wake Time</p>
+                  </div>
+                  <p style="font-size: 12px; color: #888; margin-bottom: 6px; line-height: 1.4;">Wake up at the same time every day to regulate your circadian rhythm and improve energy levels.</p>
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <span style="font-size: 10px; color: #888; background: #1f1f1f; padding: 2px 8px; border-radius: 6px;">Daily</span>
+                    <div class="science-badge">🔬 Walker 2017</div>
+                  </div>
+                  <div style="display: flex; gap: 8px;">
+                    <button style="flex: 1; padding: 8px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 12px; font-weight: 600; border: none; cursor: pointer;">+ Import</button>
+                    <button style="padding: 8px 12px; border-radius: 8px; background: transparent; color: #888; font-size: 12px; border: 1px solid #333; cursor: pointer;">Preview</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="template-card">
+              <div style="display: flex; gap: 12px;">
+                <div style="width: 48px; height: 48px; border-radius: 14px; background: #3B82F620; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0;">💧</div>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
+                    <p style="font-size: 15px; font-weight: 600;">Hydration First</p>
+                  </div>
+                  <p style="font-size: 12px; color: #888; margin-bottom: 6px; line-height: 1.4;">Drink 16oz of water within 30 minutes of waking. Rehydrates after sleep and kickstarts metabolism.</p>
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <span style="font-size: 10px; color: #888; background: #1f1f1f; padding: 2px 8px; border-radius: 6px;">Daily</span>
+                    <div class="science-badge">🔬 Popkin 2010</div>
+                  </div>
+                  <div style="display: flex; gap: 8px;">
+                    <button style="flex: 1; padding: 8px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 12px; font-weight: 600; border: none; cursor: pointer;">+ Import</button>
+                    <button style="padding: 8px 12px; border-radius: 8px; background: transparent; color: #888; font-size: 12px; border: 1px solid #333; cursor: pointer;">Preview</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="template-card imported">
+              <div style="display: flex; gap: 12px;">
+                <div style="width: 48px; height: 48px; border-radius: 14px; background: #F59E0B20; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0;">📝</div>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
+                    <p style="font-size: 15px; font-weight: 600;">Morning Pages</p>
+                    <span class="added-badge">✓ Added</span>
+                  </div>
+                  <p style="font-size: 12px; color: #888; margin-bottom: 6px; line-height: 1.4;">Write 3 pages of stream-of-consciousness first thing in the morning to clear mental clutter.</p>
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <span style="font-size: 10px; color: #888; background: #1f1f1f; padding: 2px 8px; border-radius: 6px;">Daily</span>
+                    <div class="science-badge">🔬 Cameron 1992</div>
+                  </div>
+                  <div style="width: 100%; padding: 8px; border-radius: 8px; background: #22c55e15; color: #22c55e; font-size: 12px; font-weight: 600; text-align: center;">✓ Added to Habits</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="template-card">
+              <div style="display: flex; gap: 12px;">
+                <div style="width: 48px; height: 48px; border-radius: 14px; background: #10B98120; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0;">🧘</div>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
+                    <p style="font-size: 15px; font-weight: 600;">5-Minute Meditation</p>
+                  </div>
+                  <p style="font-size: 12px; color: #888; margin-bottom: 6px; line-height: 1.4;">Start your day with mindful meditation. Just 5 minutes daily reduces stress and improves focus.</p>
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <span style="font-size: 10px; color: #888; background: #1f1f1f; padding: 2px 8px; border-radius: 6px;">Daily</span>
+                    <div class="science-badge">🔬 Goyal 2014</div>
+                  </div>
+                  <div style="display: flex; gap: 8px;">
+                    <button style="flex: 1; padding: 8px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 12px; font-weight: 600; border: none; cursor: pointer;">+ Import</button>
+                    <button style="padding: 8px 12px; border-radius: 8px; background: transparent; color: #888; font-size: 12px; border: 1px solid #333; cursor: pointer;">Preview</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Side legend -->
+    <div style="max-width: 320px; padding-top: 20px;">
+      <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: #fff;">Item 8: Curated Templates View</h3>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px;">
+          <p style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">Before</p>
+          <p style="font-size: 12px; color: #888;">Tapping the hero card dumps the user into the full category (e.g., 14 morning_routine templates). The 4 chip labels are purely decorative.</p>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px; border-left: 3px solid #60a5fa;">
+          <p style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">After</p>
+          <p style="font-size: 12px; color: #888;">Tapping opens a focused view of exactly the 4 templates matching the chip labels. Users see the curated selection the hero card promised.</p>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px;">
+          <p style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">Key Details</p>
+          <ul style="font-size: 12px; color: #888; padding-left: 16px; line-height: 1.6;">
+            <li>Time-aware: changes hero based on time of day</li>
+            <li>4 curated templates per collection</li>
+            <li>Shows "Added" badge for imported templates (Item 7)</li>
+            <li>Slide-in animation consistent with CategoryDrillView</li>
+            <li>Each template card has Import + Preview actions</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PACK DETAIL VIEW (Item 10) ============ -->
+  <div class="view" id="view-packDetail" style="display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; justify-content: center;">
+    <div class="phone-frame">
+      <div class="phone-screen" style="padding: 56px 0 40px;">
+        <div class="stagger">
+
+          <!-- Back + Header -->
+          <div style="padding: 0 16px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; cursor: pointer;" onclick="showView('main')">
+              <i data-lucide="arrow-left" style="width: 20px; height: 20px; color: #888;"></i>
+              <span style="font-size: 13px; color: #888;">Back</span>
+            </div>
+          </div>
+
+          <!-- Pack gradient header -->
+          <div style="background: linear-gradient(135deg, #7C3AED, #4F46E5); padding: 24px 16px; margin-bottom: 20px;">
+            <div style="display: flex; gap: 4px; font-size: 22px; margin-bottom: 10px;">🔬🧠💪🧬</div>
+            <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 4px;">Huberman Essentials</h2>
+            <p style="font-size: 13px; color: rgba(255,255,255,0.75); margin-bottom: 16px;">Science-backed protocols for peak performance</p>
+            <button class="import-all-btn">Import All 5 Habits</button>
+          </div>
+
+          <!-- Pack habits list -->
+          <div style="padding: 0 16px; display: flex; flex-direction: column; gap: 12px;">
+
+            <div class="template-card">
+              <div style="display: flex; gap: 12px;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #F59E0B20; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">🌅</div>
+                <div style="flex: 1; min-width: 0;">
+                  <p style="font-size: 14px; font-weight: 600; margin-bottom: 2px;">Morning Sunlight Viewing</p>
+                  <p style="font-size: 11px; color: #888; margin-bottom: 6px; line-height: 1.4;">Get 10+ min of sunlight within 30-60 min of waking to set circadian clock.</p>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 10px; color: #888; background: #1f1f1f; padding: 2px 8px; border-radius: 6px;">Daily</span>
+                    <div class="science-badge">🔬 Huberman Lab</div>
+                  </div>
+                </div>
+                <button style="padding: 6px 10px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer; align-self: center; white-space: nowrap;">+ Add</button>
+              </div>
+            </div>
+
+            <div class="template-card">
+              <div style="display: flex; gap: 12px;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #3B82F620; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">🧊</div>
+                <div style="flex: 1; min-width: 0;">
+                  <p style="font-size: 14px; font-weight: 600; margin-bottom: 2px;">Deliberate Cold Exposure</p>
+                  <p style="font-size: 11px; color: #888; margin-bottom: 6px; line-height: 1.4;">1-3 min cold shower to boost dopamine, adrenaline, and immune function.</p>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 10px; color: #888; background: #1f1f1f; padding: 2px 8px; border-radius: 6px;">Daily</span>
+                    <div class="science-badge">🔬 Huberman Lab</div>
+                  </div>
+                </div>
+                <button style="padding: 6px 10px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer; align-self: center; white-space: nowrap;">+ Add</button>
+              </div>
+            </div>
+
+            <div class="template-card imported">
+              <div style="display: flex; gap: 12px;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #10B98120; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">🧘</div>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
+                    <p style="font-size: 14px; font-weight: 600;">NSDR Practice</p>
+                    <span class="added-badge">✓ Added</span>
+                  </div>
+                  <p style="font-size: 11px; color: #888; margin-bottom: 6px; line-height: 1.4;">Non-Sleep Deep Rest protocol for recovery and focus restoration.</p>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 10px; color: #888; background: #1f1f1f; padding: 2px 8px; border-radius: 6px;">Daily</span>
+                    <div class="science-badge">🔬 Huberman Lab</div>
+                  </div>
+                </div>
+                <div style="padding: 6px 10px; border-radius: 8px; background: #22c55e15; color: #22c55e; font-size: 11px; font-weight: 600; align-self: center; white-space: nowrap;">✓ Added</div>
+              </div>
+            </div>
+
+            <div class="template-card">
+              <div style="display: flex; gap: 12px;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #EF444420; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">🥩</div>
+                <div style="flex: 1; min-width: 0;">
+                  <p style="font-size: 14px; font-weight: 600; margin-bottom: 2px;">Morning Protein Protocol</p>
+                  <p style="font-size: 11px; color: #888; margin-bottom: 6px; line-height: 1.4;">30g protein within first hour of waking for sustained energy and focus.</p>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 10px; color: #888; background: #1f1f1f; padding: 2px 8px; border-radius: 6px;">Daily</span>
+                    <div class="science-badge">🔬 Huberman Lab</div>
+                  </div>
+                </div>
+                <button style="padding: 6px 10px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer; align-self: center; white-space: nowrap;">+ Add</button>
+              </div>
+            </div>
+
+            <div class="template-card">
+              <div style="display: flex; gap: 12px;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #EF444420; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">🏋️</div>
+                <div style="flex: 1; min-width: 0;">
+                  <p style="font-size: 14px; font-weight: 600; margin-bottom: 2px;">Zone 2 Cardio Training</p>
+                  <p style="font-size: 11px; color: #888; margin-bottom: 6px; line-height: 1.4;">150-180 min/week of Zone 2 cardio for mitochondrial health.</p>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 10px; color: #888; background: #1f1f1f; padding: 2px 8px; border-radius: 6px;">Daily</span>
+                    <div class="science-badge">🔬 Huberman Lab</div>
+                  </div>
+                </div>
+                <button style="padding: 6px 10px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer; align-self: center; white-space: nowrap;">+ Add</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Side legend -->
+    <div style="max-width: 320px; padding-top: 20px;">
+      <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: #fff;">Item 10: Pack Detail View</h3>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px;">
+          <p style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">Before</p>
+          <p style="font-size: 12px; color: #888;">Tapping a pack card immediately shows a confirm modal: "Import 5 habits?" Users have no idea what's in the pack before committing.</p>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px; border-left: 3px solid #a855f7;">
+          <p style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">After</p>
+          <p style="font-size: 12px; color: #888;">Opens a detail view showing each habit with descriptions, science references, and individual import buttons. "Import All" CTA at top for bulk action (still shows confirm modal).</p>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px;">
+          <p style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">Key Details</p>
+          <ul style="font-size: 12px; color: #888; padding-left: 16px; line-height: 1.6;">
+            <li>Gradient header matches pack brand colors</li>
+            <li>Each habit matched to its DB template for full info</li>
+            <li>Individual add buttons per habit</li>
+            <li>"Import All" retains confirmation step</li>
+            <li>Shows "Added" badge for already-imported habits</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SEE ALL VIEW with HIDE IMPORTED (Item 7) ============ -->
+  <div class="view" id="view-seeAll" style="display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; justify-content: center;">
+    <div class="phone-frame">
+      <div class="phone-screen" style="padding: 56px 16px 40px;">
+        <div class="stagger">
+
+          <!-- Back + Header -->
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; cursor: pointer;" onclick="showView('main')">
+            <i data-lucide="arrow-left" style="width: 20px; height: 20px; color: #888;"></i>
+            <span style="font-size: 13px; color: #888;">Back</span>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <h2 style="font-size: 22px; font-weight: 800;">All Popular Templates</h2>
+            <p style="font-size: 13px; color: #888;" id="seeAllSubtitle">228 templates &middot; sorted by popularity</p>
+          </div>
+
+          <!-- Filter bar (Item 7) -->
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; position: relative;">
+            <div class="annotation" style="top: -24px; left: 0;">ITEM 7: Hide imported toggle</div>
+            <div class="filter-chip active" id="hideImportedChip" onclick="toggleHideImported()">
+              <span id="hideImportedIcon" style="margin-right: 2px;">☐</span> Hide imported
+            </div>
+          </div>
+
+          <!-- Template list -->
+          <div style="display: flex; flex-direction: column; gap: 10px;" id="seeAllList">
+
+            <div class="template-card" data-imported="false">
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #EF444420; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">🏃</div>
+                <div style="flex: 1; min-width: 0;">
+                  <p style="font-size: 14px; font-weight: 600;">7-Minute Workout</p>
+                  <div style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                    <span style="font-size: 10px; color: #888;">Daily</span>
+                    <div class="science-badge">🔬 ACSM</div>
+                    <div class="popularity-pill">🔥 98</div>
+                  </div>
+                </div>
+                <button style="padding: 6px 12px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer;">+ Add</button>
+              </div>
+            </div>
+
+            <div class="template-card" data-imported="false">
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #7C3AED20; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">🧠</div>
+                <div style="flex: 1; min-width: 0;">
+                  <p style="font-size: 14px; font-weight: 600;">Deep Work Session</p>
+                  <div style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                    <span style="font-size: 10px; color: #888;">Daily</span>
+                    <div class="science-badge">🔬 Newport</div>
+                    <div class="popularity-pill">🔥 96</div>
+                  </div>
+                </div>
+                <button style="padding: 6px 12px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer;">+ Add</button>
+              </div>
+            </div>
+
+            <div class="template-card imported" data-imported="true">
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #10B98120; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">🧘</div>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <p style="font-size: 14px; font-weight: 600;">5-Minute Meditation</p>
+                    <span class="added-badge">✓ Added</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                    <span style="font-size: 10px; color: #888;">Daily</span>
+                    <div class="science-badge">🔬 Goyal</div>
+                    <div class="popularity-pill">🔥 95</div>
+                  </div>
+                </div>
+                <div style="padding: 6px 10px; border-radius: 8px; background: #22c55e15; color: #22c55e; font-size: 11px; font-weight: 600;">✓</div>
+              </div>
+            </div>
+
+            <div class="template-card" data-imported="false">
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #059669 20; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">📖</div>
+                <div style="flex: 1; min-width: 0;">
+                  <p style="font-size: 14px; font-weight: 600;">Daily Reading</p>
+                  <div style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                    <span style="font-size: 10px; color: #888;">Daily</span>
+                    <div class="science-badge">🔬 Bavishi</div>
+                    <div class="popularity-pill">🔥 94</div>
+                  </div>
+                </div>
+                <button style="padding: 6px 12px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer;">+ Add</button>
+              </div>
+            </div>
+
+            <div class="template-card imported" data-imported="true">
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #F59E0B20; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">📝</div>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <p style="font-size: 14px; font-weight: 600;">Morning Pages</p>
+                    <span class="added-badge">✓ Added</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                    <span style="font-size: 10px; color: #888;">Daily</span>
+                    <div class="science-badge">🔬 Cameron</div>
+                    <div class="popularity-pill">🔥 92</div>
+                  </div>
+                </div>
+                <div style="padding: 6px 10px; border-radius: 8px; background: #22c55e15; color: #22c55e; font-size: 11px; font-weight: 600;">✓</div>
+              </div>
+            </div>
+
+            <div class="template-card" data-imported="false">
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #3B82F620; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">💧</div>
+                <div style="flex: 1; min-width: 0;">
+                  <p style="font-size: 14px; font-weight: 600;">Hydration First</p>
+                  <div style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                    <span style="font-size: 10px; color: #888;">Daily</span>
+                    <div class="science-badge">🔬 Popkin</div>
+                    <div class="popularity-pill">🔥 91</div>
+                  </div>
+                </div>
+                <button style="padding: 6px 12px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer;">+ Add</button>
+              </div>
+            </div>
+
+            <div class="template-card" data-imported="false">
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #6366F120; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">😴</div>
+                <div style="flex: 1; min-width: 0;">
+                  <p style="font-size: 14px; font-weight: 600;">Sleep Preparation Routine</p>
+                  <div style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                    <span style="font-size: 10px; color: #888;">Daily</span>
+                    <div class="science-badge">🔬 Walker</div>
+                    <div class="popularity-pill">🔥 90</div>
+                  </div>
+                </div>
+                <button style="padding: 6px 12px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer;">+ Add</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Side legend -->
+    <div style="max-width: 320px; padding-top: 20px;">
+      <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: #fff;">Item 7: See All + Hide Imported</h3>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px; border-left: 3px solid #22c55e;">
+          <p style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">Visual Treatment</p>
+          <ul style="font-size: 12px; color: #888; padding-left: 16px; line-height: 1.6;">
+            <li>Imported cards: 65% opacity</li>
+            <li>Green "Added" badge next to name</li>
+            <li>Green checkmark replaces "+ Add" button</li>
+            <li>Green accent bar on TemplateCard (existing)</li>
+          </ul>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px; border-left: 3px solid #22c55e;">
+          <p style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">Hide Imported Toggle</p>
+          <p style="font-size: 12px; color: #888;">Click the "Hide imported" chip above to see it in action. Filters out already-added templates so returning users can focus on what's new.</p>
+          <p style="font-size: 12px; color: #888; margin-top: 6px;">Also available in CategoryDrillView (already implemented on this branch).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DYNAMIC POPULARITY (Item 11) ============ -->
+  <div class="view" id="view-dynamic" style="display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; justify-content: center;">
+    <div class="phone-frame">
+      <div class="phone-screen" style="padding: 56px 16px 40px;">
+        <div class="stagger">
+
+          <div style="margin-bottom: 20px;">
+            <h2 style="font-size: 22px; font-weight: 800;">Trending Now</h2>
+            <p style="font-size: 13px; color: #888;">Ranked by real user adoption</p>
+          </div>
+
+          <!-- Dynamic popularity cards -->
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+
+            <div class="template-card" style="border-left: 3px solid #f59e0b;">
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="display: flex; flex-direction: column; align-items: center; min-width: 36px;">
+                  <span style="font-size: 18px; font-weight: 800; color: #f59e0b;">#1</span>
+                </div>
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #EF444420; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">🏃</div>
+                <div style="flex: 1; min-width: 0;">
+                  <p style="font-size: 14px; font-weight: 600;">7-Minute Workout</p>
+                  <div style="display: flex; align-items: center; gap: 8px; margin-top: 3px;">
+                    <span style="font-size: 10px; color: #888;">Daily</span>
+                    <div style="display: flex; align-items: center; gap: 3px;">
+                      <span style="font-size: 10px; color: #f59e0b; font-weight: 600;">847 imports</span>
+                      <span style="font-size: 9px; color: #22c55e;">↑ 12%</span>
+                    </div>
+                  </div>
+                </div>
+                <button style="padding: 6px 12px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer;">+ Add</button>
+              </div>
+              <!-- Popularity bar -->
+              <div style="margin-top: 8px; height: 3px; background: #2a2a2a; border-radius: 2px; overflow: hidden;">
+                <div style="width: 100%; height: 100%; background: linear-gradient(90deg, #f59e0b, #ef4444); border-radius: 2px;"></div>
+              </div>
+            </div>
+
+            <div class="template-card" style="border-left: 3px solid #eab308;">
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="display: flex; flex-direction: column; align-items: center; min-width: 36px;">
+                  <span style="font-size: 18px; font-weight: 800; color: #eab308;">#2</span>
+                </div>
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #7C3AED20; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">🧠</div>
+                <div style="flex: 1; min-width: 0;">
+                  <p style="font-size: 14px; font-weight: 600;">Deep Work Session</p>
+                  <div style="display: flex; align-items: center; gap: 8px; margin-top: 3px;">
+                    <span style="font-size: 10px; color: #888;">Daily</span>
+                    <div style="display: flex; align-items: center; gap: 3px;">
+                      <span style="font-size: 10px; color: #eab308; font-weight: 600;">723 imports</span>
+                      <span style="font-size: 9px; color: #22c55e;">↑ 8%</span>
+                    </div>
+                  </div>
+                </div>
+                <button style="padding: 6px 12px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer;">+ Add</button>
+              </div>
+              <div style="margin-top: 8px; height: 3px; background: #2a2a2a; border-radius: 2px; overflow: hidden;">
+                <div style="width: 85%; height: 100%; background: linear-gradient(90deg, #eab308, #f59e0b); border-radius: 2px;"></div>
+              </div>
+            </div>
+
+            <div class="template-card" style="border-left: 3px solid #a3a3a3;">
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="display: flex; flex-direction: column; align-items: center; min-width: 36px;">
+                  <span style="font-size: 18px; font-weight: 800; color: #a3a3a3;">#3</span>
+                </div>
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #10B98120; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">🧘</div>
+                <div style="flex: 1; min-width: 0;">
+                  <p style="font-size: 14px; font-weight: 600;">5-Minute Meditation</p>
+                  <div style="display: flex; align-items: center; gap: 8px; margin-top: 3px;">
+                    <span style="font-size: 10px; color: #888;">Daily</span>
+                    <div style="display: flex; align-items: center; gap: 3px;">
+                      <span style="font-size: 10px; color: #a3a3a3; font-weight: 600;">695 imports</span>
+                      <span style="font-size: 9px; color: #22c55e;">↑ 15%</span>
+                    </div>
+                  </div>
+                </div>
+                <button style="padding: 6px 12px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer;">+ Add</button>
+              </div>
+              <div style="margin-top: 8px; height: 3px; background: #2a2a2a; border-radius: 2px; overflow: hidden;">
+                <div style="width: 82%; height: 100%; background: linear-gradient(90deg, #a3a3a3, #d4d4d4); border-radius: 2px;"></div>
+              </div>
+            </div>
+
+            <div class="template-card">
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="display: flex; flex-direction: column; align-items: center; min-width: 36px;">
+                  <span style="font-size: 16px; font-weight: 700; color: #666;">#4</span>
+                </div>
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #059669 20; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">📖</div>
+                <div style="flex: 1; min-width: 0;">
+                  <p style="font-size: 14px; font-weight: 600;">Daily Reading</p>
+                  <div style="display: flex; align-items: center; gap: 8px; margin-top: 3px;">
+                    <span style="font-size: 10px; color: #888;">Daily</span>
+                    <span style="font-size: 10px; color: #666; font-weight: 600;">612 imports</span>
+                  </div>
+                </div>
+                <button style="padding: 6px 12px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer;">+ Add</button>
+              </div>
+              <div style="margin-top: 8px; height: 3px; background: #2a2a2a; border-radius: 2px; overflow: hidden;">
+                <div style="width: 72%; height: 100%; background: #444; border-radius: 2px;"></div>
+              </div>
+            </div>
+
+            <div class="template-card">
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="display: flex; flex-direction: column; align-items: center; min-width: 36px;">
+                  <span style="font-size: 16px; font-weight: 700; color: #666;">#5</span>
+                </div>
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #3B82F620; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">💧</div>
+                <div style="flex: 1; min-width: 0;">
+                  <p style="font-size: 14px; font-weight: 600;">Hydration First</p>
+                  <div style="display: flex; align-items: center; gap: 8px; margin-top: 3px;">
+                    <span style="font-size: 10px; color: #888;">Daily</span>
+                    <span style="font-size: 10px; color: #666; font-weight: 600;">589 imports</span>
+                  </div>
+                </div>
+                <button style="padding: 6px 12px; border-radius: 8px; background: #2a2a2a; color: #fff; font-size: 11px; font-weight: 600; border: none; cursor: pointer;">+ Add</button>
+              </div>
+              <div style="margin-top: 8px; height: 3px; background: #2a2a2a; border-radius: 2px; overflow: hidden;">
+                <div style="width: 69%; height: 100%; background: #444; border-radius: 2px;"></div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Backend info -->
+          <div style="margin-top: 24px; background: #1a1a1a; border-radius: 12px; padding: 14px; border: 1px dashed #333;">
+            <p style="font-size: 11px; font-weight: 600; color: #888; margin-bottom: 6px;">BACKEND: Convex Cron Job</p>
+            <div style="font-family: monospace; font-size: 10px; color: #666; line-height: 1.6;">
+              <p>// convex/crons.ts</p>
+              <p style="color: #a855f7;">crons.daily(</p>
+              <p>&nbsp;&nbsp;'compute-template-popularity',</p>
+              <p>&nbsp;&nbsp;{ hourUTC: 4, minuteUTC: 0 },</p>
+              <p>&nbsp;&nbsp;internal.templates.computePopularity</p>
+              <p style="color: #a855f7;">);</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Side legend -->
+    <div style="max-width: 320px; padding-top: 20px;">
+      <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: #fff;">Item 11: Dynamic Popularity</h3>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px;">
+          <p style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">Before</p>
+          <p style="font-size: 12px; color: #888;">Static <code style="background:#2a2a2a;padding:1px 4px;border-radius:3px;">popularityScore</code> hardcoded in seed data (76-98). Never changes. Rankings are arbitrary.</p>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px; border-left: 3px solid #f59e0b;">
+          <p style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">After</p>
+          <p style="font-size: 12px; color: #888;">Daily cron computes scores from real <code style="background:#2a2a2a;padding:1px 4px;border-radius:3px;">templateUsage</code> import counts. Rankings reflect actual user behavior.</p>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px;">
+          <p style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">Visual Note</p>
+          <p style="font-size: 12px; color: #888;">The rank numbers, import counts, and progress bars shown here are <strong>illustrative</strong>. The actual UI won't change much - the existing trending carousel and sort-by-popular will just use real data instead of static scores. The visual enhancement is optional.</p>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px;">
+          <p style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">Formula</p>
+          <p style="font-size: 12px; color: #888; font-family: monospace;">score = min(100, max(baseline, importCount * scale))</p>
+          <p style="font-size: 11px; color: #666; margin-top: 4px;">Baseline preserves seed scores until real data accumulates.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  let hideImported = false;
+
+  function showView(viewId) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + viewId).classList.add('active');
+
+    document.querySelectorAll('.mock-tab').forEach(t => t.classList.remove('active'));
+    const tabs = document.querySelectorAll('.mock-tab');
+    const map = { main: 0, curated: 1, packDetail: 2, seeAll: 3, dynamic: 4 };
+    tabs[map[viewId]]?.classList.add('active');
+
+    // Re-init lucide icons for the new view
+    setTimeout(() => lucide.createIcons(), 50);
+  }
+
+  function toggleHideImported() {
+    hideImported = !hideImported;
+    const chip = document.getElementById('hideImportedChip');
+    const icon = document.getElementById('hideImportedIcon');
+    const cards = document.querySelectorAll('#seeAllList .template-card');
+    const subtitle = document.getElementById('seeAllSubtitle');
+
+    if (hideImported) {
+      chip.style.background = '#22c55e20';
+      chip.style.color = '#22c55e';
+      chip.style.borderColor = '#22c55e40';
+      icon.textContent = '☑';
+      let hiddenCount = 0;
+      cards.forEach(card => {
+        if (card.dataset.imported === 'true') {
+          card.style.display = 'none';
+          hiddenCount++;
+        }
+      });
+      subtitle.textContent = (cards.length - hiddenCount) + ' of ' + cards.length + ' templates · hiding imported';
+    } else {
+      chip.style.background = '';
+      chip.style.color = '';
+      chip.style.borderColor = '';
+      icon.textContent = '☐';
+      cards.forEach(card => card.style.display = '');
+      subtitle.textContent = cards.length + ' templates · sorted by popularity';
+    }
+  }
+</script>
+
+</body>
+</html>

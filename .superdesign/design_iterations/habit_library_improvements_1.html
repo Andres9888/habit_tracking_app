@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Library - UX Improvements Mock</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #F5F1ED;
+    --card: #EDEAE5;
+    --border: #DDD8D2;
+    --text-primary: #2D2A26;
+    --text-secondary: #6B6560;
+    --text-tertiary: #6E6660;
+    --primary-600: #059669;
+    --primary-500: #10B981;
+    --premium-400: #7B52C4;
+    --premium-bg: #F3E8FF;
+    --surface-muted: #E8E4DF;
+    --warning-light: #FEF3C7;
+    --warning: #92400E;
+    --gold: #8B6208;
+    --gold-bg: #FEF3CD;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1a1a2e !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    min-height: 100vh !important;
+    padding: 32px 16px !important;
+    gap: 32px !important;
+  }
+
+  h1, h2, h3 { font-family: 'DM Sans', sans-serif !important; }
+  .literata { font-family: 'Literata', serif !important; }
+  .mono { font-family: 'JetBrains Mono', monospace !important; }
+
+  .phone-frame {
+    width: 390px;
+    min-height: 844px;
+    background: var(--bg);
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .phone-frame::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 126px;
+    height: 34px;
+    background: #000;
+    border-radius: 0 0 20px 20px;
+    z-index: 10;
+  }
+
+  .screen-content {
+    padding-top: 54px;
+    height: 844px;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .screen-content::-webkit-scrollbar { display: none; }
+
+  .annotation {
+    position: absolute;
+    background: #FF6B35;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    z-index: 20;
+    font-family: 'JetBrains Mono', monospace;
+    box-shadow: 0 2px 8px rgba(255,107,53,0.4);
+  }
+
+  .annotation::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+
+  .annotation.left::after {
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 6px solid #FF6B35;
+  }
+
+  .annotation.right::after {
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 6px solid #FF6B35;
+  }
+
+  .annotation.top::after {
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #FF6B35;
+  }
+
+  .version-label {
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .version-label.before { color: #ef4444; }
+  .version-label.after { color: #10B981; }
+
+  .change-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .change-badge.new { background: #DCFCE7; color: #166534; }
+  .change-badge.moved { background: #DBEAFE; color: #1E40AF; }
+  .change-badge.removed { background: #FEE2E2; color: #991B1B; }
+  .change-badge.modified { background: #FEF3C7; color: #92400E; }
+
+  /* Glow effect for new elements */
+  .glow-new {
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3), 0 0 12px rgba(16, 185, 129, 0.15);
+  }
+
+  .comparison-wrapper {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .title-section {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #e2e8f0;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .title-section h1 {
+    font-family: 'Literata', serif !important;
+    font-size: 32px !important;
+    font-weight: 700 !important;
+    color: #f1f5f9 !important;
+    margin-bottom: 8px !important;
+  }
+
+  .title-section p {
+    color: #94a3b8 !important;
+    font-size: 15px !important;
+  }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #94a3b8;
+    font-family: 'JetBrains Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<div style="width: 100%; max-width: 1200px;">
+  <div class="title-section">
+    <h1>Habit Library - UX Improvements</h1>
+    <p>Side-by-side comparison: Current state vs. proposed changes grounded in UX science</p>
+    <div class="legend">
+      <div class="legend-item"><span class="change-badge new">NEW</span> Added element</div>
+      <div class="legend-item"><span class="change-badge moved">MOVED</span> Repositioned</div>
+      <div class="legend-item"><span class="change-badge removed">REMOVED</span> Deleted</div>
+      <div class="legend-item"><span class="change-badge modified">MODIFIED</span> Updated</div>
+    </div>
+  </div>
+
+  <div class="comparison-wrapper">
+    <!-- ============ CURRENT STATE ============ -->
+    <div style="position: relative;">
+      <div class="version-label before">Current</div>
+      <div class="phone-frame">
+        <div class="screen-content">
+          <!-- Header -->
+          <div style="padding: 16px 16px 4px;">
+            <h1 class="literata" style="font-size: 22px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.35px;">Habit Library</h1>
+            <p style="font-size: 14px; color: var(--text-secondary); margin-top: 2px;">Science-backed templates to build great habits</p>
+          </div>
+
+          <!-- Search Bar -->
+          <div style="padding: 12px 16px;">
+            <div style="display: flex; align-items: center; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; height: 44px; padding: 0 14px; gap: 10px;">
+              <i data-lucide="search" style="width: 18px; height: 18px; color: var(--text-tertiary);"></i>
+              <span style="color: var(--text-tertiary); font-size: 15px;">Search for habits...</span>
+            </div>
+          </div>
+
+          <!-- Featured Hero Card (CURRENT - with circles) -->
+          <div style="margin: 4px 16px 16px; position: relative; overflow: hidden; border-radius: 16px; background: linear-gradient(135deg, #059669, #047857, #065f46); padding: 20px; min-height: 180px;">
+            <!-- Decorative circles -->
+            <div style="position: absolute; top: -40px; right: -30px; width: 180px; height: 180px; border-radius: 50%; background: rgba(255,255,255,0.08);"></div>
+            <div style="position: absolute; bottom: -60px; left: -40px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.06);"></div>
+
+            <div style="position: relative; z-index: 1;">
+              <span style="display: inline-block; background: rgba(255,255,255,0.2); color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; margin-bottom: 8px; letter-spacing: 0.5px;">MORNING PICK</span>
+              <h2 class="literata" style="font-size: 24px; font-weight: 800; color: white; letter-spacing: -0.5px; margin-bottom: 4px;">Morning Mastery</h2>
+              <p style="font-size: 13px; color: rgba(255,255,255,0.75); margin-bottom: 12px;">Start your day with intention</p>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+                <span style="background: rgba(255,255,255,0.15); color: white; font-size: 12px; padding: 4px 10px; border-radius: 999px;">Wake Early</span>
+                <span style="background: rgba(255,255,255,0.15); color: white; font-size: 12px; padding: 4px 10px; border-radius: 999px;">Hydrate</span>
+                <span style="background: rgba(255,255,255,0.15); color: white; font-size: 12px; padding: 4px 10px; border-radius: 999px;">Meditate</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 12px; color: rgba(255,255,255,0.5);">2.4k users</span>
+                <div style="display: flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.25); padding: 6px 14px; border-radius: 999px;">
+                  <span style="color: white; font-size: 13px; font-weight: 600;">Explore</span>
+                  <i data-lucide="chevron-right" style="width: 14px; height: 14px; color: white;"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trending Now -->
+          <div style="padding: 0 16px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary);">Trending Now</h3>
+              <span style="font-size: 14px; color: var(--primary-600); font-weight: 500;">See all</span>
+            </div>
+            <div style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px;">
+              <!-- Card 1 -->
+              <div style="min-width: 165px; background: var(--card); border-radius: 12px; padding: 14px; border: 1px solid var(--border);">
+                <div style="width: 48px; height: 48px; background: rgba(5,150,105,0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 10px;">🌅</div>
+                <p style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Morning Sunlight</p>
+                <p class="mono" style="font-size: 11px; color: var(--text-secondary); margin-bottom: 6px;">Daily</p>
+                <span style="display: inline-block; background: var(--warning-light); color: var(--warning); font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 6px; margin-bottom: 8px;">Science</span>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 11px; font-weight: 700; color: var(--primary-600);">1.2K track this</span>
+                  <div style="width: 32px; height: 32px; background: var(--primary-500); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(5,150,105,0.25);">
+                    <i data-lucide="plus" style="width: 16px; height: 16px; color: white;"></i>
+                  </div>
+                </div>
+              </div>
+              <!-- Card 2 -->
+              <div style="min-width: 165px; background: var(--card); border-radius: 12px; padding: 14px; border: 1px solid var(--border);">
+                <div style="width: 48px; height: 48px; background: rgba(8,145,178,0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 10px;">🧊</div>
+                <p style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Cold Exposure</p>
+                <p class="mono" style="font-size: 11px; color: var(--text-secondary); margin-bottom: 6px;">Daily</p>
+                <span style="display: inline-block; background: var(--warning-light); color: var(--warning); font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 6px; margin-bottom: 8px;">Science</span>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 11px; font-weight: 700; color: var(--primary-600);">890 track this</span>
+                  <div style="width: 32px; height: 32px; background: var(--primary-500); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(5,150,105,0.25);">
+                    <i data-lucide="plus" style="width: 16px; height: 16px; color: white;"></i>
+                  </div>
+                </div>
+              </div>
+              <!-- Card 3 (peek) -->
+              <div style="min-width: 165px; background: var(--card); border-radius: 12px; padding: 14px; border: 1px solid var(--border); opacity: 0.6;">
+                <div style="width: 48px; height: 48px; background: rgba(139,98,8,0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 10px;">📖</div>
+                <p style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Read 20 Min</p>
+                <p class="mono" style="font-size: 11px; color: var(--text-secondary);">Daily</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Browse by Category (CURRENT - before packs) -->
+          <div style="padding: 0 16px; margin-bottom: 20px;">
+            <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Browse by Category</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div style="background: #ECFDF5; border-radius: 12px; padding: 12px; min-height: 100px; position: relative;">
+                <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">🌅</span>
+                <p style="font-size: 14px; font-weight: 700; color: #065f46; margin-top: 40px;">Morning</p>
+                <p style="font-size: 12px; color: #065f46; opacity: 0.7;">8 templates</p>
+              </div>
+              <div style="background: #DBEAFE; border-radius: 12px; padding: 12px; min-height: 100px; position: relative;">
+                <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">💪</span>
+                <p style="font-size: 14px; font-weight: 700; color: #1e3a5f; margin-top: 40px;">Health & Fitness</p>
+                <p style="font-size: 12px; color: #1e3a5f; opacity: 0.7;">12 templates</p>
+              </div>
+              <div style="background: #FEF3C7; border-radius: 12px; padding: 12px; min-height: 100px; position: relative;">
+                <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">🎯</span>
+                <p style="font-size: 14px; font-weight: 700; color: #78350f; margin-top: 40px;">Productivity</p>
+                <p style="font-size: 12px; color: #78350f; opacity: 0.7;">10 templates</p>
+              </div>
+              <div style="background: #F3E8FF; border-radius: 12px; padding: 12px; min-height: 100px; position: relative;">
+                <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">🧬</span>
+                <p style="font-size: 14px; font-weight: 700; color: #4c1d95; margin-top: 40px;">Huberman Lab</p>
+                <p style="font-size: 12px; color: #4c1d95; opacity: 0.7;">5 templates</p>
+              </div>
+              <div style="background: #FCE7F3; border-radius: 12px; padding: 12px; min-height: 100px; position: relative;">
+                <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">🧘</span>
+                <p style="font-size: 14px; font-weight: 700; color: #831843; margin-top: 40px;">Mindfulness</p>
+                <p style="font-size: 12px; color: #831843; opacity: 0.7;">7 templates</p>
+              </div>
+              <div style="background: #E0F2FE; border-radius: 12px; padding: 12px; min-height: 100px; position: relative;">
+                <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">📚</span>
+                <p style="font-size: 14px; font-weight: 700; color: #0c4a6e; margin-top: 40px;">Learning</p>
+                <p style="font-size: 12px; color: #0c4a6e; opacity: 0.7;">6 templates</p>
+              </div>
+            </div>
+            <!-- Nearly invisible expand button -->
+            <div style="margin-top: 10px; padding: 10px; text-align: center; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 12px;">
+              <span style="font-size: 14px; color: var(--text-secondary);">Show all 14 categories</span>
+            </div>
+          </div>
+
+          <!-- Curated Packs (CURRENT - buried at bottom) -->
+          <div style="padding: 0 16px; margin-bottom: 100px;">
+            <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Curated Packs</h3>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="background: linear-gradient(135deg, #7C3AED, #4F46E5); border-radius: 16px; padding: 16px 20px; display: flex; align-items: center; gap: 14px;">
+                <div style="display: flex; flex-direction: column; gap: 4px; font-size: 22px;">🌅🧊<br>🧘💪</div>
+                <div style="flex: 1;">
+                  <p style="font-size: 16px; font-weight: 700; color: white;">Huberman Essentials</p>
+                  <p style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 2px;">Science-backed daily protocols</p>
+                  <p class="mono" style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px;">5 habits</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 999px;">
+                  <span style="color: white; font-size: 13px; font-weight: 600;">Import Pack</span>
+                </div>
+              </div>
+              <div style="background: linear-gradient(135deg, #059669, #047857); border-radius: 16px; padding: 16px 20px; display: flex; align-items: center; gap: 14px;">
+                <div style="display: flex; flex-direction: column; gap: 4px; font-size: 22px;">⏰💧<br>📝🧘</div>
+                <div style="flex: 1;">
+                  <p style="font-size: 16px; font-weight: 700; color: white;">Morning Mastery</p>
+                  <p style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 2px;">Win the first hour</p>
+                  <p class="mono" style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px;">4 habits</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 999px;">
+                  <span style="color: white; font-size: 13px; font-weight: 600;">Import Pack</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ PROPOSED STATE ============ -->
+    <div style="position: relative;">
+      <div class="version-label after">Proposed</div>
+      <div class="phone-frame">
+        <div class="screen-content">
+          <!-- Header (unchanged) -->
+          <div style="padding: 16px 16px 4px;">
+            <h1 class="literata" style="font-size: 22px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.35px;">Habit Library</h1>
+            <p style="font-size: 14px; color: var(--text-secondary); margin-top: 2px;">Science-backed templates to build great habits</p>
+          </div>
+
+          <!-- Search Bar (unchanged) -->
+          <div style="padding: 12px 16px 8px;">
+            <div style="display: flex; align-items: center; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; height: 44px; padding: 0 14px; gap: 10px;">
+              <i data-lucide="search" style="width: 18px; height: 18px; color: var(--text-tertiary);"></i>
+              <span style="color: var(--text-tertiary); font-size: 15px;">Search for habits...</span>
+            </div>
+          </div>
+
+          <!-- R1: NEW - Usage Banner -->
+          <div class="glow-new" style="margin: 4px 16px 12px; display: flex; align-items: center; justify-content: space-between; background: var(--surface-muted); border: 1px solid var(--border); border-radius: 12px; padding: 12px;">
+            <div>
+              <p style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">2 of 3 free habits used</p>
+              <div style="display: flex; gap: 4px; margin-top: 6px;">
+                <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary-600);"></div>
+                <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary-600);"></div>
+                <div style="width: 8px; height: 8px; border-radius: 50%; background: #D1D5DB;"></div>
+              </div>
+            </div>
+            <div style="background: var(--primary-600); padding: 6px 14px; border-radius: 8px;">
+              <span style="color: white; font-size: 13px; font-weight: 700;">Unlock All</span>
+            </div>
+          </div>
+          <div style="position: absolute; top: 252px; right: -8px; z-index: 20;">
+            <span class="change-badge new" style="font-size: 9px;">R1: NEW</span>
+          </div>
+
+          <!-- Featured Hero Card (PROPOSED - no circles, real social proof) -->
+          <div style="margin: 0 16px 16px; position: relative; overflow: hidden; border-radius: 16px; background: linear-gradient(135deg, #059669, #047857, #065f46); padding: 20px; min-height: 170px;">
+            <!-- NO decorative circles -->
+            <div style="position: relative; z-index: 1;">
+              <span style="display: inline-block; background: rgba(255,255,255,0.2); color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; margin-bottom: 8px; letter-spacing: 0.5px;">MORNING PICK</span>
+              <h2 class="literata" style="font-size: 22px; font-weight: 700; color: white; letter-spacing: -0.35px; margin-bottom: 4px;">Morning Mastery</h2>
+              <p style="font-size: 13px; color: rgba(255,255,255,0.75); margin-bottom: 12px;">Start your day with intention</p>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+                <span style="background: rgba(255,255,255,0.15); color: white; font-size: 12px; padding: 4px 10px; border-radius: 999px;">Wake Early</span>
+                <span style="background: rgba(255,255,255,0.15); color: white; font-size: 12px; padding: 4px 10px; border-radius: 999px;">Hydrate</span>
+                <span style="background: rgba(255,255,255,0.15); color: white; font-size: 12px; padding: 4px 10px; border-radius: 999px;">Meditate</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 12px; color: rgba(255,255,255,0.5);">Popular collection</span>
+                <div style="display: flex; align-items: center; gap: 4px; background: white; padding: 6px 14px; border-radius: 999px;">
+                  <span style="color: #047857; font-size: 13px; font-weight: 600;">Explore</span>
+                  <i data-lucide="chevron-right" style="width: 14px; height: 14px; color: #047857;"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="position: absolute; top: 310px; right: -8px; z-index: 20; display: flex; flex-direction: column; gap: 3px; align-items: flex-end;">
+            <span class="change-badge removed" style="font-size: 9px;">R3: CIRCLES GONE</span>
+            <span class="change-badge modified" style="font-size: 9px;">R8: REAL PROOF</span>
+          </div>
+
+          <!-- Most Popular (renamed from Trending) -->
+          <div style="padding: 0 16px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary);">Most Popular</h3>
+              <span style="font-size: 14px; color: var(--primary-600); font-weight: 500;">See all</span>
+            </div>
+            <div style="position: absolute; top: 508px; right: -8px; z-index: 20;">
+              <span class="change-badge modified" style="font-size: 9px;">R11: RENAMED</span>
+            </div>
+            <div style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px;">
+              <!-- Card 1 -->
+              <div style="min-width: 165px; background: var(--card); border-radius: 12px; padding: 14px; border: 1px solid var(--border);">
+                <div style="width: 48px; height: 48px; background: rgba(5,150,105,0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 10px;">🌅</div>
+                <p style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Morning Sunlight</p>
+                <p class="mono" style="font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Daily</p>
+                <span style="display: inline-block; background: var(--warning-light); color: var(--warning); font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 6px; margin-bottom: 8px;">Science</span>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 11px; font-weight: 700; color: var(--primary-600);">1.2K track this</span>
+                  <div style="width: 36px; height: 36px; background: var(--primary-500); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(45,42,38,0.12);">
+                    <i data-lucide="plus" style="width: 16px; height: 16px; color: white;"></i>
+                  </div>
+                </div>
+              </div>
+              <!-- Card 2 - with PRO badge -->
+              <div style="min-width: 165px; background: var(--card); border-radius: 12px; padding: 14px; border: 1px solid var(--border); position: relative;">
+                <div style="position: absolute; top: 8px; right: 8px; background: var(--premium-bg); padding: 2px 8px; border-radius: 6px; display: flex; align-items: center; gap: 3px;">
+                  <i data-lucide="lock" style="width: 10px; height: 10px; color: var(--premium-400);"></i>
+                  <span style="font-size: 10px; font-weight: 700; color: var(--premium-400);">PRO</span>
+                </div>
+                <div style="width: 48px; height: 48px; background: rgba(8,145,178,0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 10px;">🧊</div>
+                <p style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Cold Exposure</p>
+                <p class="mono" style="font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Daily</p>
+                <span style="display: inline-block; background: var(--warning-light); color: var(--warning); font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 6px; margin-bottom: 8px;">Science</span>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 11px; font-weight: 700; color: var(--primary-600);">890 track this</span>
+                  <div style="width: 36px; height: 36px; background: var(--primary-500); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(45,42,38,0.12);">
+                    <i data-lucide="plus" style="width: 16px; height: 16px; color: white;"></i>
+                  </div>
+                </div>
+              </div>
+              <!-- Card 3 (peek) -->
+              <div style="min-width: 165px; background: var(--card); border-radius: 12px; padding: 14px; border: 1px solid var(--border); opacity: 0.6;">
+                <div style="width: 48px; height: 48px; background: rgba(139,98,8,0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 10px;">📖</div>
+                <p style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Read 20 Min</p>
+                <p class="mono" style="font-size: 13px; color: var(--text-secondary);">Daily</p>
+              </div>
+            </div>
+          </div>
+          <div style="position: absolute; top: 605px; right: -8px; z-index: 20; display: flex; flex-direction: column; gap: 3px; align-items: flex-end;">
+            <span class="change-badge new" style="font-size: 9px;">R7: PRO BADGE</span>
+            <span class="change-badge modified" style="font-size: 9px;">R5: BIGGER TAP</span>
+          </div>
+
+          <!-- R2: MOVED UP - Curated Packs (with trial CTA) -->
+          <div class="glow-new" style="padding: 0 16px; margin-bottom: 20px; border-radius: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary);">Curated Packs</h3>
+              <span style="font-size: 11px; color: var(--primary-600); font-weight: 600; background: rgba(5,150,105,0.08); padding: 3px 8px; border-radius: 6px;">7-day free trial</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="background: linear-gradient(135deg, #7C3AED, #4F46E5); border-radius: 16px; padding: 16px 20px; display: flex; align-items: center; gap: 14px; position: relative;">
+                <!-- PRO badge -->
+                <div style="position: absolute; top: 8px; right: 12px; background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 6px;">
+                  <span style="font-size: 10px; font-weight: 700; color: white; letter-spacing: 0.5px;">PRO</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px; font-size: 22px;">🌅🧊<br>🧘💪</div>
+                <div style="flex: 1;">
+                  <p style="font-size: 15px; font-weight: 700; color: white;">Huberman Essentials</p>
+                  <p style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 2px;">Science-backed daily protocols</p>
+                  <p class="mono" style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px;">5 habits</p>
+                </div>
+                <div style="background: white; padding: 8px 16px; border-radius: 999px;">
+                  <span style="color: #4F46E5; font-size: 13px; font-weight: 700;">Try Free</span>
+                </div>
+              </div>
+              <div style="background: linear-gradient(135deg, #059669, #047857); border-radius: 16px; padding: 16px 20px; display: flex; align-items: center; gap: 14px;">
+                <div style="display: flex; flex-direction: column; gap: 4px; font-size: 22px;">⏰💧<br>📝🧘</div>
+                <div style="flex: 1;">
+                  <p style="font-size: 15px; font-weight: 700; color: white;">Morning Mastery</p>
+                  <p style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 2px;">Win the first hour</p>
+                  <p class="mono" style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px;">4 habits</p>
+                </div>
+                <div style="background: white; padding: 8px 16px; border-radius: 999px;">
+                  <span style="color: #047857; font-size: 13px; font-weight: 700;">Try Free</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="position: absolute; top: 730px; right: -8px; z-index: 20; display: flex; flex-direction: column; gap: 3px; align-items: flex-end;">
+            <span class="change-badge moved" style="font-size: 9px;">R2: MOVED UP</span>
+            <span class="change-badge new" style="font-size: 9px;">R9: TRIAL CTA</span>
+            <span class="change-badge new" style="font-size: 9px;">R7: PRO BADGE</span>
+          </div>
+
+          <!-- Browse by Category (MOVED DOWN, with PRO badge + better expand) -->
+          <div style="padding: 0 16px; margin-bottom: 20px;">
+            <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Browse by Category</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div style="background: #ECFDF5; border-radius: 12px; padding: 12px; min-height: 100px; position: relative;">
+                <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">🌅</span>
+                <p style="font-size: 14px; font-weight: 700; color: #065f46; margin-top: 40px;">Morning</p>
+                <p style="font-size: 12px; color: #065f46; opacity: 0.7;">8 templates</p>
+              </div>
+              <div style="background: #DBEAFE; border-radius: 12px; padding: 12px; min-height: 100px; position: relative;">
+                <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">💪</span>
+                <p style="font-size: 14px; font-weight: 700; color: #1e3a5f; margin-top: 40px;">Health & Fitness</p>
+                <p style="font-size: 12px; color: #1e3a5f; opacity: 0.7;">12 templates</p>
+              </div>
+              <div style="background: #FEF3C7; border-radius: 12px; padding: 12px; min-height: 100px; position: relative;">
+                <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">🎯</span>
+                <p style="font-size: 14px; font-weight: 700; color: #78350f; margin-top: 40px;">Productivity</p>
+                <p style="font-size: 12px; color: #78350f; opacity: 0.7;">10 templates</p>
+              </div>
+              <!-- Huberman with PRO badge -->
+              <div class="glow-new" style="background: #F3E8FF; border-radius: 12px; padding: 12px; min-height: 100px; position: relative;">
+                <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">🧬</span>
+                <!-- PRO badge -->
+                <div style="display: inline-flex; align-items: center; gap: 3px; background: rgba(123,82,196,0.15); padding: 2px 8px; border-radius: 6px; margin-bottom: 4px;">
+                  <i data-lucide="lock" style="width: 10px; height: 10px; color: var(--premium-400);"></i>
+                  <span style="font-size: 10px; font-weight: 700; color: var(--premium-400);">PRO</span>
+                </div>
+                <p style="font-size: 14px; font-weight: 700; color: #4c1d95; margin-top: 12px;">Huberman Lab</p>
+                <p style="font-size: 12px; color: #4c1d95; opacity: 0.7;">5 templates</p>
+              </div>
+              <div style="background: #FCE7F3; border-radius: 12px; padding: 12px; min-height: 100px; position: relative;">
+                <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">🧘</span>
+                <p style="font-size: 14px; font-weight: 700; color: #831843; margin-top: 40px;">Mindfulness</p>
+                <p style="font-size: 12px; color: #831843; opacity: 0.7;">7 templates</p>
+              </div>
+              <div style="background: #E0F2FE; border-radius: 12px; padding: 12px; min-height: 100px; position: relative;">
+                <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">📚</span>
+                <p style="font-size: 14px; font-weight: 700; color: #0c4a6e; margin-top: 40px;">Learning</p>
+                <p style="font-size: 12px; color: #0c4a6e; opacity: 0.7;">6 templates</p>
+              </div>
+            </div>
+            <!-- R4: Improved expand button -->
+            <div class="glow-new" style="margin-top: 10px; padding: 10px; text-align: center; background: var(--surface-muted); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+              <span style="font-size: 14px; color: var(--primary-600); font-weight: 600;">Show 8 more categories</span>
+              <i data-lucide="chevron-down" style="width: 16px; height: 16px; color: var(--primary-600);"></i>
+            </div>
+          </div>
+          <div style="position: absolute; top: 1070px; right: -8px; z-index: 20; display: flex; flex-direction: column; gap: 3px; align-items: flex-end;">
+            <span class="change-badge moved" style="font-size: 9px;">R2: MOVED DOWN</span>
+            <span class="change-badge new" style="font-size: 9px;">R7: PRO BADGE</span>
+            <span class="change-badge modified" style="font-size: 9px;">R4: BETTER CTA</span>
+          </div>
+
+          <!-- Bottom padding -->
+          <div style="height: 100px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library Icon Alternatives</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif !important;
+      background: #0a0a0a !important;
+      color: #fafafa !important;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 24px;
+    }
+    h1 {
+      font-size: 24px !important;
+      font-weight: 700 !important;
+      margin-bottom: 8px !important;
+      color: #fafafa !important;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 48px;
+    }
+    .current-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #666;
+      margin-bottom: 16px;
+    }
+
+    /* Current icon section */
+    .current-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid #222;
+      width: 100%;
+      max-width: 800px;
+    }
+    .current-icon-wrapper {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: rgba(212, 175, 55, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .current-icon-wrapper i {
+      color: #d4af37;
+      width: 28px;
+      height: 28px;
+    }
+    .current-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #d4af37;
+    }
+
+    /* Alternatives grid */
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #666;
+      margin-bottom: 24px;
+      width: 100%;
+      max-width: 800px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      width: 100%;
+      max-width: 800px;
+    }
+    .icon-card {
+      background: #141414;
+      border: 1px solid #262626;
+      border-radius: 16px;
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .icon-card:hover {
+      border-color: #d4af37;
+      background: #1a1a1a;
+      transform: translateY(-2px);
+    }
+    .icon-card.selected {
+      border-color: #d4af37;
+      background: rgba(212, 175, 55, 0.08);
+      box-shadow: 0 0 0 1px #d4af37;
+    }
+    .icon-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: rgba(212, 175, 55, 0.10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon-circle i {
+      color: #d4af37;
+      width: 26px;
+      height: 26px;
+    }
+    .icon-info {
+      text-align: center;
+    }
+    .icon-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #e0e0e0;
+      margin-bottom: 4px;
+    }
+    .icon-desc {
+      font-size: 11px;
+      color: #666;
+      line-height: 1.4;
+    }
+    .icon-card .rank {
+      font-size: 10px;
+      font-weight: 700;
+      color: #444;
+      position: absolute;
+      top: 10px;
+      right: 12px;
+    }
+    .icon-card {
+      position: relative;
+    }
+
+    /* Bottom bar preview */
+    .preview-section {
+      margin-top: 56px;
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .preview-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #666;
+      margin-bottom: 24px;
+    }
+    .phone-frame {
+      width: 320px;
+      height: 120px;
+      background: #111;
+      border-radius: 24px;
+      border: 1px solid #262626;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .bottom-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(30, 30, 30, 0.95);
+      border: 1px solid #333;
+      border-radius: 28px;
+      padding: 10px 16px;
+      width: 260px;
+      backdrop-filter: blur(20px);
+    }
+    .bar-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .bar-left i {
+      color: #888;
+      width: 22px;
+      height: 22px;
+    }
+    .bar-right {
+      position: relative;
+    }
+    .bar-right i {
+      color: #d4af37;
+      width: 22px;
+      height: 22px;
+    }
+    .notif-dot {
+      width: 6px;
+      height: 6px;
+      background: #d4af37;
+      border-radius: 50%;
+      position: absolute;
+      top: -2px;
+      right: -2px;
+    }
+    .preview-icon-name {
+      font-size: 13px;
+      color: #888;
+      margin-top: 12px;
+      text-align: center;
+    }
+    .preview-icon-name span {
+      color: #d4af37;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <h1>Library Icon Alternatives</h1>
+  <p class="subtitle">Click any icon to preview it in the bottom bar below</p>
+
+  <!-- Current -->
+  <div class="current-section">
+    <div class="current-label">CURRENT</div>
+    <div class="current-icon-wrapper">
+      <i data-lucide="sparkles"></i>
+    </div>
+    <div class="current-name">Sparkles</div>
+  </div>
+
+  <!-- Alternatives -->
+  <div class="section-label">ALTERNATIVES</div>
+  <div class="grid">
+    <div class="icon-card" data-icon="book-open" onclick="selectIcon(this)">
+      <span class="rank">1</span>
+      <div class="icon-circle"><i data-lucide="book-open"></i></div>
+      <div class="icon-info">
+        <div class="icon-name">BookOpen</div>
+        <div class="icon-desc">Classic open book. Direct "library" metaphor.</div>
+      </div>
+    </div>
+
+    <div class="icon-card" data-icon="library" onclick="selectIcon(this)">
+      <span class="rank">2</span>
+      <div class="icon-circle"><i data-lucide="library"></i></div>
+      <div class="icon-info">
+        <div class="icon-name">Library</div>
+        <div class="icon-desc">Building columns. Institutional feel.</div>
+      </div>
+    </div>
+
+    <div class="icon-card" data-icon="bookmark" onclick="selectIcon(this)">
+      <span class="rank">3</span>
+      <div class="icon-circle"><i data-lucide="bookmark"></i></div>
+      <div class="icon-info">
+        <div class="icon-name">Bookmark</div>
+        <div class="icon-desc">Subtle ribbon. Browse & save.</div>
+      </div>
+    </div>
+
+    <div class="icon-card" data-icon="compass" onclick="selectIcon(this)">
+      <span class="rank">4</span>
+      <div class="icon-circle"><i data-lucide="compass"></i></div>
+      <div class="icon-info">
+        <div class="icon-name">Compass</div>
+        <div class="icon-desc">Explore & discover. Used by Instagram.</div>
+      </div>
+    </div>
+
+    <div class="icon-card" data-icon="layout-grid" onclick="selectIcon(this)">
+      <span class="rank">5</span>
+      <div class="icon-circle"><i data-lucide="layout-grid"></i></div>
+      <div class="icon-info">
+        <div class="icon-name">LayoutGrid</div>
+        <div class="icon-desc">Catalog / browse grid. App-store feel.</div>
+      </div>
+    </div>
+
+    <div class="icon-card" data-icon="layers" onclick="selectIcon(this)">
+      <span class="rank">6</span>
+      <div class="icon-circle"><i data-lucide="layers"></i></div>
+      <div class="icon-info">
+        <div class="icon-name">Layers</div>
+        <div class="icon-desc">Stacked packs. Template bundles.</div>
+      </div>
+    </div>
+
+    <div class="icon-card" data-icon="book-marked" onclick="selectIcon(this)">
+      <span class="rank">7</span>
+      <div class="icon-circle"><i data-lucide="book-marked"></i></div>
+      <div class="icon-info">
+        <div class="icon-name">BookMarked</div>
+        <div class="icon-desc">Book with ribbon. Curated library.</div>
+      </div>
+    </div>
+
+    <div class="icon-card" data-icon="gallery-horizontal" onclick="selectIcon(this)">
+      <span class="rank">8</span>
+      <div class="icon-circle"><i data-lucide="gallery-horizontal"></i></div>
+      <div class="icon-info">
+        <div class="icon-name">GalleryHorizontal</div>
+        <div class="icon-desc">Horizontal browse. Carousel feel.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom bar preview -->
+  <div class="preview-section">
+    <div class="preview-label">BOTTOM BAR PREVIEW</div>
+    <div class="phone-frame">
+      <div class="bottom-bar">
+        <div class="bar-left">
+          <i data-lucide="settings"></i>
+        </div>
+        <div class="bar-right" id="preview-icon">
+          <i data-lucide="sparkles"></i>
+          <div class="notif-dot"></div>
+        </div>
+      </div>
+    </div>
+    <div class="preview-icon-name">Showing: <span id="preview-name">Sparkles (current)</span></div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function selectIcon(card) {
+      // Remove selected from all
+      document.querySelectorAll('.icon-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+
+      const iconName = card.getAttribute('data-icon');
+      const displayName = card.querySelector('.icon-name').textContent;
+
+      // Update preview
+      const preview = document.getElementById('preview-icon');
+      preview.innerHTML = `<i data-lucide="${iconName}"></i><div class="notif-dot"></div>`;
+      lucide.createIcons({ nodes: [preview] });
+
+      document.getElementById('preview-name').textContent = displayName;
+    }
+  </script>
+</body>
+</html>
