@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A2 — Optimistic Past-Day Backfill · Before / After</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f1310; --panel:#171c18; --card:#FAF8F5; --ink:#1b211d; --muted:#6b746c;
+    --green:#2e7d5b; --green-soft:#dcefe4; --amber:#b9852b; --line:#e7e2da;
+    --red:#c2503a; --shadow:0 10px 30px -12px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:#e8ece9;font-family:Inter,system-ui,sans-serif;
+    padding:34px 20px 70px;-webkit-font-smoothing:antialiased}
+  .head{max-width:920px;margin:0 auto 26px}
+  .kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--green);
+    font-weight:700;margin:0 0 8px}
+  h1{font-family:Lora,serif;font-size:30px;margin:0 0 8px;font-weight:600;color:#f4f7f5}
+  .sub{color:#9aa39c;font-size:15px;margin:0;max-width:640px;line-height:1.5}
+  .stage{max-width:920px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media(max-width:800px){.stage{grid-template-columns:1fr}}
+  .col-title{display:flex;align-items:center;gap:9px;margin:0 0 12px;font-weight:700;font-size:15px}
+  .tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.04em}
+  .tag.before{background:#3a2320;color:#e9b4a8}
+  .tag.after{background:#12352a;color:#8fe3bb}
+  /* phone */
+  .phone{background:var(--card);border-radius:26px;padding:16px 15px 20px;box-shadow:var(--shadow);
+    color:var(--ink);position:relative;overflow:hidden}
+  .hero{background:linear-gradient(160deg,#1f2a24,#101613);border-radius:18px;padding:15px 16px;color:#eef4f0;
+    margin-bottom:14px}
+  .hname{font-family:Lora,serif;font-size:18px;font-weight:600}
+  .hstats{display:flex;gap:18px;margin-top:10px}
+  .stat b{display:block;font-size:20px;font-weight:800;line-height:1}
+  .stat span{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#9fb6ab}
+  .stat b .flame{color:#f0a martingale}
+  .mlabel{font-weight:700;font-size:13px;margin:2px 2px 10px;color:#3b433d}
+  .dow{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px}
+  .dow span{text-align:center;font-size:10px;color:var(--muted);font-weight:600}
+  .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .cell{aspect-ratio:1;border-radius:11px;display:flex;align-items:center;justify-content:center;
+    font-size:12.5px;font-weight:600;background:#f0ece5;color:#6c746d;position:relative;
+    cursor:pointer;user-select:none;transition:transform .12s ease}
+  .cell.empty{background:transparent;cursor:default}
+  .cell.future{color:#c4bfb6;cursor:not-allowed}
+  .cell.done{background:var(--green);color:#fff}
+  .cell.today{outline:2px solid var(--amber);outline-offset:1px}
+  .cell:active{transform:scale(.9)}
+  .cell.spin{color:transparent!important;background:#e4ddd2!important}
+  .cell .sp{position:absolute;width:15px;height:15px;border:2px solid #c3bdb2;border-top-color:var(--green);
+    border-radius:50%;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .cell.pop{animation:pop .28s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+  .cell.blocked{animation:shake .3s}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+  /* controls / log */
+  .foot{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+  .net{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:9px;color:#4b534c}
+  .toggle{width:38px;height:22px;border-radius:20px;background:#cdd4cd;position:relative;cursor:pointer;
+    transition:background .2s;flex:none}
+  .toggle.on{background:var(--green)}
+  .knob{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;
+    transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+  .toggle.on .knob{left:18px}
+  .log{font-family:ui-monospace,monospace;font-size:11px;line-height:1.55;color:#77807a;
+    background:#f4f0e9;border-radius:10px;padding:9px 11px;height:96px;overflow-y:auto}
+  .log .q{color:var(--amber)} .log .ok{color:var(--green)} .log .err{color:var(--red)}
+  .hint{font-size:11.5px;color:var(--muted);margin:9px 2px 0;line-height:1.45}
+  .diffbar{max-width:920px;margin:26px auto 0;background:var(--panel);border:1px solid #232a25;
+    border-radius:14px;padding:16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:14px 30px}
+  @media(max-width:800px){.diffbar{grid-template-columns:1fr}}
+  .diffbar h3{margin:0 0 4px;font-size:13px;color:#f4f7f5}
+  .diffbar ul{margin:0;padding-left:16px;color:#9aa39c;font-size:12.5px;line-height:1.6}
+  .diffbar .r{color:#e9b4a8}.diffbar .g{color:#8fe3bb}
+</style>
+</head>
+<body>
+  <div class="head">
+    <p class="kicker">Habit Detail · Month Calendar</p>
+    <h1>A2 — Optimistic Past-Day Backfill</h1>
+    <p class="sub">Tap past days to backfill. <b>Before</b>: each tap awaits a server round-trip behind a per-cell spinner, and a second tap is blocked while one is in flight. <b>After</b>: taps paint instantly from the shared optimistic store — rapid backfill, live streak, offline queueing.</p>
+  </div>
+
+  <div class="stage">
+    <!-- BEFORE -->
+    <div>
+      <div class="col-title"><span class="tag before">BEFORE</span> await + spinner, serialized</div>
+      <div class="phone" id="beforePhone">
+        <div class="hero">
+          <div class="hname">Morning Meditation</div>
+          <div class="hstats">
+            <div class="stat"><b id="bStreak">4🔥</b><span>Streak</span></div>
+            <div class="stat"><b id="bTotal">12</b><span>Total</span></div>
+            <div class="stat"><b>28</b><span>Best</span></div>
+          </div>
+        </div>
+        <div class="mlabel">July 2026</div>
+        <div class="dow"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+        <div class="grid" id="bGrid"></div>
+        <div class="foot">
+          <div class="net">Network <span class="toggle on" id="bNet"><span class="knob"></span></span><span id="bNetLbl">online</span></div>
+          <div class="log" id="bLog"></div>
+        </div>
+      </div>
+      <p class="hint">Try tapping two past days fast → second tap is dropped until the first server call returns (~900ms). Turn network off → cell spins forever.</p>
+    </div>
+
+    <!-- AFTER -->
+    <div>
+      <div class="col-title"><span class="tag after">AFTER</span> instant paint, optimistic store</div>
+      <div class="phone" id="afterPhone">
+        <div class="hero">
+          <div class="hname">Morning Meditation</div>
+          <div class="hstats">
+            <div class="stat"><b id="aStreak">4🔥</b><span>Streak</span></div>
+            <div class="stat"><b id="aTotal">12</b><span>Total</span></div>
+            <div class="stat"><b>28</b><span>Best</span></div>
+          </div>
+        </div>
+        <div class="mlabel">July 2026</div>
+        <div class="dow"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+        <div class="grid" id="aGrid"></div>
+        <div class="foot">
+          <div class="net">Network <span class="toggle on" id="aNet"><span class="knob"></span></span><span id="aNetLbl">online</span></div>
+          <div class="log" id="aLog"></div>
+        </div>
+      </div>
+      <p class="hint">Tap as fast as you like → each cell paints on touch, streak/total update live. Turn network off → still instant, mutations queue and flush on reconnect.</p>
+    </div>
+  </div>
+
+  <div class="diffbar">
+    <div>
+      <h3 class="r">Before — what happens</h3>
+      <ul>
+        <li><span class="r">togglingRef</span> serializes: 1 toggle in flight blocks the rest</li>
+        <li>Per-cell spinner until Convex mutation resolves</li>
+        <li>Offline = spinner hangs, no queue</li>
+        <li>Hero streak only moves after refetch</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="g">After — reuse the list's machinery</h3>
+      <ul>
+        <li><span class="g">useOptimisticToggleMutation</span> + shared store, no ref lock</li>
+        <li>Instant paint, hybrid client-side streak while pending</li>
+        <li>Offline backfill queues → flushes on reconnect</li>
+        <li>Cross-surface list ↔ detail agreement for free</li>
+      </ul>
+    </div>
+  </div>
+
+<script>
+const DAYS_IN_MONTH=31, FIRST_DOW=3 /*Jul 1 2026 = Wed*/, TODAY=8;
+const seed=new Set([2,3,4,5,8]); // pre-done incl streak days 5,8 (grace)
+
+function build(gridId,{optimistic}){
+  const grid=document.getElementById(gridId);
+  const state={done:new Set(seed), online:true, inflight:false, pending:new Set()};
+  for(let i=0;i<FIRST_DOW;i++){const e=document.createElement('div');e.className='cell empty';grid.appendChild(e);}
+  for(let d=1;d<=DAYS_IN_MONTH;d++){
+    const c=document.createElement('div');
+    c.className='cell'+(state.done.has(d)?' done':'')+(d===TODAY?' today':'')+(d>TODAY?' future':'');
+    c.textContent=d; c.dataset.d=d; grid.appendChild(c);
+  }
+  return {grid,state};
+}
+
+function log(id,msg){const el=document.getElementById(id);
+  el.insertAdjacentHTML('afterbegin',msg+'<br>');}
+
+function paint(ctx,pre){
+  const {state,grid}=ctx;
+  grid.querySelectorAll('.cell:not(.empty)').forEach(c=>{
+    const d=+c.dataset.d;
+    c.classList.toggle('done',state.done.has(d));
+  });
+  // stats
+  const total=state.done.size;
+  // simple streak: consecutive back from today
+  let s=0; for(let d=TODAY;d>=1;d--){ if(state.done.has(d)) s++; else if(d===TODAY) continue; else break;}
+  document.getElementById(pre+'Streak').innerHTML=s+'🔥';
+  document.getElementById(pre+'Total').textContent=total;
+}
+
+/* ---- BEFORE : serialized await + spinner ---- */
+const B=build('bGrid',{optimistic:false});
+paint(B,'b');
+document.getElementById('bNet').onclick=()=>{B.state.online=!B.state.online;
+  document.getElementById('bNet').classList.toggle('on',B.state.online);
+  document.getElementById('bNetLbl').textContent=B.state.online?'online':'offline';};
+B.grid.addEventListener('click',e=>{
+  const c=e.target.closest('.cell'); if(!c||c.classList.contains('empty'))return;
+  const d=+c.dataset.d;
+  if(d>TODAY){log('bLog','<span class="err">future day — no-op</span>');return;}
+  if(B.state.inflight){c.classList.add('blocked');setTimeout(()=>c.classList.remove('blocked'),300);
+    log('bLog','<span class="err">✗ blocked — toggle in flight</span>');return;}
+  B.state.inflight=true; c.classList.add('spin');
+  c.insertAdjacentHTML('beforeend','<span class="sp"></span>');
+  log('bLog','→ awaiting server for '+d+'…');
+  const finish=()=>{
+    c.classList.remove('spin'); const sp=c.querySelector('.sp'); if(sp)sp.remove();
+    if(B.state.done.has(d))B.state.done.delete(d);else B.state.done.add(d);
+    B.state.inflight=false; paint(B,'b'); log('bLog','<span class="ok">✓ server ok '+d+'</span>');
+  };
+  const wait=()=>{ if(!B.state.online){setTimeout(wait,400);return;} setTimeout(finish,900); };
+  wait();
+});
+
+/* ---- AFTER : instant optimistic ---- */
+const A=build('aGrid',{optimistic:true});
+paint(A,'a');
+document.getElementById('aNet').onclick=()=>{
+  const was=A.state.online; A.state.online=!A.state.online;
+  document.getElementById('aNet').classList.toggle('on',A.state.online);
+  document.getElementById('aNetLbl').textContent=A.state.online?'online':'offline';
+  if(A.state.online && A.state.pending.size){
+    log('aLog','<span class="ok">⚡ reconnect — flushing '+A.state.pending.size+' queued</span>');
+    A.state.pending.clear();
+  }
+};
+A.grid.addEventListener('click',e=>{
+  const c=e.target.closest('.cell'); if(!c||c.classList.contains('empty'))return;
+  const d=+c.dataset.d;
+  if(d>TODAY){log('aLog','<span class="err">future day — no-op</span>');return;}
+  // instant paint
+  if(A.state.done.has(d))A.state.done.delete(d);else A.state.done.add(d);
+  c.classList.remove('pop');void c.offsetWidth;c.classList.add('pop');
+  paint(A,'a');
+  if(A.state.online){ log('aLog','<span class="ok">✓ '+d+' painted → mutation sent</span>'); }
+  else{ A.state.pending.add(d); log('aLog','<span class="q">⏳ '+d+' painted → queued (offline)</span>'); }
+});
+</script>
+</body>
+</html>
