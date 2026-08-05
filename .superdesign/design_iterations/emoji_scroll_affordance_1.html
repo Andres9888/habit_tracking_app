@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emoji Category Pills — Scroll Affordance Mocks</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #111;
+      color: #fff;
+      padding: 20px 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page-title {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      padding: 0 20px 8px;
+      color: #fff;
+    }
+    .page-subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+      padding: 0 20px 32px;
+    }
+
+    /* === Phone frame === */
+    .mock {
+      width: 390px;
+      margin: 0 auto 40px;
+      background: #1a1a1a;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid #2a2a2a;
+    }
+    .mock-header {
+      padding: 16px 20px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .mock-number {
+      font-size: 11px;
+      font-weight: 600;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .mock-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ccc;
+    }
+
+    /* === Search bar (context) === */
+    .search-bar {
+      margin: 8px 20px 14px;
+      background: #262626;
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .search-bar svg { flex-shrink: 0; }
+    .search-bar span {
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* === Base pill styles === */
+    .pills-container {
+      position: relative;
+      padding: 0 0 16px;
+    }
+    .pills-scroll {
+      display: flex;
+      gap: 8px;
+      padding: 0 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scroll-behavior: smooth;
+    }
+    .pills-scroll::-webkit-scrollbar { display: none; }
+
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 14px;
+      border-radius: 9999px;
+      white-space: nowrap;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .pill.inactive {
+      background: #2a2a2a;
+      color: #888;
+    }
+    .pill.active {
+      background: #e8e8e8;
+      color: #111;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .pill .emoji { font-size: 13px; }
+
+    /* === Emoji grid hint (context) === */
+    .emoji-grid-hint {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      padding: 4px 20px 20px;
+      opacity: 0.3;
+    }
+    .emoji-grid-hint span {
+      font-size: 24px;
+      text-align: center;
+      padding: 6px 0;
+    }
+
+    /* ================================= */
+    /* VARIATION-SPECIFIC STYLES         */
+    /* ================================= */
+
+    /* --- 1. Right fade gradient --- */
+    .v1-fade-right .pills-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 60px;
+      height: calc(100% - 16px);
+      background: linear-gradient(to right, transparent, #1a1a1a);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* --- 2. Both-edge fade --- */
+    .v2-fade-both .pills-container::before,
+    .v2-fade-both .pills-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 50px;
+      height: calc(100% - 16px);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .v2-fade-both .pills-container::before {
+      left: 0;
+      background: linear-gradient(to left, transparent, #1a1a1a);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .v2-fade-both .pills-container::after {
+      right: 0;
+      background: linear-gradient(to right, transparent, #1a1a1a);
+    }
+    .v2-fade-both .pills-container.scrolled-right::before {
+      opacity: 1;
+    }
+    .v2-fade-both .pills-container.scrolled-end::after {
+      opacity: 0;
+    }
+
+    /* --- 3. Arrow indicator --- */
+    .v3-arrow .pills-container::after {
+      content: '›';
+      position: absolute;
+      top: 0;
+      right: 6px;
+      height: calc(100% - 16px);
+      display: flex;
+      align-items: center;
+      font-size: 22px;
+      font-weight: 300;
+      color: #666;
+      z-index: 2;
+      pointer-events: none;
+      animation: v3-pulse 2s ease-in-out infinite;
+    }
+    @keyframes v3-pulse {
+      0%, 100% { opacity: 0.4; transform: translateX(0); }
+      50% { opacity: 1; transform: translateX(3px); }
+    }
+
+    /* --- 4. Peek / cut-off --- */
+    .v4-peek .pills-scroll {
+      padding-right: 0;
+      mask-image: linear-gradient(to right, black calc(100% - 30px), transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, black calc(100% - 30px), transparent 100%);
+    }
+
+    /* --- 5. Scroll indicator dots --- */
+    .v5-dots .dot-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      padding: 8px 0 0;
+    }
+    .v5-dots .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #444;
+      transition: all 0.3s;
+    }
+    .v5-dots .dot.active {
+      background: #aaa;
+      width: 14px;
+      border-radius: 3px;
+    }
+
+    /* --- 6. Animated nudge --- */
+    .v6-nudge .pills-scroll {
+      animation: v6-nudge-scroll 1.5s ease-in-out 0.5s 1;
+    }
+    @keyframes v6-nudge-scroll {
+      0% { transform: translateX(0); }
+      30% { transform: translateX(-40px); }
+      60% { transform: translateX(-40px); }
+      100% { transform: translateX(0); }
+    }
+    .v6-nudge .nudge-hint {
+      text-align: center;
+      font-size: 11px;
+      color: #555;
+      padding-top: 4px;
+      animation: v6-hint-fade 1.5s ease-in-out 0.5s 1;
+    }
+    @keyframes v6-hint-fade {
+      0%, 100% { opacity: 0; }
+      30%, 70% { opacity: 1; }
+    }
+
+    /* --- 7. "+N more" chip --- */
+    .v7-more .more-pill {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 7px 14px;
+      border-radius: 9999px;
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+      background: transparent;
+      color: #666;
+      border: 1px dashed #444;
+      cursor: pointer;
+    }
+
+    /* --- 8. Gradient + arrow combo --- */
+    .v8-combo .pills-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 70px;
+      height: calc(100% - 16px);
+      background: linear-gradient(to right, transparent, #1a1a1a 70%);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .v8-combo .arrow-overlay {
+      position: absolute;
+      top: 0;
+      right: 8px;
+      height: calc(100% - 16px);
+      display: flex;
+      align-items: center;
+      z-index: 3;
+      pointer-events: none;
+    }
+    .v8-combo .arrow-circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #333;
+      border: 1px solid #444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #aaa;
+      animation: v8-bounce 2s ease-in-out infinite;
+    }
+    @keyframes v8-bounce {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(3px); }
+    }
+
+    /* --- 9. Thin scrollbar --- */
+    .v9-scrollbar .scrollbar-track {
+      margin: 8px 20px 0;
+      height: 3px;
+      background: #222;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .v9-scrollbar .scrollbar-thumb {
+      width: 30%;
+      height: 100%;
+      background: #555;
+      border-radius: 2px;
+      animation: v9-slide 3s ease-in-out infinite;
+    }
+    @keyframes v9-slide {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(30px); }
+    }
+
+    /* --- 10. Grip lines --- */
+    .v10-grip .pills-container::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      transform: translateY(calc(-50% - 8px));
+      width: 4px;
+      height: 20px;
+      z-index: 2;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        #555 0px, #555 2px,
+        transparent 2px, transparent 5px
+      );
+      border-radius: 1px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+<h1 class="page-title">Emoji Category Pills — Scroll Affordance</h1>
+<p class="page-subtitle">10 variations to hint that category tags are horizontally scrollable</p>
+
+<!-- ============================================ -->
+<!-- VARIATION 1: Right fade gradient             -->
+<!-- ============================================ -->
+<div class="mock v1-fade-right">
+  <div class="mock-header">
+    <span class="mock-number">Variation 1</span>
+    <span class="mock-label">Right Fade Gradient</span>
+  </div>
+  <div class="search-bar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>Search emoji...</span>
+  </div>
+  <div class="pills-container">
+    <div class="pills-scroll">
+      <div class="pill active"><span class="emoji">💪</span> Fitness</div>
+      <div class="pill inactive"><span class="emoji">📚</span> Learning</div>
+      <div class="pill inactive"><span class="emoji">🧘</span> Wellness</div>
+      <div class="pill inactive"><span class="emoji">🍎</span> Health</div>
+      <div class="pill inactive"><span class="emoji">💼</span> Work</div>
+      <div class="pill inactive"><span class="emoji">🎨</span> Creative</div>
+      <div class="pill inactive"><span class="emoji">🏠</span> Home</div>
+      <div class="pill inactive"><span class="emoji">💰</span> Finance</div>
+      <div class="pill inactive"><span class="emoji">❤️</span> Social</div>
+      <div class="pill inactive"><span class="emoji">🌙</span> Sleep</div>
+    </div>
+  </div>
+  <div class="emoji-grid-hint">
+    <span>🏃</span><span>🏋️</span><span>🚴</span><span>🧗</span><span>🏊</span><span>⚽</span><span>🎾</span>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- VARIATION 2: Both-edge fade                  -->
+<!-- ============================================ -->
+<div class="mock v2-fade-both">
+  <div class="mock-header">
+    <span class="mock-number">Variation 2</span>
+    <span class="mock-label">Both-Edge Fade</span>
+  </div>
+  <div class="search-bar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>Search emoji...</span>
+  </div>
+  <div class="pills-container" id="v2-container">
+    <div class="pills-scroll" id="v2-scroll">
+      <div class="pill active"><span class="emoji">💪</span> Fitness</div>
+      <div class="pill inactive"><span class="emoji">📚</span> Learning</div>
+      <div class="pill inactive"><span class="emoji">🧘</span> Wellness</div>
+      <div class="pill inactive"><span class="emoji">🍎</span> Health</div>
+      <div class="pill inactive"><span class="emoji">💼</span> Work</div>
+      <div class="pill inactive"><span class="emoji">🎨</span> Creative</div>
+      <div class="pill inactive"><span class="emoji">🏠</span> Home</div>
+      <div class="pill inactive"><span class="emoji">💰</span> Finance</div>
+      <div class="pill inactive"><span class="emoji">❤️</span> Social</div>
+      <div class="pill inactive"><span class="emoji">🌙</span> Sleep</div>
+    </div>
+  </div>
+  <div class="emoji-grid-hint">
+    <span>🏃</span><span>🏋️</span><span>🚴</span><span>🧗</span><span>🏊</span><span>⚽</span><span>🎾</span>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- VARIATION 3: Arrow indicator                 -->
+<!-- ============================================ -->
+<div class="mock v3-arrow">
+  <div class="mock-header">
+    <span class="mock-number">Variation 3</span>
+    <span class="mock-label">Pulsing Arrow</span>
+  </div>
+  <div class="search-bar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>Search emoji...</span>
+  </div>
+  <div class="pills-container">
+    <div class="pills-scroll">
+      <div class="pill active"><span class="emoji">💪</span> Fitness</div>
+      <div class="pill inactive"><span class="emoji">📚</span> Learning</div>
+      <div class="pill inactive"><span class="emoji">🧘</span> Wellness</div>
+      <div class="pill inactive"><span class="emoji">🍎</span> Health</div>
+      <div class="pill inactive"><span class="emoji">💼</span> Work</div>
+      <div class="pill inactive"><span class="emoji">🎨</span> Creative</div>
+      <div class="pill inactive"><span class="emoji">🏠</span> Home</div>
+      <div class="pill inactive"><span class="emoji">💰</span> Finance</div>
+      <div class="pill inactive"><span class="emoji">❤️</span> Social</div>
+      <div class="pill inactive"><span class="emoji">🌙</span> Sleep</div>
+    </div>
+  </div>
+  <div class="emoji-grid-hint">
+    <span>🏃</span><span>🏋️</span><span>🚴</span><span>🧗</span><span>🏊</span><span>⚽</span><span>🎾</span>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- VARIATION 4: Peek / cut-off                  -->
+<!-- ============================================ -->
+<div class="mock v4-peek">
+  <div class="mock-header">
+    <span class="mock-number">Variation 4</span>
+    <span class="mock-label">Peek / Cut-Off</span>
+  </div>
+  <div class="search-bar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>Search emoji...</span>
+  </div>
+  <div class="pills-container">
+    <div class="pills-scroll">
+      <div class="pill active"><span class="emoji">💪</span> Fitness</div>
+      <div class="pill inactive"><span class="emoji">📚</span> Learning</div>
+      <div class="pill inactive"><span class="emoji">🧘</span> Wellness</div>
+      <div class="pill inactive"><span class="emoji">🍎</span> Health</div>
+      <div class="pill inactive"><span class="emoji">💼</span> Work</div>
+      <div class="pill inactive"><span class="emoji">🎨</span> Creative</div>
+      <div class="pill inactive"><span class="emoji">🏠</span> Home</div>
+      <div class="pill inactive"><span class="emoji">💰</span> Finance</div>
+      <div class="pill inactive"><span class="emoji">❤️</span> Social</div>
+      <div class="pill inactive"><span class="emoji">🌙</span> Sleep</div>
+    </div>
+  </div>
+  <div class="emoji-grid-hint">
+    <span>🏃</span><span>🏋️</span><span>🚴</span><span>🧗</span><span>🏊</span><span>⚽</span><span>🎾</span>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- VARIATION 5: Scroll indicator dots           -->
+<!-- ============================================ -->
+<div class="mock v5-dots">
+  <div class="mock-header">
+    <span class="mock-number">Variation 5</span>
+    <span class="mock-label">Pagination Dots</span>
+  </div>
+  <div class="search-bar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>Search emoji...</span>
+  </div>
+  <div class="pills-container">
+    <div class="pills-scroll" id="v5-scroll">
+      <div class="pill active"><span class="emoji">💪</span> Fitness</div>
+      <div class="pill inactive"><span class="emoji">📚</span> Learning</div>
+      <div class="pill inactive"><span class="emoji">🧘</span> Wellness</div>
+      <div class="pill inactive"><span class="emoji">🍎</span> Health</div>
+      <div class="pill inactive"><span class="emoji">💼</span> Work</div>
+      <div class="pill inactive"><span class="emoji">🎨</span> Creative</div>
+      <div class="pill inactive"><span class="emoji">🏠</span> Home</div>
+      <div class="pill inactive"><span class="emoji">💰</span> Finance</div>
+      <div class="pill inactive"><span class="emoji">❤️</span> Social</div>
+      <div class="pill inactive"><span class="emoji">🌙</span> Sleep</div>
+    </div>
+    <div class="dot-indicator">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+  <div class="emoji-grid-hint">
+    <span>🏃</span><span>🏋️</span><span>🚴</span><span>🧗</span><span>🏊</span><span>⚽</span><span>🎾</span>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- VARIATION 6: Animated nudge                  -->
+<!-- ============================================ -->
+<div class="mock v6-nudge">
+  <div class="mock-header">
+    <span class="mock-number">Variation 6</span>
+    <span class="mock-label">Animated Nudge on Mount</span>
+  </div>
+  <div class="search-bar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>Search emoji...</span>
+  </div>
+  <div class="pills-container">
+    <div class="pills-scroll">
+      <div class="pill active"><span class="emoji">💪</span> Fitness</div>
+      <div class="pill inactive"><span class="emoji">📚</span> Learning</div>
+      <div class="pill inactive"><span class="emoji">🧘</span> Wellness</div>
+      <div class="pill inactive"><span class="emoji">🍎</span> Health</div>
+      <div class="pill inactive"><span class="emoji">💼</span> Work</div>
+      <div class="pill inactive"><span class="emoji">🎨</span> Creative</div>
+      <div class="pill inactive"><span class="emoji">🏠</span> Home</div>
+      <div class="pill inactive"><span class="emoji">💰</span> Finance</div>
+      <div class="pill inactive"><span class="emoji">❤️</span> Social</div>
+      <div class="pill inactive"><span class="emoji">🌙</span> Sleep</div>
+    </div>
+    <div class="nudge-hint">← swipe for more categories</div>
+  </div>
+  <div class="emoji-grid-hint">
+    <span>🏃</span><span>🏋️</span><span>🚴</span><span>🧗</span><span>🏊</span><span>⚽</span><span>🎾</span>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- VARIATION 7: "+N more" chip                  -->
+<!-- ============================================ -->
+<div class="mock v7-more">
+  <div class="mock-header">
+    <span class="mock-number">Variation 7</span>
+    <span class="mock-label">"+N More" Counter Chip</span>
+  </div>
+  <div class="search-bar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>Search emoji...</span>
+  </div>
+  <div class="pills-container">
+    <div class="pills-scroll">
+      <div class="pill active"><span class="emoji">💪</span> Fitness</div>
+      <div class="pill inactive"><span class="emoji">📚</span> Learning</div>
+      <div class="pill inactive"><span class="emoji">🧘</span> Wellness</div>
+      <div class="pill inactive"><span class="emoji">🍎</span> Health</div>
+      <div class="pill inactive"><span class="emoji">💼</span> Work</div>
+      <div class="pill inactive"><span class="emoji">🎨</span> Creative</div>
+      <div class="pill inactive"><span class="emoji">🏠</span> Home</div>
+      <div class="pill inactive"><span class="emoji">💰</span> Finance</div>
+      <div class="pill inactive"><span class="emoji">❤️</span> Social</div>
+      <div class="more-pill">+5 more →</div>
+    </div>
+  </div>
+  <div class="emoji-grid-hint">
+    <span>🏃</span><span>🏋️</span><span>🚴</span><span>🧗</span><span>🏊</span><span>⚽</span><span>🎾</span>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- VARIATION 8: Gradient + arrow combo          -->
+<!-- ============================================ -->
+<div class="mock v8-combo">
+  <div class="mock-header">
+    <span class="mock-number">Variation 8</span>
+    <span class="mock-label">Gradient + Arrow Combo</span>
+  </div>
+  <div class="search-bar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>Search emoji...</span>
+  </div>
+  <div class="pills-container">
+    <div class="pills-scroll">
+      <div class="pill active"><span class="emoji">💪</span> Fitness</div>
+      <div class="pill inactive"><span class="emoji">📚</span> Learning</div>
+      <div class="pill inactive"><span class="emoji">🧘</span> Wellness</div>
+      <div class="pill inactive"><span class="emoji">🍎</span> Health</div>
+      <div class="pill inactive"><span class="emoji">💼</span> Work</div>
+      <div class="pill inactive"><span class="emoji">🎨</span> Creative</div>
+      <div class="pill inactive"><span class="emoji">🏠</span> Home</div>
+      <div class="pill inactive"><span class="emoji">💰</span> Finance</div>
+      <div class="pill inactive"><span class="emoji">❤️</span> Social</div>
+      <div class="pill inactive"><span class="emoji">🌙</span> Sleep</div>
+    </div>
+    <div class="arrow-overlay">
+      <div class="arrow-circle">›</div>
+    </div>
+  </div>
+  <div class="emoji-grid-hint">
+    <span>🏃</span><span>🏋️</span><span>🚴</span><span>🧗</span><span>🏊</span><span>⚽</span><span>🎾</span>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- VARIATION 9: Thin scrollbar                  -->
+<!-- ============================================ -->
+<div class="mock v9-scrollbar">
+  <div class="mock-header">
+    <span class="mock-number">Variation 9</span>
+    <span class="mock-label">Thin Custom Scrollbar</span>
+  </div>
+  <div class="search-bar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>Search emoji...</span>
+  </div>
+  <div class="pills-container">
+    <div class="pills-scroll" id="v9-scroll">
+      <div class="pill active"><span class="emoji">💪</span> Fitness</div>
+      <div class="pill inactive"><span class="emoji">📚</span> Learning</div>
+      <div class="pill inactive"><span class="emoji">🧘</span> Wellness</div>
+      <div class="pill inactive"><span class="emoji">🍎</span> Health</div>
+      <div class="pill inactive"><span class="emoji">💼</span> Work</div>
+      <div class="pill inactive"><span class="emoji">🎨</span> Creative</div>
+      <div class="pill inactive"><span class="emoji">🏠</span> Home</div>
+      <div class="pill inactive"><span class="emoji">💰</span> Finance</div>
+      <div class="pill inactive"><span class="emoji">❤️</span> Social</div>
+      <div class="pill inactive"><span class="emoji">🌙</span> Sleep</div>
+    </div>
+    <div class="scrollbar-track">
+      <div class="scrollbar-thumb" id="v9-thumb"></div>
+    </div>
+  </div>
+  <div class="emoji-grid-hint">
+    <span>🏃</span><span>🏋️</span><span>🚴</span><span>🧗</span><span>🏊</span><span>⚽</span><span>🎾</span>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- VARIATION 10: Grip lines                     -->
+<!-- ============================================ -->
+<div class="mock v10-grip">
+  <div class="mock-header">
+    <span class="mock-number">Variation 10</span>
+    <span class="mock-label">Grip Lines / Drag Handle</span>
+  </div>
+  <div class="search-bar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>Search emoji...</span>
+  </div>
+  <div class="pills-container">
+    <div class="pills-scroll">
+      <div class="pill active"><span class="emoji">💪</span> Fitness</div>
+      <div class="pill inactive"><span class="emoji">📚</span> Learning</div>
+      <div class="pill inactive"><span class="emoji">🧘</span> Wellness</div>
+      <div class="pill inactive"><span class="emoji">🍎</span> Health</div>
+      <div class="pill inactive"><span class="emoji">💼</span> Work</div>
+      <div class="pill inactive"><span class="emoji">🎨</span> Creative</div>
+      <div class="pill inactive"><span class="emoji">🏠</span> Home</div>
+      <div class="pill inactive"><span class="emoji">💰</span> Finance</div>
+      <div class="pill inactive"><span class="emoji">❤️</span> Social</div>
+      <div class="pill inactive"><span class="emoji">🌙</span> Sleep</div>
+    </div>
+  </div>
+  <div class="emoji-grid-hint">
+    <span>🏃</span><span>🏋️</span><span>🚴</span><span>🧗</span><span>🏊</span><span>⚽</span><span>🎾</span>
+  </div>
+</div>
+
+<script>
+  // V2: Both-edge fade scroll tracking
+  const v2Scroll = document.getElementById('v2-scroll');
+  const v2Container = document.getElementById('v2-container');
+  if (v2Scroll && v2Container) {
+    v2Scroll.addEventListener('scroll', () => {
+      const { scrollLeft, scrollWidth, clientWidth } = v2Scroll;
+      if (scrollLeft > 10) {
+        v2Container.classList.add('scrolled-right');
+      } else {
+        v2Container.classList.remove('scrolled-right');
+      }
+      if (scrollLeft + clientWidth >= scrollWidth - 10) {
+        v2Container.classList.add('scrolled-end');
+      } else {
+        v2Container.classList.remove('scrolled-end');
+      }
+    });
+  }
+
+  // V5: Dot indicator scroll tracking
+  const v5Scroll = document.getElementById('v5-scroll');
+  if (v5Scroll) {
+    const dots = v5Scroll.closest('.mock').querySelectorAll('.dot');
+    v5Scroll.addEventListener('scroll', () => {
+      const { scrollLeft, scrollWidth, clientWidth } = v5Scroll;
+      const ratio = scrollLeft / (scrollWidth - clientWidth);
+      const activeIndex = Math.min(Math.round(ratio * (dots.length - 1)), dots.length - 1);
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === activeIndex);
+      });
+    });
+  }
+
+  // V9: Custom scrollbar thumb tracking
+  const v9Scroll = document.getElementById('v9-scroll');
+  const v9Thumb = document.getElementById('v9-thumb');
+  if (v9Scroll && v9Thumb) {
+    v9Thumb.style.animation = 'none';
+    const updateThumb = () => {
+      const { scrollLeft, scrollWidth, clientWidth } = v9Scroll;
+      const trackWidth = v9Scroll.closest('.mock').querySelector('.scrollbar-track').clientWidth;
+      const thumbWidth = Math.max((clientWidth / scrollWidth) * trackWidth, 30);
+      const maxScroll = scrollWidth - clientWidth;
+      const maxThumbTravel = trackWidth - thumbWidth;
+      const thumbLeft = maxScroll > 0 ? (scrollLeft / maxScroll) * maxThumbTravel : 0;
+      v9Thumb.style.width = thumbWidth + 'px';
+      v9Thumb.style.transform = `translateX(${thumbLeft}px)`;
+    };
+    v9Scroll.addEventListener('scroll', updateThumb);
+    updateThumb();
+  }
+
+  // Make all pill rows interactive (click to select)
+  document.querySelectorAll('.pills-scroll').forEach(scroll => {
+    scroll.addEventListener('click', (e) => {
+      const pill = e.target.closest('.pill');
+      if (!pill) return;
+      scroll.querySelectorAll('.pill').forEach(p => {
+        p.classList.remove('active');
+        p.classList.add('inactive');
+      });
+      pill.classList.remove('inactive');
+      pill.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
