@@ -1,0 +1,8 @@
+{
+  "rating": 3,
+  "summary": "User pointing out missing empty state, frustrated by incomplete response",
+  "detailed_context": "User is reporting that the empty state component/UI is not visible or working. The previous response was incomplete (ended with '**') and appears to have missed the user's actual need. The terse correction 'don't see the empt state' signals clear dissatisfaction—something promised or expected is missing. User is not hostile but expects the assistant to address the gap.",
+  "session_id": "33f729ff-81da-4d1b-b55f-c12eff730c24",
+  "captured_at": "2026-06-01T15:35:52.929Z",
+  "transcript_source": "33f729ff-81da-4d1b-b55f-c12eff730c24.jsonl"
+}

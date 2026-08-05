@@ -1,0 +1,3 @@
+{"timestamp":"2026-06-01T05:39:51-07:00","rating":5,"session_id":"725eeaf1-c685-4585-9116-249f7cee2bfc","source":"implicit","sentiment_summary":"Inference failed: Failed to parse JSON response","confidence":0.3}
+{"timestamp":"2026-06-01T05:39:55-07:00","rating":5,"session_id":"33f729ff-81da-4d1b-b55f-c12eff730c24","source":"implicit","sentiment_summary":"Inference failed: Timeout after 15000ms","confidence":0.3}
+{"timestamp":"2026-06-01T08:35:42-07:00","rating":3,"session_id":"33f729ff-81da-4d1b-b55f-c12eff730c24","source":"implicit","sentiment_summary":"User pointing out missing empty state, frustrated by incomplete response","confidence":0.85}
