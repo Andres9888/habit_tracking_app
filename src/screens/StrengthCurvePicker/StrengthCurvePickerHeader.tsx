@@ -14,8 +14,8 @@ export function StrengthCurvePickerHeader({ topInset, onClose }: Props) {
   return (
     <View
       style={{
-        backgroundColor: colors.surface,
-        borderBottomColor: colors.border,
+        backgroundColor: colors.card,
+        borderBottomColor: colors.cardBorder,
         borderBottomWidth: 1,
         paddingTop: topInset,
       }}
@@ -43,7 +43,7 @@ export function StrengthCurvePickerHeader({ topInset, onClose }: Props) {
           style={{ backgroundColor: colors.primary[600] }}
           onPress={onClose}
         >
-          <Text className='text-[13px] font-semibold text-white'>
+          <Text className='text-[13px] font-semibold' style={{ color: colors.text.inverse }}>
             {STRENGTH_CURVE_PICKER_COPY.doneLabel}
           </Text>
         </Pressable>

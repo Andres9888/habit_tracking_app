@@ -11,10 +11,11 @@ import { TierPickerTile } from './TierPickerTile';
 interface Props {
   selected: AlgorithmMode;
   onSelect: (mode: AlgorithmMode) => void;
+  lockedModes?: readonly AlgorithmMode[];
   scale?: number;
 }
 
-export function TierPickerRow({ selected, onSelect, scale = 1 }: Props) {
+export function TierPickerRow({ selected, onSelect, lockedModes = [], scale = 1 }: Props) {
   const reduceMotion = useReduceMotion();
   return (
     <View className='flex-row mx-4' style={{ gap: 10 * scale }}>
@@ -26,6 +27,7 @@ export function TierPickerRow({ selected, onSelect, scale = 1 }: Props) {
         >
           <TierPickerTile
             isSelected={mode === selected}
+            locked={lockedModes.includes(mode)}
             mode={mode}
             scale={scale}
             style={MODE_STYLES[mode]}

@@ -16,7 +16,7 @@ export interface ModeStyle {
 
 export const MODE_STYLES: Record<AlgorithmMode, ModeStyle> = {
   forgiving: {
-    curveColor: '#D97A3A',
+    curveColor: colors.tone.orange.text,
     curveTint: 'rgba(217,122,58,0.12)',
     iconColor: colors.tone.orange.text,
     iconTileBackground: colors.tone.orange.bg,
@@ -30,7 +30,7 @@ export const MODE_STYLES: Record<AlgorithmMode, ModeStyle> = {
     iconColor: colors.primary[700],
     iconTileBackground: colors.primary[100],
     tierPillBg: colors.primary[100],
-    tierPillFg: '#086148',
+    tierPillFg: colors.primary[700],
     Icon: TrendingUp,
   },
   strict: {
@@ -39,7 +39,7 @@ export const MODE_STYLES: Record<AlgorithmMode, ModeStyle> = {
     iconColor: colors.premium[600],
     iconTileBackground: '#EEE7FA',
     tierPillBg: '#EEE7FA',
-    tierPillFg: '#3F2F75',
+    tierPillFg: colors.premium[700],
     Icon: Mountain,
   },
 };

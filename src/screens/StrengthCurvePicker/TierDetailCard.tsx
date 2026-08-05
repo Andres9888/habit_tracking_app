@@ -1,18 +1,27 @@
-/** TierDetailCard — explainer card for the currently selected tier (Option B). */
-import { Text, View } from 'react-native';
+/** TierDetailCard — selected tier explainer. */
+import { Lock } from 'lucide-react-native';
+import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { TIER_COPY } from './StrengthCurvePicker.copy';
+import { STRENGTH_CURVE_PICKER_COPY, TIER_COPY } from './StrengthCurvePicker.copy';
 import { MODE_STYLES } from './strengthCurveModeStyles';
 
-export function TierDetailCard({ mode, scale = 1 }: { mode: AlgorithmMode; scale?: number }) {
+interface Props {
+  mode: AlgorithmMode;
+  isPremium: boolean;
+  onUpgradePress: () => void;
+  scale?: number;
+}
+
+export function TierDetailCard({ mode, isPremium, onUpgradePress, scale = 1 }: Props) {
   const { colors } = useThemeColors();
   const reduceMotion = useReduceMotion();
   const tier = TIER_COPY[mode];
   const style = MODE_STYLES[mode];
-  const accent = style.curveColor;
+  const TierIcon = style.Icon;
+  const showPremiumUpsell = mode === 'strict' && !isPremium;
 
   return (
     <Animated.View
@@ -21,8 +30,8 @@ export function TierDetailCard({ mode, scale = 1 }: { mode: AlgorithmMode; scale
       className='mx-4 rounded-2xl'
       style={{
         backgroundColor: colors.card,
-        borderColor: colors.border,
-        borderLeftColor: accent,
+        borderColor: colors.cardBorder,
+        borderLeftColor: style.curveColor,
         borderLeftWidth: 4,
         borderTopWidth: 1,
         borderRightWidth: 1,
@@ -36,7 +45,7 @@ export function TierDetailCard({ mode, scale = 1 }: { mode: AlgorithmMode; scale
           className='flex-row items-center rounded-full'
           style={{ backgroundColor: style.tierPillBg, gap: 4 * scale, paddingHorizontal: 8 * scale, paddingVertical: 2 * scale }}
         >
-          <Text style={{ fontSize: 13 * scale }}>{tier.emoji}</Text>
+          <TierIcon color={style.tierPillFg} size={12 * scale} strokeWidth={2.25} />
           <Text className='font-bold' style={{ color: style.tierPillFg, fontSize: 11.5 * scale }}>
             {tier.detailHeading}
           </Text>
@@ -55,7 +64,7 @@ export function TierDetailCard({ mode, scale = 1 }: { mode: AlgorithmMode; scale
             className='rounded-full'
             style={{
               backgroundColor: colors.gray[100],
-              borderColor: colors.border,
+              borderColor: colors.cardBorder,
               borderWidth: 1,
               paddingHorizontal: 8 * scale,
               paddingVertical: 2 * scale,
@@ -67,6 +76,24 @@ export function TierDetailCard({ mode, scale = 1 }: { mode: AlgorithmMode; scale
           </View>
         ))}
       </View>
+      {showPremiumUpsell ? (
+        <View className='rounded-xl' style={{ backgroundColor: colors.status.premiumLight, gap: 4 * scale, marginTop: 10 * scale, padding: 8 * scale }}>
+          <View className='flex-row items-center' style={{ gap: 6 * scale }}>
+            <Lock color={colors.status.premiumText} size={12 * scale} strokeWidth={2.25} />
+            <Text className='font-semibold' style={{ color: colors.status.premiumText, fontSize: 11 * scale }}>
+              {STRENGTH_CURVE_PICKER_COPY.premiumComplexLockedLabel}
+            </Text>
+          </View>
+          <Text style={{ color: colors.status.premiumText, fontSize: 11 * scale, lineHeight: 15 * scale }}>
+            {STRENGTH_CURVE_PICKER_COPY.premiumComplexNote}
+          </Text>
+          <Pressable accessibilityHint='Open premium options' accessibilityRole='button' onPress={onUpgradePress}>
+            <Text className='font-semibold' style={{ color: colors.status.premium, fontSize: 11 * scale }}>
+              {STRENGTH_CURVE_PICKER_COPY.premiumComplexCta}
+            </Text>
+          </Pressable>
+        </View>
+      ) : null}
     </Animated.View>
   );
 }

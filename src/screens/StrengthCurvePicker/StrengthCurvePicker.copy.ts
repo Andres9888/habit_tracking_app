@@ -4,9 +4,13 @@ import type { AlgorithmMode } from '@/components/AlgorithmPicker';
 export const STRENGTH_CURVE_PICKER_COPY = {
   headerTitle: 'Habit strength',
   doneLabel: 'Done',
-  heroTitle: 'Strength fills like this.',
-  heroSubtitle: 'Check in to grow it. Miss a day and it dips.',
+  heroTitle: 'Build a habit that sticks.',
+  heroSubtitle: 'Strength grows with check-ins and dips when you skip.',
   pickerSectionLabel: 'What kind of habit is this?',
+  premiumComplexLockedLabel: 'Premium',
+  premiumComplexNote:
+    'Complex uses deeper decay modeling for long routines, so your score reflects real consistency.',
+  premiumComplexCta: 'Unlock Complex with Premium',
   freshStartLabel: 'Fresh start',
   automaticLabel: 'Automatic',
   checkInLabel: 'Check in',
@@ -14,7 +18,6 @@ export const STRENGTH_CURVE_PICKER_COPY = {
 } as const;
 
 export interface TierCopy {
-  emoji: string;
   tierName: string;
   durationPerDay: string;
   formationWeeks: string;
@@ -32,7 +35,6 @@ export interface TierCopy {
 
 export const TIER_COPY: Record<AlgorithmMode, TierCopy> = {
   forgiving: {
-    emoji: '⚡',
     tierName: 'Simple',
     durationPerDay: 'seconds daily',
     formationWeeks: '~2.5 wk',
@@ -45,12 +47,11 @@ export const TIER_COPY: Record<AlgorithmMode, TierCopy> = {
     dipPercent: '−3%',
     detailHeading: 'Simple habit',
     description:
-      'A quick action that takes seconds. Forms fast and forgives slips.',
+      'Quick actions you can do in seconds. Fast momentum, forgiving when life gets busy.',
     exampleChips: ['💧 Drink water', '🪥 Floss', '💊 Vitamins', '🌅 Make bed'],
   },
   balanced: {
-    emoji: '🌱',
-    tierName: 'Regular',
+    tierName: 'Average',
     durationPerDay: '5-15 min',
     formationWeeks: '~9 wk',
     formationDays: '66d',
@@ -60,13 +61,12 @@ export const TIER_COPY: Record<AlgorithmMode, TierCopy> = {
     automaticMilestone: 'DAY 66 ✨',
     fillPercent: '+1.5%',
     dipPercent: '−5%',
-    detailHeading: 'Regular habit',
+    detailHeading: 'Average habit',
     description:
-      'A daily action that takes 5–15 minutes. Forms steadily and bounces back from honest setbacks.',
+      'A 5-15 minute daily routine. Steady progress with enough flexibility to recover from misses.',
     exampleChips: ['📖 Read 10 min', '🚶 Daily walk', '🧘 Meditate', '✏️ Journal'],
   },
   strict: {
-    emoji: '🏔️',
     tierName: 'Complex',
     durationPerDay: '30+ min',
     formationWeeks: '~4 mo',
@@ -79,7 +79,7 @@ export const TIER_COPY: Record<AlgorithmMode, TierCopy> = {
     dipPercent: '−8%',
     detailHeading: 'Complex habit',
     description:
-      'A big commitment that takes 30+ minutes. Months to build, but the habit goes deeper.',
+      'High-effort routines (30+ min) that take longer to automate, but create deeper behavior change.',
     exampleChips: ['🏃 Run 5K', '✍️ Write daily', '💪 Workout', '🧘 30-min meditate'],
   },
 };
