@@ -4,10 +4,10 @@ import type { HabitSortMode } from '../../features/habits/types';
 export type SortFamily = 'manual' | 'name' | 'strength' | 'streak';
 
 export const SORT_FAMILIES: { key: SortFamily; label: string }[] = [
-  { key: 'manual', label: 'Custom' },
+  { key: 'manual', label: 'Manual' },
   { key: 'name', label: 'Name' },
   { key: 'strength', label: 'Strength' },
-  { key: 'streak', label: 'Streak' },
+  { key: 'streak', label: 'Chain' },
 ];
 
 type SortableFamily = Exclude<SortFamily, 'manual'>;

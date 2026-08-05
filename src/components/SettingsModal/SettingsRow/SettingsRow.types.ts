@@ -16,4 +16,6 @@ export interface SettingsRowProps {
   showChevron?: boolean;
   /** Override haptic: toggle→Medium, selection→Selection, navigation→Light */
   hapticStyle?: 'light' | 'medium' | 'heavy' | 'selection';
+  /** Override the title color (e.g. destructive rows). Defaults to primary text. */
+  labelColor?: string;
 }

@@ -28,6 +28,7 @@ export function renderSettingsMainViewContent(
           isPremium={props.isPremium}
           onBack={() => props.setView('settings')}
           onClose={props.handleClose}
+          onExportHabitsData={props.onExportHabitsData}
           onPremiumUpsell={props.onPremiumUpsell}
         />
       );

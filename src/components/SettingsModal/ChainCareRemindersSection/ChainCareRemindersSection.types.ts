@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-export interface StreakRemindersSectionProps {
+export interface ChainCareRemindersSectionProps {
   enabled: boolean;
   reminderTime: string;
   isPremium: boolean;

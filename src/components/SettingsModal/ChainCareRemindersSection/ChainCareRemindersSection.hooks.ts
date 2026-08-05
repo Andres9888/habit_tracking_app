@@ -1,4 +1,4 @@
-/** StreakRemindersSection hooks — time picker state + expand animations */
+/** ChainCareRemindersSection hooks — time picker state + expand animations */
 import { useCallback, useState } from 'react';
 import type { LayoutChangeEvent } from 'react-native';
 import { Platform } from 'react-native';

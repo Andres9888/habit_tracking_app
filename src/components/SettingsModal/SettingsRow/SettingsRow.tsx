@@ -9,7 +9,6 @@ import { SettingsRowContent } from './components/SettingsRowContent';
 import { useSettingsRowDivider } from './SettingsRowDivider.provider';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { useFocusRing } from '../../../utils/accessibility';
-import { useSettingsSearch, rowMatchesQuery } from '../search';
 import type { SettingsRowProps } from './SettingsRow.types';
 
 export function SettingsRow({
@@ -25,6 +24,7 @@ export function SettingsRow({
   rightAccessory,
   showChevron,
   hapticStyle,
+  labelColor,
 }: SettingsRowProps) {
   const { colors: themeColors, isDark } = useThemeColors();
   const colors = getSettingsRowColors(isDark);
@@ -34,12 +34,7 @@ export function SettingsRow({
     { hapticStyle, onPress, onToggle },
     triggerPulse
   );
-  const { query } = useSettingsSearch();
-  const rowVisible = rowMatchesQuery(query, label);
-  const showTopBorder = useSettingsRowDivider(rowVisible);
-
-  // Live search filter: hide rows whose label doesn't match the active query.
-  if (!rowVisible) return null;
+  const showTopBorder = useSettingsRowDivider(true);
 
   const isInteractiveInfo =
     type === 'info' && (!!rightAccessory || !!showChevron || !!onPress);
@@ -48,6 +43,7 @@ export function SettingsRow({
       badge={badge}
       colors={colors}
       icon={icon}
+      labelColor={labelColor}
       iconBackgroundColor={iconBackgroundColor}
       isInteractiveInfo={isInteractiveInfo}
       label={label}

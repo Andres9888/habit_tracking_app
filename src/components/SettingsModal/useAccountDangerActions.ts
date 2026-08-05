@@ -12,6 +12,8 @@ export function useAccountDangerActions() {
   const deleteCurrentUserData = useMutation(api.users.deleteCurrentUserData);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [isDeleteSheetOpen, setIsDeleteSheetOpen] = useState(false);
+  const [deleteAcknowledged, setDeleteAcknowledged] = useState(false);
 
   const handleSignOut = useCallback(() => {
     Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
@@ -31,40 +33,41 @@ export function useAccountDangerActions() {
     ]);
   }, [signOut]);
 
-  const handleDeleteAccount = useCallback(() => {
-    Alert.alert(
-      'Delete Account',
-      'This will permanently delete your account and all your data. This action cannot be undone.',
-      [
-        { style: 'cancel', text: 'Cancel' },
-        {
-          onPress: () => {
-            setIsDeletingAccount(true);
-            void (async () => {
-              try {
-                await deleteCurrentUserData({});
-                await user?.delete();
-              } catch {
-                Alert.alert(
-                  'Error',
-                  'Failed to delete account. Please try again.'
-                );
-              } finally {
-                setIsDeletingAccount(false);
-              }
-            })();
-          },
-          style: 'destructive',
-          text: 'Delete',
-        },
-      ]
-    );
-  }, [deleteCurrentUserData, user]);
+  const openDeleteSheet = useCallback(() => {
+    setDeleteAcknowledged(false);
+    setIsDeleteSheetOpen(true);
+  }, []);
+
+  const closeDeleteSheet = useCallback(() => {
+    if (isDeletingAccount) return;
+    setIsDeleteSheetOpen(false);
+  }, [isDeletingAccount]);
+
+  const confirmDeleteAccount = useCallback(() => {
+    if (!deleteAcknowledged) return;
+    setIsDeletingAccount(true);
+    void (async () => {
+      try {
+        await deleteCurrentUserData({});
+        await user?.delete();
+        setIsDeleteSheetOpen(false);
+      } catch {
+        Alert.alert('Error', 'Failed to delete account. Please try again.');
+      } finally {
+        setIsDeletingAccount(false);
+      }
+    })();
+  }, [deleteAcknowledged, deleteCurrentUserData, user]);
 
   return {
     isSigningOut,
     isDeletingAccount,
     handleSignOut,
-    handleDeleteAccount,
+    handleDeleteAccount: openDeleteSheet,
+    isDeleteSheetOpen,
+    closeDeleteSheet,
+    deleteAcknowledged,
+    setDeleteAcknowledged,
+    confirmDeleteAccount,
   };
 }

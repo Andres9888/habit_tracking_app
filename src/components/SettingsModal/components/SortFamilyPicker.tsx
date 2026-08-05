@@ -48,7 +48,7 @@ export function SortFamilyPicker({
             key={key}
             accessibilityLabel={label}
             accessibilityRole='radio'
-            accessibilityState={{ selected: on }}
+            accessibilityState={{ checked: on }}
             className='flex-1 items-center justify-center rounded-lg py-2'
             hitSlop={4}
             style={{ backgroundColor: on ? selectedBg : 'transparent' }}

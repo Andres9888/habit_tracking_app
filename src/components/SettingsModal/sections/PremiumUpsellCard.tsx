@@ -1,56 +1,91 @@
-/** PremiumUpsellCard — editorial forest conversion card for non-subscribers */
+/** PremiumUpsellCard — quiet gold-tinted plan card (below controls, non-subscribers) */
 import { Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { shadows } from '@/theme';
-import { typography, fontWeights } from '@/theme/typography';
+import { fontFamilies, typography, fontWeights } from '@/theme/typography';
 import { airy } from '@/theme/airyScale';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { premiumHero } from '../theme/premiumHero';
-import { PremiumUpsellContent } from './PremiumUpsellContent';
+import { getRaisedSurface } from '../raisedSurface';
 
 interface PremiumUpsellCardProps {
   onUpgrade?: () => void;
 }
 
 export function PremiumUpsellCard({ onUpgrade }: PremiumUpsellCardProps) {
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
+  const goldBorder = isDark ? '#5C5230' : '#E8D48A';
+  const surface = getRaisedSurface(isDark);
 
   return (
-    <View className='gap-2'>
+    <LinearGradient
+      className='overflow-hidden'
+      colors={[themeColors.status.warningLight, surface]}
+      end={{ x: 0, y: 1 }}
+      start={{ x: 0, y: 0 }}
+      style={{
+        borderColor: goldBorder,
+        borderRadius: airy.cardRadius,
+        borderWidth: 1,
+        padding: 16,
+        ...shadows.card,
+      }}
+    >
       <Text
-        className='px-1'
         style={{
           ...typography.caption,
           fontWeight: fontWeights.semibold,
           textTransform: 'uppercase',
-          letterSpacing: 0.7,
+          letterSpacing: 0.8,
           color: themeColors.text.secondary,
         }}
       >
-        Subscription
+        Chain Day Premium
+      </Text>
+      <Text
+        className='mt-1.5'
+        style={{
+          fontFamily: fontFamilies.serif,
+          fontSize: 18,
+          fontWeight: fontWeights.bold,
+          letterSpacing: -0.3,
+          color: themeColors.text.primary,
+        }}
+      >
+        A little more room to grow
+      </Text>
+      <Text
+        className='mb-3.5 mt-1.5'
+        style={{ ...typography.bodySmall, color: themeColors.text.secondary }}
+      >
+        Unlimited habits, calendar themes, and gentle extras — without turning
+        Settings into a storefront.
       </Text>
       <AnimatedPressable
         accessibilityHint='Opens premium upgrade screen'
-        accessibilityLabel='Go Premium'
+        accessibilityLabel='See Premium'
         accessibilityRole='button'
         onPress={onUpgrade}
       >
-        <LinearGradient
-          className='overflow-hidden rounded-2xl px-4 py-4'
-          colors={premiumHero.gradient}
-          end={{ x: 1, y: 1 }}
-          start={{ x: 0, y: 0 }}
+        <View
+          className='w-full items-center justify-center'
           style={{
-            borderColor: premiumHero.border,
-            borderRadius: airy.cardRadius,
-            borderWidth: 1,
-            ...shadows.card,
+            backgroundColor: themeColors.status.success,
+            borderRadius: airy.buttonRadius,
+            height: 48,
           }}
         >
-          <PremiumUpsellContent />
-        </LinearGradient>
+          <Text
+            style={{
+              ...typography.body,
+              fontWeight: fontWeights.semibold,
+              color: '#FFFFFF',
+            }}
+          >
+            See Premium
+          </Text>
+        </View>
       </AnimatedPressable>
-    </View>
+    </LinearGradient>
   );
 }
