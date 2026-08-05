@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Detail — Design-System Alignment: Before / After</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Literata:wght@600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root{
+    /* ---- LIGHT palette (src/theme/darkColors.ts lightColors) ---- */
+    --l-bg:#F5F1ED; --l-card:#EDEAE5; --l-cardElevated:#FFFFFF; --l-border:#DDD8D2;
+    --l-accent:#059669; --l-text-primary:#2D2A26; --l-text-secondary:#6B6560; --l-text-tertiary:#6E6660;
+    --l-primary100:#D1FAE5; --l-primary600:#059669; --l-primary700:#047857;
+
+    /* ---- DARK palette ---- */
+    --d-bg:#111827; --d-card:#1F2937; --d-cardElevated:#1F2937; --d-border:#374151;
+    --d-accent:#34D399; --d-text-primary:#F9FAFB; --d-text-secondary:#9CA3AF; --d-text-tertiary:#8E95A2;
+    --d-primary100:#064E3B; --d-primary600:#059669; --d-primary700:#A7F3D0;
+
+    --font-display:'Literata', serif;
+    --font-text:'DM Sans', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:var(--font-text);
+    background:#0b0d12;
+    color:#e8e6e3;
+    padding:40px 24px 80px;
+  }
+  h1{
+    font-family:var(--font-display);
+    font-size:30px;
+    font-weight:700;
+    text-align:center;
+    color:#fff;
+    letter-spacing:-0.3px;
+  }
+  .subtitle{
+    text-align:center;
+    color:#9aa1ac;
+    font-size:14px;
+    margin-top:8px;
+    max-width:680px;
+    margin-left:auto;
+    margin-right:auto;
+    line-height:1.5;
+  }
+  .controls{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin:28px 0 8px;
+    flex-wrap:wrap;
+  }
+  .seg{
+    display:inline-flex;
+    background:#1b1f28;
+    border:1px solid #2a3040;
+    border-radius:999px;
+    padding:4px;
+    gap:2px;
+  }
+  .seg button{
+    appearance:none;
+    border:none;
+    background:transparent;
+    color:#9aa1ac;
+    font-family:var(--font-text);
+    font-weight:600;
+    font-size:13px;
+    padding:8px 16px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+  }
+  .seg button.active{
+    background:#059669;
+    color:#fff;
+  }
+
+  .stage-label{
+    text-align:center;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:#6b7280;
+    margin:36px 0 14px;
+  }
+
+  .compare{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:28px;
+    max-width:900px;
+    margin:0 auto;
+  }
+  @media (max-width:820px){
+    .compare{grid-template-columns:1fr;}
+  }
+
+  .col-head{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    margin-bottom:14px;
+  }
+  .col-head .tag{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.6px;
+    text-transform:uppercase;
+    padding:4px 10px;
+    border-radius:999px;
+  }
+  .tag.before{ background:rgba(248,113,113,0.15); color:#fca5a5; border:1px solid rgba(248,113,113,0.35); }
+  .tag.after{ background:rgba(52,211,153,0.15); color:#6ee7b7; border:1px solid rgba(52,211,153,0.35); }
+
+  /* ---------- Phone frame ---------- */
+  .phone{
+    width:100%;
+    max-width:380px;
+    margin:0 auto;
+    border-radius:40px;
+    padding:14px;
+    background:#000;
+    box-shadow:0 30px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04);
+  }
+  .screen{
+    border-radius:30px;
+    overflow:hidden;
+    height:640px;
+    overflow-y:auto;
+    position:relative;
+    -ms-overflow-style:none;
+    scrollbar-width:none;
+  }
+  .screen::-webkit-scrollbar{display:none;}
+
+  /* Header */
+  .sheet-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 20px 6px;
+  }
+  .header-btn{
+    width:40px;height:40px;
+    display:flex;align-items:center;justify-content:center;
+    border-width:1px;
+    border-style:solid;
+  }
+  .header-btn.before{ border-radius:14px; } /* borderRadius.xl clamped visually */
+  .header-btn.after{ border-radius:999px; } /* borderRadius.full */
+  .header-title{
+    font-family:var(--font-text);
+    font-weight:700;
+    font-size:15px;
+  }
+
+  /* Hero card */
+  .hero-card{
+    margin:8px 20px 0;
+    border-radius:24px;
+    border-width:1px;
+    border-style:solid;
+    overflow:hidden;
+  }
+  .hero-top{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:16px;
+  }
+  .hero-icon{
+    width:52px;height:52px;border-radius:16px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:24px;
+    flex-shrink:0;
+  }
+  .hero-name-block{ flex:1; min-width:0; }
+  .hero-name{ font-family:var(--font-display); font-weight:700; }
+  .hero-name.before{ font-size:19px; letter-spacing:-0.2px; }
+  .hero-name.after{ font-size:20px; letter-spacing:-0.2px; }
+  .hero-context{ font-size:12px; margin-top:3px; display:flex; gap:8px; align-items:center; }
+  .hero-total{ text-align:right; flex-shrink:0; }
+  .hero-total .num.before{ font-family:var(--font-display); font-weight:700; font-size:22px; line-height:22px; }
+  .hero-total .num.after{ font-family:var(--font-display); font-weight:700; font-size:22px; line-height:28px; }
+  .hero-total .lbl.before{ font-size:10.5px; font-weight:600; letter-spacing:0.8px; text-transform:uppercase; margin-top:2px; }
+  .hero-total .lbl.after{ font-size:12px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; margin-top:2px; }
+
+  .complete-bar{
+    margin:0 16px 16px;
+    border-radius:16px;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    font-weight:600;
+  }
+  .complete-bar.before{ height:46px; font-size:17px; }
+  .complete-bar.after{ height:48px; font-size:17px; letter-spacing:0.08px; }
+
+  /* tabs */
+  .tabs{
+    display:flex;
+    gap:6px;
+    padding:10px 20px;
+  }
+  .tab-btn{
+    flex:1;
+    text-align:center;
+    padding:9px 0;
+    border-radius:12px;
+    font-weight:500;
+  }
+  .tab-btn.before{ font-size:10px; letter-spacing:0.1px; }
+  .tab-btn.after{ font-size:10px; letter-spacing:0.1px; }
+
+  /* section cards */
+  .section-card{
+    border-radius:16px;
+    border-width:1px;
+    border-style:solid;
+    padding:16px;
+  }
+  .section-card + .section-card{ margin-top:16px; }
+  .sec-gap-before{ margin:16px 20px 0; }
+  .sec-gap-before + .sec-gap-before{ margin-top:16px; }
+  .sec-gap-before.goal, .sec-gap-before.strength{ margin-top:20px; }
+  .sec-gap-after{ margin:16px 20px 0; }
+
+  .sec-header{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:12px;
+  }
+  .overline{
+    font-size:12px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase;
+  }
+  .pill{
+    padding:6px 12px; border-radius:999px; font-size:13px; font-weight:600;
+  }
+  .badge-caption{ font-size:13px; font-weight:700; }
+  .stage-badge-before{ font-size:9px; font-weight:700; padding:3px 8px; border-radius:999px; }
+  .stage-badge-after{ font-size:10px; font-weight:700; padding:3px 8px; border-radius:999px; }
+
+  .fake-chart{
+    height:78px; border-radius:12px;
+    background:linear-gradient(180deg, rgba(52,211,153,0.18), rgba(52,211,153,0.02));
+    display:flex; align-items:flex-end; gap:4px; padding:8px; margin-bottom:10px;
+  }
+  .fake-chart span{ flex:1; border-radius:3px 3px 0 0; background:currentColor; opacity:.75;}
+
+  .cal-grid{
+    display:grid; grid-template-columns:repeat(7,1fr); gap:5px; margin-top:2px;
+  }
+  .cal-grid div{
+    aspect-ratio:1; border-radius:6px;
+  }
+
+  .milestones{
+    display:flex; justify-content:space-between; margin-top:12px;
+  }
+  .milestones .dot{
+    width:9px;height:9px;border-radius:999px;
+  }
+
+  .callout{
+    max-width:900px;
+    margin:22px auto 0;
+    font-size:12.5px;
+    line-height:1.55;
+    color:#aeb4bd;
+    background:#12151c;
+    border:1px solid #232838;
+    border-radius:12px;
+    padding:14px 16px;
+  }
+  .callout b{ color:#fff; }
+  .callout code{ font-family:var(--font-mono); font-size:11.5px; background:rgba(255,255,255,0.06); padding:1px 5px; border-radius:4px; }
+
+  .legend{
+    max-width:900px; margin:36px auto 0; display:grid; grid-template-columns:1fr 1fr; gap:14px;
+  }
+  @media (max-width:820px){ .legend{ grid-template-columns:1fr; } }
+  .legend .card{
+    background:#12151c; border:1px solid #232838; border-radius:14px; padding:16px 18px;
+  }
+  .legend .card h3{
+    font-family:var(--font-text); font-size:13px; font-weight:700; color:#fff; margin-bottom:8px;
+    display:flex; align-items:center; gap:6px;
+  }
+  .legend .card ul{ list-style:none; display:flex; flex-direction:column; gap:6px; }
+  .legend .card li{ font-size:12.5px; color:#9aa1ac; padding-left:14px; position:relative; }
+  .legend .card li::before{ content:'—'; position:absolute; left:0; color:#4b5563; }
+  .legend .card li b{ color:#d7dae0; font-weight:600; }
+</style>
+</head>
+<body>
+
+<h1>Habit Detail — Design-System Alignment</h1>
+<p class="subtitle">Before vs. after the token-canon cleanup (F1–F9). No behavior changes — same data, same layout intent, drifted values pulled back onto <code style="font-family:var(--font-mono);background:rgba(255,255,255,.08);padding:1px 6px;border-radius:4px;">src/theme</code> tokens.</p>
+
+<div class="controls">
+  <div class="seg" id="theme-seg">
+    <button class="active" data-theme="light">☀️ Light</button>
+    <button data-theme="dark">🌙 Dark</button>
+  </div>
+</div>
+
+<!-- ================= HERO + TABS ================= -->
+<div class="stage-label">Hero card, header button &amp; complete bar</div>
+<div class="compare">
+  <div>
+    <div class="col-head"><span class="tag before">Before</span></div>
+    <div class="phone"><div class="screen" id="hero-before"></div></div>
+  </div>
+  <div>
+    <div class="col-head"><span class="tag after">After</span></div>
+    <div class="phone"><div class="screen" id="hero-after"></div></div>
+  </div>
+</div>
+<div class="callout">
+  <b>F1</b> semantic <code>cardElevated</code> token replaces <code>isDark ? colors.card : palette.light.cardElevated</code> (pixel-identical, just removes the branch) ·
+  <b>F2</b> card shadow <code>shadows.subtle</code> → <code>shadows.card</code> (opacity 0.04→0.06, radius 3→8 — slightly more lift) ·
+  <b>F3</b> habit name 19px → 20px (<code>heading3</code>), "TOTAL" 10.5px hand-rolled → 12px <code>overline</code> ·
+  <b>F6</b> complete bar 46px → 48px (<code>airy.controlHeight</code>), label now full <code>typography.button</code> ·
+  <b>F7</b> header icon button <code>borderRadius.xl</code> (clamped-circle bug) → <code>borderRadius.full</code>, 40px via <code>componentSpacing.iconButton.size</code>.
+</div>
+
+<!-- ================= SECTION CARDS ================= -->
+<div class="stage-label">Calendar / Goal / Strength sections</div>
+<div class="compare">
+  <div>
+    <div class="col-head"><span class="tag before">Before</span></div>
+    <div class="phone"><div class="screen" id="sections-before"></div></div>
+  </div>
+  <div>
+    <div class="col-head"><span class="tag after">After</span></div>
+    <div class="phone"><div class="screen" id="sections-after"></div></div>
+  </div>
+</div>
+<div class="callout">
+  <b>F4</b> section rhythm unified: Calendar was already <code>mt-4</code> (16px), Goal/Strength <code>mt-5</code> (20px) → all three now <code>mt-4</code> = <code>airy.sectionGap</code> ·
+  <b>F5</b> three different header treatments (accent overline + pill / secondary overline + badge / none) → shared <code>DetailSectionHeader</code>: overline title in <code>text.secondary</code>, optional right meta slot. Calendar gains a "History" header so all three cards scan the same way. Accent color moves off the Goal title and stays only on the Adjust pill.
+</div>
+
+<div class="legend">
+  <div class="card">
+    <h3>🔧 Phase 1 — mechanical, pixel-identical</h3>
+    <ul>
+      <li><b>F1</b> add <code>cardElevated</code> to <code>darkColors.ts</code>, replace 4 ternaries</li>
+      <li><b>F7</b> HeaderButton → <code>borderRadius.full</code> + token size</li>
+      <li><b>F6</b> complete-button label → <code>typography.button</code></li>
+      <li><b>F8</b> tab label → full <code>typography.caption</code> spread</li>
+      <li><b>F8</b> derive <code>TAB_BAR_HEIGHT</code>, drop magic <code>52</code> in scrollspy</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🎨 Phase 2–3 — visual (screenshot-verify)</h3>
+    <ul>
+      <li><b>F4</b> section gaps → 16px everywhere</li>
+      <li><b>F2</b> section-card shadow <code>subtle</code> → <code>card</code></li>
+      <li><b>F3</b> hero numeral/label/name/badge back on type scale</li>
+      <li><b>F6</b> complete bar 46→48px, check icon 15→16px</li>
+      <li><b>F5</b> shared <code>DetailSectionHeader</code> across all 3 cards</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+lucide.createIcons();
+
+const PALETTES = {
+  light: {
+    bg:'var(--l-bg)', card:'var(--l-card)', cardElevated:'var(--l-cardElevated)', border:'var(--l-border)',
+    accent:'var(--l-accent)', textPrimary:'var(--l-text-primary)', textSecondary:'var(--l-text-secondary)',
+    textTertiary:'var(--l-text-tertiary)', primary100:'var(--l-primary100)', primary600:'var(--l-primary600)', primary700:'var(--l-primary700)'
+  },
+  dark: {
+    bg:'var(--d-bg)', card:'var(--d-card)', cardElevated:'var(--d-cardElevated)', border:'var(--d-border)',
+    accent:'var(--d-accent)', textPrimary:'var(--d-text-primary)', textSecondary:'var(--d-text-secondary)',
+    textTertiary:'var(--d-text-tertiary)', primary100:'var(--d-primary100)', primary600:'var(--d-primary600)', primary700:'var(--d-primary700)'
+  }
+};
+
+const SHADOW_SUBTLE = '0 1px 3px rgba(45,42,38,0.04)';
+const SHADOW_CARD = '0 2px 8px rgba(45,42,38,0.06)';
+
+function heroHTML(mode){
+  const before = mode === 'before';
+  return `
+  <div style="background:var(--bg);height:100%;">
+    <div class="sheet-header" style="color:var(--text-primary)">
+      <div class="header-btn ${before?'before':'after'}" style="background:var(--card);border-color:var(--border);color:var(--text-primary);">
+        <i data-lucide="x" style="width:18px;height:18px;"></i>
+      </div>
+      <div class="header-title" style="color:var(--text-primary);">Habit</div>
+      <div class="header-btn ${before?'before':'after'}" style="background:var(--card);border-color:var(--border);color:var(--text-primary);">
+        <i data-lucide="more-horizontal" style="width:18px;height:18px;"></i>
+      </div>
+    </div>
+
+    <div class="hero-card" style="background:${before ? '' : 'var(--cardElevated)'};background-color:${before ? 'var(--cardElevated-ternary)' : 'var(--cardElevated)'};border-color:var(--border); box-shadow:${before ? SHADOW_SUBTLE : SHADOW_CARD};">
+      <div class="hero-top">
+        <div class="hero-icon" style="background:var(--primary100);color:var(--primary700);">🏃</div>
+        <div class="hero-name-block">
+          <div class="hero-name ${before?'before':'after'}" style="color:var(--text-primary);font-family:var(--font-display);">Morning Run</div>
+          <div class="hero-context" style="color:var(--text-secondary);">
+            <span>🔥 12 day streak</span><span style="opacity:.5">·</span><span>best 21</span>
+          </div>
+        </div>
+        <div class="hero-total">
+          <div class="num ${before?'before':'after'}" style="color:var(--text-primary);">184</div>
+          <div class="lbl ${before?'before':'after'}" style="color:var(--text-tertiary);">total</div>
+        </div>
+      </div>
+      <div class="complete-bar ${before?'before':'after'}" style="background:var(--primary600);color:#fff;">
+        <i data-lucide="check" style="width:${before?15:16}px;height:${before?15:16}px;"></i>
+        <span>Mark complete</span>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab-btn ${before?'before':'after'}" style="background:var(--primary100);color:var(--primary700);">CALENDAR</div>
+      <div class="tab-btn ${before?'before':'after'}" style="color:var(--text-secondary);">GOAL</div>
+      <div class="tab-btn ${before?'before':'after'}" style="color:var(--text-secondary);">STRENGTH</div>
+    </div>
+  </div>`;
+}
+
+function sectionCardHeader(mode, kind, colors){
+  // kind: calendar | goal | strength
+  const before = mode === 'before';
+  if (kind === 'calendar'){
+    if (before) return ''; // F5: no header before
+    return `<div class="sec-header">
+      <span class="overline" style="color:var(--text-secondary);">History</span>
+    </div>`;
+  }
+  if (kind === 'goal'){
+    return `<div class="sec-header">
+      <span class="overline" style="color:${before ? 'var(--accent)' : 'var(--text-secondary)'};">Streak goal</span>
+      <span class="pill" style="background:rgba(5,150,105,0.1);color:var(--accent);">Adjust</span>
+    </div>`;
+  }
+  // strength
+  return `<div class="sec-header">
+    <span class="overline" style="color:var(--text-secondary);">Strength</span>
+    <span class="badge-caption" style="color:#D97706;">🔥 Building · 62%</span>
+  </div>`;
+}
+
+function sectionsHTML(mode){
+  const before = mode === 'before';
+  const gapClass = before ? 'sec-gap-before' : 'sec-gap-after';
+  const shadow = before ? SHADOW_SUBTLE : SHADOW_CARD;
+  const cardBg = before ? 'var(--cardElevated-ternary)' : 'var(--cardElevated)';
+
+  const calendarCard = `
+    <div class="${gapClass}">
+      <div class="section-card" style="background:${cardBg};border-color:var(--border);box-shadow:${shadow};">
+        ${sectionCardHeader(mode,'calendar')}
+        <div class="cal-grid">
+          ${Array.from({length:21}).map((_,i)=>{
+            const filled = [1,2,3,5,6,9,10,11,13,14,17,18,20].includes(i);
+            return `<div style="background:${filled ? 'var(--accent)' : 'var(--border)'};opacity:${filled?0.85:0.35}"></div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>`;
+
+  const goalCard = `
+    <div class="${gapClass} goal">
+      <div class="section-card" style="background:${cardBg};border-color:var(--border);box-shadow:${shadow};">
+        ${sectionCardHeader(mode,'goal')}
+        <div style="font-family:var(--font-display);font-size:34px;font-weight:700;color:var(--text-primary);">12<span style="font-size:16px;font-weight:500;color:var(--text-secondary);"> / 21 days</span></div>
+        <div style="height:8px;border-radius:999px;background:var(--border);margin-top:10px;overflow:hidden;">
+          <div style="height:100%;width:57%;background:var(--accent);border-radius:999px;"></div>
+        </div>
+      </div>
+    </div>`;
+
+  const strengthCard = `
+    <div class="${gapClass} strength">
+      <div class="section-card" style="background:${cardBg};border-color:var(--border);box-shadow:${shadow};">
+        ${sectionCardHeader(mode,'strength')}
+        <div class="fake-chart" style="color:var(--accent);">
+          ${[30,45,38,55,48,62,58,70,64,78].map(h=>`<span style="height:${h}%;"></span>`).join('')}
+        </div>
+        <div class="milestones">
+          ${['🌱','🌿','🌳','🔥','🏆'].map((e,i)=>`<div class="dot" style="background:${i<=2?'var(--accent)':'var(--border)'};"></div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+
+  return `<div style="background:var(--bg);min-height:100%;padding-bottom:24px;">
+    <div style="padding:16px 20px 4px;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--text-tertiary);text-transform:uppercase;">Scrolled view</div>
+    ${calendarCard}${goalCard}${strengthCard}
+  </div>`;
+}
+
+function applyPaletteVars(el, mode){
+  const p = PALETTES[mode];
+  el.style.setProperty('--bg', p.bg);
+  el.style.setProperty('--card', p.card);
+  el.style.setProperty('--cardElevated', p.cardElevated);
+  // "before" ternary result: dark -> colors.card, light -> palette.light.cardElevated (#FFFFFF) — same visual outcome as the new token
+  el.style.setProperty('--cardElevated-ternary', mode === 'dark' ? p.card : '#FFFFFF');
+  el.style.setProperty('--border', p.border);
+  el.style.setProperty('--accent', p.accent);
+  el.style.setProperty('--text-primary', p.textPrimary);
+  el.style.setProperty('--text-secondary', p.textSecondary);
+  el.style.setProperty('--text-tertiary', p.textTertiary);
+  el.style.setProperty('--primary100', p.primary100);
+  el.style.setProperty('--primary600', p.primary600);
+  el.style.setProperty('--primary700', p.primary700);
+}
+
+function render(mode){
+  ['hero-before','hero-after','sections-before','sections-after'].forEach(id=>{
+    const el = document.getElementById(id);
+    applyPaletteVars(el, mode);
+  });
+  document.getElementById('hero-before').innerHTML = heroHTML('before');
+  document.getElementById('hero-after').innerHTML = heroHTML('after');
+  document.getElementById('sections-before').innerHTML = sectionsHTML('before');
+  document.getElementById('sections-after').innerHTML = sectionsHTML('after');
+  lucide.createIcons();
+}
+
+document.getElementById('theme-seg').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  document.querySelectorAll('#theme-seg button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render(btn.dataset.theme);
+});
+
+render('light');
+</script>
+</body>
+</html>
