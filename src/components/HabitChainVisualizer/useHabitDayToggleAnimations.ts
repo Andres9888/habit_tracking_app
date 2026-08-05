@@ -1,6 +1,8 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { Animated } from 'react-native';
 
+import { useForgeFlashMount } from './useForgeFlashMount';
+
 import {
   buildBreathingAnimation,
   buildCompletionAnimation,
@@ -24,6 +26,7 @@ export const useHabitDayToggleAnimations = ({
   const prevCompletedRef = useRef<boolean | null>(null);
   const prevDateRef = useRef<string | null>(null);
   const mountTimeRef = useRef(Date.now());
+  const { flashActive, setFlashMounted } = useForgeFlashMount();
 
   // Combine scale values using Animated.multiply
   const combinedScale = useMemo(
@@ -42,10 +45,11 @@ export const useHabitDayToggleAnimations = ({
     if (prevDateRef.current !== dateString) {
       forceValue(completion, completed ? 1 : 0);
       forceValue(forgeFlash, 0);
+      setFlashMounted(false);
       prevCompletedRef.current = completed;
       prevDateRef.current = dateString;
     }
-  }, [completed, dateString, completion, forgeFlash]);
+  }, [completed, dateString, completion, forgeFlash, setFlashMounted]);
 
   useEffect(() => {
     const prevCompleted = prevCompletedRef.current;
@@ -68,6 +72,7 @@ export const useHabitDayToggleAnimations = ({
       completed,
       forgeFlash,
       mountTime: mountTimeRef.current,
+      onActiveChange: setFlashMounted,
     });
 
     // Value changed - animate the transition
@@ -106,6 +111,7 @@ export const useHabitDayToggleAnimations = ({
         forgeFlashHandle.animation.stop();
       }
       forceValue(forgeFlash, 0);
+      setFlashMounted(false);
     };
   }, [completed]);
 
@@ -122,5 +128,5 @@ export const useHabitDayToggleAnimations = ({
     }
   }, [completed, isToday]);
 
-  return { buttonScale, combinedScale, completion, forgeFlash };
+  return { buttonScale, combinedScale, completion, flashActive, forgeFlash };
 };

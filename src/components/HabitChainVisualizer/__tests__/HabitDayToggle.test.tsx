@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { render } from '@testing-library/react-native';
+import { act, render } from '@testing-library/react-native';
 
 import { HabitDayToggle } from '../HabitDayToggle';
 import type { HabitDayToggleProps } from '../types';
@@ -57,6 +57,22 @@ function entriesWithBackground(
   return styles.filter((entry) => entry.backgroundColor === color);
 }
 
+const FORGE_FLASH_COLOR = '#FBBF24';
+
+function countNodesWithBackground(
+  tree: JsonNode | null,
+  color: string
+): number {
+  const nodes: JsonNode[] = [];
+  collectNodes(tree, nodes);
+  return nodes.filter((node) => {
+    const flat = StyleSheet.flatten(node.props?.style as StyleEntry) as
+      | StyleEntry
+      | undefined;
+    return flat?.backgroundColor === color;
+  }).length;
+}
+
 const baseProps: HabitDayToggleProps = {
   accentColor: '#3B82F6',
   accessibilityHint: 'Toggles completion',
@@ -98,5 +114,64 @@ describe('HabitDayToggle cellStyle attachment', () => {
     const styles = findCellFrameStyles(toJSON() as JsonNode);
 
     expect(entriesWithBackground(styles, '#FEF2F2').length).toBe(2);
+  });
+});
+
+/**
+ * Regression coverage for the stuck amber forge flash. The overlay opacity is
+ * driven by the native driver, so a dropped native update repaints nothing and
+ * the cell stays solid #FBBF24 forever. Three previous fixes pushed the reset
+ * through that same native channel and could not hold. The overlay must simply
+ * not exist in the tree unless a flash is running — an unmounted view cannot
+ * carry a stale native opacity.
+ */
+describe('HabitDayToggle forge flash overlay', () => {
+  it('does not mount the amber overlay on an uncompleted cell', () => {
+    const { toJSON } = render(<HabitDayToggle {...baseProps} />);
+
+    expect(
+      countNodesWithBackground(toJSON() as JsonNode, FORGE_FLASH_COLOR)
+    ).toBe(0);
+  });
+
+  it('does not mount the amber overlay on a completed cell at rest', () => {
+    const { toJSON } = render(<HabitDayToggle {...baseProps} completed />);
+
+    expect(
+      countNodesWithBackground(toJSON() as JsonNode, FORGE_FLASH_COLOR)
+    ).toBe(0);
+  });
+
+  it('drops the amber overlay after completed -> uncompleted', () => {
+    const { rerender, toJSON } = render(
+      <HabitDayToggle {...baseProps} completed />
+    );
+
+    rerender(<HabitDayToggle {...baseProps} completed={false} />);
+
+    expect(
+      countNodesWithBackground(toJSON() as JsonNode, FORGE_FLASH_COLOR)
+    ).toBe(0);
+  });
+
+  it('mounts the amber overlay for a post-hydration completion', () => {
+    jest.useFakeTimers();
+    try {
+      const { rerender, toJSON } = render(<HabitDayToggle {...baseProps} />);
+
+      // Past the 1500ms hydration window, so the flip counts as a user tap.
+      act(() => {
+        jest.advanceTimersByTime(2000);
+      });
+      act(() => {
+        rerender(<HabitDayToggle {...baseProps} completed />);
+      });
+
+      expect(
+        countNodesWithBackground(toJSON() as JsonNode, FORGE_FLASH_COLOR)
+      ).toBe(1);
+    } finally {
+      jest.useRealTimers();
+    }
   });
 });

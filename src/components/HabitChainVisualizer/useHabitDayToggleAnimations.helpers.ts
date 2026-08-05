@@ -20,6 +20,10 @@ interface ForgeFlashParams {
   completed: boolean;
   forgeFlash: Animated.Value;
   mountTime: number;
+  /** Mounts / unmounts the overlay. Opacity alone cannot be trusted: it is
+   * natively driven, so a dropped native update leaves the cell painted amber
+   * with no further value change to repaint it. */
+  onActiveChange: (active: boolean) => void;
 }
 
 interface ForgeFlashHandle {
@@ -33,34 +37,38 @@ export function startForgeFlash({
   completed,
   forgeFlash,
   mountTime,
+  onActiveChange,
 }: ForgeFlashParams): ForgeFlashHandle {
   const isPastHydrationWindow = Date.now() - mountTime > HYDRATION_WINDOW_MS;
 
   if (!completed || !isPastHydrationWindow) {
     forceValue(forgeFlash, 0);
+    onActiveChange(false);
     return { animation: null, safetyTimer: null };
   }
 
   forgeFlash.setValue(1);
+  onActiveChange(true);
   const animation = Animated.timing(forgeFlash, {
     duration: FORGE_FLASH_MS,
     easing: Motion.easing.outCubic,
     toValue: 0,
     useNativeDriver: true,
   });
-  let cancelled = false;
-  animation.start(({ finished }) => {
-    if (!finished && !cancelled) {
-      forceValue(forgeFlash, 0);
-    }
-  });
-  // Safety net: if the native-driver animation silently fails or the
-  // callback is lost, force opacity to 0 so the amber overlay doesn't
-  // stay painted on the cell (fires 100ms after FORGE_FLASH_MS elapses).
-  const safetyTimer = setTimeout(() => {
-    cancelled = true;
+  let settled = false;
+  let safetyTimer: ReturnType<typeof setTimeout> | null = null;
+  const settle = () => {
+    if (settled) return;
+    settled = true;
+    if (safetyTimer !== null) clearTimeout(safetyTimer);
     forceValue(forgeFlash, 0);
-  }, FORGE_FLASH_MS + 100);
+    onActiveChange(false);
+  };
+  animation.start(settle);
+  // Safety net: if the native-driver animation silently fails or the
+  // callback is lost, unmount the amber overlay anyway (fires 100ms after
+  // FORGE_FLASH_MS elapses).
+  safetyTimer = setTimeout(settle, FORGE_FLASH_MS + 100);
 
   return { animation, safetyTimer };
 }
