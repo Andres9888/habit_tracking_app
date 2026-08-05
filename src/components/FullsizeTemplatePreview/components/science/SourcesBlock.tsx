@@ -1,6 +1,15 @@
 /**
- * "The research" — quiet numbered citations with an educational disclaimer.
- * Uses structured sources when present, else the single scientificReference.
+ * Citations with an educational disclaimer. Uses structured sources when
+ * present, else the single scientificReference.
+ *
+ * The heading is claim-gated the same way the Science-backed badge is. This
+ * section used to be titled "The research" unconditionally, and because
+ * `scientificReference` is populated on every template the fallback rendered a
+ * research heading on all 318 — including the ~50 that correctly do NOT earn
+ * the badge, over a row reading "Cirillo (2006) - The Pomodoro Technique" with
+ * no authors, journal or year. The badge disappeared and the research framing
+ * survived one section later, which undid the gate. When nothing here is
+ * primary literature the section says "Further reading" instead.
  */
 
 import React from 'react';
@@ -12,6 +21,7 @@ import { openExternalLink } from '@/utils/openExternalLink';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { SecLabel } from './SecLabel';
 import { useScienceCard } from './useScienceCard';
+import { citedSources } from '../../utils/scienceBadge';
 import { scienceResearchStyles as b } from '../../styles/scienceResearch.styles';
 import type { Template } from '../../../../types/template';
 import type { ScienceSource } from '../../../../../convex/templates/types';
@@ -37,10 +47,15 @@ export function SourcesBlock({ template }: { template: Template }) {
     : fallbackSources(template);
   if (sources.length === 0) return null;
 
+  // Books and methodology references stay listed — they are real references.
+  // They just cannot be what makes the section "The research".
+  const heading =
+    citedSources(template).length > 0 ? 'The research' : 'Further reading';
+
   return (
     <View>
       <SecLabel glyph={<Quote color={glyph} size={17} strokeWidth={2} />}>
-        The research
+        {heading}
       </SecLabel>
       <View style={flushCard}>
         {sources.map((src, i) => {

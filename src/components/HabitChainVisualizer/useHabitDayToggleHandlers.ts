@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { Animated } from 'react-native';
-import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 
 interface UseHabitDayToggleHandlersParams {
   buttonScale: Animated.Value;
@@ -13,8 +12,6 @@ export const useHabitDayToggleHandlers = ({
   completed,
   onPress,
 }: UseHabitDayToggleHandlersParams) => {
-  const { triggerSuccess, triggerLightImpact } = useHapticFeedback();
-
   const handlePressIn = useCallback(() => {
     Animated.spring(buttonScale, {
       friction: 20,
@@ -36,13 +33,9 @@ export const useHabitDayToggleHandlers = ({
   }, [buttonScale, completed]);
 
   const handlePress = useCallback(() => {
-    // Haptic feedback: success when completing, light tap when uncompleting
-    if (completed) {
-      triggerLightImpact();
-    } else {
-      triggerSuccess();
-    }
-
+    // Haptics are fired by useToggleDayHandler, which knows whether the tap is
+    // a completion, an uncompletion, or a disabled-day rejection. Firing a
+    // second one here doubled the JSI calls on every press.
     Animated.sequence([
       Animated.spring(buttonScale, {
         friction: 6,
@@ -58,7 +51,7 @@ export const useHabitDayToggleHandlers = ({
       }),
     ]).start();
     onPress();
-  }, [buttonScale, completed, onPress, triggerSuccess, triggerLightImpact]);
+  }, [buttonScale, onPress]);
 
   return { handlePress, handlePressIn, handlePressOut };
 };

@@ -43,50 +43,43 @@ export function useCompletionSound({
 }: UseCompletionSoundOptions = {}) {
   // Use undefined instead of null to avoid type union issues
 
+  // One player is created per sound type and reused for every subsequent play.
+  // Building a fresh AudioPlayer on each completion put asset decoding on the
+  // tap's critical path.
   const soundRef = useRef<AudioPlayer | undefined>(undefined);
-  const loadingRef = useRef(false);
+  const loadedTypeRef = useRef<CompletionSoundType | undefined>(undefined);
 
   useEffect(() => {
     return () => {
       soundRef.current?.remove();
       soundRef.current = undefined;
+      loadedTypeRef.current = undefined;
     };
   }, []);
 
-  const playCompletionSound = useCallback(async () => {
-    if (!soundEnabled || loadingRef.current) {
+  const playCompletionSound = useCallback(() => {
+    if (!soundEnabled) {
       return;
     }
 
-    loadingRef.current = true;
     try {
-      if (soundRef.current) {
-        soundRef.current.remove();
-        soundRef.current = undefined;
+      if (!soundRef.current || loadedTypeRef.current !== soundType) {
+        soundRef.current?.remove();
+        const sound = createAudioPlayer(SOUND_ASSETS[soundType], {
+          keepAudioSessionActive: true,
+        });
+        sound.volume = 0.7;
+        soundRef.current = sound;
+        loadedTypeRef.current = soundType;
       }
 
-      // Load and play the sound
-      const sound = createAudioPlayer(SOUND_ASSETS[soundType], {
-        keepAudioSessionActive: true,
-      });
-      sound.volume = 0.7;
-      soundRef.current = sound;
-
-      // Auto-cleanup after playback
-      sound.addListener('playbackStatusUpdate', (status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          sound.remove();
-          if (soundRef.current === sound) {
-            soundRef.current = undefined;
-          }
-        }
-      });
-      sound.play();
+      // Rewind so rapid consecutive completions each retrigger the sound.
+      // Not awaited: playback should start on this tick, not a microtask later.
+      void soundRef.current.seekTo(0)?.catch(() => {});
+      soundRef.current.play();
     } catch (error) {
       // Silently fail - sounds are non-critical UX enhancements
       if (__DEV__) console.warn('Failed to play completion sound:', error);
-    } finally {
-      loadingRef.current = false;
     }
   }, [soundEnabled, soundType]);
 

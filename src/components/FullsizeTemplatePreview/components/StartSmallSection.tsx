@@ -7,15 +7,22 @@
  * the reader has already tapped in, so they are at the decision point this
  * copy is written for.
  *
- * Outer wrapper spacing is neutralized so DecisionDrilldown's shared stack
- * owns horizontal padding and gap. The inner card treatment is unchanged.
+ * Rendered in the shared SecLabel + card grammar rather than a local one. It
+ * previously used its own uppercase micro-label and no glyph, so the single
+ * most persuasive block on the page read as an aside wedged between two
+ * properly-labelled blocks — it looked like a footnote to "What you'll feel"
+ * instead of the answer to "can I actually do this".
+ *
  * Hidden entirely when the template has no start-small version.
  */
 
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { fontWeights, typography } from '../../../theme/typography';
-import { useDetailPalette } from '../detailPalette';
+import { Feather } from 'lucide-react-native';
+
+import { fontFamilies, typography } from '../../../theme/typography';
+import { SecLabel } from './science/SecLabel';
+import { useScienceCard } from './science/useScienceCard';
 
 interface StartSmallSectionProps {
   startSmallVersion?: string;
@@ -24,37 +31,27 @@ interface StartSmallSectionProps {
 export function StartSmallSection({
   startSmallVersion,
 }: StartSmallSectionProps) {
-  const palette = useDetailPalette();
+  const { palette, card, glyph } = useScienceCard();
   const text = startSmallVersion?.trim();
   if (!text) return null;
 
   return (
-    <View
-      style={[
-        s.box,
-        { backgroundColor: palette.card, borderColor: palette.border },
-      ]}
-    >
-      <Text style={[s.label, { color: palette.textTertiary }]}>
+    <View>
+      <SecLabel glyph={<Feather color={glyph} size={16} strokeWidth={2} />}>
         Start small
-      </Text>
-      <Text style={[s.text, { color: palette.textPrimary }]}>{text}</Text>
+      </SecLabel>
+      <View style={card}>
+        <Text style={[s.text, { color: palette.textPrimary }]}>{text}</Text>
+      </View>
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  box: { borderRadius: 16, borderWidth: 1, padding: 16 },
-  label: {
-    fontSize: 11,
-    fontWeight: fontWeights.bold,
-    letterSpacing: 0.9,
-    textTransform: 'uppercase',
-  },
   text: {
     ...typography.body,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 15,
     lineHeight: 22,
-    marginTop: 6,
   },
 });

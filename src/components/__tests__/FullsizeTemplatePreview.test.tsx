@@ -404,7 +404,9 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const closeButton = getByLabelText('Close preview');
+      // Relabelled from 'Close preview': the header now carries two exits, and
+      // "Close" alone did not say which destination this one leads to.
+      const closeButton = getByLabelText('Close and go to my habits');
       fireEvent.press(closeButton);
 
       expect(Haptics.impactAsync).toHaveBeenCalledWith(
@@ -471,7 +473,9 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const closeButton = getByLabelText('Close preview');
+      // Relabelled from 'Close preview': the header now carries two exits, and
+      // "Close" alone did not say which destination this one leads to.
+      const closeButton = getByLabelText('Close and go to my habits');
       fireEvent.press(closeButton);
 
       expect(Haptics.impactAsync).not.toHaveBeenCalled();
@@ -576,7 +580,9 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const closeButton = getByLabelText('Close preview');
+      // Relabelled from 'Close preview': the header now carries two exits, and
+      // "Close" alone did not say which destination this one leads to.
+      const closeButton = getByLabelText('Close and go to my habits');
       expect(closeButton.props.accessibilityRole).toBe('button');
       expect(closeButton.props.accessibilityHint).toBe(
         'Double tap to close this preview'

@@ -68,6 +68,7 @@ function TemplatesScreenContent({
           handlers={handlers}
           packConfirm={packConfirm}
           state={state}
+          onCloseLibrary={onCloseLibrary}
         />
       }
       onClose={() => onCloseLibrary?.()}

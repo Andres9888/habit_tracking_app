@@ -10,13 +10,15 @@ import { useDetailPalette } from '../detailPalette';
 interface MetadataPillProps {
   children: React.ReactNode;
   icon?: React.ReactNode;
+  testID?: string;
 }
 
-export function MetadataPill({ children, icon }: MetadataPillProps) {
+export function MetadataPill({ children, icon, testID }: MetadataPillProps) {
   const palette = useDetailPalette();
 
   return (
     <View
+      testID={testID}
       style={[
         heroStyles.metadataPill,
         {

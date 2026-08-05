@@ -9,11 +9,11 @@
  * 5. {@link WeekCompleteIndicator} — "✨ Perfect Week ✨" badge
  */
 
-import React, { useMemo } from 'react';
+import React, { memo } from 'react';
 import { View } from 'react-native';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { resolveProgressEmojis } from '../../utils/progressEmojis';
+import { useCardContent } from './CardContent.hooks';
 import { CardHeader } from './CardHeader';
 import { NewRecordBadge } from './NewRecordBadge';
 import { StrengthProgressBar } from './StrengthProgressBar';
@@ -28,13 +28,10 @@ interface CardContentProps extends DraggableHabitCardProps {
   effectiveAccentColor: string;
 }
 
-export function CardContent(props: CardContentProps) {
+function CardContentComponent(props: CardContentProps) {
   const { colors: themeColors } = useThemeColors();
   const compact = props.isCompactMode;
-  const progressEmojis = useMemo(
-    () => resolveProgressEmojis(props.habit.progressEmojis, props.userProgressEmojis),
-    [props.habit.progressEmojis, props.userProgressEmojis]
-  );
+  const { handleWeekComplete, progressEmojis } = useCardContent(props);
   return (
     <>
       <View className={`px-3 ${compact ? 'pt-3' : 'pt-4'}`}>
@@ -98,9 +95,7 @@ export function CardContent(props: CardContentProps) {
           weekDateStrings={props.weekDateStrings}
           weekStatus={props.weekStatus}
           onToggle={props.toggleHabit}
-          onWeekComplete={({ completedDate }) =>
-            props.onWeekComplete?.({ completedDate, habit: props.habit })
-          }
+          onWeekComplete={handleWeekComplete}
         />
         {!compact && props.isWeekComplete ? (
           <WeekCompleteIndicator accentColor={props.effectiveAccentColor} />
@@ -109,3 +104,5 @@ export function CardContent(props: CardContentProps) {
     </>
   );
 }
+
+export const CardContent = memo(CardContentComponent);

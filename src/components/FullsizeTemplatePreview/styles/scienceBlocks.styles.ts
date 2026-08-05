@@ -84,25 +84,12 @@ export const scienceBlockStyles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 22,
   },
-  cadenceRow: {
-    alignItems: 'center',
-    borderTopWidth: 1,
-    flexDirection: 'row',
-    gap: 8,
-    marginTop: spacing.base,
-    paddingTop: spacing.base,
-  },
-  cadenceLabel: {
+  // Reassurance line under the timeline. Quiet by design: it should read as a
+  // footnote the reader finds, not a warning the page leads with.
+  timelineNote: {
     ...typography.bodySmall,
-    flexShrink: 0,
-    fontWeight: fontWeights.bold,
-  },
-  // Must shrink and wrap: authored cadenceLabels can be long enough to clip
-  // off the right edge otherwise.
-  cadenceValue: {
-    ...typography.bodySmall,
-    flexShrink: 1,
-    marginLeft: 'auto',
-    textAlign: 'right',
+    lineHeight: 20,
+    marginTop: spacing.sm,
+    paddingHorizontal: 4,
   },
 });

@@ -20,6 +20,7 @@ import { scienceWhyStyles as s } from '../../styles/scienceWhy.styles';
 import { ScienceVideoEmbed } from '../ScienceVideoEmbed';
 import { useScienceTheme } from './scienceTheme';
 import { useDetailPalette } from '../../detailPalette';
+import { isScienceBacked } from '../../utils/scienceBadge';
 import type { Template } from '../../../../types/template';
 
 export function WhyItWorksCard({ template }: { template: Template }) {
@@ -31,15 +32,11 @@ export function WhyItWorksCard({ template }: { template: Template }) {
 
   if (!lead && !evidence) return null;
 
-  // Gate the badge on AUTHORED backing only — never on the `scientificReference`
-  // fallback. That field is populated on every template and is frequently a book
-  // or a methodology ("The Artist's Way", "Deep Work", "Inbox Zero"), so gating on
-  // the merged `evidence` const above handed "Science-backed" to all 293 templates
-  // and hollowed out the claim. The authoring rules require the badge to disappear
-  // when a habit has no primary literature; this is what enforces that.
-  const showHeader = Boolean(
-    template?.evidence?.trim() || template?.sources?.length
-  );
+  // Eligibility lives in `isScienceBacked` so this badge and the hero chip can
+  // never disagree. It gates on authored backing only — never on the
+  // `scientificReference` fallback merged into `evidence` above — and it drops
+  // sources whose venue is a trade imprint rather than primary literature.
+  const showHeader = isScienceBacked(template);
 
   return (
     <View

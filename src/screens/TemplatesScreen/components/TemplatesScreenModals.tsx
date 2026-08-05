@@ -20,9 +20,12 @@ interface TemplatesScreenModalsProps {
   showCustomizeModal: boolean;
   showFullsizePreview: boolean;
   showPaywall: boolean;
+  /** Detail modal back — returns to the catalog with its state intact. */
+  onBackToLibrary: () => void;
   onCloseCustomize: () => void;
-  onCloseFullsize: () => void;
   onClosePaywall: () => void;
+  /** Detail modal X — dismisses the whole flow onto the home screen. */
+  onExitToHome: () => void;
   onCustomize: (template: Doc<'templates'>) => void;
   onDirectImport: (templateId: Id<'templates'>) => Promise<void>;
   onImport: (
@@ -45,9 +48,10 @@ export function TemplatesScreenModals(p: TemplatesScreenModalsProps) {
         previewTemplate={p.previewTemplate}
         showCustomizeModal={p.showCustomizeModal}
         showFullsizePreview={p.showFullsizePreview}
+        onBackToLibrary={p.onBackToLibrary}
         onCloseCustomize={p.onCloseCustomize}
-        onCloseFullsize={p.onCloseFullsize}
         onCustomize={p.onCustomize}
+        onExitToHome={p.onExitToHome}
         onDirectImport={p.onDirectImport}
         onImport={p.onImport}
       />

@@ -29,6 +29,7 @@ export function FooterSection({
   customizeButtonScale,
   onImport,
   onCustomize,
+  onDone,
 }: FooterSectionProps) {
   const palette = useDetailPalette();
 
@@ -62,15 +63,15 @@ export function FooterSection({
             templateName={templateName}
             onImport={onImport}
           />
-          {isImported ? null : (
-            <FooterSecondaryActions
-              createPressHandlers={createPressHandlers}
-              customizeButtonScale={customizeButtonScale}
-              customizeButtonStyle={customizeButtonStyle}
-              isImporting={isImporting}
-              onCustomize={onCustomize}
-            />
-          )}
+          <FooterSecondaryActions
+            createPressHandlers={createPressHandlers}
+            customizeButtonScale={customizeButtonScale}
+            customizeButtonStyle={customizeButtonStyle}
+            isImported={isImported}
+            isImporting={isImporting}
+            onCustomize={onCustomize}
+            onDone={onDone}
+          />
         </View>
       </LinearGradient>
     </View>

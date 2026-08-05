@@ -20,8 +20,12 @@ export interface PreviewContentAnimatedStyles {
 }
 
 export interface PreviewContentHandlers {
+  /** Exit to the home screen (header X). */
   handleClose: () => void;
+  /** Return to the Habit Library (header back). Absent when no library. */
   handleBack?: () => void;
+  /** Back when a library is behind us, close otherwise. */
+  handleDismiss: () => void;
   handleCustomize: () => void;
   handleImport: () => void;
 }

@@ -20,6 +20,8 @@ interface LibraryOverlaysProps {
   handlers: ScreenProps['handlers'];
   packConfirm: ScreenProps['packConfirm'];
   state: ScreenProps['state'];
+  /** Dismisses the Habit Library itself, landing the user on the home screen. */
+  onCloseLibrary?: () => void;
 }
 
 export function LibraryFeedbackOverlays({
@@ -51,7 +53,20 @@ export function LibraryModals({
   handlers,
   packConfirm,
   state,
+  onCloseLibrary,
 }: LibraryOverlaysProps) {
+  // The detail modal has two distinct exits and they must not collapse into
+  // one. Back only hides the overlay — CatalogView stays mounted underneath
+  // (MainBrowseView), so scroll position, search text and the selected
+  // category all survive. Exit-to-home additionally dismisses the library.
+  // The preview is hidden FIRST so the overlay never outlives the screen that
+  // owns its state.
+  const handleBackToLibrary = () => state.setShowFullsizePreview(false);
+  const handleExitToHome = () => {
+    state.setShowFullsizePreview(false);
+    onCloseLibrary?.();
+  };
+
   return (
     <TemplatesScreenModals
       importedTemplateIds={state.importedTemplateIds}
@@ -61,9 +76,10 @@ export function LibraryModals({
       showCustomizeModal={state.showCustomizeModal}
       showFullsizePreview={state.showFullsizePreview}
       showPaywall={state.showPaywall}
+      onBackToLibrary={handleBackToLibrary}
       onCloseCustomize={() => state.setShowCustomizeModal(false)}
-      onCloseFullsize={() => state.setShowFullsizePreview(false)}
       onClosePaywall={() => state.setShowPaywall(false)}
+      onExitToHome={handleExitToHome}
       onCustomize={handlers.handleCustomizeFromPreview}
       onDirectImport={actions.handleDetailsDirectImport}
       onImport={handlers.handleTemplateImport}

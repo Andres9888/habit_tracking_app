@@ -1,5 +1,16 @@
 /**
- * Event handlers for FullsizeTemplatePreview
+ * Event handlers for FullsizeTemplatePreview.
+ *
+ * The modal has two semantically distinct exits:
+ *   handleBack  → the Habit Library, which stays mounted behind the overlay.
+ *   handleClose → the home screen, dismissing the library too.
+ *
+ * `handleDismiss` is what implicit gestures (hardware back, backdrop,
+ * swipe) resolve to. It maps to BACK, never home: an implicit dismissal
+ * means "undo the thing I just opened", and taking someone out of the
+ * library they were browsing is a bigger jump than they asked for. It only
+ * falls through to close when no back handler exists, so a caller that
+ * renders the preview without a library behind it still has a way out.
  */
 
 import { useCallback } from 'react';
@@ -58,9 +69,18 @@ export const useHandlers = ({
     onCustomize(template);
   }, [template, onCustomize, reducedMotion]);
 
+  const handleDismiss = useCallback(() => {
+    if (onBack) {
+      handleBack();
+      return;
+    }
+    handleClose();
+  }, [handleBack, handleClose, onBack]);
+
   return {
     handleClose,
     handleBack: onBack ? handleBack : undefined,
+    handleDismiss,
     handleCustomize,
     handleImport,
   };

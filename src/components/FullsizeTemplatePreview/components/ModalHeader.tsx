@@ -1,7 +1,13 @@
 /**
- * Modal header for FullsizeTemplatePreview
- * Uses shared ModalCloseButton for consistent close button styling.
- * Optionally renders a circular back button on the left when `onBack` is provided.
+ * Modal header for FullsizeTemplatePreview.
+ *
+ * Two exits, conventionally placed and semantically distinct: back at
+ * top-left returns to the Habit Library, X at top-right leaves for the home
+ * screen. The X is `subtle` precisely so the pair doesn't read as two equal
+ * ways out — back is the expected move, the X is the escape hatch.
+ *
+ * The left slot keeps an empty `<View />` when no `onBack` is supplied so the
+ * row's space-between keeps the X pinned right.
  */
 
 import React from 'react';
@@ -16,7 +22,9 @@ import { useDetailPalette } from '../detailPalette';
 interface ModalHeaderProps {
   topInset: number;
   closeButtonAnimatedOpacityStyle: object;
+  /** Back to the Habit Library. Omit to hide the back control entirely. */
   onBack?: () => void;
+  /** Exit the whole flow to the home screen. */
   onClose: () => void;
   tintColor?: string;
   /** Reanimated style applied to the outer container — overrides tintColor when scrolled. */
@@ -63,7 +71,10 @@ export function ModalHeader({
           <View />
         )}
         <ModalCloseButton
-          label='Close preview'
+          hint='Leaves the habit library and returns to your habits'
+          hitSlop={8}
+          label='Close and go to my habits'
+          testID='templates-preview-exit-home'
           variant='subtle'
           onClose={onClose}
         />

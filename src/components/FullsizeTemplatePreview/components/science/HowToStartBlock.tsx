@@ -1,27 +1,23 @@
 /**
- * "How to start" — ordered concrete steps plus a suggested-cadence line.
+ * "How to start" — ordered concrete steps.
  * Uses howToStart when present, otherwise falls back to the generic tips list.
+ *
+ * The "Suggested cadence" row was removed. Its fallback was
+ * `frequency · estimatedMinutes`, which is byte-for-byte what the hero meta
+ * pill already printed at the top of the same page — a gold-accented row
+ * pulling the eye to information the reader passed four screens ago. Templates
+ * that author a richer `cadenceLabel` still surface it: the hero pill and the
+ * timeline both carry the timing story.
  */
 
 import React from 'react';
 import { Text, View } from 'react-native';
-import { CheckCircle2, Repeat } from 'lucide-react-native';
+import { CheckCircle2 } from 'lucide-react-native';
 
 import { SecLabel } from './SecLabel';
 import { useScienceCard } from './useScienceCard';
 import { scienceBlockStyles as b } from '../../styles/scienceBlocks.styles';
 import type { Template } from '../../../../types/template';
-
-function cadenceFor(template: Template): string | undefined {
-  if (template?.cadenceLabel) return template.cadenceLabel;
-  const freq = template?.frequency
-    ? `${template.frequency[0].toUpperCase()}${template.frequency.slice(1)}`
-    : null;
-  const mins = template?.estimatedMinutes
-    ? `${template.estimatedMinutes} min`
-    : null;
-  return [freq, mins].filter(Boolean).join(' · ') || undefined;
-}
 
 export function HowToStartBlock({ template }: { template: Template }) {
   const { palette, card, glyph } = useScienceCard();
@@ -29,7 +25,6 @@ export function HowToStartBlock({ template }: { template: Template }) {
     ? template.howToStart
     : template?.tips;
   if (!steps || steps.length === 0) return null;
-  const cadence = cadenceFor(template);
 
   return (
     <View>
@@ -59,17 +54,6 @@ export function HowToStartBlock({ template }: { template: Template }) {
             </Text>
           </View>
         ))}
-        {cadence ? (
-          <View style={[b.cadenceRow, { borderTopColor: palette.border }]}>
-            <Repeat color={palette.gold} size={15} strokeWidth={2} />
-            <Text style={[b.cadenceLabel, { color: palette.gold }]}>
-              Suggested cadence
-            </Text>
-            <Text style={[b.cadenceValue, { color: palette.textSecondary }]}>
-              {cadence}
-            </Text>
-          </View>
-        ) : null}
       </View>
     </View>
   );

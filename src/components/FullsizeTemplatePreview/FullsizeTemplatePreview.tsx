@@ -16,6 +16,7 @@ import {
   useButtonAnimations,
   useAnimatedStyles,
   useHandlers,
+  useHardwareBack,
 } from './hooks';
 import type { FullsizeTemplatePreviewProps } from './FullsizeTemplatePreview.types';
 
@@ -66,6 +67,13 @@ function FullsizeTemplatePreviewComponent({
     ...successAnimations,
   });
 
+  // Block the hardware back mid-import for the same reason the backdrop is
+  // blocked: the add is in flight and unmounting under it strands the result.
+  useHardwareBack({
+    enabled: visible && !isImporting,
+    onBack: handlers.handleDismiss,
+  });
+
   if (!shouldRender || !effectiveTemplate) return null;
 
   return (
@@ -77,7 +85,7 @@ function FullsizeTemplatePreviewComponent({
       skipAnimation
       variant='fullScreen'
       visible={shouldRender}
-      onClose={handlers.handleClose}
+      onClose={handlers.handleDismiss}
     >
       <PreviewContent
         animatedStyles={animatedStyles}
