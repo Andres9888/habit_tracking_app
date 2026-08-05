@@ -1,0 +1,8 @@
+{
+  "rating": 2,
+  "summary": "User repeating request—previous attempt to open mocks failed",
+  "detailed_context": "The previous response claimed 'Mock opened in your default browser' but the user is immediately re-requesting the same action. This indicates the mock either didn't actually open, or opened incorrectly/invisibly. The terse, direct repeat without any other context signals frustration—the user expected the task to be complete. This is a failed delivery on a straightforward task, requiring the user to follow up. Key lesson: verify file operations actually succeeded before claiming completion.",
+  "session_id": "fa602509-b93e-4cbc-8f2c-be1337d89e6b",
+  "captured_at": "2026-05-22T17:24:37.190Z",
+  "transcript_source": "fa602509-b93e-4cbc-8f2c-be1337d89e6b.jsonl"
+}

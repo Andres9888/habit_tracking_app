@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>More to Customize — tap affordance variants</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #edeae5;
+        --border: #ddd8d2;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #8e95a2;
+        --primary-100: #d1fae5;
+        --primary-300: #6ee7b7;
+        --primary-600: #059669;
+        --primary-700: #047857;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #ece6df;
+        color: var(--text-primary);
+        -webkit-font-smoothing: antialiased;
+        padding: 32px 24px 64px;
+      }
+      h1 {
+        font-family: 'Literata', serif;
+        font-size: 26px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .subhead {
+        color: var(--text-secondary);
+        font-size: 13px;
+        max-width: 760px;
+        margin-bottom: 28px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        max-width: 1640px;
+      }
+      .phone {
+        background: #faf7f3;
+        border-radius: 24px;
+        box-shadow:
+          0 12px 30px rgba(0, 0, 0, 0.1),
+          0 2px 6px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+        border: 1px solid #e8e2da;
+      }
+      .uppercase-label {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+      }
+      .reminder-row {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+      }
+      .toggle {
+        width: 36px;
+        height: 22px;
+        border-radius: 999px;
+        background: var(--primary-600);
+        position: relative;
+      }
+      .toggle::after {
+        content: '';
+        position: absolute;
+        right: 3px;
+        top: 3px;
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
+        background: #fff;
+      }
+      .variant-label {
+        padding: 14px 16px 0;
+      }
+      .variant-name {
+        font-family: 'Literata', serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .variant-desc {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .scene {
+        padding: 18px;
+      }
+      .chevron {
+        font-size: 13px;
+        color: var(--text-tertiary);
+        line-height: 1;
+      }
+      .emoji-row {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        margin: 8px 0 4px;
+      }
+      .emoji-tile {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        background: #fff;
+        border: 1px solid var(--border);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+      }
+      .emoji-tile.selected {
+        background: var(--primary-100);
+        border-color: var(--primary-300);
+      }
+      .color-row {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin: 6px 0 4px;
+      }
+      .color-dot {
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+      }
+      .color-dot.selected {
+        outline: 2px solid var(--primary-300);
+        outline-offset: 2px;
+      }
+      /* ===== Variant A: Pill button (chip) ===== */
+      .pill-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: var(--card);
+        border-radius: 999px;
+        border: 1px solid var(--border);
+      }
+      /* ===== Variant B: Soft card (current heavy → softened) ===== */
+      .soft-card {
+        background: var(--card);
+        border-radius: 16px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      /* ===== Variant C: Outline button (centered, no fill) ===== */
+      .outline-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        background: transparent;
+        border-radius: 14px;
+        border: 1.5px dashed var(--border);
+      }
+      /* ===== Variant D: Card with arrow on the right (full-width row) ===== */
+      .row-btn {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .row-btn .left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .badge {
+        background: var(--primary-100);
+        color: var(--primary-700);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+      .center-wrap {
+        display: flex;
+        justify-content: center;
+        margin-top: 12px;
+      }
+      .annotate {
+        font-size: 11px;
+        color: #8a766a;
+        padding: 0 16px 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>“More to Customize” — make it obviously tappable</h1>
+    <p class="subhead">
+      The flat divider now reads like
+      <em>Choose an icon</em> / <em>Pick a color</em> — but those don’t open
+      anything; this does. Below are four affordance options that preserve
+      the cleaner alignment we already shipped, while signalling
+      interactivity. All keep the centered placement, the uppercase /
+      letter-spaced label, the tertiary text color, and the chevron.
+    </p>
+
+    <div class="grid">
+      <!-- Variant A: Pill button -->
+      <div class="phone">
+        <div class="variant-label">
+          <div class="variant-name">A — Pill button (chip)</div>
+          <div class="variant-desc">
+            Light tap surface · feels like a chip · most aligned to the warm
+            UI tokens
+          </div>
+        </div>
+        <div class="scene">
+          <div class="text-center">
+            <div class="uppercase-label">Pick a color</div>
+          </div>
+          <div class="color-row">
+            <span
+              class="color-dot selected"
+              style="background: #c084fc"
+            ></span>
+            <span class="color-dot" style="background: #60a5fa"></span>
+            <span class="color-dot" style="background: #34d399"></span>
+            <span class="color-dot" style="background: #fbbf24"></span>
+            <span class="color-dot" style="background: #fb7185"></span>
+          </div>
+          <div class="reminder-row" style="margin-top: 14px">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="center-wrap">
+            <div class="pill-btn">
+              <span class="uppercase-label">More to customize · 3</span>
+              <span class="chevron">⌄</span>
+            </div>
+          </div>
+        </div>
+        <p class="annotate">
+          Pros: clearly a button, small footprint, matches Growth-Type pill
+          language used inside.<br />Cons: chip pattern is normally used
+          for filters; could read as "selected: 3".
+        </p>
+      </div>
+
+      <!-- Variant B: Soft card (no border) -->
+      <div class="phone">
+        <div class="variant-label">
+          <div class="variant-name">B — Soft tile (no border)</div>
+          <div class="variant-desc">
+            Card surface, no border · contrast against parchment is the
+            affordance
+          </div>
+        </div>
+        <div class="scene">
+          <div class="text-center">
+            <div class="uppercase-label">Pick a color</div>
+          </div>
+          <div class="color-row">
+            <span
+              class="color-dot selected"
+              style="background: #c084fc"
+            ></span>
+            <span class="color-dot" style="background: #60a5fa"></span>
+            <span class="color-dot" style="background: #34d399"></span>
+            <span class="color-dot" style="background: #fbbf24"></span>
+            <span class="color-dot" style="background: #fb7185"></span>
+          </div>
+          <div class="reminder-row" style="margin-top: 14px">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div style="margin-top: 14px">
+            <div class="soft-card">
+              <span class="uppercase-label">More to customize · 3</span>
+              <span class="chevron">⌄</span>
+            </div>
+          </div>
+        </div>
+        <p class="annotate">
+          Pros: full-width tap target, soft visual weight, matches reminder
+          row width.<br />Cons: needs slight contrast adjustment if `card`
+          and `background` are too close.
+        </p>
+      </div>
+
+      <!-- Variant C: Outline button -->
+      <div class="phone">
+        <div class="variant-label">
+          <div class="variant-name">C — Dashed outline pill</div>
+          <div class="variant-desc">
+            "Show more" / disclosure language · transparent fill
+          </div>
+        </div>
+        <div class="scene">
+          <div class="text-center">
+            <div class="uppercase-label">Pick a color</div>
+          </div>
+          <div class="color-row">
+            <span
+              class="color-dot selected"
+              style="background: #c084fc"
+            ></span>
+            <span class="color-dot" style="background: #60a5fa"></span>
+            <span class="color-dot" style="background: #34d399"></span>
+            <span class="color-dot" style="background: #fbbf24"></span>
+            <span class="color-dot" style="background: #fb7185"></span>
+          </div>
+          <div class="reminder-row" style="margin-top: 14px">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="center-wrap">
+            <div class="outline-btn">
+              <span class="uppercase-label">More to customize · 3</span>
+              <span class="chevron">⌄</span>
+            </div>
+          </div>
+        </div>
+        <p class="annotate">
+          Pros: clearly a “reveal” affordance, dashed line reads as
+          progressive disclosure.<br />Cons: dashed borders aren’t used
+          anywhere else in the app yet — introduces a new token.
+        </p>
+      </div>
+
+      <!-- Variant D: Full-width row with chevron right -->
+      <div class="phone">
+        <div class="variant-label">
+          <div class="variant-name">D — Full-width row (chevron right)</div>
+          <div class="variant-desc">
+            iOS-style settings row · left label · trailing chevron
+          </div>
+        </div>
+        <div class="scene">
+          <div class="text-center">
+            <div class="uppercase-label">Pick a color</div>
+          </div>
+          <div class="color-row">
+            <span
+              class="color-dot selected"
+              style="background: #c084fc"
+            ></span>
+            <span class="color-dot" style="background: #60a5fa"></span>
+            <span class="color-dot" style="background: #34d399"></span>
+            <span class="color-dot" style="background: #fbbf24"></span>
+            <span class="color-dot" style="background: #fb7185"></span>
+          </div>
+          <div class="reminder-row" style="margin-top: 14px">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div style="margin-top: 14px">
+            <div class="row-btn">
+              <div class="left">
+                <span class="uppercase-label">More to customize</span>
+                <span class="badge">3</span>
+              </div>
+              <span class="chevron">⌄</span>
+            </div>
+          </div>
+        </div>
+        <p class="annotate">
+          Pros: matches the bordered row pattern used by the option rows
+          inside.<br />Cons: closest to the original heavy card — the look
+          we just moved away from.
+        </p>
+      </div>
+    </div>
+
+    <h2
+      style="
+        font-family: 'Literata', serif;
+        font-size: 18px;
+        margin-top: 44px;
+        margin-bottom: 8px;
+      "
+    >
+      My recommendation
+    </h2>
+    <p class="subhead">
+      <strong>Variant A — pill button</strong>. It’s the lightest of the
+      four, reuses an existing app pattern (the Growth-Type pill that lives
+      inside this very section), and gives a clearly defined tap surface
+      without re-introducing the heavy card. Variant B is a strong second
+      if you’d rather have a wider tap target.
+    </p>
+  </body>
+</html>

@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>More to Customize — V2 polish variations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #ece6df;
+        --surface: #faf7f3;
+        --card: #ffffff;
+        --card-warm: #f5f1ec;
+        --border: #ddd8d2;
+        --border-strong: #c8c0b5;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #8e95a2;
+        --primary-50: #ecfdf5;
+        --primary-100: #d1fae5;
+        --primary-200: #a7f3d0;
+        --primary-300: #6ee7b7;
+        --primary-500: #10b981;
+        --primary-600: #059669;
+        --primary-700: #047857;
+        --primary-800: #065f46;
+        --amber-50: #fefce8;
+        --amber-100: #fef3c7;
+        --amber-700: #b45309;
+        --lilac-100: #f3e8ff;
+        --lilac-700: #7c3aed;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: var(--bg);
+        color: var(--text-primary);
+        -webkit-font-smoothing: antialiased;
+        padding: 36px 28px 96px;
+      }
+      h1 {
+        font-family: 'Literata', serif;
+        font-size: 26px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .lede {
+        color: var(--text-secondary);
+        font-size: 14px;
+        max-width: 880px;
+        margin-bottom: 24px;
+      }
+      .current {
+        background: #fef3c7;
+        border-left: 4px solid #d97706;
+        padding: 12px 16px;
+        border-radius: 6px;
+        font-size: 13px;
+        color: #78350f;
+        max-width: 880px;
+        margin-bottom: 32px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+        max-width: 1700px;
+      }
+      .frame {
+        background: var(--surface);
+        border-radius: 24px;
+        box-shadow:
+          0 14px 36px rgba(0, 0, 0, 0.08),
+          0 2px 6px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        border: 1px solid #e8e2da;
+      }
+      .frame-head {
+        padding: 16px 18px 0;
+      }
+      .badge {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        background: var(--primary-100);
+        color: var(--primary-700);
+        padding: 3px 10px;
+        border-radius: 999px;
+        display: inline-block;
+      }
+      .name {
+        font-family: 'Literata', serif;
+        font-size: 17px;
+        font-weight: 600;
+        margin-top: 10px;
+        color: var(--text-primary);
+      }
+      .pitch {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-top: 4px;
+        line-height: 1.5;
+      }
+      .scene {
+        padding: 14px 18px 22px;
+      }
+      .ctx {
+        font-size: 11px;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-align: center;
+        margin: 6px 0 10px;
+      }
+      .reminder {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        margin-bottom: 14px;
+      }
+      .toggle {
+        width: 36px;
+        height: 22px;
+        border-radius: 999px;
+        background: var(--primary-600);
+        position: relative;
+      }
+      .toggle::after {
+        content: '';
+        position: absolute;
+        right: 3px;
+        top: 3px;
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
+        background: #fff;
+      }
+      .reasoning {
+        background: #f4eee5;
+        border-top: 1px dashed #d4cec3;
+        padding: 12px 18px;
+        font-size: 12px;
+        color: #5c4f43;
+        line-height: 1.55;
+      }
+      .pros {
+        color: #047857;
+        font-weight: 700;
+      }
+      .cons {
+        color: #b45309;
+        font-weight: 700;
+      }
+      .chevron {
+        font-size: 14px;
+        color: var(--text-tertiary);
+      }
+      .label {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+      }
+      .edit-pill {
+        background: var(--primary-100);
+        color: var(--primary-700);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+      }
+
+      /* ===== A — Elevated white card ===== */
+      .a-card {
+        background: #ffffff;
+        border: 1px solid #e8e0d5;
+        border-radius: 16px;
+        padding: 14px 14px 12px;
+        box-shadow: 0 2px 4px rgba(45, 42, 38, 0.04);
+      }
+      .a-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .a-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .a-chip {
+        background: var(--card-warm);
+        border: 1px solid #e2dcd3;
+        padding: 5px 11px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-primary);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      /* ===== B — Tinted color chips ===== */
+      .b-card {
+        background: #ffffff;
+        border: 1px solid #e2dcd3;
+        border-radius: 16px;
+        padding: 14px 14px 12px;
+      }
+      .b-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .b-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .b-chip {
+        padding: 5px 11px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .b-chip-curve {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .b-chip-icons {
+        background: var(--primary-100);
+        color: var(--primary-800);
+      }
+      .b-chip-streak {
+        background: var(--amber-100);
+        color: var(--amber-700);
+      }
+
+      /* ===== C — Icon-led settings row with chips ===== */
+      .c-card {
+        background: #ffffff;
+        border: 1px solid #e2dcd3;
+        border-radius: 16px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .c-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: var(--primary-50);
+        color: var(--primary-700);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+      .c-body {
+        flex: 1;
+        min-width: 0;
+      }
+      .c-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .c-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 4px;
+      }
+      .c-chip {
+        font-size: 11px;
+        color: var(--text-secondary);
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .c-chip::after {
+        content: '·';
+        margin-left: 4px;
+        color: var(--text-tertiary);
+        font-weight: 400;
+      }
+      .c-chip:last-child::after {
+        display: none;
+      }
+
+      /* ===== D — Inline summary (no chips) ===== */
+      .d-card {
+        background: #ffffff;
+        border: 1px solid #e2dcd3;
+        border-radius: 16px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .d-left {
+        flex: 1;
+        min-width: 0;
+      }
+      .d-line1 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .d-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .d-summary {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .d-summary b {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      /* ===== E — Two-row stacked chips with EDIT below ===== */
+      .e-card {
+        background: linear-gradient(180deg, #ffffff 0%, #fbfaf7 100%);
+        border: 1px solid #e2dcd3;
+        border-radius: 18px;
+        padding: 14px 16px 12px;
+      }
+      .e-title {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .e-rows {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+      .e-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .e-row-icon {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        background: var(--card-warm);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+      }
+      .e-row-label {
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+      .e-row-label b {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+      .e-cta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 8px;
+        border-top: 1px solid #ece4d5;
+      }
+      .e-cta-text {
+        font-size: 12px;
+        color: var(--text-tertiary);
+      }
+      .e-cta-btn {
+        background: var(--primary-600);
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 5px 12px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* ===== F — Subtle chips with arrow CTA ===== */
+      .f-card {
+        background: var(--card-warm);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 14px 16px;
+      }
+      .f-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .f-title-block {
+        flex: 1;
+      }
+      .f-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .f-sub {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-top: 2px;
+      }
+      .f-chips {
+        margin-top: 10px;
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .f-chip {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        padding: 5px 11px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-primary);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .f-arrow {
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        background: var(--primary-600);
+        color: #ffffff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .rec {
+        margin-top: 44px;
+        padding: 18px 22px;
+        background: var(--primary-50);
+        border-left: 4px solid var(--primary-500);
+        border-radius: 8px;
+        max-width: 1000px;
+      }
+      .rec h3 {
+        font-family: 'Literata', serif;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #064e3b;
+      }
+      .rec p {
+        font-size: 13px;
+        color: #065f46;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>“More to Customize” — V2 polish variations</h1>
+    <p class="lede">
+      Same core idea (preview what's inside + tile-wide tap target) but
+      six variations on visual treatment. The goal: make the tile feel
+      meaningful and obviously interactive without dragging back the
+      heaviness of the original bordered card.
+    </p>
+    <div class="current">
+      <strong>What's wrong with the current build:</strong> the tile uses
+      <code>colors.card</code> (warm stone) on a background that's also
+      warm stone — they blend. Chips use the same warm tone, so they
+      disappear into the tile. The result reads as one washed-out blob
+      instead of a clear tap target with crisp preview content.
+    </div>
+
+    <div class="grid">
+      <!-- A: Elevated white card -->
+      <div class="frame">
+        <div class="frame-head">
+          <span class="badge">A · Elevated white card</span>
+          <div class="name">Lift the surface, keep the chip layout</div>
+          <p class="pitch">
+            Same V2 structure, but the tile is white with a subtle shadow
+            so it floats above the warm background. Chips get a soft warm
+            fill to stand out against the white.
+          </p>
+        </div>
+        <div class="scene">
+          <div class="ctx">…reminder section above…</div>
+          <div class="reminder">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="a-card">
+            <div class="a-top">
+              <span class="label">More to customize</span>
+              <span style="display: inline-flex; align-items: center; gap: 6px">
+                <span class="edit-pill">EDIT</span>
+                <span class="chevron">⌄</span>
+              </span>
+            </div>
+            <div class="a-chips">
+              <span class="a-chip">♥ Forgiving</span>
+              <span class="a-chip">🌱 Classic</span>
+              <span class="a-chip">🎯 30-day</span>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <span class="pros">PROS</span> · floats above background,
+          chips read clearly against white, minimal departure from
+          current.<br />
+          <span class="cons">CONS</span> · white card breaks warm-stone
+          palette slightly; reminder above uses white too so they pair OK.
+        </div>
+      </div>
+
+      <!-- B: Tinted color chips -->
+      <div class="frame">
+        <div class="frame-head">
+          <span class="badge">B · Tinted color chips</span>
+          <div class="name">Each chip earns its own color tint</div>
+          <p class="pitch">
+            Chips inherit semantic colors from the inner option rows:
+            strength curve = warm red (heart), icons = primary green,
+            streak goal = amber. Instant visual association.
+          </p>
+        </div>
+        <div class="scene">
+          <div class="ctx">…reminder section above…</div>
+          <div class="reminder">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="b-card">
+            <div class="b-top">
+              <span class="label">More to customize</span>
+              <span style="display: inline-flex; align-items: center; gap: 6px">
+                <span class="edit-pill">EDIT</span>
+                <span class="chevron">⌄</span>
+              </span>
+            </div>
+            <div class="b-chips">
+              <span class="b-chip b-chip-curve">♥ Forgiving</span>
+              <span class="b-chip b-chip-icons">🌱 Classic</span>
+              <span class="b-chip b-chip-streak">🎯 30-day</span>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <span class="pros">PROS</span> · chips become memorable, each
+          one is a glance-recognizable category, color carries meaning.<br />
+          <span class="cons">CONS</span> · more visual noise; if any one
+          chip has long text, the row gets busy.
+        </div>
+      </div>
+
+      <!-- C: Icon-led settings row with chips -->
+      <div class="frame">
+        <div class="frame-head">
+          <span class="badge">C · Icon-led row</span>
+          <div class="name">Slider icon · stacked title · chip rail</div>
+          <p class="pitch">
+            iOS settings-row pattern. Left icon (sliders), title on top,
+            chips on the dot-separated rail below. The icon does the
+            "this is settings" signaling.
+          </p>
+        </div>
+        <div class="scene">
+          <div class="ctx">…reminder section above…</div>
+          <div class="reminder">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="c-card">
+            <span class="c-icon">⇋</span>
+            <div class="c-body">
+              <div class="c-title">More to customize</div>
+              <div class="c-chips">
+                <span class="c-chip">♥ Forgiving</span>
+                <span class="c-chip">🌱 Classic</span>
+                <span class="c-chip">🎯 30-day</span>
+              </div>
+            </div>
+            <span class="chevron" style="font-size: 16px">›</span>
+          </div>
+        </div>
+        <div class="reasoning">
+          <span class="pros">PROS</span> · dense but readable, icon ties
+          to "more settings" mental model, trailing chevron is
+          unmistakable.<br />
+          <span class="cons">CONS</span> · most card-heavy of the six,
+          dots-as-separator chips feel like body text rather than
+          distinct tags.
+        </div>
+      </div>
+
+      <!-- D: Inline summary -->
+      <div class="frame">
+        <div class="frame-head">
+          <span class="badge">D · Inline summary</span>
+          <div class="name">No chips · single sentence summary</div>
+          <p class="pitch">
+            Drop the chips entirely. One title, one summary sentence
+            ("Forgiving · Classic · 30-day target") that previews
+            content in plain text. Cleanest of the six.
+          </p>
+        </div>
+        <div class="scene">
+          <div class="ctx">…reminder section above…</div>
+          <div class="reminder">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="d-card">
+            <div class="d-left">
+              <div class="d-line1">
+                <span class="d-title">More to customize</span>
+                <span class="edit-pill">EDIT</span>
+              </div>
+              <div class="d-summary">
+                <b>Forgiving</b> curve · <b>Classic</b> icons ·
+                <b>30-day</b> goal
+              </div>
+            </div>
+            <span class="chevron" style="font-size: 16px">›</span>
+          </div>
+        </div>
+        <div class="reasoning">
+          <span class="pros">PROS</span> · cleanest typography, mature
+          tone, summary reads naturally, less visual noise.<br />
+          <span class="cons">CONS</span> · loses the icon affordances
+          that make chips glanceable; longer values truncate awkwardly.
+        </div>
+      </div>
+
+      <!-- E: Stacked option-row preview -->
+      <div class="frame">
+        <div class="frame-head">
+          <span class="badge">E · Mini-row preview</span>
+          <div class="name">Three tiny rows · primary CTA button</div>
+          <p class="pitch">
+            A vertical preview of what's inside — three stacked
+            mini-rows ("Strength curve · Forgiving") followed by a real
+            primary CTA button. The strongest "tap me" signal.
+          </p>
+        </div>
+        <div class="scene">
+          <div class="ctx">…reminder section above…</div>
+          <div class="reminder">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="e-card">
+            <div class="e-title">More to customize</div>
+            <div class="e-rows">
+              <div class="e-row">
+                <span class="e-row-icon">♥</span>
+                <span class="e-row-label">
+                  Strength curve · <b>Forgiving</b>
+                </span>
+              </div>
+              <div class="e-row">
+                <span class="e-row-icon">🌱</span>
+                <span class="e-row-label">
+                  Growth icons · <b>Classic</b>
+                </span>
+              </div>
+              <div class="e-row">
+                <span class="e-row-icon">🎯</span>
+                <span class="e-row-label">
+                  Streak goal · <b>30-day</b>
+                </span>
+              </div>
+            </div>
+            <div class="e-cta">
+              <span class="e-cta-text">Tap to customize</span>
+              <span class="e-cta-btn">CUSTOMIZE ›</span>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <span class="pros">PROS</span> · obviously interactive, full
+          content preview, primary green CTA is impossible to miss.<br />
+          <span class="cons">CONS</span> · biggest footprint of all
+          variants, duplicates content shown on expand, may compete with
+          Save button.
+        </div>
+      </div>
+
+      <!-- F: Warm tile with floating arrow -->
+      <div class="frame">
+        <div class="frame-head">
+          <span class="badge">F · Warm tile + arrow</span>
+          <div class="name">Stone tile · title + subtitle · floating arrow</div>
+          <p class="pitch">
+            Warm-stone tile that matches reminder row weight. Title +
+            subtitle stacked, chips below in soft rounded squares. Right
+            side: a small filled circular arrow as the affordance.
+          </p>
+        </div>
+        <div class="scene">
+          <div class="ctx">…reminder section above…</div>
+          <div class="reminder">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="f-card">
+            <div class="f-top">
+              <div class="f-title-block">
+                <div class="f-title">More to customize</div>
+                <div class="f-sub">3 more habit settings</div>
+              </div>
+              <span class="f-arrow">›</span>
+            </div>
+            <div class="f-chips">
+              <span class="f-chip">♥ Forgiving</span>
+              <span class="f-chip">🌱 Classic</span>
+              <span class="f-chip">🎯 30-day</span>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <span class="pros">PROS</span> · filled circular arrow is the
+          strongest "tap me" signal short of a button, warm tile pairs
+          with the reminder row above.<br />
+          <span class="cons">CONS</span> · the circular arrow is a new
+          primitive; warm tile blends with bg in light mode.
+        </div>
+      </div>
+    </div>
+
+    <div class="rec">
+      <h3>My picks: B (color-tinted chips) or E (mini-row preview)</h3>
+      <p>
+        <strong>B</strong> is the most surgical fix — keep everything we
+        already shipped but give chips real color tints so they
+        <em>look</em> like preview tags instead of washed-out labels.
+        Each chip's color matches the inner option row's icon
+        background, so users will recognize them. Five-minute change.<br /><br />
+        <strong>E</strong> is the more ambitious bet — a full preview of
+        what's inside, ending with a primary green CTA button. This is
+        the variant where the user
+        <em>cannot</em> miss that it's interactive, and they learn the
+        feature without expanding. Bigger footprint but worth it.<br /><br />
+        <strong>Skip</strong> A (too small a leap), C (too busy with the
+        leading icon), D (loses the chips you liked), F (circular-arrow
+        primitive is overkill).
+      </p>
+    </div>
+  </body>
+</html>

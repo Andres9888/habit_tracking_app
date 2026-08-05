@@ -1,0 +1,8 @@
+{
+  "rating": 3,
+  "summary": "User confused, didn't see promised changes or understand outcome",
+  "detailed_context": "The assistant's previous response appears incomplete or unclear (cuts off mid-explanation). The user attempted to follow instructions but either didn't see the expected result or didn't understand what was displayed. The polite 'maybe i don't understand' signals clear dissatisfaction requiring clarification. This is a communication failure—the explanation wasn't clear enough, or the expected outcome didn't materialize. The assistant should now explicitly walk through what was supposed to happen, verify the user completed each step, and check if they're looking at the right thing.",
+  "session_id": "fa602509-b93e-4cbc-8f2c-be1337d89e6b",
+  "captured_at": "2026-05-22T17:30:44.028Z",
+  "transcript_source": "fa602509-b93e-4cbc-8f2c-be1337d89e6b.jsonl"
+}

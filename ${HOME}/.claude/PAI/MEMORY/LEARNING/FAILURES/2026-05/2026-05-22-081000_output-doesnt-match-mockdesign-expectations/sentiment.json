@@ -1,0 +1,8 @@
+{
+  "rating": 3,
+  "summary": "Output doesn't match mock/design expectations",
+  "detailed_context": "The assistant shipped V2-B and stated it was ready for testing, but when the user reviewed the actual output (image), they found a clear mismatch with the expected mock design. This is a direct correction signal—the assistant moved forward with implementation that diverged from requirements. The user is redirecting back to spec compliance.",
+  "session_id": "5d49f6a8-549b-4a6b-9592-bc0c5f8cc1c2",
+  "captured_at": "2026-05-22T15:10:00.760Z",
+  "transcript_source": "5d49f6a8-549b-4a6b-9592-bc0c5f8cc1c2.jsonl"
+}

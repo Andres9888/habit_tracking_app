@@ -1,0 +1,8 @@
+{
+  "rating": 3,
+  "summary": "User can't see promised changes; unclear delivery",
+  "detailed_context": "The assistant claimed to open a mock in the browser with four design variants and provided TSX code, but the user reports seeing no changes. This is a critical delivery failure—either the mock wasn't actually rendered/accessible to the user, or the code wasn't implemented. The terse response ('don't see tehc change') signals frustration and a clear miss. The assistant overpromised visibility without verifying it was actually visible to the user.",
+  "session_id": "5d49f6a8-549b-4a6b-9592-bc0c5f8cc1c2",
+  "captured_at": "2026-05-21T22:52:50.649Z",
+  "transcript_source": "5d49f6a8-549b-4a6b-9592-bc0c5f8cc1c2.jsonl"
+}

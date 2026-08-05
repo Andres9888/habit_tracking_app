@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>More to Customize — stronger clickability</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #ece6df;
+        --surface: #faf7f3;
+        --card: #ffffff;
+        --border: #ddd8d2;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #8e95a2;
+        --primary-100: #d1fae5;
+        --primary-500: #10b981;
+        --primary-600: #059669;
+        --primary-700: #047857;
+        --error-light: #fee2e2;
+        --error-text: #b91c1c;
+        --streak-light: #fef3c7;
+        --streak-text: #92400e;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: var(--bg);
+        color: var(--text-primary);
+        padding: 36px 28px 96px;
+        -webkit-font-smoothing: antialiased;
+      }
+      h1 {
+        font-family: 'Literata', serif;
+        font-size: 26px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .lede {
+        color: var(--text-secondary);
+        font-size: 14px;
+        max-width: 880px;
+        margin-bottom: 28px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+        max-width: 1180px;
+      }
+      .frame {
+        background: var(--surface);
+        border-radius: 24px;
+        box-shadow: 0 14px 36px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        border: 1px solid #e8e2da;
+      }
+      .frame-head {
+        padding: 16px 18px 0;
+      }
+      .badge {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        background: var(--primary-100);
+        color: var(--primary-700);
+        padding: 3px 10px;
+        border-radius: 999px;
+        display: inline-block;
+      }
+      .name {
+        font-family: 'Literata', serif;
+        font-size: 17px;
+        font-weight: 600;
+        margin-top: 10px;
+      }
+      .pitch {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-top: 4px;
+        line-height: 1.5;
+      }
+      .scene {
+        padding: 16px 18px 22px;
+      }
+      .ctx {
+        font-size: 11px;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-align: center;
+        margin-bottom: 12px;
+      }
+      .reminder {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        margin-bottom: 24px;
+      }
+      .toggle {
+        width: 36px;
+        height: 22px;
+        border-radius: 999px;
+        background: var(--primary-600);
+        position: relative;
+      }
+      .toggle::after {
+        content: '';
+        position: absolute;
+        right: 3px;
+        top: 3px;
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
+        background: #fff;
+      }
+      .chip {
+        padding: 5px 11px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .chip-curve {
+        background: var(--error-light);
+        color: var(--error-text);
+      }
+      .chip-icons {
+        background: var(--primary-100);
+        color: var(--primary-700);
+      }
+      .chip-streak {
+        background: var(--streak-light);
+        color: var(--streak-text);
+      }
+      .chip-row {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .label-small {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+      }
+      .reasoning {
+        background: #f4eee5;
+        border-top: 1px dashed #d4cec3;
+        padding: 12px 18px;
+        font-size: 12px;
+        color: #5c4f43;
+        line-height: 1.55;
+      }
+      .pros {
+        color: #047857;
+        font-weight: 700;
+      }
+      .cons {
+        color: #b45309;
+        font-weight: 700;
+      }
+
+      /* ===== 1: Full primary CTA button at bottom ===== */
+      .v1-tile {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 14px 16px 12px;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.06);
+      }
+      .v1-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+      .v1-cta {
+        background: var(--primary-600);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        padding: 12px;
+        border-radius: 12px;
+        margin-top: 14px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      /* ===== 2: Tap-to-customize verb hint ===== */
+      .v2-tile {
+        background: #fff;
+        border: 1.5px solid var(--primary-600);
+        border-radius: 16px;
+        padding: 14px 16px;
+        box-shadow: 0 2px 8px rgba(5, 150, 105, 0.08);
+      }
+      .v2-top {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      .v2-verb {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--primary-700);
+        letter-spacing: 0.3px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .v2-arrow {
+        font-size: 14px;
+        color: var(--primary-600);
+      }
+
+      /* ===== 3: Big arrow on the right ===== */
+      .v3-tile {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.06);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .v3-body {
+        flex: 1;
+      }
+      .v3-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+        margin-bottom: 8px;
+      }
+      .v3-chips {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .v3-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        background: var(--primary-600);
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 700;
+        flex-shrink: 0;
+        box-shadow: 0 2px 6px rgba(5, 150, 105, 0.25);
+      }
+
+      /* ===== 4: Header band over chip preview ===== */
+      .v4-tile {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.06);
+      }
+      .v4-band {
+        background: var(--primary-600);
+        color: #fff;
+        padding: 8px 16px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .v4-band-right {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        opacity: 0.95;
+      }
+      .v4-body {
+        padding: 14px 16px 14px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>“More to Customize” — make it unmistakably tappable</h1>
+    <p class="lede">
+      The current tile reads like an info card because the chips
+      <em>preview</em> data and the EDIT pill is small. To say "this is a
+      control," we need a primary affordance — a button, a verb, or an
+      arrow that can't be mistaken for decoration. Four options, ranked.
+    </p>
+
+    <div class="grid">
+      <!-- 1: Full primary CTA button -->
+      <div class="frame">
+        <div class="frame-head">
+          <span class="badge">1 · Primary CTA button</span>
+          <div class="name">Chips on top, real green button on bottom</div>
+          <p class="pitch">
+            Add an explicit primary CTA button at the bottom of the
+            tile. The user can't miss it — it looks exactly like every
+            "Continue/Save" button they've ever tapped.
+          </p>
+        </div>
+        <div class="scene">
+          <div class="ctx">…reminder above…</div>
+          <div class="reminder">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="v1-tile">
+            <div class="v1-header">
+              <span class="label-small">More to customize</span>
+            </div>
+            <div class="chip-row">
+              <span class="chip chip-curve">♥ Forgiving</span>
+              <span class="chip chip-icons">🌱 Classic</span>
+              <span class="chip chip-streak">🎯 30-day</span>
+            </div>
+            <div class="v1-cta">CUSTOMIZE ›</div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <span class="pros">PROS</span> · impossible to misread as
+          decoration, looks like every native CTA button, full-width tap
+          target.<br />
+          <span class="cons">CONS</span> · same primary green as the
+          top-right Save button — risks visual competition.
+        </div>
+      </div>
+
+      <!-- 2: Tap-to-customize verb hint with green border -->
+      <div class="frame">
+        <div class="frame-head">
+          <span class="badge">2 · Verb + primary border</span>
+          <div class="name">"Tap to customize ›" + brand-colored outline</div>
+          <p class="pitch">
+            Lead with the verb ("Tap to customize"), wrap the tile in a
+            primary-green border to mark it as interactive. The chips
+            stay as the preview but the tile <em>itself</em> wears the
+            brand color.
+          </p>
+        </div>
+        <div class="scene">
+          <div class="ctx">…reminder above…</div>
+          <div class="reminder">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="v2-tile">
+            <div class="v2-top">
+              <span class="v2-verb"
+                >Tap to customize <span class="v2-arrow">›</span></span
+              >
+            </div>
+            <div class="chip-row">
+              <span class="chip chip-curve">♥ Forgiving</span>
+              <span class="chip chip-icons">🌱 Classic</span>
+              <span class="chip chip-streak">🎯 30-day</span>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <span class="pros">PROS</span> · verb-led header eliminates
+          ambiguity, primary-green border signals "interactive
+          container", minimal new visual weight.<br />
+          <span class="cons">CONS</span> · green border is louder than
+          our usual neutral tokens; needs to feel intentional, not
+          frantic.
+        </div>
+      </div>
+
+      <!-- 3: Floating circular arrow -->
+      <div class="frame">
+        <div class="frame-head">
+          <span class="badge">3 · Circular arrow button</span>
+          <div class="name">Filled green arrow circle on the right</div>
+          <p class="pitch">
+            Borrow the "open this" pattern from chat / inbox apps — a
+            big, filled circular arrow on the right side. Reads as a
+            tappable knob even from peripheral vision.
+          </p>
+        </div>
+        <div class="scene">
+          <div class="ctx">…reminder above…</div>
+          <div class="reminder">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="v3-tile">
+            <div class="v3-body">
+              <div class="v3-label">More to customize</div>
+              <div class="v3-chips">
+                <span class="chip chip-curve">♥ Forgiving</span>
+                <span class="chip chip-icons">🌱 Classic</span>
+                <span class="chip chip-streak">🎯 30-day</span>
+              </div>
+            </div>
+            <div class="v3-circle">›</div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <span class="pros">PROS</span> · the filled circular arrow is
+          a near-universal "open me" knob, eye-catching without being
+          loud.<br />
+          <span class="cons">CONS</span> · introduces a new primitive
+          (circle button), feels a bit "iOS messaging" stylistically.
+        </div>
+      </div>
+
+      <!-- 4: Header band -->
+      <div class="frame">
+        <div class="frame-head">
+          <span class="badge">4 · Header band</span>
+          <div class="name">Green strip on top: "TAP TO CUSTOMIZE ›"</div>
+          <p class="pitch">
+            A colored header strip with explicit instructions. Reads
+            like a labeled drawer or a marked section. Chips sit in the
+            white body below as the preview.
+          </p>
+        </div>
+        <div class="scene">
+          <div class="ctx">…reminder above…</div>
+          <div class="reminder">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="v4-tile">
+            <div class="v4-band">
+              <span>TAP TO CUSTOMIZE</span>
+              <span class="v4-band-right">3 settings ›</span>
+            </div>
+            <div class="v4-body">
+              <div class="chip-row">
+                <span class="chip chip-curve">♥ Forgiving</span>
+                <span class="chip chip-icons">🌱 Classic</span>
+                <span class="chip chip-streak">🎯 30-day</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <span class="pros">PROS</span> · explicit "TAP TO CUSTOMIZE"
+          instruction in a colored band can't be ignored, the band reads
+          like a header on a drawer.<br />
+          <span class="cons">CONS</span> · most visually loud of the
+          four, all-caps instruction can feel shouty.
+        </div>
+      </div>
+    </div>
+
+    <div
+      style="
+        margin-top: 36px;
+        padding: 18px 22px;
+        background: #ecfdf5;
+        border-left: 4px solid var(--primary-500);
+        border-radius: 8px;
+        max-width: 980px;
+      "
+    >
+      <h3
+        style="
+          font-family: 'Literata', serif;
+          font-size: 17px;
+          font-weight: 600;
+          margin-bottom: 6px;
+          color: #064e3b;
+        "
+      >
+        My pick: <strong>1 · Primary CTA button</strong>
+      </h3>
+      <p style="font-size: 13px; color: #065f46; line-height: 1.55">
+        Adding an explicit green "CUSTOMIZE ›" button at the bottom of
+        the tile is the strongest "tap me" signal — it looks like every
+        confirm/continue button the user has ever tapped. The chips
+        still act as a preview of what's inside. Risk: it shares brand
+        green with the Save button at the top of the modal, so we'd
+        want to confirm visual hierarchy stays right.<br /><br />
+        <strong>Runner-up:</strong> <em>2 · Verb + primary border</em>
+        — less visual weight than a button while still being explicit.
+      </p>
+    </div>
+  </body>
+</html>

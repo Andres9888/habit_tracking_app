@@ -1,0 +1,8 @@
+{
+  "rating": 3,
+  "summary": "Issue persists, troubleshooting attempts failed",
+  "detailed_context": "User explicitly states the problem hasn't been resolved despite receiving detailed technical explanations about file syncing and hard reloads. The extremely terse 'still don't see it' is a classic frustration signal—dismissing the previous lengthy response as unhelpful. This is a repeated issue (user asking again after an attempted fix), indicating the assistant's diagnosis was incomplete. Clear dissatisfaction with the troubleshooting approach.",
+  "session_id": "5d49f6a8-549b-4a6b-9592-bc0c5f8cc1c2",
+  "captured_at": "2026-05-21T23:01:35.118Z",
+  "transcript_source": "5d49f6a8-549b-4a6b-9592-bc0c5f8cc1c2.jsonl"
+}

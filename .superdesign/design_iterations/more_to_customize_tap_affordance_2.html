@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>More to Customize — stronger tap affordance variants</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #edeae5;
+        --card-elevated: #ffffff;
+        --border: #ddd8d2;
+        --border-strong: #c8c0b5;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #8e95a2;
+        --primary-100: #d1fae5;
+        --primary-300: #6ee7b7;
+        --primary-500: #10b981;
+        --primary-600: #059669;
+        --primary-700: #047857;
+        --growth-pill-bg: #ecfdf5;
+        --growth-pill-fg: #047857;
+        --status-streak-light: #fef3c7;
+        --status-streak-text: #b45309;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #ece6df;
+        color: var(--text-primary);
+        -webkit-font-smoothing: antialiased;
+        padding: 36px 28px 96px;
+      }
+      h1 {
+        font-family: 'Literata', serif;
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .lede {
+        color: var(--text-secondary);
+        font-size: 14px;
+        max-width: 900px;
+        margin-bottom: 12px;
+      }
+      .problem {
+        background: #fef3c7;
+        border-left: 4px solid #d97706;
+        padding: 12px 16px;
+        border-radius: 6px;
+        font-size: 13px;
+        color: #78350f;
+        max-width: 900px;
+        margin-bottom: 32px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+        max-width: 1680px;
+      }
+      .card {
+        background: #faf7f3;
+        border-radius: 24px;
+        box-shadow:
+          0 14px 36px rgba(0, 0, 0, 0.1),
+          0 2px 6px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+        border: 1px solid #e8e2da;
+      }
+      .header {
+        padding: 16px 18px 0;
+      }
+      .label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        color: var(--primary-700);
+        background: var(--primary-100);
+        padding: 3px 9px;
+        border-radius: 999px;
+        display: inline-block;
+      }
+      .name {
+        font-family: 'Literata', serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-top: 10px;
+      }
+      .pitch {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-top: 4px;
+        line-height: 1.5;
+      }
+      .scene {
+        padding: 16px 18px 22px;
+      }
+      .scene-label {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        text-align: center;
+        display: block;
+        margin-bottom: 6px;
+      }
+      .reminder-row {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        margin: 12px 0 16px;
+      }
+      .toggle {
+        width: 36px;
+        height: 22px;
+        border-radius: 999px;
+        background: var(--primary-600);
+        position: relative;
+      }
+      .toggle::after {
+        content: '';
+        position: absolute;
+        right: 3px;
+        top: 3px;
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
+        background: #fff;
+      }
+      .chevron {
+        font-size: 14px;
+        color: var(--text-tertiary);
+      }
+      .reasoning {
+        background: #f8f4ee;
+        border-top: 1px dashed #d4cec3;
+        padding: 14px 18px;
+        font-size: 12px;
+        color: #5c4f43;
+        line-height: 1.55;
+      }
+      .reasoning strong {
+        color: var(--text-primary);
+      }
+      .pros {
+        color: #047857;
+        font-weight: 600;
+      }
+      .cons {
+        color: #b45309;
+        font-weight: 600;
+      }
+      /* ===== V1: Full-width iOS settings row ===== */
+      .v1-row {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .v1-row .left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .v1-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: var(--primary-100);
+        color: var(--primary-700);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+      }
+      .v1-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .v1-sub {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-top: 1px;
+      }
+      .v1-meta {
+        font-size: 12px;
+        color: var(--text-tertiary);
+        margin-right: 6px;
+      }
+      /* ===== V2: Preview chips with Edit button ===== */
+      .v2-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 14px 14px 12px;
+      }
+      .v2-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .v2-title {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+      }
+      .v2-edit {
+        background: var(--primary-100);
+        color: var(--primary-700);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .v2-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .v2-chip {
+        background: #fff;
+        border: 1px solid var(--border);
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        color: var(--text-secondary);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-weight: 500;
+      }
+      /* ===== V3: Plus-prefixed pill ===== */
+      .v3-wrap {
+        display: flex;
+        justify-content: center;
+        padding: 4px 0;
+      }
+      .v3-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        background: #fff;
+        border-radius: 999px;
+        border: 1.5px solid var(--primary-600);
+        color: var(--primary-700);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        box-shadow: 0 1px 0 rgba(5, 150, 105, 0.06);
+      }
+      .v3-plus {
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        background: var(--primary-600);
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1;
+      }
+      /* ===== V4: Drawer with handle visual ===== */
+      .v4-drawer {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        position: relative;
+        padding: 16px;
+      }
+      .v4-handle {
+        width: 32px;
+        height: 4px;
+        background: var(--border-strong);
+        border-radius: 999px;
+        margin: -4px auto 8px;
+      }
+      .v4-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      .v4-text {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .v4-sub {
+        font-size: 11px;
+        color: var(--text-tertiary);
+        text-align: center;
+        margin-top: 4px;
+      }
+      /* ===== V5: Dashed disclosure card with verb ===== */
+      .v5-card {
+        background: transparent;
+        border: 1.5px dashed var(--border-strong);
+        border-radius: 16px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .v5-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .v5-emoji {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        border: 1px solid var(--border);
+      }
+      .v5-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .v5-sub {
+        font-size: 11px;
+        color: var(--text-tertiary);
+      }
+      /* ===== V6: Section header with "Customize" text-button ===== */
+      .v6-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 4px;
+      }
+      .v6-title {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+      }
+      .v6-action {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--primary-600);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .v6-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 8px 0 12px;
+      }
+      .v6-summary {
+        font-size: 12px;
+        color: var(--text-secondary);
+        line-height: 1.5;
+        text-align: center;
+      }
+      .rec-banner {
+        margin-top: 44px;
+        padding: 16px 20px;
+        background: #ecfdf5;
+        border-left: 4px solid var(--primary-500);
+        border-radius: 8px;
+        max-width: 1000px;
+      }
+      .rec-banner h3 {
+        font-family: 'Literata', serif;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #064e3b;
+      }
+      .rec-banner p {
+        font-size: 13px;
+        color: #065f46;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>“More to Customize” — make the box obviously openable</h1>
+    <p class="lede">
+      Six variants ranked by tap-affordance strength. Each preserves the
+      app’s warm-minimal language. The current pill reads as a label
+      because it lives in the same horizontal band where sibling section
+      labels (Choose an icon / Pick a color) are also centered and
+      tertiary-colored — context kills its button-ness.
+    </p>
+    <div class="problem">
+      <strong>Why the current pill fails:</strong> centered uppercase
+      tertiary text + a chevron looks like a passive header. Users skim
+      and treat it like the labels above it. The fix is either
+      <em>change the shape so it can’t be mistaken for a header</em> or
+      <em>show what’s inside</em> so the value is visible before tap.
+    </p>
+
+    <div class="grid">
+      <!-- V1: Full-width iOS settings row -->
+      <div class="card">
+        <div class="header">
+          <span class="label">V1 · iOS settings row</span>
+          <div class="name">Full-width row · trailing chevron</div>
+          <p class="pitch">
+            The pattern every iPhone user has tapped 10,000 times. Left
+            icon, title + subtitle, chevron on the right. Unmistakably
+            tappable.
+          </p>
+        </div>
+        <div class="scene">
+          <span class="scene-label">…reminder section above…</span>
+          <div class="reminder-row">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="v1-row">
+            <div class="left">
+              <span class="v1-icon">⚙</span>
+              <div>
+                <div class="v1-title">More to customize</div>
+                <div class="v1-sub">
+                  Curve · icons · streak goal
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center">
+              <span class="v1-meta">3</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <span class="pros">PROS</span> · zero learning curve, full-width
+          tap target (~600px²), trailing chevron is the universal
+          “opens-something” signal.<br />
+          <span class="cons">CONS</span> · most visually heavy of the six;
+          partly walks back the alignment work we just did.
+        </div>
+      </div>
+
+      <!-- V2: Preview chips with Edit button -->
+      <div class="card">
+        <div class="header">
+          <span class="label">V2 · Preview + Edit</span>
+          <div class="name">Show what’s inside · with an Edit pill</div>
+          <p class="pitch">
+            Users see the current values as chips; the "Edit" pill makes
+            it obviously interactive. Best for discoverability — they
+            learn what's customizable without opening.
+          </p>
+        </div>
+        <div class="scene">
+          <span class="scene-label">…reminder section above…</span>
+          <div class="reminder-row">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="v2-card">
+            <div class="v2-top">
+              <span class="v2-title">More to customize</span>
+              <span class="v2-edit">EDIT ›</span>
+            </div>
+            <div class="v2-chips">
+              <span class="v2-chip">♥ Forgiving</span>
+              <span class="v2-chip">🌱 Classic</span>
+              <span class="v2-chip">🎯 30-day</span>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <span class="pros">PROS</span> · teaches users what's
+          customizable before they tap, EDIT pill is unambiguous, preview
+          chips reduce blind-tapping.<br />
+          <span class="cons">CONS</span> · more visual density; if the
+          section is collapsed by default the preview duplicates info
+          that's about to expand.
+        </div>
+      </div>
+
+      <!-- V3: Plus-prefixed primary-color pill -->
+      <div class="card">
+        <div class="header">
+          <span class="label">V3 · Action pill</span>
+          <div class="name">+ icon · primary color · verb-led</div>
+          <p class="pitch">
+            Compact like the current pill but borrows brand color and a
+            plus-icon. "Customize" is a verb; the user expects something
+            to happen on tap.
+          </p>
+        </div>
+        <div class="scene">
+          <span class="scene-label">…reminder section above…</span>
+          <div class="reminder-row">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="v3-wrap">
+            <div class="v3-pill">
+              <span class="v3-plus">+</span>
+              Customize habit · 3 more
+              <span style="font-size: 11px; opacity: 0.75">›</span>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <span class="pros">PROS</span> · clearly a CTA, brand color
+          breaks out of the gray-label trap, "+ Customize" reads as
+          action.<br />
+          <span class="cons">CONS</span> · borrows the primary color used
+          by Save/CTA buttons — might compete with the Save button at the
+          top.
+        </div>
+      </div>
+
+      <!-- V4: Drawer with handle visual -->
+      <div class="card">
+        <div class="header">
+          <span class="label">V4 · Drawer affordance</span>
+          <div class="name">Pull-handle on top · "Pull to reveal"</div>
+          <p class="pitch">
+            Mimics a physical drawer or bottom sheet. The handle visual is
+            a known signal for "pull/open me." Closest to the iOS sheet
+            pattern users already know.
+          </p>
+        </div>
+        <div class="scene">
+          <span class="scene-label">…reminder section above…</span>
+          <div class="reminder-row">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="v4-drawer">
+            <div class="v4-handle"></div>
+            <div class="v4-content">
+              <span class="v4-text">3 more habit settings</span>
+              <span class="chevron">⌄</span>
+            </div>
+            <div class="v4-sub">Strength curve · icons · streak goal</div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <span class="pros">PROS</span> · the handle = "drag me open"
+          schema, content list shows what's hidden, subtitle previews
+          contents.<br />
+          <span class="cons">CONS</span> · we don’t actually drag this
+          open (just tap) — could over-promise interaction, and the
+          handle is a new visual primitive in this app.
+        </div>
+      </div>
+
+      <!-- V5: Dashed disclosure card -->
+      <div class="card">
+        <div class="header">
+          <span class="label">V5 · Dashed disclosure</span>
+          <div class="name">Dashed border = "more here" · verb in label</div>
+          <p class="pitch">
+            Dashed outlines universally signal "expandable" or
+            "incomplete." Combined with an emoji preview and a "Tap to
+            customize" verb, intent is obvious.
+          </p>
+        </div>
+        <div class="scene">
+          <span class="scene-label">…reminder section above…</span>
+          <div class="reminder-row">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="v5-card">
+            <div class="v5-left">
+              <span class="v5-emoji">🌱</span>
+              <div>
+                <div class="v5-title">Tap to customize growth</div>
+                <div class="v5-sub">3 more settings</div>
+              </div>
+            </div>
+            <span class="chevron">⌄</span>
+          </div>
+        </div>
+        <div class="reasoning">
+          <span class="pros">PROS</span> · dashed outline is a strong
+          "open me" signal, verb "Tap" is explicit, emoji preview
+          previews the contents.<br />
+          <span class="cons">CONS</span> · introduces a new border style;
+          dashed lines can feel un-polished if not done carefully.
+        </div>
+      </div>
+
+      <!-- V6: Section header with "Customize" text-button -->
+      <div class="card">
+        <div class="header">
+          <span class="label">V6 · Section + text button</span>
+          <div class="name">Sibling-aligned label · "Customize" CTA on right</div>
+          <p class="pitch">
+            Keep the section header rhythm of "Choose an icon" / "Pick a
+            color", but anchor a brand-colored "Customize ›" text-button
+            on the right. Stays minimal; the CTA color carries the
+            affordance.
+          </p>
+        </div>
+        <div class="scene">
+          <span class="scene-label">…reminder section above…</span>
+          <div class="reminder-row">
+            <div>
+              <div style="font-weight: 600">Daily reminder</div>
+              <div style="font-size: 12px; color: var(--text-secondary)">
+                8:00 AM
+              </div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="v6-row">
+            <span class="v6-title">More to customize</span>
+            <span class="v6-action">Customize <span>›</span></span>
+          </div>
+          <div class="v6-divider"></div>
+          <p class="v6-summary">
+            Strength curve · growth icons · streak goal
+          </p>
+        </div>
+        <div class="reasoning">
+          <span class="pros">PROS</span> · most aligned to existing
+          sibling labels, CTA color does the heavy lifting, summary teases
+          contents without opening.<br />
+          <span class="cons">CONS</span> · two tap targets (button vs
+          card) split the user's attention; brand-color CTA might compete
+          with Save.
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-banner">
+      <h3>Recommendation: V1 (iOS settings row) for safety, V2 (Preview + Edit) for delight</h3>
+      <p>
+        <strong>V1</strong> is the safest pick — it's the pattern users
+        tap dozens of times a day in iOS Settings, so there's no learning
+        curve and no risk of misreading it as a header. It walks back
+        some of the visual minimalism we landed on, but the tradeoff is
+        worth it for clarity.
+        <br /><br />
+        <strong>V2</strong> is the more interesting bet — it surfaces
+        what's actually customizable
+        (<em>Forgiving · Classic · 30-day</em>) as chips, so users learn
+        the feature without tapping in. The EDIT pill removes any doubt
+        that the card is interactive. Best long-term, but slightly more
+        visual weight. <br /><br />
+        <strong>Skip</strong> V3 (color competes with Save), V4 (handle
+        over-promises drag), V5 (dashed border introduces new
+        primitive), V6 (split tap targets).
+      </p>
+    </div>
+  </body>
+</html>

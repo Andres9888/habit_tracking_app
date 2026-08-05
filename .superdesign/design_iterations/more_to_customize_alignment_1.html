@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>More to Customize — alignment mock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #edeae5;
+        --border: #ddd8d2;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #8e95a2;
+        --primary-100: #d1fae5;
+        --primary-300: #6ee7b7;
+        --primary-600: #059669;
+        --primary-700: #047857;
+        --status-streak-light: #fef3c7;
+        --status-streak-text: #b45309;
+        --growth-pill-bg: #ecfdf5;
+        --growth-pill-fg: #047857;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #ece6df;
+        color: var(--text-primary);
+        -webkit-font-smoothing: antialiased;
+      }
+      .phone {
+        width: 390px;
+        background: #faf7f3;
+        border-radius: 36px;
+        box-shadow:
+          0 20px 50px rgba(0, 0, 0, 0.15),
+          0 4px 12px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        border: 1px solid #e8e2da;
+      }
+      .uppercase-label {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+      }
+      .body-text {
+        font-size: 17px;
+        line-height: 24px;
+        color: var(--text-primary);
+      }
+      .caption-text {
+        font-size: 13px;
+        line-height: 18px;
+        color: var(--text-secondary);
+      }
+      .heading-edit {
+        font-family: 'Literata', serif;
+        font-size: 28px;
+        line-height: 34px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .name-input {
+        font-size: 22px;
+        font-weight: 500;
+        color: var(--text-primary);
+        background: #ffffff;
+        border: 2px solid var(--border);
+        border-radius: 16px;
+        padding: 16px 20px;
+        text-align: center;
+        width: 100%;
+      }
+      .emoji-tile {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: #ffffff;
+        border: 1px solid var(--border);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+      }
+      .emoji-tile.selected {
+        background: var(--primary-100);
+        border-color: var(--primary-300);
+      }
+      .color-dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        display: inline-block;
+      }
+      .color-dot.selected {
+        outline: 3px solid var(--primary-300);
+        outline-offset: 2px;
+      }
+      .reminder-row {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .toggle {
+        width: 44px;
+        height: 26px;
+        border-radius: 999px;
+        background: var(--primary-600);
+        position: relative;
+      }
+      .toggle::after {
+        content: '';
+        position: absolute;
+        right: 3px;
+        top: 3px;
+        width: 20px;
+        height: 20px;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      /* BEFORE - heavy card */
+      .before-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        margin: 24px;
+        overflow: hidden;
+      }
+      .before-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+      }
+      .before-icon {
+        width: 16px;
+        height: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+      }
+      .badge-count {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-tertiary);
+      }
+      /* AFTER - flat divider */
+      .after-divider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 24px 8px;
+      }
+      .option-row {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 64px;
+      }
+      .option-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .edit-pill {
+        background: var(--primary-100);
+        color: var(--primary-700);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 4px 10px;
+        border-radius: 999px;
+      }
+      .growth-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--growth-pill-bg);
+        color: var(--growth-pill-fg);
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 999px;
+      }
+      .drag-handle {
+        width: 36px;
+        height: 5px;
+        border-radius: 3px;
+        background: #d4cec5;
+        margin: 8px auto;
+      }
+      .chevron {
+        font-size: 14px;
+        color: var(--text-tertiary);
+        line-height: 1;
+      }
+      .annotate {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 12px;
+        color: #8a766a;
+        font-style: italic;
+      }
+      .label-pill {
+        background: #fff;
+        border: 1px solid #e2dad0;
+        border-radius: 999px;
+        padding: 4px 12px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #6b6560;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="px-10 pb-2 pt-10">
+      <h1
+        class="mb-2 text-3xl font-bold"
+        style="font-family: 'Literata', serif"
+      >
+        “More to Customize” — alignment with the rest of the Add/Edit Habit
+        screen
+      </h1>
+      <p class="caption-text max-w-3xl">
+        Goal: bring the outer container in line with sibling sections
+        (<em>Choose an icon</em>, <em>Pick a color</em>) so the form reads as
+        one rhythm. Inner option rows are unchanged.
+      </p>
+    </header>
+
+    <main class="flex items-start gap-12 px-10 py-8">
+      <!-- BEFORE -->
+      <section>
+        <div class="mb-4 flex items-center gap-3">
+          <span class="label-pill" style="background: #fbe9d9; color: #9a5a2c"
+            >Before</span
+          >
+          <span class="annotate"
+            >Heavy bordered card · left-aligned icon · count badge</span
+          >
+        </div>
+        <div class="phone">
+          <div class="drag-handle"></div>
+          <div
+            class="flex items-center justify-between px-5 pb-3 pt-1"
+            style="color: var(--text-secondary); font-size: 15px"
+          >
+            <span>Cancel</span>
+            <span style="font-weight: 600; color: var(--text-primary)"
+              >Edit your habit</span
+            >
+            <span style="color: var(--primary-600); font-weight: 600"
+              >Save</span
+            >
+          </div>
+          <div class="pt-5 text-center">
+            <div class="heading-edit">Edit your habit</div>
+          </div>
+          <div class="px-6 pt-6">
+            <input class="name-input" value="Read 30 minutes" />
+          </div>
+
+          <div class="px-6 pt-7 text-center">
+            <div class="uppercase-label mb-3">Choose an icon</div>
+            <div class="flex justify-center gap-2">
+              <span class="emoji-tile selected">📖</span>
+              <span class="emoji-tile">🏃</span>
+              <span class="emoji-tile">🧘</span>
+              <span class="emoji-tile">💧</span>
+              <span class="emoji-tile">📚</span>
+              <span class="emoji-tile">⭐</span>
+            </div>
+          </div>
+
+          <div class="px-6 pt-6 text-center">
+            <div class="uppercase-label mb-3">Pick a color</div>
+            <div class="flex justify-center gap-3">
+              <span
+                class="color-dot selected"
+                style="background: #c084fc"
+              ></span>
+              <span class="color-dot" style="background: #60a5fa"></span>
+              <span class="color-dot" style="background: #34d399"></span>
+              <span class="color-dot" style="background: #fbbf24"></span>
+              <span class="color-dot" style="background: #fb7185"></span>
+              <span class="color-dot" style="background: #94a3b8"></span>
+            </div>
+          </div>
+
+          <div class="px-6 pt-6">
+            <div class="reminder-row">
+              <div>
+                <div class="body-text" style="font-weight: 600">
+                  Daily reminder
+                </div>
+                <div class="caption-text">8:00 AM</div>
+              </div>
+              <div class="toggle"></div>
+            </div>
+          </div>
+
+          <!-- Heavy card container -->
+          <div class="before-card">
+            <div class="before-card-header">
+              <div class="flex items-center gap-2.5">
+                <svg
+                  class="before-icon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="21" y1="4" x2="14" y2="4"></line>
+                  <line x1="10" y1="4" x2="3" y2="4"></line>
+                  <line x1="21" y1="12" x2="12" y2="12"></line>
+                  <line x1="8" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="20" x2="16" y2="20"></line>
+                  <line x1="12" y1="20" x2="3" y2="20"></line>
+                  <line x1="14" y1="2" x2="14" y2="6"></line>
+                  <line x1="8" y1="10" x2="8" y2="14"></line>
+                  <line x1="16" y1="18" x2="16" y2="22"></line>
+                </svg>
+                <span class="body-text" style="font-weight: 600"
+                  >More to customize</span
+                >
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="badge-count">3</span>
+                <span class="chevron">⌄</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="height: 24px"></div>
+        </div>
+        <ul
+          class="annotate ml-1 mt-5 max-w-sm space-y-1"
+          style="font-style: normal; color: #8a766a"
+        >
+          <li>• Only section wrapped in a bordered card</li>
+          <li>• Title is body-weight + left-aligned (different from above)</li>
+          <li>• Breaks the centered uppercase divider rhythm</li>
+        </ul>
+      </section>
+
+      <!-- AFTER -->
+      <section>
+        <div class="mb-4 flex items-center gap-3">
+          <span class="label-pill" style="background: #d1fae5; color: #047857"
+            >After — aligned</span
+          >
+          <span class="annotate"
+            >Matches sibling divider style · collapse preserved</span
+          >
+        </div>
+        <div class="phone">
+          <div class="drag-handle"></div>
+          <div
+            class="flex items-center justify-between px-5 pb-3 pt-1"
+            style="color: var(--text-secondary); font-size: 15px"
+          >
+            <span>Cancel</span>
+            <span style="font-weight: 600; color: var(--text-primary)"
+              >Edit your habit</span
+            >
+            <span style="color: var(--primary-600); font-weight: 600"
+              >Save</span
+            >
+          </div>
+          <div class="pt-5 text-center">
+            <div class="heading-edit">Edit your habit</div>
+          </div>
+          <div class="px-6 pt-6">
+            <input class="name-input" value="Read 30 minutes" />
+          </div>
+
+          <div class="px-6 pt-7 text-center">
+            <div class="uppercase-label mb-3">Choose an icon</div>
+            <div class="flex justify-center gap-2">
+              <span class="emoji-tile selected">📖</span>
+              <span class="emoji-tile">🏃</span>
+              <span class="emoji-tile">🧘</span>
+              <span class="emoji-tile">💧</span>
+              <span class="emoji-tile">📚</span>
+              <span class="emoji-tile">⭐</span>
+            </div>
+          </div>
+
+          <div class="px-6 pt-6 text-center">
+            <div class="uppercase-label mb-3">Pick a color</div>
+            <div class="flex justify-center gap-3">
+              <span
+                class="color-dot selected"
+                style="background: #c084fc"
+              ></span>
+              <span class="color-dot" style="background: #60a5fa"></span>
+              <span class="color-dot" style="background: #34d399"></span>
+              <span class="color-dot" style="background: #fbbf24"></span>
+              <span class="color-dot" style="background: #fb7185"></span>
+              <span class="color-dot" style="background: #94a3b8"></span>
+            </div>
+          </div>
+
+          <div class="px-6 pt-6">
+            <div class="reminder-row">
+              <div>
+                <div class="body-text" style="font-weight: 600">
+                  Daily reminder
+                </div>
+                <div class="caption-text">8:00 AM</div>
+              </div>
+              <div class="toggle"></div>
+            </div>
+          </div>
+
+          <!-- Flat divider, matches uppercase rhythm -->
+          <div class="after-divider mt-4">
+            <span class="uppercase-label">More to customize · 3</span>
+            <span class="chevron">⌄</span>
+          </div>
+
+          <div style="height: 16px"></div>
+        </div>
+        <ul
+          class="annotate ml-1 mt-5 max-w-sm space-y-1"
+          style="font-style: normal; color: #8a766a"
+        >
+          <li>
+            • Same caption typography as siblings (uppercase, semibold,
+            tertiary)
+          </li>
+          <li>• Centered, with chevron as the only affordance</li>
+          <li>• Count merged inline ("· 3") — no badge</li>
+          <li>• No outer border — flat in the scroll flow</li>
+        </ul>
+      </section>
+    </main>
+
+    <!-- AFTER expanded -->
+    <section class="px-10 pb-16 pt-2">
+      <div class="mb-4 flex items-center gap-3">
+        <span class="label-pill" style="background: #ddeefe; color: #1d4ed8"
+          >After — expanded</span
+        >
+        <span class="annotate"
+          >Helper caption + growth pill + 3 option rows render at the full
+          24px gutter, no nested card</span
+        >
+      </div>
+      <div class="phone" style="margin-left: 0">
+        <div class="drag-handle"></div>
+        <div class="pt-4 text-center">
+          <div class="uppercase-label mb-4">Reminder section above…</div>
+        </div>
+
+        <div class="after-divider">
+          <span class="uppercase-label">More to customize · 3</span>
+          <span
+            class="chevron"
+            style="display: inline-block; transform: rotate(180deg)"
+            >⌄</span
+          >
+        </div>
+
+        <div class="px-6 pt-2">
+          <p class="caption-text" style="color: var(--text-tertiary)">
+            Tap any option below to customize how this habit grows.
+          </p>
+        </div>
+
+        <div class="px-6 pt-3">
+          <span class="growth-pill"
+            >🌱 Growth Type · Compounding · ~66-day build</span
+          >
+        </div>
+
+        <div class="space-y-2.5 px-6 pb-6 pt-3">
+          <div class="option-row">
+            <div
+              class="option-icon"
+              style="background: var(--primary-100); color: var(--primary-600)"
+            >
+              ♥
+            </div>
+            <div class="flex-1">
+              <div class="body-text" style="font-weight: 600">
+                Strength Curve
+              </div>
+              <div class="caption-text">Forgiving · ~30-day build</div>
+              <div
+                class="caption-text"
+                style="color: var(--text-tertiary); font-size: 12px"
+              >
+                How your habit’s strength grows and resets when you miss
+                days.
+              </div>
+            </div>
+            <span class="edit-pill">EDIT</span>
+          </div>
+
+          <div class="option-row">
+            <div
+              class="option-icon"
+              style="background: var(--status-streak-light); font-size: 18px"
+            >
+              🌱
+            </div>
+            <div class="flex-1">
+              <div class="body-text" style="font-weight: 600">
+                Growth Icons
+              </div>
+              <div class="caption-text">Classic · 5 stages</div>
+              <div
+                class="caption-text"
+                style="color: var(--text-tertiary); font-size: 12px"
+              >
+                The 5-stage emoji progression on your habit’s strength bar.
+              </div>
+            </div>
+            <span class="edit-pill">EDIT</span>
+          </div>
+
+          <div class="option-row">
+            <div
+              class="option-icon"
+              style="
+                background: var(--status-streak-light);
+                color: var(--status-streak-text);
+              "
+            >
+              🎯
+            </div>
+            <div class="flex-1">
+              <div class="body-text" style="font-weight: 600">
+                Streak Goal
+              </div>
+              <div class="caption-text">30-day target</div>
+              <div
+                class="caption-text"
+                style="color: var(--text-tertiary); font-size: 12px"
+              >
+                A motivational target — purely visual, no penalty if you
+                miss it.
+              </div>
+            </div>
+            <span class="edit-pill">EDIT</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer
+      class="annotate px-10 pb-16"
+      style="font-style: normal; max-width: 880px"
+    >
+      <strong style="color: var(--text-primary)">Spec summary —</strong>
+      replace the outer
+      <code>Animated.View</code>’s
+      <code>rounded-2xl + border + colors.card</code> with a flat
+      <code>px-6</code> wrapper; replace the header
+      <code>SlidersHorizontal + body title + badge</code> with a centered
+      <code>uppercase</code>,
+      <code>letterSpacing: 0.5</code>,
+      <code>typography.caption + fontWeights.semibold</code>,
+      <code>color: colors.text.tertiary</code> label that includes the
+      count inline ("· 3") and a single chevron. Inner
+      <code>AdvancedOptionRow</code>s unchanged.
+    </footer>
+  </body>
+</html>
