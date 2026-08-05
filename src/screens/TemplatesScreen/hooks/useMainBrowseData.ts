@@ -30,48 +30,63 @@ export function useMainBrowseData({
   isPremiumUser,
   userHabitCount,
 }: UseMainBrowseDataOptions) {
-  const popularTemplates = useMemo(() => {
-    if (!allTemplates) return [];
-    const sorted = [...allTemplates].sort(
+  const { availableCategoryIds, categoryList, popularTemplates } = useMemo(() => {
+    if (!allTemplates) {
+      return {
+        availableCategoryIds: new Set<string>(),
+        categoryList: [],
+        popularTemplates: [],
+      };
+    }
+
+    const sortedByPopularity = [...allTemplates].sort(
       (a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0)
     );
-    return sortTemplatesByImportState(sorted, importedTemplateIds).slice(
-      0,
-      POPULAR_LIMIT
-    );
-  }, [allTemplates, importedTemplateIds]);
+    const categoryAggregates = new Map<
+      string,
+      {
+        count: number;
+        meta: CategoryMeta;
+        popularityScore: number;
+        previewTemplates: Doc<'templates'>[];
+      }
+    >();
 
-  const categoryList = useMemo(() => {
-    if (!allTemplates) return [];
-    const ids = [...new Set(allTemplates.map((t) => t.category))].sort();
-    return ids
-      .map((id) => {
-        const meta: CategoryMeta = CATEGORY_META[id] ?? {
+    for (const template of sortedByPopularity) {
+      const id = template.category;
+      const existing = categoryAggregates.get(id);
+      if (existing) {
+        existing.count += 1;
+        existing.popularityScore += template.popularityScore ?? 0;
+        if (existing.previewTemplates.length < PREVIEW_EMOJI_LIMIT) {
+          existing.previewTemplates.push(template);
+        }
+        continue;
+      }
+
+      categoryAggregates.set(id, {
+        count: 1,
+        meta: CATEGORY_META[id] ?? {
           bgColor: '#F3F4F6',
           borderColor: '#E5E7EB',
           icon: '📌',
           isPremium: false,
           label: id,
           textColor: '#374151',
-        };
-        const catTemplates = allTemplates.filter((t) => t.category === id);
-        const previewEmojis = [...catTemplates]
-          .sort((a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0))
-          .slice(0, PREVIEW_EMOJI_LIMIT)
-          .map((t) => t.icon);
-        const popularityScore = catTemplates.reduce(
-          (sum, template) => sum + (template.popularityScore ?? 0),
-          0
-        );
+        },
+        popularityScore: template.popularityScore ?? 0,
+        previewTemplates: [template],
+      });
+    }
 
-        return {
-          ...meta,
-          categoryId: id,
-          count: catTemplates.length,
-          popularityScore,
-          previewEmojis,
-        };
-      })
+    const nextCategoryList = Array.from(categoryAggregates.entries())
+      .map(([categoryId, aggregate]) => ({
+        ...aggregate.meta,
+        categoryId,
+        count: aggregate.count,
+        popularityScore: aggregate.popularityScore,
+        previewEmojis: aggregate.previewTemplates.map((template) => template.icon),
+      }))
       .sort((a, b) => {
         const priorityDelta =
           getCategoryPriority(a.categoryId) - getCategoryPriority(b.categoryId);
@@ -82,18 +97,25 @@ export function useMainBrowseData({
         return a.label.localeCompare(b.label);
       })
       .map(({ popularityScore: _popularityScore, ...category }) => category);
-  }, [allTemplates]);
+
+    return {
+      availableCategoryIds: new Set(categoryAggregates.keys()),
+      categoryList: nextCategoryList,
+      popularTemplates: sortTemplatesByImportState(
+        sortedByPopularity,
+        importedTemplateIds
+      ).slice(0, POPULAR_LIMIT),
+    };
+  }, [allTemplates, importedTemplateIds]);
 
   const quickFilterCategories = useMemo(
     () =>
-      QUICK_FILTER_IDS.filter((id) =>
-        categoryList.some((category) => category.categoryId === id)
-      ).map((id) => ({
+      QUICK_FILTER_IDS.filter((id) => availableCategoryIds.has(id)).map((id) => ({
         icon: CATEGORY_META[id].icon,
         id,
         label: CATEGORY_META[id].label,
       })),
-    [categoryList]
+    [availableCategoryIds]
   );
 
   return {

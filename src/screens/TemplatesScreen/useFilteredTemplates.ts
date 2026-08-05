@@ -27,16 +27,17 @@ export function useTemplatesByCategory(
     for (const template of allTemplates) {
       if (!template) continue;
       const category = template.category || 'uncategorized';
-      const existing = grouped.get(category) || [];
-      grouped.set(category, [...existing, template]);
+      const existing = grouped.get(category);
+      if (existing) {
+        existing.push(template);
+      } else {
+        grouped.set(category, [template]);
+      }
     }
 
-    for (const [category, templates] of grouped.entries()) {
-      grouped.set(
-        category,
-        templates.sort(
-          (a, b) => (b.popularityScore || 0) - (a.popularityScore || 0)
-        )
+    for (const templates of grouped.values()) {
+      templates.sort(
+        (a, b) => (b.popularityScore || 0) - (a.popularityScore || 0)
       );
     }
 
