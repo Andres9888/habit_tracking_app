@@ -17,6 +17,7 @@ function projectHabitForList(habit: Doc<'habits'>) {
     createdAt: habit.createdAt,
     currentStreak: habit.currentStreak,
     daysOfWeek: habit.daysOfWeek,
+    effortMinutes: habit.effortMinutes,
     frequency: habit.frequency,
     goalDuration: habit.goalDuration,
     goalUnit: habit.goalUnit,

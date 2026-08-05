@@ -11,6 +11,7 @@ export interface ConvexMutations {
     color?: string;
     iconColor?: string;
     daysOfWeek?: number[];
+    effortMinutes?: number;
     frequency?: string;
     goalDuration?: number;
     notes?: string;
@@ -26,6 +27,7 @@ export interface ConvexMutations {
     icon?: string;
     color?: string;
     iconColor?: string;
+    effortMinutes?: number | null;
     notes?: string;
     preferredTime?: string;
     remindersEnabled?: boolean;

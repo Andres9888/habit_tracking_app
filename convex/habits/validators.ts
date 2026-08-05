@@ -30,6 +30,7 @@ export const fullHabitValidator = v.object({
   cueTime: v.optional(v.string()),
   currentStreak: v.optional(v.number()),
   daysOfWeek: v.optional(v.array(v.number())),
+  effortMinutes: v.optional(v.number()),
   frequency: v.optional(v.string()),
   goalDuration: v.optional(v.number()),
   goalUnit: v.optional(v.string()),

@@ -47,6 +47,9 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
   const [frequency, setFrequency] = useState<string>(
     habitToEdit?.frequency ?? ''
   );
+  const [effortMinutes, setEffortMinutes] = useState<number | undefined>(
+    habitToEdit?.effortMinutes
+  );
   const [selectedDays, setSelectedDays] = useState<number[]>(
     habitToEdit?.daysOfWeek ?? [0, 1, 2, 3, 4, 5, 6]
   );
@@ -76,6 +79,7 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
 
   return {
     dayPhase,
+    effortMinutes,
     frequency,
     habitName,
     isColorPickerVisible,
@@ -89,6 +93,7 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     selectedEmoji,
     setColorPickerVisible,
     setDayPhase,
+    setEffortMinutes,
     setFrequency,
     setHabitName,
     setReminderOptionState,

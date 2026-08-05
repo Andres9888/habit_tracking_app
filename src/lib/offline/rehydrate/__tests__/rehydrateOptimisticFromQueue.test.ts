@@ -72,6 +72,7 @@ describe('rehydrateOptimisticFromQueue', () => {
       payload: {
         color: '#10B981',
         daysOfWeek: [1, 3, 5],
+        effortMinutes: 15,
         frequency: 'weekly',
         icon: '💪',
         name: 'Lift',
@@ -89,6 +90,7 @@ describe('rehydrateOptimisticFromQueue', () => {
       {
         _id: 'temp_habit_queued',
         daysOfWeek: [1, 3, 5],
+        effortMinutes: 15,
         frequency: 'weekly',
         name: 'Lift',
       },

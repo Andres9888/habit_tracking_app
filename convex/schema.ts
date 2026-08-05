@@ -82,6 +82,9 @@ const applicationTables = {
     // Background color for icon
     frequency: v.optional(v.string()),
 
+    // User-estimated effort for one completion, in minutes.
+    effortMinutes: v.optional(v.number()),
+
     // "default", etc.
     goalDuration: v.optional(v.number()),
 

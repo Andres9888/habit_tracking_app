@@ -28,6 +28,7 @@ export function useDeferredFormResetOnClose({
 
 interface HabitDataParams {
   dayPhase: string | null;
+  effortMinutes?: number;
   frequency: string;
   fullHabitName: string;
   reminderSound: string | null;
@@ -44,6 +45,7 @@ export function useHabitData(params: HabitDataParams) {
   return useMemo(
     () => ({
       dayPhase: params.dayPhase,
+      effortMinutes: params.effortMinutes,
       frequency: params.frequency,
       fullHabitName: params.fullHabitName,
       reminderSound: params.reminderSound,
@@ -57,6 +59,7 @@ export function useHabitData(params: HabitDataParams) {
     }),
     [
       params.dayPhase,
+      params.effortMinutes,
       params.frequency,
       params.fullHabitName,
       params.reminderSound,

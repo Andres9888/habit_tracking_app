@@ -21,6 +21,7 @@ interface FormSetters {
   setReminderTime: (time: Date) => void;
   setReminderSound: (sound: string) => void;
   setFrequency: (freq: string) => void;
+  setEffortMinutes: (minutes: number | undefined) => void;
   setSelectedDays: (days: number[]) => void;
   setDayPhase: (phase: HubermanPhase | null) => void;
   setReminderOptionState: (option: ReminderOption) => void;
@@ -41,6 +42,7 @@ export const useHabitFormInit = ({
 }: UseHabitFormInitOptions) => {
   const {
     setDayPhase,
+    setEffortMinutes,
     setFrequency,
     setHabitName,
     setSelectedDays,
@@ -63,6 +65,7 @@ export const useHabitFormInit = ({
     setRemindersEnabled(habitToEdit.remindersEnabled ?? false);
     setReminderTime(parseReminderTime(habitToEdit.reminderTime));
     setReminderSound(habitToEdit.reminderSound ?? DEFAULT_SOUND);
+    setEffortMinutes(habitToEdit.effortMinutes);
     setFrequency(habitToEdit.frequency ?? '');
     setSelectedDays(habitToEdit.daysOfWeek ?? [0, 1, 2, 3, 4, 5, 6]);
     setDayPhase(getPhaseFromPreferredTime(habitToEdit.preferredTime));

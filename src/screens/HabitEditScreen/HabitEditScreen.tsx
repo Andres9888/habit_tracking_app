@@ -135,6 +135,7 @@ function HabitEditScreenContent({
                   <Pressable onPress={Keyboard.dismiss}>
                     <HabitFormBody
                       colors={HABIT_COLORS}
+                      effortMinutes={state.effortMinutes}
                       growthType={state.growthType}
                       habitName={state.habitName}
                       initialEmojiLocked={false}
@@ -154,6 +155,7 @@ function HabitEditScreenContent({
                         scrollViewRef.current?.scrollToEnd({ animated: true })
                       }
                       onColorSelect={state.handleColorSelect}
+                      onEffortMinutesChange={state.handleEffortMinutesChange}
                       onEmojiSelect={state.handleEmojiSelect}
                       onHabitNameChange={handleNameChange}
                       onProgressEmojisChange={state.handleProgressEmojisChange}

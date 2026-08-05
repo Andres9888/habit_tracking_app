@@ -13,6 +13,7 @@ import { springs } from '@/theme/animations';
 import { useHaptics } from '@/utils/haptics';
 import {
   buildAccessibilityLabel,
+  getEffortAccessibilityText,
   getAccessibilityHint,
   getStatusText,
 } from './DayCell.helpers';
@@ -24,6 +25,7 @@ const DayCellComponent: React.FC<DayCellProps> = ({
   index,
   isCurrentDay,
   isUpcoming,
+  capacityMinutes,
   completed,
   completionStatus,
   total,
@@ -42,6 +44,8 @@ const DayCellComponent: React.FC<DayCellProps> = ({
   currentStreak,
   strengthPercent,
   completionIcon,
+  plannedMinutes,
+  remainingMinutes,
 }) => {
   const weekday = format(date, 'EEE');
   const dayNumber = format(date, 'd');
@@ -53,10 +57,18 @@ const DayCellComponent: React.FC<DayCellProps> = ({
     isDayPressEnabled && onDayPress && !isDayDisabled
   );
   const statusText = getStatusText(completionStatus);
+  const effortText = getEffortAccessibilityText({
+    capacityMinutes,
+    isCurrentDay,
+    isUpcoming,
+    plannedMinutes,
+    remainingMinutes,
+  });
   const accessibilityLabel = buildAccessibilityLabel(
     isCurrentDay,
     baseLabel,
-    statusText
+    statusText,
+    effortText
   );
   const accessibilityHint = getAccessibilityHint(canPressDay, isDayDisabled);
   const { trigger } = useHaptics({ preference: reduceMotion });
@@ -81,6 +93,7 @@ const DayCellComponent: React.FC<DayCellProps> = ({
 
   const cp = {
     colors,
+    capacityMinutes,
     completed,
     completionIcon,
     completionStatus,
@@ -91,6 +104,8 @@ const DayCellComponent: React.FC<DayCellProps> = ({
     isUpcoming,
     monthPrefix,
     reduceMotion,
+    plannedMinutes,
+    remainingMinutes,
     strengthPercent,
     total,
     weekday,

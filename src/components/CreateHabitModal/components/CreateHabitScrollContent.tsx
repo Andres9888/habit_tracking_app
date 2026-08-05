@@ -62,6 +62,7 @@ export function CreateHabitScrollContent({
             <HabitFormBody
               autoFocus={visible}
               colors={HABIT_COLORS}
+              effortMinutes={form.effortMinutes}
               habitName={form.habitName}
               isNewHabit
               placeholder={isPlaceholderReady ? habitNamePlaceholder : ''}
@@ -80,6 +81,7 @@ export function CreateHabitScrollContent({
                 scrollViewRef.current?.scrollToEnd({ animated: true })
               }
               onColorSelect={callbacks.handleColorSelect}
+              onEffortMinutesChange={form.setEffortMinutes}
               onEmojiSelect={callbacks.handleEmojiSelect}
               onHabitNameChange={callbacks.handleNameChange}
               onProgressEmojisChange={form.setProgressEmojis}

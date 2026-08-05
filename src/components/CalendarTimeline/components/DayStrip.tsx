@@ -58,6 +58,7 @@ const DayStripComponent: React.FC<DayStripProps> = ({
             <DayCell
               key={`timeline-day-${index}`}
               colors={augmentedColors}
+              capacityMinutes={completionCounts[index]?.capacityMinutes}
               completed={completionCounts[index]?.completed ?? 0}
               completionIcon={completionIcon}
               completionStatus={status}
@@ -74,7 +75,9 @@ const DayStripComponent: React.FC<DayStripProps> = ({
               isCurrentDay={isTodayCell}
               isDayPressEnabled={isDayPressEnabled}
               isUpcoming={isFuture(date)}
+              plannedMinutes={completionCounts[index]?.plannedMinutes}
               reduceMotion={reduceMotion}
+              remainingMinutes={completionCounts[index]?.remainingMinutes}
               streakConnectorColor={connectorColor}
               strengthPercent={strengthPercent}
               total={completionCounts[index]?.total ?? 0}

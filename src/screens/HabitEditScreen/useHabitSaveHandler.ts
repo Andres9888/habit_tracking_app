@@ -15,6 +15,7 @@ import type { ProgressEmojiSet } from '../../utils/progressEmojis';
 
 interface UseSaveHandlerProps {
   habitId: Id<'habits'> | null;
+  effortMinutes?: number;
   habitName: string;
   selectedEmoji: string | null;
   selectedColor: string;
@@ -28,6 +29,7 @@ interface UseSaveHandlerProps {
 
 export function useHabitSaveHandler({
   habitId,
+  effortMinutes,
   habitName,
   selectedEmoji,
   selectedColor,
@@ -83,6 +85,7 @@ export function useHabitSaveHandler({
 
       await updateHabit({
         habitId,
+        effortMinutes: effortMinutes ?? null,
         icon: selectedEmoji ?? undefined,
         color: selectedColor,
         iconColor: selectedColor,
@@ -105,6 +108,7 @@ export function useHabitSaveHandler({
   }, [
     isSaving,
     habitId,
+    effortMinutes,
     habitName,
     selectedEmoji,
     selectedColor,

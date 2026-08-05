@@ -30,6 +30,8 @@ const HabitFormBodyComponent = ({
   colors,
   selectedColor,
   onColorSelect,
+  effortMinutes,
+  onEffortMinutesChange,
   reminderEnabled,
   reminderTime,
   onReminderToggle,
@@ -80,6 +82,7 @@ const HabitFormBodyComponent = ({
         colors={colors}
         emojiQueryName={committedHabitName}
         isEmojiLocked={isEmojiLocked}
+        effortMinutes={effortMinutes}
         reminderEnabled={reminderEnabled}
         reminderSectionRef={reminderSectionRef}
         reminderTime={reminderTime}
@@ -87,6 +90,7 @@ const HabitFormBodyComponent = ({
         selectedEmoji={selectedEmoji}
         snapReminderDefaultToPreset={snapReminderDefaultToPreset}
         onColorSelect={onColorSelect}
+        onEffortMinutesChange={onEffortMinutesChange}
         onEmojiSelect={handleEmojiSelect}
         onReminderTimeChange={onReminderTimeChange}
         onReminderToggle={onReminderToggle}

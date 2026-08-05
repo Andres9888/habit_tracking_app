@@ -20,6 +20,7 @@ interface RemovedHabitPayload {
     cueLocation?: string;
     cueTime?: string;
     daysOfWeek?: number[];
+    effortMinutes?: number;
     frequency?: string;
     goalDuration?: number;
     goalUnit?: string;
@@ -112,6 +113,7 @@ export const remove = mutation({
         cueLocation: habit.cueLocation,
         cueTime: habit.cueTime,
         daysOfWeek: habit.daysOfWeek,
+        effortMinutes: habit.effortMinutes,
         frequency: habit.frequency,
         goalDuration: habit.goalDuration,
         goalUnit: habit.goalUnit,

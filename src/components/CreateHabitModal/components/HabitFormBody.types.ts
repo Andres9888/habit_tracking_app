@@ -36,6 +36,9 @@ export interface HabitFormBodyProps {
   colors: readonly string[];
   selectedColor: string;
   onColorSelect: (color: string) => void;
+  /** Estimated time required for one completion. */
+  effortMinutes?: number;
+  onEffortMinutesChange: (minutes: number | undefined) => void;
   reminderEnabled: boolean;
   /** Reminder time as Date object for EnhancedReminderSelector */
   reminderTime: Date;
