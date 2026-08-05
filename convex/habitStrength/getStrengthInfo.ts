@@ -12,6 +12,7 @@ import {
   LOGISTIC_SLOPE,
 } from './constants';
 import { startOfDay } from './dateUtils';
+import { withDecayedStrength } from './decayAdjustment';
 import { predictCompletionProbability } from './legacyFormula';
 import { generateHabitStrengthSnapshot } from './snapshot';
 import { STRENGTH_LEVELS } from './types';
@@ -27,12 +28,14 @@ export const getHabitStrengthInfo = query({
       throw new Error('Unauthenticated: Must be logged in to view habit strength');
     }
 
-    const habit = await ctx.db.get(args.habitId);
-    if (!habit) throw new Error('Habit not found');
+    const rawHabit = await ctx.db.get(args.habitId);
+    if (!rawHabit) throw new Error('Habit not found');
 
-    if (habit.userId !== identity.subject) {
+    if (rawHabit.userId !== identity.subject) {
       throw new Error('Not authorized to view this habit');
     }
+
+    const habit = withDecayedStrength(rawHabit);
 
     const tracking = await ctx.db
       .query('tracking')

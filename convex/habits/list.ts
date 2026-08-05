@@ -4,6 +4,7 @@
  */
 import { v } from 'convex/values';
 import { query } from '../_generated/server';
+import { withDecayedStrength } from '../habitStrength';
 import { fullHabitValidator } from './types';
 
 export const list = query({
@@ -31,10 +32,7 @@ export const list = query({
       return a._creationTime - b._creationTime;
     });
 
-    // Issue 4: Use stored strength/strengthLevel from habit documents
-    // instead of recalculating from all tracking records on every query.
-    // These fields are kept up-to-date by recalculateStreakAndStrength on toggle.
-    return sortedHabits;
+    return sortedHabits.map((h) => withDecayedStrength(h));
   },
   returns: v.array(fullHabitValidator),
 });

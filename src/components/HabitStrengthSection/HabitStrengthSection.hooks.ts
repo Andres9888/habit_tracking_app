@@ -19,12 +19,14 @@ interface HabitStrengthInput {
   completedDates: Set<string>;
   habitCreatedAt: number;
   habitStrength?: number;
+  strengthAlgorithm?: string | null;
 }
 
 export function useHabitStrengthData({
   completedDates,
   habitCreatedAt,
   habitStrength,
+  strengthAlgorithm,
 }: HabitStrengthInput) {
   const [timeRange, setTimeRange] = useState<TimeRange>('1y');
 
@@ -79,9 +81,13 @@ export function useHabitStrengthData({
   );
 
   const chartData = useMemo(() => {
-    const raw = generateChartDataFromCompletions(safeCompletedDates, timeRange);
+    const raw = generateChartDataFromCompletions(
+      safeCompletedDates,
+      timeRange,
+      strengthAlgorithm
+    );
     return sampleHistoryForChart(raw, 50);
-  }, [safeCompletedDates, timeRange]);
+  }, [safeCompletedDates, timeRange, strengthAlgorithm]);
 
   const strengthLabel = getStrengthLabel(currentStrength);
 

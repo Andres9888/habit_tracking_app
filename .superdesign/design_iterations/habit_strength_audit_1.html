@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Habit Strength — Detail Page Audit</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:#F2F2F7;
+    --card:#FFFFFF;
+    --text:#0B0B0F;
+    --text-2:#5B5B66;
+    --text-3:#9A9AA5;
+    --border:#E6E6EB;
+    --track:#EDEDF2;
+    --habit-cyan:#1FB6D1;
+    --tier-amber:#C2740A;
+    --tier-amber-bg:#FEF3C7;
+    --tier-emerald:#16A34A;
+    --tier-emerald-bg:#DCFCE7;
+    --tier-red:#DC2626;
+    --tier-red-bg:#FEE2E2;
+    --positive:#16A34A;
+    --negative:#DC2626;
+    --annot:#7C3AED;
+    --annot-bg:#F3E8FF;
+  }
+  html,body{ font-family:'Inter',system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); }
+  .card { background: var(--card); border-radius: 18px; box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 6px 24px rgba(11,11,15,.04); }
+  .phone { width: 390px; background: var(--bg); border-radius: 36px; padding: 18px 14px 28px; box-shadow: 0 20px 60px rgba(0,0,0,.12); border: 1px solid #E2E2E7; }
+  .phone-header { display:flex; justify-content:space-between; align-items:center; height: 36px; }
+  .h-title { font-weight:600; font-size:17px; }
+  .pill-tabs { display:flex; background:#EEF; border-radius:12px; padding:4px; gap:4px; background:#F0F0F4; }
+  .tab { flex:1; text-align:center; padding:8px 10px; font-size:13px; color:var(--text-2); border-radius:9px; font-weight:500; }
+  .tab.active { background:#FFFFFF; color:var(--text); box-shadow:0 1px 3px rgba(0,0,0,.06); }
+  .small { font-size:12px; color: var(--text-2); }
+  .xs { font-size:11px; color: var(--text-3); }
+  .toggle { display:inline-flex; background:#F0F0F4; border-radius:999px; padding:3px; }
+  .toggle .opt { padding:6px 11px; font-size:12px; color:var(--text-2); border-radius:999px; font-weight:500; }
+  .toggle .opt.active { background:#FFFFFF; color:var(--text); box-shadow:0 1px 2px rgba(0,0,0,.08); }
+  .ring-wrap { position:relative; }
+  .ring-num { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:700; }
+  .badge { display:inline-flex; align-items:center; padding:4px 10px; border-radius:999px; font-size:13px; font-weight:600; }
+  .arrow { stroke:var(--annot); stroke-width:1.5; fill:none; }
+  .annot { position:absolute; background:var(--annot-bg); color:var(--annot); font-weight:600; font-size:11.5px; padding:5px 8px; border-radius:8px; line-height:1.25; max-width:200px; box-shadow:0 1px 2px rgba(124,58,237,.15); }
+  .legend-dot { width:8px; height:8px; border-radius:999px; display:inline-block; margin-right:6px; vertical-align:middle; }
+  .chip { display:inline-flex; align-items:center; gap:6px; padding:3px 9px; border-radius:999px; font-size:11.5px; font-weight:600; background:#EEF2FF; color:#4338CA; }
+  .stat-col { flex:1; text-align:center; }
+  .stat-row { display:flex; align-items:center; background:#F7F7FB; border-radius:10px; padding:10px 8px; }
+  .divider-v { width:1px; height:24px; background:#E6E6EB; }
+  .delta-up { color:var(--positive); font-weight:600; }
+  .delta-down { color:var(--negative); font-weight:600; }
+  .scrim { background: linear-gradient(180deg, rgba(31,182,209,.20), rgba(31,182,209,0)); }
+  .scrim-amber { background: linear-gradient(180deg, rgba(194,116,10,.18), rgba(194,116,10,0)); }
+  .dashed { stroke-dasharray:4 4; }
+  .why-card { background:#FFFFFF; border:1px solid var(--border); border-radius:14px; padding:14px 16px; }
+  .why-card h4 { font-size:13px; font-weight:700; color:var(--annot); margin-bottom:6px; letter-spacing:.02em; text-transform:uppercase; }
+  .why-card p { font-size:13.5px; color:var(--text); line-height:1.5; }
+  .label-tag { font-size:10px; font-weight:700; color:#7C3AED; background:#F3E8FF; padding:2px 6px; border-radius:6px; letter-spacing:.04em; }
+  .bad-tag { font-size:10px; font-weight:700; color:#B91C1C; background:#FEE2E2; padding:2px 6px; border-radius:6px; letter-spacing:.04em; }
+</style>
+</head>
+<body class="min-h-screen p-8">
+
+<div class="max-w-[1480px] mx-auto">
+  <header class="mb-6">
+    <div class="flex items-baseline gap-3">
+      <h1 class="text-2xl font-bold">Habit Strength — Detail Page</h1>
+      <span class="small">Audit mockup · Run 5K · 35% Developing</span>
+    </div>
+    <p class="small mt-1">Left: live app today (matches the simulator screenshot). Right: proposed redesign with annotated rationale. Source: <code>.context/screenshots/01-current.png</code>.</p>
+  </header>
+
+  <div class="grid grid-cols-12 gap-8">
+
+    <!-- =================== CURRENT (LEFT) =================== -->
+    <div class="col-span-5">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="bad-tag">CURRENT</span>
+        <span class="small">As shipped today</span>
+      </div>
+
+      <div class="phone">
+        <div class="phone-header">
+          <span style="font-size:18px;">✕</span>
+          <span class="h-title">🏃 Run 5K</span>
+          <span class="small" style="border:1px solid var(--border); border-radius:999px; padding:5px 10px;">✎ Edit</span>
+        </div>
+
+        <div class="pill-tabs mt-4">
+          <div class="tab active">Calendar</div>
+          <div class="tab">Strength</div>
+          <div class="tab">Goal</div>
+        </div>
+
+        <!-- Strength card -->
+        <div class="card mt-4 p-4">
+          <div class="flex items-center justify-between mb-3">
+            <div class="font-semibold text-[15px]">Habit Strength</div>
+            <div class="toggle">
+              <div class="opt">1M</div>
+              <div class="opt">3M</div>
+              <div class="opt active">1Y</div>
+            </div>
+          </div>
+
+          <!-- Hero -->
+          <div class="flex items-center gap-3 mb-3">
+            <div class="ring-wrap" style="width:64px;height:64px;">
+              <svg viewBox="0 0 64 64" width="64" height="64">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--track)" stroke-width="6"/>
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--habit-cyan)" stroke-width="6"
+                  stroke-linecap="round" stroke-dasharray="163.36" stroke-dashoffset="106.18" transform="rotate(-90 32 32)"/>
+              </svg>
+              <div class="ring-num" style="font-size:15px;">35%</div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <span class="badge" style="background:var(--tier-amber-bg); color:var(--tier-amber);">Developing</span>
+              <div class="mt-1 flex items-center gap-1">
+                <span style="color:var(--positive);">↗</span>
+                <span class="delta-up text-[13px]">+25%</span>
+                <span class="small">vs last month</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart -->
+          <div class="-mx-1 mb-3">
+            <svg viewBox="0 0 340 100" width="100%" height="100">
+              <defs>
+                <linearGradient id="curGrad" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="var(--habit-cyan)" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="var(--habit-cyan)" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path d="M 8 80 C 60 75, 120 28, 180 24 S 280 50, 332 38" stroke="var(--habit-cyan)" stroke-width="2.5" fill="none"/>
+              <path d="M 8 80 C 60 75, 120 28, 180 24 S 280 50, 332 38 L 332 96 L 8 96 Z" fill="url(#curGrad)"/>
+              <circle cx="332" cy="38" r="4.5" fill="var(--habit-cyan)"/>
+            </svg>
+            <div class="flex justify-between mt-1 xs">
+              <span>Apr 16</span><span>May 2</span><span>Now</span>
+            </div>
+          </div>
+
+          <!-- Stats row -->
+          <div class="stat-row">
+            <div class="stat-col"><div class="xs">Since Start</div><div class="delta-up text-[13px]">35%</div></div>
+            <div class="divider-v"></div>
+            <div class="stat-col"><div class="xs">Last Month</div><div class="delta-up text-[13px]">+25%</div></div>
+            <div class="divider-v"></div>
+            <div class="stat-col"><div class="xs">Last Week</div><div class="delta-down text-[13px]">-4%</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Problems list (overlaid annotations summarized) -->
+      <div class="mt-6 space-y-2">
+        <div class="why-card" style="border-color:#FECACA; background:#FEF2F2;">
+          <h4 style="color:#B91C1C;">Problems with the current build</h4>
+          <ul class="text-[13px] space-y-1.5" style="color:#7F1D1D;">
+            <li>• A11y label hardcoded — screen reader says "Strong" at 35% (<code>ProgressRing.tsx:52</code>)</li>
+            <li>• 1M / 3M / 1Y toggle only moves the chart — ring & deltas frozen</li>
+            <li>• Cyan ring + amber badge clash (semantic vs personalization color conflict)</li>
+            <li>• Hero shows +25% (green) while -4% (red) hides in the row — buries the recent decline</li>
+            <li>• Chart has no Y-axis labels — the line is decorative, not readable</li>
+            <li>• Algorithm mode (Balanced / 63-day) is invisible — science is hidden</li>
+            <li>• Empty state is flat; no milestones, no "why this number" affordance</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== PROPOSED (RIGHT) =================== -->
+    <div class="col-span-7">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="label-tag">PROPOSED</span>
+        <span class="small">Track 1 (bugs) + 2.1, 2.4 (engagement) + 3.1, 3.2 (algorithm) shipped together</span>
+      </div>
+
+      <div class="flex gap-8 items-start">
+
+        <div class="phone">
+          <div class="phone-header">
+            <span style="font-size:18px;">✕</span>
+            <span class="h-title">🏃 Run 5K</span>
+            <span class="small" style="border:1px solid var(--border); border-radius:999px; padding:5px 10px;">✎ Edit</span>
+          </div>
+
+          <div class="pill-tabs mt-4">
+            <div class="tab">Calendar</div>
+            <div class="tab active">Strength</div>
+            <div class="tab">Goal</div>
+          </div>
+
+          <!-- Strength card (proposed) -->
+          <div class="card mt-4 p-4">
+
+            <!-- Header row with mode chip -->
+            <div class="flex items-center justify-between mb-1">
+              <div class="font-semibold text-[15px]">Habit Strength</div>
+              <span class="chip">⚖ Balanced · 63d</span>
+            </div>
+            <div class="xs mb-3">Auto-picked from template duration. Tap chip to learn more.</div>
+
+            <!-- Hero -->
+            <div class="flex items-center gap-4 mb-4">
+              <div class="ring-wrap" style="width:104px;height:104px;">
+                <svg viewBox="0 0 104 104" width="104" height="104">
+                  <!-- track -->
+                  <circle cx="52" cy="52" r="44" fill="none" stroke="var(--track)" stroke-width="9"/>
+                  <!-- progress arc — TIER color for semantic clarity -->
+                  <circle cx="52" cy="52" r="44" fill="none" stroke="var(--tier-amber)" stroke-width="9"
+                    stroke-linecap="round" stroke-dasharray="276.46" stroke-dashoffset="179.7" transform="rotate(-90 52 52)"/>
+                  <!-- inner accent ring in habit color (subtle personalization) -->
+                  <circle cx="52" cy="52" r="34" fill="none" stroke="var(--habit-cyan)" stroke-width="1.5" stroke-dasharray="2 4" opacity="0.55"/>
+                </svg>
+                <div class="ring-num" style="font-size:22px;">35%</div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <span class="badge" style="background:var(--tier-amber-bg); color:var(--tier-amber);">Developing</span>
+                <div class="mt-2 text-[13px]" style="color:var(--text);">⚠ First dip in 2 weeks</div>
+                <div class="text-[12.5px] mt-0.5" style="color:var(--text-2);">
+                  <span class="delta-down">-4%</span> last 7 days · <span class="delta-up">+25%</span> last 30
+                </div>
+                <a href="#" class="text-[12px] mt-1 inline-block" style="color:#4338CA;">Why this number ↗</a>
+              </div>
+            </div>
+
+            <!-- Chart range label (scoped honestly) -->
+            <div class="flex items-center justify-between mb-2">
+              <span class="xs">Chart range</span>
+              <div class="toggle">
+                <div class="opt">1M</div>
+                <div class="opt">3M</div>
+                <div class="opt active">1Y</div>
+              </div>
+            </div>
+
+            <!-- Chart with Y axis + target line + milestones -->
+            <div class="-mx-1 mb-3 relative">
+              <svg viewBox="0 0 340 150" width="100%" height="150">
+                <defs>
+                  <linearGradient id="propGrad" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="var(--tier-amber)" stop-opacity="0.28"/>
+                    <stop offset="100%" stop-color="var(--tier-amber)" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+
+                <!-- Y axis labels -->
+                <text x="6" y="22" font-size="9" fill="var(--text-3)">100%</text>
+                <text x="6" y="52" font-size="9" fill="var(--tier-emerald)" font-weight="600">85% formed</text>
+                <text x="6" y="92" font-size="9" fill="var(--text-3)">50%</text>
+                <text x="6" y="140" font-size="9" fill="var(--text-3)">0%</text>
+
+                <!-- gridlines -->
+                <line x1="44" x2="332" y1="20" y2="20" stroke="#EDEDF2" stroke-width="1"/>
+                <line x1="44" x2="332" y1="90" y2="90" stroke="#EDEDF2" stroke-width="1"/>
+                <line x1="44" x2="332" y1="138" y2="138" stroke="#EDEDF2" stroke-width="1"/>
+
+                <!-- target threshold dashed line at 85% -->
+                <line x1="44" x2="332" y1="48" y2="48" class="dashed" stroke="var(--tier-emerald)" stroke-width="1.4"/>
+
+                <!-- curve -->
+                <path d="M 50 122 C 100 118, 160 78, 210 70 S 290 92, 326 84"
+                      stroke="var(--tier-amber)" stroke-width="2.5" fill="none"/>
+                <path d="M 50 122 C 100 118, 160 78, 210 70 S 290 92, 326 84 L 326 138 L 50 138 Z" fill="url(#propGrad)"/>
+
+                <!-- milestone marker (crossed 25%) -->
+                <circle cx="120" cy="108" r="3.5" fill="#fff" stroke="var(--tier-amber)" stroke-width="2"/>
+                <text x="100" y="100" font-size="9" fill="var(--text-2)">25% · Apr 22</text>
+
+                <!-- current dot -->
+                <circle cx="326" cy="84" r="4.5" fill="var(--tier-amber)"/>
+                <circle cx="326" cy="84" r="9" fill="var(--tier-amber)" opacity="0.18"/>
+              </svg>
+              <div class="flex justify-between mt-1 xs pl-10 pr-2">
+                <span>Apr 16</span><span>May 2</span><span>Now</span>
+              </div>
+            </div>
+
+            <!-- Stats row (kept, deduped) -->
+            <div class="stat-row">
+              <div class="stat-col"><div class="xs">Since Start</div><div class="delta-up text-[13px]">+35%</div></div>
+              <div class="divider-v"></div>
+              <div class="stat-col"><div class="xs">Last Month</div><div class="delta-up text-[13px]">+25%</div></div>
+              <div class="divider-v"></div>
+              <div class="stat-col"><div class="xs">Last Week</div><div class="delta-down text-[13px]">-4%</div></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- =========== WHY column =========== -->
+        <div class="flex-1 space-y-3" style="max-width: 360px;">
+
+          <div class="why-card">
+            <h4>① Mode chip — Balanced · 63d</h4>
+            <p>Surfaces the algorithm choice (auto-picked from template duration, per commit <code>98f4ae19d</code>). Users see "this is the 63-day curve, calibrated to Lally 2010" — the science becomes a feature, not a hidden constant.</p>
+          </div>
+
+          <div class="why-card">
+            <h4>② Bigger ring (104px) with tier color</h4>
+            <p>Ring stroke is the <em>tier</em> color (amber for Developing) — semantic, never clashes with the user's habit color. Habit color stays as a subtle dashed inner accent for personalization. Fixes the cyan-vs-amber clash visible today.</p>
+          </div>
+
+          <div class="why-card">
+            <h4>③ Honest microcopy ("First dip in 2 weeks")</h4>
+            <p>Replaces the duplicated "+25% vs last month" with the most-truthful-and-relevant single line. Surfaces the <span class="delta-down">-4%</span> last-week decline that today's hero hides. The headline stops cheerleading and starts narrating.</p>
+          </div>
+
+          <div class="why-card">
+            <h4>④ Screen-reader fix</h4>
+            <p>Ring's <code>accessibilityLabel</code> now reads the actual tier ("35%, Developing"), not the hardcoded "Strong" bug in <code>ProgressRing.tsx:52</code>. One-line code change; massive correctness win.</p>
+          </div>
+
+          <div class="why-card">
+            <h4>⑤ Chart range scoped honestly</h4>
+            <p>Toggle relabeled "Chart range" and moved over the chart. Ring + deltas always reflect <em>current</em> strength — no longer pretending the toggle scopes everything. Cheaper than re-scoping all metrics, more honest UI.</p>
+          </div>
+
+          <div class="why-card">
+            <h4>⑥ Y-axis + 85% target line</h4>
+            <p>Chart is now readable: 0 / 50 / 85 / 100 grid, dashed "habit-formed" line at 85% (the threshold the algorithm targets). Users see how far they are from the goal, not just a decorative wiggle.</p>
+          </div>
+
+          <div class="why-card">
+            <h4>⑦ Milestone dot on chart</h4>
+            <p>Small flag at "25% · Apr 22" celebrates the day they crossed a tier. Adds a sense of journey to a static curve. Per the design-intent doc: bias toward what keeps users coming back.</p>
+          </div>
+
+          <div class="why-card">
+            <h4>⑧ "Why this number ↗"</h4>
+            <p>Tappable hint opens a sheet with the 7-day breakdown (✅ ✅ ⬜ ✅ ✅ ✅ ⬜), the per-completion delta, and a plain-English mode explanation. The math becomes inspectable, builds trust.</p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Other states preview -->
+      <div class="mt-10">
+        <div class="label-tag">PROPOSED · OTHER STATES</div>
+        <div class="flex gap-6 mt-3">
+
+          <!-- Empty state -->
+          <div class="card p-4 flex-1">
+            <div class="flex items-center justify-between mb-1">
+              <div class="font-semibold text-[15px]">Habit Strength</div>
+              <span class="chip">⚖ Balanced · 63d</span>
+            </div>
+            <div class="xs mb-3">Your curve starts the day you do.</div>
+            <svg viewBox="0 0 340 130" width="100%" height="130">
+              <text x="6" y="22" font-size="9" fill="var(--text-3)">100%</text>
+              <text x="6" y="52" font-size="9" fill="var(--tier-emerald)" font-weight="600">85% formed</text>
+              <text x="6" y="92" font-size="9" fill="var(--text-3)">50%</text>
+              <line x1="44" x2="332" y1="48" y2="48" class="dashed" stroke="var(--tier-emerald)" stroke-width="1.4"/>
+              <!-- expected curve, dashed preview -->
+              <path d="M 50 118 C 110 115, 170 78, 230 56 S 300 50, 326 48"
+                    stroke="var(--text-3)" stroke-width="2" fill="none" class="dashed"/>
+              <text x="160" y="116" font-size="10" fill="var(--text-2)">expected first 63 days</text>
+            </svg>
+            <div class="text-center mt-2">
+              <div class="text-[13px] font-semibold">🌱 Day 0 of 63</div>
+              <div class="xs">Complete today to start the climb.</div>
+            </div>
+          </div>
+
+          <!-- Strong state -->
+          <div class="card p-4 flex-1">
+            <div class="flex items-center justify-between mb-3">
+              <div class="font-semibold text-[15px]">Habit Strength</div>
+              <span class="chip">⚖ Balanced · 63d</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="ring-wrap" style="width:96px;height:96px;">
+                <svg viewBox="0 0 96 96" width="96" height="96">
+                  <circle cx="48" cy="48" r="40" fill="none" stroke="var(--track)" stroke-width="8"/>
+                  <circle cx="48" cy="48" r="40" fill="none" stroke="var(--tier-emerald)" stroke-width="8"
+                    stroke-linecap="round" stroke-dasharray="251.33" stroke-dashoffset="22.62" transform="rotate(-90 48 48)"/>
+                </svg>
+                <div class="ring-num" style="font-size:20px;">91%</div>
+              </div>
+              <div class="flex-1">
+                <span class="badge" style="background:var(--tier-emerald-bg); color:var(--tier-emerald);">Strong</span>
+                <div class="mt-2 text-[13px]">🏆 Strongest you've been</div>
+                <div class="text-[12.5px]" style="color:var(--text-2);">
+                  <span class="delta-up">+2%</span> last 7 days · habit formed ✓
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer summary -->
+  <div class="mt-12 grid grid-cols-2 gap-6">
+    <div class="why-card">
+      <h4>Pass A (bugs only) ships first</h4>
+      <p>Items ① (label only, no chip yet), ② (color rule), ③ (microcopy), ④ (a11y), ⑤ (toggle re-scope), ⑪ comment fix. ~½ day. Honest, accessible, no new visuals.</p>
+    </div>
+    <div class="why-card">
+      <h4>Pass B+C bundles the visual upgrade</h4>
+      <p>Adds the mode chip, the bigger ring, Y-axis labels, target line, milestone dot, and "Why this number". Empty state and Strong state below preview where the system goes once the redesign is in.</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

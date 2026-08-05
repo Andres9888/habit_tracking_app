@@ -12,6 +12,7 @@ import { getTodayForTimezone, maxDateKey } from './utils';
 import {
   calculateMomentumStrengthSnapshot,
   resolveAlgorithmMode,
+  withDecayedStrength,
 } from '../habitStrength';
 
 /**
@@ -156,12 +157,13 @@ export const listPaused = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return [];
-    return await ctx.db
+    const habits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .filter((q) => q.eq(q.field('paused'), true))
       .order('desc')
       .collect();
+    return habits.map((h) => withDecayedStrength(h));
   },
   returns: v.array(fullHabitValidator),
 });

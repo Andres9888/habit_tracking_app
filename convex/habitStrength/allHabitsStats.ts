@@ -4,6 +4,7 @@
  */
 import { v } from 'convex/values';
 import { query } from '../_generated/server';
+import { withDecayedStrength } from './decayAdjustment';
 import { getStrengthLevel } from './strengthLevel';
 import type { StrengthLevel } from './types';
 
@@ -13,11 +14,12 @@ export const getAllHabitsStrengthStats = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return { averageStrength: 0, levelDistribution: { automatic: 0, building: 0, developing: 0, starting: 0, strong: 0 }, strongestHabit: null, totalHabits: 0, weakestHabit: null };
 
-    const habits = await ctx.db
+    const rawHabits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .filter((q) => q.neq(q.field('archived'), true))
       .collect();
+    const habits = rawHabits.map((h) => withDecayedStrength(h));
 
     const stats = {
       averageStrength: 0,

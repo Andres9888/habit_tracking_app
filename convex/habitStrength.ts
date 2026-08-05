@@ -70,6 +70,7 @@ export {
   calculateNewStrength,
 } from './habitStrength/momentum';
 export { getStrengthLevel } from './habitStrength/strengthLevel';
+export { withDecayedStrength } from './habitStrength/decayAdjustment';
 export { generateHabitStrengthSnapshot } from './habitStrength/snapshot';
 export {
   calculateHabitStrength,

@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Habit Strength Explainer — Redesign</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:#F2F2F7;
+    --card:#FFFFFF;
+    --text:#0B0B0F;
+    --text-2:#5B5B66;
+    --text-3:#9A9AA5;
+    --border:#E6E6EB;
+    --tier-amber:#B45309;
+    --tier-amber-2:#D97706;
+    --tier-amber-bg:#FFFBEB;
+    --tier-emerald:#047857;
+    --tier-emerald-2:#059669;
+    --tier-emerald-bg:#ECFDF5;
+    --tier-red:#B91C1C;
+    --tier-red-2:#DC2626;
+    --tier-red-bg:#FEF2F2;
+    --status-success:#10B981;
+    --status-success-light:#D1FAE5;
+    --status-error:#EF4444;
+    --status-error-light:#FEE2E2;
+    --status-warning:#F59E0B;
+    --status-warning-light:#FEF3C7;
+    --annot:#7C3AED;
+    --annot-bg:#F3E8FF;
+    --annot-soft:#FAF5FF;
+  }
+  html, body { font-family:'Inter',system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); }
+
+  /* Phone frame mirroring the audit mockup */
+  .phone { width: 390px; background: var(--card); border-radius: 36px; padding: 18px 14px 28px; box-shadow: 0 20px 60px rgba(0,0,0,.12); border: 1px solid #E2E2E7; }
+  .phone-header { display:flex; justify-content:space-between; align-items:center; height: 36px; padding: 0 4px 16px; border-bottom: 1px solid var(--border); }
+  .h-title { font-weight:700; font-size:20px; }
+  .h-title-section { font-weight:600; font-size:17px; }
+  .close-btn { width:36px; height:36px; border-radius:999px; background:#EFEFF4; display:flex; align-items:center; justify-content:center; color:var(--text-2); font-weight:600; }
+
+  /* Info cards */
+  .info-card { border-radius: 16px; padding: 14px 16px; margin-bottom: 14px; }
+  .info-title { font-weight:600; font-size:15px; }
+  .info-desc  { font-size:13px; line-height:1.45; margin-top:4px; }
+  .info-icon  { width:18px; height:18px; }
+  .num-strong { font-feature-settings:"tnum"; font-variant-numeric:tabular-nums; font-weight:700; }
+
+  /* Tips */
+  .tips-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px 16px; }
+  .tips-title { font-size:14px; font-weight:600; color:var(--text); }
+  .tips-bullet { font-size:13px; line-height:1.5; color:var(--text); }
+
+  /* Annotation chips (purple) */
+  .annot { background:var(--annot-bg); color:var(--annot); font-weight:600; font-size:11.5px; padding:6px 9px; border-radius:8px; line-height:1.3; max-width:260px; box-shadow:0 1px 2px rgba(124,58,237,.12); }
+  .annot-num { display:inline-block; min-width:16px; height:16px; padding:0 4px; border-radius:999px; background:var(--annot); color:#fff; font-size:10px; line-height:16px; text-align:center; margin-right:6px; font-weight:700; }
+  .annot-row { display:flex; gap:10px; align-items:flex-start; }
+
+  /* Tag chips */
+  .bad-tag  { font-size:10px; font-weight:700; color:#B91C1C; background:#FEE2E2; padding:2px 6px; border-radius:6px; letter-spacing:.04em; }
+  .good-tag { font-size:10px; font-weight:700; color:#047857; background:#D1FAE5; padding:2px 6px; border-radius:6px; letter-spacing:.04em; }
+
+  .legend-dot { width:8px; height:8px; border-radius:999px; display:inline-block; margin-right:6px; vertical-align:middle; }
+
+  /* Mode chip mimicking AlgorithmModeChip */
+  .mode-chip { display:inline-flex; align-items:center; gap:6px; padding:3px 9px; border-radius:999px; font-size:11.5px; font-weight:600; background:#EEF2FF; color:#4338CA; }
+  .mode-chip .dot { width:6px; height:6px; border-radius:999px; background:#6366F1; }
+
+  /* Mode comparison row inside the new "Three intensities" card */
+  .mode-row { display:flex; align-items:center; justify-content:space-between; padding:8px 10px; border-radius:10px; background:#FFFFFF; }
+  .mode-row + .mode-row { margin-top:6px; }
+  .mode-name { font-size:13px; font-weight:600; }
+  .mode-nums { font-size:12px; color:var(--text-2); font-variant-numeric:tabular-nums; }
+  .mode-active { box-shadow: 0 0 0 1.5px var(--annot) inset; }
+
+  /* Page chrome */
+  .col-h { font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--text-2); }
+  .small { font-size:12px; color: var(--text-2); }
+</style>
+</head>
+<body class="min-h-screen p-8">
+
+<div class="max-w-[1480px] mx-auto">
+  <header class="mb-6">
+    <div class="flex items-baseline gap-3">
+      <h1 class="text-2xl font-bold">Habit Strength Explainer — Redesign</h1>
+      <span class="small">Modal opened from the Strength section · "How Strength Works"</span>
+    </div>
+    <p class="small mt-1">Left: current modal in production (<code>src/components/HabitStrengthHistory/InfoModal/</code>). Right: proposed redesign with rationale numbered to match the review findings.</p>
+  </header>
+
+  <div class="grid grid-cols-12 gap-8">
+
+    <!-- =================== CURRENT (LEFT) =================== -->
+    <div class="col-span-5">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="bad-tag">CURRENT</span>
+        <span class="col-h">As shipped today</span>
+      </div>
+
+      <div class="phone mx-auto">
+        <div class="phone-header">
+          <div class="h-title">How Strength Works</div>
+          <div class="close-btn">×</div>
+        </div>
+
+        <div class="px-1 pt-4">
+          <p class="text-[14px] leading-6 text-[color:var(--text-2)] mb-5">
+            Habit Strength shows how ingrained your habit has become. It's based on the proven exponential smoothing algorithm.
+          </p>
+
+          <!-- When You Complete (hard-coded hex) -->
+          <div class="info-card" style="background:#ecfdf5;">
+            <div class="flex items-center gap-2 mb-1">
+              <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>
+              <span class="info-title" style="color:#047857;">When You Complete</span>
+            </div>
+            <p class="info-desc" style="color:#059669;">
+              Each completion increases strength by <span class="num-strong">5%</span> of the remaining gap to 100%.
+            </p>
+          </div>
+
+          <!-- When You Miss -->
+          <div class="info-card" style="background:#fef2f2;">
+            <div class="flex items-center gap-2 mb-1">
+              <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><polyline points="3 7 9 13 13 9 21 17"/><polyline points="14 17 21 17 21 10"/></svg>
+              <span class="info-title" style="color:#B91C1C;">When You Miss</span>
+            </div>
+            <p class="info-desc" style="color:#dc2626;">
+              Missing a day reduces strength by <span class="num-strong">5%</span>. Consistent misses weaken the habit.
+            </p>
+          </div>
+
+          <!-- Building to 100% -->
+          <div class="info-card" style="background:#fffbeb;">
+            <div class="flex items-center gap-2 mb-1">
+              <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+              <span class="info-title" style="color:#B45309;">Building to 100%</span>
+            </div>
+            <p class="info-desc" style="color:#d97706;">
+              With perfect consistency, it takes <span class="num-strong">60–90 days</span> to reach near 100% strength.
+            </p>
+          </div>
+
+          <!-- Tips (invisible card — background == page background) -->
+          <div class="rounded-2xl p-4" style="background:var(--bg);">
+            <div class="tips-title mb-3">💡 Tips for Building Strength</div>
+            <div class="space-y-1">
+              <div class="tips-bullet">• Consistency beats intensity — daily small wins add up</div>
+              <div class="tips-bullet">• Don't break the chain — each day matters</div>
+              <div class="tips-bullet">• If you miss, get back immediately — decay is gradual</div>
+              <div class="tips-bullet">• Watch your 30-day comparison to track progress</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Issue chips below the phone -->
+      <div class="mt-5 grid grid-cols-2 gap-3">
+        <div class="annot"><span class="annot-num">1</span>“5%” is wrong — real rates vary by mode (1–10%).</div>
+        <div class="annot"><span class="annot-num">2</span>Hex backgrounds break in dark mode.</div>
+        <div class="annot"><span class="annot-num">3</span>Tips card uses page bg = invisible.</div>
+        <div class="annot"><span class="annot-num">4</span>Tip #3 contradicts strict mode; tip #4 references removed UI.</div>
+      </div>
+    </div>
+
+    <!-- =================== PROPOSED (RIGHT) =================== -->
+    <div class="col-span-7">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="good-tag">PROPOSED</span>
+        <span class="col-h">Mode-aware, theme-tokenized, current copy</span>
+      </div>
+
+      <div class="grid grid-cols-12 gap-6">
+
+        <div class="col-span-7">
+          <div class="phone mx-auto">
+            <div class="phone-header">
+              <div class="h-title">How Strength Works</div>
+              <div class="close-btn">×</div>
+            </div>
+
+            <div class="px-1 pt-4">
+              <p class="text-[14px] leading-6 text-[color:var(--text-2)] mb-4">
+                Habit Strength reflects how ingrained the habit has become. The numbers below show your current setting.
+              </p>
+
+              <!-- NEW: Active-mode banner -->
+              <div class="flex items-center justify-between mb-4 rounded-2xl px-4 py-3" style="background:#F5F3FF; border:1px solid #E9D5FF;">
+                <div>
+                  <div class="text-[11px] uppercase tracking-wider font-semibold" style="color:#6D28D9;">Your algorithm</div>
+                  <div class="text-[15px] font-semibold mt-0.5">Balanced</div>
+                  <div class="text-[12px] mt-0.5" style="color:var(--text-2);">~63 days to 85% with perfect consistency</div>
+                </div>
+                <div class="mode-chip"><span class="dot"></span>Balanced</div>
+              </div>
+
+              <!-- When You Complete (theme tokens, current mode's rate) -->
+              <div class="info-card" style="background:var(--tier-emerald-bg);">
+                <div class="flex items-center gap-2 mb-1">
+                  <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="var(--tier-emerald-2)" stroke-width="2"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>
+                  <span class="info-title" style="color:var(--tier-emerald);">When you complete a day</span>
+                </div>
+                <p class="info-desc" style="color:var(--tier-emerald-2);">
+                  Strength climbs by <span class="num-strong">3%</span> of the remaining gap to 100%. Bigger jumps when you're low, smaller as you near automatic.
+                </p>
+              </div>
+
+              <!-- When You Miss -->
+              <div class="info-card" style="background:var(--tier-red-bg);">
+                <div class="flex items-center gap-2 mb-1">
+                  <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="var(--tier-red-2)" stroke-width="2"><polyline points="3 7 9 13 13 9 21 17"/><polyline points="14 17 21 17 21 10"/></svg>
+                  <span class="info-title" style="color:var(--tier-red);">When a day goes by without it</span>
+                </div>
+                <p class="info-desc" style="color:var(--tier-red-2);">
+                  Strength fades by <span class="num-strong">2%</span> per missed day — even between visits. The longer the gap, the more it slips.
+                </p>
+              </div>
+
+              <!-- Building to 100% -->
+              <div class="info-card" style="background:var(--tier-amber-bg);">
+                <div class="flex items-center gap-2 mb-1">
+                  <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="var(--tier-amber-2)" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                  <span class="info-title" style="color:var(--tier-amber);">Reaching automatic</span>
+                </div>
+                <p class="info-desc" style="color:var(--tier-amber-2);">
+                  At <span class="num-strong">85%</span> the habit reads as automatic. With consistent practice in Balanced mode, that's about <span class="num-strong">63 days</span>.
+                </p>
+              </div>
+
+              <!-- NEW: Three intensities comparison -->
+              <div class="info-card" style="background:#F5F3FF;">
+                <div class="info-title mb-2" style="color:#4C1D95;">Three intensities</div>
+                <p class="info-desc mb-2" style="color:#6D28D9;">Tap the chip on the Strength card to switch. The numbers above update with your choice.</p>
+                <div class="mt-3">
+                  <div class="mode-row">
+                    <div>
+                      <div class="mode-name" style="color:#4C1D95;">Forgiving</div>
+                      <div class="mode-nums">+10% on / −1% off · ~18 days to 85%</div>
+                    </div>
+                    <div class="text-[11px] font-semibold" style="color:#6D28D9;">Simple cues</div>
+                  </div>
+                  <div class="mode-row mode-active">
+                    <div>
+                      <div class="mode-name" style="color:#4C1D95;">Balanced <span class="text-[10px] ml-1 px-1.5 py-0.5 rounded" style="background:#7C3AED; color:#fff;">ACTIVE</span></div>
+                      <div class="mode-nums">+3% on / −2% off · ~63 days to 85%</div>
+                    </div>
+                    <div class="text-[11px] font-semibold" style="color:#6D28D9;">Default</div>
+                  </div>
+                  <div class="mode-row">
+                    <div>
+                      <div class="mode-name" style="color:#4C1D95;">Strict</div>
+                      <div class="mode-nums">+1.3% on / −4% off · ~145 days to 85%</div>
+                    </div>
+                    <div class="text-[11px] font-semibold" style="color:#6D28D9;">High-stakes</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tips (now a real card; updated copy) -->
+              <div class="tips-card mb-2">
+                <div class="tips-title mb-3">Tips for building strength</div>
+                <div class="space-y-2">
+                  <div class="tips-bullet">• Consistency beats intensity — small daily wins compound.</div>
+                  <div class="tips-bullet">• Decay runs between visits, so the score keeps moving even when you don't open the app.</div>
+                  <div class="tips-bullet">• A short gap is recoverable; long ones cost real momentum in Strict mode.</div>
+                  <div class="tips-bullet">• Check the 7d and 30d deltas in the Strength card to spot trends early.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rationale column -->
+        <div class="col-span-5">
+          <div class="col-h mb-3">Why these changes</div>
+
+          <div class="space-y-3">
+            <div class="annot"><span class="annot-num">1</span><strong>Mode-aware numbers.</strong> The hard-coded 5% claim was wrong after we made the algorithm mode-aware. Now we surface the active mode's actual growth/decay (from <code>ALGORITHM_MODE_CONFIGS</code>) so the modal can't lie. The mode banner up top tells you which set of numbers you're reading.</div>
+
+            <div class="annot"><span class="annot-num">2</span><strong>Theme tokens for tier colors.</strong> Backgrounds and text now come from <code>colors.status.{success,error,warning}Light</code> + <code>STRENGTH_LEVELS</code>, so they flip correctly in dark mode and match the ring/chart tier colors. No more hex.</div>
+
+            <div class="annot"><span class="annot-num">3</span><strong>Tips card is a real card.</strong> Background switched from <code>colors.background</code> (which equals the modal's container) to <code>colors.card</code> with a 1px border. It now has visual weight against the page.</div>
+
+            <div class="annot"><span class="annot-num">4</span><strong>Updated tips.</strong> Tip 3 was misleading after the decay-between-toggles fix — replaced with copy that explains decay runs even when the app is closed. Tip 4 referenced a removed "30-day comparison" UI; updated to point at the 7d/30d deltas the hero now shows.</div>
+
+            <div class="annot"><span class="annot-num">5</span><strong>"Three intensities" card.</strong> The Strength section has an <code>AlgorithmModeChip</code> but the explainer never explained it. Closes the loop: shows all three modes side-by-side with their actual rates, highlights the active one, and invites the user to switch.</div>
+
+            <div class="annot"><span class="annot-num">6</span><strong>Header echoes section typography.</strong> Title uses <code>typography.heading3</code> for type-ramp consistency with "Habit Strength" in the section. Close button keeps the same shape — minor.</div>
+
+            <div class="annot"><span class="annot-num">7</span><strong>Removed emoji from headings.</strong> Lucide icons throughout matches the section. 💡 lived in tips title only — now a plain heading.</div>
+
+            <div class="annot opacity-70"><span class="annot-num">·</span>Out of scope for this pass: bottom safe-area inset (low-risk fix in <code>index.tsx:34</code>), drag handle on Android.</div>
+          </div>
+
+          <div class="mt-6 col-h">Files that would change</div>
+          <ul class="text-[12px] mt-2 space-y-1" style="color:var(--text-2);">
+            <li>• <code>src/components/HabitStrengthHistory/InfoModal/index.tsx</code> — wire mode prop, swap copy</li>
+            <li>• <code>src/components/HabitStrengthHistory/InfoModal/InfoCard.tsx</code> — accept theme tokens</li>
+            <li>• <code>src/components/HabitStrengthHistory/InfoModal/TipsSection.tsx</code> — bg + copy</li>
+            <li>• <code>src/components/HabitStrengthHistory/InfoModal/ModeComparison.tsx</code> — new, ≤100 lines</li>
+            <li>• Threaded prop from <code>HabitStrengthHistory.tsx</code> entry point</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="mt-10 small">
+    Reference: review findings 1–9 in conversation. ALGORITHM_MODE_CONFIGS values from <code>convex/habitStrength/algorithmConfig.ts:25-39</code>. Strength tier tokens from <code>src/theme/colors/core.ts</code> and <code>src/theme/darkColors.ts</code>.
+  </footer>
+</div>
+
+</body>
+</html>

@@ -14,13 +14,20 @@ import {
 } from 'date-fns';
 
 import type { StrengthSnapshot } from '../../HabitStrengthHistory/types';
-import { getStrengthLabel } from '../../HabitStrengthHistory/strengthUtils';
+import {
+  ALGORITHM_MODE_CONFIGS,
+  getStrengthLabel,
+} from '../../HabitStrengthHistory/strengthUtils';
 import type { TimeRange } from '../types';
 import { TIME_RANGE_DAYS } from '../constants';
 
-/** Exponential smoothing constants (matches Loop Habit Tracker) */
-const GROWTH_RATE = 0.05; // +5% of remaining on completion
-const DECAY_RATE = 0.95; // -5% on miss
+function resolveRates(mode?: string | null): {
+  growthRate: number;
+  decayRate: number;
+} {
+  const key = mode && mode in ALGORITHM_MODE_CONFIGS ? mode : 'balanced';
+  return ALGORITHM_MODE_CONFIGS[key];
+}
 
 /** Safely format a date, returning empty string on error */
 function safeFormatDate(date: Date): string {
@@ -47,8 +54,10 @@ function safeFormatDate(date: Date): string {
  */
 export function generateChartDataFromCompletions(
   completedDates: Set<string>,
-  timeRange: TimeRange
+  timeRange: TimeRange,
+  mode?: string | null
 ): StrengthSnapshot[] {
+  const { growthRate, decayRate } = resolveRates(mode);
   if (completedDates.size === 0) {
     return [];
   }
@@ -103,10 +112,10 @@ export function generateChartDataFromCompletions(
     }
     const wasCompleted = completedDates.has(dateStr);
 
-    // Apply exponential smoothing
+    // Apply exponential smoothing (mode-aware to match backend)
     strength = wasCompleted
-      ? strength + (1 - strength) * GROWTH_RATE
-      : strength * DECAY_RATE;
+      ? strength + (1 - strength) * growthRate
+      : strength * decayRate;
 
     // Convert to percentage (0-100)
     const strengthPercent = Math.round(strength * 1000) / 10;

@@ -3,6 +3,7 @@
 import { v } from 'convex/values';
 import { mutation, query } from '../_generated/server';
 import { hasPremiumAccess } from '../subscriptions/premiumCheck';
+import { withDecayedStrength } from '../habitStrength';
 import { fullHabitValidator } from './types';
 import { findMaxOrder } from './utils';
 
@@ -68,11 +69,12 @@ export const listArchived = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return [];
-    return await ctx.db
+    const habits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .filter((q) => q.eq(q.field('archived'), true))
       .collect();
+    return habits.map((h) => withDecayedStrength(h));
   },
   returns: v.array(fullHabitValidator),
 });

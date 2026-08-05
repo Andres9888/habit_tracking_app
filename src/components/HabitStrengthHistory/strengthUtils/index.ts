@@ -14,6 +14,7 @@
 
 export { calculateStrengthAtDate } from './calculation';
 export {
+  ALGORITHM_MODE_CONFIGS,
   DEFAULT_DECAY_RATE,
   DEFAULT_GROWTH_RATE,
   DEFAULT_MAX_SAMPLE_POINTS,

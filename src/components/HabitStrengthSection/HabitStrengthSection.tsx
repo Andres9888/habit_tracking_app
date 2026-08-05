@@ -46,7 +46,12 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
     setTimeRange,
     strengthLabel,
     timeRange,
-  } = useHabitStrengthData({ completedDates, habitCreatedAt, habitStrength });
+  } = useHabitStrengthData({
+    completedDates,
+    habitCreatedAt,
+    habitStrength,
+    strengthAlgorithm,
+  });
 
   if (isCalculating) {
     return <HabitStrengthLoading />;

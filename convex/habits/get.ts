@@ -8,6 +8,7 @@
  */
 import { v } from 'convex/values';
 import { query } from '../_generated/server';
+import { withDecayedStrength } from '../habitStrength';
 import { fullHabitValidator } from './types';
 
 export const get = query({
@@ -20,7 +21,7 @@ export const get = query({
     if (!habit) return null;
     if (habit.userId !== identity.subject) return null;
 
-    return habit;
+    return withDecayedStrength(habit);
   },
   returns: v.union(v.null(), fullHabitValidator),
 });
