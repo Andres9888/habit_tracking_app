@@ -8,17 +8,21 @@ import { useThemeColors } from '@/theme/ThemeContext';
 import { useSettingsSearch } from '../search';
 import { AndroidTimePickerDialog } from './components/AndroidTimePickerDialog';
 import { DisabledHint } from './components/DisabledHint';
+import { NotificationPermissionWarning } from './components/NotificationPermissionWarning';
 import { ReminderInsetCard } from './components/ReminderInsetCard';
+import { SoundHapticsRows } from './components/SoundHapticsRows';
 import {
   useStreakRemindersAnimations,
   useTimePickerState,
 } from './StreakRemindersSection.hooks';
+import { useNotificationPermissionStatus } from './useNotificationPermissionStatus';
 import type { StreakRemindersSectionProps } from './StreakRemindersSection.types';
 
 export function StreakRemindersSection(props: StreakRemindersSectionProps) {
   const { setShowTimePicker, showTimePicker } = useTimePickerState();
   const { colors: themeColors, isDark, settings } = useThemeColors();
   const { isSearching } = useSettingsSearch();
+  const { permissionGranted } = useNotificationPermissionStatus(props.enabled);
   const animations = useStreakRemindersAnimations(
     props.enabled,
     showTimePicker
@@ -41,11 +45,14 @@ export function StreakRemindersSection(props: StreakRemindersSectionProps) {
 
   return (
     <SettingsSection icon={props.icon} title='Reminders'>
+      {props.enabled && !permissionGranted && !isSearching ? (
+        <NotificationPermissionWarning />
+      ) : null}
       <SettingsRow
         icon={<Bell color={settings.bell.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.bell.bg}
-        label='Streak Reminders'
-        subtitle='Get nudged before an active streak slips'
+        label='Streak reminders'
+        subtitle='Nudge before an active streak slips'
         type='toggle'
         value={props.enabled}
         onToggle={(v) => void props.onToggle(v)}
@@ -80,6 +87,12 @@ export function StreakRemindersSection(props: StreakRemindersSectionProps) {
           />
         </>
       )}
+      <SoundHapticsRows
+        enabled={props.completionSoundEnabled}
+        soundType={props.completionSoundType}
+        onChangeEnabled={props.onChangeCompletionSoundEnabled}
+        onChangeType={props.onChangeCompletionSoundType}
+      />
     </SettingsSection>
   );
 }

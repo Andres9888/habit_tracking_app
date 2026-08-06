@@ -1,12 +1,11 @@
 /** SettingsSection - Card container with optional collapsible accordion behavior */
 import { ReactNode } from 'react';
 import { View } from 'react-native';
-import { shadows } from '@/theme';
 import { airy } from '@/theme/airyScale';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { StaticSectionLabel } from './StaticSectionLabel';
 import { CollapsibleSectionCard } from './CollapsibleSectionCard';
-import { getRaisedSurface } from './raisedSurface';
+import { getRaisedSurface, settingsCardShadow } from './raisedSurface';
 import { SettingsRowDividerProvider } from './SettingsRow/SettingsRowDivider.provider';
 
 interface Props {
@@ -35,7 +34,7 @@ export function SettingsSection({
     borderColor: themeColors.border,
     borderRadius: airy.cardRadius,
     borderWidth: 1,
-    ...shadows.card,
+    ...settingsCardShadow,
   };
 
   if (collapsible) {

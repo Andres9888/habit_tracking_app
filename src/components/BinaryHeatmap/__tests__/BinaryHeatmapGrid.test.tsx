@@ -172,7 +172,7 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      // Count the seven static day rows.
+      // Count View elements with accessibilityRole="row"
       const allViews = UNSAFE_getAllByType(require('react-native').View);
       const rows = allViews.filter(
         (v: unknown) => v.props.accessibilityRole === 'row'
@@ -194,7 +194,8 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      const buttons = getAllByRole('image');
+      // Get all buttons (interactive cells)
+      const buttons = getAllByRole('button');
       // Each week has 7 days, 2 weeks = 14 cells
       expect(buttons).toHaveLength(weekCount * 7);
     });
@@ -215,7 +216,7 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      const buttons = getAllByRole('image');
+      const buttons = getAllByRole('button');
       expect(buttons.length).toBeGreaterThan(0);
     });
 
@@ -288,13 +289,13 @@ describe('BinaryHeatmapGrid', () => {
       );
 
       // We should have 14 cells total (2 weeks * 7 days)
-      const buttons = getAllByRole('image');
+      const buttons = getAllByRole('button');
       expect(buttons).toHaveLength(14);
     });
   });
 
   describe('Cell Press Handling', () => {
-    it('should keep the legacy grid static when a cell is pressed', () => {
+    it('should call onCellPress when a cell is pressed', () => {
       const targetDate = '2025-01-05';
       const gridData = createGridData(1, () => createDay(targetDate));
 
@@ -306,13 +307,13 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      const buttons = getAllByRole('image');
+      const buttons = getAllByRole('button');
       fireEvent.press(buttons[0]);
 
-      expect(mockOnCellPress).not.toHaveBeenCalled();
+      expect(mockOnCellPress).toHaveBeenCalledWith(targetDate, false);
     });
 
-    it('should expose completed status accessibly', () => {
+    it('should call onCellPress with correct completed status', () => {
       const gridData: BinaryGridData = {
         weeks: [
           [
@@ -337,10 +338,11 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
+      // Press the completed cell
       const completedCell = getByLabelText(/December 15, 2025.*Completed/);
-      expect(completedCell.props.accessibilityState).toEqual({
-        selected: true,
-      });
+      fireEvent.press(completedCell);
+
+      expect(mockOnCellPress).toHaveBeenCalledWith('2025-12-15', true);
     });
 
     it('should handle missing onCellPress gracefully', () => {
@@ -354,7 +356,7 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      const buttons = getAllByRole('image');
+      const buttons = getAllByRole('button');
       expect(() => fireEvent.press(buttons[0])).not.toThrow();
     });
   });
@@ -380,7 +382,7 @@ describe('BinaryHeatmapGrid', () => {
       // Week 1, Day 1 = 8
 
       // We verify the grid renders correctly - animation logic is in BinaryCell
-      const buttons = getAllByRole('image');
+      const buttons = getAllByRole('button');
       expect(buttons).toHaveLength(14);
     });
   });
@@ -452,7 +454,7 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      const buttons = getAllByRole('image');
+      const buttons = getAllByRole('button');
       expect(buttons).toHaveLength(26 * 7);
     });
   });
@@ -699,7 +701,7 @@ describe('BinaryHeatmapGrid', () => {
       );
 
       // Initial: 2 weeks * 7 days = 14 cells
-      let buttons = getAllByRole('image');
+      let buttons = getAllByRole('button');
       expect(buttons).toHaveLength(14);
 
       // Re-render with more weeks
@@ -712,7 +714,7 @@ describe('BinaryHeatmapGrid', () => {
       );
 
       // Updated: 4 weeks * 7 days = 28 cells
-      buttons = getAllByRole('image');
+      buttons = getAllByRole('button');
       expect(buttons).toHaveLength(28);
     });
 
@@ -728,7 +730,7 @@ describe('BinaryHeatmapGrid', () => {
       );
 
       // Should render without errors
-      expect(getAllByRole('image')).toHaveLength(7);
+      expect(getAllByRole('button')).toHaveLength(7);
 
       // Change color
       rerender(
@@ -740,7 +742,7 @@ describe('BinaryHeatmapGrid', () => {
       );
 
       // Should still render without errors
-      expect(getAllByRole('image')).toHaveLength(7);
+      expect(getAllByRole('button')).toHaveLength(7);
     });
   });
 });

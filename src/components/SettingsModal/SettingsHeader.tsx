@@ -23,14 +23,15 @@ export function SettingsHeader({ onClose }: SettingsHeaderProps) {
         paddingBottom: 12,
       }}
     >
-      <View className='flex-row items-end justify-between'>
-        <View style={{ gap: 3 }}>
+      {/* Spec 4a: eyebrow 11/700 ls 2.5 above a 33/700 serif title, 6px gap. */}
+      <View className='flex-row items-start justify-between'>
+        <View style={{ gap: 6 }}>
           <Text
             style={{
               fontFamily: fontFamilies.primary.text,
-              fontSize: 10.5,
+              fontSize: 11,
               fontWeight: fontWeights.bold,
-              letterSpacing: 2,
+              letterSpacing: 2.5,
               textTransform: 'uppercase',
               color: themeColors.primary[700],
             }}
@@ -40,10 +41,10 @@ export function SettingsHeader({ onClose }: SettingsHeaderProps) {
           <Text
             style={{
               fontFamily: fontFamilies.serif,
-              fontSize: 29,
-              fontWeight: fontWeights.semibold,
+              fontSize: 33,
+              fontWeight: fontWeights.bold,
               letterSpacing: -0.5,
-              lineHeight: 32,
+              lineHeight: 38,
               color: themeColors.text.primary,
             }}
           >

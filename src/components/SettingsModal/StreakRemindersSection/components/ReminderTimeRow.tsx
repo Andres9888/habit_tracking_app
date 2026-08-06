@@ -1,5 +1,7 @@
-import { ChevronRight, Clock } from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
+/** ReminderTimeRow — "Remind me at" with the time as a tappable tinted pill.
+ *  The pill carries the affordance on its own, so this row drops the icon tile
+ *  and chevron the main list rows use — it sits inside an inset card, not the
+ *  settings list proper. */
 import { typography, fontWeights } from '@/theme/typography';
 import { triggerHaptic } from '@/utils/haptics';
 import { Text, View } from 'react-native';
@@ -25,17 +27,12 @@ export function ReminderTimeRow({
 
   return (
     <AnimatedPressable
-      accessibilityLabel='Reminder time'
+      accessibilityLabel='Remind me at'
       accessibilityRole='button'
+      accessibilityValue={{ text: formatDisplayTime(reminderTime) }}
       onPress={handlePress}
     >
       <View className='flex-row items-center px-3.5 py-3' style={{ gap: 12 }}>
-        <View
-          className='h-10 w-10 items-center justify-center rounded-xl'
-          style={{ backgroundColor: settings.clock.bg }}
-        >
-          <Clock color={settings.clock.icon} size={iconSizes.small} />
-        </View>
         <Text
           className='flex-1'
           style={{
@@ -44,22 +41,22 @@ export function ReminderTimeRow({
             color: themeColors.text.primary,
           }}
         >
-          Reminder time
+          Remind me at
         </Text>
-        <Text
-          style={{
-            ...typography.body,
-            fontWeight: fontWeights.medium,
-            color: themeColors.text.secondary,
-          }}
+        <View
+          className='rounded-[9px] px-3 py-1.5'
+          style={{ backgroundColor: settings.clock.bg }}
         >
-          {formatDisplayTime(reminderTime)}
-        </Text>
-        <ChevronRight
-          color={themeColors.text.secondary}
-          size={iconSizes.small}
-          strokeWidth={2}
-        />
+          <Text
+            style={{
+              ...typography.body,
+              fontWeight: fontWeights.bold,
+              color: settings.clock.icon,
+            }}
+          >
+            {formatDisplayTime(reminderTime)}
+          </Text>
+        </View>
       </View>
     </AnimatedPressable>
   );

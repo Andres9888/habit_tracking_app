@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme';
 import { borderRadius } from '../../../../theme/spacing';
-import { typography, fontWeights } from '@/theme/typography';
+import { typography, fontWeights, fontFamilies } from '@/theme/typography';
 
 export const progressStyles = StyleSheet.create({
   badgeIcon: {

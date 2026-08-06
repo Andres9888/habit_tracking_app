@@ -27,7 +27,7 @@ import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
 import { useBottomBarProps } from './useBottomBarProps';
 import { schedulePostLaunchAppPreload } from './postLaunchPreload';
-import { useTemplatesWarmup } from './hooks/useTemplatesWarmup';
+import { useWarmTemplatesCache } from '../../screens/TemplatesScreen/useWarmTemplatesCache';
 import { enterEasing } from '../../theme/animations';
 
 const ENTERING = FadeInDown.duration(280).easing(enterEasing);
@@ -38,7 +38,7 @@ function HabitsAppContent() {
   useEffect(() => {
     return schedulePostLaunchAppPreload();
   }, []);
-  useTemplatesWarmup();
+  useWarmTemplatesCache();
 
   const [overlaysMounted, setOverlaysMounted] = useState(false);
   useEffect(() => {
@@ -130,17 +130,18 @@ function HabitsAppContent() {
           </Animated.View>
         )}
         {selection.isSelectionMode ? (
-            <SelectionActionBar
-              selectedCount={selection.selectedCount}
-              onArchive={handleBatchArchivePress}
-              onCancel={handleExitSelectionMode}
-              onDelete={selectionActions.showDeleteConfirmation}
-            />
-          ) : (
-            <BottomActionBar {...bottomBar} />
-          )}
+          <SelectionActionBar
+            selectedCount={selection.selectedCount}
+            onArchive={handleBatchArchivePress}
+            onCancel={handleExitSelectionMode}
+            onDelete={selectionActions.showDeleteConfirmation}
+          />
+        ) : (
+          <BottomActionBar {...bottomBar} />
+        )}
 
-        {overlaysMounted ? <HabitsAppOverlays
+        {overlaysMounted ? (
+          <HabitsAppOverlays
             batchArchiveUndoCount={selectionActions.batchArchiveUndoCount}
             batchArchiveUndoVisible={selectionActions.batchArchiveUndoVisible}
             confirmDeleteCount={selectionActions.deleteCount}
@@ -153,7 +154,8 @@ function HabitsAppContent() {
             onConfirmDeleteConfirm={handleConfirmBatchDelete}
             onPaywallClose={handlers.handlePaywallClose}
             onPaywallSuccess={handlers.handlePaywallSuccess}
-          /> : null}
+          />
+        ) : null}
       </View>
     </GestureHandlerRootView>
   );

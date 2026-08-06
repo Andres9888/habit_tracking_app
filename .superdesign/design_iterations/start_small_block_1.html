@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Start Small block — drill-down variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,600;7..72,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F1ED;            /* colors.background (light) */
+    --card:#F8F5F1;          /* colors.cardPaper */
+    --border:#DDD8D2;
+    --ink:#2D2A26;
+    --ink2:#6B6560;
+    --quiet:#6E6660;
+    --addBg:#2FA36F;
+    --addedBg:#DDF2E4;
+    --addedFg:#157A4E;
+    --gold:#E8B94D;
+    --goldFill:#F2E3B8;
+    --startSmallBg:#EDE9DF;  /* matches library card's START SMALL fill */
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#E7E2DB;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;color:var(--ink);padding:28px 16px 60px}
+  h1{font-family:Literata,Georgia,serif;font-size:22px;margin:0 0 4px}
+  .sub{color:#6B6560;font-size:14px;margin:0 0 26px;max-width:960px;line-height:1.5}
+  .row{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start;justify-content:center}
+  .col{width:390px}
+  .label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8C877B;margin:0 0 8px}
+  .note{font-size:12.5px;color:#6B6560;line-height:1.5;margin:10px 2px 0}
+  .note b{color:#2D2A26}
+  .phone{background:var(--bg);border-radius:26px;padding:16px 18px 0;box-shadow:0 6px 22px rgba(90,70,45,.14);overflow:hidden}
+
+  /* section chrome */
+  .sec{display:flex;align-items:center;gap:7px;margin:0 0 12px}
+  .sec span{font-size:16px;font-weight:700;letter-spacing:-.2px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  .step{display:flex;gap:12px;align-items:flex-start;padding-bottom:14px}
+  .step:last-of-type{padding-bottom:0}
+  .num{flex:0 0 26px;height:26px;border-radius:13px;background:var(--addedBg);color:var(--addedFg);display:grid;place-items:center;font-size:12px;font-weight:700;margin-top:1px}
+  .stepTxt{font-size:15px;line-height:1.47}
+  .cadence{display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);margin-top:16px;padding-top:16px}
+  .cadence .l{font-size:13.5px;font-weight:700;color:var(--gold)}
+  .cadence .v{font-size:13.5px;color:var(--ink2);margin-left:auto;text-align:right}
+
+  /* ---- Variant A: quiet echo of library treatment ---- */
+  .ssA{background:var(--startSmallBg);border-radius:16px;padding:14px 18px;margin-top:18px}
+  .ssA .k{font-size:11px;font-weight:700;letter-spacing:.08em;color:#8C877B;margin-bottom:4px}
+  .ssA .v{font-size:16px;line-height:1.4}
+
+  /* ---- Variant B: permission framing ---- */
+  .ssB{margin-top:18px;background:var(--card);border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:16px;padding:14px 16px 14px 15px}
+  .ssB .k{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7D5907;margin-bottom:6px}
+  .ssB .v{font-size:16px;line-height:1.45}
+  .ssB .t{font-size:13px;color:var(--ink2);margin-top:6px}
+
+  /* ---- Variant C: two-tier CTA ---- */
+  .ssC{margin-top:18px;background:var(--goldFill);border-radius:18px;padding:15px 16px}
+  .ssC .k{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7D5907;margin-bottom:6px}
+  .ssC .v{font-size:16px;line-height:1.45;margin-bottom:12px}
+  .ghost{display:block;width:100%;text-align:center;background:transparent;border:1.5px solid #C9A748;color:#7D5907;border-radius:999px;padding:12px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
+
+  /* sticky footer */
+  .footer{margin:0 -18px;padding:22px 18px 20px;background:linear-gradient(180deg,rgba(245,241,237,0) 0%,var(--bg) 38%,var(--bg) 100%)}
+  .add{width:100%;background:var(--addBg);color:#fff;border:0;border-radius:999px;padding:17px;font-size:17px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 4px 14px rgba(21,122,78,.28)}
+  .cust{display:block;text-align:center;color:var(--ink2);font-size:13px;font-weight:600;padding:12px 0 0}
+  .fade{height:14px}
+</style>
+</head>
+<body>
+
+<h1>“Start small” block — three variants</h1>
+<p class="sub">
+  Placement is identical in all three: <b>inside / directly below “How to start”, immediately above the sticky Add button</b> — the last thing read before the decision.
+  Copy is real <code>startSmallVersion</code> data from <code>templatesDataSeed.ts</code> (255 of 316 templates have it). Example habit: <b>Wake-Up Movement</b>.
+</p>
+
+<div class="row">
+
+  <!-- ================= VARIANT A ================= -->
+  <div class="col">
+    <p class="label">A · Quiet echo (lowest risk)</p>
+    <div class="phone">
+      <div class="sec">✅ <span>How to start</span></div>
+      <div class="card">
+        <div class="step"><div class="num">1</div><div class="stepTxt">Start small: 10 seconds of arm circles before you leave the bed.</div></div>
+        <div class="step"><div class="num">2</div><div class="stepTxt">Add 2 minutes of gentle stretching once standing feels routine.</div></div>
+        <div class="step"><div class="num">3</div><div class="stepTxt">Build to 5 minutes — a short walk or full-body stretch.</div></div>
+        <div class="cadence"><span>🔁</span><span class="l">Suggested cadence</span><span class="v">Daily · 5 min</span></div>
+      </div>
+
+      <div class="ssA">
+        <div class="k">START SMALL</div>
+        <div class="v">Do 10 seconds of arm circles.</div>
+      </div>
+
+      <div class="fade"></div>
+      <div class="footer">
+        <button class="add">+ Add this habit</button>
+        <span class="cust">Customize</span>
+      </div>
+    </div>
+    <p class="note">Reuses the exact treatment from the library card, so it reads as familiar. <b>Pro:</b> zero new visual language, ships fastest. <b>Con:</b> looks like metadata, not permission — weakest objection-kill.</p>
+  </div>
+
+  <!-- ================= VARIANT B ================= -->
+  <div class="col">
+    <p class="label">B · Permission framing (recommended)</p>
+    <div class="phone">
+      <div class="sec">✅ <span>How to start</span></div>
+      <div class="card">
+        <div class="step"><div class="num">1</div><div class="stepTxt">Start small: 10 seconds of arm circles before you leave the bed.</div></div>
+        <div class="step"><div class="num">2</div><div class="stepTxt">Add 2 minutes of gentle stretching once standing feels routine.</div></div>
+        <div class="step"><div class="num">3</div><div class="stepTxt">Build to 5 minutes — a short walk or full-body stretch.</div></div>
+        <div class="cadence"><span>🔁</span><span class="l">Suggested cadence</span><span class="v">Daily · 5 min</span></div>
+      </div>
+
+      <div class="ssB">
+        <div class="k">🌱 No time today?</div>
+        <div class="v">Do 10 seconds of arm circles.</div>
+        <div class="t">That still counts as done.</div>
+      </div>
+
+      <div class="fade"></div>
+      <div class="footer">
+        <button class="add">+ Add this habit</button>
+        <span class="cust">Customize</span>
+      </div>
+    </div>
+    <p class="note">Answers the real objection (“I won’t keep this up”) in the user’s own words, then licenses the smallest version. <b>“That still counts as done”</b> is the load-bearing line — it pre-forgives the bad day before it happens, which is what protects week-2 streaks.</p>
+  </div>
+
+  <!-- ================= VARIANT C ================= -->
+  <div class="col">
+    <p class="label">C · Two-tier CTA (highest ceiling, most build)</p>
+    <div class="phone">
+      <div class="sec">✅ <span>How to start</span></div>
+      <div class="card">
+        <div class="step"><div class="num">1</div><div class="stepTxt">Start small: 10 seconds of arm circles before you leave the bed.</div></div>
+        <div class="step"><div class="num">2</div><div class="stepTxt">Add 2 minutes of gentle stretching once standing feels routine.</div></div>
+        <div class="step"><div class="num">3</div><div class="stepTxt">Build to 5 minutes — a short walk or full-body stretch.</div></div>
+        <div class="cadence"><span>🔁</span><span class="l">Suggested cadence</span><span class="v">Daily · 5 min</span></div>
+      </div>
+
+      <div class="ssC">
+        <div class="k">🌱 Not ready for 5 min?</div>
+        <div class="v">Start with 10 seconds of arm circles and build up.</div>
+        <button class="ghost">Add the 10-second version</button>
+      </div>
+
+      <div class="fade"></div>
+      <div class="footer">
+        <button class="add">+ Add this habit</button>
+        <span class="cust">Customize</span>
+      </div>
+    </div>
+    <p class="note">Gives the hesitant user a second, cheaper door instead of only a reassurance. <b>Pro:</b> converts people who would otherwise close the page. <b>Con:</b> needs a real import path that overrides target/minutes, plus a decision about whether it later “graduates” — that’s product surface, not a copy tweak.</p>
+  </div>
+
+</div>
+
+<div class="row" style="margin-top:34px">
+  <div class="col" style="width:820px">
+    <p class="label">Fallback — no startSmallVersion (Box Breathing, 61 of 316)</p>
+    <div class="phone" style="padding-bottom:0">
+      <div class="sec">✅ <span>How to start</span></div>
+      <div class="card">
+        <div class="step"><div class="num">1</div><div class="stepTxt">Inhale 4, hold 4, exhale 4, hold 4. That is one round.</div></div>
+        <div class="step"><div class="num">2</div><div class="stepTxt">Start with four rounds — under two minutes.</div></div>
+        <div class="cadence"><span>🔁</span><span class="l">Suggested cadence</span><span class="v">Daily · 5 min, or on demand</span></div>
+      </div>
+      <div class="fade"></div>
+      <div class="footer">
+        <button class="add">+ Add this habit</button>
+        <span class="cust">Customize</span>
+      </div>
+    </div>
+    <p class="note">Block renders nothing when the field is absent — same graceful-degradation contract as every other drill-down section. No placeholder, no empty card.</p>
+  </div>
+</div>
+
+</body>
+</html>

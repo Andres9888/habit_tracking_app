@@ -25,7 +25,7 @@ export async function loadQueueIndex(): Promise<string[]> {
     }
 
     return parsed.filter((id): id is string => typeof id === 'string');
-  } catch {
+  } catch (error) {
     return [];
   }
 }
@@ -34,10 +34,8 @@ export async function loadQueueIndex(): Promise<string[]> {
 export async function saveQueueIndex(ids: string[]): Promise<void> {
   try {
     await AsyncStorage.setItem(QUEUE_INDEX_KEY, JSON.stringify(ids));
-  } catch (error) {
-    throw error instanceof Error
-      ? error
-      : new Error('Failed to save queue index');
+  } catch {
+    throw new Error('Failed to save queue index');
   }
 }
 
@@ -66,10 +64,8 @@ export async function saveQueueItem(item: QueuedSubmission): Promise<void> {
   try {
     const key = getItemKey(item.id);
     await setSensitiveItem(key, JSON.stringify(item));
-  } catch (error) {
-    throw error instanceof Error
-      ? error
-      : new Error(`Failed to save queue item ${item.id}`);
+  } catch {
+    throw new Error(`Failed to save queue item ${item.id}`);
   }
 }
 
@@ -78,9 +74,7 @@ export async function removeQueueItem(id: string): Promise<void> {
   try {
     const key = getItemKey(id);
     await removeSensitiveItem(key);
-  } catch {
-    // Queue removal is best-effort.
-  }
+  } catch {}
 }
 
 /** Load all items from the queue */

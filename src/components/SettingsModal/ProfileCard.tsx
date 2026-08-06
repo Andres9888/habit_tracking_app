@@ -1,16 +1,15 @@
-/** ProfileCard — left-aligned account hero: identity + streak + edit, then stats */
+/** ProfileCard — left-aligned account hero: identity + tenure + edit */
 import { Text, View } from 'react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { typography, fontWeights } from '../../theme/typography';
+import { typography } from '../../theme/typography';
 import { SkeletonLoader } from '../SkeletonLoader/SkeletonLoader';
 import { EditableUserAvatar } from './EditableUserAvatar';
+import { formatMemberSince } from './memberSince';
 import { getProfileCardShellStyle } from './profileCardShellStyle';
 import { ProfilePremiumBadge } from './ProfilePremiumBadge';
-import { ProfileStatsRow } from './ProfileStatsRow';
 import { useChangeProfileImage } from './useChangeProfileImage';
 import { useProfileDisplayImage } from './useProfileDisplayImage';
 import { useProfileDisplayName } from './useProfileDisplayName';
-import { useProfileStats } from './useProfileStats';
 
 interface ProfileCardProps {
   isPremium: boolean;
@@ -19,9 +18,9 @@ interface ProfileCardProps {
 export function ProfileCard({ isPremium }: ProfileCardProps) {
   const { colors: themeColors } = useThemeColors();
   const { email, initial, name } = useProfileDisplayName();
-  const { isLoading: statsLoading, stats } = useProfileStats();
-  const { imageUrl } = useProfileDisplayImage();
+  const { convexUser, imageUrl } = useProfileDisplayImage();
   const { isUpdating, openPhotoPicker } = useChangeProfileImage();
+  const memberSince = formatMemberSince(convexUser);
 
   return (
     <View
@@ -29,7 +28,7 @@ export function ProfileCard({ isPremium }: ProfileCardProps) {
       style={getProfileCardShellStyle(themeColors)}
     >
       <View
-        className='flex-row items-center px-4 pb-3 pt-4'
+        className='flex-row items-center px-4 pb-4 pt-4'
         style={{ gap: 16 }}
       >
         <EditableUserAvatar
@@ -75,27 +74,26 @@ export function ProfileCard({ isPremium }: ProfileCardProps) {
               {email}
             </Text>
           ) : null}
-          <View className='mt-2 flex-row items-center' style={{ gap: 5 }}>
-            {statsLoading ? (
-              <SkeletonLoader borderRadius={6} height={16} width={96} />
-            ) : (
-              <>
-                <Text style={{ fontSize: 13 }}>🔥</Text>
-                <Text
-                  style={{
-                    ...typography.bodySmall,
-                    fontWeight: fontWeights.bold,
-                    color: themeColors.status.streakText,
-                  }}
-                >
-                  {stats.currentStreak}-day streak
-                </Text>
-              </>
-            )}
+          {/* Same type token as the email line above, differing only in
+              colour: `caption` carries letterSpacing 0.12 and weight 500,
+              which made this line sit visibly off the shared left edge. */}
+          <View className='mt-1'>
+            {convexUser === undefined ? (
+              <SkeletonLoader borderRadius={6} height={16} width={148} />
+            ) : memberSince ? (
+              <Text
+                numberOfLines={1}
+                style={{
+                  ...typography.bodySmall,
+                  color: themeColors.text.tertiary,
+                }}
+              >
+                {memberSince}
+              </Text>
+            ) : null}
           </View>
         </View>
       </View>
-      <ProfileStatsRow isLoading={statsLoading} stats={stats} />
     </View>
   );
 }

@@ -21,7 +21,6 @@ function rehydrateOperation(operation: OfflineOperation): void {
       const payload = operation.payload as {
         color?: string;
         daysOfWeek?: number[];
-        effortMinutes?: number;
         frequency?: string;
         icon?: string;
         iconColor?: string;
@@ -37,7 +36,6 @@ function rehydrateOperation(operation: OfflineOperation): void {
         {
           color: payload.color ?? payload.iconColor ?? '#10B981',
           daysOfWeek: payload.daysOfWeek,
-          effortMinutes: payload.effortMinutes,
           frequency: payload.frequency,
           icon: payload.icon,
           iconColor: payload.iconColor,

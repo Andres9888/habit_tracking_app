@@ -20,13 +20,13 @@ describe('White Color Replacement - Components', () => {
     it('should use theme color tokens for background colors', () => {
       expect(VARIANT_CONFIG.error.backgroundColor).toBe(colors.error);
       expect(VARIANT_CONFIG.info.backgroundColor).toBe(colors.secondary[500]);
-      expect(VARIANT_CONFIG.success.backgroundColor).toBe(colors.success);
+      expect(VARIANT_CONFIG.success.backgroundColor).toBe(colors.primary[500]);
       expect(VARIANT_CONFIG.undo.backgroundColor).toBe(colors.gray[700]);
       expect(VARIANT_CONFIG.warning.backgroundColor).toBe(colors.warning[500]);
     });
 
-    it('should preserve the accessible semantic success color', () => {
-      expect(VARIANT_CONFIG.success.backgroundColor).toBe('#15793C');
+    it('should preserve canonical emerald primary color', () => {
+      expect(VARIANT_CONFIG.success.backgroundColor).toBe('#10B981');
     });
   });
 

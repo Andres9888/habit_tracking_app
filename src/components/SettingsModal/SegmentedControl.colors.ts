@@ -2,7 +2,7 @@ import { darkColors, lightColors } from '@/theme/darkColors';
 
 /**
  * Shared overlay colors for inline segmented-control pickers
- * (DayShapePicker, CompletionIconPicker, SoundPicker).
+ * (SegmentedTextPicker, SortFamilyPicker, SoundPicker).
  *
  * The rgba values are intentional — they're alpha overlays that must
  * composite over varying theme surfaces, so they stay translucent rather
@@ -15,10 +15,16 @@ import { darkColors, lightColors } from '@/theme/darkColors';
 export function getSegmentedControlColors(isDark: boolean) {
   const palette = isDark ? darkColors : lightColors;
   return {
-    /** Selected icon/label tint */
-    accent: palette.primary[700],
-    /** Selected-option background overlay */
-    selectedBg: isDark ? 'rgba(52,211,153,0.18)' : 'rgba(5,150,105,0.12)',
+    /**
+     * Selected icon/label tint — INK, not brand green. Green tint made a
+     * selected segment look like one more green thing on a page already full
+     * of green tiles and toggles; inverting text-primary against the canvas
+     * makes "this one is chosen" unmistakable, and matches the Habit Browser's
+     * `chipActive`. Inverting the pair keeps contrast correct in both themes.
+     */
+    accent: palette.text.inverse,
+    /** Selected-option background — the ink chip. */
+    selectedBg: palette.text.primary,
     /** Unselected container/pill background overlay */
     containerBg: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
   };

@@ -3,13 +3,15 @@
  * Bounce entrance with icon pop, swipe-to-dismiss
  */
 
-import { useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
 import {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
+  withSequence,
+  withDelay,
   runOnJS,
 } from 'react-native-reanimated';
 
@@ -17,9 +19,10 @@ import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import {
   DISMISS_THRESHOLD,
   SPRING_BOUNCY,
+  SPRING_EXIT,
+  SPRING_ICON,
   VELOCITY_THRESHOLD,
 } from './constants';
-import { useToastAnimationLifecycle } from './useToastAnimationLifecycle';
 
 interface Params {
   visible: boolean;
@@ -39,17 +42,68 @@ export function useTemplateAddedToastAnimations({
   const scale = useSharedValue(0.85);
   const iconScale = useSharedValue(0);
   const haptic = useHapticFeedback();
-  const handleDismiss = useToastAnimationLifecycle({
+  const onDismissRef = useRef(onDismiss);
+  onDismissRef.current = onDismiss;
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    },
+    []
+  );
+
+  const handleDismiss = useCallback(
+    (fromSwipe = false) => {
+      if (fromSwipe) haptic.triggerLightImpact();
+      translateY.value = withSpring(120, SPRING_EXIT);
+      opacity.value = withTiming(0, { duration: 280 });
+      scale.value = withTiming(0.9, { duration: 280 });
+      iconScale.value = withTiming(0, { duration: 200 });
+      if (onDismissRef.current) {
+        if (timerRef.current) clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => onDismissRef.current?.(), 300);
+      }
+    },
+    [translateY, opacity, scale, iconScale, haptic]
+  );
+
+  useEffect(() => {
+    if (visible) {
+      if (variant === 'already_exists') {
+        haptic.triggerLightImpact();
+      }
+      translateY.value = withSpring(0, SPRING_BOUNCY);
+      opacity.value = withTiming(1, { duration: 250 });
+      scale.value = withSequence(
+        withSpring(1.02, SPRING_BOUNCY),
+        withSpring(1, SPRING_EXIT)
+      );
+      iconScale.value = withDelay(
+        200,
+        withSequence(withSpring(1.15, SPRING_ICON), withSpring(1, SPRING_EXIT))
+      );
+      if (duration > 0 && onDismissRef.current) {
+        const t = setTimeout(() => handleDismiss(), duration);
+        return () => clearTimeout(t);
+      }
+    } else {
+      translateY.value = withSpring(120, SPRING_EXIT);
+      opacity.value = withTiming(0, { duration: 280 });
+      scale.value = withTiming(0.85, { duration: 280 });
+      iconScale.value = withTiming(0, { duration: 200 });
+    }
+  }, [
+    visible,
     duration,
-    haptic,
-    iconScale,
-    onDismiss,
+    translateY,
     opacity,
     scale,
-    translateY,
+    iconScale,
+    handleDismiss,
+    haptic,
     variant,
-    visible,
-  });
+  ]);
 
   const swipeDismiss = useCallback(() => handleDismiss(true), [handleDismiss]);
   const panGesture = Gesture.Pan()

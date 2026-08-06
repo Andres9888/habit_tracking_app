@@ -24,11 +24,7 @@ jest.mock('react-native-safe-area-context', () => ({
 
 // Mock haptic feedback
 jest.mock('../../../hooks/useHapticFeedback', () => ({
-  useHapticFeedback: () => ({
-    triggerLightImpact: jest.fn(),
-    triggerStreak: jest.fn(),
-    triggerSuccess: jest.fn(),
-  }),
+  useHapticFeedback: () => ({ triggerLightImpact: jest.fn() }),
 }));
 
 // Mock theme

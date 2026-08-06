@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { Habit, HabitStatus } from '../types';
 import { getNextWeekConnection } from './getNextWeekConnection';
 import { getPreviousWeekConnection } from './getPreviousWeekConnection';

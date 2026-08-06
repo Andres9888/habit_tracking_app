@@ -7,6 +7,7 @@
  */
 
 import type { ViewStyle, StyleProp } from 'react-native';
+import type { AnimatedStyle } from 'react-native-reanimated';
 
 /**
  * Props for PendingSyncBadge component
@@ -36,6 +37,6 @@ export interface UsePendingSyncBadgeOptions {
  * Hook result for usePendingSyncBadge
  */
 export interface UsePendingSyncBadgeResult {
-  animatedStyle: { opacity: number; transform: { scale: number }[] };
+  animatedStyle: AnimatedStyle<ViewStyle>;
   shouldRender: boolean;
 }

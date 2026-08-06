@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Habit card — density &amp; state improvements</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      /* Tokens from src/theme: colors/core.ts, colors/semantic.ts, darkColors.ts, browserPalette.ts */
+      :root {
+        --bg: #f5f1ed;
+        --card: #f8f5f1;
+        --border: #ddd8d2;
+        --text-primary: #2d2a26;
+        --text-secondary: #524d47;
+        --text-tertiary: #8a837b;
+        --ink: #1a1816;
+        --chip-idle: #faf8f5;
+        --add-bg: #c4ebd9;
+        --add-fg: #04724d;
+        --added-bg: #e4f7ee;
+        --added-fg: #16a374;
+        --start-small-bg: #f8f5f1;
+        --icon-tile: #f8e9ce;
+        --details-fill: #ffffff;
+        --danger: #b3261e;
+        --win: #04724d;
+        --streak-100: #fef3cd;
+        --streak-700: #7d5907;
+        --font-serif: 'Literata', Georgia, serif;
+        --font-sans: 'DM Sans', -apple-system, sans-serif;
+      }
+      * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+      body {
+        margin: 0 !important;
+        background: #e6e0d8 !important;
+        font-family: var(--font-sans) !important;
+        color: var(--text-primary) !important;
+        padding: 30px 16px 70px !important;
+      }
+      .page-title { font-family: var(--font-serif) !important; font-size: 30px !important; margin: 0 0 6px !important; text-align: center; }
+      .page-sub { text-align: center; color: var(--text-secondary); font-size: 15px; margin: 0 0 24px; line-height: 1.5; }
+
+      .toggle-bar { text-align: center; margin-bottom: 24px; }
+      .toggle-bar button {
+        font-family: var(--font-sans); font-size: 13px; font-weight: 600;
+        border: 1px solid var(--border); background: var(--card); color: var(--text-secondary);
+        border-radius: 999px; padding: 8px 16px; margin: 0 3px; cursor: pointer;
+      }
+      .toggle-bar button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+      .stage { display: flex; gap: 34px; justify-content: center; flex-wrap: wrap; align-items: flex-start; }
+      .col { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+      .col-label { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+      .col-label.before { color: var(--danger); }
+      .col-label.after { color: var(--win); }
+      .col-meta { font-size: 12px; color: var(--text-secondary); margin-top: -4px; }
+
+      /* Phone */
+      .phone {
+        width: 380px; height: 760px; background: var(--bg);
+        border-radius: 42px; border: 10px solid #17140f;
+        box-shadow: 0 26px 60px rgba(0,0,0,.28);
+        overflow: hidden; display: flex; flex-direction: column; position: relative;
+      }
+      .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 126px; height: 25px; background: #17140f; border-radius: 0 0 16px 16px; z-index: 30; }
+      .body { flex: 1; overflow-y: auto; padding: 40px 0 40px; scrollbar-width: none; }
+      .body::-webkit-scrollbar { display: none; }
+
+      .section-hdr { display: flex; align-items: center; gap: 10px; padding: 0 20px; margin: 12px 0 8px; }
+      .section-hdr .tile { width: 44px; height: 44px; border-radius: 12px; background: var(--icon-tile); display: grid; place-items: center; font-size: 22px; flex-shrink: 0; }
+      .section-hdr .t { font-family: var(--font-serif) !important; font-size: 22px !important; font-weight: 700 !important; }
+      .section-hdr .c { font-size: 15px; color: var(--text-tertiary); margin-left: 8px; font-weight: 400; }
+
+      /* Card */
+      .card {
+        background: var(--card); border: 1px solid var(--border); border-radius: 26px;
+        margin: 8px 16px; padding: 20px; position: relative;
+        box-shadow: 0 1px 3px rgba(0,0,0,.1), 0 4px 6px -1px rgba(0,0,0,.06);
+      }
+      .card.compact { padding: 16px 18px; border-radius: 22px; }
+      .card-title-row { display: flex; align-items: center; gap: 12px; }
+      .icon-box { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; flex-shrink: 0; }
+      .compact .icon-box { width: 44px; height: 44px; border-radius: 12px; font-size: 22px; }
+      .card h3 { font-family: var(--font-serif) !important; font-size: 21px !important; line-height: 26px !important; font-weight: 700 !important; margin: 0 !important; flex: 1; }
+      .compact h3 { font-size: 19px !important; line-height: 24px !important; }
+      .desc { font-size: 15px; line-height: 22px; color: var(--text-secondary); margin-top: 12px; }
+      .clamp3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+      .clamp2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      .details-pill {
+        display: inline-flex; align-items: center; gap: 4px; border: 1.5px solid var(--border);
+        background: var(--details-fill); border-radius: 999px; padding: 8px 16px; margin-top: 12px;
+        font-size: 14px; font-weight: 600; color: var(--text-secondary);
+      }
+      .start-box { background: var(--start-small-bg); border-radius: 16px; padding: 14px; margin-top: 12px; border: 1px solid var(--border); }
+      .start-label { font-size: 11px; font-weight: 700; letter-spacing: .9px; text-transform: uppercase; color: var(--text-tertiary); }
+      .start-text { font-size: 15px; line-height: 21px; margin-top: 4px; }
+      .footer { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
+      .compact .footer { margin-top: 14px; }
+      .meta { font-size: 14px; color: var(--text-secondary); flex-shrink: 1; }
+      .meta .dot { color: var(--text-tertiary); }
+      .meta .pop { color: var(--streak-700); font-weight: 600; }
+      .add-btn {
+        margin-left: auto; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+        gap: 5px; background: var(--add-bg); color: var(--add-fg); border: 0; border-radius: 999px;
+        font-family: var(--font-sans); font-size: 14px; font-weight: 700; cursor: pointer;
+        min-height: 44px; padding: 0 18px; transition: transform .12s ease;
+      }
+      .add-btn:active { transform: scale(.94); }
+      .add-btn.added { background: var(--added-bg); color: var(--added-fg); }
+      .chev { color: var(--text-tertiary); flex-shrink: 0; }
+
+      /* Importing state */
+      .card.importing { opacity: .72; }
+      .card.importing.locked::after {
+        content: ''; position: absolute; inset: 0; border-radius: 26px; z-index: 5;
+      }
+      .spinner {
+        width: 15px; height: 15px; border-radius: 999px;
+        border: 2px solid currentColor; border-right-color: transparent;
+        animation: spin .7s linear infinite; display: inline-block;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* Annotations */
+      .tag {
+        position: absolute; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px;
+        white-space: nowrap; z-index: 13; pointer-events: none;
+      }
+      .tag.bad { background: var(--danger); color: #fff; }
+      .tag.good { background: var(--win); color: #fff; }
+      .hot { position: absolute; border-radius: 12px; pointer-events: none; z-index: 12; }
+      .hot.bad { outline: 2px dashed var(--danger); background: rgba(179,38,30,.07); }
+      .hot.good { outline: 2px dashed var(--win); background: rgba(4,114,77,.07); }
+      body.hide-notes .tag, body.hide-notes .hot { display: none; }
+
+      .fold {
+        position: absolute; left: 0; right: 0; z-index: 14; pointer-events: none;
+        border-top: 2px dashed rgba(179,38,30,.75);
+      }
+      .fold span {
+        position: absolute; right: 8px; top: -9px; font-size: 10px; font-weight: 700;
+        background: var(--danger); color: #fff; padding: 2px 7px; border-radius: 999px;
+      }
+      .fold.good { border-top-color: rgba(4,114,77,.75); }
+      .fold.good span { background: var(--win); }
+      body.hide-notes .fold { display: none; }
+
+      /* Legend */
+      .legend { max-width: 1000px; margin: 38px auto 0; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px 28px; }
+      .legend h2 { font-family: var(--font-serif) !important; font-size: 22px !important; margin: 0 0 14px !important; }
+      .legend table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      .legend th { text-align: left; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-tertiary); padding: 6px 10px 6px 0; border-bottom: 1px solid var(--border); }
+      .legend td { padding: 10px 10px 10px 0; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+      .legend tr:last-child td { border-bottom: 0; }
+      .num { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 11px; font-weight: 700; }
+      .num.exp { background: var(--streak-700); }
+      code { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; background: #ece7e1; padding: 1px 5px; border-radius: 4px; }
+    </style>
+  </head>
+  <body>
+    <h1 class="page-title">Habit card — density &amp; state</h1>
+    <p class="page-sub">
+      Left is what's on your simulator right now. Middle is the compact proposal (items&nbsp;1–3).
+      Right shows the state variants (items&nbsp;5–7). Dashed line = fold at 760px.
+    </p>
+
+    <div class="toggle-bar">
+      <button id="btn-notes" class="on">Annotations on</button>
+      <button id="btn-fold" class="on">Show fold line</button>
+    </div>
+
+    <div class="stage">
+      <!-- ============ CURRENT ============ -->
+      <div class="col">
+        <div class="col-label before">Current (shipped today)</div>
+        <div class="col-meta">~232px per card · 2.4 cards visible</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="body">
+            <div class="section-hdr">
+              <div class="tile">💪</div>
+              <div><span class="t">Health</span><span class="c">48 habits</span></div>
+            </div>
+
+            <div class="card">
+              <div class="card-title-row">
+                <div class="icon-box" style="background:#EDE4FA">🏋️</div>
+                <h3>Resistance Training for Brain</h3>
+              </div>
+              <div class="desc clamp3">Progressive resistance training 2-3x weekly specifically for brain health. Studies show muscle mass is directly linked to brain volume and cognitive resilience in later life.</div>
+              <div class="details-pill">Details <i data-lucide="chevron-right" width="14" height="14"></i></div>
+              <div class="start-box">
+                <div class="start-label">Start small</div>
+                <div class="start-text">Do one set of one exercise.</div>
+              </div>
+              <div class="footer">
+                <span class="meta">25 min <span class="dot">·</span> Weekly</span>
+                <button class="add-btn"><i data-lucide="plus" width="15" height="15"></i> Add</button>
+              </div>
+              <div class="hot bad" style="top:106px;left:20px;right:20px;height:104px"></div>
+              <span class="tag bad" style="top:96px;left:20px">1 · ~104px of persuasion, repeated 48×</span>
+            </div>
+
+            <div class="card">
+              <div class="card-title-row">
+                <div class="icon-box" style="background:#D1FAE5">🏃</div>
+                <h3>Zone 2 Cardio</h3>
+              </div>
+              <div class="desc clamp3">Steady conversational-pace cardio builds mitochondrial density. The single most studied intervention for long-term metabolic health.</div>
+              <div class="details-pill">Details <i data-lucide="chevron-right" width="14" height="14"></i></div>
+              <div class="start-box">
+                <div class="start-label">Start small</div>
+                <div class="start-text">Walk to the end of the street.</div>
+              </div>
+              <div class="footer">
+                <span class="meta">45 min <span class="dot">·</span> Weekly</span>
+                <button class="add-btn"><i data-lucide="plus" width="15" height="15"></i> Add</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-title-row">
+                <div class="icon-box" style="background:#FEF3CD">🧘</div>
+                <h3>Post-workout Stretch</h3>
+              </div>
+              <div class="desc clamp3">Ten minutes of static stretching after training preserves range of motion as you age.</div>
+              <div class="details-pill">Details <i data-lucide="chevron-right" width="14" height="14"></i></div>
+            </div>
+          </div>
+          <div class="fold" style="top:718px"><span>fold</span></div>
+        </div>
+      </div>
+
+      <!-- ============ COMPACT ============ -->
+      <div class="col">
+        <div class="col-label after">Proposed · items 1–3</div>
+        <div class="col-meta">~150px per card · 4 cards visible (+65%)</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="body">
+            <div class="section-hdr">
+              <div class="tile">💪</div>
+              <div><span class="t">Health</span><span class="c">48 habits</span></div>
+            </div>
+
+            <div class="card compact">
+              <div class="card-title-row">
+                <div class="icon-box" style="background:#EDE4FA">🏋️</div>
+                <h3>Resistance Training for Brain</h3>
+                <i data-lucide="chevron-right" width="18" height="18" class="chev"></i>
+              </div>
+              <div class="desc clamp2">Progressive resistance training 2-3x weekly specifically for brain health. Studies show muscle mass is directly linked to brain volume…</div>
+              <div class="footer">
+                <span class="meta">25 min <span class="dot">·</span> Weekly</span>
+                <button class="add-btn"><i data-lucide="plus" width="15" height="15"></i> Add</button>
+              </div>
+              <div class="hot good" style="top:8px;right:8px;width:34px;height:56px"></div>
+              <span class="tag good" style="top:-9px;right:6px">2 · chevron replaces Details pill</span>
+              <span class="tag good" style="bottom:52px;left:18px">1 · Start small moved to detail view</span>
+            </div>
+
+            <div class="card compact">
+              <div class="card-title-row">
+                <div class="icon-box" style="background:#D1FAE5">🏃</div>
+                <h3>Zone 2 Cardio</h3>
+                <i data-lucide="chevron-right" width="18" height="18" class="chev"></i>
+              </div>
+              <div class="desc clamp2">Steady conversational-pace cardio builds mitochondrial density. The single most studied intervention for long-term metabolic health.</div>
+              <div class="footer">
+                <span class="meta">45 min <span class="dot">·</span> Weekly</span>
+                <button class="add-btn"><i data-lucide="plus" width="15" height="15"></i> Add</button>
+              </div>
+            </div>
+
+            <div class="card compact">
+              <div class="card-title-row">
+                <div class="icon-box" style="background:#FEF3CD">🧘</div>
+                <h3>Post-workout Stretch</h3>
+                <i data-lucide="chevron-right" width="18" height="18" class="chev"></i>
+              </div>
+              <div class="desc clamp2">Ten minutes of static stretching after training preserves range of motion as you age.</div>
+              <div class="footer">
+                <span class="meta">10 min <span class="dot">·</span> Daily</span>
+                <button class="add-btn"><i data-lucide="plus" width="15" height="15"></i> Add</button>
+              </div>
+            </div>
+
+            <div class="card compact">
+              <div class="card-title-row">
+                <div class="icon-box" style="background:#EEF4FB">💧</div>
+                <h3>Hydrate on Waking</h3>
+                <i data-lucide="chevron-right" width="18" height="18" class="chev"></i>
+              </div>
+              <div class="desc clamp2">A full glass of water before coffee restores overnight fluid loss and blunts the caffeine crash.</div>
+              <div class="footer">
+                <span class="meta">1 min <span class="dot">·</span> Daily</span>
+                <button class="add-btn"><i data-lucide="plus" width="15" height="15"></i> Add</button>
+              </div>
+            </div>
+
+            <div class="card compact">
+              <div class="card-title-row">
+                <div class="icon-box" style="background:#F5F0FF">😴</div>
+                <h3>Consistent Wake Time</h3>
+                <i data-lucide="chevron-right" width="18" height="18" class="chev"></i>
+              </div>
+              <div class="desc clamp2">Same wake time every day, weekends included. The strongest single lever on sleep quality.</div>
+            </div>
+          </div>
+          <div class="fold good" style="top:718px"><span>fold</span></div>
+        </div>
+      </div>
+
+      <!-- ============ STATES ============ -->
+      <div class="col">
+        <div class="col-label after">States · items 5–7</div>
+        <div class="col-meta">importing · added · popularity</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="body">
+            <div class="section-hdr">
+              <div class="tile">💪</div>
+              <div><span class="t">Health</span><span class="c">48 habits</span></div>
+            </div>
+
+            <!-- 7: popularity -->
+            <div class="card compact">
+              <div class="card-title-row">
+                <div class="icon-box" style="background:#EDE4FA">🏋️</div>
+                <h3>Resistance Training for Brain</h3>
+                <i data-lucide="chevron-right" width="18" height="18" class="chev"></i>
+              </div>
+              <div class="desc clamp2">Progressive resistance training 2-3x weekly specifically for brain health. Studies show muscle mass is directly linked to brain volume…</div>
+              <div class="footer">
+                <span class="meta">25 min <span class="dot">·</span> Weekly <span class="dot">·</span> <span class="pop">1.2k using</span></span>
+                <button class="add-btn"><i data-lucide="plus" width="15" height="15"></i> Add</button>
+              </div>
+              <div class="hot good" style="bottom:14px;left:14px;width:210px;height:26px"></div>
+              <span class="tag good" style="bottom:44px;left:14px">7 · social proof, zero extra height</span>
+            </div>
+
+            <!-- 5: importing -->
+            <div class="card compact importing locked">
+              <div class="card-title-row">
+                <div class="icon-box" style="background:#D1FAE5">🏃</div>
+                <h3>Zone 2 Cardio</h3>
+                <i data-lucide="chevron-right" width="18" height="18" class="chev"></i>
+              </div>
+              <div class="desc clamp2">Steady conversational-pace cardio builds mitochondrial density. The single most studied intervention for long-term metabolic health.</div>
+              <div class="footer">
+                <span class="meta">45 min <span class="dot">·</span> Weekly</span>
+                <button class="add-btn"><span class="spinner"></span></button>
+              </div>
+              <div class="hot good" style="inset:4px"></div>
+              <span class="tag good" style="top:-9px;left:16px">5 · card press disabled while importing</span>
+            </div>
+
+            <div class="section-hdr" style="margin-top:22px">
+              <div class="tile">✅</div>
+              <div><span class="t">Added</span><span class="c">2 habits</span></div>
+            </div>
+
+            <!-- 6: compact added -->
+            <div class="card compact" style="padding:14px 18px">
+              <div class="card-title-row">
+                <div class="icon-box" style="background:#FEF3CD;width:40px;height:40px;font-size:20px">🧘</div>
+                <div style="flex:1;min-width:0">
+                  <h3 style="font-size:17px !important;line-height:22px !important">Post-workout Stretch</h3>
+                  <span class="meta" style="font-size:13px">10 min · Daily</span>
+                </div>
+                <button class="add-btn added" style="min-height:36px;padding:0 14px;font-size:13px">
+                  <i data-lucide="check" width="14" height="14"></i> Added
+                </button>
+              </div>
+              <div class="hot good" style="inset:4px"></div>
+              <span class="tag good" style="top:-9px;left:16px">6 · added rows collapse — history, not shopping</span>
+            </div>
+
+            <div class="card compact" style="padding:14px 18px">
+              <div class="card-title-row">
+                <div class="icon-box" style="background:#EEF4FB;width:40px;height:40px;font-size:20px">💧</div>
+                <div style="flex:1;min-width:0">
+                  <h3 style="font-size:17px !important;line-height:22px !important">Hydrate on Waking</h3>
+                  <span class="meta" style="font-size:13px">1 min · Daily</span>
+                </div>
+                <button class="add-btn added" style="min-height:36px;padding:0 14px;font-size:13px">
+                  <i data-lucide="check" width="14" height="14"></i> Added
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ LEGEND ============ -->
+    <div class="legend">
+      <h2>The seven items</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:34px"></th>
+            <th style="width:22%">Change</th>
+            <th style="width:38%">Why</th>
+            <th>Where</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="num">1</span></td>
+            <td><b>Start small → detail view; description 3→2 lines</b></td>
+            <td>Browsing is scanning, not reading. Start small is persuasion — it lands at the decision moment, not 48 times in a scroll list. Biggest single win: 2.4 → 4 cards per screen.</td>
+            <td><code>TemplateReadRow.tsx</code> (drop <code>Teaser</code>), <code>…Header.tsx</code> <code>numberOfLines</code></td>
+          </tr>
+          <tr>
+            <td><span class="num">2</span></td>
+            <td><b>Details pill → chevron in title row</b></td>
+            <td>The whole card already opens details, so the pill is a signpost costing ~50px. A chevron says "tappable" for free — the standard iOS idiom.</td>
+            <td><code>TemplateReadRowDetails.tsx</code> folds into <code>…Header.tsx</code></td>
+          </tr>
+          <tr>
+            <td><span class="num">3</span></td>
+            <td><b><code>withAlpha()</code> guard on icon tint</b></td>
+            <td>Today <code>`${item.iconColor}30`</code> assumes 6-digit hex. One rgba value from the backend silently breaks the tile background.</td>
+            <td><code>TemplateReadRowHeader.tsx</code> + small util</td>
+          </tr>
+          <tr>
+            <td><span class="num">5</span></td>
+            <td><b>Disable card press while importing</b></td>
+            <td>Real race: tapping mid-import opens the preview modal while the import completes underneath it.</td>
+            <td><code>TemplateReadRow.tsx</code> — <code>disabled={isImporting}</code></td>
+          </tr>
+          <tr>
+            <td><span class="num exp">6</span></td>
+            <td><b>Compact rows in the Added group</b></td>
+            <td>Added habits aren't shopping any more. Collapsing to icon + name + meta shortens the tail and makes the section read as history.</td>
+            <td>New <code>TemplateAddedRow.tsx</code>, switched in <code>CatalogSectionList</code></td>
+          </tr>
+          <tr>
+            <td><span class="num exp">7</span></td>
+            <td><b>Popularity in the meta line</b></td>
+            <td><code>popularityScore</code> already drives sort order but is invisible — the user can't see why card #1 is first. Social proof is the strongest known nudge on template adoption. <b>A/B this rather than ship blind.</b></td>
+            <td><code>templateMeta.ts</code> — append to label</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:13px;color:var(--text-secondary);margin:14px 0 0;line-height:1.6">
+        <b>Item 4</b> (no ellipsis affordance on truncated description) is dropped — the chevron in item 2 covers it.
+        <b>Black numbers</b> are safe mechanical changes. <b>Gold numbers</b> are product calls worth measuring.
+      </p>
+    </div>
+
+    <script>
+      lucide.createIcons();
+      const bn = document.getElementById('btn-notes');
+      const bf = document.getElementById('btn-fold');
+      bn.onclick = () => {
+        document.body.classList.toggle('hide-notes');
+        bn.classList.toggle('on');
+        bn.textContent = document.body.classList.contains('hide-notes') ? 'Annotations off' : 'Annotations on';
+      };
+      bf.onclick = () => {
+        document.querySelectorAll('.fold').forEach((f) => {
+          f.style.visibility = f.style.visibility === 'hidden' ? 'visible' : 'hidden';
+        });
+        bf.classList.toggle('on');
+      };
+    </script>
+  </body>
+</html>

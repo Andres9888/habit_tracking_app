@@ -31,7 +31,7 @@ export function SuggestionsSection({
   return (
     <View style={suggestionStyles.container}>
       <View style={suggestionStyles.header}>
-        <Sparkles color={colors.warning} size={iconSizes.small} />
+        <Sparkles color={colors.warning[500]} size={iconSizes.small} />
         <Text style={suggestionStyles.headerText}>
           Perfect for "{habitName}"
         </Text>
@@ -52,8 +52,8 @@ export function SuggestionsSection({
 
 export const suggestionStyles = StyleSheet.create({
   container: {
-    backgroundColor: colors.warningLight,
-    borderColor: colors.streak[300],
+    backgroundColor: colors.warning[100],
+    borderColor: colors.warning[300],
     borderRadius: borderRadius.large,
     borderWidth: 1,
     marginBottom: spacing.md,
@@ -70,7 +70,7 @@ export const suggestionStyles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   headerText: {
-    color: colors.warning,
+    color: colors.warning[700],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: fontWeights.semibold,

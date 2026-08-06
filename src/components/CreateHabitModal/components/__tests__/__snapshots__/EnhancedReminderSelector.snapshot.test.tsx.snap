@@ -6,36 +6,7 @@ exports[`EnhancedReminderSelector Snapshots Disabled State renders in disabled s
   testID="enhanced-reminder-selector"
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={false}
     className="flex-row items-center justify-between rounded-2xl border px-4 py-4"
-    collapsable={false}
-    focusable={true}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       [
         {
@@ -59,16 +30,16 @@ exports[`EnhancedReminderSelector Snapshots Disabled State renders in disabled s
       className="flex-row items-center gap-3"
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-xl"
+        className="h-10 w-10 items-center justify-center rounded-full"
         style={
           {
-            "backgroundColor": "#EDEAE5",
+            "backgroundColor": "#D1FAE5",
           }
         }
       >
         <View
-          color="#047857"
-          size={16}
+          color="#059669"
+          size={18}
           testID="lucide-icon-Bell"
         />
       </View>
@@ -102,7 +73,7 @@ exports[`EnhancedReminderSelector Snapshots Disabled State renders in disabled s
         ]
       }
       testID="reminder-toggle"
-      thumbTintColor="#FFFFFF"
+      thumbTintColor="#ffffff"
       tintColor="#DDD8D2"
       value={false}
     />
@@ -116,36 +87,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
   testID="enhanced-reminder-selector"
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={false}
     className="flex-row items-center justify-between rounded-2xl border px-4 py-4"
-    collapsable={false}
-    focusable={true}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       [
         {
@@ -169,16 +111,16 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
       className="flex-row items-center gap-3"
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-xl"
+        className="h-10 w-10 items-center justify-center rounded-full"
         style={
           {
-            "backgroundColor": "#EDEAE5",
+            "backgroundColor": "#D1FAE5",
           }
         }
       >
         <View
-          color="#047857"
-          size={16}
+          color="#059669"
+          size={18}
           testID="lucide-icon-Bell"
         />
       </View>
@@ -212,7 +154,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
         ]
       }
       testID="reminder-toggle"
-      thumbTintColor="#FFFFFF"
+      thumbTintColor="#ffffff"
       tintColor="#DDD8D2"
       value={true}
     />
@@ -260,23 +202,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
         testID="preset-morning"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderColor": "#DDD8D2",
-                "borderWidth": 1,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -291,7 +230,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#6B6560",
+                  "color": "#57534e",
                 }
               }
             >
@@ -302,7 +241,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
             className="mt-0.5 text-xs"
             style={
               {
-                "color": "#6E6660",
+                "color": "#a8a29e",
               }
             }
           >
@@ -346,23 +285,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
         testID="preset-midday"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderColor": "#DDD8D2",
-                "borderWidth": 1,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -377,7 +313,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#6B6560",
+                  "color": "#57534e",
                 }
               }
             >
@@ -388,7 +324,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
             className="mt-0.5 text-xs"
             style={
               {
-                "color": "#6E6660",
+                "color": "#a8a29e",
               }
             }
           >
@@ -432,23 +368,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
         testID="preset-evening"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderColor": "#DDD8D2",
-                "borderWidth": 1,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -463,7 +396,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#6B6560",
+                  "color": "#57534e",
                 }
               }
             >
@@ -474,7 +407,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
             className="mt-0.5 text-xs"
             style={
               {
-                "color": "#6E6660",
+                "color": "#a8a29e",
               }
             }
           >
@@ -567,36 +500,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
   testID="enhanced-reminder-selector"
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={false}
     className="flex-row items-center justify-between rounded-2xl border px-4 py-4"
-    collapsable={false}
-    focusable={true}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       [
         {
@@ -620,16 +524,16 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
       className="flex-row items-center gap-3"
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-xl"
+        className="h-10 w-10 items-center justify-center rounded-full"
         style={
           {
-            "backgroundColor": "#EDEAE5",
+            "backgroundColor": "#D1FAE5",
           }
         }
       >
         <View
-          color="#047857"
-          size={16}
+          color="#059669"
+          size={18}
           testID="lucide-icon-Bell"
         />
       </View>
@@ -663,7 +567,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
         ]
       }
       testID="reminder-toggle"
-      thumbTintColor="#FFFFFF"
+      thumbTintColor="#ffffff"
       tintColor="#DDD8D2"
       value={true}
     />
@@ -711,23 +615,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
         testID="preset-morning"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderColor": "#DDD8D2",
-                "borderWidth": 1,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -742,7 +643,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#6B6560",
+                  "color": "#57534e",
                 }
               }
             >
@@ -753,7 +654,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
             className="mt-0.5 text-xs"
             style={
               {
-                "color": "#6E6660",
+                "color": "#a8a29e",
               }
             }
           >
@@ -797,23 +698,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
         testID="preset-midday"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderColor": "#DDD8D2",
-                "borderWidth": 1,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -828,7 +726,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#6B6560",
+                  "color": "#57534e",
                 }
               }
             >
@@ -839,7 +737,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
             className="mt-0.5 text-xs"
             style={
               {
-                "color": "#6E6660",
+                "color": "#a8a29e",
               }
             }
           >
@@ -883,23 +781,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
         testID="preset-evening"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderColor": "#DDD8D2",
-                "borderWidth": 1,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -914,7 +809,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#6B6560",
+                  "color": "#57534e",
                 }
               }
             >
@@ -925,7 +820,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
             className="mt-0.5 text-xs"
             style={
               {
-                "color": "#6E6660",
+                "color": "#a8a29e",
               }
             }
           >
@@ -1018,36 +913,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
   testID="enhanced-reminder-selector"
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={false}
     className="flex-row items-center justify-between rounded-2xl border px-4 py-4"
-    collapsable={false}
-    focusable={true}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       [
         {
@@ -1071,16 +937,16 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
       className="flex-row items-center gap-3"
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-xl"
+        className="h-10 w-10 items-center justify-center rounded-full"
         style={
           {
-            "backgroundColor": "#EDEAE5",
+            "backgroundColor": "#D1FAE5",
           }
         }
       >
         <View
-          color="#047857"
-          size={16}
+          color="#059669"
+          size={18}
           testID="lucide-icon-Bell"
         />
       </View>
@@ -1114,7 +980,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
         ]
       }
       testID="reminder-toggle"
-      thumbTintColor="#FFFFFF"
+      thumbTintColor="#ffffff"
       tintColor="#DDD8D2"
       value={true}
     />
@@ -1162,23 +1028,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
         testID="preset-morning"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderColor": "#DDD8D2",
-                "borderWidth": 1,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -1193,7 +1056,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#6B6560",
+                  "color": "#57534e",
                 }
               }
             >
@@ -1204,7 +1067,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
             className="mt-0.5 text-xs"
             style={
               {
-                "color": "#6E6660",
+                "color": "#a8a29e",
               }
             }
           >
@@ -1248,23 +1111,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
         testID="preset-midday"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderColor": "#DDD8D2",
-                "borderWidth": 1,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -1279,7 +1139,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#6B6560",
+                  "color": "#57534e",
                 }
               }
             >
@@ -1290,7 +1150,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
             className="mt-0.5 text-xs"
             style={
               {
-                "color": "#6E6660",
+                "color": "#a8a29e",
               }
             }
           >
@@ -1334,23 +1194,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
         testID="preset-evening"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#D1FAE5",
-                "borderColor": "#10B981",
-                "borderWidth": 2,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#ECFDF5",
+              "borderColor": "#10B981",
+              "borderWidth": 2,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -1365,7 +1222,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#047857",
+                  "color": "#059669",
                 }
               }
             >
@@ -1429,7 +1286,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
           }
         }
       >
-        or pick a custom time
+        Pick a different time
       </Text>
       <Text
         className="ml-1"
@@ -1464,36 +1321,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
   testID="enhanced-reminder-selector"
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={false}
     className="flex-row items-center justify-between rounded-2xl border px-4 py-4"
-    collapsable={false}
-    focusable={true}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       [
         {
@@ -1517,16 +1345,16 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
       className="flex-row items-center gap-3"
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-xl"
+        className="h-10 w-10 items-center justify-center rounded-full"
         style={
           {
-            "backgroundColor": "#EDEAE5",
+            "backgroundColor": "#D1FAE5",
           }
         }
       >
         <View
-          color="#047857"
-          size={16}
+          color="#059669"
+          size={18}
           testID="lucide-icon-Bell"
         />
       </View>
@@ -1560,7 +1388,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
         ]
       }
       testID="reminder-toggle"
-      thumbTintColor="#FFFFFF"
+      thumbTintColor="#ffffff"
       tintColor="#DDD8D2"
       value={true}
     />
@@ -1608,23 +1436,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
         testID="preset-morning"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderColor": "#DDD8D2",
-                "borderWidth": 1,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -1639,7 +1464,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#6B6560",
+                  "color": "#57534e",
                 }
               }
             >
@@ -1650,7 +1475,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
             className="mt-0.5 text-xs"
             style={
               {
-                "color": "#6E6660",
+                "color": "#a8a29e",
               }
             }
           >
@@ -1694,23 +1519,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
         testID="preset-midday"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#D1FAE5",
-                "borderColor": "#10B981",
-                "borderWidth": 2,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#ECFDF5",
+              "borderColor": "#10B981",
+              "borderWidth": 2,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -1725,7 +1547,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#047857",
+                  "color": "#059669",
                 }
               }
             >
@@ -1780,23 +1602,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
         testID="preset-evening"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderColor": "#DDD8D2",
-                "borderWidth": 1,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -1811,7 +1630,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#6B6560",
+                  "color": "#57534e",
                 }
               }
             >
@@ -1822,7 +1641,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
             className="mt-0.5 text-xs"
             style={
               {
-                "color": "#6E6660",
+                "color": "#a8a29e",
               }
             }
           >
@@ -1875,7 +1694,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
           }
         }
       >
-        or pick a custom time
+        Pick a different time
       </Text>
       <Text
         className="ml-1"
@@ -1910,36 +1729,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
   testID="enhanced-reminder-selector"
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={false}
     className="flex-row items-center justify-between rounded-2xl border px-4 py-4"
-    collapsable={false}
-    focusable={true}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       [
         {
@@ -1963,16 +1753,16 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
       className="flex-row items-center gap-3"
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-xl"
+        className="h-10 w-10 items-center justify-center rounded-full"
         style={
           {
-            "backgroundColor": "#EDEAE5",
+            "backgroundColor": "#D1FAE5",
           }
         }
       >
         <View
-          color="#047857"
-          size={16}
+          color="#059669"
+          size={18}
           testID="lucide-icon-Bell"
         />
       </View>
@@ -2006,7 +1796,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
         ]
       }
       testID="reminder-toggle"
-      thumbTintColor="#FFFFFF"
+      thumbTintColor="#ffffff"
       tintColor="#DDD8D2"
       value={true}
     />
@@ -2054,23 +1844,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
         testID="preset-morning"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#D1FAE5",
-                "borderColor": "#10B981",
-                "borderWidth": 2,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#ECFDF5",
+              "borderColor": "#10B981",
+              "borderWidth": 2,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -2085,7 +1872,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#047857",
+                  "color": "#059669",
                 }
               }
             >
@@ -2140,23 +1927,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
         testID="preset-midday"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderColor": "#DDD8D2",
-                "borderWidth": 1,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -2171,7 +1955,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#6B6560",
+                  "color": "#57534e",
                 }
               }
             >
@@ -2182,7 +1966,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
             className="mt-0.5 text-xs"
             style={
               {
-                "color": "#6E6660",
+                "color": "#a8a29e",
               }
             }
           >
@@ -2226,23 +2010,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
         testID="preset-evening"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderColor": "#DDD8D2",
-                "borderWidth": 1,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -2257,7 +2038,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#6B6560",
+                  "color": "#57534e",
                 }
               }
             >
@@ -2268,7 +2049,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
             className="mt-0.5 text-xs"
             style={
               {
-                "color": "#6E6660",
+                "color": "#a8a29e",
               }
             }
           >
@@ -2321,7 +2102,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
           }
         }
       >
-        or pick a custom time
+        Pick a different time
       </Text>
       <Text
         className="ml-1"
@@ -2356,36 +2137,7 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
   testID="enhanced-reminder-selector"
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={false}
     className="flex-row items-center justify-between rounded-2xl border px-4 py-4"
-    collapsable={false}
-    focusable={true}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       [
         {
@@ -2409,16 +2161,16 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
       className="flex-row items-center gap-3"
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-xl"
+        className="h-10 w-10 items-center justify-center rounded-full"
         style={
           {
-            "backgroundColor": "#EDEAE5",
+            "backgroundColor": "#D1FAE5",
           }
         }
       >
         <View
-          color="#047857"
-          size={16}
+          color="#059669"
+          size={18}
           testID="lucide-icon-Bell"
         />
       </View>
@@ -2452,7 +2204,7 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
         ]
       }
       testID="reminder-toggle"
-      thumbTintColor="#FFFFFF"
+      thumbTintColor="#ffffff"
       tintColor="#DDD8D2"
       value={true}
     />
@@ -2500,23 +2252,20 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
         testID="preset-early"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#D1FAE5",
-                "borderColor": "#10B981",
-                "borderWidth": 2,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#ECFDF5",
+              "borderColor": "#10B981",
+              "borderWidth": 2,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -2531,7 +2280,7 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#047857",
+                  "color": "#059669",
                 }
               }
             >
@@ -2576,23 +2325,20 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
         testID="preset-late"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderColor": "#DDD8D2",
-                "borderWidth": 1,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -2607,7 +2353,7 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#6B6560",
+                  "color": "#57534e",
                 }
               }
             >
@@ -2661,7 +2407,7 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
           }
         }
       >
-        or pick a custom time
+        Pick a different time
       </Text>
       <Text
         className="ml-1"
@@ -2696,36 +2442,7 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
   testID="enhanced-reminder-selector"
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={false}
     className="flex-row items-center justify-between rounded-2xl border px-4 py-4"
-    collapsable={false}
-    focusable={true}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       [
         {
@@ -2749,16 +2466,16 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
       className="flex-row items-center gap-3"
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-xl"
+        className="h-10 w-10 items-center justify-center rounded-full"
         style={
           {
-            "backgroundColor": "#EDEAE5",
+            "backgroundColor": "#D1FAE5",
           }
         }
       >
         <View
-          color="#047857"
-          size={16}
+          color="#059669"
+          size={18}
           testID="lucide-icon-Bell"
         />
       </View>
@@ -2792,7 +2509,7 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
         ]
       }
       testID="reminder-toggle"
-      thumbTintColor="#FFFFFF"
+      thumbTintColor="#ffffff"
       tintColor="#DDD8D2"
       value={true}
     />
@@ -2840,23 +2557,20 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
         testID="preset-morning"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderColor": "#DDD8D2",
-                "borderWidth": 1,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -2871,7 +2585,7 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#6B6560",
+                  "color": "#57534e",
                 }
               }
             >
@@ -2882,7 +2596,7 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
             className="mt-0.5 text-xs"
             style={
               {
-                "color": "#6E6660",
+                "color": "#a8a29e",
               }
             }
           >
@@ -2926,23 +2640,20 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
         testID="preset-midday"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#D1FAE5",
-                "borderColor": "#10B981",
-                "borderWidth": 2,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#ECFDF5",
+              "borderColor": "#10B981",
+              "borderWidth": 2,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -2957,7 +2668,7 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#047857",
+                  "color": "#059669",
                 }
               }
             >
@@ -3012,23 +2723,20 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
         testID="preset-evening"
       >
         <View
-          className="items-center justify-center rounded-2xl px-3"
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
           style={
-            [
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderColor": "#DDD8D2",
-                "borderWidth": 1,
-                "height": 48,
-              },
-              {
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <View
@@ -3043,7 +2751,7 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
               className="text-sm font-semibold"
               style={
                 {
-                  "color": "#6B6560",
+                  "color": "#57534e",
                 }
               }
             >
@@ -3054,7 +2762,7 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
             className="mt-0.5 text-xs"
             style={
               {
-                "color": "#6E6660",
+                "color": "#a8a29e",
               }
             }
           >
@@ -3107,7 +2815,7 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
           }
         }
       >
-        or pick a custom time
+        Pick a different time
       </Text>
       <Text
         className="ml-1"

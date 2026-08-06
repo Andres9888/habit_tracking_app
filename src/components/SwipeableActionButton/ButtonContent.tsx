@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * ButtonContent - The main pressable button content
  */
@@ -29,41 +30,21 @@ export function ButtonContent({
       accessibilityLabel={accessibleLabel}
       accessibilityRole='button'
       className='flex-row items-center gap-3 rounded-xl border px-4 py-3.5 active:opacity-70'
-      style={
-        isBoost
-          ? { borderColor: themeColors.status.premiumLight }
-          : isDestructive
-            ? {
-                borderColor: themeColors.status.errorLight,
-                backgroundColor: themeColors.status.errorLight,
-              }
-            : {
-                borderColor: themeColors.border,
-                backgroundColor: themeColors.card,
-              }
-      }
+      style={isBoost ? { borderColor: themeColors.status.premiumLight } : isDestructive ? { borderColor: themeColors.status.errorLight, backgroundColor: themeColors.status.errorLight } : { borderColor: themeColors.border, backgroundColor: themeColors.card }}
       onPress={() => {
         triggerHaptic('tap');
         onPress();
       }}
     >
-      {isBoost ? (
-        <LinearGradient
+      {isBoost ? <LinearGradient
           className='absolute inset-0 rounded-xl'
           colors={['#f5f3ff', '#e0e7ff']}
           end={{ x: 1, y: 0 }}
           start={{ x: 0, y: 0 }}
-        />
-      ) : null}
+        /> : null}
       <IconContainer isBoost={isBoost} isDestructive={isDestructive}>
         <Icon
-          color={
-            isDestructive
-              ? themeColors.status.error
-              : isBoost
-                ? themeColors.text.inverse
-                : themeColors.text.primary
-          }
+          color={isDestructive ? themeColors.status.error : isBoost ? themeColors.text.inverse : themeColors.text.primary}
           size={iconSizes.medium}
           strokeWidth={2.5}
         />
@@ -71,41 +52,21 @@ export function ButtonContent({
       <View className='flex-1'>
         <Text
           className='text-base font-medium'
-          style={{
-            color: isDestructive
-              ? themeColors.status.error
-              : isBoost
-                ? themeColors.status.premiumText
-                : themeColors.text.primary,
-          }}
+          style={{ color: isDestructive ? themeColors.status.error : isBoost ? themeColors.status.premiumText : themeColors.text.primary }}
         >
           {label}
         </Text>
-        {subtitle ? (
-          <Text
+        {subtitle ? <Text
             className='text-xs'
-            style={{
-              color: isBoost
-                ? themeColors.status.premiumText
-                : themeColors.text.secondary,
-            }}
+            style={{ color: isBoost ? themeColors.status.premiumText : themeColors.text.secondary }}
           >
             {subtitle}
-          </Text>
-        ) : null}
+          </Text> : null}
       </View>
-      {showChevron ? (
-        <ChevronRight
-          color={
-            isDestructive
-              ? themeColors.status.error
-              : isBoost
-                ? themeColors.status.premium
-                : themeColors.text.tertiary
-          }
+      {showChevron ? <ChevronRight
+          color={isDestructive ? themeColors.status.error : isBoost ? themeColors.status.premium : themeColors.text.tertiary}
           size={iconSizes.medium}
-        />
-      ) : null}
+        /> : null}
     </Pressable>
   );
 }

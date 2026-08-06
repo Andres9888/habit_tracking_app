@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Animated styles for FullsizeTemplatePreview
  */

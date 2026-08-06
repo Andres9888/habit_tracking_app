@@ -11,7 +11,9 @@ import { useMemo } from 'react';
 import {
   useSharedValue,
   useDerivedValue,
+  withTiming,
   useAnimatedScrollHandler,
+  Easing,
 } from 'react-native-reanimated';
 import type { StickyHeaderContextValue } from '../../../../components/CalendarTimeline/StickyHeaderContext';
 

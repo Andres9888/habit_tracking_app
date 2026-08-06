@@ -16,8 +16,8 @@ import {
   useButtonAnimations,
   useAnimatedStyles,
   useHandlers,
+  useHardwareBack,
 } from './hooks';
-import { DEFAULT_ICON_COLOR } from './FullsizeTemplatePreview.constants';
 import type { FullsizeTemplatePreviewProps } from './FullsizeTemplatePreview.types';
 
 function FullsizeTemplatePreviewComponent({
@@ -43,8 +43,6 @@ function FullsizeTemplatePreviewComponent({
   if (template) lastTemplateRef.current = template;
   const effectiveTemplate = visible ? template : lastTemplateRef.current;
 
-  const iconColor = effectiveTemplate?.iconColor?.trim() || DEFAULT_ICON_COLOR;
-
   const entranceAnimations = useEntranceAnimations({
     reducedMotion,
     template: effectiveTemplate,
@@ -52,12 +50,7 @@ function FullsizeTemplatePreviewComponent({
   });
   useExitAnimations({ ...entranceAnimations, reducedMotion, visible });
   const successAnimations = useSuccessAnimations({ isImported, reducedMotion });
-  const {
-    closeButtonScale,
-    importButtonScale,
-    customizeButtonScale,
-    createPressHandlers,
-  } = useButtonAnimations({ reducedMotion });
+  const buttons = useButtonAnimations({ reducedMotion });
   const handlers = useHandlers({
     isImported,
     isImporting,
@@ -70,10 +63,15 @@ function FullsizeTemplatePreviewComponent({
   });
   const animatedStyles = useAnimatedStyles({
     ...entranceAnimations,
-    closeButtonScale,
-    customizeButtonScale,
-    importButtonScale,
+    ...buttons,
     ...successAnimations,
+  });
+
+  // Block the hardware back mid-import for the same reason the backdrop is
+  // blocked: the add is in flight and unmounting under it strands the result.
+  useHardwareBack({
+    enabled: visible && !isImporting,
+    onBack: handlers.handleDismiss,
   });
 
   if (!shouldRender || !effectiveTemplate) return null;
@@ -87,15 +85,14 @@ function FullsizeTemplatePreviewComponent({
       skipAnimation
       variant='fullScreen'
       visible={shouldRender}
-      onClose={handlers.handleClose}
+      onClose={handlers.handleDismiss}
     >
       <PreviewContent
         animatedStyles={animatedStyles}
-        createPressHandlers={createPressHandlers}
-        customizeButtonScale={customizeButtonScale}
+        createPressHandlers={buttons.createPressHandlers}
+        customizeButtonScale={buttons.customizeButtonScale}
         handlers={handlers}
-        iconColor={iconColor}
-        importButtonScale={importButtonScale}
+        importButtonScale={buttons.importButtonScale}
         insets={insets}
         initialAnchor={initialAnchor}
         isImported={isImported}

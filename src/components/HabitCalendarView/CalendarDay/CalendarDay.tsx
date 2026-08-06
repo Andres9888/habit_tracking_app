@@ -30,39 +30,31 @@ interface StatusStyles {
  */
 function getStatusStyles(
   status: HabitStatus,
-  colors: SemanticColors
+  colors: SemanticColors,
 ): StatusStyles {
   switch (status) {
     case 'done': {
       return {
-        container: {
-          borderColor: 'transparent',
-          backgroundColor: colors.status.successLight,
-        },
+        container: { borderColor: 'transparent', backgroundColor: colors.status.successLight },
         indicator: { backgroundColor: colors.status.success },
         text: { color: colors.status.successText },
       };
     }
     case 'missed': {
       return {
-        container: {
-          borderColor: 'transparent',
-          backgroundColor: colors.status.errorLight,
-        },
+        container: { borderColor: 'transparent', backgroundColor: colors.status.errorLight },
         indicator: { backgroundColor: colors.status.error },
         text: { color: colors.status.errorText },
       };
     }
     case 'planned': {
       return {
-        container: {
-          borderColor: colors.status.success,
-          backgroundColor: colors.status.successLight,
-        },
+        container: { borderColor: colors.status.success, backgroundColor: colors.status.successLight },
         indicator: { backgroundColor: colors.status.success },
         text: { color: colors.status.successText },
       };
     }
+    case 'upcoming':
     default: {
       return {
         container: { borderColor: 'transparent', backgroundColor: colors.card },

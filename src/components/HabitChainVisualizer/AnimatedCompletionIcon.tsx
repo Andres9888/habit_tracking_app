@@ -54,7 +54,7 @@ export function AnimatedCompletionIcon({
       {completed && showFallback ? (
         <View
           pointerEvents='none'
-          style={StyleSheet.absoluteFillObject}
+          style={StyleSheet.absoluteFill}
           className='items-center justify-center'
         >
           {icon}

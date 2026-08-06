@@ -10,7 +10,9 @@ const OPTIONS: {
   label: string;
   Icon: typeof Volume1;
 }[] = [
-  { key: 'chime', label: 'Ding', Icon: Volume1 },
+  // These segments are now the only place a tone is named — the Completion
+  // sound row above carries on/off and nothing else.
+  { key: 'chime', label: 'Chime', Icon: Volume1 },
   { key: 'pop', label: 'Pop', Icon: Droplet },
   { key: 'success', label: 'Rise', Icon: TrendingUp },
 ];

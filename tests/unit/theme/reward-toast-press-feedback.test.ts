@@ -1,84 +1,88 @@
 /**
- * Milestone reward action press-feedback contract.
- *
- * RewardCelebrationToast was removed after its UI became dead code. The live
- * reward surface is StreakMilestoneCelebration, whose action buttons retain
- * the animated scale-feedback contract this suite was created to protect.
+ * RewardCelebrationToast Press Feedback Tests (Phase 6 Task 3)
+ * Verifies that all Pressable buttons have been replaced with
+ * AnimatedPressable for consistent scale-based press feedback.
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
 
 const SRC = path.resolve(__dirname, '../../../src');
-const source = fs.readFileSync(
-  path.join(
-    SRC,
-    'components/StreakMilestoneCelebration/ActionButtons.tsx'
-  ),
-  'utf-8'
-);
 
-describe('Milestone reward actions use AnimatedPressable', () => {
-  it('imports Animated and Pressable to build the animated control', () => {
-    expect(source).toContain(
-      "import { View, Text, Pressable } from 'react-native'"
-    );
-    expect(source).toContain(
-      "import Animated, { type AnimatedStyle } from 'react-native-reanimated'"
+function readSource(relativePath: string): string {
+  return fs.readFileSync(path.join(SRC, relativePath), 'utf-8');
+}
+
+describe('RewardCelebrationToast uses AnimatedPressable', () => {
+  const source = readSource(
+    'components/RewardCelebrationToast/RewardCelebrationToast.tsx'
+  );
+
+  it('imports AnimatedPressable from ui/AnimatedPressable', () => {
+    expect(source).toMatch(
+      /import\s+\{[^}]*AnimatedPressable[^}]*\}\s+from\s+['"]\.\.\/ui\/AnimatedPressable['"]/
     );
   });
 
-  it('creates AnimatedPressable from the native Pressable', () => {
-    expect(source).toContain(
-      'const AnimatedPressable = Animated.createAnimatedComponent(Pressable)'
+  it('does not import Pressable from react-native', () => {
+    // Should import Animated, Text, View but NOT Pressable
+    expect(source).not.toMatch(
+      /import\s+\{[^}]*Pressable[^}]*\}\s+from\s+['"]react-native['"]/
     );
   });
 
-  it('uses AnimatedPressable for the share action', () => {
-    const shareIndex = source.indexOf(
-      'accessibilityLabel="Share your achievement"'
+  it('uses AnimatedPressable for Share button', () => {
+    expect(source).toContain("accessibilityLabel='Share streak'");
+    const shareIndex = source.indexOf("accessibilityLabel='Share streak'");
+    const precedingChunk = source.slice(
+      Math.max(0, shareIndex - 200),
+      shareIndex
     );
-    expect(shareIndex).toBeGreaterThan(0);
-    expect(source.slice(shareIndex - 200, shareIndex)).toContain(
-      '<AnimatedPressable'
-    );
+    expect(precedingChunk).toContain('<AnimatedPressable');
   });
 
-  it('uses AnimatedPressable for the continue action', () => {
-    const continueIndex = source.indexOf('accessibilityLabel="Keep going"');
-    expect(continueIndex).toBeGreaterThan(0);
-    expect(source.slice(continueIndex - 200, continueIndex)).toContain(
-      '<AnimatedPressable'
-    );
+  it('uses AnimatedPressable for primary CTA button', () => {
+    expect(source).toContain('accessibilityLabel={premiumCTA.text}');
+    const ctaIndex = source.indexOf('accessibilityLabel={premiumCTA.text}');
+    const precedingChunk = source.slice(Math.max(0, ctaIndex - 200), ctaIndex);
+    expect(precedingChunk).toContain('<AnimatedPressable');
   });
 
-  it('does not render plain Pressable elements', () => {
+  it('uses AnimatedPressable for dismiss button', () => {
+    expect(source).toContain("accessibilityLabel='Dismiss reward toast'");
+    const dismissIndex = source.indexOf(
+      "accessibilityLabel='Dismiss reward toast'"
+    );
+    const precedingChunk = source.slice(
+      Math.max(0, dismissIndex - 200),
+      dismissIndex
+    );
+    expect(precedingChunk).toContain('<AnimatedPressable');
+  });
+
+  it('does not use plain <Pressable> elements', () => {
+    // AnimatedContainer is fine (Animated.createAnimatedComponent(View))
+    // But no plain <Pressable should remain
     expect(source).not.toMatch(/<Pressable[\s>]/);
     expect(source).not.toMatch(/<\/Pressable>/);
   });
 
-  it('has exactly 2 AnimatedPressable opening tags', () => {
-    expect(source.match(/<AnimatedPressable[\s>]/g)).toHaveLength(2);
+  it('does not use active: Tailwind press classes', () => {
+    expect(source).not.toContain('active:opacity');
+    expect(source).not.toContain('active:bg-');
   });
 
-  it('has exactly 2 AnimatedPressable closing tags', () => {
-    expect(source.match(/<\/AnimatedPressable>/g)).toHaveLength(2);
+  it('has exactly 3 AnimatedPressable opening tags', () => {
+    const matches = source.match(/<AnimatedPressable[\s>]/g);
+    expect(matches).toHaveLength(3);
   });
 
-  it('keeps accessible labels on both reward actions', () => {
-    expect(source).toContain('accessibilityLabel="Share your achievement"');
-    expect(source).toContain('accessibilityLabel="Keep going"');
+  it('has exactly 3 AnimatedPressable closing tags', () => {
+    const matches = source.match(/<\/AnimatedPressable>/g);
+    expect(matches).toHaveLength(3);
   });
 
-  it('triggers tap feedback before sharing', () => {
-    expect(source).toMatch(
-      /const handleShare[\s\S]*?triggerHaptic\('tap'\)[\s\S]*?onShare\?\.\(\)/
-    );
-  });
-
-  it('triggers tap feedback before continuing', () => {
-    expect(source).toMatch(
-      /const handleContinue[\s\S]*?triggerHaptic\('tap'\)[\s\S]*?onClose\(\)/
-    );
+  it('still uses Animated.createAnimatedComponent for container', () => {
+    expect(source).toContain('Animated.createAnimatedComponent(View)');
   });
 });

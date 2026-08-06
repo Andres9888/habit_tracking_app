@@ -1,7 +1,8 @@
-/** Gradient hairline ring wrapping the profile avatar */
+/** ProfileHeroAvatar — the profile photo as a Habit Browser icon TILE
+ *  (rounded square on a warm brand fill) rather than a gradient circle, so the
+ *  profile card shares the library card's anatomy: tile first, then identity. */
 import { View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { borderRadius } from '@/theme/spacing';
+import { airy } from '@/theme/airyScale';
 import { UserAvatar } from '../UserAvatar';
 
 interface ProfileHeroAvatarProps {
@@ -13,45 +14,35 @@ interface ProfileHeroAvatarProps {
   };
 }
 
+/** Matches the Habit Browser card's 52px icon tile. */
+const TILE_SIZE = 52;
+
 export function ProfileHeroAvatar({
   imageUrl,
   initial,
   themeColors,
 }: ProfileHeroAvatarProps) {
-  const avatarSize = 72;
-  const ringPadding = 2;
-
   return (
-    <LinearGradient
-      colors={[themeColors.primary[400], themeColors.primary[700]]}
-      end={{ x: 1, y: 1 }}
-      start={{ x: 0, y: 0 }}
-      style={{ borderRadius: borderRadius.full, padding: ringPadding }}
+    <View
+      className='items-center justify-center overflow-hidden'
+      style={{
+        backgroundColor: themeColors.primary[100],
+        borderRadius: airy.tileRadius,
+        height: TILE_SIZE,
+        width: TILE_SIZE,
+      }}
     >
-      <View
-        style={{
-          backgroundColor: themeColors.card,
-          borderRadius: borderRadius.full,
-          padding: 1,
+      <UserAvatar
+        imageUrl={imageUrl}
+        initial={initial}
+        palette={{
+          avatarBg: 'transparent',
+          avatarBorderColor: 'transparent',
+          avatarBorderWidth: 0,
+          avatarTextColor: themeColors.primary[700],
         }}
-      >
-        <UserAvatar
-          imageUrl={imageUrl}
-          initial={initial}
-          palette={{
-            avatarBg: themeColors.primary[100],
-            avatarBorderColor: 'transparent',
-            avatarBorderWidth: 0,
-            avatarTextColor: themeColors.primary[700],
-            gradientColors: [
-              themeColors.primary[700],
-              themeColors.primary[600],
-            ],
-          }}
-          size={avatarSize - ringPadding * 4}
-          useGradient
-        />
-      </View>
-    </LinearGradient>
+        size={TILE_SIZE}
+      />
+    </View>
   );
 }

@@ -7,10 +7,6 @@ import type { OptimisticOperation, OptimisticStore } from '../types';
 import { getToggleKey } from './helpers';
 import { clearPendingState as clearOperationPendingState } from './clearPendingState';
 import { createOperationTimers } from './operationTimers';
-import {
-  countPendingOperations,
-  hasPendingOperations,
-} from './pendingStateQueries';
 
 export function createStateManagement(
   state: OptimisticStore,
@@ -108,7 +104,11 @@ export function createStateManagement(
     },
 
     getPendingCount(): number {
-      return countPendingOperations(state);
+      let count = 0;
+      for (const op of state.operations.values()) {
+        if (op.state === 'pending') count++;
+      }
+      return count;
     },
 
     getPendingPause(habitId: Id<'habits'>): boolean | undefined {
@@ -124,7 +124,10 @@ export function createStateManagement(
     },
 
     hasPendingOperations(): boolean {
-      return hasPendingOperations(state);
+      for (const op of state.operations.values()) {
+        if (op.state === 'pending') return true;
+      }
+      return false;
     },
   };
 }

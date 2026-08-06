@@ -1,10 +1,10 @@
-import { View } from 'react-native';
+import { View, type ViewStyle } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 
 import { useToastStyles } from '../styles';
 
 interface ProgressBarProps {
-  progressStyle: AnimatedStyle;
+  progressStyle: AnimatedStyle<ViewStyle>;
 }
 
 /**

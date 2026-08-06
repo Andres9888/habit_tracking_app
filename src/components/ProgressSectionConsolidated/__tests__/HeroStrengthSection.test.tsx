@@ -37,7 +37,6 @@ jest.mock('react-native-reanimated', () => {
     withDelay: (_delay: number, value: number) => value,
     withSpring: (value: number) => value,
     Easing: {
-      ...jest.requireActual('react-native-reanimated/mock').Easing,
       out: () => () => 0,
       cubic: () => 0,
     },

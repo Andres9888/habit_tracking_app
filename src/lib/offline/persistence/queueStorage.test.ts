@@ -226,7 +226,8 @@ describe('queueStorage', () => {
         1,
         '@chainday:offline_queue_v1:user_456_pending'
       );
-      expect(AsyncStorage.getItem).toHaveBeenCalledWith(
+      expect(AsyncStorage.getItem).toHaveBeenNthCalledWith(
+        2,
         '@chainday:offline_queue_v1:user_456'
       );
     });

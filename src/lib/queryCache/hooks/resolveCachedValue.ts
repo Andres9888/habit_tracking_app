@@ -10,6 +10,7 @@ interface ResolveCachedValueArgs<T> {
   live: T | undefined;
   previousLive: T | undefined;
   requestedArgs: unknown;
+  serveCachedWhileSkipped: boolean | undefined;
 }
 
 function getLatestFallback<T>({
@@ -31,7 +32,11 @@ function getLatestFallback<T>({
 // order: live → previousLive → cached → guarded latest fallback. Extracted so
 // the stabilizer hook can be called unconditionally in useCachedQuery.
 export function resolveCachedValue<T>(params: ResolveCachedValueArgs<T>): T | undefined {
-  if (params.args === 'skip') return undefined;
+  // A skipped request has no args-keyed memory slot (the key would be built
+  // from 'skip'), so opted-in callers read the args-independent latest slot.
+  if (params.args === 'skip') {
+    return params.serveCachedWhileSkipped ? params.latest : undefined;
+  }
   if (params.live !== undefined) return params.live;
   if (params.previousLive !== undefined) return params.previousLive;
   return params.cached ?? getLatestFallback(params);

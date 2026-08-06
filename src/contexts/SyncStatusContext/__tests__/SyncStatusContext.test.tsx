@@ -33,7 +33,7 @@ const mockState = {
   lastResult: undefined as SyncOrchestratorResult | undefined,
   lastSuccessfulSyncAt: undefined as number | undefined,
 };
-let mockPendingOperationCount = 0;
+let mockHasPendingOperations = false;
 let onSyncCompleteCallback:
   | ((result: SyncOrchestratorResult) => void)
   | undefined;
@@ -50,7 +50,7 @@ jest.mock('../../../lib/offline/sync/useSyncOrchestrator', () => ({
     onSyncErrorCallback = options?.onSyncError;
     return {
       state: mockState,
-      pendingOperationCount: mockPendingOperationCount,
+      hasPendingOperations: mockHasPendingOperations,
       isOnline: true,
       triggerSync: mockTriggerSync,
       subscribe: (listener: (event: { type: string }) => void) => {
@@ -91,7 +91,7 @@ describe('SyncStatusContext', () => {
     mockState.isActive = true;
     mockState.lastResult = undefined;
     mockState.lastSuccessfulSyncAt = undefined;
-    mockPendingOperationCount = 0;
+    mockHasPendingOperations = false;
     eventListeners.length = 0;
     onSyncCompleteCallback = undefined;
     onSyncErrorCallback = undefined;
@@ -198,7 +198,7 @@ describe('SyncStatusContext', () => {
 
   describe('useHasPendingSync', () => {
     it('returns false when no pending operations', () => {
-      mockPendingOperationCount = 0;
+      mockHasPendingOperations = false;
 
       const { result } = renderHook(() => useHasPendingSync(), {
         wrapper: createWrapper(),
@@ -208,7 +208,7 @@ describe('SyncStatusContext', () => {
     });
 
     it('returns true when has pending operations', () => {
-      mockPendingOperationCount = 1;
+      mockHasPendingOperations = true;
 
       const { result } = renderHook(() => useHasPendingSync(), {
         wrapper: createWrapper(),

@@ -35,11 +35,7 @@ export function useHabitNamePlaceholder(
   useEffect(() => {
     if (!active) {
       advancedForOpenRef.current = false;
-      setState((current) =>
-        current.isReady || current.placeholder
-          ? { isReady: false, placeholder: '' }
-          : current
-      );
+      setState({ isReady: false, placeholder: '' });
       return;
     }
 

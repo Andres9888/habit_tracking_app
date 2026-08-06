@@ -17,8 +17,11 @@ interface TemplateModalsProps {
   previewTemplate: Doc<'templates'> | null;
   showCustomizeModal: boolean;
   showFullsizePreview: boolean;
+  /** Detail modal back — hides the overlay, leaves the catalog mounted. */
+  onBackToLibrary: () => void;
   onCloseCustomize: () => void;
-  onCloseFullsize: () => void;
+  /** Detail modal X — dismisses the overlay and the library behind it. */
+  onExitToHome: () => void;
   onCustomize: (template: Doc<'templates'>) => void;
   onDirectImport: (templateId: Id<'templates'>) => Promise<void>;
   onImport: (
@@ -34,8 +37,9 @@ export function TemplateModals({
   previewTemplate,
   showCustomizeModal,
   showFullsizePreview,
+  onBackToLibrary,
   onCloseCustomize,
-  onCloseFullsize,
+  onExitToHome,
   onCustomize,
   onDirectImport,
   onImport,
@@ -55,7 +59,8 @@ export function TemplateModals({
         isImporting={isImporting}
         template={previewTemplate}
         visible={showFullsizePreview}
-        onClose={onCloseFullsize}
+        onBack={onBackToLibrary}
+        onClose={onExitToHome}
         onCustomize={onCustomize}
         onImport={onDirectImport}
       />

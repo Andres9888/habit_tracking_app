@@ -81,10 +81,10 @@ describe('PendingSyncBadge', () => {
       );
     });
 
-    it('has accessibility role of image', () => {
+    it('has accessibility role of img', () => {
       render(<PendingSyncBadge visible={true} />);
       const badge = screen.getByTestId('pending-sync-badge');
-      expect(badge.props.accessibilityRole).toBe('image');
+      expect(badge.props.accessibilityRole).toBe('img');
     });
 
     it('is accessible', () => {

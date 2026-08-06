@@ -2,7 +2,7 @@
  * Benefits variant: page-sheet modal with rich feature cards
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, ScrollView, Modal } from 'react-native';
 import { SocialProofSection } from './SocialProofSection';
 import { BenefitsHeader } from './BenefitsHeader';
@@ -32,11 +32,17 @@ export function BenefitsVariant({
   visible,
 }: BenefitsVariantProps) {
   const { colors } = useThemeColors();
-  const sortedFeatures = [...MOTIVATION_FEATURES].sort((a, b) => {
-    if (a.id === triggeredByFeature) return -1;
-    if (b.id === triggeredByFeature) return 1;
-    return 0;
-  });
+  // Memoized: this copied and re-sorted a module constant on every render,
+  // including every render driven by the paywall's own animation state.
+  const sortedFeatures = useMemo(
+    () =>
+      [...MOTIVATION_FEATURES].sort((a, b) => {
+        if (a.id === triggeredByFeature) return -1;
+        if (b.id === triggeredByFeature) return 1;
+        return 0;
+      }),
+    [triggeredByFeature]
+  );
 
   const handleStartTrialPress = () => { void handlers.handleStartTrial(); };
   const handleRestorePress = () => { void handlers.handleRestorePurchases(); };

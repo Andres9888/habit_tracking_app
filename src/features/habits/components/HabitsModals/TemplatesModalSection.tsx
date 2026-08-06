@@ -1,13 +1,15 @@
+import { lazy, Suspense } from 'react';
 import { View } from 'react-native';
 
 import ErrorBoundary from '../../../../components/ErrorBoundary';
 import Modal from '../../../../components/Modal';
-import { useWarmMountWindow } from '../../../../components/Modal/useWarmMountWindow';
-import TemplatesScreen from '../../../../screens/TemplatesScreen';
-import { useWarmTemplatesCache } from '../../../../screens/TemplatesScreen/useWarmTemplatesCache';
 import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
+
+const TemplatesScreen = lazy(
+  () => import('../../../../screens/TemplatesScreen')
+);
 
 /**
  * Templates modal section - displays templates screen in full-screen modal
@@ -20,8 +22,6 @@ export function TemplatesModalSection({
 }: TemplatesModalSectionProps) {
   const { colors } = useThemeColors();
   const { trigger } = useHaptics();
-  const warmMount = useWarmMountWindow(showTemplatesScreen);
-  useWarmTemplatesCache();
 
   const handleClose = () => {
     trigger('tap');
@@ -42,7 +42,6 @@ export function TemplatesModalSection({
       backdropOpacity={0}
       variant='fullScreen'
       visible={showTemplatesScreen}
-      warmMount={warmMount}
       onClose={handleClose}
       style={{
         borderTopLeftRadius: 0,
@@ -51,10 +50,12 @@ export function TemplatesModalSection({
     >
       <View className='flex-1' style={{ backgroundColor: colors.background }}>
         <ErrorBoundary>
-          <TemplatesScreen
-            onCloseLibrary={handleClose}
-            onViewHabit={handleViewHabit}
-          />
+          <Suspense fallback={null}>
+            <TemplatesScreen
+              onCloseLibrary={handleClose}
+              onViewHabit={handleViewHabit}
+            />
+          </Suspense>
         </ErrorBoundary>
       </View>
     </Modal>

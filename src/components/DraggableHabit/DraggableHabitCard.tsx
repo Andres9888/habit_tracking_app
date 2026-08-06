@@ -147,7 +147,7 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
                   borderColor: props.accentColor ?? colors.premium[400],
                   borderRadius: borderRadius.xl,
                   borderWidth: 2,
-                  ...StyleSheet.absoluteFillObject,
+                  ...StyleSheet.absoluteFill,
                 },
                 glowStyle,
               ]}

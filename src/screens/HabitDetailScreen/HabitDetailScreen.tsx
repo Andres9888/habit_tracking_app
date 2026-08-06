@@ -1,28 +1,30 @@
 /* eslint-disable max-lines */
 /** HabitDetailScreen - Optimized for 9+ scores across all dimensions */
-import { iconSizes } from '@/theme/iconSizes';
-import { fontWeights, typography } from '@/theme/typography';
-import { Edit3 } from 'lucide-react-native';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, View } from 'react-native';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
-import { ScreenHeader } from '../../components/ScreenHeader';
 import { useThemeColors } from '../../theme';
 import { overlays } from '../../theme/colors';
 import { shadows } from '../../theme/spacing';
 import { api } from '../../../convex/_generated/api';
 import { useCachedQuery } from '../../lib/queryCache';
 import {
+  DetailBandHeader,
   DetailLoadingState,
   getHabitDisplayName,
   HabitDetailContent,
   HabitDetailModals,
-  HeaderButton,
 } from './components';
 import { buildModalsProps } from './HabitDetailScreen.constants';
 import type { HabitDetailScreenProps } from './HabitDetailScreen.types';
 import { useCalendarHandlers } from './useCalendarHandlers';
 import { useHabitDetailScreenState } from './useHabitDetailScreenState';
+
+// Module-scoped so the default prop is referentially stable. As an inline `[]`
+// literal it was a new array on every render, which meant the tracking-keyed
+// useMemo in useHabitDetailScreenState could never hold whenever the prop was
+// omitted.
+const NO_TRACKING: NonNullable<HabitDetailScreenProps['tracking']> = [];
 
 // eslint-disable-next-line max-lines-per-function
 function HabitDetailScreenContent({
@@ -32,7 +34,7 @@ function HabitDetailScreenContent({
   onClose,
   onDelete,
   onEdit,
-  tracking = [],
+  tracking = NO_TRACKING,
   visible,
 }: HabitDetailScreenProps) {
   const { colors } = useThemeColors();
@@ -65,6 +67,22 @@ function HabitDetailScreenContent({
   const handleEdit = () => {
     if (displayHabit) onEdit?.(displayHabit);
   };
+  // Memoized because this object is threaded down through HabitDetailContent →
+  // HabitDetailSections → ThisWeekCard / MonthHeatmapCard / PauseCard etc. As a
+  // fresh literal it defeated every memo boundary below it, so each scroll tick
+  // (which flips isTitlePinned) rebuilt the whole detail stack including the
+  // 42-cell month grid.
+  const habitWithStreaks = useMemo(
+    () =>
+      displayHabit
+        ? {
+            ...displayHabit,
+            bestStreak: screenState.bestStreak,
+            currentStreak: screenState.currentStreak,
+          }
+        : undefined,
+    [displayHabit, screenState.bestStreak, screenState.currentStreak]
+  );
   const [isTitlePinned, setIsTitlePinned] = useState(false);
   const handlePinnedChange = useCallback((pinned: boolean) => {
     setIsTitlePinned(pinned);
@@ -80,7 +98,7 @@ function HabitDetailScreenContent({
       visible={visible}
       onRequestClose={onClose}
     >
-      {displayHabit ? (
+      {displayHabit && habitWithStreaks ? (
         <>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -94,39 +112,21 @@ function HabitDetailScreenContent({
                 className='flex-1 overflow-hidden rounded-t-3xl'
                 style={{ backgroundColor: colors.background, ...shadows.modal }}
               >
-                <ScreenHeader
-                  leftAction='close'
-                  rightAction={
-                    <HeaderButton
-                      compact={isTitlePinned}
-                      icon={<Edit3 size={iconSizes.small} strokeWidth={2.5} />}
-                      label='Edit habit'
-                      text='Edit'
-                      tone='subtle'
-                      onPress={handleEdit}
-                    />
-                  }
+                <DetailBandHeader
+                  isCompletedToday={screenState.isCompletedToday}
+                  isTitlePinned={isTitlePinned}
                   title={getHabitDisplayName(displayHabit)}
-                  titleStyle={{
-                    ...typography.body,
-                    fontWeight: fontWeights.semibold,
-                    letterSpacing: -0.2,
-                  }}
-                  titleVisible={isTitlePinned}
-                  variant='transparent'
-                  onBack={onClose}
+                  onClose={onClose}
+                  onEdit={handleEdit}
                 />
                 <HabitDetailContent
                   completedDates={screenState.completedDates}
-                  habit={{
-                    ...displayHabit,
-                    bestStreak: screenState.bestStreak,
-                    currentStreak: screenState.currentStreak,
-                  }}
+                  habit={habitWithStreaks}
                   isCompletedToday={screenState.isCompletedToday}
                   pendingToggleDate={screenState.pendingToggleDate}
-                  totalCompletions={screenState.totalCompletions}
+                  visible={visible}
                   onDayPress={calendarHandlers.handleCalendarDayPress}
+                  onEdit={handleEdit}
                   onPinnedChange={handlePinnedChange}
                 />
               </View>

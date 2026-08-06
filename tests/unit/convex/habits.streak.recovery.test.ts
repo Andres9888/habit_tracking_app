@@ -9,7 +9,7 @@ describe('Habit Streak Recovery and Edge Cases', () => {
       // Day 1-5: completed (streak = 5)
       // Day 6: missed (streak breaks, becomes 0)
       // Day 7: complete again (new streak = 1)
-
+      
       const tracking = [
         { date: '2025-01-01', completed: true },
         { date: '2025-01-02', completed: true },
@@ -19,9 +19,9 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         { date: '2025-01-06', completed: false },
         { date: '2025-01-07', completed: true },
       ];
-
+      
       const currentStreak = calculateStreakFrom(tracking, '2025-01-07');
-
+      
       expect(currentStreak).toBe(1); // Only day 7
     });
 
@@ -40,12 +40,9 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         { date: '2025-01-08', completed: true },
         { date: '2025-01-09', completed: true },
       ];
-
-      const { currentStreak, bestStreak } = calculateBothStreaks(
-        tracking,
-        '2025-01-09'
-      );
-
+      
+      const { currentStreak, bestStreak } = calculateBothStreaks(tracking, '2025-01-09');
+      
       expect(currentStreak).toBe(3); // Last 3 days
       expect(bestStreak).toBe(5); // Best ever is 5
     });
@@ -59,10 +56,10 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         // Resume on Feb 10
         { date: '2025-02-10', completed: true },
       ];
-
+      
       const currentStreak = calculateStreakFrom(tracking, '2025-02-10');
       const bestStreak = findBestStreak(tracking);
-
+      
       expect(currentStreak).toBe(1); // Just started again
       expect(bestStreak).toBe(10); // Old streak is preserved as best
     });
@@ -70,15 +67,15 @@ describe('Habit Streak Recovery and Edge Cases', () => {
     it('prevents "Grace Days" from creating false streaks', () => {
       // User completes on Jan 1 and Jan 3 (gap on Jan 2)
       // Should NOT show streak of 2 if Jan 2 was not completed
-
+      
       const tracking = [
         { date: '2025-01-01', completed: true },
         { date: '2025-01-02', completed: false }, // Missed
         { date: '2025-01-03', completed: true },
       ];
-
+      
       const currentStreak = calculateStreakFrom(tracking, '2025-01-03');
-
+      
       expect(currentStreak).toBe(1); // Only Jan 3, not including Jan 1
     });
 
@@ -90,11 +87,11 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         // No record for Jan 3 - could mean not completed or not tracked
         { date: '2025-01-04', completed: true },
       ];
-
+      
       // Without explicit completed: false record for Jan 3, we can't determine streak
       // Streak should be calculated conservatively
       const currentStreak = calculateStreakFrom(tracking, '2025-01-04');
-
+      
       // This depends on the streaking algorithm:
       // Conservative: treat missing as break = streak of 1
       // Optimistic: treat missing as unknown = streak of 3
@@ -109,9 +106,9 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         { date: '2025-01-07', completed: true },
         { date: '2025-01-08', completed: false }, // Explicitly marked incomplete
       ];
-
+      
       const currentStreak = calculateStreakFrom(tracking, '2025-01-08');
-
+      
       expect(currentStreak).toBe(0); // Streak broken by Jan 8 incomplete
     });
   });
@@ -128,31 +125,31 @@ describe('Habit Streak Recovery and Edge Cases', () => {
     it('counts completion logged just before midnight as today', () => {
       // 23:59 UTC = still today in UTC
       jest.setSystemTime(new Date('2025-01-15T23:59:59.999Z'));
-
+      
       const loggedDate = '2025-01-15';
       const evaluationDate = '2025-01-15';
-
+      
       expect(loggedDate).toBe(evaluationDate);
     });
 
     it('counts completion logged just after midnight as next day', () => {
       // 00:00 UTC = next day
       jest.setSystemTime(new Date('2025-01-16T00:00:00.000Z'));
-
+      
       const loggedDate = '2025-01-16';
       const evaluationDate = '2025-01-16';
-
+      
       expect(loggedDate).toBe(evaluationDate);
     });
 
     it('handles timezone midnight crossover (UTC+12)', () => {
       // UTC 00:00 = UTC+12 00:00 next day (Fiji)
       jest.setSystemTime(new Date('2025-01-15T00:00:00.000Z'));
-
+      
       // UTC+12 timezone
       const todayUTC = '2025-01-15';
       const todayUTC12 = '2025-01-15'; // Actually next day in UTC+12 but logic should account
-
+      
       // When user logs habit in UTC+12, they log it as their local date
       // Storing as logged date, not evaluating with UTC logic
       expect(todayUTC).toBeDefined();
@@ -161,10 +158,10 @@ describe('Habit Streak Recovery and Edge Cases', () => {
     it('handles timezone midnight crossover (UTC-12)', () => {
       // UTC 00:00 = UTC-12 12:00 previous day (Baker Island)
       jest.setSystemTime(new Date('2025-01-15T12:00:00.000Z'));
-
+      
       const todayUTC = '2025-01-15';
       const todayUTC_minus12 = '2025-01-14'; // Previous day
-
+      
       // System stores the date the user logged (their local date)
       expect(todayUTC).not.toBe(todayUTC_minus12);
     });
@@ -176,9 +173,9 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         { date: '2025-01-31', completed: true },
         { date: '2025-02-01', completed: true },
       ];
-
+      
       const currentStreak = calculateStreakFrom(tracking, '2025-02-01');
-
+      
       expect(currentStreak).toBe(3); // Consecutive across month boundary
     });
 
@@ -189,9 +186,9 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         { date: '2024-12-31', completed: true },
         { date: '2025-01-01', completed: true },
       ];
-
+      
       const currentStreak = calculateStreakFrom(tracking, '2025-01-01');
-
+      
       expect(currentStreak).toBe(3); // Consecutive across year boundary
     });
 
@@ -201,9 +198,9 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         { date: '2024-02-29', completed: true }, // Leap day
         { date: '2024-03-01', completed: true },
       ];
-
+      
       const currentStreak = calculateStreakFrom(tracking, '2024-03-01');
-
+      
       expect(currentStreak).toBe(3);
     });
 
@@ -213,9 +210,9 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         { date: '2025-02-28', completed: true },
         { date: '2025-03-01', completed: true },
       ];
-
+      
       const currentStreak = calculateStreakFrom(tracking, '2025-03-01');
-
+      
       expect(currentStreak).toBe(3);
     });
   });
@@ -225,15 +222,15 @@ describe('Habit Streak Recovery and Edge Cases', () => {
       // 14:30 UTC: User toggles habit ON
       // 14:35 UTC: User toggles habit OFF (changed mind)
       // 14:36 UTC: User toggles habit ON again
-
+      
       const toggleSequence = [
         { action: 'toggle', completed: true, time: 1 },
         { action: 'toggle', completed: false, time: 2 },
         { action: 'toggle', completed: true, time: 3 },
       ];
-
+      
       const finalState = toggleSequence[toggleSequence.length - 1].completed;
-
+      
       expect(finalState).toBe(true); // Latest toggle wins
     });
 
@@ -244,7 +241,7 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         date,
         completed: true,
       }));
-
+      
       expect(finalTracking).toHaveLength(3);
       expect(finalTracking.every((t) => t.completed)).toBe(true);
     });
@@ -256,10 +253,10 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         Promise.resolve({ date: '2025-01-15', completed: true }),
         Promise.resolve({ date: '2025-01-16', completed: true }),
       ];
-
+      
       // After all resolve, streak recalculation should see all three
       const results = asyncToggles.map((p) => p);
-
+      
       expect(results).toHaveLength(3);
     });
 
@@ -267,7 +264,7 @@ describe('Habit Streak Recovery and Edge Cases', () => {
       // Toggle A triggers recalculation
       // Toggle B arrives before recalculation completes
       // Recalculation B should use fresh data
-
+      
       const timeline = [
         { event: 'toggleA', date: '2025-01-15' },
         { event: 'toggleB', date: '2025-01-16' },
@@ -276,9 +273,9 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         // Recalc B completes after
         { event: 'recalcB completes', streak: 2 },
       ];
-
+      
       const finalStreak = 2; // Should reflect both toggles
-
+      
       expect(finalStreak).toBe(2);
     });
   });
@@ -291,18 +288,10 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         { date: '2025-01-16', completed: true },
         { date: '2025-01-17', completed: true },
       ];
-
-      const snapshot1 = calculateMomentumSnapshot(
-        habitCreatedAt,
-        tracking,
-        '2025-01-17'
-      );
-      const snapshot2 = calculateMomentumSnapshot(
-        habitCreatedAt,
-        tracking,
-        '2025-01-17'
-      );
-
+      
+      const snapshot1 = calculateMomentumSnapshot(habitCreatedAt, tracking, '2025-01-17');
+      const snapshot2 = calculateMomentumSnapshot(habitCreatedAt, tracking, '2025-01-17');
+      
       // Same input should produce same output
       expect(snapshot1.strength).toBe(snapshot2.strength);
       expect(snapshot1.strengthLevel).toBe(snapshot2.strengthLevel);
@@ -310,28 +299,20 @@ describe('Habit Streak Recovery and Edge Cases', () => {
 
     it('reflects new completion in strength immediately after toggle', () => {
       const habitCreatedAt = Date.now() - 60 * 24 * 60 * 60 * 1000;
-
+      
       const trackingBefore = [
         { date: '2025-01-15', completed: true },
         { date: '2025-01-16', completed: false },
       ];
-
+      
       const trackingAfter = [
         { date: '2025-01-15', completed: true },
         { date: '2025-01-16', completed: true }, // Toggled ON
       ];
-
-      const strengthBefore = calculateMomentumSnapshot(
-        habitCreatedAt,
-        trackingBefore,
-        '2025-01-16'
-      ).strength;
-      const strengthAfter = calculateMomentumSnapshot(
-        habitCreatedAt,
-        trackingAfter,
-        '2025-01-16'
-      ).strength;
-
+      
+      const strengthBefore = calculateMomentumSnapshot(habitCreatedAt, trackingBefore, '2025-01-16').strength;
+      const strengthAfter = calculateMomentumSnapshot(habitCreatedAt, trackingAfter, '2025-01-16').strength;
+      
       // After completing the habit, strength should increase
       expect(strengthAfter).toBeGreaterThan(strengthBefore);
     });
@@ -343,14 +324,10 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         { date: '2025-01-16', completed: true },
         // Today is 2025-01-17 but user is viewing past
       ];
-
+      
       const evaluationDate = '2025-01-17';
-      const snapshot = calculateMomentumSnapshot(
-        habitCreatedAt,
-        tracking,
-        evaluationDate
-      );
-
+      const snapshot = calculateMomentumSnapshot(habitCreatedAt, tracking, evaluationDate);
+      
       expect(snapshot).toBeDefined();
       expect(snapshot.strength).toBeGreaterThanOrEqual(0);
       expect(snapshot.strength).toBeLessThanOrEqual(1);
@@ -367,7 +344,7 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         strengthLevel: 'building',
         strengthUpdatedAt: Date.now(),
       };
-
+      
       // All fields should be updated atomically
       expect(Object.keys(patch)).toHaveLength(6);
       expect(patch).toHaveProperty('bestStreak');
@@ -386,13 +363,13 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         createdAt: 1000,
         bestStreak: 5,
       };
-
+      
       const patch = {
         bestStreak: 10,
         currentStreak: 5,
         strength: 0.8,
       };
-
+      
       // Patch should not change name, userId, createdAt
       expect(patch).not.toHaveProperty('name');
       expect(patch).not.toHaveProperty('userId');
@@ -407,10 +384,10 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         { _id: 'track2', date: '2025-01-02', completed: true },
         { _id: 'track3', date: '2025-01-03', completed: false },
       ];
-
+      
       // Recalculation should not modify tracking records
       const trackingAfterRecalc = tracking;
-
+      
       expect(trackingAfterRecalc).toHaveLength(3);
       expect(trackingAfterRecalc[0].completed).toBe(true);
       expect(trackingAfterRecalc[2].completed).toBe(false);
@@ -423,9 +400,9 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         // Jan 2 has no record - user didn't toggle
         { date: '2025-01-03', completed: true },
       ];
-
+      
       const streak = calculateStreakFrom(tracking, '2025-01-03');
-
+      
       // Streak breaks on missing Jan 2
       expect(streak).toBeLessThanOrEqual(1);
     });
@@ -437,13 +414,11 @@ describe('Habit Streak Recovery and Edge Cases', () => {
         { date: '2025-01-01', completed: true },
         { date: '2025-01-02', completed: true },
       ];
-
+      
       // Should sort by date for correct streak calculation
-      const sortedTracking = tracking.sort((a, b) =>
-        a.date.localeCompare(b.date)
-      );
+      const sortedTracking = tracking.sort((a, b) => a.date.localeCompare(b.date));
       const streak = calculateStreakFrom(sortedTracking, '2025-01-03');
-
+      
       expect(streak).toBe(3);
     });
   });
@@ -453,47 +428,47 @@ describe('Habit Streak Recovery and Edge Cases', () => {
 /* eslint-disable @typescript-eslint/no-unused-vars */
 function generateCompletedDates(startDate, count, completed) {
   const result = [];
-  let current = new Date(`${startDate}T00:00:00.000Z`);
+  let current = new Date(startDate);
   for (let i = 0; i < count; i++) {
-    const year = current.getUTCFullYear();
-    const month = String(current.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(current.getUTCDate()).padStart(2, '0');
+    const year = current.getFullYear();
+    const month = String(current.getMonth() + 1).padStart(2, '0');
+    const day = String(current.getDate()).padStart(2, '0');
     result.push({
       date: `${year}-${month}-${day}`,
       completed,
     });
-    current.setUTCDate(current.getUTCDate() + 1);
+    current.setDate(current.getDate() + 1);
   }
   return result;
 }
 
 function calculateStreakFrom(tracking, evaluationDate) {
   let streak = 0;
-  let currentDate = new Date(`${evaluationDate}T00:00:00.000Z`);
-
+  let currentDate = new Date(evaluationDate);
+  
   for (let i = 0; i < 365; i++) {
-    const year = currentDate.getUTCFullYear();
-    const month = String(currentDate.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(currentDate.getUTCDate()).padStart(2, '0');
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
     const dateStr = `${year}-${month}-${day}`;
-
+    
     const record = tracking.find((t) => t.date === dateStr);
-
+    
     if (record?.completed) {
       streak++;
-      currentDate.setUTCDate(currentDate.getUTCDate() - 1);
+      currentDate.setDate(currentDate.getDate() - 1);
     } else {
       break;
     }
   }
-
+  
   return streak;
 }
 
 function calculateBothStreaks(tracking, evaluationDate) {
   const currentStreak = calculateStreakFrom(tracking, evaluationDate);
   const bestStreak = findBestStreak(tracking);
-
+  
   return { currentStreak, bestStreak };
 }
 
@@ -501,7 +476,7 @@ function findBestStreak(tracking) {
   const sorted = [...tracking].sort((a, b) => a.date.localeCompare(b.date));
   let maxStreak = 0;
   let currentStreak = 0;
-
+  
   for (const record of sorted) {
     if (record.completed) {
       currentStreak++;
@@ -510,7 +485,7 @@ function findBestStreak(tracking) {
       currentStreak = 0;
     }
   }
-
+  
   return maxStreak;
 }
 
@@ -519,12 +494,12 @@ function calculateMomentumSnapshot(habitCreatedAt, tracking, throughDate) {
   const ageInDays = (Date.now() - habitCreatedAt) / (24 * 60 * 60 * 1000);
   const completions = tracking.filter((t) => t.completed).length;
   const strength = Math.min(1, completions / Math.max(ageInDays, 1));
-
+  
   let strengthLevel = 'building';
   if (strength < 0.2) strengthLevel = 'struggling';
   else if (strength < 0.5) strengthLevel = 'building';
   else if (strength < 0.8) strengthLevel = 'strong';
   else strengthLevel = 'excellent';
-
+  
   return { strength, strengthLevel };
 }

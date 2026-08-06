@@ -1,13 +1,12 @@
 /**
  * Hook for starting a new recording
  *
- * Story T10.2: Audio recording integration (expo-av)
+ * Story T10.2: Audio recording integration (expo-audio)
  */
 
 import { useCallback, RefObject } from 'react';
-import { Audio } from 'expo-av';
+import type { AudioRecorder } from 'expo-audio';
 import type { RecordingStatus } from './types';
-import { RECORDING_OPTIONS, STATUS_UPDATE_INTERVAL_MS } from './constants';
 
 type SetStatus = React.Dispatch<React.SetStateAction<RecordingStatus>>;
 
@@ -16,10 +15,10 @@ interface UseStartRecordingDeps {
   hasPermission: boolean | null;
   requestPermission: () => Promise<boolean>;
   configureAudioMode: () => Promise<void>;
-  onRecordingStatusUpdate: (status: Audio.RecordingStatus) => void;
   durationRef: RefObject<number>;
   resetRefs: () => void;
-  recordingRef: RefObject<Audio.Recording | null>;
+  recorder: AudioRecorder;
+  recordingRef: RefObject<AudioRecorder | null>;
   onError?: (error: Error) => void;
 }
 
@@ -29,9 +28,9 @@ export function useStartRecording(deps: UseStartRecordingDeps) {
     hasPermission,
     requestPermission,
     configureAudioMode,
-    onRecordingStatusUpdate,
     durationRef,
     resetRefs,
+    recorder,
     recordingRef,
     onError,
   } = deps;
@@ -66,13 +65,10 @@ export function useStartRecording(deps: UseStartRecordingDeps) {
       resetRefs();
       await configureAudioMode();
 
-      const { recording } = await Audio.Recording.createAsync(
-        RECORDING_OPTIONS,
-        onRecordingStatusUpdate,
-        STATUS_UPDATE_INTERVAL_MS
-      );
+      await recorder.prepareToRecordAsync();
+      recorder.record();
 
-      (recordingRef as { current: Audio.Recording | null }).current = recording;
+      (recordingRef as { current: AudioRecorder | null }).current = recorder;
       (durationRef as { current: number }).current = 0;
 
       setStatus((prev) => ({ ...prev, state: 'recording' }));
@@ -86,8 +82,8 @@ export function useStartRecording(deps: UseStartRecordingDeps) {
     hasPermission,
     requestPermission,
     configureAudioMode,
-    onRecordingStatusUpdate,
     onError,
+    recorder,
     setStatus,
     durationRef,
     resetRefs,

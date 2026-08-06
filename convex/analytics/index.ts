@@ -25,6 +25,7 @@ export { getStreaksForHabit, getStreaksForHabitsBatch } from './streakHelpers';
 
 // Weekly insight helpers
 export {
+  buildWeeklyCompletionIndex,
   calculateHabitChanges,
   categorizeHabitChanges,
   calculateWeekOverWeekChange,

@@ -26,6 +26,7 @@ export function useOfflineQueue(
     () => manager.getState()
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const stats = useMemo(() => manager.getStats(), [state, manager]);
 
   const operations = state.operations;

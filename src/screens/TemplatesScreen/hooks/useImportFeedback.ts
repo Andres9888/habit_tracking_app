@@ -52,10 +52,16 @@ export function useImportFeedback(o: FeedbackOptions) {
         o.setShowToast(true);
       }
 
+      // "Imported habit successfully" was engineering copy at the highest-intent
+      // moment in the flow. Name the habit back to the user instead. Kept free
+      // of "starts today" — plenty of templates are weekly, and the toast is
+      // not the place to make a scheduling claim the habit may not honour.
       o.setToastMessage(
         variant === 'already_exists'
           ? 'You already added this habit'
-          : 'Imported habit successfully'
+          : t?.name
+            ? `${t.name} is on your list`
+            : 'Added to your list'
       );
     },
     [

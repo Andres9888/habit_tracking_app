@@ -65,10 +65,7 @@ export function useOfflineHabitState(
   ]);
 
   return {
-    bestStreak: Math.max(
-      streakData.bestStreak,
-      serverStreak?.bestStreak ?? 0
-    ),
+    bestStreak: streakData.bestStreak,
     completed,
     currentStreak: streakData.currentStreak,
     hasPendingOperations,

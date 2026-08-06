@@ -12,7 +12,6 @@ export interface HabitEditScreenProps {
 }
 
 export interface HabitEditState {
-  effortMinutes?: number;
   habitName: string;
   setHabitName: (name: string) => void;
   selectedEmoji: string | null;
@@ -21,7 +20,6 @@ export interface HabitEditState {
   reminderTime: Date;
   handleEmojiSelect: (emoji: string | null) => void;
   handleColorSelect: (color: string) => void;
-  handleEffortMinutesChange: (minutes: number | undefined) => void;
   handleReminderToggle: (enabled: boolean) => void;
   handleReminderTimeChange: (time: Date) => void;
   handleSave: () => Promise<void>;

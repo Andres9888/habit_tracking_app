@@ -12,14 +12,13 @@ import { ProgressSection } from '../ProgressSection';
 import type { HabitTrackingEntry } from '../../../features/habits/types';
 
 // Mock AccessibilityInfo
-jest
-  .spyOn(AccessibilityInfo, 'isReduceMotionEnabled')
-  .mockImplementation(() => Promise.resolve(false));
+jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockImplementation(
+  () => Promise.resolve(false)
+);
 
 // Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {
   const { View, Text } = require('react-native');
-  const Reanimated = require('react-native-reanimated/mock');
 
   const Animated = {
     View,
@@ -40,10 +39,23 @@ jest.mock('react-native-reanimated', () => {
     withSpring: (value: number) => value,
     withRepeat: (value: number) => value,
     withSequence: (value: number) => value,
-    Easing: Reanimated.Easing,
+    Easing: {
+      out: () => () => 0,
+      inOut: () => () => 0,
+      cubic: () => 0,
+      ease: () => 0,
+    },
     runOnJS: (fn: (...args: unknown[]) => unknown) => fn,
-    FadeInDown: Reanimated.FadeInDown,
-    FadeIn: Reanimated.FadeIn,
+    FadeInDown: {
+      delay: () => ({
+        springify: () => ({}),
+      }),
+    },
+    FadeIn: {
+      delay: () => ({
+        duration: () => ({}),
+      }),
+    },
   };
 });
 
@@ -52,13 +64,8 @@ jest.mock('react-native-svg', () => {
   const React = require('react');
   const { View } = require('react-native');
 
-  const Svg = ({
-    children,
-    ...props
-  }: {
-    children?: React.ReactNode;
-    [key: string]: unknown;
-  }) => React.createElement(View, { testID: 'svg', ...props }, children);
+  const Svg = ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) =>
+    React.createElement(View, { testID: 'svg', ...props }, children);
   const Circle = (props: { [key: string]: unknown }) =>
     React.createElement(View, { testID: 'circle', ...props });
 
@@ -92,9 +99,7 @@ function createMockTrackingData(daysBack: number = 30): HabitTrackingEntry[] {
     date.setDate(date.getDate() - i);
     // Random completion pattern (70% completion rate)
     const completed = Math.random() < 0.7;
-    entries.push(
-      createTrackingEntry(date.toISOString().split('T')[0], completed)
-    );
+    entries.push(createTrackingEntry(date.toISOString().split('T')[0], completed));
   }
 
   return entries.sort((a, b) => a.date.localeCompare(b.date));
@@ -154,9 +159,7 @@ describe('ProgressSection Integration', () => {
   });
 
   it('passes correct props to YourProgressCard', () => {
-    const { getByText, getByLabelText } = render(
-      <ProgressSection {...defaultProps} />
-    );
+    const { getByText, getByLabelText } = render(<ProgressSection {...defaultProps} />);
 
     // Verify strength level is reflected
     expect(getByText('Developing')).toBeTruthy(); // 55% = Developing level
@@ -197,19 +200,13 @@ describe('ProgressSection Integration', () => {
       tracking: trackingWithStreak,
     };
 
-    const { getByLabelText, getByText } = render(
-      <ProgressSection {...props} />
-    );
-    expect(
-      getByLabelText(/Personal bests, current streak 5 days/)
-    ).toBeTruthy();
+    const { getByText } = render(<ProgressSection {...props} />);
+    expect(getByText('5 days')).toBeTruthy(); // Current streak
     expect(getByText('NOW 🔥')).toBeTruthy();
   });
 
   it('calculates and passes day stats to ThisMonthCard', () => {
-    const { getAllByText, getByText } = render(
-      <ProgressSection {...defaultProps} />
-    );
+    const { getAllByText, getByText } = render(<ProgressSection {...defaultProps} />);
 
     // Should show completed days count in summary (may appear multiple times)
     expect(getAllByText(/days$/).length).toBeGreaterThan(0);
@@ -264,9 +261,7 @@ describe('ProgressSection Integration', () => {
   });
 
   it('updates computed values when tracking changes', () => {
-    const { rerender, getByText } = render(
-      <ProgressSection {...defaultProps} />
-    );
+    const { rerender, getByText } = render(<ProgressSection {...defaultProps} />);
 
     // Initial render
     expect(getByText('Developing')).toBeTruthy();
@@ -288,8 +283,7 @@ describe('ProgressSection Integration', () => {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
       const dayOfWeek = date.getDay();
-      const completed =
-        dayOfWeek === 1 ? true : dayOfWeek === 6 ? false : Math.random() > 0.5;
+      const completed = dayOfWeek === 1 ? true : dayOfWeek === 6 ? false : Math.random() > 0.5;
       patternedTracking.push(
         createTrackingEntry(date.toISOString().split('T')[0], completed)
       );
@@ -341,18 +335,14 @@ describe('ProgressSection Data Flow', () => {
     for (let i = 1; i <= 10; i++) {
       const date = new Date(thisYear, thisMonth, i);
       if (date <= today) {
-        tracking.push(
-          createTrackingEntry(date.toISOString().split('T')[0], i <= 8)
-        );
+        tracking.push(createTrackingEntry(date.toISOString().split('T')[0], i <= 8));
       }
     }
 
     // Last month: 50% completion (5/10 days)
     for (let i = 1; i <= 10; i++) {
       const date = new Date(thisYear, thisMonth - 1, i);
-      tracking.push(
-        createTrackingEntry(date.toISOString().split('T')[0], i <= 5)
-      );
+      tracking.push(createTrackingEntry(date.toISOString().split('T')[0], i <= 5));
     }
 
     const props = {
@@ -379,9 +369,7 @@ describe('ProgressSection Data Flow', () => {
       const dayOfWeek = date.getDay();
       // Make Friday (5) and Saturday (6) weak
       const completed = dayOfWeek === 5 || dayOfWeek === 6 ? false : true;
-      tracking.push(
-        createTrackingEntry(date.toISOString().split('T')[0], completed)
-      );
+      tracking.push(createTrackingEntry(date.toISOString().split('T')[0], completed));
     }
 
     const props = {

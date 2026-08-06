@@ -140,7 +140,7 @@ describe('DraggableHabit swipe to archive', () => {
     expect(swipeable).toBeTruthy();
   });
 
-  it('calls onArchive from the explicit archive action', () => {
+  it('passes onArchive callback to Swipeable', () => {
     const mockOnArchive = jest.fn();
     const habit = buildHabit();
 
@@ -159,13 +159,11 @@ describe('DraggableHabit swipe to archive', () => {
 
     const swipeable = UNSAFE_getByType(Swipeable);
 
-    const mockDragX = { interpolate: jest.fn(() => 0) };
-    const rightActions = swipeable.props.renderRightActions(
-      { interpolate: jest.fn() },
-      mockDragX
-    );
-    const { getByTestId } = render(rightActions);
-    fireEvent.press(getByTestId('archive-habit-action'));
+    // Verify Swipeable has the onSwipeableOpen prop
+    expect(swipeable.props.onSwipeableOpen).toBeDefined();
+
+    // Simulate swipe open
+    swipeable.props.onSwipeableOpen('right');
 
     // Verify onArchive was called with the habit ID
     expect(mockOnArchive).toHaveBeenCalledWith(habit._id);
@@ -193,6 +191,7 @@ describe('DraggableHabit swipe to archive', () => {
     // Verify Swipeable configuration
     expect(swipeable.props.overshootRight).toBe(false);
     expect(swipeable.props.friction).toBe(2);
+    expect(swipeable.props.rightThreshold).toBe(40);
     expect(swipeable.props.renderRightActions).toBeDefined();
   });
 
@@ -225,7 +224,6 @@ describe('DraggableHabit swipe to archive', () => {
     // Verify it returns a valid element with expected structure
     expect(rightActions).toBeTruthy();
     expect(rightActions.type).toBeDefined();
-    render(rightActions);
     expect(mockDragX.interpolate).toHaveBeenCalled();
   });
 

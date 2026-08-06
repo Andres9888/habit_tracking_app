@@ -75,6 +75,9 @@ export const darkColors = {
   /** Card border — slightly lighter than surface (gray-700) */
   cardBorder: '#374151',
 
+  /** Row hairline inside a card — one step lighter than the card border. */
+  cardDivider: '#2F3846',
+
   /** Accent color for highlights, icons, and activity indicators */
   accent: '#34D399',
 
@@ -178,6 +181,9 @@ export const lightColors = {
 
   /** Card border — same as general border */
   cardBorder: '#DDD8D2',
+
+  /** Row hairline inside a card — sits between border #DDD8D2 and paper #F8F5F1. */
+  cardDivider: '#EFEAE4',
 
   /** Accent color for highlights, icons, and activity indicators */
   accent: '#059669',
@@ -284,6 +290,10 @@ export interface SemanticColors {
 
   /** Card border color */
   cardBorder: string;
+
+  /** Hairline between rows inside a card — softer than `border`, which boxes
+   *  the card itself. Sits between the border and the card fill. */
+  cardDivider: string;
 
   /** Accent color for highlights, icons, and activity indicators */
   accent: string;

@@ -52,12 +52,7 @@ exports[`QuickPicksRow Snapshots should match snapshot with default unselected s
       onStartShouldSetResponder={[Function]}
     >
       <Text
-        className="text-sm font-medium"
-        style={
-          {
-            "color": "#059669",
-          }
-        }
+        className="text-sm font-medium text-[#22C55E]"
       >
         Browse all →
       </Text>
@@ -693,12 +688,7 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (E
       onStartShouldSetResponder={[Function]}
     >
       <Text
-        className="text-sm font-medium"
-        style={
-          {
-            "color": "#059669",
-          }
-        }
+        className="text-sm font-medium text-[#22C55E]"
       >
         Browse all →
       </Text>
@@ -1025,7 +1015,7 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (E
             collapsable={false}
             style={
               {
-                "borderColor": "#059669",
+                "borderColor": "#22C55E",
                 "borderWidth": 2,
                 "minWidth": 100,
                 "transform": [
@@ -1334,12 +1324,7 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (M
       onStartShouldSetResponder={[Function]}
     >
       <Text
-        className="text-sm font-medium"
-        style={
-          {
-            "color": "#059669",
-          }
-        }
+        className="text-sm font-medium text-[#22C55E]"
       >
         Browse all →
       </Text>
@@ -1464,7 +1449,7 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (M
             collapsable={false}
             style={
               {
-                "borderColor": "#059669",
+                "borderColor": "#22C55E",
                 "borderWidth": 2,
                 "minWidth": 100,
                 "transform": [

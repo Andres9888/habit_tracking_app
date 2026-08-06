@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * useStrengthAnimation Hook
  * Handles progress bar and emoji animations

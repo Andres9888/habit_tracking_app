@@ -28,7 +28,7 @@ describe('mapOAuthError', () => {
 
       expect(result.shouldRedirect).toBe(true);
       expect(result.isCancellation).toBe(false);
-      expect(result.message).toBe("You're already signed in.");
+      expect(result.message).toBe('You are already signed in.');
     });
 
     it('maps session_exists for redirect', () => {
@@ -36,7 +36,7 @@ describe('mapOAuthError', () => {
       const result = mapOAuthError(error);
 
       expect(result.shouldRedirect).toBe(true);
-      expect(result.message).toBe("You're already signed in.");
+      expect(result.message).toBe('You already have an active session.');
     });
   });
 
@@ -46,7 +46,7 @@ describe('mapOAuthError', () => {
       const result = mapOAuthError(error);
 
       expect(result.message).toBe(
-        "Couldn't verify your account. Try again in a moment."
+        'Unable to verify your account. Please try again.'
       );
       expect(result.isCancellation).toBe(false);
       expect(result.shouldRedirect).toBe(false);
@@ -56,14 +56,14 @@ describe('mapOAuthError', () => {
       const error = { errors: [{ code: 'external_account_exists' }] };
       const result = mapOAuthError(error);
 
-      expect(result.message).toContain('linked to another user');
+      expect(result.message).toContain('already linked to another user');
     });
 
     it('maps email_address_not_found with alternative suggestion', () => {
       const error = { errors: [{ code: 'email_address_not_found' }] };
       const result = mapOAuthError(error);
 
-      expect(result.message).toContain("Couldn't find that email");
+      expect(result.message).toContain("couldn't retrieve your email");
       expect(result.message).toContain('different sign-in method');
     });
   });
@@ -75,7 +75,7 @@ describe('mapOAuthError', () => {
 
       expect(result.code).toBe('network_error');
       expect(result.message).toBe(
-        'No internet connection. Check your connection and try again.'
+        'Please check your internet connection and try again.'
       );
     });
 
@@ -100,14 +100,14 @@ describe('mapOAuthError', () => {
       const result = mapOAuthError(error);
 
       expect(result.code).toBe('some_unknown_code');
-      expect(result.message).toBe("Couldn't sign you in. Try again in a moment.");
+      expect(result.message).toBe('Failed to sign in. Please try again.');
     });
 
     it('handles error without code using Clerk message', () => {
       const error = { errors: [{ message: 'Custom Clerk message' }] };
       const result = mapOAuthError(error);
 
-      expect(result.message).toBe("Couldn't sign you in. Try again in a moment.");
+      expect(result.message).toBe('Custom Clerk message');
     });
 
     it('handles completely unknown error shape', () => {
@@ -115,7 +115,7 @@ describe('mapOAuthError', () => {
       const result = mapOAuthError(error);
 
       expect(result.code).toBe('unknown');
-      expect(result.message).toBe("Couldn't sign you in. Try again in a moment.");
+      expect(result.message).toBe('Failed to sign in. Please try again.');
       expect(result.isCancellation).toBe(false);
       expect(result.shouldRedirect).toBe(false);
     });

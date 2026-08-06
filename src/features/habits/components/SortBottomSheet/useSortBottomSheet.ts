@@ -12,7 +12,6 @@ import {
 import { durations, enterEasing, springs } from '@/theme/animations';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import type { HabitSortMode } from '../../types';
-import type { UseSortBottomSheetOptions } from './types';
 import {
   BACKDROP_FADE_IN_DURATION_MS,
   BACKDROP_FADE_OUT_DURATION_MS,
@@ -23,6 +22,13 @@ import {
 } from './constants';
 
 const SHEET_TIMING_CONFIG = { duration: durations.sheet, easing: enterEasing };
+
+interface UseSortBottomSheetOptions {
+  visible: boolean;
+  reduceMotion: boolean;
+  onClose: () => void;
+  onSelectSortMode: (mode: HabitSortMode) => void;
+}
 
 export function useSortBottomSheet({
   visible,
@@ -43,7 +49,9 @@ export function useSortBottomSheet({
             duration: BACKDROP_FADE_IN_DURATION_MS,
             easing: Easing.out(Easing.cubic),
           });
-      translateY.value = reduceMotion ? 0 : withTiming(0, SHEET_TIMING_CONFIG);
+      translateY.value = reduceMotion
+        ? 0
+        : withTiming(0, SHEET_TIMING_CONFIG);
     } else {
       backdropOpacity.value = reduceMotion
         ? 0

@@ -7,6 +7,7 @@ import { progressEmojisValidator } from '../lib/progressEmojisValidator';
 
 export const settingsReturnValidator = v.object({
   appIcon: v.string(),
+  appLock: v.boolean(),
   catTheme: v.boolean(),
   celebrationsEnabled: v.boolean(),
   compactView: v.boolean(),
@@ -53,6 +54,7 @@ export const settingsReturnValidator = v.object({
 
 export const updateArgsValidator = {
   appIcon: v.optional(v.string()),
+  appLock: v.optional(v.boolean()),
   catTheme: v.optional(v.boolean()),
   celebrationsEnabled: v.optional(v.boolean()),
   compactView: v.optional(v.boolean()),

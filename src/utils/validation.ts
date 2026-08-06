@@ -242,7 +242,7 @@ export function safeParseNumber(
   if (min !== undefined && parsed < min) return min;
   if (max !== undefined && parsed > max) return max;
 
-  return Object.is(parsed, -0) ? 0 : parsed;
+  return parsed;
 }
 
 /**

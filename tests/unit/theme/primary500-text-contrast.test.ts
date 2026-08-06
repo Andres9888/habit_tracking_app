@@ -30,10 +30,10 @@ const STYLESHEET_TEXT_FILES = [
     antiPattern: 'colors.primary[500]',
   },
   {
-    file: 'components/AdvancedOptions/StrengthCurveOption.tsx',
-    description: 'Selected strength curve label',
+    file: 'components/MilestoneCelebration/StrengthDisplay.tsx',
+    description: 'Strength percentage heading',
     pattern: 'colors.primary[700]',
-    antiPattern: 'color: active ? colors.primary[500]',
+    antiPattern: 'colors.primary[500]',
   },
   {
     file: 'components/ShareCardGenerator/components/ShareCardHeader.tsx',
@@ -50,7 +50,6 @@ const BUTTON_CONFIG_FILE = {
   file: 'components/Button/useButtonConfig.ts',
   description: 'Secondary and ghost button text',
 };
-const BUTTON_VARIANT_STYLES_FILE = 'components/Button/buttonVariantStyles.ts';
 
 /**
  * Tailwind-based components where text-emerald-500 was replaced
@@ -60,26 +59,26 @@ const TAILWIND_TEXT_FILES = [
   {
     file: 'components/HabitCalendarModal/StatsCard.tsx',
     description: 'Completion percentage stat',
-    pattern: 'colors.status.successText',
-    antiPattern: 'colors.primary[500]',
+    pattern: 'text-emerald-700',
+    antiPattern: 'text-emerald-500',
   },
   {
     file: 'components/HabitCalendarModal/ActivityLog.tsx',
     description: 'Completed activity timestamp',
-    pattern: '#047857',
-    antiPattern: '#10B981',
+    pattern: 'text-emerald-700',
+    antiPattern: 'text-emerald-500',
   },
   {
-    file: 'components/CreateHabitModal/components/EnhancedReminderSelector/PresetButton.tsx',
+    file: 'components/CreateHabitModal/components/MinimalReminderToggle.tsx',
     description: 'Enabled reminder time text',
-    pattern: 'color: isSelected ? colors.primary[700]',
-    antiPattern: 'color: isSelected ? colors.primary[500]',
+    pattern: 'text-emerald-700',
+    antiPattern: 'text-emerald-500',
   },
   {
-    file: 'components/ProgressSectionConsolidated/DayBar.tsx',
-    description: 'Best-day label color',
-    pattern: 'colors.status.successText',
-    antiPattern: 'colors.primary[500]',
+    file: 'components/QuickStatsStrip/QuickStatsStrip.tsx',
+    description: 'Success rate stat card color',
+    pattern: 'text-emerald-700',
+    antiPattern: 'text-emerald-500',
   },
 ];
 
@@ -91,12 +90,12 @@ const HARDCODED_HEX_FILES = [
   {
     file: 'components/FloatingXPText/FloatingXPText.tsx',
     description: 'XP floating text color',
-    pattern: 'colors.primary[700]',
+    pattern: '#047857',
   },
   {
     file: 'components/CreateHabitModal/components/EnhancedReminderSelector/PresetButton.tsx',
     description: 'Selected preset time text',
-    pattern: 'colors.primary[700]',
+    pattern: '#047857',
   },
 ];
 
@@ -117,34 +116,33 @@ describe('Primary-500 contrast: StyleSheet text uses primary-700', () => {
 
 describe('Primary-500 contrast: Button config uses primary-700 for text', () => {
   it('secondary variant text uses primary[700]', () => {
-    const configContent = fs.readFileSync(
+    const content = fs.readFileSync(
       path.join(SRC_ROOT, BUTTON_CONFIG_FILE.file),
       'utf-8'
     );
-    const stylesContent = fs.readFileSync(
-      path.join(SRC_ROOT, BUTTON_VARIANT_STYLES_FILE),
-      'utf-8'
-    );
-    expect(configContent).toMatch(
-      /primaryText:[\s\S]*?mergedTheme\.colors\?\.primary\?\.\[700\]/
-    );
-    expect(stylesContent).toContain('text: { color: colors.primaryText }');
+    const textMatches = content.match(/text:.*colors\.primary\[\d+\]/g) ?? [];
+    for (const match of textMatches) {
+      expect(match).toContain('primary[700]');
+      expect(match).not.toContain('primary[500]');
+    }
   });
 
   it('primary variant container still uses primary[500] for background', () => {
     const content = fs.readFileSync(
-      path.join(SRC_ROOT, BUTTON_VARIANT_STYLES_FILE),
+      path.join(SRC_ROOT, BUTTON_CONFIG_FILE.file),
       'utf-8'
     );
-    expect(content).toContain('backgroundColor: colors.primary');
+    expect(content).toContain(
+      'backgroundColor: theme.custom.colors.primary[500]'
+    );
   });
 
   it('secondary variant border still uses primary[500]', () => {
     const content = fs.readFileSync(
-      path.join(SRC_ROOT, BUTTON_VARIANT_STYLES_FILE),
+      path.join(SRC_ROOT, BUTTON_CONFIG_FILE.file),
       'utf-8'
     );
-    expect(content).toContain('borderColor: colors.primary');
+    expect(content).toContain('borderColor: theme.custom.colors.primary[500]');
   });
 });
 

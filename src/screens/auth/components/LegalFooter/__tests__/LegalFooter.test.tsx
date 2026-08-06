@@ -3,11 +3,12 @@ import { Linking } from 'react-native';
 import { render, fireEvent } from '@testing-library/react-native';
 import { LegalFooter } from '../LegalFooter';
 
-describe('LegalFooter', () => {
-  beforeAll(() => {
-    Linking.openURL = jest.fn();
-  });
+// Mock Linking
+jest.mock('react-native/Libraries/Linking/Linking', () => ({
+  openURL: jest.fn(),
+}));
 
+describe('LegalFooter', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -51,7 +52,7 @@ describe('LegalFooter', () => {
       fireEvent.press(getByLabelText('Terms of Service'));
 
       expect(Linking.openURL).toHaveBeenCalledWith(
-        'https://andres9888.github.io/chainday-landing/terms.html'
+        'https://dailyhabits.app/terms'
       );
     });
 
@@ -61,7 +62,7 @@ describe('LegalFooter', () => {
       fireEvent.press(getByLabelText('Privacy Policy'));
 
       expect(Linking.openURL).toHaveBeenCalledWith(
-        'https://andres9888.github.io/chainday-landing/privacy.html'
+        'https://dailyhabits.app/privacy'
       );
     });
   });

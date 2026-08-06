@@ -10,7 +10,7 @@
 import { renderHook } from '@testing-library/react-native';
 import { useOfflineHabitState } from '../useOfflineHabitState';
 import {
-  getOfflineQueueManager,
+  createOfflineQueueManager,
   resetOfflineQueueManager,
 } from '../../../../lib/offline/queueManager';
 import type { Id } from '../../../../../convex/_generated/dataModel';
@@ -92,7 +92,7 @@ describe('useOfflineHabitState', () => {
 
   describe('with pending toggle operations', () => {
     it('returns pending completion status for today over server state', () => {
-      const manager = getOfflineQueueManager();
+      const manager = createOfflineQueueManager({ autoPersist: false });
 
       // Queue a completion toggle
       manager.enqueue('toggleCompletion', {
@@ -114,7 +114,7 @@ describe('useOfflineHabitState', () => {
     });
 
     it('returns pending uncomplete status over server completed', () => {
-      const manager = getOfflineQueueManager();
+      const manager = createOfflineQueueManager({ autoPersist: false });
 
       // Queue an uncomplete toggle
       manager.enqueue('toggleCompletion', {
@@ -136,7 +136,7 @@ describe('useOfflineHabitState', () => {
     });
 
     it('reports hasPendingOperations as true', () => {
-      const manager = getOfflineQueueManager();
+      const manager = createOfflineQueueManager({ autoPersist: false });
 
       manager.enqueue('toggleCompletion', {
         date: todayDate,
@@ -156,7 +156,7 @@ describe('useOfflineHabitState', () => {
     });
 
     it('ignores operations for different habits', () => {
-      const manager = getOfflineQueueManager();
+      const manager = createOfflineQueueManager({ autoPersist: false });
 
       manager.enqueue('toggleCompletion', {
         date: todayDate,
@@ -177,7 +177,7 @@ describe('useOfflineHabitState', () => {
     });
 
     it('ignores completed (synced) operations', () => {
-      const manager = getOfflineQueueManager();
+      const manager = createOfflineQueueManager({ autoPersist: false });
 
       // Queue and then mark as completed (synced)
       const { operationId } = manager.enqueue('toggleCompletion', {
@@ -202,7 +202,7 @@ describe('useOfflineHabitState', () => {
 
   describe('streak calculation with pending operations', () => {
     it('calculates streak including pending completion', () => {
-      const manager = getOfflineQueueManager();
+      const manager = createOfflineQueueManager({ autoPersist: false });
 
       // Server tracking shows yesterday completed
       const serverTracking = [{ completed: true, date: '2026-01-29' }];
@@ -227,7 +227,7 @@ describe('useOfflineHabitState', () => {
     });
 
     it('calculates streak when breaking with pending uncomplete', () => {
-      const manager = getOfflineQueueManager();
+      const manager = createOfflineQueueManager({ autoPersist: false });
 
       // Server shows today completed (2-day streak)
       const serverTracking = [
@@ -255,12 +255,12 @@ describe('useOfflineHabitState', () => {
         })
       );
 
-      // Yesterday still counts as an active one-day streak under the grace rule.
-      expect(result.current.currentStreak).toBe(1);
+      // Streak should be 0 (today uncompleted, breaking the streak)
+      expect(result.current.currentStreak).toBe(0);
     });
 
     it('preserves best streak from server when lower', () => {
-      const manager = getOfflineQueueManager();
+      const manager = createOfflineQueueManager({ autoPersist: false });
 
       manager.enqueue('toggleCompletion', {
         date: todayDate,
@@ -288,7 +288,7 @@ describe('useOfflineHabitState', () => {
 
   describe('multiple operations handling', () => {
     it('uses latest pending operation for same date', () => {
-      const manager = getOfflineQueueManager();
+      const manager = createOfflineQueueManager({ autoPersist: false });
 
       // First toggle to complete
       manager.enqueue(
@@ -317,7 +317,7 @@ describe('useOfflineHabitState', () => {
     });
 
     it('counts all pending operations for this habit', () => {
-      const manager = getOfflineQueueManager();
+      const manager = createOfflineQueueManager({ autoPersist: false });
 
       // Queue operations for multiple dates
       manager.enqueue('toggleCompletion', {

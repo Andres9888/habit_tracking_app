@@ -16,9 +16,6 @@ export interface BrowserPalette {
   background: string;
   card: string;
   border: string;
-  detailsFill: string;
-  startSmallBg: string;
-  metaPillBg: string;
   closeBg: string;
   iconTile: string;
 
@@ -32,8 +29,9 @@ export interface BrowserPalette {
   chipIdle: string;
   chipActive: string;
 
-  // Add / added toggle
+  // Add / added toggle — tonal pair, Add reads stronger than Added
   addBg: string;
+  addFg: string;
   addedBg: string;
   addedFg: string;
 }
@@ -52,9 +50,6 @@ export function buildBrowserPalette(
     background: colors.background,
     card: isDark ? colors.card : colors.cardPaper,
     border: colors.border,
-    detailsFill: isDark ? colors.gray[200] : '#FFFFFF',
-    startSmallBg: isDark ? colors.background : colors.card,
-    metaPillBg: isDark ? colors.background : colors.card,
     closeBg: isDark ? colors.gray[200] : colors.card,
     iconTile: isDark ? colors.status.streakLight : '#F8E9CE',
 
@@ -66,9 +61,10 @@ export function buildBrowserPalette(
     chipIdle: isDark ? colors.card : colors.gray[50],
     chipActive: colors.gray[900],
 
-    addBg: colors.accent,
-    addedBg: colors.status.successLight,
-    addedFg: colors.status.successText,
+    addBg: isDark ? 'rgba(52,211,153,0.20)' : '#C4EBD9',
+    addFg: isDark ? '#4ADE9E' : '#04724D',
+    addedBg: isDark ? 'rgba(52,211,153,0.09)' : '#E4F7EE',
+    addedFg: isDark ? '#4E9B7E' : '#16A374',
   };
 }
 

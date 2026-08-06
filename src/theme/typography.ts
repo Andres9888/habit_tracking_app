@@ -9,8 +9,6 @@
  */
 
 import { TextStyle } from 'react-native';
-import { fontFamilies, fontWeights } from './typographyFonts';
-export { fontFamilies, fontWeights } from './typographyFonts';
 
 /**
  * Font Families
@@ -23,12 +21,27 @@ export { fontFamilies, fontWeights } from './typographyFonts';
  * - iOS: SF Pro Display / SF Pro Text
  * - Native Handset: Roboto
  */
+export const fontFamilies = {
+  monospace: 'JetBrainsMono',
+  primary: {
+    display: 'Literata', // Serif — display/H1 headings
+    text: 'DMSans', // Sans-serif — body, UI, H2/H3
+  },
+  serif: 'Literata', // Alias for display font
+  system: '-apple-system', // Fallback to system font
+} as const;
 
 /**
  * Font Weights
  * DM Sans supports 400, 500, 600, 700
  * Literata supports 400, 500, 600, 700
  */
+export const fontWeights = {
+  bold: '700' as const,
+  medium: '500' as const,
+  regular: '400' as const,
+  semibold: '600' as const,
+};
 
 /**
  * Type Scale (Design System: 34/22/17/13)

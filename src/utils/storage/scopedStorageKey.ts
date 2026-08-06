@@ -2,7 +2,7 @@ export function normalizeStorageScope(
   scope: string | null | undefined
 ): string | null {
   const trimmed = scope?.trim();
-  return trimmed || null;
+  return trimmed ? trimmed : null;
 }
 
 export function buildScopedStorageKey(

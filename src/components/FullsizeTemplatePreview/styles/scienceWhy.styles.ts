@@ -1,60 +1,73 @@
 /**
  * Science drill-down — "Why it works" credibility card styles: accent bar,
  * gradient header with badge + read-paper pill, and the lead/evidence body.
+ *
+ * Layout only — colors come from `useDetailPalette()` at the call site.
  */
 
 import { StyleSheet } from 'react-native';
 
-import { colors } from '@/theme';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
 import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 
 export const scienceWhyStyles = StyleSheet.create({
   whyCard: {
-    backgroundColor: colors.gray[50],
-    borderColor: colors.border,
-    borderRadius: borderRadius.xl,
+    borderRadius: 22,
     borderWidth: 1,
     overflow: 'hidden',
     position: 'relative',
     ...shadows.card,
   },
-  whyAccentBar: { bottom: 0, left: 0, position: 'absolute', top: 0, width: 4, zIndex: 2 },
+  whyAccentBar: {
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    top: 0,
+    width: 4,
+    zIndex: 2,
+  },
+  // Mock lays the badge and Read-paper pill out as one row. Their combined
+  // intrinsic width overflows the card on a 375pt screen (and on any screen
+  // once Dynamic Type is on), so the row wraps rather than clipping the pill
+  // off the card edge.
   whyHeader: {
-    alignItems: 'flex-start',
-    borderBottomColor: colors.border,
+    alignItems: 'center',
     borderBottomWidth: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: spacing.sm,
+    justifyContent: 'space-between',
     paddingHorizontal: spacing.base,
     paddingLeft: spacing.base + 2,
-    paddingVertical: spacing.base,
+    paddingVertical: 14,
   },
   whyBadge: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
     borderRadius: borderRadius.full,
     flexDirection: 'row',
-    gap: 7,
+    flexShrink: 1,
+    gap: 6,
     paddingHorizontal: 13,
     paddingVertical: 7,
     ...shadows.subtle,
   },
   whyBadgeText: {
+    flexShrink: 1,
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.bold,
-    letterSpacing: 1.2,
+    letterSpacing: 1.1,
     textTransform: 'uppercase',
   },
   whyReadBtn: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
     borderRadius: borderRadius.full,
-    borderWidth: 1,
+    borderWidth: 1.5,
     flexDirection: 'row',
-    gap: 7,
+    flexShrink: 0,
+    gap: 6,
     paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingVertical: 7,
   },
   whyReadText: {
     fontFamily: fontFamilies.primary.text,
@@ -75,14 +88,12 @@ export const scienceWhyStyles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   whyLead: {
-    color: colors.gray[800],
     fontFamily: fontFamilies.primary.display,
-    fontSize: 18,
+    fontSize: 17,
     letterSpacing: -0.2,
-    lineHeight: 27,
+    lineHeight: 26,
   },
   whyEvidence: {
-    color: colors.gray[600],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     lineHeight: 20,

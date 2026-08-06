@@ -20,6 +20,11 @@ export async function ensureNotificationPermissions(): Promise<boolean> {
   return mod.ensureNotificationPermissions();
 }
 
+export async function hasNotificationPermissions(): Promise<boolean> {
+  const mod = await import('./permissions');
+  return mod.hasNotificationPermissions();
+}
+
 export async function cancelHabitReminder(habitId: string): Promise<void> {
   const mod = await import('./habitReminders');
   return mod.cancelHabitReminder(habitId);

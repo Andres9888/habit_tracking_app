@@ -13,11 +13,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { extendedTheme } from '../../../theme';
 import { HabitCard } from '../HabitCard';
 
-jest.mock('../hooks', () => ({
-  ...jest.requireActual('../hooks'),
-  useStreakMilestoneIntegration: jest.fn(),
-}));
-
 // Wrapper with theme and gesture handler
 const renderWithProviders = (component: React.ReactElement) => {
   return render(
@@ -122,11 +117,11 @@ describe('HabitCard - Phase 2', () => {
   describe('Tap Interaction (Complete Habit)', () => {
     it('should call onPress when tapped', () => {
       const onPress = jest.fn();
-      const { getByTestId } = renderWithProviders(
+      const { getByRole } = renderWithProviders(
         <HabitCard {...defaultProps} onPress={onPress} />
       );
 
-      const card = getByTestId('home-habit-toggle');
+      const card = getByRole('button');
       fireEvent.press(card);
 
       expect(onPress).toHaveBeenCalledTimes(1);
@@ -134,12 +129,13 @@ describe('HabitCard - Phase 2', () => {
 
     it('should not call onPress when disabled', () => {
       const onPress = jest.fn();
-      const { getByTestId } = renderWithProviders(
+      const { getByRole } = renderWithProviders(
         <HabitCard {...defaultProps} disabled onPress={onPress} />
       );
 
-      const card = getByTestId('home-habit-toggle');
-      expect(card.props.accessibilityState.disabled).toBe(true);
+      const card = getByRole('button');
+      fireEvent.press(card);
+
       expect(onPress).not.toHaveBeenCalled();
     });
   });
@@ -147,11 +143,11 @@ describe('HabitCard - Phase 2', () => {
   describe('Long Press Interaction (Quick Actions)', () => {
     it('should call onLongPress when long pressed', () => {
       const onLongPress = jest.fn();
-      const { getByTestId } = renderWithProviders(
+      const { getByRole } = renderWithProviders(
         <HabitCard {...defaultProps} onLongPress={onLongPress} />
       );
 
-      const card = getByTestId('home-habit-toggle');
+      const card = getByRole('button');
       fireEvent(card, 'onLongPress');
 
       expect(onLongPress).toHaveBeenCalledTimes(1);
@@ -159,12 +155,13 @@ describe('HabitCard - Phase 2', () => {
 
     it('should not call onLongPress when disabled', () => {
       const onLongPress = jest.fn();
-      const { getByTestId } = renderWithProviders(
+      const { getByRole } = renderWithProviders(
         <HabitCard {...defaultProps} disabled onLongPress={onLongPress} />
       );
 
-      const card = getByTestId('home-habit-toggle');
-      expect(card.props.accessibilityState.disabled).toBe(true);
+      const card = getByRole('button');
+      fireEvent(card, 'onLongPress');
+
       expect(onLongPress).not.toHaveBeenCalled();
     });
   });
@@ -225,7 +222,7 @@ describe('HabitCard - Phase 2', () => {
       const onEdit = jest.fn();
       const onDelete = jest.fn();
 
-      const { getByTestId } = renderWithProviders(
+      const { getByRole } = renderWithProviders(
         <HabitCard
           {...defaultProps}
           disabled
@@ -235,18 +232,19 @@ describe('HabitCard - Phase 2', () => {
         />
       );
 
-      const card = getByTestId('home-habit-toggle');
-      expect(card.props.accessibilityState.disabled).toBe(true);
+      const card = getByRole('button');
+      fireEvent.press(card);
+
       expect(onPress).not.toHaveBeenCalled();
     });
   });
 
   describe('Accessibility - VoiceOver Support', () => {
     it('should have accessible role as button', () => {
-      const { getByTestId } = renderWithProviders(
+      const { getByRole } = renderWithProviders(
         <HabitCard {...defaultProps} />
       );
-      expect(getByTestId('home-habit-toggle')).toBeDefined();
+      expect(getByRole('button')).toBeDefined();
     });
 
     it('should provide descriptive accessibility label', () => {
@@ -258,19 +256,18 @@ describe('HabitCard - Phase 2', () => {
     });
 
     it('should announce completion state', () => {
-      const { getByTestId } = renderWithProviders(
+      const { getByLabelText } = renderWithProviders(
         <HabitCard {...defaultProps} completed />
       );
-      const card = getByTestId('home-habit-toggle');
-      expect(card.props.accessibilityLabel).toMatch(/completed/);
+      const card = getByLabelText(/completed today/);
       expect(card).toBeDefined();
     });
 
     it('should have proper accessibility state', () => {
-      const { getByTestId } = renderWithProviders(
+      const { getByRole } = renderWithProviders(
         <HabitCard {...defaultProps} completed disabled />
       );
-      const card = getByTestId('home-habit-toggle');
+      const card = getByRole('button');
       expect(card.props.accessibilityState).toMatchObject({
         checked: true,
         disabled: true,
@@ -278,13 +275,11 @@ describe('HabitCard - Phase 2', () => {
     });
 
     it('should provide accessibility hint', () => {
-      const { getByTestId } = renderWithProviders(
+      const { getByRole } = renderWithProviders(
         <HabitCard {...defaultProps} />
       );
-      const card = getByTestId('home-habit-toggle');
-      expect(card.props.accessibilityHint).toContain(
-        'Tap to toggle completion'
-      );
+      const card = getByRole('button');
+      expect(card.props.accessibilityHint).toContain('Tap to complete');
     });
 
     it('should have accessible Edit button', () => {
@@ -355,11 +350,11 @@ describe('HabitCard - Phase 2', () => {
   describe('Phase 2 Acceptance Criteria', () => {
     it('✅ Responds to tap (complete)', () => {
       const onPress = jest.fn();
-      const { getByTestId } = renderWithProviders(
+      const { getByRole } = renderWithProviders(
         <HabitCard {...defaultProps} onPress={onPress} />
       );
 
-      fireEvent.press(getByTestId('home-habit-toggle'));
+      fireEvent.press(getByRole('button'));
       expect(onPress).toHaveBeenCalled();
     });
 
@@ -375,11 +370,11 @@ describe('HabitCard - Phase 2', () => {
 
     it('✅ Long press shows menu', () => {
       const onLongPress = jest.fn();
-      const { getByTestId } = renderWithProviders(
+      const { getByRole } = renderWithProviders(
         <HabitCard {...defaultProps} onLongPress={onLongPress} />
       );
 
-      fireEvent(getByTestId('home-habit-toggle'), 'onLongPress');
+      fireEvent(getByRole('button'), 'onLongPress');
       expect(onLongPress).toHaveBeenCalled();
     });
 

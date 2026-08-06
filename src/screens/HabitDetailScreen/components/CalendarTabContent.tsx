@@ -1,6 +1,6 @@
 /**
  * CalendarTabContent — one unified card: interactive monthly grid on top,
- * chromeless year strip below a divider (tap a year cell to jump the month).
+ * "Year at a glance" below a divider (tap a year cell to jump the month).
  */
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
@@ -13,13 +13,19 @@ import type { Habit } from '../../../features/habits/types';
 import { colors as palette } from '../../../theme/colors';
 import { shadows } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { YearStrip } from './YearStrip';
+import { CalendarYearSection } from './CalendarYearSection';
 
 interface CalendarTabContentProps {
   completedDates: Set<string>;
   habit: Habit;
   habitColor: string;
   pendingToggleDate?: string | null;
+  /** Hidden when the standalone "Year at a glance" card is already showing. */
+  showYearSection?: boolean;
+  /** Trend line under the year strip, e.g. "May was your turning point." */
+  yearCaption?: string | null;
+  /** "Jan – Jul", derived from the elapsed months. */
+  yearRangeLabel?: string;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
 }
 
@@ -29,6 +35,9 @@ export function CalendarTabContent({
   habitColor,
   pendingToggleDate = null,
   onDayPress,
+  showYearSection = true,
+  yearCaption,
+  yearRangeLabel,
 }: CalendarTabContentProps) {
   const { colors, isDark } = useThemeColors();
   const [currentMonth, setCurrentMonth] = useState(() =>
@@ -66,19 +75,21 @@ export function CalendarTabContent({
           onDayPress={onDayPress}
         />
       </ErrorBoundary>
-      <View
-        className='mt-3 pt-3'
-        style={{ borderTopColor: colors.border, borderTopWidth: 1 }}
-      >
-        <ErrorBoundary>
-          <YearStrip
+      {showYearSection ? (
+        <View
+          className='mt-3 pt-3'
+          style={{ borderTopColor: colors.border, borderTopWidth: 1 }}
+        >
+          <CalendarYearSection
+            caption={yearCaption}
             completedDates={completedDates}
             habitColor={habitColor}
             habitCreatedAt={habit.createdAt}
+            rangeLabel={yearRangeLabel}
             onNavigateToMonth={navigateToMonth}
           />
-        </ErrorBoundary>
-      </View>
+        </View>
+      ) : null}
     </Animated.View>
   );
 }

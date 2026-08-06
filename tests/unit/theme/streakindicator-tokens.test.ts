@@ -1,65 +1,64 @@
 /**
- * Current streak-badge token contracts.
- *
- * The former StreakIndicator was removed; streak UI now lives in HabitCard's
- * StreakBadge and consumes milestone/theme tokens directly.
+ * StreakIndicator Token Migration Tests (Phase 2)
+ * Verifies that StreakIndicator.constants uses theme milestone tokens
+ * instead of hardcoded hex values.
  */
 
-import fs from 'fs';
-import path from 'path';
 import { colors, milestoneColors } from '@/theme/colors';
-import { streakStyles } from '@/components/HabitCard/HabitCard.streakStyles';
+import {
+  COLORS,
+  MILESTONE_BADGES,
+} from '@/components/StreakIndicator/StreakIndicator.constants';
 
-const source = fs.readFileSync(
-  path.resolve(
-    __dirname,
-    '../../../src/components/HabitCard/components/StreakBadge.tsx'
-  ),
-  'utf8'
-);
-
-describe('HabitCard StreakBadge token contracts', () => {
-  describe('milestone tiers remain stable', () => {
-    it('uses amber for the primary achievement accent', () => {
-      expect(milestoneColors.amber).toBe('#F59E0B');
+describe('StreakIndicator Token Migration - Phase 2', () => {
+  describe('MILESTONE_BADGES use milestoneColors tokens', () => {
+    it('7-day badge uses milestoneColors.amber', () => {
+      expect(MILESTONE_BADGES[7].color).toBe(milestoneColors.amber);
+      expect(MILESTONE_BADGES[7].color).toBe('#F59E0B');
     });
 
-    it('uses yellow for the alternate achievement tier', () => {
-      expect(milestoneColors.yellow).toBe('#EAB308');
+    it('30-day badge uses milestoneColors.yellow', () => {
+      expect(MILESTONE_BADGES[30].color).toBe(milestoneColors.yellow);
+      expect(MILESTONE_BADGES[30].color).toBe('#EAB308');
     });
 
-    it('uses violet for special achievements', () => {
-      expect(milestoneColors.violet).toBe('#8B5CF6');
+    it('100-day badge uses milestoneColors.violet', () => {
+      expect(MILESTONE_BADGES[100].color).toBe(milestoneColors.violet);
+      expect(MILESTONE_BADGES[100].color).toBe('#8B5CF6');
     });
   });
 
-  describe('StreakBadge consumes centralized tokens', () => {
-    it('imports milestoneColors', () => {
-      expect(source).toContain("import { milestoneColors }");
+  describe('COLORS use milestone and theme tokens', () => {
+    it('bestStreakBg uses milestoneColors.amberLight', () => {
+      expect(COLORS.bestStreakBg).toBe(milestoneColors.amberLight);
     });
 
-    it('uses amberLight for the light-mode badge background', () => {
-      expect(source).toContain('milestoneColors.amberLight');
+    it('milestoneBadgeBgAchieved uses milestoneColors.amberLight', () => {
+      expect(COLORS.milestoneBadgeBgAchieved).toBe(milestoneColors.amberLight);
     });
 
-    it('uses amberBorder for the record badge border', () => {
-      expect(source).toContain('milestoneColors.amberBorder');
+    it('milestoneBadgeBorder uses milestoneColors.amberBorder', () => {
+      expect(COLORS.milestoneBadgeBorder).toBe(milestoneColors.amberBorder);
+      expect(COLORS.milestoneBadgeBorder).toBe('#FCD34D');
     });
 
-    it('uses amberText for record badge text', () => {
-      expect(source).toContain('milestoneColors.amberText');
+    it('milestoneLabelAchieved uses milestoneColors.amberDark', () => {
+      expect(COLORS.milestoneLabelAchieved).toBe(milestoneColors.amberDark);
+      expect(COLORS.milestoneLabelAchieved).toBe('#78350F');
     });
 
-    it('uses theme-aware secondary text for zero streaks', () => {
-      expect(source).toContain('themeColors.text.secondary');
+    it('milestoneLabelUnachieved uses milestoneColors.stone', () => {
+      expect(COLORS.milestoneLabelUnachieved).toBe(milestoneColors.stone);
+      expect(COLORS.milestoneLabelUnachieved).toBe('#A8A29E');
     });
 
-    it('uses the centralized streak style sheet', () => {
-      expect(source).toContain("from '../HabitCard.streakStyles'");
+    it('zeroStreakEmoji uses milestoneColors.stone', () => {
+      expect(COLORS.zeroStreakEmoji).toBe(milestoneColors.stone);
     });
 
-    it('uses the burnished-gold streak token for the ripple', () => {
-      expect(streakStyles.rippleOverlay.backgroundColor).toBe(colors.streak[500]);
+    it('zeroStreakText uses colors.gray[500]', () => {
+      expect(COLORS.zeroStreakText).toBe(colors.gray[500]);
+      expect(COLORS.zeroStreakText).toBe('#78716c');
     });
   });
 });

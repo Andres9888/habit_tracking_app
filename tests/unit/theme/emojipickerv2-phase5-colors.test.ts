@@ -4,11 +4,11 @@
  * have been replaced with theme tokens.
  *
  * Covers:
- * - Current semantic tokens: secondary.100, warningLight, streak.300
+ * - New color tokens: secondary.100, warning.100, warning.300
  * - EmojiGrid selected state background → colors.secondary[100]
  * - SuggestionEmojiCell selected state → colors.secondary[100]
- * - SuggestionsSection container → colors.warningLight/colors.streak[300]
- * - Sheet styling stays delegated to useSheetStyles
+ * - SuggestionsSection container → colors.warning[100]/[300]
+ * - useSheetAnimations search bar colors → colors.secondary[500]/colors.border
  */
 
 import { colors } from '@/theme/colors';
@@ -22,12 +22,12 @@ describe('EmojiPickerV2 Color Token Migration - Phase 5', () => {
       expect(colors.secondary[100]).toBe('#dbeafe');
     });
 
-    it('colors.warningLight should provide the warm warning surface', () => {
-      expect(colors.warningLight).toBe('#FEF3CD');
+    it('colors.warning[100] should be #fef3c7 (amber-100)', () => {
+      expect(colors.warning[100]).toBe('#fef3c7');
     });
 
-    it('colors.streak[300] should provide the warning border accent', () => {
-      expect(colors.streak[300]).toBe('#E8B94D');
+    it('colors.warning[300] should be #fcd34d (amber-300)', () => {
+      expect(colors.warning[300]).toBe('#fcd34d');
     });
   });
 
@@ -55,28 +55,28 @@ describe('EmojiPickerV2 Color Token Migration - Phase 5', () => {
     });
   });
 
-  describe('SuggestionsSection container uses semantic warning tokens', () => {
-    it('container backgroundColor should be colors.warningLight', () => {
+  describe('SuggestionsSection container uses warning tokens', () => {
+    it('container backgroundColor should be colors.warning[100]', () => {
       expect(suggestionStyles.container.backgroundColor).toBe(
-        colors.warningLight
+        colors.warning[100]
       );
     });
 
-    it('container backgroundColor should be the warm warning tint', () => {
-      expect(suggestionStyles.container.backgroundColor).toBe('#FEF3CD');
+    it('container backgroundColor should be #fef3c7', () => {
+      expect(suggestionStyles.container.backgroundColor).toBe('#fef3c7');
     });
 
-    it('container borderColor should be colors.streak[300]', () => {
-      expect(suggestionStyles.container.borderColor).toBe(colors.streak[300]);
+    it('container borderColor should be colors.warning[300]', () => {
+      expect(suggestionStyles.container.borderColor).toBe(colors.warning[300]);
     });
 
-    it('container borderColor should be the burnished-gold accent', () => {
-      expect(suggestionStyles.container.borderColor).toBe('#E8B94D');
+    it('container borderColor should be #fcd34d', () => {
+      expect(suggestionStyles.container.borderColor).toBe('#fcd34d');
     });
   });
 
   describe('Source files use theme imports (not hardcoded literals)', () => {
-    it('useSheetAnimations.ts should delegate visual tokens to useSheetStyles', () => {
+    it('useSheetAnimations.ts should import colors from theme', () => {
       const fs = require('fs');
       const path = require('path');
       const filePath = path.resolve(
@@ -84,9 +84,11 @@ describe('EmojiPickerV2 Color Token Migration - Phase 5', () => {
         '../../../src/components/EmojiPickerV2/EmojiPickerSheet/useSheetAnimations.ts'
       );
       const content = fs.readFileSync(filePath, 'utf8');
-      expect(content).toContain("from './useSheetStyles'");
-      expect(content).toContain('useSheetStyles(');
-      expect(content).not.toContain('backgroundColor:');
+      expect(content).toContain("from '../../../theme/colors'");
+      expect(content).toContain('colors.secondary[500]');
+      expect(content).toContain('colors.border');
+      expect(content).not.toContain("'#3b82f6'");
+      expect(content).not.toContain("'#e7e5e4'");
     });
 
     it('EmojiGrid/styles.ts should not contain hardcoded #dbeafe', () => {
@@ -113,7 +115,7 @@ describe('EmojiPickerV2 Color Token Migration - Phase 5', () => {
       expect(content).toContain('colors.secondary[100]');
     });
 
-    it('SuggestionsSection.tsx should use current semantic warning tokens', () => {
+    it('SuggestionsSection.tsx should not contain hardcoded #fef3c7 or #fcd34d', () => {
       const fs = require('fs');
       const path = require('path');
       const filePath = path.resolve(
@@ -121,10 +123,10 @@ describe('EmojiPickerV2 Color Token Migration - Phase 5', () => {
         '../../../src/components/EmojiPickerV2/EmojiPickerSheet/SuggestionsSection.tsx'
       );
       const content = fs.readFileSync(filePath, 'utf8');
-      expect(content).not.toContain("'#FEF3CD'");
-      expect(content).not.toContain("'#E8B94D'");
-      expect(content).toContain('colors.warningLight');
-      expect(content).toContain('colors.streak[300]');
+      expect(content).not.toContain("'#fef3c7'");
+      expect(content).not.toContain("'#fcd34d'");
+      expect(content).toContain('colors.warning[100]');
+      expect(content).toContain('colors.warning[300]');
     });
   });
 });

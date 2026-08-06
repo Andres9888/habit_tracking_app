@@ -1,7 +1,7 @@
-import type { ReactElement, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import type { StyleProp, TextStyle } from 'react-native';
 
-export type ScreenHeaderLeftAction = 'back' | 'close' | ReactElement | null;
+export type ScreenHeaderLeftAction = 'back' | 'close' | ReactNode;
 
 export type ScreenHeaderVariant = 'default' | 'transparent';
 

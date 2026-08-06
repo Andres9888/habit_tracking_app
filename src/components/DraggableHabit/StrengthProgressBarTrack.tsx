@@ -3,14 +3,14 @@
  */
 
 import React from 'react';
-import { View } from 'react-native';
+import { View, type ViewStyle } from 'react-native';
 import ReAnimated, { type AnimatedStyle } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '../../theme/spacing';
 import { CARD_BAR_LEFT, CARD_BAR_RIGHT } from './cardLayout.constants';
 
 interface StrengthProgressBarTrackProps {
-  progressAnimatedStyle: AnimatedStyle;
+  progressAnimatedStyle: AnimatedStyle<ViewStyle>;
   tierFillColor: string;
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, type ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
@@ -10,7 +10,7 @@ import type { StreakRecord } from './types';
 interface MedalRowProps {
   records: StreakRecord[];
   currentStreak: number;
-  pulseAnimatedStyle: AnimatedStyle;
+  pulseAnimatedStyle: AnimatedStyle<ViewStyle>;
 }
 
 function resolveMedalColor(value: string, themeColors: ReturnType<typeof useThemeColors>['colors']): string {

@@ -1,11 +1,11 @@
 /**
  * Hook for managing microphone permissions
  *
- * Story T10.2: Audio recording integration (expo-av)
+ * Story T10.2: Audio recording integration (expo-audio)
  */
 
 import { useCallback } from 'react';
-import { Audio } from 'expo-av';
+import { requestRecordingPermissionsAsync } from 'expo-audio';
 import type { RecordingStatus } from './types';
 
 type SetStatus = React.Dispatch<React.SetStateAction<RecordingStatus>>;
@@ -34,7 +34,7 @@ export function useRecordingPermission(
         state: 'requesting-permission',
       }));
 
-      const permissionResponse = await Audio.requestPermissionsAsync();
+      const permissionResponse = await requestRecordingPermissionsAsync();
       const { granted, canAskAgain } = permissionResponse;
 
       setStatus((prev) => ({

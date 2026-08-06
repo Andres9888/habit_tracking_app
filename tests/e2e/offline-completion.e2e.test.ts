@@ -230,11 +230,7 @@ describe('Offline Completion E2E', () => {
         await queueManager.persist();
 
         expect(AsyncStorage.setItem).toHaveBeenCalled();
-        const mainWrite = (AsyncStorage.setItem as jest.Mock).mock.calls.find(
-          ([key]) => key === '@chainday:offline_queue_v1'
-        );
-        expect(mainWrite).toBeDefined();
-        const savedData = mainWrite![1];
+        const savedData = (AsyncStorage.setItem as jest.Mock).mock.calls[0][1];
         const parsed = JSON.parse(savedData);
 
         expect(parsed.operations).toHaveLength(1);
@@ -265,10 +261,8 @@ describe('Offline Completion E2E', () => {
           version: 1,
         };
 
-        (AsyncStorage.getItem as jest.Mock).mockImplementation((key: string) =>
-          key === '@chainday:offline_queue_v1'
-            ? JSON.stringify(savedState)
-            : null
+        (AsyncStorage.getItem as jest.Mock).mockResolvedValueOnce(
+          JSON.stringify(savedState)
         );
 
         await queueManager.restore();
@@ -282,8 +276,8 @@ describe('Offline Completion E2E', () => {
         const AsyncStorage =
           require('@react-native-async-storage/async-storage') as typeof import('@react-native-async-storage/async-storage').default;
 
-        (AsyncStorage.getItem as jest.Mock).mockImplementation((key: string) =>
-          key === '@chainday:offline_queue_v1' ? 'not valid json {' : null
+        (AsyncStorage.getItem as jest.Mock).mockResolvedValueOnce(
+          'not valid json {'
         );
 
         // Should not throw

@@ -10,9 +10,7 @@
 import * as Haptics from 'expo-haptics';
 
 const wait = (ms: number) =>
-  new Promise<void>((resolve) => {
-    setTimeout(resolve, ms);
-  });
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 /**
  * Named haptic patterns mapped to interaction types.

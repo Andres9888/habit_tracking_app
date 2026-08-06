@@ -14,9 +14,17 @@ export interface FullsizeTemplatePreviewProps {
   visible: boolean;
   /** Scroll target on open */
   initialAnchor?: TemplatePreviewAnchor;
-  /** Close handler — called when the X button is tapped */
+  /**
+   * Exit the whole flow to the home screen — the header X. Callers are
+   * expected to dismiss the library behind the preview too, not just this
+   * modal.
+   */
   onClose: () => void;
-  /** Optional back handler — when provided, a back button is rendered in the header */
+  /**
+   * Return to the Habit Library — the header back button, and where implicit
+   * dismissals (hardware back, backdrop) resolve. When omitted the back
+   * control is hidden and dismissals fall through to `onClose`.
+   */
   onBack?: () => void;
   /** Direct import handler (skips customization) */
   onImport: (templateId: Id<'templates'>) => void;

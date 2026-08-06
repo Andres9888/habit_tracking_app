@@ -18,49 +18,18 @@ export function HabitStatsBadges({ habit, strength }: HabitStatsBadgesProps) {
   const label = colors.text.secondary;
   const trackBg = colors.gray[200];
 
-  const statText = {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 12,
-    lineHeight: 16,
-    letterSpacing: 0,
-  } as const;
-  const statValue = {
-    ...statText,
-    fontWeight: fontWeights.semibold,
-    color: label,
-  } as const;
+  const statText = { fontFamily: fontFamilies.primary.text, fontSize: 12, lineHeight: 16, letterSpacing: 0 } as const;
+  const statValue = { ...statText, fontWeight: fontWeights.semibold, color: label } as const;
 
   return (
     <View style={{ marginBottom: 14 }}>
       {/* Strength bar */}
-      <View
-        style={{
-          height: 3,
-          borderRadius: 2,
-          backgroundColor: trackBg,
-          marginBottom: 10,
-        }}
-      >
-        <View
-          style={{
-            height: 3,
-            borderRadius: 2,
-            width: `${Math.min(strength, 100)}%`,
-            backgroundColor: barColor,
-          }}
-        />
+      <View style={{ height: 3, borderRadius: 2, backgroundColor: trackBg, marginBottom: 10 }}>
+        <View style={{ height: 3, borderRadius: 2, width: `${Math.min(strength, 100)}%`, backgroundColor: barColor }} />
       </View>
       {/* Stat line */}
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-        <Text
-          style={{
-            fontFamily: fontFamilies.monospace,
-            fontSize: 12,
-            lineHeight: 16,
-            fontWeight: fontWeights.semibold,
-            color: label,
-          }}
-        >
+        <Text style={{ fontFamily: fontFamilies.monospace, fontSize: 12, lineHeight: 16, fontWeight: fontWeights.semibold, color: label }}>
           {Math.round(strength)}%
         </Text>
         <Text style={{ ...statText, color: muted }}> strength</Text>
@@ -68,28 +37,16 @@ export function HabitStatsBadges({ habit, strength }: HabitStatsBadgesProps) {
         <Text style={streak > 0 ? statValue : { ...statText, color: muted }}>
           {streak > 0 ? `${streak}d streak` : 'no streak'}
         </Text>
-        {completions > 0 ? (
-          <>
-            <Dot color={trackBg} />
-            <Text style={statValue}>{completions}</Text>
-            <Text style={{ ...statText, color: muted }}> done</Text>
-          </>
-        ) : null}
+        {completions > 0 && (<>
+          <Dot color={trackBg} />
+          <Text style={statValue}>{completions}</Text>
+          <Text style={{ ...statText, color: muted }}> done</Text>
+        </>)}
       </View>
     </View>
   );
 }
 
 function Dot({ color }: { color: string }) {
-  return (
-    <View
-      style={{
-        width: 3,
-        height: 3,
-        borderRadius: 2,
-        backgroundColor: color,
-        marginHorizontal: 4,
-      }}
-    />
-  );
+  return <View style={{ width: 3, height: 3, borderRadius: 2, backgroundColor: color, marginHorizontal: 4 }} />;
 }

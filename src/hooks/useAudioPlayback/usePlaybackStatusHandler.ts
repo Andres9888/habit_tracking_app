@@ -1,11 +1,11 @@
 /**
  * usePlaybackStatusHandler - Handles playback status updates
  *
- * Processes status updates from expo-av and detects audio interruptions.
+ * Processes status updates from expo-audio and detects audio interruptions.
  */
 
 import { useCallback, useRef, useEffect } from 'react';
-import type { AVPlaybackStatus } from 'expo-av';
+import type { AudioStatus } from 'expo-audio';
 import type {
   PlaybackState,
   PlaybackStatus,
@@ -20,7 +20,7 @@ export interface UsePlaybackStatusHandlerOptions {
 }
 
 export interface UsePlaybackStatusHandlerReturn {
-  onPlaybackStatusUpdate: (playbackStatus: AVPlaybackStatus) => void;
+  onPlaybackStatusUpdate: (playbackStatus: AudioStatus) => void;
   handleInterruption: (reason: InterruptionReason) => void;
 }
 
@@ -31,7 +31,7 @@ interface HandlerDeps {
 }
 
 /**
- * Hook for handling playback status updates from expo-av
+ * Hook for handling playback status updates from expo-audio
  */
 export function usePlaybackStatusHandler(
   deps: HandlerDeps,
@@ -70,10 +70,10 @@ export function usePlaybackStatusHandler(
   );
 
   /**
-   * Handle playback status updates from expo-av
+   * Handle playback status updates from expo-audio
    */
   const onPlaybackStatusUpdate = useCallback(
-    (playbackStatus: AVPlaybackStatus) => {
+    (playbackStatus: AudioStatus) => {
       if (!isPlaybackStatusSuccess(playbackStatus)) {
         // Handle error or unloaded state
         if (!playbackStatus.isLoaded && playbackStatus.error) {
@@ -87,12 +87,8 @@ export function usePlaybackStatusHandler(
         return;
       }
 
-      const positionSeconds = Math.floor(
-        (playbackStatus.positionMillis || 0) / 1000
-      );
-      const durationSeconds = Math.floor(
-        (playbackStatus.durationMillis || 0) / 1000
-      );
+      const positionSeconds = Math.floor(playbackStatus.currentTime || 0);
+      const durationSeconds = Math.floor(playbackStatus.duration || 0);
       const progress =
         durationSeconds > 0 ? positionSeconds / durationSeconds : 0;
 
@@ -100,7 +96,7 @@ export function usePlaybackStatusHandler(
       // and we haven't finished and we're not paused by user
       // Use ref to get latest state value
       if (
-        !playbackStatus.isPlaying &&
+        !playbackStatus.playing &&
         !playbackStatus.didJustFinish &&
         currentStateRef.current === 'playing'
       ) {
@@ -115,9 +111,9 @@ export function usePlaybackStatusHandler(
       } else if (playbackStatus.didJustFinish) {
         newState = 'finished';
         onFinish?.();
-      } else if (playbackStatus.isPlaying) {
+      } else if (playbackStatus.playing) {
         newState = 'playing';
-      } else if (playbackStatus.positionMillis > 0) {
+      } else if (playbackStatus.currentTime > 0) {
         newState = 'paused';
       }
 
@@ -125,7 +121,7 @@ export function usePlaybackStatusHandler(
         ...prev,
         didJustFinish: playbackStatus.didJustFinish,
         durationSeconds,
-        isMuted: playbackStatus.isMuted,
+        isMuted: playbackStatus.mute,
         positionSeconds,
         progress: Math.min(1, Math.max(0, progress)),
         state: newState,

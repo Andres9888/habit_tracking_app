@@ -31,9 +31,8 @@ jest.mock('react-native-reanimated', () => {
     View,
     Text,
     createAnimatedComponent: (Component: React.ComponentType) => {
-      const AnimatedComponent = React.forwardRef(
-        (props: Record<string, unknown>, ref: React.Ref<unknown>) =>
-          React.createElement(Component, { ...props, ref })
+      const AnimatedComponent = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) =>
+        React.createElement(Component, { ...props, ref })
       );
       AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`;
       return AnimatedComponent;
@@ -54,7 +53,6 @@ jest.mock('react-native-reanimated', () => {
     interpolate: (value: number, input: number[], output: number[]) =>
       output[0],
     Easing: {
-      ...jest.requireActual('react-native-reanimated/mock').Easing,
       out: () => () => 0,
       inOut: () => () => 0,
       cubic: () => 0,
@@ -111,8 +109,9 @@ jest.mock('lucide-react-native', () => {
   const React = require('react');
   const { View } = require('react-native');
 
-  const createIcon = (name: string) => (props: Record<string, unknown>) =>
-    React.createElement(View, { testID: `lucide-${name}`, ...props });
+  const createIcon =
+    (name: string) => (props: Record<string, unknown>) =>
+      React.createElement(View, { testID: `lucide-${name}`, ...props });
 
   return {
     Check: createIcon('Check'),
@@ -131,8 +130,7 @@ describe('WeeklySummaryStrip', () => {
   ): WeekDayData[] => {
     const today = new Date();
     const startOfWeek = new Date(today);
-    const daysSinceMonday = (today.getDay() + 6) % 7;
-    startOfWeek.setDate(today.getDate() - daysSinceMonday);
+    startOfWeek.setDate(today.getDate() - today.getDay() + 1); // Monday
 
     return completedDays.map((completed, index) => {
       const date = new Date(startOfWeek);

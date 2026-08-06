@@ -5,29 +5,51 @@
 import type { Doc, Id } from '../_generated/dataModel';
 import { HabitChange } from './types';
 
+export type WeeklyCompletionCounts = { thisWeek: number; lastWeek: number };
+
+/**
+ * Bucket completions per habit for the current and previous week in one pass.
+ *
+ * Callers map over every active habit, so doing the filtering inside
+ * `calculateHabitChanges` meant two full scans of the tracking array per habit
+ * — habits x rows x 2 operations. Build this index once and hand it in.
+ *
+ * Tracking dates are YYYY-MM-DD calendar-day keys, compared lexicographically
+ * (same pattern as streakUtils) rather than parsed into Date instants.
+ */
+export function buildWeeklyCompletionIndex(
+  trackings: Doc<'tracking'>[],
+  oneWeekAgoKey: string,
+  twoWeeksAgoKey: string
+): Map<Id<'habits'>, WeeklyCompletionCounts> {
+  const index = new Map<Id<'habits'>, WeeklyCompletionCounts>();
+
+  for (const t of trackings) {
+    if (!t.completed) continue;
+
+    const isThisWeek = t.date >= oneWeekAgoKey;
+    const isLastWeek = t.date < oneWeekAgoKey && t.date >= twoWeeksAgoKey;
+    if (!isThisWeek && !isLastWeek) continue;
+
+    const counts = index.get(t.habitId) ?? { lastWeek: 0, thisWeek: 0 };
+    if (isThisWeek) counts.thisWeek += 1;
+    else counts.lastWeek += 1;
+    index.set(t.habitId, counts);
+  }
+
+  return index;
+}
+
 /**
  * Calculate habit changes for weekly insights
  */
 export function calculateHabitChanges(
   habit: { _id: Id<'habits'>; name: string; icon?: string },
-  trackings: Doc<'tracking'>[],
-  oneWeekAgoKey: string,
-  twoWeeksAgoKey: string,
+  completionIndex: Map<Id<'habits'>, WeeklyCompletionCounts>,
   currentStreak: number
 ): HabitChange {
-  // Tracking dates are YYYY-MM-DD calendar-day keys; compare lexicographically
-  // (same pattern as streakUtils) instead of parsing into Date instants.
-  const thisWeekCompletions = trackings.filter(
-    (t) => t.habitId === habit._id && t.completed && t.date >= oneWeekAgoKey
-  ).length;
-
-  const lastWeekCompletions = trackings.filter(
-    (t) =>
-      t.habitId === habit._id &&
-      t.completed &&
-      t.date < oneWeekAgoKey &&
-      t.date >= twoWeeksAgoKey
-  ).length;
+  const { lastWeek: lastWeekCompletions, thisWeek: thisWeekCompletions } =
+    completionIndex.get(habit._id) ?? { lastWeek: 0, thisWeek: 0 };
 
   const change = thisWeekCompletions - lastWeekCompletions;
   const percentageChange =

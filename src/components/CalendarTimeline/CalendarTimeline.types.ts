@@ -4,12 +4,6 @@ export interface DayCompletionStatus {
   completed: number;
   /** Total number of habits for this day */
   total: number;
-  /** Daily effort budget used to classify forecast load. */
-  capacityMinutes?: number;
-  /** Total estimated effort scheduled for this day. */
-  plannedMinutes?: number;
-  /** Estimated unfinished effort; meaningful for today. */
-  remainingMinutes?: number;
 }
 
 export interface CalendarTimelineProps {
@@ -98,9 +92,6 @@ export interface DayCellProps {
   strengthPercent?: number;
   /** Completion icon style for the ring */
   completionIcon?: 'chain' | 'checkbox';
-  capacityMinutes?: number;
-  plannedMinutes?: number;
-  remainingMinutes?: number;
 }
 
 export interface CalendarColors {

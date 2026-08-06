@@ -36,7 +36,7 @@ describe('Sync Orchestrator Helpers', () => {
 
       expect(syncItem.id).toBe('test-op-1');
       expect(syncItem.type).toBe('toggleCompletion');
-      expect(syncItem.payload).toEqual(operation);
+      expect(syncItem.payload).toEqual(operation.payload);
       expect(syncItem.retryContext.attemptCount).toBe(2);
     });
 

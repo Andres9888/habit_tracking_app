@@ -125,7 +125,7 @@ describe('OfflineIndicator Component Contract', () => {
   it('should export OfflineIndicator from SyncStatus index', () => {
     const indexPath = path.resolve(
       __dirname,
-      '../../../../../components/SyncStatus/index.ts'
+      '../../../../../../components/SyncStatus/index.ts'
     );
     const source = fs.readFileSync(indexPath, 'utf-8');
     expect(source).toContain('export { OfflineIndicator }');
@@ -134,7 +134,7 @@ describe('OfflineIndicator Component Contract', () => {
   it('should have visible prop in OfflineIndicatorProps', () => {
     const typesPath = path.resolve(
       __dirname,
-      '../../../../../components/SyncStatus/OfflineIndicator/types.ts'
+      '../../../../../../components/SyncStatus/OfflineIndicator/types.ts'
     );
     const source = fs.readFileSync(typesPath, 'utf-8');
     expect(source).toContain('visible?: boolean');

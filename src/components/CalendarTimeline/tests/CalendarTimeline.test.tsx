@@ -13,7 +13,7 @@ describe('CalendarTimeline', () => {
     const { getAllByText } = render(<CalendarTimeline dates={dates} />);
 
     // Check that weekday names are rendered
-    expect(getAllByText(/MON|TUE|WED|THU|FRI/)).toHaveLength(5);
+    expect(getAllByText(/Mon|Tue|Wed|Thu|Fri/)).toHaveLength(5);
 
     // Check that date numbers are rendered
     expect(getAllByText('14')).toBeTruthy();
@@ -45,7 +45,7 @@ describe('CalendarTimeline', () => {
     const { getAllByText } = render(<CalendarTimeline dates={dates} />);
 
     // Should render one weekday and one date number
-    expect(getAllByText('MON')).toBeTruthy();
+    expect(getAllByText('Mon')).toBeTruthy();
     expect(getAllByText('14')).toBeTruthy();
   });
 
@@ -56,11 +56,11 @@ describe('CalendarTimeline', () => {
     const { getByText } = render(<CalendarTimeline dates={dates} />);
 
     // Verify all weekdays are rendered
-    expect(getByText('MON')).toBeTruthy();
-    expect(getByText('TUE')).toBeTruthy();
-    expect(getByText('WED')).toBeTruthy();
-    expect(getByText('THU')).toBeTruthy();
-    expect(getByText('FRI')).toBeTruthy();
+    expect(getByText('Mon')).toBeTruthy();
+    expect(getByText('Tue')).toBeTruthy();
+    expect(getByText('Wed')).toBeTruthy();
+    expect(getByText('Thu')).toBeTruthy();
+    expect(getByText('Fri')).toBeTruthy();
   });
 
   it('renders with selected date', () => {
@@ -81,7 +81,6 @@ describe('CalendarTimeline', () => {
     const createPanGestureMock = () => ({
       activeOffsetX: jest.fn().mockReturnThis(),
       failOffsetY: jest.fn().mockReturnThis(),
-      runOnJS: jest.fn().mockReturnThis(),
       onEnd: jest.fn().mockReturnThis(),
     });
 
@@ -223,9 +222,10 @@ describe('CalendarTimeline', () => {
         />
       );
 
-      expect(
-        screen.queryByRole('button', { name: 'Next week' })
-      ).toBeNull();
+      const nextButton = screen.getByRole('button', { name: 'Next week' });
+
+      fireEvent.press(nextButton);
+
       expect(onNextWeek).not.toHaveBeenCalled();
     });
   });

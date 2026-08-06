@@ -13,15 +13,18 @@ import { useAuth } from '@clerk/clerk-expo';
 import { useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { usePremium } from '../../hooks/usePremium';
 import { useQueryCacheHydrated } from '../../lib/queryCache';
 import { useConvexAuthReady } from '../../providers';
-import { useOnboardingV2Complete } from '../../screens/onboarding-v2';
+// Deep import, not the `screens/onboarding-v2` barrel: AuthGate is on the
+// startup path, and the barrel also exports OnboardingFlowV2, which would pull
+// the whole onboarding tree (incl. the RevenueCat paywall) into the startup
+// chunk and defeat the lazy() split in AuthGateContent.
+import { useOnboardingV2Complete } from '../../screens/onboarding-v2/useOnboardingV2Complete';
 import { getScreenKey, shouldShowLoadingScreen } from './AuthGate.helpers';
 import { AuthGateContent } from './AuthGateContent';
 import { BrandedLoadingScreen } from './BrandedLoadingScreen';
 import { useAuthGateUserSync } from './useAuthGateUserSync';
-import { useSettingsReady } from './useSettingsReady';
+import { useStartupSettings } from './useSettingsReady';
 
 export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -29,9 +32,11 @@ export function AuthGate() {
   const isCacheHydrated = useQueryCacheHydrated();
   const { complete: onboardingComplete, markComplete } =
     useOnboardingV2Complete(isSignedIn ?? false);
-  const { isPremium, isLoading: isPremiumLoading } = usePremium();
-  // prettier-ignore
-  const isSettingsReady = useSettingsReady(isSignedIn, isConvexReady, isCacheHydrated);
+  const { isReady: isSettingsReady, settings } = useStartupSettings(
+    isSignedIn,
+    isConvexReady,
+    isCacheHydrated
+  );
   const [paywallDismissed, setPaywallDismissed] = useState(false);
 
   useAuthGateUserSync(isSignedIn, isConvexReady);
@@ -40,7 +45,6 @@ export function AuthGate() {
     shouldShowLoadingScreen({
       isCacheHydrated,
       isLoaded,
-      isPremiumLoading,
       isSettingsReady,
       isSignedIn,
       onboardingComplete,
@@ -52,7 +56,7 @@ export function AuthGate() {
   const screenKey = getScreenKey(
     isSignedIn ?? false,
     onboardingComplete ?? false,
-    isPremium || paywallDismissed
+    settings?.hasPremium === true || paywallDismissed
   );
 
   return (

@@ -2,9 +2,9 @@
  * RingCenter - Content displayed in the center of the ring (emoji or percentage)
  */
 import React from 'react';
-import { Text, View, ViewStyle } from 'react-native';
+import { Text, View, type TextStyle } from 'react-native';
 
-import Animated from 'react-native-reanimated';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 
 import type { LevelInfo } from './StrengthRing.types';
 import { styles } from './StrengthRing.styles';
@@ -18,7 +18,7 @@ interface RingCenterProps {
   fontSize: number;
   ringSize: number;
   trend?: 'up' | 'down' | 'stable';
-  emojiAnimatedStyle: ViewStyle;
+  emojiAnimatedStyle: AnimatedStyle<TextStyle>;
 }
 
 export const RingCenter = React.memo(function RingCenter({

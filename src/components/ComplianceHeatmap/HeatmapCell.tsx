@@ -2,7 +2,7 @@
  * Individual cell in the heatmap grid
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Text, Pressable } from 'react-native';
 import type { HeatmapData } from './ComplianceHeatmap.types';
 import { LEVEL_COLORS } from './ComplianceHeatmap.constants';
@@ -13,7 +13,11 @@ interface HeatmapCellProps {
   onPress?: (day: HeatmapData) => void;
 }
 
-export function HeatmapCell({ day, onPress }: HeatmapCellProps) {
+// memo: see WeekColumn — this is one of ~364 cells in a non-virtualized grid.
+export const HeatmapCell = memo(function HeatmapCell({
+  day,
+  onPress,
+}: HeatmapCellProps) {
   const handlePress = () => {
     if (day.date && onPress) {
       onPress(day);
@@ -41,4 +45,4 @@ export function HeatmapCell({ day, onPress }: HeatmapCellProps) {
       {day.completionRate > 0 ? <Text style={styles.cellText}>{Math.round(day.completionRate)}</Text> : null}
     </Pressable>
   );
-}
+});

@@ -1,4 +1,6 @@
 export const MAX_IMAGE_UPLOAD_BYTES = 10 * 1024 * 1024;
+export const MAX_OWNED_UPLOADS_PER_USER = 5;
+export const UNCLAIMED_UPLOAD_RETENTION_MS = 24 * 60 * 60 * 1000;
 
 export const ALLOWED_IMAGE_CONTENT_TYPES = new Set([
   'image/heic',

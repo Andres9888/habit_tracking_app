@@ -20,12 +20,12 @@ export async function checkWithTimeout(
 ): Promise<boolean | null> {
   return Promise.race([
     check(habitId, date),
-    new Promise<null>((_, reject) => {
+    new Promise<null>((_, reject) =>
       setTimeout(
         () => reject(new Error('Server state check timed out')),
         timeout
-      );
-    }),
+      )
+    ),
   ]);
 }
 

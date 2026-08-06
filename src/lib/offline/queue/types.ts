@@ -60,8 +60,6 @@ export interface CreateHabitPayload {
   preferredTime?: string;
   /** Optional frequency/cadence */
   frequency?: string;
-  /** Optional per-completion effort estimate */
-  effortMinutes?: number;
   /** Optional weekly day selection */
   daysOfWeek?: number[];
   /** Optional streak goal */
@@ -88,7 +86,6 @@ export interface UpdateHabitPayload {
     icon?: string;
     color?: string;
     iconColor?: string;
-    effortMinutes?: number | null;
     notes?: string;
     preferredTime?: string;
     remindersEnabled?: boolean;

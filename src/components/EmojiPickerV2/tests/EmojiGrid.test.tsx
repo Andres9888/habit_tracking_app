@@ -15,8 +15,7 @@ import { render, fireEvent } from '@testing-library/react-native';
 // Mock reanimated with proper Animated component
 jest.mock('react-native-reanimated', () => {
   const RealReact = jest.requireActual('react');
-  const { View, Pressable, Text } = jest.requireActual('react-native');
-  const Reanimated = require('react-native-reanimated/mock');
+  const { View, Pressable } = jest.requireActual('react-native');
 
   const AnimatedView = RealReact.forwardRef(
     (props: Record<string, unknown>, ref: React.Ref<typeof View>) =>
@@ -32,7 +31,6 @@ jest.mock('react-native-reanimated', () => {
 
   const Animated = {
     View: AnimatedView,
-    Text,
     createAnimatedComponent: (Component: React.ComponentType<unknown>) => {
       const AnimatedComponent = RealReact.forwardRef(
         (props: Record<string, unknown>, ref: React.Ref<unknown>) =>
@@ -49,13 +47,10 @@ jest.mock('react-native-reanimated', () => {
     useSharedValue: (value: number) => ({ value }),
     useAnimatedStyle: () => ({}),
     withSpring: (toValue: number) => toValue,
-    withDelay: (_delay: number, animation: unknown) => animation,
     withTiming: (toValue: number) => toValue,
     withSequence: (..._animations: unknown[]) => 0,
     runOnJS: (fn: () => void) => fn,
-    Easing: Reanimated.Easing,
-    interpolate: (value: number, inputRange: number[], outputRange: number[]) =>
-      outputRange[0],
+    interpolate: (value: number, inputRange: number[], outputRange: number[]) => outputRange[0],
     Extrapolation: { CLAMP: 'clamp' },
   };
 });
@@ -65,20 +60,7 @@ import { EmojiGrid } from '../EmojiGrid';
 
 const mockOnEmojiSelect = jest.fn();
 
-const sampleEmojis = [
-  '💪',
-  '🏃',
-  '🚴',
-  '🏊',
-  '⚽',
-  '🏀',
-  '🎾',
-  '🥊',
-  '🧘',
-  '🎿',
-  '🏋️',
-  '🤸',
-];
+const sampleEmojis = ['💪', '🏃', '🚴', '🏊', '⚽', '🏀', '🎾', '🥊', '🧘', '🎿', '🏋️', '🤸'];
 
 const defaultProps = {
   emojis: sampleEmojis,
@@ -116,7 +98,9 @@ describe('EmojiGrid - V2 Virtualized Grid', () => {
     });
 
     it('should handle empty emoji array', () => {
-      const { getByText } = render(<EmojiGrid {...defaultProps} emojis={[]} />);
+      const { getByText } = render(
+        <EmojiGrid {...defaultProps} emojis={[]} />
+      );
 
       expect(getByText('No emojis found')).toBeDefined();
       expect(getByText('Try a different search term')).toBeDefined();
@@ -148,7 +132,7 @@ describe('EmojiGrid - V2 Virtualized Grid', () => {
     it('should handle large number of emojis efficiently', () => {
       // Create a large array of emojis
       const largeEmojiSet = Array.from({ length: 100 }, (_, i) =>
-        String.fromCodePoint(0x1f600 + i)
+        String.fromCodePoint(0x1F600 + i)
       );
 
       const { getByLabelText } = render(
@@ -172,7 +156,7 @@ describe('EmojiGrid - V2 Virtualized Grid', () => {
 
     it('should highlight selected emoji', () => {
       const { getByLabelText } = render(
-        <EmojiGrid {...defaultProps} selectedEmoji='💪' />
+        <EmojiGrid {...defaultProps} selectedEmoji="💪" />
       );
 
       const emojiButton = getByLabelText('Select 💪 emoji');
@@ -181,7 +165,7 @@ describe('EmojiGrid - V2 Virtualized Grid', () => {
 
     it('should not highlight non-selected emojis', () => {
       const { getByLabelText } = render(
-        <EmojiGrid {...defaultProps} selectedEmoji='💪' />
+        <EmojiGrid {...defaultProps} selectedEmoji="💪" />
       );
 
       const otherEmoji = getByLabelText('Select 🏃 emoji');
@@ -231,12 +215,14 @@ describe('EmojiGrid - V2 Virtualized Grid', () => {
 
     it('should update category header when category changes', () => {
       const { rerender, getByText, queryByText } = render(
-        <EmojiGrid {...defaultProps} categoryName='💪 FITNESS' />
+        <EmojiGrid {...defaultProps} categoryName="💪 FITNESS" />
       );
 
       expect(getByText('💪 FITNESS')).toBeDefined();
 
-      rerender(<EmojiGrid {...defaultProps} categoryName='📚 LEARNING' />);
+      rerender(
+        <EmojiGrid {...defaultProps} categoryName="📚 LEARNING" />
+      );
 
       expect(queryByText('💪 FITNESS')).toBeNull();
       expect(getByText('📚 LEARNING')).toBeDefined();
@@ -261,7 +247,7 @@ describe('EmojiGrid - V2 Virtualized Grid', () => {
 
     it('should indicate selected state in accessibility', () => {
       const { getByLabelText } = render(
-        <EmojiGrid {...defaultProps} selectedEmoji='🏃' />
+        <EmojiGrid {...defaultProps} selectedEmoji="🏃" />
       );
 
       const selectedEmoji = getByLabelText('Select 🏃 emoji');
@@ -274,7 +260,9 @@ describe('EmojiGrid - V2 Virtualized Grid', () => {
 
   describe('Empty State', () => {
     it('should show empty state when no emojis provided', () => {
-      const { getByText } = render(<EmojiGrid {...defaultProps} emojis={[]} />);
+      const { getByText } = render(
+        <EmojiGrid {...defaultProps} emojis={[]} />
+      );
 
       expect(getByText('No emojis found')).toBeDefined();
       expect(getByText('Try a different search term')).toBeDefined();
@@ -305,7 +293,7 @@ describe('EmojiGrid - V2 Virtualized Grid', () => {
 
     it('should allow reselecting the same emoji', () => {
       const { getByLabelText } = render(
-        <EmojiGrid {...defaultProps} selectedEmoji='💪' />
+        <EmojiGrid {...defaultProps} selectedEmoji="💪" />
       );
 
       fireEvent.press(getByLabelText('Select 💪 emoji'));

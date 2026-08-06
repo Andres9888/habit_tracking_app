@@ -5,7 +5,7 @@
  */
 
 import { useCallback } from 'react';
-import { Audio, InterruptionModeIOS, InterruptionModeAndroid } from 'expo-av';
+import { setAudioModeAsync } from 'expo-audio';
 
 export interface UseAudioModeReturn {
   configureAudioMode: () => Promise<void>;
@@ -18,18 +18,12 @@ export interface UseAudioModeReturn {
  */
 export function useAudioMode(): UseAudioModeReturn {
   const configureAudioMode = useCallback(async (): Promise<void> => {
-    await Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-      // Native Handset: Do not mix with other audio - pause when interrupted
-      interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
-      // iOS: Do not mix with other audio - pause when interrupted
-      interruptionModeIOS: InterruptionModeIOS.DoNotMix,
-      playsInSilentModeIOS: true,
-      // Native Handset-specific
-      playThroughEarpieceAndroid: false,
-      shouldDuckAndroid: false,
-      // Don't duck, pause completely
-      staysActiveInBackground: false,
+    await setAudioModeAsync({
+      allowsRecording: false,
+      interruptionMode: 'doNotMix',
+      playsInSilentMode: true,
+      shouldPlayInBackground: false,
+      shouldRouteThroughEarpiece: false,
     });
   }, []);
 

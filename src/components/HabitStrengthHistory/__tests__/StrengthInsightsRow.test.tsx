@@ -338,9 +338,9 @@ describe('StrengthInsightsRow', () => {
     it('should have correct size for all icons', () => {
       const { getByTestId } = render(<StrengthInsightsRow {...defaultProps} />);
 
-      expect(getByTestId('icon-trending-up').props.size).toBe(20);
-      expect(getByTestId('icon-trophy').props.size).toBe(20);
-      expect(getByTestId('icon-chart').props.size).toBe(20);
+      expect(getByTestId('icon-trending-up').props.size).toBe(18);
+      expect(getByTestId('icon-trophy').props.size).toBe(18);
+      expect(getByTestId('icon-chart').props.size).toBe(18);
     });
   });
 });

@@ -32,7 +32,6 @@ jest.mock('react-native-reanimated', () => {
       return outputRange[0] + progress * (outputRange[1] - outputRange[0]);
     }),
     Easing: {
-      ...jest.requireActual('react-native-reanimated/mock').Easing,
       inOut: jest.fn((easing) => easing),
       ease: jest.fn(),
     },
@@ -59,7 +58,6 @@ jest.mock('expo-linear-gradient', () => {
 
 // Mock SkeletonLoader component
 jest.mock('../../SkeletonLoader/SkeletonLoader', () => ({
-  ...jest.requireActual('../../SkeletonLoader/SkeletonLoader'),
   SkeletonLoader: (props: { width?: number | string; height?: number }) => {
     const React = require('react');
     const { View } = require('react-native');
@@ -111,9 +109,7 @@ describe('HabitStrengthHistorySkeleton', () => {
   describe('Accessibility', () => {
     it('should have correct accessibility label', () => {
       const { getByLabelText } = render(<HabitStrengthHistorySkeleton />);
-      expect(
-        getByLabelText('Loading your habit strength history...')
-      ).toBeTruthy();
+      expect(getByLabelText('Loading habit strength history')).toBeTruthy();
     });
 
     it('should be marked as accessible', () => {

@@ -2,9 +2,11 @@ import React from 'react';
 import { View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import Animated, {
+  type AnimatedStyle,
   useAnimatedProps,
   SharedValue,
 } from 'react-native-reanimated';
+import type { TextStyle } from 'react-native';
 import type { LevelConfig } from '../types';
 import { RING_SIZE, STROKE_WIDTH } from './constants';
 import { AnimatedPercentageText } from './AnimatedPercentageText';
@@ -17,7 +19,7 @@ const center = RING_SIZE / 2;
 
 interface ProgressRingProps {
   animatedStrength: SharedValue<number>;
-  emojiAnimatedStyle: { transform: { scale: number }[] };
+  emojiAnimatedStyle: AnimatedStyle<TextStyle>;
   level: LevelConfig;
 }
 

@@ -28,7 +28,6 @@ export async function createHabit(
     color: payload.color,
     iconColor: payload.iconColor,
     daysOfWeek: payload.daysOfWeek,
-    effortMinutes: payload.effortMinutes,
     frequency: payload.frequency,
     goalDuration: payload.goalDuration,
     notes: payload.notes,

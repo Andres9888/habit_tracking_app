@@ -50,50 +50,63 @@ jobs:
         run: npm ci
 
       - name: Build for analysis
-        run: |
-          # Export web build for bundle analysis
-          npx expo export -p web --output-dir dist-analysis 2>&1 || true
+        # No `|| true` / `continue-on-error` here: a failed export used to fall
+        # through to a source-size estimate, which reported a passing budget for
+        # a build that did not exist. A broken build must fail the job.
+        run: npx expo export -p web --output-dir dist-analysis
         env:
           NODE_ENV: production
-        continue-on-error: true
 
       - name: Analyze bundle size
         id: analyze
+        env:
+          # Ratchets, not targets. The declared budgets in
+          # performance.budget.json are JS 2048KB / assets 5120KB / total
+          # 7168KB; the app is currently over on JS. These values sit just above
+          # the measured web export so any regression fails, and they must be
+          # tightened — never loosened — as size work lands.
+          # Measured 2026-08-01: JS 6735KB, assets 544KB, total 7302KB.
+          PERF_WEB_JS_BUDGET_KB: '6850'
+          PERF_WEB_ASSET_BUDGET_KB: '640'
+          PERF_WEB_TOTAL_BUDGET_KB: '7420'
         run: |
           echo "## Bundle Size Analysis" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Define budgets (in KB)
-          JS_BUDGET_KB=2048    # 2MB JS budget
-          ASSET_BUDGET_KB=5120 # 5MB total assets budget
-          TOTAL_BUDGET_KB=7168 # 7MB total budget
+          # Budgets come from performance.budget.json so there is one source of
+          # truth. The PERF_WEB_*_BUDGET_KB env vars below act as ratchets while
+          # the app is still over its declared targets.
+          JS_BUDGET_KB=${PERF_WEB_JS_BUDGET_KB:-$(node -p "Math.round(require('./performance.budget.json').budgets.bundle.javascript.maxSizeBytes/1024)")}
+          ASSET_BUDGET_KB=${PERF_WEB_ASSET_BUDGET_KB:-$(node -p "Math.round(require('./performance.budget.json').budgets.bundle.assets.maxSizeBytes/1024)")}
+          TOTAL_BUDGET_KB=${PERF_WEB_TOTAL_BUDGET_KB:-$(node -p "Math.round(require('./performance.budget.json').budgets.bundle.total.maxSizeBytes/1024)")}
 
-          # Calculate sizes
-          if [ -d "dist-analysis" ]; then
-            JS_SIZE=$(find dist-analysis -name "*.js" -type f -exec cat {} + 2>/dev/null | wc -c || echo "0")
-            CSS_SIZE=$(find dist-analysis -name "*.css" -type f -exec cat {} + 2>/dev/null | wc -c || echo "0")
-            ASSET_SIZE=$(find dist-analysis -type f ! -name "*.js" ! -name "*.css" ! -name "*.html" -exec cat {} + 2>/dev/null | wc -c || echo "0")
-            TOTAL_SIZE=$((JS_SIZE + CSS_SIZE + ASSET_SIZE))
-
-            JS_SIZE_KB=$((JS_SIZE / 1024))
-            CSS_SIZE_KB=$((CSS_SIZE / 1024))
-            ASSET_SIZE_KB=$((ASSET_SIZE / 1024))
-            TOTAL_SIZE_KB=$((TOTAL_SIZE / 1024))
-          else
-            # Fallback: estimate from source
-            JS_SIZE_KB=$(find src app -name "*.ts" -o -name "*.tsx" 2>/dev/null | xargs wc -c 2>/dev/null | tail -1 | awk '{print int($1/1024)}' || echo "500")
-            CSS_SIZE_KB=100
-            ASSET_SIZE_KB=500
-            TOTAL_SIZE_KB=$((JS_SIZE_KB + CSS_SIZE_KB + ASSET_SIZE_KB))
-            echo "Note: Using estimated sizes (build may have failed)" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
+          # The build step is no longer allowed to fail, so dist-analysis must
+          # exist. Bail loudly rather than estimating from source.
+          if [ ! -d "dist-analysis" ]; then
+            echo "::error::dist-analysis missing — the web export did not produce output."
+            exit 1
           fi
 
-          # Determine status
+          JS_SIZE=$(find dist-analysis -name "*.js" -type f -exec cat {} + 2>/dev/null | wc -c || echo "0")
+          CSS_SIZE=$(find dist-analysis -name "*.css" -type f -exec cat {} + 2>/dev/null | wc -c || echo "0")
+          ASSET_SIZE=$(find dist-analysis -type f ! -name "*.js" ! -name "*.css" ! -name "*.html" -exec cat {} + 2>/dev/null | wc -c || echo "0")
+          TOTAL_SIZE=$((JS_SIZE + CSS_SIZE + ASSET_SIZE))
+
+          JS_SIZE_KB=$((JS_SIZE / 1024))
+          CSS_SIZE_KB=$((CSS_SIZE / 1024))
+          ASSET_SIZE_KB=$((ASSET_SIZE / 1024))
+          TOTAL_SIZE_KB=$((TOTAL_SIZE / 1024))
+
+          # Every category gates, not just the total. Previously a 4x-over JS
+          # bundle passed as long as the total happened to fit.
           BUDGET_STATUS="pass"
-          if [ "$TOTAL_SIZE_KB" -gt "$TOTAL_BUDGET_KB" ]; then
+          if [ "$TOTAL_SIZE_KB" -gt "$TOTAL_BUDGET_KB" ] \
+            || [ "$JS_SIZE_KB" -gt "$JS_BUDGET_KB" ] \
+            || [ "$ASSET_SIZE_KB" -gt "$ASSET_BUDGET_KB" ]; then
             BUDGET_STATUS="fail"
-          elif [ "$TOTAL_SIZE_KB" -gt "$((TOTAL_BUDGET_KB * 90 / 100))" ]; then
+          elif [ "$TOTAL_SIZE_KB" -gt "$((TOTAL_BUDGET_KB * 90 / 100))" ] \
+            || [ "$JS_SIZE_KB" -gt "$((JS_BUDGET_KB * 90 / 100))" ] \
+            || [ "$ASSET_SIZE_KB" -gt "$((ASSET_BUDGET_KB * 90 / 100))" ]; then
             BUDGET_STATUS="warning"
           fi
 

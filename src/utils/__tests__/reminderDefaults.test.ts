@@ -11,7 +11,7 @@ describe('getSmartReminderDefault', () => {
   const RealDate = Date;
 
   const mockDate = (hour: number, minute = 0) => {
-    const mockNow = new RealDate(2024, 0, 1, hour, minute, 0);
+    const mockNow = new Date(2024, 0, 1, hour, minute, 0);
     global.Date = class extends RealDate {
       constructor() {
         super();

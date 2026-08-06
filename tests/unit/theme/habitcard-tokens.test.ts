@@ -25,11 +25,11 @@ describe('HabitCard Token Migration - Phase 2', () => {
   });
 
   describe('streakStyles uses theme tokens', () => {
-    it('rippleOverlay should use the burnished-gold streak token', () => {
+    it('rippleOverlay should use colors.primary[500] for emerald', () => {
       expect(streakStyles.rippleOverlay.backgroundColor).toBe(
-        colors.streak[500]
+        colors.primary[500]
       );
-      expect(streakStyles.rippleOverlay.backgroundColor).toBe('#8B6208');
+      expect(streakStyles.rippleOverlay.backgroundColor).toBe('#10B981');
     });
   });
 

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { View, Text } from 'react-native';
 import { CheckCircle2, FastForward } from 'lucide-react-native';
 import {
@@ -20,16 +21,22 @@ interface ActivityLogProps {
 export function ActivityLog({ tracking }: ActivityLogProps) {
   const { colors } = useThemeColors();
 
-  // Sort by date descending (most recent first) and limit to 20 entries
-  const sortedActivities = [...tracking]
-    .sort((a, b) => {
-      // Sort by date first
-      const dateCompare = b.date.localeCompare(a.date);
-      if (dateCompare !== 0) return dateCompare;
-      // If same date, sort by creation time
-      return b._creationTime - a._creationTime;
-    })
-    .slice(0, 20);
+  // Sort by date descending (most recent first) and limit to 20 entries.
+  // Memoized: this copied and sorted the entire tracking history on every
+  // render just to show 20 rows. Dates are ISO `yyyy-MM-dd`, so plain
+  // comparison already orders them correctly and avoids localeCompare's
+  // collator cost per pair.
+  const sortedActivities = useMemo(
+    () =>
+      [...tracking]
+        .sort((a, b) => {
+          if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+          // If same date, sort by creation time
+          return b._creationTime - a._creationTime;
+        })
+        .slice(0, 20),
+    [tracking]
+  );
 
   if (sortedActivities.length === 0) {
     return (

@@ -3,7 +3,9 @@ import { fontFamilies, fontWeights } from '@/theme/typography';
 
 export const settingsSectionTitle = {
   fontFamily: fontFamilies.serif,
-  fontSize: 15.5,
-  fontWeight: fontWeights.semibold,
-  letterSpacing: -0.1,
+  // Editorial scale, matching the Habit Browser's section headers. At 15.5 the
+  // serif read as a slightly-odd list label rather than a deliberate heading.
+  fontSize: 19,
+  fontWeight: fontWeights.bold,
+  letterSpacing: -0.3,
 } as const;

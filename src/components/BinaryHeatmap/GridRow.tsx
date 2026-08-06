@@ -11,7 +11,6 @@ import type { BinaryDay } from './types';
 import { CELL_SIZE } from './constants';
 import { styles } from './BinaryHeatmapGrid.styles';
 import { getCellBackgroundColor } from './cellHelpers';
-import { getBinaryCellAccessibilityLabel } from './utils';
 
 export interface GridRowProps {
   dayIndex: number;
@@ -28,11 +27,7 @@ export const GridRow = memo(function GridRow({
     <View accessibilityRole='none' style={styles.gridRow}>
       {row.map((day, weekIndex) => (
         <View
-          accessible
           key={day?.date ?? `empty-${dayIndex}-${weekIndex}`}
-          accessibilityLabel={getBinaryCellAccessibilityLabel(day)}
-          accessibilityRole='image'
-          accessibilityState={day ? { selected: day.completed } : undefined}
           style={[
             styles.cellWrapper,
             {

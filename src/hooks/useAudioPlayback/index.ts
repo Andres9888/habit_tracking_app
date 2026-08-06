@@ -1,5 +1,5 @@
 /**
- * useAudioPlayback - Audio playback hook with expo-av
+ * useAudioPlayback - Audio playback hook with expo-audio
  *
  * Story T10.4: Playback UI with progress bar
  */

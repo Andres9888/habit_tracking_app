@@ -53,6 +53,24 @@ export type ScienceSource = {
   link?: string;
 };
 
+/**
+ * Authored science drill-down content for one template. Every field is
+ * optional: the UI renders each section only when its data is present, so
+ * partially-authored templates degrade cleanly. See
+ * `scienceEnrichment.data.ts` for the authoring rules (notably: never invent
+ * a citation).
+ */
+export type ScienceEnrichment = {
+  tagline?: string;
+  lead?: string;
+  evidence?: string;
+  cadenceLabel?: string;
+  benefitDetails?: BenefitDetail[];
+  timeline?: TimelineEntry[];
+  howToStart?: string[];
+  sources?: ScienceSource[];
+};
+
 export type TemplateInsert = {
   benefits?: string[];
   category: TemplateCategory;

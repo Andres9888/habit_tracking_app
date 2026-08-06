@@ -15,11 +15,13 @@ export async function updateUserSettingsPremium(
     .withIndex('by_userId', (q) => q.eq('userId', clerkId))
     .first();
 
-  await (settings
-    ? ctx.db.patch(settings._id, { hasPremium })
-    : ctx.db.insert('userSettings', {
-        ...DEFAULT_SETTINGS,
-        hasPremium,
-        userId: clerkId,
-      }));
+  if (settings) {
+    await ctx.db.patch(settings._id, { hasPremium });
+  } else {
+    await ctx.db.insert('userSettings', {
+      ...DEFAULT_SETTINGS,
+      hasPremium,
+      userId: clerkId,
+    });
+  }
 }

@@ -5,24 +5,24 @@
 /** Default fallback color when iconColor is missing or invalid */
 export const DEFAULT_ICON_COLOR = '#78716c';
 
-/** Hero icon disc emoji size (mockup: 112px disc, 52px glyph) */
-export const HERO_ICON_TEXT_SIZE = 52;
+/** Hero icon tile emoji size ("Habit Detail" mock: 88px tile, 44px glyph) */
+export const HERO_ICON_TEXT_SIZE = 44;
 
 /**
  * Hero title is a deliberate hero-scale exception to `typography.heading1`
- * (22px) — the mockup treats it as a display moment, not a screen title.
+ * (22px) — the mock treats it as a display moment, not a screen title.
  */
 export const HERO_TITLE = {
-  fontSize: 32,
-  letterSpacing: -0.5,
-  lineHeight: 38,
+  fontSize: 30,
+  letterSpacing: -0.4,
+  lineHeight: 36,
 };
 
-/** Metadata pill label size (mockup: 15px semibold DM Sans) */
-export const PILL_TEXT_SIZE = 15;
+/** Metadata chip label size (mock: 14px semibold) */
+export const PILL_TEXT_SIZE = 14;
 
-/** Hero description body copy (mockup: 18px / 28px line-height) */
-export const HERO_DESCRIPTION = { fontSize: 18, lineHeight: 28 };
+/** Hero description body copy (mock: 17px / 26px line-height) */
+export const HERO_DESCRIPTION = { fontSize: 17, lineHeight: 26 };
 
 /** Mapping of frequency values to display labels */
 export const FREQUENCY_LABELS: Record<string, string> = {

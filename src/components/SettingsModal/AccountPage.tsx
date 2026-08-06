@@ -2,15 +2,15 @@
 import Constants from 'expo-constants';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { useReducedMotion } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { typography } from '../../theme/typography';
 import { ScreenHeader } from '../ScreenHeader';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
-import { AccountSection } from './AccountSection';
 import { ProfileCard } from './ProfileCard';
 import { PremiumStatus } from './sections';
 import { AccountActionsCard } from './sections/AccountActionsCard';
 import { AccountDangerCard } from './sections/AccountDangerCard';
+import { SignOutCard } from './sections/SignOutCard';
 import { useAccountActions } from './useAccountActions';
 import { useThemeColors } from '../../theme/ThemeContext';
 
@@ -28,7 +28,6 @@ export function AccountPage({
   onPremiumUpsell,
 }: AccountPageProps) {
   const insets = useSafeAreaInsets();
-  const reduceMotion = useReducedMotion();
   const { colors: themeColors } = useThemeColors();
   const actions = useAccountActions();
   const bottomPadding = Math.max((insets.bottom ?? 0) + 16, 24);
@@ -54,31 +53,29 @@ export function AccountPage({
         showsVerticalScrollIndicator={false}
       >
         <View className='gap-5'>
-          <AccountSection index={0} reduceMotion={reduceMotion}>
-            <ProfileCard isPremium={isPremium} />
-          </AccountSection>
-          <AccountSection index={1} reduceMotion={reduceMotion}>
-            <PremiumStatus isPremium={isPremium} onUpgrade={onPremiumUpsell} />
-          </AccountSection>
-          <AccountSection index={2} reduceMotion={reduceMotion}>
-            <AccountActionsCard />
-          </AccountSection>
-          <AccountSection index={3} reduceMotion={reduceMotion}>
-            <AccountDangerCard
-              isDeletingAccount={actions.isDeletingAccount}
-              isSigningOut={actions.isSigningOut}
-              onDeleteAccount={actions.handleDeleteAccount}
-              onSignOut={actions.handleSignOut}
-            />
-          </AccountSection>
-          <Text
-            className='pt-1 text-center'
-            style={{ ...typography.caption, color: themeColors.text.tertiary }}
-          >
-            Chain Day · Version {Constants.expoConfig?.version ?? '1.0.0'} (
-            {Constants.expoConfig?.ios?.buildNumber ?? '1'})
-          </Text>
+          <ProfileCard isPremium={isPremium} />
+          <PremiumStatus isPremium={isPremium} onUpgrade={onPremiumUpsell} />
+          <AccountActionsCard />
+          <SignOutCard
+            isSigningOut={actions.isSigningOut}
+            onSignOut={actions.handleSignOut}
+          />
         </View>
+        {/* Deliberate dead space: deleting an account should require leaving
+            the rest of the page behind, not sit one row under Sign out. */}
+        <View style={{ marginTop: 56 }}>
+          <AccountDangerCard
+            isDeletingAccount={actions.isDeletingAccount}
+            onDeleteAccount={actions.handleDeleteAccount}
+          />
+        </View>
+        <Text
+          className='pt-6 text-center'
+          style={{ ...typography.caption, color: themeColors.text.tertiary }}
+        >
+          Chain Day · Version {Constants.expoConfig?.version ?? '1.0.0'} (
+          {Constants.expoConfig?.ios?.buildNumber ?? '1'})
+        </Text>
       </Animated.ScrollView>
     </View>
   );

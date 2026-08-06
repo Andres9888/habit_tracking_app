@@ -1,24 +1,30 @@
 /**
- * Modal header for FullsizeTemplatePreview
- * Uses shared ModalCloseButton for consistent close button styling.
- * Optionally renders a circular back button on the left when `onBack` is provided.
+ * Modal header for FullsizeTemplatePreview.
+ *
+ * Two exits, conventionally placed and semantically distinct: back at
+ * top-left returns to the Habit Library, X at top-right leaves for the home
+ * screen. The X is `subtle` precisely so the pair doesn't read as two equal
+ * ways out — back is the expected move, the X is the escape hatch.
+ *
+ * The left slot keeps an empty `<View />` when no `onBack` is supplied so the
+ * row's space-between keeps the X pinned right.
  */
 
 import React from 'react';
-import { ChevronLeft } from 'lucide-react-native';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { iconSizes } from '@/theme/iconSizes';
-import { AnimatedPressable } from '../../ui/AnimatedPressable';
+import { borderRadius } from '@/theme/spacing';
 import { layoutStyles } from '../styles';
+import { ModalBackButton } from './ModalBackButton';
 import { ModalCloseButton } from '../../ui/ModalCloseButton';
-import { useThemeColors } from '../../../theme/ThemeContext';
-import { modalHeaderStyles as s } from './ModalHeader.styles';
+import { useDetailPalette } from '../detailPalette';
 
 interface ModalHeaderProps {
   topInset: number;
   closeButtonAnimatedOpacityStyle: object;
+  /** Back to the Habit Library. Omit to hide the back control entirely. */
   onBack?: () => void;
+  /** Exit the whole flow to the home screen. */
   onClose: () => void;
   tintColor?: string;
   /** Reanimated style applied to the outer container — overrides tintColor when scrolled. */
@@ -33,8 +39,8 @@ export function ModalHeader({
   tintColor,
   animatedBgStyle,
 }: ModalHeaderProps) {
-  const { colors: themeColors, isDark } = useThemeColors();
-  const subtleBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
+  // Translucent cream so the chrome reads as glass over the warm hero gradient.
+  const palette = useDetailPalette();
 
   return (
     <Animated.View
@@ -44,7 +50,7 @@ export function ModalHeader({
       ]}
     >
       <View testID='templates-preview-handle' style={s.handleRow}>
-        <View style={s.handle} />
+        <View style={[s.handle, { backgroundColor: palette.border }]} />
       </View>
       <Animated.View
         testID='templates-preview-close'
@@ -56,25 +62,19 @@ export function ModalHeader({
         ]}
       >
         {onBack ? (
-          <AnimatedPressable
-            accessibilityLabel='Back'
-            accessibilityRole='button'
-            testID='templates-preview-back'
-            style={[s.backButton, { backgroundColor: subtleBg }]}
-            onPress={onBack}
-          >
-            <ChevronLeft
-              color={themeColors.text.secondary}
-              size={iconSizes.large}
-              strokeWidth={2.5}
-            />
-          </AnimatedPressable>
+          <ModalBackButton
+            backgroundColor={palette.closeBg}
+            color={palette.textSecondary}
+            onBack={onBack}
+          />
         ) : (
           <View />
         )}
         <ModalCloseButton
-          haptic={false}
-          label='Close preview'
+          hint='Leaves the habit library and returns to your habits'
+          hitSlop={8}
+          label='Close and go to my habits'
+          testID='templates-preview-exit-home'
           variant='subtle'
           onClose={onClose}
         />
@@ -82,3 +82,17 @@ export function ModalHeader({
     </Animated.View>
   );
 }
+
+const s = StyleSheet.create({
+  handle: {
+    borderRadius: borderRadius.xs,
+    height: 4,
+    width: 40,
+  },
+  handleRow: { alignItems: 'center', paddingTop: 8 },
+  headerRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+});

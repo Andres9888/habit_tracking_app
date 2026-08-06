@@ -12,12 +12,13 @@ const mockHabitId = (id: string) => id as Id<'habits'>;
 
 describe('Optimistic Updates Integration', () => {
   beforeEach(() => {
-    optimisticStore.reset();
-  });
-
-  afterEach(() => {
-    optimisticStore.reset();
-    jest.useRealTimers();
+    // Reset store state
+    const snapshot = optimisticStore.getSnapshot();
+    for (const op of snapshot.operations.values()) {
+      if (op.state === 'pending') {
+        optimisticStore.confirm(op.id);
+      }
+    }
   });
 
   describe('Toggle Completion Flow', () => {
@@ -87,7 +88,6 @@ describe('Optimistic Updates Integration', () => {
     });
 
     it('should handle rapid toggling correctly', async () => {
-      jest.useFakeTimers();
       const habitId = mockHabitId('rapid_toggle');
       const date = '2026-01-22';
 
@@ -110,7 +110,6 @@ describe('Optimistic Updates Integration', () => {
 
       // Confirm second toggle
       optimisticStore.confirm(op2);
-      jest.advanceTimersByTime(300);
       expect(optimisticStore.getPendingToggle(habitId, date)).toBeUndefined();
     });
 
@@ -211,7 +210,6 @@ describe('Optimistic Updates Integration', () => {
 
   describe('Reorder Flow', () => {
     it('should apply new order immediately during drag', () => {
-      jest.useFakeTimers();
       const originalOrder = [
         mockHabitId('drag_1'),
         mockHabitId('drag_2'),
@@ -232,7 +230,6 @@ describe('Optimistic Updates Integration', () => {
       expect(optimisticStore.getPendingReorder()).toEqual(newOrder);
 
       optimisticStore.confirm(operationId);
-      jest.advanceTimersByTime(300);
       expect(optimisticStore.getPendingReorder()).toBeNull();
     });
 

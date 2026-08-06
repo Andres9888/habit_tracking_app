@@ -1,12 +1,13 @@
+/** Static styles for HeaderButton. */
 import { StyleSheet } from 'react-native';
-import { typography, fontWeights } from '../../../theme/typography';
 import {
   borderRadius,
-  spacing,
   componentSpacing,
+  spacing,
 } from '../../../theme/spacing';
+import { fontWeights, typography } from '../../../theme/typography';
 
-export const headerButtonStyles = StyleSheet.create({
+export const s = StyleSheet.create({
   compactButton: {
     alignItems: 'center',
     borderRadius: borderRadius.xl,

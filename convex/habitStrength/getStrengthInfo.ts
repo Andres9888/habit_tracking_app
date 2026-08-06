@@ -11,6 +11,7 @@ import {
   LOGISTIC_MIDPOINT,
   LOGISTIC_SLOPE,
 } from './constants';
+import { getTrackingCutoffKey } from '../habits/utils';
 import { startOfDay } from './dateUtils';
 import { predictCompletionProbability } from './legacyFormula';
 import { generateHabitStrengthSnapshot } from './snapshot';
@@ -34,9 +35,12 @@ export const getHabitStrengthInfo = query({
       throw new Error('Not authorized to view this habit');
     }
 
+    // Bounded — see getTrackingCutoffKey. Only a strength snapshot is derived.
     const tracking = await ctx.db
       .query('tracking')
-      .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
+      .withIndex('by_habit_and_date', (q) =>
+        q.eq('habitId', args.habitId).gte('date', getTrackingCutoffKey())
+      )
       .collect();
 
     const snapshot = generateHabitStrengthSnapshot({

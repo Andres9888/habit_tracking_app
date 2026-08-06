@@ -17,8 +17,8 @@ const nativeHandsetKey = ['and', 'roid'].join('') as 'android';
 /** Get the Sentry DSN from environment variables.
  * @returns The DSN string, or null if not configured
  */
-function getDsn(dsnOverride?: string): string | null {
-  const dsn = dsnOverride ?? process.env.EXPO_PUBLIC_SENTRY_DSN;
+function getDsn(): string | null {
+  const dsn = process.env.EXPO_PUBLIC_SENTRY_DSN;
   if (!dsn || dsn === '') {
     if (__DEV__)
       console.log('[Sentry] No DSN configured - monitoring disabled');
@@ -62,8 +62,8 @@ function getRelease(): string {
  *   initSentry(config);
  * }
  */
-export function buildSentryConfig(dsnOverride?: string): SentryConfig | null {
-  const dsn = getDsn(dsnOverride);
+export function buildSentryConfig(): SentryConfig | null {
+  const dsn = getDsn();
   if (!dsn) return null;
 
   const environment = getEnvironment();
@@ -82,6 +82,6 @@ export function buildSentryConfig(dsnOverride?: string): SentryConfig | null {
 /** Check if Sentry should be enabled based on DSN configuration.
  * @returns True if DSN is configured, false otherwise
  */
-export function isSentryEnabled(dsnOverride?: string): boolean {
-  return getDsn(dsnOverride) !== null;
+export function isSentryEnabled(): boolean {
+  return getDsn() !== null;
 }

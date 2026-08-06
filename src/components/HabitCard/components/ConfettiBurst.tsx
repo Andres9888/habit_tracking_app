@@ -15,7 +15,7 @@ import { styles } from './ConfettiBurst.styles';
 const CONFETTI_COLORS = [
   colors.primary[500],
   colors.secondary[500],
-  colors.warning,
+  colors.warning[500],
   colors.error,
   colors.premium[500],
 ];
@@ -87,7 +87,7 @@ export function ConfettiBurst({ active, onComplete }: ConfettiBurstProps) {
   if (!active) return null;
 
   return (
-    <View pointerEvents='none' style={styles.container} testID='confetti-burst'>
+    <View pointerEvents='none' style={styles.container}>
       {particles.map((particle) => (
         <Particle
           key={particle.id}

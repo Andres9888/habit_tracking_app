@@ -3,10 +3,16 @@ import { useCachedQuery } from '../../../lib/queryCache';
 
 type TrackingQueryArgs = { endDate: string; startDate: string } | 'skip';
 
+// Module-scoped so every "no data yet" return is the *same* array. Returning a
+// fresh `[]` on each render meant consumers using `habits`/`tracking` as
+// useMemo deps (e.g. CharacterScreen) re-ran their derivations on every render
+// for as long as the query was loading or offline.
+const EMPTY: never[] = [];
+
 function getSafeDateStrings(extendedDateStrings: string[]) {
   return Array.isArray(extendedDateStrings) && extendedDateStrings.length > 0
     ? extendedDateStrings
-    : [];
+    : EMPTY;
 }
 
 function buildTrackingQueryArgs(
@@ -34,7 +40,7 @@ export function useHabitData(extendedDateStrings: string[]) {
   );
   // Guard: When Convex is unreachable, habitsQuery will be undefined
   // Return empty array as safe fallback
-  const habits = Array.isArray(habitsQuery) ? habitsQuery : [];
+  const habits = Array.isArray(habitsQuery) ? habitsQuery : EMPTY;
   const isHabitsLoading = habitsQuery === undefined;
 
   const settings = useCachedQuery(
@@ -58,7 +64,7 @@ export function useHabitData(extendedDateStrings: string[]) {
   );
 
   // Guard: When Convex is unreachable, trackingQuery will be undefined
-  const tracking = Array.isArray(trackingQuery) ? trackingQuery : [];
+  const tracking = Array.isArray(trackingQuery) ? trackingQuery : EMPTY;
 
   return { habits, isHabitsLoading, settings, tracking };
 }

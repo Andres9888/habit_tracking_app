@@ -9,3 +9,5 @@ export { useSuccessAnimations } from './useSuccessAnimations';
 export { useButtonAnimations } from './useButtonAnimations';
 export { useAnimatedStyles } from './useAnimatedStyles';
 export { useHandlers } from './useHandlers';
+export { useHardwareBack } from './useHardwareBack';
+export { useTemplateAccent } from './useTemplateAccent';

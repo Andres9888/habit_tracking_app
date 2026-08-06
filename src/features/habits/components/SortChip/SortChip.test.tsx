@@ -67,25 +67,25 @@ describe('SortChip', () => {
   });
 
   describe('Habit Count Display', () => {
-    it('should keep the current section label with multiple habits', () => {
+    it('should display habit count with plural form', () => {
       const { getByText } = render(
         <SortChip {...defaultProps} habitCount={7} />
       );
-      expect(getByText('My Habits')).toBeTruthy();
+      expect(getByText('7 habits')).toBeTruthy();
     });
 
-    it('should keep the current section label with one habit', () => {
+    it('should display habit count with singular form for 1 habit', () => {
       const { getByText } = render(
         <SortChip {...defaultProps} habitCount={1} />
       );
-      expect(getByText('My Habits')).toBeTruthy();
+      expect(getByText('1 habit')).toBeTruthy();
     });
 
-    it('should keep the current section label with no habits', () => {
+    it('should display habit count with plural form for 0 habits', () => {
       const { getByText } = render(
         <SortChip {...defaultProps} habitCount={0} />
       );
-      expect(getByText('My Habits')).toBeTruthy();
+      expect(getByText('0 habits')).toBeTruthy();
     });
   });
 

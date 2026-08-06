@@ -4,6 +4,7 @@
  */
 import { v } from 'convex/values';
 import { mutation } from '../_generated/server';
+import { getTrackingCutoffKey } from '../habits/utils';
 import { resolveAlgorithmMode } from './algorithmConfig';
 import { calculateMomentumStrengthSnapshot } from './momentum';
 
@@ -26,9 +27,12 @@ export const recalculateHabitStrength = mutation({
       throw new Error('Not authorized to recalculate this habit');
     }
 
+    // Bounded — see getTrackingCutoffKey. Only a strength snapshot is derived.
     const tracking = await ctx.db
       .query('tracking')
-      .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
+      .withIndex('by_habit_and_date', (q) =>
+        q.eq('habitId', args.habitId).gte('date', getTrackingCutoffKey())
+      )
       .collect();
 
     // Resolve algorithm mode from per-habit setting, fallback 'balanced'

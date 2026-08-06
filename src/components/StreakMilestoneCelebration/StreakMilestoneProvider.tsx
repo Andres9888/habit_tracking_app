@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * StreakMilestoneProvider
  * Global provider for managing streak milestone celebrations
@@ -6,12 +7,7 @@
  * when a habit completion might cross a milestone threshold
  */
 
-import React, {
-  createContext,
-  useContext,
-  useMemo,
-  type ReactNode,
-} from 'react';
+import React, { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { StreakMilestoneCelebration } from './StreakMilestoneCelebration';
 import { ShareCardGenerator } from '../ShareCardGenerator';
 import { useCelebrationHandlers } from './useCelebrationHandlers';
@@ -61,8 +57,7 @@ export function StreakMilestoneProvider({
       {children}
 
       {/* Celebration Modal */}
-      {celebrationData ? (
-        <StreakMilestoneCelebration
+      {celebrationData ? <StreakMilestoneCelebration
           habitEmoji={celebrationData.habitEmoji}
           habitName={celebrationData.habitName}
           milestone={celebrationData.milestone}
@@ -70,17 +65,14 @@ export function StreakMilestoneProvider({
           visible={!!celebrationData}
           onClose={handleClose}
           onShare={handleShare}
-        />
-      ) : null}
+        /> : null}
 
       {/* Share Card Generator */}
-      {shareData ? (
-        <ShareCardGenerator
+      {shareData ? <ShareCardGenerator
           data={shareData}
           visible={showShareCard}
           onClose={handleShareClose}
-        />
-      ) : null}
+        /> : null}
     </StreakMilestoneContext.Provider>
   );
 }

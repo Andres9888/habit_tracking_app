@@ -5,6 +5,7 @@ import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { getPaperSurface } from '../../../theme/surfaces';
 import type { StatCardProps } from '../AnalyticsScreen.types';
 import { styles } from './StatCard.styles';
 
@@ -22,7 +23,7 @@ export const StatCard = memo(function StatCard({
 
   // When wrapped in AnimatedPressable, a11y is on the pressable — avoid double-announcing
   const isInteractive = !!onPress && !loading;
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
 
   const content = (
     <View
@@ -38,7 +39,11 @@ export const StatCard = memo(function StatCard({
       }
       style={[
         styles.statCard,
-        { backgroundColor: colors.surface, shadowColor: colors.text.primary },
+        {
+          backgroundColor: getPaperSurface(isDark),
+          borderColor: colors.border,
+          shadowColor: colors.text.primary,
+        },
       ]}
     >
       {loading ? (

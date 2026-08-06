@@ -3,7 +3,7 @@
 import { Pressable, Text, View, StyleSheet } from 'react-native';
 
 import { useThemeColors } from '../../theme/ThemeContext';
-import { typography } from '@/theme/typography';
+import { typography, fontWeights } from '@/theme/typography';
 
 interface SecondaryActionsProps {
   onOpenSettings?: () => void;
@@ -24,16 +24,14 @@ export function SecondaryActions({
 
   return (
     <View style={styles.actions}>
-      {onOpenSettings ? (
-        <Pressable
+      {onOpenSettings ? <Pressable
           accessibilityLabel='Open app settings'
           accessibilityRole='link'
           style={styles.link}
           onPress={onOpenSettings}
         >
           <Text style={styles.linkText}>Go to Settings</Text>
-        </Pressable>
-      ) : null}
+        </Pressable> : null}
       <Pressable
         accessibilityLabel='Contact support via email'
         accessibilityRole='link'

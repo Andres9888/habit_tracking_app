@@ -84,10 +84,6 @@ jest.mock('../components/WebToaster', () => ({
   default: () => null,
 }));
 
-jest.mock('../components/SyncStatusOverlays', () => ({
-  SyncStatusOverlays: () => null,
-}));
-
 // Mock GestureHandlerRootView
 jest.mock('react-native-gesture-handler', () => ({
   GestureHandlerRootView: ({ children }: { children: React.ReactNode }) =>
@@ -110,7 +106,7 @@ describe('HabitsApp - FloatingActionButton Integration', () => {
   describe('FAB Rendering', () => {
     it('should render the FloatingActionButton', () => {
       const { getByLabelText } = render(<HabitsApp />);
-      const fab = getByLabelText('Add new habit');
+      const fab = getByLabelText('Add habit');
       expect(fab).toBeDefined();
     });
 
@@ -129,7 +125,7 @@ describe('HabitsApp - FloatingActionButton Integration', () => {
       expect(queryByTestId('create-habit-modal')).toBeNull();
 
       // Press the FAB
-      const fab = getByLabelText('Add new habit');
+      const fab = getByLabelText('Add habit');
       fireEvent.press(fab);
 
       // Modal should be visible after pressing FAB
@@ -145,7 +141,7 @@ describe('HabitsApp - FloatingActionButton Integration', () => {
       expect(queryByTestId('create-habit-modal')).toBeNull();
 
       // Press the FAB
-      const fab = getByLabelText('Add new habit');
+      const fab = getByLabelText('Add habit');
       fireEvent.press(fab);
 
       // Modal state should be updated (verified by testID presence)
@@ -160,7 +156,7 @@ describe('HabitsApp - FloatingActionButton Integration', () => {
       const { getByLabelText, queryByTestId } = render(<HabitsApp />);
 
       // Verify the FAB uses the correct handler
-      const fab = getByLabelText('Add new habit');
+      const fab = getByLabelText('Add habit');
       fireEvent.press(fab);
 
       await waitFor(() => {
@@ -175,7 +171,7 @@ describe('HabitsApp - FloatingActionButton Integration', () => {
       expect(queryByTestId('create-habit-modal')).toBeNull();
 
       // Open modal
-      const fab = getByLabelText('Add new habit');
+      const fab = getByLabelText('Add habit');
       fireEvent.press(fab);
 
       await waitFor(() => {
@@ -190,16 +186,16 @@ describe('HabitsApp - FloatingActionButton Integration', () => {
   describe('Accessibility', () => {
     it('should announce FAB action to screen readers', () => {
       const { getByLabelText } = render(<HabitsApp />);
-      const fab = getByLabelText('Add new habit');
+      const fab = getByLabelText('Add habit');
 
-      expect(fab.props.accessibilityLabel).toBe('Add new habit');
-      expect(fab.props.accessibilityHint).toBeUndefined();
+      expect(fab.props.accessibilityLabel).toBe('Add habit');
+      expect(fab.props.accessibilityHint).toBe('Open create habit modal');
       expect(fab.props.accessibilityRole).toBe('button');
     });
 
     it('should be keyboard accessible', () => {
       const { getByLabelText } = render(<HabitsApp />);
-      const fab = getByLabelText('Add new habit');
+      const fab = getByLabelText('Add habit');
 
       // Should be focusable and pressable
       expect(fab.props.accessibilityRole).toBe('button');
@@ -211,7 +207,7 @@ describe('HabitsApp - FloatingActionButton Integration', () => {
       const { getByLabelText, queryByTestId } = render(<HabitsApp />);
 
       // Open modal via FAB
-      const fab = getByLabelText('Add new habit');
+      const fab = getByLabelText('Add habit');
       fireEvent.press(fab);
 
       // HabitsModals should receive showCreateHabit = true
@@ -224,7 +220,7 @@ describe('HabitsApp - FloatingActionButton Integration', () => {
       const { getByLabelText, queryByTestId } = render(<HabitsApp />);
 
       // Open modal
-      const fab = getByLabelText('Add new habit');
+      const fab = getByLabelText('Add habit');
       fireEvent.press(fab);
 
       // Modal should be integrated and rendered
@@ -238,7 +234,7 @@ describe('HabitsApp - FloatingActionButton Integration', () => {
     it('should handle typical user interaction flow', async () => {
       const { getByLabelText, queryByTestId } = render(<HabitsApp />);
 
-      const fab = getByLabelText('Add new habit');
+      const fab = getByLabelText('Add habit');
 
       // Step 1: Initial state - modal closed
       expect(queryByTestId('create-habit-modal')).toBeNull();
@@ -263,7 +259,7 @@ describe('HabitsApp - FloatingActionButton Integration', () => {
 
       const { getByLabelText, queryByTestId } = render(<HabitsApp />);
 
-      const fab = getByLabelText('Add new habit');
+      const fab = getByLabelText('Add habit');
       fireEvent.press(fab);
 
       // If FAB uses list.openCreateHabitScreen (bug), modal won't open
@@ -277,7 +273,7 @@ describe('HabitsApp - FloatingActionButton Integration', () => {
       const { getByLabelText, queryByTestId } = render(<HabitsApp />);
 
       // Press FAB
-      const fab = getByLabelText('Add new habit');
+      const fab = getByLabelText('Add habit');
       fireEvent.press(fab);
 
       // Verify modal opens (proves correct handler is used)

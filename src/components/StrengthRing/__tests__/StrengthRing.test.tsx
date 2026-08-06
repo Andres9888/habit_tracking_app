@@ -131,7 +131,7 @@ describe('StrengthRing Component', () => {
       );
       // strength=50 is in Developing level (<20: Starting, 20-39: Building, 40-59: Developing)
       expect(getByText(/Developing/i)).toBeTruthy();
-      expect(getByText(/🥇/)).toBeTruthy();
+      expect(getByText(/🌳/)).toBeTruthy();
     });
 
     it('should show both percentage and level when both props are true', () => {
@@ -141,7 +141,7 @@ describe('StrengthRing Component', () => {
       expect(getByText('50%')).toBeTruthy();
       // strength=50 is in Developing level
       expect(getByText(/Developing/i)).toBeTruthy();
-      expect(getByText(/🥇/)).toBeTruthy();
+      expect(getByText(/🌳/)).toBeTruthy();
     });
   });
 
@@ -155,17 +155,17 @@ describe('StrengthRing Component', () => {
       const { getByLabelText } = render(<StrengthRing strength={45} />);
       // Label format: "X% strength, LevelName level emoji"
       // 45% is in Developing level (40-59)
-      expect(getByLabelText(/45% strength, Developing level 🥇/)).toBeTruthy();
+      expect(getByLabelText(/45% strength, Developing level 🌳/)).toBeTruthy();
     });
 
     it('should announce correct level for different strengths', () => {
       // Updated thresholds: <20: Starting, 20-39: Building, 40-59: Developing, 60-79: Strong, 80+: Automatic
       const testCases = [
-        { strength: 15, expectedLabel: /15% strength, Starting level 🥉/ },
-        { strength: 30, expectedLabel: /30% strength, Building level 🥈/ },
-        { strength: 50, expectedLabel: /50% strength, Developing level 🥇/ },
-        { strength: 70, expectedLabel: /70% strength, Strong level 🏆/ },
-        { strength: 90, expectedLabel: /90% strength, Automatic level 💎/ },
+        { strength: 15, expectedLabel: /15% strength, Starting level 🌱/ },
+        { strength: 30, expectedLabel: /30% strength, Building level 🌿/ },
+        { strength: 50, expectedLabel: /50% strength, Developing level 🌳/ },
+        { strength: 70, expectedLabel: /70% strength, Strong level 💪/ },
+        { strength: 90, expectedLabel: /90% strength, Automatic level ⚡/ },
       ];
 
       for (const testCase of testCases) {
@@ -289,13 +289,13 @@ describe('StrengthRing Component', () => {
     });
 
     it('should use all level emojis correctly', () => {
-      // Default "Ranks" progression is user-customizable via emojiOverrides.
+      // Updated thresholds: <20: Starting 🌱, 20-39: Building 🌿, 40-59: Developing 🌳, 60-79: Strong 💪, 80+: Automatic ⚡
       const levels = [
-        { strength: 15, emoji: '🥉' },
-        { strength: 30, emoji: '🥈' },
-        { strength: 50, emoji: '🥇' },
-        { strength: 70, emoji: '🏆' },
-        { strength: 90, emoji: '💎' },
+        { strength: 15, emoji: '🌱' },  // Starting
+        { strength: 30, emoji: '🌿' },  // Building
+        { strength: 50, emoji: '🌳' },  // Developing
+        { strength: 70, emoji: '💪' },  // Strong
+        { strength: 90, emoji: '⚡' },  // Automatic
       ];
 
       for (const level of levels) {

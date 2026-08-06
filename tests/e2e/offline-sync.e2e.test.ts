@@ -186,8 +186,8 @@ describe('Offline Sync E2E', () => {
 
       it('should process operations in FIFO order (FR-005)', async () => {
         const processedOrder: string[] = [];
-        mockExecutor.mockImplementation(async (operation) => {
-          processedOrder.push(operation.payload.habitId);
+        mockExecutor.mockImplementation(async (payload) => {
+          processedOrder.push(payload.habitId);
         });
 
         // Enqueue in specific order

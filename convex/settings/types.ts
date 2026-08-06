@@ -26,6 +26,7 @@ export type ConnectorStyle = (typeof CONNECTOR_STYLE_OPTIONS)[number];
 
 export const DEFAULT_SETTINGS = {
   appIcon: 'default' as const,
+  appLock: false,
   catTheme: true,
   celebrationsEnabled: true,
   compactView: false,

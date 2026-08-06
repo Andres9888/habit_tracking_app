@@ -15,6 +15,7 @@
 
 import { useCallback, useState } from 'react';
 import { useMutation } from 'convex/react';
+import * as ImageManipulator from 'expo-image-manipulator';
 import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
 import {
@@ -22,7 +23,9 @@ import {
   MAX_IMAGE_UPLOAD_BYTES,
 } from '../../convex/storageValidation';
 import type { PickedImage } from './useImagePicker';
-import { resizeImageIfNeeded } from './imageUploadHelpers';
+
+/** Maximum image dimension (width or height) - balances quality and performance */
+const MAX_IMAGE_DIMENSION = 1200;
 
 export interface UploadResult {
   storageId: Id<'_storage'>;
@@ -66,6 +69,42 @@ export function useImageUpload(): UseImageUploadReturn {
   // Convex mutation for generating upload URL
   const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
   const validateImageUpload = useMutation(api.storage.validateImageUpload);
+
+  /**
+   * Resize image if dimensions exceed MAX_IMAGE_DIMENSION
+   * Maintains aspect ratio and reduces memory/bandwidth usage
+   */
+  const resizeImageIfNeeded = useCallback(
+    async (image: PickedImage): Promise<string> => {
+      const maxDimension = Math.max(image.width, image.height);
+
+      // No resize needed if already within limits
+      if (maxDimension <= MAX_IMAGE_DIMENSION) {
+        return image.uri;
+      }
+
+      // Calculate resize ratio to fit within MAX_IMAGE_DIMENSION
+      const ratio = MAX_IMAGE_DIMENSION / maxDimension;
+      const newWidth = Math.round(image.width * ratio);
+      const newHeight = Math.round(image.height * ratio);
+
+      if (__DEV__) {
+        console.log(
+          `Resizing image from ${image.width}x${image.height} to ${newWidth}x${newHeight}`
+        );
+      }
+
+      // Resize using expo-image-manipulator
+      const resizedImage = await ImageManipulator.manipulateAsync(
+        image.uri,
+        [{ resize: { width: newWidth, height: newHeight } }],
+        { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
+      );
+
+      return resizedImage.uri;
+    },
+    []
+  );
 
   /**
    * Upload an image to Convex storage
@@ -123,7 +162,10 @@ export function useImageUpload(): UseImageUploadReturn {
 
         // Step 5: Parse the storage ID from the response
         const { storageId } = await uploadResponse.json();
-        await validateImageUpload({ storageId });
+        const validation = await validateImageUpload({ storageId });
+        if (!validation.ok) {
+          throw new Error(validation.error);
+        }
 
         // The URL will be the upload response but we typically get
         // the final URL via a query. For now, return the storage ID.

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recommended — Compact Tonal Add</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', sans-serif;
+    background: #ECEAE6;
+    padding: 40px 24px 80px;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1 { font-size: 22px; font-weight: 800; color: #1C1917; letter-spacing: -0.02em; }
+  .sub { font-size: 14px; color: #78716C; margin: 4px 0 28px; }
+  .row-2col { display: grid; grid-template-columns: repeat(auto-fit, minmax(370px, 1fr)); gap: 24px; max-width: 1100px; margin: 0 auto; }
+  .col { border-radius: 20px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .col-header { padding: 14px 18px 12px; background: #FFF; }
+  .col-name { font-size: 15px; font-weight: 700; color: #1C1917; }
+  .col-desc { font-size: 12.5px; color: #78716C; margin-top: 2px; line-height: 1.45; }
+  .panel { padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .panel.light { background: #FAF9F7; }
+  .panel.dark  { background: #171412; }
+  .mode-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2px; }
+  .light .mode-label { color: #A8A29E; }
+  .dark  .mode-label { color: #57534E; }
+  .section-line { font-size: 12px; font-weight: 700; margin: 6px 2px 0; }
+  .light .section-line { color: #78716C; }
+  .dark  .section-line { color: #8B8680; }
+  .section-line span { font-weight: 500; opacity: 0.7; }
+
+  .card { border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
+  .light .card { background: #FFFFFF; border: 1px solid #EDEAE5; }
+  .dark  .card { background: #211E1B; border: 1px solid #35312C; }
+  .emoji { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; }
+  .light .emoji { background: #F3F1EC; }
+  .dark  .emoji { background: #2B2723; }
+  .meta { flex: 1; min-width: 0; }
+  .title { font-size: 15.5px; font-weight: 700; letter-spacing: -0.01em; }
+  .light .title { color: #1C1917; }
+  .dark  .title { color: #F5F4F2; }
+  .detail { font-size: 13px; margin-top: 2px; color: #8B8680; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 5px; flex-shrink: 0; cursor: pointer; border: none;
+    font-family: inherit; font-weight: 700; border-radius: 999px;
+    transition: transform 0.12s ease; letter-spacing: -0.01em;
+  }
+  .btn:active { transform: scale(0.96); }
+  .btn svg { flex-shrink: 0; }
+
+  /* Current (ships today) */
+  .cur-add { padding: 11px 22px; font-size: 16px; }
+  .light .cur-add { background: #059669; color: #FFF; }
+  .dark  .cur-add { background: #34D399; color: #111827; }
+  .cur-added { padding: 10px 16px; font-size: 14.5px; cursor: default; }
+  .light .cur-added { background: #D1FAE5; color: #047857; }
+  .dark  .cur-added { background: rgba(5,150,105,0.15); color: #6EE7B7; }
+  .cur-added:active { transform: none; }
+
+  /* Recommended: compact tonal.
+     Add = deeper tint + darker text (more presence),
+     Added = lighter tint + softer text (recedes). */
+  .rec-add { padding: 8px 15px; font-size: 14px; }
+  .light .rec-add { background: #C4EBD9; color: #04724D; }
+  .dark  .rec-add { background: rgba(52,211,153,0.20); color: #4ADE9E; }
+  .rec-added { padding: 8px 14px; font-size: 14px; cursor: default; }
+  .light .rec-added { background: #E4F7EE; color: #16A374; }
+  .dark  .rec-added { background: rgba(52,211,153,0.09); color: #4E9B7E; }
+  .rec-added:active { transform: none; }
+</style>
+</head>
+<body>
+<h1>Recommended: compact tonal Add</h1>
+<p class="sub">Left = current. Right = recommendation. Stacked rows show the repeated-button weight problem. Add carries the deeper tint + darker text; Added recedes.</p>
+
+<div class="row-2col" id="grid"></div>
+
+<script>
+const plus = (s) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>`;
+const check = (s) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
+
+const habits = [
+  ['🧘','Morning meditation','10 min · Mindfulness', false],
+  ['💧','Drink water','8 glasses · Health', true],
+  ['📖','Read 20 pages','Evening · Learning', false],
+  ['🏃','Go for a run','5 km · Fitness', false],
+  ['✍️','Journal','5 min · Reflection', true],
+];
+
+const cardRow = (h, prefix, iconAdd, iconCheck) => `
+  <div class="card">
+    <div class="emoji">${h[0]}</div>
+    <div class="meta">
+      <div class="title">${h[1]}</div>
+      <div class="detail">${h[2]}</div>
+    </div>
+    ${h[3]
+      ? `<button class="btn ${prefix}-added">${check(iconCheck)}Added</button>`
+      : `<button class="btn ${prefix}-add">${plus(iconAdd)}Add</button>`}
+  </div>`;
+
+const panel = (mode, prefix, iconAdd, iconCheck) => `
+  <div class="panel ${mode}">
+    <div class="mode-label">${mode}</div>
+    ${habits.map(h => cardRow(h, prefix, iconAdd, iconCheck)).join('')}
+  </div>`;
+
+const cols = [
+  { prefix:'cur', name:'Current', iconAdd:16, iconCheck:15,
+    desc:'Solid saturated pill on every row — heaviest element on screen, repeats down the whole list.' },
+  { prefix:'rec', name:'Recommended — compact tonal', iconAdd:14, iconCheck:14,
+    desc:'Soft green pill, ~25% smaller. Add = deeper tint + darker text (actionable, more presence). Added = lighter tint, recedes. Same family, states read as one system.' },
+];
+
+document.getElementById('grid').innerHTML = cols.map(c => `
+  <div class="col">
+    <div class="col-header">
+      <div class="col-name">${c.name}</div>
+      <div class="col-desc">${c.desc}</div>
+    </div>
+    ${panel('light', c.prefix, c.iconAdd, c.iconCheck)}
+    ${panel('dark', c.prefix, c.iconAdd, c.iconCheck)}
+  </div>`).join('');
+</script>
+</body>
+</html>

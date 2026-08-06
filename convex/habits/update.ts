@@ -10,11 +10,8 @@ import {
 } from '../habitStrength';
 import { enforceRateLimit } from '../lib/rateLimit';
 import { updateHabitArgs } from './types';
-import {
-  validateDaysOfWeek,
-  validateEffortMinutes,
-  validateHabitUpdateFields,
-} from './validation';
+import { getTrackingCutoffKey } from './utils';
+import { validateDaysOfWeek, validateHabitUpdateFields } from './validation';
 
 export const update = mutation({
   args: updateHabitArgs,
@@ -42,7 +39,6 @@ export const update = mutation({
     // SEC-003: Input validation
     const validated = validateHabitUpdateFields(updates);
     validateDaysOfWeek(updates.daysOfWeek);
-    validateEffortMinutes(updates.effortMinutes);
 
     // Merge strategy: non-string fields (booleans, arrays, numbers) in updateHabitArgs
     // are type-checked by Convex's `v` validators but bypass validateHabitUpdateFields
@@ -58,7 +54,6 @@ export const update = mutation({
       ...Object.fromEntries(
         Object.entries(validated).filter(([_, value]) => value !== undefined)
       ),
-      ...(updates.effortMinutes === null ? { effortMinutes: undefined } : {}),
     };
 
     await ctx.db.patch(habitId, cleanedUpdates);
@@ -67,9 +62,12 @@ export const update = mutation({
     if (args.strengthAlgorithm !== undefined) {
       const updatedHabit = await ctx.db.get(habitId);
       if (updatedHabit) {
+        // Bounded — see getTrackingCutoffKey. Only strength is derived here.
         const tracking = await ctx.db
           .query('tracking')
-          .withIndex('by_habit_and_date', (q) => q.eq('habitId', habitId))
+          .withIndex('by_habit_and_date', (q) =>
+            q.eq('habitId', habitId).gte('date', getTrackingCutoffKey())
+          )
           .collect();
 
         const mode = resolveAlgorithmMode(updatedHabit.strengthAlgorithm);

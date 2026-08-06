@@ -1,108 +1,74 @@
 /**
- * Hero metadata pills — frequency, category, duration, growth, popularity.
+ * Hero metadata chips — cadence+duration, category, difficulty, and the
+ * Science-backed marker when the template earns it.
+ *
+ * The "Habit Detail" mock shows a 3-chip row; popularity moved out of the hero
+ * so the chips describe the commitment, not the crowd.
+ *
+ * The page argues desire before proof, which is right — but the differentiator
+ * still has to be legible on arrival. The full evidence case stays where it
+ * was, at the bottom; only the marker sits up here, gated on the same rule as
+ * the WhyItWorksCard badge so the two can never disagree.
+ *
+ * The difficulty chip reads `getAutomaticityMeta`, not `growthType` directly:
+ * the timeline is the page's source of truth for days-to-automatic.
  */
 
 import React from 'react';
 import { View } from 'react-native';
-import { Clock, Sparkles, Sprout, Timer, Users } from 'lucide-react-native';
+import { Clock, ShieldCheck, Sprout, Tag } from 'lucide-react-native';
 
-import { colors } from '@/theme';
 import { iconSizes } from '@/theme/iconSizes';
-import { getGrowthTypeMeta } from '@/utils/growthTypeMeta';
 import { heroStyles } from '../styles';
+import { useDetailPalette } from '../detailPalette';
+import { getAutomaticityMeta } from '../utils/automaticityMeta';
+import { isScienceBacked } from '../utils/scienceBadge';
 import {
   FREQUENCY_LABELS,
   CATEGORY_LABELS,
   CATEGORY_DURATION_DEFAULTS,
 } from '../FullsizeTemplatePreview.constants';
-import { formatPopularity } from '../../../screens/TemplatesScreen/components/TrendingCard/formatPopularity';
-import { readableAccent } from '../utils/readableAccent';
 import { MetadataPill } from './MetadataPill';
 import type { Template } from '../../../types/template';
 
-const NEUTRAL_ICON_COLOR = colors.gray[500];
-
 interface HeroMetaPillsProps {
   template: Template;
-  iconColor: string;
 }
 
-export function HeroMetaPills({ template, iconColor }: HeroMetaPillsProps) {
+export function HeroMetaPills({ template }: HeroMetaPillsProps) {
+  const palette = useDetailPalette();
+  const iconProps = {
+    color: palette.textSecondary,
+    size: iconSizes.small,
+    strokeWidth: 2,
+  };
+
   const frequency =
     FREQUENCY_LABELS[template?.frequency] || template?.frequency || 'Daily';
   const category =
     CATEGORY_LABELS[template?.category] || template?.category || 'General';
-  const duration = CATEGORY_DURATION_DEFAULTS[template?.category] || '5-10 min';
-  const popularity = template?.popularityScore ?? 0;
-  const growthMeta = getGrowthTypeMeta(template?.growthType);
-
-  const accentIconColor = readableAccent(iconColor);
+  const duration = template?.estimatedMinutes
+    ? `${template.estimatedMinutes} min`
+    : CATEGORY_DURATION_DEFAULTS[template?.category] || '5-10 min';
+  const automaticity = getAutomaticityMeta(template);
 
   return (
     <View testID='templates-preview-pills' style={heroStyles.pillsRow}>
-      <MetadataPill
-        icon={
-          <Clock
-            color={NEUTRAL_ICON_COLOR}
-            size={iconSizes.small}
-            strokeWidth={2}
-          />
-        }
-        iconColor={iconColor}
-      >
-        {frequency}
+      <MetadataPill icon={<Clock {...iconProps} />}>
+        {`${frequency} · ${duration}`}
       </MetadataPill>
-      <MetadataPill
-        icon={
-          <Sparkles
-            color={accentIconColor}
-            size={iconSizes.small}
-            strokeWidth={2}
-          />
-        }
-        iconColor={iconColor}
-        variant='accent'
-      >
-        {category}
-      </MetadataPill>
-      <MetadataPill
-        icon={
-          <Timer
-            color={NEUTRAL_ICON_COLOR}
-            size={iconSizes.small}
-            strokeWidth={2}
-          />
-        }
-        iconColor={iconColor}
-      >
-        {duration}
-      </MetadataPill>
-      {growthMeta ? (
-        <MetadataPill
-          icon={
-            <Sprout
-              color={NEUTRAL_ICON_COLOR}
-              size={iconSizes.small}
-              strokeWidth={2}
-            />
-          }
-          iconColor={iconColor}
-        >
-          {`${growthMeta.label} · ~${growthMeta.days}d`}
+      <MetadataPill icon={<Tag {...iconProps} />}>{category}</MetadataPill>
+      {automaticity ? (
+        <MetadataPill icon={<Sprout {...iconProps} />}>
+          {`${automaticity.label} · ~${automaticity.days}d`}
         </MetadataPill>
       ) : null}
-      {popularity > 0 ? (
+      {isScienceBacked(template) ? (
         <MetadataPill
-          icon={
-            <Users
-              color={NEUTRAL_ICON_COLOR}
-              size={iconSizes.small}
-              strokeWidth={2}
-            />
-          }
-          iconColor={iconColor}
+          testID='templates-preview-science-chip'
+          icon={<ShieldCheck {...iconProps} />}
         >
-          {formatPopularity(popularity)}
+          Science-backed
         </MetadataPill>
       ) : null}
     </View>

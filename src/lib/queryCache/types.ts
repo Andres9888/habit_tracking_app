@@ -1,6 +1,7 @@
 export type QueryCacheEntryName =
   | 'analytics.getAnalyticsDashboard'
   | 'habits.get'
+  | 'habits.getHabitTracking'
   | 'habits.getTracking'
   | 'habits.list'
   | 'habits.listArchived'
@@ -44,4 +45,12 @@ export interface CachedQueryOptions {
    * fallback (treat as no cache) instead of serving unrelated data.
    */
   latestUsable?: (persistedArgs: unknown, requestedArgs: unknown) => boolean;
+  /**
+   * Serve the hydrated `:latest` slot while args are 'skip' instead of
+   * undefined. Opt-in because most skips mean "this request is not valid yet"
+   * (e.g. a null habitId), where stale data would be wrong. Only safe for
+   * entries with a single args shape — the `:latest` slot is args-independent,
+   * so a multi-args entry could serve another key's payload.
+   */
+  serveCachedWhileSkipped?: boolean;
 }

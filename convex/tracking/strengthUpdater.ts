@@ -2,6 +2,7 @@ import type { GenericMutationCtx } from 'convex/server';
 import type { DataModel, Id } from '../_generated/dataModel';
 import type { StrengthAlgorithmMode } from '../habitStrength';
 import { calculateMomentumStrengthSnapshot } from '../habitStrength';
+import { getTrackingCutoffKey } from '../habits/utils';
 import { findMaxTrackingDate, getTodayForTimezone, maxDateKey } from './helpers';
 
 interface TrackingRecord {
@@ -28,9 +29,13 @@ export async function updateHabitStrength(
   const { ctx, habitCreatedAt, habitId, currentStrength, mode, toggleDate, timezone } =
     params;
 
+  // Bounded — see getTrackingCutoffKey. Only strength is written here, and the
+  // momentum model decays to its floor well inside the lookback window.
   const allTracking = await ctx.db
     .query('tracking')
-    .withIndex('by_habit_and_date', (q) => q.eq('habitId', habitId))
+    .withIndex('by_habit_and_date', (q) =>
+      q.eq('habitId', habitId).gte('date', getTrackingCutoffKey())
+    )
     .collect();
 
   const maxTrackingDateKey = findMaxTrackingDate(allTracking, toggleDate);

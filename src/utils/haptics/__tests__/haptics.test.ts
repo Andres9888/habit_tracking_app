@@ -24,6 +24,14 @@ jest.mock('expo-haptics', () => ({
   selectionAsync: jest.fn().mockResolvedValue(undefined),
 }));
 
+jest.mock('react-native', () => {
+  const actual = jest.requireActual('react-native');
+  return {
+    ...actual,
+    Platform: { ...actual.Platform, OS: 'ios' as const },
+  };
+});
+
 describe('HapticPatterns', () => {
   afterEach(() => jest.clearAllMocks());
 

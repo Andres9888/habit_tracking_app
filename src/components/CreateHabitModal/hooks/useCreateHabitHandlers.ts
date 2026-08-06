@@ -18,7 +18,6 @@ import { optimisticHabitCreationStore } from '../../../features/habits/hooks/opt
 
 interface HabitData {
   dayPhase: string | null;
-  effortMinutes?: number;
   frequency: string;
   fullHabitName: string;
   hasReminders: boolean;
@@ -57,7 +56,6 @@ export function useCreateHabitHandlers() {
     selectedColor,
     selectedDays,
     dayPhase,
-    effortMinutes,
     reminderSound,
     strengthAlgorithm,
     progressEmojis,
@@ -94,7 +92,6 @@ export function useCreateHabitHandlers() {
         iconColor: selectedColor,
         frequency: frequency || undefined,
         daysOfWeek: selectedDays.length < 7 ? selectedDays : undefined,
-        effortMinutes: effortMinutes ?? null,
         goalDuration: streakGoal > 0 ? streakGoal : undefined,
         name: sanitizedName,
         notes: habitToEdit.notes ?? '',
@@ -124,7 +121,6 @@ export function useCreateHabitHandlers() {
     selectedColor,
     selectedDays,
     dayPhase,
-    effortMinutes,
     reminderSound,
     strengthAlgorithm,
     progressEmojis,
@@ -142,7 +138,6 @@ export function useCreateHabitHandlers() {
     const optimisticOperationId = optimisticHabitCreationStore.add({
       color: selectedColor,
       daysOfWeek: selectedDays.length < 7 ? selectedDays : undefined,
-      effortMinutes,
       frequency: frequency || undefined,
       icon: selectedEmoji ?? undefined,
       iconColor: selectedColor,
@@ -160,7 +155,6 @@ export function useCreateHabitHandlers() {
         iconColor: selectedColor,
         frequency: frequency || undefined,
         daysOfWeek: selectedDays.length < 7 ? selectedDays : undefined,
-        effortMinutes,
         goalDuration: streakGoal > 0 ? streakGoal : undefined,
         name: sanitizedName,
         notes: '',

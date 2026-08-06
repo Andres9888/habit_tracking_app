@@ -35,9 +35,7 @@ export async function executeWithRetry<T>(
       const delay = getTimeUntilRetry(context);
       onRetry?.(context, delay);
 
-      await new Promise((resolve) => {
-        setTimeout(resolve, delay);
-      });
+      await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
 }

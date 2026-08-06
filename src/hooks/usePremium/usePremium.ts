@@ -13,6 +13,7 @@
  */
 
 import type { UsePremiumReturn, SubscriptionStatus } from './types';
+import { getAnnualSavingsPercent, getTrialDays } from './offeringMath';
 import { usePremiumData } from './usePremiumData';
 import { usePremiumActions } from './usePremiumActions';
 
@@ -54,15 +55,38 @@ export function usePremium(): UsePremiumReturn {
     packages?.find((p) => p.packageType?.toString() === 'MONTHLY') ?? null;
   const priceString = monthlyPackage?.product.priceString ?? null;
 
+  // Annual package powers the monthly -> annual upgrade nudge.
+  const annualPackage =
+    packages?.find((p) => p.packageType?.toString() === 'ANNUAL') ?? null;
+  const annualPriceString = annualPackage?.product.priceString ?? null;
+
+  const annualSavingsPercent = getAnnualSavingsPercent(
+    monthlyPackage?.product.price,
+    annualPackage?.product.price
+  );
+
+  // Only non-null when the store really does offer a zero-cost intro period.
+  const trialDays = getTrialDays(monthlyPackage?.product.introPrice);
+
+  // Product backing the active entitlement — used to tell monthly subscribers
+  // apart from annual ones so we only upsell the former.
+  const activeProductId = premiumEntitlement?.productIdentifier ?? null;
+  const isAnnualPlan = /year|annual/i.test(activeProductId ?? '');
+
   // Subscription info
   const expirationDate = premiumEntitlement?.expirationDate
     ? new Date(premiumEntitlement.expirationDate)
     : null;
 
   return {
+    activeProductId,
+    annualPackage,
+    annualPriceString,
+    annualSavingsPercent,
     customerInfo,
     error,
     expirationDate,
+    isAnnualPlan,
     isLoading,
     isLoadingOfferings,
     isPremium,
@@ -75,5 +99,6 @@ export function usePremium(): UsePremiumReturn {
     refreshStatus,
     restorePurchases,
     status,
+    trialDays,
   };
 }

@@ -57,9 +57,16 @@ export const updateHabitStrength = mutation({
     const toggleDate = new Date(args.date);
     const sevenDaysAgo = new Date(toggleDate);
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    // Bounded to the 7-day window this loop actually needs. The bound is
+    // deliberately generous (date-key granularity vs. the loop's exact
+    // timestamp compare); the loop below still filters precisely.
     const allTracking = await ctx.db
       .query('tracking')
-      .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
+      .withIndex('by_habit_and_date', (q) =>
+        q
+          .eq('habitId', args.habitId)
+          .gte('date', sevenDaysAgo.toISOString().slice(0, 10))
+      )
       .collect();
     let completionsLast7Days = 0;
     for (const record of allTracking) {

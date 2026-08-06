@@ -14,6 +14,7 @@ import { calculateStreakFromHistory } from '../streakUtils';
 import { enforceRateLimit } from '../lib/rateLimit';
 import {
   getTodayForTimezone,
+  getTrackingCutoffKey,
   isFutureDate,
   isValidDateFormat,
   maxDateKey,
@@ -104,9 +105,13 @@ export const recalculateStreakAndStrength = internalMutation({
     if (!habit) return;
     if (habit.pendingStrengthRecalcRequestedAt !== args.requestedAt) return;
 
+    // Bounded to the recalc lookback window. An unbounded read here made the
+    // cost of every toggle grow with account age; see getTrackingCutoffKey.
     const allTracking = await ctx.db
       .query('tracking')
-      .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
+      .withIndex('by_habit_and_date', (q) =>
+        q.eq('habitId', args.habitId).gte('date', getTrackingCutoffKey())
+      )
       .collect();
 
     let maxTrackingDateKey = args.date;
@@ -156,7 +161,10 @@ export const recalculateStreakAndStrength = internalMutation({
         timezone: args.timezone,
       });
       streakPatch = {
-        bestStreak: streakData.bestStreak,
+        // Guarded with the stored value because the tracking read above is
+        // windowed: a best streak set outside the lookback window is not
+        // recomputable and must not be clobbered. Matches recalcStaleHelpers.
+        bestStreak: Math.max(streakData.bestStreak, habit.bestStreak ?? 0),
         currentStreak: streakData.currentStreak,
         lastCompletedDate: streakData.lastCompletedDate,
       };

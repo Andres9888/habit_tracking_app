@@ -13,15 +13,9 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import type { OptimisticStore } from '../types';
+import type { Id } from '../../../../convex/_generated/dataModel';
+import type { OptimisticOperation, OptimisticStore } from '../types';
 import { buildScopedStorageKey } from '../../../utils/storage/scopedStorageKey';
-import {
-  deserializeStore,
-  isValidSerializedStore,
-  migrateSerializedStore,
-  type SerializedOptimisticStore,
-} from './persistenceSerialization';
-export type { SerializedOptimisticStore } from './persistenceSerialization';
 
 /** Storage key for the optimistic store state */
 export const OPTIMISTIC_STORE_STORAGE_KEY = '@chainday:optimistic_store_v1';
@@ -47,6 +41,16 @@ export function setOptimisticStoreScope(scope: string | null): void {
  * Maps cannot be directly JSON-serialized, so we convert them
  * to arrays of [key, value] entries for persistence.
  */
+export interface SerializedOptimisticStore {
+  version: number;
+  operations: [string, OptimisticOperation][];
+  pendingToggles: [string, boolean][];
+  pendingArchives: [string, boolean][];
+  pendingReorder: Id<'habits'>[] | null;
+  pendingPauses: [string, boolean][];
+  savedAt: number;
+}
+
 /**
  * Save the optimistic store state to AsyncStorage
  *
@@ -106,7 +110,7 @@ export async function loadOptimisticStore(
     const migrated =
       parsed.version === OPTIMISTIC_STORE_VERSION
         ? parsed
-        : migrateSerializedStore(parsed, OPTIMISTIC_STORE_VERSION);
+        : migrateSerializedStore(parsed);
 
     return deserializeStore(migrated);
   } catch (error) {
@@ -134,4 +138,55 @@ export async function clearOptimisticStoreForScope(
 
 export async function clearLegacyOptimisticStore(): Promise<void> {
   await AsyncStorage.removeItem(OPTIMISTIC_STORE_STORAGE_KEY);
+}
+
+/**
+ * Type guard to validate serialized store structure
+ */
+function isValidSerializedStore(
+  value: unknown
+): value is SerializedOptimisticStore {
+  if (!value || typeof value !== 'object') return false;
+
+  const store = value as Record<string, unknown>;
+
+  return (
+    typeof store.version === 'number' &&
+    Array.isArray(store.operations) &&
+    Array.isArray(store.pendingToggles) &&
+    Array.isArray(store.pendingArchives) &&
+    (store.pendingReorder === null || Array.isArray(store.pendingReorder)) &&
+    Array.isArray(store.pendingPauses) &&
+    typeof store.savedAt === 'number'
+  );
+}
+
+/**
+ * Deserialize the stored format back into OptimisticStore
+ */
+function deserializeStore(
+  serialized: SerializedOptimisticStore
+): OptimisticStore {
+  return {
+    operations: new Map(serialized.operations),
+    pendingArchives: new Map(serialized.pendingArchives),
+    pendingPauses: new Map(serialized.pendingPauses),
+    pendingReorder: serialized.pendingReorder,
+    pendingToggles: new Map(serialized.pendingToggles),
+  };
+}
+
+/**
+ * Migrate serialized store from older versions
+ * Currently just returns the store as-is since we're at v1
+ */
+function migrateSerializedStore(
+  store: SerializedOptimisticStore
+): SerializedOptimisticStore {
+  // Future migrations would be handled here
+  // For now, just update the version and return
+  return {
+    ...store,
+    version: OPTIMISTIC_STORE_VERSION,
+  };
 }

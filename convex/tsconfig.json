@@ -11,10 +11,14 @@
     "jsx": "react-jsx",
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
+    /* `process.env` is available in the Convex runtime and read by
+     * config/apiConstants.ts and webhooks/revenuecatSignature.ts. */
+    "types": ["node"],
 
     /* These compiler options are required by Convex */
     "target": "ESNext",
-    "lib": ["ES2021", "dom"],
+    /* ES2022 for Array.prototype.at, used across the query helpers. */
+    "lib": ["ES2022", "dom"],
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "isolatedModules": true,

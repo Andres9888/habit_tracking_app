@@ -7,7 +7,7 @@
 import { ConvexProvider } from 'convex/react';
 import { useAuth } from '@clerk/clerk-expo';
 import type { PropsWithChildren } from 'react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { convexClient } from '../lib/appConfig';
 import { setBackgroundSyncTokenProvider } from '../lib/offline/backgroundSync';
 import { ConvexAuthReadyContext } from './ConvexAuthReady.context';
@@ -18,8 +18,10 @@ export function ConvexClerkProvider({ children }: PropsWithChildren) {
   const getTokenRef = useRef(getToken);
   getTokenRef.current = getToken;
   const [isConvexReady, setIsConvexReady] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   const convexClientInstance = convexClient;
   const isConvexClientConfigured = convexClientInstance !== null;
+  const retryConvexAuth = useCallback(() => setRetryCount((n) => n + 1), []);
 
   useEffect(() => {
     if (!isConvexClientConfigured) {
@@ -59,9 +61,14 @@ export function ConvexClerkProvider({ children }: PropsWithChildren) {
       isCurrent = false;
       setBackgroundSyncTokenProvider(null);
     };
-  }, [isConvexClientConfigured, isSignedIn]);
+    // retryCount re-runs setAuth so a stuck connection gets a fresh token and
+    // a new socket instead of waiting on Convex's own backoff.
+  }, [isConvexClientConfigured, isSignedIn, retryCount]);
 
-  const value = useMemo(() => ({ isConvexReady }), [isConvexReady]);
+  const value = useMemo(
+    () => ({ isConvexReady, retryConvexAuth }),
+    [isConvexReady, retryConvexAuth]
+  );
 
   if (!isConvexClientConfigured) {
     if (__DEV__) {

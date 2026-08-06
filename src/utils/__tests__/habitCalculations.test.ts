@@ -122,18 +122,18 @@ describe('habitCalculations', () => {
     });
 
     it('returns 0 for empty tracking', () => {
-      const habitCreatedAt = new Date(2024, 0, 1).getTime();
+      const habitCreatedAt = new Date('2024-01-01').getTime();
       expect(calculateCompletionPercentage(habitCreatedAt, [])).toBe(0);
     });
 
     it('calculates percentage for single day habit', () => {
-      const habitCreatedAt = new Date(2024, 1, 1).getTime();
+      const habitCreatedAt = new Date('2024-02-01').getTime();
       const tracking = [{ date: '2024-02-01', completed: true }];
       expect(calculateCompletionPercentage(habitCreatedAt, tracking)).toBe(100);
     });
 
     it('calculates 50% for half completions', () => {
-      const habitCreatedAt = new Date(2024, 0, 1).getTime();
+      const habitCreatedAt = new Date('2024-01-01').getTime();
       const tracking = Array.from({ length: 16 }, (_, i) => ({
         date: new Date(2024, 0, i + 1).toISOString().split('T')[0],
         completed: true,
@@ -144,7 +144,7 @@ describe('habitCalculations', () => {
     });
 
     it('calculates 100% for perfect habit', () => {
-      const habitCreatedAt = new Date(2024, 0, 25).getTime();
+      const habitCreatedAt = new Date('2024-01-25').getTime();
       const tracking = Array.from({ length: 8 }, (_, i) => ({
         date: new Date(2024, 0, 25 + i).toISOString().split('T')[0],
         completed: true,
@@ -155,7 +155,7 @@ describe('habitCalculations', () => {
     });
 
     it('rounds percentage to nearest integer', () => {
-      const habitCreatedAt = new Date(2024, 0, 1).getTime();
+      const habitCreatedAt = new Date('2024-01-01').getTime();
       const tracking = [
         { date: '2024-01-01', completed: true },
         { date: '2024-01-02', completed: true },
@@ -165,14 +165,14 @@ describe('habitCalculations', () => {
     });
 
     it('handles habit created today', () => {
-      const habitCreatedAt = new Date(2024, 1, 1).getTime();
+      const habitCreatedAt = new Date('2024-02-01').getTime();
       const tracking: { date: string; completed: boolean }[] = [];
       // 0 completed / 1 day = 0%
       expect(calculateCompletionPercentage(habitCreatedAt, tracking)).toBe(0);
     });
 
     it('ignores incomplete entries in count', () => {
-      const habitCreatedAt = new Date(2024, 0, 29).getTime();
+      const habitCreatedAt = new Date('2024-01-29').getTime();
       const tracking = [
         { date: '2024-01-29', completed: true },
         { date: '2024-01-30', completed: false },
@@ -190,7 +190,7 @@ describe('habitCalculations', () => {
     });
 
     it('handles very old habits', () => {
-      const habitCreatedAt = new Date(2020, 0, 1).getTime();
+      const habitCreatedAt = new Date('2020-01-01').getTime();
       const tracking = Array.from({ length: 100 }, (_, i) => ({
         date: new Date(2020, 0, i + 1).toISOString().split('T')[0],
         completed: true,

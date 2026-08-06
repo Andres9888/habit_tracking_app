@@ -115,26 +115,22 @@ describe('Offline Habit CRUD E2E', () => {
       expect(state.operations[0].payload).toMatchObject(payload);
     });
 
-    it('should preserve multiple updates to the same habit in FIFO order', () => {
+    it('should coalesce multiple updates to same habit', () => {
       // First update
       queueManager.enqueue('updateHabit', {
         habitId: mockHabitId,
         updates: { name: 'First Update' },
       });
 
-      // Second update remains a separate operation so both mutations sync.
+      // Second update (should replace first)
       queueManager.enqueue('updateHabit', {
         habitId: mockHabitId,
         updates: { name: 'Second Update', color: '#047857' },
       });
 
       const operations = queueManager.getState().operations;
-      expect(operations).toHaveLength(2);
+      expect(operations).toHaveLength(1);
       expect(operations[0].payload).toMatchObject({
-        habitId: mockHabitId,
-        updates: { name: 'First Update' },
-      });
-      expect(operations[1].payload).toMatchObject({
         habitId: mockHabitId,
         updates: { name: 'Second Update', color: '#047857' },
       });
@@ -186,7 +182,7 @@ describe('Offline Habit CRUD E2E', () => {
       expect(operations[0].type).toBe('removeHabit');
     });
 
-    it('should preserve an update before a later remove operation', () => {
+    it('should prioritize remove over other operations for same habit', () => {
       const habitId = 'habit_xyz' as Id<'habits'>;
 
       // Queue an update
@@ -195,15 +191,12 @@ describe('Offline Habit CRUD E2E', () => {
         updates: { name: 'Updated' },
       });
 
-      // Queue a removal after the update.
+      // Queue a removal (should replace update)
       queueManager.enqueue('removeHabit', { habitId });
 
       const operations = queueManager.getState().operations;
-      expect(operations).toHaveLength(2);
-      expect(operations.map((operation) => operation.type)).toEqual([
-        'updateHabit',
-        'removeHabit',
-      ]);
+      expect(operations).toHaveLength(1);
+      expect(operations[0].type).toBe('removeHabit');
     });
   });
 
@@ -296,7 +289,7 @@ describe('Offline Habit CRUD E2E', () => {
       });
 
       // Mark first operation as completed
-      queueManager.markCompleted(op1.operationId!);
+      queueManager.removeOperation(op1.operationId!);
 
       const stats = queueManager.getStats();
       expect(stats.pendingCount).toBe(1);

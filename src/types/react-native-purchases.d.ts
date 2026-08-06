@@ -1,4 +1,14 @@
 declare module 'react-native-purchases' {
+  /** Introductory offer attached to a product (free trial or discounted period). */
+  export interface PurchasesIntroPrice {
+    price: number;
+    priceString: string;
+    period: string;
+    cycles: number;
+    periodUnit: string;
+    periodNumberOfUnits: number;
+  }
+
   export interface PurchasesProduct {
     identifier: string;
     description: string;
@@ -6,6 +16,7 @@ declare module 'react-native-purchases' {
     price: number;
     priceString: string;
     currencyCode: string;
+    introPrice: PurchasesIntroPrice | null;
   }
 
   export interface PurchasesPackage {

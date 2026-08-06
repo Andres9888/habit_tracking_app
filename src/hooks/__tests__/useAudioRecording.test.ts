@@ -1,6 +1,6 @@
 /**
  * useAudioRecording Hook Tests
- * Story T10.2: Audio recording integration (expo-av)
+ * Story T10.2: Audio recording integration (expo-audio)
  *
  * Tests:
  * - Permission handling (including graceful denial handling)
@@ -14,52 +14,66 @@
 
 import { renderHook, act, waitFor } from '@testing-library/react-native';
 
-// Mock expo-av
+// Mock expo-audio
+const mockRequestPermissionsAsync = jest.fn();
+const mockSetAudioModeAsync = jest.fn();
 const mockStopAndUnloadAsync = jest.fn();
 const mockPauseAsync = jest.fn();
 const mockStartAsync = jest.fn();
-const mockGetURI = jest.fn();
-
-const mockRecording = {
-  stopAndUnloadAsync: mockStopAndUnloadAsync,
-  pauseAsync: mockPauseAsync,
-  startAsync: mockStartAsync,
-  getURI: mockGetURI,
+const mockPrepareToRecordAsync = jest.fn();
+const mockRecorderStateSetters = new Set<(state: unknown) => void>();
+const mockInitialRecorderState = {
+  canRecord: true,
+  durationMillis: 0,
+  isRecording: false,
+  mediaServicesDidReset: false,
+  metering: -160,
+  url: null,
 };
 
-jest.mock('expo-av', () => ({
-  Audio: {
-    requestPermissionsAsync: jest.fn(),
-    setAudioModeAsync: jest.fn(),
-    Recording: {
-      createAsync: jest.fn(),
-    },
-    AndroidOutputFormat: {
-      MPEG_4: 'MPEG_4',
-    },
-    AndroidAudioEncoder: {
-      AAC: 'AAC',
-    },
-    IOSOutputFormat: {
-      MPEG4AAC: 'MPEG4AAC',
-    },
-    IOSAudioQuality: {
-      HIGH: 'HIGH',
-    },
-  },
-  InterruptionModeAndroid: { DoNotMix: 1 },
-  InterruptionModeIOS: { DoNotMix: 1 },
+const mockRecording = {
+  isRecording: false,
+  pause: mockPauseAsync,
+  prepareToRecordAsync: mockPrepareToRecordAsync,
+  record: mockStartAsync,
+  stop: mockStopAndUnloadAsync,
+  uri: 'file:///recording.m4a',
+};
+
+const mockUseAudioRecorder = jest.fn(() => mockRecording);
+const mockUseAudioRecorderState = jest.fn(() => {
+  const React = jest.requireActual<typeof import('react')>('react');
+  const [state, setState] = React.useState(mockInitialRecorderState);
+  React.useEffect(() => {
+    mockRecorderStateSetters.add(setState);
+    return () => {
+      mockRecorderStateSetters.delete(setState);
+    };
+  }, []);
+  return state;
+});
+
+jest.mock('expo-audio', () => ({
+  AudioQuality: { HIGH: 96 },
+  IOSOutputFormat: { MPEG4AAC: 'aac ' },
+  requestRecordingPermissionsAsync: (...args: unknown[]) =>
+    mockRequestPermissionsAsync(...args),
+  setAudioModeAsync: (...args: unknown[]) => mockSetAudioModeAsync(...args),
+  useAudioRecorder: (...args: unknown[]) => mockUseAudioRecorder(...args),
+  useAudioRecorderState: (...args: unknown[]) =>
+    mockUseAudioRecorderState(...args),
 }));
+
+function emitRecorderState(state: Partial<typeof mockInitialRecorderState>) {
+  for (const setState of mockRecorderStateSetters) {
+    setState({ ...mockInitialRecorderState, ...state });
+  }
+}
 
 // Note: Linking, Alert, and Platform mocking is not possible with TurboModules in RN 0.76+
 // The Open Settings functionality tests are skipped but the core logic is tested elsewhere
 
-import { Audio } from 'expo-av';
 import { useAudioRecording } from '../useAudioRecording';
-
-const mockRequestPermissionsAsync = Audio.requestPermissionsAsync as jest.Mock;
-const mockSetAudioModeAsync = Audio.setAudioModeAsync as jest.Mock;
-const mockCreateAsync = Audio.Recording.createAsync as jest.Mock;
 
 describe('useAudioRecording', () => {
   beforeEach(() => {
@@ -68,11 +82,10 @@ describe('useAudioRecording', () => {
     // Default mock implementations
     mockRequestPermissionsAsync.mockResolvedValue({ granted: true });
     mockSetAudioModeAsync.mockResolvedValue(undefined);
-    mockCreateAsync.mockResolvedValue({ recording: mockRecording });
+    mockPrepareToRecordAsync.mockResolvedValue(undefined);
     mockStopAndUnloadAsync.mockResolvedValue(undefined);
-    mockPauseAsync.mockResolvedValue(undefined);
-    mockStartAsync.mockResolvedValue(undefined);
-    mockGetURI.mockReturnValue('file:///recording.m4a');
+    mockPauseAsync.mockReturnValue(undefined);
+    mockStartAsync.mockReturnValue(undefined);
   });
 
   describe('Initial state', () => {
@@ -273,10 +286,10 @@ describe('useAudioRecording', () => {
       expect(mockRequestPermissionsAsync).toHaveBeenCalled();
       expect(mockSetAudioModeAsync).toHaveBeenCalledWith(
         expect.objectContaining({
-          allowsRecordingIOS: true,
+          allowsRecording: true,
         })
       );
-      expect(mockCreateAsync).toHaveBeenCalled();
+      expect(mockPrepareToRecordAsync).toHaveBeenCalled();
       expect(result.current.status.state).toBe('recording');
       expect(result.current.isRecording).toBe(true);
     });
@@ -292,7 +305,7 @@ describe('useAudioRecording', () => {
 
       expect(result.current.status.state).toBe('permission-denied');
       expect(result.current.isRecording).toBe(false);
-      expect(mockCreateAsync).not.toHaveBeenCalled();
+      expect(mockPrepareToRecordAsync).not.toHaveBeenCalled();
     });
 
     it('stops recording and returns URI', async () => {
@@ -404,7 +417,7 @@ describe('useAudioRecording', () => {
       });
 
       // Simulate recording status update with max duration
-      const statusCallback = mockCreateAsync.mock.calls[0][1];
+      const statusCallback = emitRecorderState;
 
       await act(async () => {
         statusCallback({
@@ -444,7 +457,7 @@ describe('useAudioRecording', () => {
         await result.current.startRecording();
       });
 
-      const statusCallback = mockCreateAsync.mock.calls[0][1];
+      const statusCallback = emitRecorderState;
 
       // Before warning threshold (40 seconds into 60 second max)
       await act(async () => {
@@ -487,7 +500,7 @@ describe('useAudioRecording', () => {
         await result.current.startRecording();
       });
 
-      const statusCallback = mockCreateAsync.mock.calls[0][1];
+      const statusCallback = emitRecorderState;
 
       // First time crossing threshold
       await act(async () => {
@@ -533,7 +546,7 @@ describe('useAudioRecording', () => {
         await result.current.startRecording();
       });
 
-      const statusCallback = mockCreateAsync.mock.calls[0][1];
+      const statusCallback = emitRecorderState;
 
       // 10 seconds remaining
       await act(async () => {
@@ -581,7 +594,7 @@ describe('useAudioRecording', () => {
         await result.current.startRecording();
       });
 
-      let statusCallback = mockCreateAsync.mock.calls[0][1];
+      const statusCallback = emitRecorderState;
 
       // Trigger warning
       await act(async () => {
@@ -610,8 +623,6 @@ describe('useAudioRecording', () => {
         await result.current.startRecording();
       });
 
-      statusCallback = mockCreateAsync.mock.calls[1][1];
-
       // Trigger warning again - should fire callback again
       await act(async () => {
         statusCallback({
@@ -636,7 +647,7 @@ describe('useAudioRecording', () => {
         await result.current.startRecording();
       });
 
-      const statusCallback = mockCreateAsync.mock.calls[0][1];
+      const statusCallback = emitRecorderState;
 
       // Trigger warning
       await act(async () => {
@@ -672,7 +683,7 @@ describe('useAudioRecording', () => {
         await result.current.startRecording();
       });
 
-      const statusCallback = mockCreateAsync.mock.calls[0][1];
+      const statusCallback = emitRecorderState;
 
       // Just before warning (269 seconds = 4:29)
       await act(async () => {
@@ -701,7 +712,7 @@ describe('useAudioRecording', () => {
   describe('Error handling', () => {
     it('handles recording start error', async () => {
       const onError = jest.fn();
-      mockCreateAsync.mockRejectedValue(new Error('Recording failed'));
+      mockPrepareToRecordAsync.mockRejectedValue(new Error('Recording failed'));
 
       const { result } = renderHook(() => useAudioRecording({ onError }));
 
@@ -783,7 +794,7 @@ describe('useAudioRecording', () => {
         await result.current.startRecording();
       });
 
-      const statusCallback = mockCreateAsync.mock.calls[0][1];
+      const statusCallback = emitRecorderState;
 
       // Test various metering levels
       await act(async () => {
@@ -862,7 +873,7 @@ describe('useAudioRecording', () => {
 
       expect(result.current.status.state).toBe('recording');
 
-      const statusCallback = mockCreateAsync.mock.calls[0][1];
+      const statusCallback = emitRecorderState;
 
       // Simulate interruption - recording reports isRecording=false unexpectedly
       await act(async () => {
@@ -887,7 +898,7 @@ describe('useAudioRecording', () => {
         await result.current.startRecording();
       });
 
-      const statusCallback = mockCreateAsync.mock.calls[0][1];
+      const statusCallback = emitRecorderState;
 
       // Record for 30 seconds
       await act(async () => {
@@ -924,7 +935,7 @@ describe('useAudioRecording', () => {
         await result.current.startRecording();
       });
 
-      const statusCallback = mockCreateAsync.mock.calls[0][1];
+      const statusCallback = emitRecorderState;
 
       // Simulate interruption
       await act(async () => {
@@ -971,7 +982,7 @@ describe('useAudioRecording', () => {
         await result.current.startRecording();
       });
 
-      const statusCallback = mockCreateAsync.mock.calls[0][1];
+      const statusCallback = emitRecorderState;
 
       // Simulate interruption
       await act(async () => {
@@ -1001,7 +1012,7 @@ describe('useAudioRecording', () => {
         await result.current.startRecording();
       });
 
-      const statusCallback = mockCreateAsync.mock.calls[0][1];
+      const statusCallback = emitRecorderState;
 
       // Simulate interruption
       await act(async () => {

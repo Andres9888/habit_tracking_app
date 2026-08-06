@@ -40,6 +40,10 @@ export function sanitizeSettingsPayload(payload: unknown): UnknownRecord {
     output.appIcon = source.appIcon;
   }
 
+  if (isValidBoolean(source.appLock)) {
+    output.appLock = source.appLock;
+  }
+
   if (isValidBoolean(source.catTheme)) {
     output.catTheme = source.catTheme;
   }

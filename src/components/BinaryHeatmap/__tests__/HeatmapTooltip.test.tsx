@@ -89,7 +89,7 @@ describe('HeatmapTooltip', () => {
     it('should render when visible is true', () => {
       const { getByRole } = render(<HeatmapTooltip {...defaultProps} />);
 
-      expect(getByRole('alert')).toBeTruthy();
+      expect(getByRole('tooltip')).toBeTruthy();
     });
 
     it('should not render when visible is false', () => {
@@ -97,7 +97,7 @@ describe('HeatmapTooltip', () => {
         <HeatmapTooltip {...defaultProps} visible={false} />
       );
 
-      expect(queryByRole('alert')).toBeNull();
+      expect(queryByRole('tooltip')).toBeNull();
     });
 
     it('should render tooltip text correctly', () => {
@@ -110,7 +110,7 @@ describe('HeatmapTooltip', () => {
       const { getByRole } = render(<HeatmapTooltip {...defaultProps} />);
 
       // Arrow is a child of the tooltip
-      const tooltip = getByRole('alert');
+      const tooltip = getByRole('tooltip');
       expect(tooltip).toBeTruthy();
     });
   });
@@ -163,7 +163,7 @@ describe('HeatmapTooltip', () => {
         <HeatmapTooltip {...defaultProps} position={{ x: 150, y: 75 }} />
       );
 
-      const tooltip = getByRole('alert');
+      const tooltip = getByRole('tooltip');
       expect(tooltip).toBeTruthy();
     });
 
@@ -172,7 +172,7 @@ describe('HeatmapTooltip', () => {
         <HeatmapTooltip {...defaultProps} position={{ x: 10, y: 10 }} />
       );
 
-      const tooltip = getByRole('alert');
+      const tooltip = getByRole('tooltip');
       expect(tooltip).toBeTruthy();
     });
 
@@ -181,7 +181,7 @@ describe('HeatmapTooltip', () => {
         <HeatmapTooltip {...defaultProps} position={{ x: 500, y: 200 }} />
       );
 
-      const tooltip = getByRole('alert');
+      const tooltip = getByRole('tooltip');
       expect(tooltip).toBeTruthy();
     });
   });
@@ -215,7 +215,7 @@ describe('HeatmapTooltip', () => {
     it('should have tooltip role', () => {
       const { getByRole } = render(<HeatmapTooltip {...defaultProps} />);
 
-      expect(getByRole('alert')).toBeTruthy();
+      expect(getByRole('tooltip')).toBeTruthy();
     });
 
     it('should have accessible label with tooltip content', () => {
@@ -229,7 +229,7 @@ describe('HeatmapTooltip', () => {
     it('should have accessibilityLiveRegion for screen readers', () => {
       const { getByRole } = render(<HeatmapTooltip {...defaultProps} />);
 
-      const tooltip = getByRole('alert');
+      const tooltip = getByRole('tooltip');
       expect(tooltip.props.accessibilityLiveRegion).toBe('polite');
     });
 
@@ -298,13 +298,13 @@ describe('HeatmapTooltip', () => {
         <HeatmapTooltip {...defaultProps} position={{ x: 100, y: 50 }} />
       );
 
-      expect(getByRole('alert')).toBeTruthy();
+      expect(getByRole('tooltip')).toBeTruthy();
 
       rerender(
         <HeatmapTooltip {...defaultProps} position={{ x: 200, y: 100 }} />
       );
 
-      expect(getByRole('alert')).toBeTruthy();
+      expect(getByRole('tooltip')).toBeTruthy();
     });
 
     it('should handle visibility toggle', () => {
@@ -312,11 +312,11 @@ describe('HeatmapTooltip', () => {
         <HeatmapTooltip {...defaultProps} visible={true} />
       );
 
-      expect(queryByRole('alert')).toBeTruthy();
+      expect(queryByRole('tooltip')).toBeTruthy();
 
       rerender(<HeatmapTooltip {...defaultProps} visible={false} />);
 
-      expect(queryByRole('alert')).toBeNull();
+      expect(queryByRole('tooltip')).toBeNull();
     });
   });
 
@@ -343,7 +343,7 @@ describe('HeatmapTooltip', () => {
         <HeatmapTooltip {...defaultProps} position={{ x: 0, y: 0 }} />
       );
 
-      expect(getByRole('alert')).toBeTruthy();
+      expect(getByRole('tooltip')).toBeTruthy();
     });
 
     it('should handle negative positions', () => {
@@ -351,7 +351,7 @@ describe('HeatmapTooltip', () => {
         <HeatmapTooltip {...defaultProps} position={{ x: -10, y: -10 }} />
       );
 
-      expect(getByRole('alert')).toBeTruthy();
+      expect(getByRole('tooltip')).toBeTruthy();
     });
 
     it('should handle rapid visibility toggles', () => {
@@ -359,13 +359,13 @@ describe('HeatmapTooltip', () => {
         <HeatmapTooltip {...defaultProps} visible={true} />
       );
 
-      expect(queryByRole('alert')).toBeTruthy();
+      expect(queryByRole('tooltip')).toBeTruthy();
 
       rerender(<HeatmapTooltip {...defaultProps} visible={false} />);
       rerender(<HeatmapTooltip {...defaultProps} visible={true} />);
       rerender(<HeatmapTooltip {...defaultProps} visible={false} />);
 
-      expect(queryByRole('alert')).toBeNull();
+      expect(queryByRole('tooltip')).toBeNull();
     });
   });
 
@@ -428,7 +428,7 @@ describe('HeatmapTooltip', () => {
       // Rerender with same props
       rerender(<HeatmapTooltip {...defaultProps} />);
 
-      expect(getByRole('alert')).toBeTruthy();
+      expect(getByRole('tooltip')).toBeTruthy();
     });
   });
 
@@ -446,7 +446,7 @@ describe('HeatmapTooltip', () => {
       );
 
       // Should still render the tooltip with correct content
-      expect(getByRole('alert')).toBeTruthy();
+      expect(getByRole('tooltip')).toBeTruthy();
       expect(getByText('Dec 15: Done ✓')).toBeTruthy();
     });
 
@@ -457,10 +457,10 @@ describe('HeatmapTooltip', () => {
         <HeatmapTooltip {...defaultProps} visible={true} />
       );
 
-      expect(queryByRole('alert')).toBeTruthy();
+      expect(queryByRole('tooltip')).toBeTruthy();
 
       rerender(<HeatmapTooltip {...defaultProps} visible={false} />);
-      expect(queryByRole('alert')).toBeNull();
+      expect(queryByRole('tooltip')).toBeNull();
     });
 
     it('should handle onClose callback with reduced motion enabled', () => {

@@ -13,7 +13,6 @@ import { AccessibilityInfo } from 'react-native';
 
 import { ProgressSectionConsolidated } from '../ProgressSectionConsolidated';
 import type { HabitTrackingEntry } from '../../../features/habits/types';
-import { formatDateString } from '../../../utils/dateUtils';
 
 /**
  * Mock tracking entry type for tests.
@@ -64,13 +63,16 @@ jest.mock('react-native-reanimated', () => {
     interpolate: () => 0,
     runOnJS: (fn: (...args: unknown[]) => unknown) => fn,
     Easing: {
-      ...jest.requireActual('react-native-reanimated/mock').Easing,
       out: () => () => 0,
       cubic: () => 0,
       inOut: () => () => 0,
       ease: () => 0,
     },
-    FadeInDown: jest.requireActual('react-native-reanimated/mock').FadeInDown,
+    FadeInDown: {
+      delay: () => ({
+        springify: () => ({}),
+      }),
+    },
   };
 });
 
@@ -112,13 +114,9 @@ jest.mock('lucide-react-native', () => {
     Minus: createIconComponent('minus'),
     BarChart3: createIconComponent('bar-chart-3'),
     CheckCircle2: createIconComponent('check-circle-2'),
-    ChevronDown: createIconComponent('chevron-down'),
-    CircleArrowRight: createIconComponent('circle-arrow-right'),
-    Flame: createIconComponent('flame'),
-    Share2: createIconComponent('share-2'),
-    X: createIconComponent('x'),
   };
 });
+
 
 // Mock hooks
 jest.mock('../../../hooks/useHapticFeedback', () => ({
@@ -153,7 +151,7 @@ function generateTrackingEntries(
     const date = new Date(today);
     date.setDate(today.getDate() - i);
     entries.push({
-      date: formatDateString(date),
+      date: date.toISOString().split('T')[0],
       completed: Math.random() < completedRatio,
     });
   }
@@ -173,7 +171,7 @@ function generateEntriesWithPattern(
     const date = new Date(today);
     date.setDate(today.getDate() - i);
     entries.push({
-      date: formatDateString(date),
+      date: date.toISOString().split('T')[0],
       completed: pattern[i % pattern.length],
     });
   }
@@ -539,7 +537,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: true, // All days completed = 100% for each day of week
         });
       }
@@ -569,7 +567,7 @@ describe('ProgressSectionConsolidated', () => {
         date.setDate(today.getDate() - i);
         const dayOfWeek = date.getDay();
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: dayOfWeek !== 0, // Sunday (0) is not completed
         });
       }
@@ -628,7 +626,7 @@ describe('ProgressSectionConsolidated', () => {
         const completed = isWeekday ? Math.random() < 0.9 : Math.random() < 0.4;
 
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed,
         });
       }
@@ -651,7 +649,7 @@ describe('ProgressSectionConsolidated', () => {
       // All major sections should be visible
       expect(screen.getByLabelText('Progress section')).toBeTruthy();
       expect(screen.getByLabelText('Progress section')).toBeTruthy(); // Level for 72%
-      // Weekly change
+       // Weekly change
       expect(screen.getByText('Weekly Pattern')).toBeTruthy();
       expect(screen.getByText('Streak Records')).toBeTruthy();
       expect(screen.getByLabelText('Progress section')).toBeTruthy();
@@ -667,7 +665,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: true,
         });
       }
@@ -707,7 +705,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: i < 3, // Completed 3 of 5 days
         });
       }
@@ -745,7 +743,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: true,
         });
       }
@@ -754,7 +752,7 @@ describe('ProgressSectionConsolidated', () => {
       const gapDate = new Date(today);
       gapDate.setDate(today.getDate() - 7);
       entries.push({
-        date: formatDateString(gapDate),
+        date: gapDate.toISOString().split('T')[0],
         completed: false,
       });
 
@@ -763,7 +761,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: true,
         });
       }
@@ -804,7 +802,7 @@ describe('ProgressSectionConsolidated', () => {
             dayOfWeek >= 1 && dayOfWeek <= 5 ? true : week % 4 === 0; // Only every 4th weekend
 
           entries.push({
-            date: formatDateString(date),
+            date: date.toISOString().split('T')[0],
             completed,
           });
         }
@@ -839,7 +837,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: true,
         });
       }
@@ -871,7 +869,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: true, // All completed
         });
       }
@@ -917,7 +915,7 @@ describe('ProgressSectionConsolidated', () => {
       const today = new Date();
       const entries: MockTrackingEntry[] = [
         {
-          date: formatDateString(today),
+          date: today.toISOString().split('T')[0],
           completed: true,
         },
       ];
@@ -943,7 +941,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: true,
         });
       }
@@ -954,7 +952,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: true,
         });
       }
@@ -981,7 +979,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: false,
         });
       }
@@ -1011,7 +1009,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: true,
         });
       }
@@ -1021,7 +1019,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() + i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: true,
         });
       }
@@ -1049,7 +1047,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: true,
         });
       }
@@ -1079,7 +1077,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: i % 2 === 0, // Every other day
         });
       }
@@ -1107,7 +1105,7 @@ describe('ProgressSectionConsolidated', () => {
     it('handles duplicate date entries', () => {
       const entries: MockTrackingEntry[] = [];
       const today = new Date();
-      const todayStr = formatDateString(today);
+      const todayStr = today.toISOString().split('T')[0];
 
       // Duplicate entries for today
       entries.push({ date: todayStr, completed: true });
@@ -1244,7 +1242,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: i === 0 || i === 3, // Only today and 3 days ago
         });
       }
@@ -1254,7 +1252,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: i % 2 === 0,
         });
       }
@@ -1271,7 +1269,7 @@ describe('ProgressSectionConsolidated', () => {
       );
 
       expect(screen.getByLabelText('Progress section')).toBeTruthy();
-      // Negative trend
+       // Negative trend
       expect(screen.getByText('1')).toBeTruthy(); // Current streak is 1
     });
 
@@ -1285,7 +1283,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: true,
         });
       }
@@ -1297,7 +1295,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: i % 2 === 0,
         });
       }
@@ -1328,7 +1326,7 @@ describe('ProgressSectionConsolidated', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         entries.push({
-          date: formatDateString(date),
+          date: date.toISOString().split('T')[0],
           completed: Math.random() < 0.95,
         });
       }
@@ -1337,7 +1335,9 @@ describe('ProgressSectionConsolidated', () => {
       for (let i = 0; i < 7; i++) {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
-        const existing = entries.find((e) => e.date === formatDateString(date));
+        const existing = entries.find(
+          (e) => e.date === date.toISOString().split('T')[0]
+        );
         if (existing) existing.completed = true;
       }
 
@@ -1353,7 +1353,7 @@ describe('ProgressSectionConsolidated', () => {
       );
 
       expect(screen.getByLabelText('Progress section')).toBeTruthy();
-
+      
       expect(screen.getByText('Weekly Pattern')).toBeTruthy();
       expect(screen.getByText('Streak Records')).toBeTruthy();
     });

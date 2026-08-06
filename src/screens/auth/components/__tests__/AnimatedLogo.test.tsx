@@ -10,7 +10,7 @@ jest.mock('expo-linear-gradient', () => ({
 
 // Mock lucide-react-native
 jest.mock('lucide-react-native', () => ({
-  Link: () => null,
+  Check: () => null,
 }));
 
 describe('AnimatedLogo', () => {

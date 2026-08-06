@@ -8,6 +8,7 @@ import { StyleSheet, View } from 'react-native';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { spacing } from '../../../theme/spacing';
 import { useBrowserPalette } from '../browserPalette';
+import { CatalogEmptyState } from '../components/CatalogEmptyState';
 import { SearchBar } from '../components/SearchBar';
 import { useCatalogViewData } from '../hooks/useCatalogViewData';
 import { CatalogHeader } from './CatalogHeader';
@@ -17,6 +18,7 @@ import { CatalogSectionList } from './CatalogSectionList';
 
 interface CatalogViewProps {
   allTemplates: Doc<'templates'>[];
+  frozenImportedIds: Set<string>;
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
   initialCategoryId?: string;
@@ -31,13 +33,31 @@ export function CatalogView(p: CatalogViewProps) {
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     p.initialCategoryId ?? CATALOG_ALL_ID
   );
-  const { chipCategories, filteredTemplates, groups } = useCatalogViewData({
+  const {
+    chipCategories,
+    filteredTemplates,
+    groups,
+    isSearching,
+    query,
+    selectedCategoryLabel,
+    totalMatches,
+  } = useCatalogViewData({
     allTemplates: p.allTemplates,
-    importedTemplateIds: p.importedTemplateIds,
+    frozenImportedIds: p.frozenImportedIds,
     searchQuery,
     selectedCategoryId,
   });
   const showShelves = selectedCategoryId === CATALOG_ALL_ID;
+
+  const emptyState = (
+    <CatalogEmptyState
+      categoryLabel={showShelves ? undefined : selectedCategoryLabel}
+      query={query}
+      totalMatches={totalMatches}
+      onClearSearch={() => setSearchQuery('')}
+      onShowAll={() => setSelectedCategoryId(CATALOG_ALL_ID)}
+    />
+  );
 
   return (
     <View
@@ -56,6 +76,7 @@ export function CatalogView(p: CatalogViewProps) {
       <CatalogChipRail
         categories={chipCategories}
         selectedCategoryId={selectedCategoryId}
+        totalCount={isSearching ? totalMatches : undefined}
         onSelectCategory={setSelectedCategoryId}
       />
       {showShelves ? (
@@ -63,6 +84,7 @@ export function CatalogView(p: CatalogViewProps) {
           groups={groups}
           importedTemplateIds={p.importedTemplateIds}
           importingTemplateId={p.importingTemplateId}
+          listEmptyComponent={emptyState}
           onImport={p.onImport}
           onPreview={p.onPreview}
         />
@@ -70,6 +92,7 @@ export function CatalogView(p: CatalogViewProps) {
         <CatalogFilteredBranch
           importedTemplateIds={p.importedTemplateIds}
           importingTemplateId={p.importingTemplateId}
+          listEmptyComponent={emptyState}
           selectedCategoryId={selectedCategoryId}
           templates={filteredTemplates}
           onImport={p.onImport}

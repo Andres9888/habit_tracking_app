@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import type { PressableStateCallbackType } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Share2 } from 'lucide-react-native';
 
@@ -39,7 +40,10 @@ export function ShareButton({
         accessibilityLabel='Share'
         accessibilityRole='button'
         hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
-        style={({ pressed }) => [styles.shareButton, { opacity: pressed ? 0.7 : 1 }]}
+        style={({ pressed }: PressableStateCallbackType) => [
+          styles.shareButton,
+          { opacity: pressed ? 0.7 : 1 },
+        ]}
         onPress={onPress}
       >
         <Share2 color={iconColor} size={iconSizes.medium} />

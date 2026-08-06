@@ -1,11 +1,12 @@
 /**
  * Science drill-down — block styles: "What you'll feel" benefits,
  * "What to expect" timeline, and "How to start" steps.
+ *
+ * Layout only — colors come from `useScienceCard()` at the call site.
  */
 
 import { StyleSheet } from 'react-native';
 
-import { colors } from '@/theme';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 
@@ -20,23 +21,20 @@ export const scienceBlockStyles = StyleSheet.create({
   },
   benefitIcon: {
     alignItems: 'center',
-    backgroundColor: colors.primary[100],
     borderRadius: borderRadius.medium,
     height: 38,
     justifyContent: 'center',
     width: 38,
   },
   benefitTitle: {
-    color: colors.gray[800],
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15.5,
+    fontSize: 15,
     fontWeight: fontWeights.semibold,
     lineHeight: 20,
   },
-  benefitDesc: { color: colors.gray[600], ...typography.caption, marginTop: 1 },
+  benefitDesc: { ...typography.caption, marginTop: 1 },
   // Timeline
   spine: {
-    backgroundColor: colors.border,
     borderRadius: 1,
     bottom: 14,
     left: 7,
@@ -63,45 +61,35 @@ export const scienceBlockStyles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   tlTitle: {
-    color: colors.gray[800],
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15.5,
+    fontSize: 15,
     fontWeight: fontWeights.semibold,
     lineHeight: 20,
     marginTop: 2,
   },
-  tlDesc: { color: colors.gray[600], ...typography.caption, lineHeight: 18, marginTop: 2 },
+  tlDesc: { ...typography.caption, lineHeight: 18, marginTop: 2 },
   // How to start
   stepRow: { alignItems: 'flex-start', flexDirection: 'row', gap: spacing.md },
   stepNum: {
     alignItems: 'center',
-    backgroundColor: colors.primary[600],
-    borderRadius: 11,
-    height: 22,
+    borderRadius: 13,
+    height: 26,
     justifyContent: 'center',
     marginTop: 1,
-    width: 22,
+    width: 26,
   },
-  stepNumText: { color: '#FFFFFF', ...typography.caption, fontWeight: fontWeights.bold },
+  stepNumText: { ...typography.caption, fontWeight: fontWeights.bold },
   stepText: {
-    color: colors.gray[700],
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15.5,
+    fontSize: 15,
     lineHeight: 22,
   },
-  cadenceRow: {
-    alignItems: 'center',
-    borderTopColor: colors.border,
-    borderTopWidth: 1,
-    flexDirection: 'row',
-    gap: 8,
-    marginTop: spacing.base,
-    paddingTop: spacing.base,
-  },
-  cadenceLabel: {
-    color: colors.streak[700],
+  // Reassurance line under the timeline. Quiet by design: it should read as a
+  // footnote the reader finds, not a warning the page leads with.
+  timelineNote: {
     ...typography.bodySmall,
-    fontWeight: fontWeights.bold,
+    lineHeight: 20,
+    marginTop: spacing.sm,
+    paddingHorizontal: 4,
   },
-  cadenceValue: { color: colors.gray[600], ...typography.bodySmall, marginLeft: 'auto' },
 });

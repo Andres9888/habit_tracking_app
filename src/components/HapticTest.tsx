@@ -73,7 +73,11 @@ export function HapticTest() {
         <Button
           mode='contained'
           style={styles.button}
-          onPress={() => testHaptic('Light Impact', () => triggerHaptic('tap'))}
+          onPress={() =>
+            testHaptic('Light Impact', () =>
+              triggerHaptic('tap')
+            )
+          }
         >
           Test Light Impact
         </Button>
@@ -82,7 +86,9 @@ export function HapticTest() {
           mode='contained'
           style={styles.button}
           onPress={() =>
-            testHaptic('Medium Impact', () => triggerHaptic('toggle'))
+            testHaptic('Medium Impact', () =>
+              triggerHaptic('toggle')
+            )
           }
         >
           Test Medium Impact
@@ -92,7 +98,9 @@ export function HapticTest() {
           mode='contained'
           style={styles.button}
           onPress={() =>
-            testHaptic('Heavy Impact', () => triggerHaptic('heavy'))
+            testHaptic('Heavy Impact', () =>
+              triggerHaptic('heavy')
+            )
           }
         >
           Test Heavy Impact
@@ -148,7 +156,9 @@ export function HapticTest() {
           mode='contained'
           style={styles.button}
           onPress={() =>
-            testHaptic('Error Notification', () => triggerHaptic('error'))
+            testHaptic('Error Notification', () =>
+              triggerHaptic('error')
+            )
           }
         >
           Test Error Notification
@@ -163,10 +173,10 @@ export function HapticTest() {
           style={styles.button}
           onPress={async () => {
             for (let i = 0; i < 5; i++) {
-              await testHaptic(`Rapid ${i + 1}`, () => triggerHaptic('tap'));
-              await new Promise((resolve) => {
-                setTimeout(resolve, 200);
-              });
+              await testHaptic(`Rapid ${i + 1}`, () =>
+                triggerHaptic('tap')
+              );
+              await new Promise((resolve) => setTimeout(resolve, 200));
             }
           }}
         >

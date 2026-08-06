@@ -1,11 +1,11 @@
 /**
  * Hook for pause/resume control during recording
  *
- * Story T10.2: Audio recording integration (expo-av)
+ * Story T10.2: Audio recording integration (expo-audio)
  */
 
 import { useCallback, RefObject } from 'react';
-import { Audio } from 'expo-av';
+import type { AudioRecorder } from 'expo-audio';
 import type { RecordingStatus, RecordingState } from './types';
 
 type SetStatus = React.Dispatch<React.SetStateAction<RecordingStatus>>;
@@ -14,7 +14,7 @@ interface UseRecordingControlDeps {
   setStatus: SetStatus;
   currentState: RecordingState;
   configureAudioMode: () => Promise<void>;
-  recordingRef: RefObject<Audio.Recording | null>;
+  recordingRef: RefObject<AudioRecorder | null>;
   wasRecordingBeforeInterruptionRef: RefObject<boolean>;
   onInterruptionEnded?: () => void;
   onError?: (error: Error) => void;
@@ -35,7 +35,7 @@ export function useRecordingControl(deps: UseRecordingControlDeps) {
     if (!recordingRef.current || currentState !== 'recording') return;
 
     try {
-      await recordingRef.current.pauseAsync();
+      recordingRef.current.pause();
       setStatus((prev) => ({ ...prev, state: 'paused' }));
     } catch (error) {
       const errorMessage =
@@ -49,7 +49,7 @@ export function useRecordingControl(deps: UseRecordingControlDeps) {
     if (!recordingRef.current || currentState !== 'paused') return;
 
     try {
-      await recordingRef.current.startAsync();
+      recordingRef.current.record();
       setStatus((prev) => ({ ...prev, state: 'recording' }));
     } catch (error) {
       const errorMessage =
@@ -64,7 +64,7 @@ export function useRecordingControl(deps: UseRecordingControlDeps) {
 
     try {
       await configureAudioMode();
-      await recordingRef.current.startAsync();
+      recordingRef.current.record();
 
       (wasRecordingBeforeInterruptionRef as { current: boolean }).current =
         false;

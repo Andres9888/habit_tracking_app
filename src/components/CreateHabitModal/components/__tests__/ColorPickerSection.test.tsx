@@ -1,16 +1,17 @@
 /**
- * ColorPickerSection Component Tests
+ * ColorPickerSection Component Tests - V9 Redesign
+ * Task 5: ColorPicker with 36px swatches and box-shadow selection
  *
  * Tests:
- * - Predefined palette swatches render in centered rows
- * - Selection state uses the current enlarged, padded ring
+ * - predefined palette swatches render in rows
+ * - Selection state with enlarged ring padding and white border ring
  * - Haptic feedback on color selection
  * - Accessible color name labels for VoiceOver
  */
 
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import { AccessibilityInfo, StyleSheet } from 'react-native';
+import { AccessibilityInfo } from 'react-native';
 import { ColorPickerSection } from '../ColorPickerSection';
 import { HABIT_COLORS, COLOR_NAMES, getColorName } from '../../constants';
 
@@ -30,7 +31,7 @@ jest
   .spyOn(AccessibilityInfo, 'announceForAccessibility')
   .mockImplementation(jest.fn());
 
-describe('ColorPickerSection', () => {
+describe('ColorPickerSection - V9 Redesign', () => {
   const mockOnSelectColor = jest.fn();
   const mockOnCustomPress = jest.fn();
 
@@ -75,22 +76,17 @@ describe('ColorPickerSection', () => {
       expect(getByLabelText('Choose custom color')).toBeDefined();
     });
 
-    it('should render color swatches in two centered row containers', () => {
+    it('should render color swatches in a single row container', () => {
       const { getByTestId } = render(<ColorPickerSection {...defaultProps} />);
-      const firstRow = getByTestId('color-picker-row-1');
-      const secondRow = getByTestId('color-picker-row-2');
-      expect(firstRow.props.style.flexDirection).toBe('row');
-      expect(firstRow.props.style.justifyContent).toBe('center');
-      expect(secondRow.props.style.flexDirection).toBe('row');
-      expect(secondRow.props.style.justifyContent).toBe('center');
+      const row = getByTestId('color-picker-row');
+      expect(row.props.style.flexDirection).toBe('row');
+      expect(row.props.style.justifyContent).toBe('space-between');
     });
   });
 
   describe('Selection State', () => {
     it('should show selected state on the default Emerald color', () => {
-      const { getByLabelText } = render(
-        <ColorPickerSection {...defaultProps} />
-      );
+      const { getByLabelText } = render(<ColorPickerSection {...defaultProps} />);
 
       const emeraldButton = getByLabelText('Emerald color, selected');
       expect(emeraldButton.props.accessibilityState?.selected).toBe(true);
@@ -109,28 +105,20 @@ describe('ColorPickerSection', () => {
       expect(emeraldButton.props.accessibilityState?.selected).toBe(false);
     });
 
-    it('should have a white padded ring around the selected color', () => {
+    it('should have white border ring on selected color (V9 box-shadow style)', () => {
       const { getByTestId } = render(<ColorPickerSection {...defaultProps} />);
 
       const emeraldSwatch = getByTestId('color-swatch-10B981');
-      let ancestor = emeraldSwatch.parent;
-      while (
-        ancestor &&
-        StyleSheet.flatten(ancestor.props.style)?.backgroundColor !== '#fff'
-      ) {
-        ancestor = ancestor.parent;
-      }
-      expect(StyleSheet.flatten(ancestor?.props.style)).toMatchObject({
-        backgroundColor: '#fff',
-        padding: 5,
-      });
+      // V9: Uses 3px white border for box-shadow ring effect
+      expect(emeraldSwatch.props.style.borderWidth).toBe(3);
+      expect(emeraldSwatch.props.style.borderColor).toBe('#ffffff');
     });
 
     it('should NOT have border on unselected colors', () => {
       const { getByTestId } = render(<ColorPickerSection {...defaultProps} />);
 
       const redSwatch = getByTestId('color-swatch-EF4444');
-      // Unselected colors have no border.
+      // V9: Unselected colors have no border (undefined)
       expect(redSwatch.props.style.borderWidth).toBeUndefined();
     });
   });
@@ -196,9 +184,7 @@ describe('ColorPickerSection', () => {
     });
 
     it('should have accessibility labels with color names', () => {
-      const { getByLabelText } = render(
-        <ColorPickerSection {...defaultProps} />
-      );
+      const { getByLabelText } = render(<ColorPickerSection {...defaultProps} />);
 
       // Check a few color labels
       expect(getByLabelText('Red color')).toBeDefined();

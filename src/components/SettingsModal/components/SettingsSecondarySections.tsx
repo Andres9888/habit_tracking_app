@@ -1,18 +1,20 @@
-/** Lower settings: Support card + quiet About footer (Privacy/Terms/Version) */
+/** Lower settings, spec 4a: premium banner → Support card → one-line footer */
 import Constants from 'expo-constants';
 import Animated from 'react-native-reanimated';
-import { AboutFooter, AboutSupportSection } from '../sections';
+import { AboutFooter, AboutSupportSection, ProSettingsCard } from '../sections';
 import { sectionEnterAnim } from '../SettingsContent.constants';
 import { sectionHasMatch, useSettingsSearch } from '../search';
 
 interface SecondarySectionsProps {
   sectionIconColor: string;
+  isPremium: boolean;
   onFeedback: () => void;
   onRate: () => void;
   onShare: () => void;
   onWhatsNew: () => void;
   onPrivacy: () => void;
   onTerms: () => void;
+  onPremiumUpsell?: () => void;
 }
 
 export function SettingsSecondarySections(p: SecondarySectionsProps) {
@@ -20,6 +22,15 @@ export function SettingsSecondarySections(p: SecondarySectionsProps) {
 
   return (
     <>
+      {/* Spec 4a puts the one dark card near the bottom, above the footer. */}
+      {isSearching ? null : (
+        <Animated.View entering={sectionEnterAnim(5)}>
+          <ProSettingsCard
+            isPremium={p.isPremium}
+            onUpgrade={p.onPremiumUpsell}
+          />
+        </Animated.View>
+      )}
       {sectionHasMatch(query, 'support') ? (
         <Animated.View entering={isSearching ? undefined : sectionEnterAnim(6)}>
           <AboutSupportSection

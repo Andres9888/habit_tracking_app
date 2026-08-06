@@ -41,7 +41,12 @@ export function useChangeProfileImage() {
           throw new Error('Failed to upload image');
         }
 
-        await updateProfileImage({ storageId: uploaded.storageId });
+        const update = await updateProfileImage({
+          storageId: uploaded.storageId,
+        });
+        if (!update.ok) {
+          throw new Error(update.error);
+        }
         triggerHaptic('success');
       } catch (error) {
         if (__DEV__)

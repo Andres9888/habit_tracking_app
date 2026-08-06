@@ -3,7 +3,7 @@
  * Sits below the month grid inside the unified Calendar card; unlike
  * BinaryHeatmap it has no title/legend/tooltip, just the grid + a rate caption.
  */
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Text, View } from 'react-native';
 import {
   generateBinaryGrid,
@@ -43,7 +43,15 @@ export function YearStrip({
   // Year cells INSPECT + navigate only — never toggle. A ~6px cell is too
   // small to safely write a completion; all toggling happens on the month
   // grid above.
-  const handleCellPress = (date: string) => onNavigateToMonth(date);
+  //
+  // useCallback matters here: InlineHeatmapGrid and HeatmapCell are both
+  // memo()'d, and a year strip is ~371 cells in a plain (non-virtualized)
+  // ScrollView. A fresh arrow re-rendered every one of them on each parent
+  // render. `onNavigateToMonth` is already stable at the call site.
+  const handleCellPress = useCallback(
+    (date: string) => onNavigateToMonth(date),
+    [onNavigateToMonth]
+  );
 
   return (
     <View>

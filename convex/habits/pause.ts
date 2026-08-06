@@ -5,7 +5,7 @@
 import { v } from 'convex/values';
 import { mutation, query } from '../_generated/server';
 import { fullHabitValidator } from './types';
-import { recalculateOnPauseChange } from './pauseRecalculation';
+import { recalculateOnPauseChange } from './pauseHelpers';
 
 export const pause = mutation({
   args: {
@@ -97,10 +97,14 @@ export const listPaused = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return [];
+    // Indexed, not filtered: Convex's `.filter` scans every row the index
+    // returned, so this previously read all of the user's habits to return the
+    // paused subset.
     return await ctx.db
       .query('habits')
-      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
-      .filter((q) => q.eq(q.field('paused'), true))
+      .withIndex('by_userId_and_paused', (q) =>
+        q.eq('userId', identity.subject).eq('paused', true)
+      )
       .order('desc')
       .collect();
   },

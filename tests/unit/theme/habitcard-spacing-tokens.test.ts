@@ -11,14 +11,14 @@ import { styles } from '@/components/HabitCard/HabitCard.styles';
 
 describe('HabitCard Spacing Token Migration - Phase 3', () => {
   describe('core styles use spacing tokens', () => {
-    it('card borderRadius should use borderRadius.large', () => {
-      expect(styles.card.borderRadius).toBe(borderRadius.large);
-      expect(styles.card.borderRadius).toBe(24);
+    it('card borderRadius should use borderRadius.medium (12)', () => {
+      expect(styles.card.borderRadius).toBe(borderRadius.medium);
+      expect(styles.card.borderRadius).toBe(12);
     });
 
-    it('cardsContainer borderRadius should use borderRadius.xl', () => {
+    it('cardsContainer borderRadius should use borderRadius.xl (20)', () => {
       expect(styles.cardsContainer.borderRadius).toBe(borderRadius.xl);
-      expect(styles.cardsContainer.borderRadius).toBe(28);
+      expect(styles.cardsContainer.borderRadius).toBe(20);
     });
 
     it('cardsContainer marginHorizontal should use spacing.md (12)', () => {
@@ -31,9 +31,9 @@ describe('HabitCard Spacing Token Migration - Phase 3', () => {
       expect(styles.cardsContainer.padding).toBe(12);
     });
 
-    it('container marginVertical should use spacing.sm (8)', () => {
-      expect(styles.container.marginVertical).toBe(spacing.sm);
-      expect(styles.container.marginVertical).toBe(8);
+    it('container marginVertical should use spacing.xs (4)', () => {
+      expect(styles.container.marginVertical).toBe(spacing.xs);
+      expect(styles.container.marginVertical).toBe(4);
     });
 
     it('content padding should use spacing.base (16)', () => {
@@ -68,9 +68,9 @@ describe('HabitCard Spacing Token Migration - Phase 3', () => {
       expect(styles.statusContainer.marginLeft).toBe(8);
     });
 
-    it('streakBadge borderRadius should use borderRadius.large', () => {
+    it('streakBadge borderRadius should use borderRadius.large (16)', () => {
       expect(styles.streakBadge.borderRadius).toBe(borderRadius.large);
-      expect(styles.streakBadge.borderRadius).toBe(24);
+      expect(styles.streakBadge.borderRadius).toBe(16);
     });
 
     it('streakBadge paddingHorizontal should use spacing.sm (8)', () => {
@@ -83,18 +83,18 @@ describe('HabitCard Spacing Token Migration - Phase 3', () => {
       expect(styles.streakBadge.paddingVertical).toBe(4);
     });
 
-    it('warningBadge borderRadius should use borderRadius.medium', () => {
+    it('warningBadge borderRadius should use borderRadius.medium (12)', () => {
       expect(styles.warningBadge.borderRadius).toBe(borderRadius.medium);
-      expect(styles.warningBadge.borderRadius).toBe(14);
+      expect(styles.warningBadge.borderRadius).toBe(12);
     });
   });
 
   describe('streakStyles use spacing/borderRadius tokens', () => {
-    it('bestStreakBadge borderRadius should use borderRadius.small', () => {
+    it('bestStreakBadge borderRadius should use borderRadius.small (8)', () => {
       expect(streakStyles.bestStreakBadge.borderRadius).toBe(
         borderRadius.small
       );
-      expect(streakStyles.bestStreakBadge.borderRadius).toBe(10);
+      expect(streakStyles.bestStreakBadge.borderRadius).toBe(8);
     });
 
     it('bestStreakBadge gap should use spacing.xs (4)', () => {
@@ -112,14 +112,14 @@ describe('HabitCard Spacing Token Migration - Phase 3', () => {
       expect(streakStyles.bestStreakBadge.paddingVertical).toBe(4);
     });
 
-    it('rippleOverlay borderRadius should use borderRadius.xl', () => {
+    it('rippleOverlay borderRadius should use borderRadius.xl (20)', () => {
       expect(streakStyles.rippleOverlay.borderRadius).toBe(borderRadius.xl);
-      expect(streakStyles.rippleOverlay.borderRadius).toBe(28);
+      expect(streakStyles.rippleOverlay.borderRadius).toBe(20);
     });
 
-    it('streakBadge borderRadius should use borderRadius.medium', () => {
+    it('streakBadge borderRadius should use borderRadius.medium (12)', () => {
       expect(streakStyles.streakBadge.borderRadius).toBe(borderRadius.medium);
-      expect(streakStyles.streakBadge.borderRadius).toBe(14);
+      expect(streakStyles.streakBadge.borderRadius).toBe(12);
     });
 
     it('streakBadge gap should use spacing.xs (4)', () => {

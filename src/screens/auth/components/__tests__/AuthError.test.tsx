@@ -20,8 +20,8 @@ describe('AuthError', () => {
     });
 
     it('renders the dismiss button', () => {
-      const { getByLabelText } = render(<AuthError {...defaultProps} />);
-      expect(getByLabelText('Dismiss error')).toBeTruthy();
+      const { getByText } = render(<AuthError {...defaultProps} />);
+      expect(getByText('Dismiss')).toBeTruthy();
     });
 
     it('renders with custom error messages', () => {
@@ -35,15 +35,15 @@ describe('AuthError', () => {
 
   describe('Interactions', () => {
     it('calls onDismiss when dismiss button is pressed', () => {
-      const { getByLabelText } = render(<AuthError {...defaultProps} />);
-      fireEvent.press(getByLabelText('Dismiss error'));
+      const { getByText } = render(<AuthError {...defaultProps} />);
+      fireEvent.press(getByText('Dismiss'));
       expect(mockOnDismiss).toHaveBeenCalledTimes(1);
     });
 
     it('calls onDismiss only once per press', () => {
-      const { getByLabelText } = render(<AuthError {...defaultProps} />);
-      fireEvent.press(getByLabelText('Dismiss error'));
-      fireEvent.press(getByLabelText('Dismiss error'));
+      const { getByText } = render(<AuthError {...defaultProps} />);
+      fireEvent.press(getByText('Dismiss'));
+      fireEvent.press(getByText('Dismiss'));
       expect(mockOnDismiss).toHaveBeenCalledTimes(2);
     });
   });

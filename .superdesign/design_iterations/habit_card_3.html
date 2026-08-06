@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Habit card — before / after</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      /* ---- Tokens copied from src/theme ----
+         colors/semantic.ts, darkColors.ts (light block), spacing.ts, typography.ts
+         spacing: xs 4 · sm 8 · md 12 · base 16 · lg 24 · xl 32            */
+      :root {
+        --bg: #f5f1ed;          /* colors.background            */
+        --card: #f8f5f1;        /* cardPaper — the card surface */
+        --recessed: #edeae5;    /* colors.card — old inner box  */
+        --raised: #ffffff;      /* old detailsFill              */
+        --border: #ddd8d2;
+        --text-primary: #2d2a26;
+        --text-secondary: #524d47;
+        --text-tertiary: #8a837b;
+        --icon-tile: #f8e9ce;
+        --add-bg: #c4ebd9;
+        --add-fg: #04724d;
+        --added-bg: #e4f7ee;
+        --added-fg: #16a374;
+        --danger: #b3261e;
+        --win: #04724d;
+        --font-serif: 'Literata', Georgia, serif;
+        --font-sans: 'DM Sans', -apple-system, sans-serif;
+        --shadow-card: 0 2px 8px rgba(45, 42, 38, 0.06);
+        --shadow-subtle: 0 1px 3px rgba(45, 42, 38, 0.05);
+      }
+      * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+      body {
+        margin: 0 !important; background: #e6e0d8 !important;
+        font-family: var(--font-sans) !important; color: var(--text-primary) !important;
+        padding: 30px 16px 70px !important;
+      }
+      .page-title { font-family: var(--font-serif) !important; font-size: 30px !important; margin: 0 0 6px !important; text-align: center; }
+      .page-sub { text-align: center; color: var(--text-secondary); font-size: 15px; margin: 0 0 22px; line-height: 1.55; }
+      .toggle-bar { text-align: center; margin-bottom: 24px; }
+      .toggle-bar button {
+        font-family: var(--font-sans); font-size: 13px; font-weight: 600;
+        border: 1px solid var(--border); background: var(--card); color: var(--text-secondary);
+        border-radius: 999px; padding: 8px 16px; margin: 0 3px; cursor: pointer;
+      }
+      .toggle-bar button.on { background: #1a1816; color: #fff; border-color: #1a1816; }
+
+      .stage { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; align-items: flex-start; }
+      .col { display: flex; flex-direction: column; align-items: center; gap: 9px; }
+      .col-label { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+      .col-label.before { color: var(--danger); }
+      .col-label.after { color: var(--win); }
+      .col-label.dead { color: var(--text-tertiary); }
+      .col-meta { font-size: 12px; color: var(--text-secondary); margin-top: -3px; text-align: center; max-width: 360px; line-height: 1.5; }
+
+      .phone {
+        width: 372px; height: 748px; background: var(--bg);
+        border-radius: 42px; border: 10px solid #17140f;
+        box-shadow: 0 26px 60px rgba(0,0,0,.28);
+        overflow: hidden; display: flex; flex-direction: column; position: relative;
+      }
+      .phone.dim { opacity: .58; }
+      .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 124px; height: 25px; background: #17140f; border-radius: 0 0 16px 16px; z-index: 30; }
+      .body { flex: 1; overflow-y: auto; padding: 38px 0 40px; scrollbar-width: none; }
+      .body::-webkit-scrollbar { display: none; }
+
+      .section-hdr { display: flex; align-items: center; gap: 8px; padding: 0 20px; margin: 10px 0 8px; }
+      .section-hdr .tile { width: 44px; height: 44px; border-radius: 12px; background: var(--icon-tile); display: grid; place-items: center; font-size: 22px; flex-shrink: 0; }
+      .section-hdr .t { font-family: var(--font-serif) !important; font-size: 22px !important; font-weight: 700 !important; }
+      .section-hdr .c { font-size: 15px; color: var(--text-tertiary); margin-left: 8px; font-weight: 400; }
+
+      /* ---------- CARD (metrics identical in both columns) ---------- */
+      .card {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: 26px;            /* s.card.borderRadius */
+        margin: 8px 16px;               /* spacing.sm / spacing.base */
+        padding: 20px;                  /* TEMPLATE_READ_ROW_PADDING */
+        box-shadow: var(--shadow-card);
+        position: relative;
+      }
+      .title-row { display: flex; align-items: center; gap: 12px; }  /* spacing.md */
+      .icon-box { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; flex-shrink: 0; }
+      .card h3 {
+        font-family: var(--font-serif) !important;
+        font-size: 21px !important; line-height: 26px !important;
+        font-weight: 700 !important; margin: 0 !important; flex: 1;
+      }
+      .desc {
+        font-size: 15px; line-height: 22px; color: var(--text-secondary);
+        margin-top: 12px;               /* spacing.md */
+        display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+      }
+
+      /* BEFORE-only pieces */
+      .details-pill {
+        display: inline-flex; align-items: center; gap: 4px;
+        border: 1.5px solid var(--border); background: var(--raised);
+        border-radius: 999px; padding: 8px 16px; margin-top: 12px;
+        font-size: 14px; font-weight: 600; color: var(--text-secondary);
+      }
+      .start-box { background: var(--recessed); border-radius: 16px; padding: 14px; margin-top: 12px; }
+      .start-label { font-size: 11px; font-weight: 700; letter-spacing: .9px; text-transform: uppercase; color: var(--text-tertiary); }
+      .start-text { font-size: 15px; line-height: 21px; margin-top: 4px; color: var(--text-primary); }
+      .meta-pill { background: var(--recessed); border-radius: 999px; padding: 8px 14px; font-size: 14px; color: var(--text-secondary); align-self: flex-start; }
+      .add-btn.old { padding: 8px 15px; min-height: 0; }
+
+      /* AFTER-only pieces */
+      .details-link {
+        align-self: flex-start; margin-top: 8px;   /* spacing.sm */
+        font-size: 14px; font-weight: 600; color: var(--text-primary);
+      }
+      .meta-text { font-size: 14px; color: var(--text-secondary); flex-shrink: 1; }
+
+      /* REJECTED-only */
+      .chev-title { color: var(--text-tertiary); flex-shrink: 0; }
+
+      .footer { display: flex; align-items: center; gap: 12px; margin-top: 24px; } /* spacing.lg */
+      .add-btn {
+        margin-left: auto; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+        gap: 5px; background: var(--add-bg); color: var(--add-fg); border: 0; border-radius: 999px;
+        font-family: var(--font-sans); font-size: 14px; font-weight: 700; cursor: pointer;
+        min-height: 44px; padding: 0 18px; transition: transform .12s ease;
+      }
+      .add-btn:active { transform: scale(.94); }
+      .card.importing { opacity: .72; }
+      .spinner { width: 15px; height: 15px; border-radius: 999px; border: 2px solid currentColor; border-right-color: transparent; animation: spin .7s linear infinite; display: inline-block; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* Added compact row */
+      .added-row {
+        display: flex; align-items: center; gap: 12px;
+        background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+        margin: 4px 16px; padding: 12px 14px; box-shadow: var(--shadow-subtle);
+      }
+      .added-row .icon-box { width: 40px; height: 40px; font-size: 20px; border-radius: 12px; }
+      .added-row .tb { flex: 1; min-width: 0; }
+      .added-row .nm { font-family: var(--font-serif); font-size: 17px; line-height: 22px; font-weight: 700; }
+      .added-row .mt { font-size: 13px; color: var(--text-tertiary); margin-top: 1px; }
+      .badge { display: inline-flex; align-items: center; gap: 4px; background: var(--added-bg); color: var(--added-fg); border-radius: 999px; padding: 6px 10px; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+
+      /* Annotations */
+      .hot { position: absolute; border-radius: 12px; pointer-events: none; z-index: 12; }
+      .hot.bad { outline: 2px dashed var(--danger); background: rgba(179,38,30,.07); }
+      .hot.good { outline: 2px dashed var(--win); background: rgba(4,114,77,.07); }
+      .tag { position: absolute; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px; white-space: nowrap; z-index: 13; pointer-events: none; }
+      .tag.bad { background: var(--danger); color: #fff; }
+      .tag.good { background: var(--win); color: #fff; }
+      body.hide-notes .hot, body.hide-notes .tag, body.hide-notes .fold { display: none; }
+      .fold { position: absolute; left: 0; right: 0; z-index: 14; pointer-events: none; border-top: 2px dashed rgba(179,38,30,.7); }
+      .fold span { position: absolute; right: 8px; top: -9px; font-size: 10px; font-weight: 700; background: var(--danger); color: #fff; padding: 2px 7px; border-radius: 999px; }
+      .fold.good { border-top-color: rgba(4,114,77,.7); }
+      .fold.good span { background: var(--win); }
+
+      #rejected-col { display: none; }
+      body.show-rejected #rejected-col { display: flex; }
+
+      .legend { max-width: 1020px; margin: 36px auto 0; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px 28px; }
+      .legend h2 { font-family: var(--font-serif) !important; font-size: 22px !important; margin: 0 0 14px !important; }
+      .legend table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      .legend th { text-align: left; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-tertiary); padding: 6px 10px 6px 0; border-bottom: 1px solid var(--border); }
+      .legend td { padding: 10px 10px 10px 0; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.55; }
+      .legend tr:last-child td { border-bottom: 0; }
+      code { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; background: #ece7e1; padding: 1px 5px; border-radius: 4px; }
+      .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(0,0,0,.15); vertical-align: -1px; margin-right: 5px; }
+    </style>
+  </head>
+  <body>
+    <h1 class="page-title">Habit card — before / after</h1>
+    <p class="page-sub">
+      Same phone, same content, same spacing tokens. Every metric that controls
+      spacing and type is <b>identical</b> in both columns — only whole blocks differ.
+    </p>
+
+    <div class="toggle-bar">
+      <button id="btn-notes" class="on">Annotations on</button>
+      <button id="btn-fold" class="on">Fold line</button>
+      <button id="btn-rejected">Show rejected chevron</button>
+    </div>
+
+    <div class="stage">
+      <!-- ================= BEFORE ================= -->
+      <div class="col">
+        <div class="col-label before">Before</div>
+        <div class="col-meta">~334px per card · 1.9 cards visible</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="body">
+            <div class="section-hdr">
+              <div class="tile">💪</div>
+              <div><span class="t">Health</span><span class="c">48 habits</span></div>
+            </div>
+
+            <div class="card">
+              <div class="title-row">
+                <div class="icon-box" style="background:#EDE4FA">🏋️</div>
+                <h3>Resistance Training for Brain</h3>
+              </div>
+              <div class="desc">Progressive resistance training 2-3x weekly specifically for brain health. Studies show muscle mass is directly linked to brain volume and cognitive resilience in later life.</div>
+              <div class="details-pill">Details <i data-lucide="chevron-right" width="14" height="14"></i></div>
+              <div class="start-box">
+                <div class="start-label">Start small</div>
+                <div class="start-text">Do one set of one exercise.</div>
+              </div>
+              <div class="footer">
+                <span class="meta-pill">🕐 25 min · Weekly</span>
+                <button class="add-btn old"><i data-lucide="plus" width="14" height="14"></i> Add</button>
+              </div>
+
+              <div class="hot bad" style="top:150px;left:20px;right:20px;height:130px"></div>
+              <span class="tag bad" style="top:140px;left:20px">2 blocks · ~130px · repeated 48×</span>
+              <div class="hot bad" style="bottom:16px;right:18px;width:82px;height:35px"></div>
+              <span class="tag bad" style="bottom:54px;right:18px">35px target</span>
+            </div>
+
+            <div class="card">
+              <div class="title-row">
+                <div class="icon-box" style="background:#D1FAE5">🏃</div>
+                <h3>Zone 2 Cardio</h3>
+              </div>
+              <div class="desc">Steady conversational-pace cardio builds mitochondrial density. The single most studied intervention for long-term metabolic health.</div>
+              <div class="details-pill">Details <i data-lucide="chevron-right" width="14" height="14"></i></div>
+              <div class="start-box">
+                <div class="start-label">Start small</div>
+                <div class="start-text">Walk to the end of the street.</div>
+              </div>
+              <div class="footer">
+                <span class="meta-pill">🕐 45 min · Weekly</span>
+                <button class="add-btn old"><i data-lucide="plus" width="14" height="14"></i> Add</button>
+              </div>
+            </div>
+          </div>
+          <div class="fold" style="top:706px"><span>fold</span></div>
+        </div>
+      </div>
+
+      <!-- ================= AFTER ================= -->
+      <div class="col">
+        <div class="col-label after">After (shipped)</div>
+        <div class="col-meta">~209px per card · 3 cards visible · spacing untouched</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="body">
+            <div class="section-hdr">
+              <div class="tile">💪</div>
+              <div><span class="t">Health</span><span class="c">48 habits</span></div>
+            </div>
+
+            <div class="card">
+              <div class="title-row">
+                <div class="icon-box" style="background:#EDE4FA">🏋️</div>
+                <h3>Resistance Training for Brain</h3>
+              </div>
+              <div class="desc">Progressive resistance training 2-3x weekly specifically for brain health. Studies show muscle mass is directly linked to brain volume and cognitive resilience in later life.</div>
+              <div class="details-link">Details ›</div>
+              <div class="footer">
+                <span class="meta-text">25 min · Weekly</span>
+                <button class="add-btn"><i data-lucide="plus" width="15" height="15"></i> Add</button>
+              </div>
+              <div class="hot good" style="bottom:76px;left:18px;width:80px;height:22px"></div>
+              <span class="tag good" style="bottom:100px;left:18px">A · label kept, container dropped</span>
+              <div class="hot good" style="bottom:14px;right:16px;width:96px;height:48px"></div>
+              <span class="tag good" style="bottom:64px;right:16px">B · 44px</span>
+            </div>
+
+            <div class="card importing">
+              <div class="title-row">
+                <div class="icon-box" style="background:#D1FAE5">🏃</div>
+                <h3>Zone 2 Cardio</h3>
+              </div>
+              <div class="desc">Steady conversational-pace cardio builds mitochondrial density. The single most studied intervention for long-term metabolic health.</div>
+              <div class="details-link">Details ›</div>
+              <div class="footer">
+                <span class="meta-text">45 min · Weekly</span>
+                <button class="add-btn"><span class="spinner"></span></button>
+              </div>
+              <div class="hot good" style="inset:4px"></div>
+              <span class="tag good" style="top:-9px;left:16px">C · taps blocked while importing</span>
+            </div>
+
+            <div class="card">
+              <div class="title-row">
+                <div class="icon-box" style="background:#FEF3CD">🧘</div>
+                <h3>Post-workout Stretch</h3>
+              </div>
+              <div class="desc">Ten minutes of static stretching after training preserves range of motion as you age.</div>
+              <div class="details-link">Details ›</div>
+              <div class="footer">
+                <span class="meta-text">10 min · Daily</span>
+                <button class="add-btn"><i data-lucide="plus" width="15" height="15"></i> Add</button>
+              </div>
+            </div>
+
+            <div class="section-hdr" style="margin-top:20px">
+              <div class="tile">✅</div>
+              <div><span class="t">Added</span><span class="c">2 habits</span></div>
+            </div>
+            <div class="added-row">
+              <div class="icon-box" style="background:#EEF4FB">💧</div>
+              <div class="tb"><div class="nm">Hydrate on Waking</div><div class="mt">1 min · Daily</div></div>
+              <span class="badge"><i data-lucide="check" width="13" height="13"></i> Added</span>
+              <div class="hot good" style="inset:4px"></div>
+              <span class="tag good" style="top:-9px;left:14px">D · added rows collapse</span>
+            </div>
+            <div class="added-row">
+              <div class="icon-box" style="background:#F5F0FF">😴</div>
+              <div class="tb"><div class="nm">Consistent Wake Time</div><div class="mt">Daily</div></div>
+              <span class="badge"><i data-lucide="check" width="13" height="13"></i> Added</span>
+            </div>
+          </div>
+          <div class="fold good" style="top:706px"><span>fold</span></div>
+        </div>
+      </div>
+
+      <!-- ================= REJECTED ================= -->
+      <div class="col" id="rejected-col">
+        <div class="col-label dead">Rejected</div>
+        <div class="col-meta">chevron only — you called this, correctly</div>
+        <div class="phone dim">
+          <div class="notch"></div>
+          <div class="body">
+            <div class="section-hdr">
+              <div class="tile">💪</div>
+              <div><span class="t">Health</span><span class="c">48 habits</span></div>
+            </div>
+            <div class="card">
+              <div class="title-row">
+                <div class="icon-box" style="background:#EDE4FA">🏋️</div>
+                <h3>Resistance Training for Brain</h3>
+                <i data-lucide="chevron-right" width="18" height="18" class="chev-title"></i>
+              </div>
+              <div class="desc">Progressive resistance training 2-3x weekly specifically for brain health. Studies show muscle mass is directly linked to brain volume and cognitive resilience in later life.</div>
+              <div class="footer">
+                <span class="meta-text">25 min · Weekly</span>
+                <button class="add-btn"><i data-lucide="plus" width="15" height="15"></i> Add</button>
+              </div>
+              <div class="hot bad" style="top:8px;right:8px;width:32px;height:56px"></div>
+              <span class="tag bad" style="top:-9px;right:6px">tertiary glyph, 200px from the text</span>
+            </div>
+            <div class="card">
+              <div class="title-row">
+                <div class="icon-box" style="background:#D1FAE5">🏃</div>
+                <h3>Zone 2 Cardio</h3>
+                <i data-lucide="chevron-right" width="18" height="18" class="chev-title"></i>
+              </div>
+              <div class="desc">Steady conversational-pace cardio builds mitochondrial density. The single most studied intervention for long-term metabolic health.</div>
+              <div class="footer">
+                <span class="meta-text">45 min · Weekly</span>
+                <button class="add-btn"><i data-lucide="plus" width="15" height="15"></i> Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= LEGEND ================= -->
+    <div class="legend">
+      <h2>What actually changed</h2>
+      <table>
+        <thead>
+          <tr><th style="width:22%">Element</th><th style="width:26%">Before</th><th style="width:26%">After</th><th>Why</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Start small box</b></td>
+            <td>On every card · <span class="swatch" style="background:#EDEAE5"></span><code>#EDEAE5</code> · ~78px</td>
+            <td>Moved to detail view</td>
+            <td>Persuasion copy. It lands at the decision point, not 48× in a scroll list. It was <b>not</b> already in the detail view — I had to build <code>StartSmallSection</code> first, or this would have deleted it.</td>
+          </tr>
+          <tr>
+            <td><b>Details affordance</b></td>
+            <td>Outlined pill · <span class="swatch" style="background:#FFFFFF"></span><code>#FFFFFF</code> · ~50px</td>
+            <td>Plain text link · ~28px</td>
+            <td>The label carries discoverability; the border was only carrying visual weight — and made a third pill in a card where pill means "tappable".</td>
+          </tr>
+          <tr>
+            <td><b>Meta</b></td>
+            <td>Filled pill + 🕐 emoji</td>
+            <td>Plain text</td>
+            <td>An inert pill beside two real ones read as a broken button, and it had to be height-matched to Add forever. Emoji was being read aloud as "clock face one o'clock".</td>
+          </tr>
+          <tr>
+            <td><b>Add button</b></td>
+            <td>~35px tall, no hitSlop</td>
+            <td>44px + hitSlop 8</td>
+            <td>Below the comfortable touch minimum; misses opened the preview instead of adding.</td>
+          </tr>
+          <tr>
+            <td><b>Tap target</b></td>
+            <td>Header + pill only</td>
+            <td>Whole card · disabled while importing</td>
+            <td>Start small and the footer were dead zones. Tapping mid-import raced the import completing underneath the modal.</td>
+          </tr>
+          <tr>
+            <td><b>Added group</b></td>
+            <td>Full-size cards</td>
+            <td>Compact rows</td>
+            <td>That group is history, not inventory — a long category shouldn't end in a second long list.</td>
+          </tr>
+          <tr>
+            <td><b>Spacing &amp; type</b></td>
+            <td colspan="2" style="text-align:center"><b>Unchanged</b> — padding 20, radius 26, icon 52, title 21/26, desc 3 lines, footer margin 24</td>
+            <td>I tightened these first; you said you preferred the old spacing, so all metrics were reverted. The density win comes from removing blocks, not from squeezing.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:13px;color:var(--text-secondary);margin:14px 0 0;line-height:1.6">
+        <b>On the card colour:</b> the surface token never changed — still <span class="swatch" style="background:#F8F5F1"></span><code>cardPaper #F8F5F1</code>.
+        What changed is that it lost three inner surfaces (<span class="swatch" style="background:#FFFFFF"></span>raised pill,
+        <span class="swatch" style="background:#EDEAE5"></span>recessed box and meta pill), so it went from three tonal levels to one flat panel.
+        That's the flatness you spotted. If it still reads too flat, add depth back deliberately rather than restoring the boxes.
+      </p>
+      <p style="font-size:13px;color:var(--text-secondary);margin:10px 0 0;line-height:1.6">
+        <b>Caveat:</b> static HTML approximating React Native layout — the px figures are close, not measured.
+        Nothing here has been seen on a simulator yet.
+      </p>
+    </div>
+
+    <script>
+      lucide.createIcons();
+      const bn = document.getElementById('btn-notes');
+      const bf = document.getElementById('btn-fold');
+      const br = document.getElementById('btn-rejected');
+      bn.onclick = () => {
+        document.body.classList.toggle('hide-notes');
+        bn.classList.toggle('on');
+        bn.textContent = document.body.classList.contains('hide-notes') ? 'Annotations off' : 'Annotations on';
+      };
+      bf.onclick = () => {
+        document.querySelectorAll('.fold').forEach((f) => {
+          f.style.visibility = f.style.visibility === 'hidden' ? 'visible' : 'hidden';
+        });
+        bf.classList.toggle('on');
+      };
+      br.onclick = () => {
+        document.body.classList.toggle('show-rejected');
+        br.classList.toggle('on');
+        br.textContent = document.body.classList.contains('show-rejected') ? 'Hide rejected chevron' : 'Show rejected chevron';
+      };
+    </script>
+  </body>
+</html>

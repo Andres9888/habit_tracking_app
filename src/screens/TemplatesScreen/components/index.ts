@@ -1,14 +1,11 @@
 /**
- * Sub-components barrel export
+ * Sub-components barrel export.
+ *
+ * Only what TemplatesScreen actually consumes. Re-exporting the whole folder
+ * kept a shelf of retired browse/search components (TabBar, FilterControls,
+ * SearchResults…) technically "reachable", which is what hid them from the
+ * last cleanup.
  */
 
-export { CategoryHeader } from './CategoryHeader';
-export { FilterControls } from './FilterControls';
-export { ScrollShadows } from './ScrollShadows';
-export { SearchBar } from './SearchBar';
-export { TabBar } from './TabBar';
-export { TemplateModals } from './TemplateModals';
-export { TemplatesScreenModals } from './TemplatesScreenModals';
-export { TemplatesEmptyState } from './TemplatesEmptyState';
-export { TemplatesListEmpty } from './TemplatesListEmpty';
 export { TemplatesLoadingState } from './TemplatesLoadingState';
+export { TemplatesScreenModals } from './TemplatesScreenModals';

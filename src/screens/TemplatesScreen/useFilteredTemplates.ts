@@ -5,11 +5,17 @@
 import { useMemo } from 'react';
 import type { Doc } from '../../../convex/_generated/dataModel';
 import type { Category, SortOption } from '../templates/constants';
+import { getCategoryMeta } from './data/categoryMeta';
 import { isHighRoiTemplate, isQuickTemplate } from './data/templateFilters';
-import {
-  matchesTemplateSearch,
-  normalizeTemplateSearchValue,
-} from './templateSearch';
+
+function normalizeSearchValue(value: string | null | undefined) {
+  return (value ?? '').trim().toLowerCase();
+}
+
+function getSearchableCategoryLabel(categoryId: string) {
+  const fallback = categoryId.replaceAll('_', ' ');
+  return `${fallback} ${getCategoryMeta(categoryId).label}`.trim();
+}
 
 export function useTemplatesByCategory(
   allTemplates: Doc<'templates'>[] | undefined
@@ -78,17 +84,26 @@ export function useFilteredTemplates(
 
     let data = [...allTemplates];
     if (selectedCategory === 'quick') {
-      data = data.filter((template) => isQuickTemplate(template));
+      data = data.filter(isQuickTemplate);
     } else if (selectedCategory === 'high-roi') {
-      data = data.filter((template) => isHighRoiTemplate(template));
+      data = data.filter(isHighRoiTemplate);
     } else if (selectedCategory !== 'all') {
       data = data.filter((t) => t.category === selectedCategory);
     }
 
-    const safeSearchQuery = normalizeTemplateSearchValue(searchQuery);
+    const safeSearchQuery = normalizeSearchValue(searchQuery);
     if (safeSearchQuery) {
-      data = data.filter((template) =>
-        matchesTemplateSearch(template, safeSearchQuery)
+      data = data.filter(
+        (t) =>
+          normalizeSearchValue(t.name).includes(safeSearchQuery) ||
+          normalizeSearchValue(t.description).includes(safeSearchQuery) ||
+          normalizeSearchValue(t.scientificReference).includes(
+            safeSearchQuery
+          ) ||
+          normalizeSearchValue(t.frequency).includes(safeSearchQuery) ||
+          normalizeSearchValue(getSearchableCategoryLabel(t.category)).includes(
+            safeSearchQuery
+          )
       );
     }
 

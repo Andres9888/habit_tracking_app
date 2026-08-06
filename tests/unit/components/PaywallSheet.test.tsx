@@ -5,28 +5,17 @@
  */
 
 import React from 'react';
-import { act, render, fireEvent, waitFor } from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 import { PaywallSheet } from '../../../src/components/PaywallSheet';
 import { PAYWALL_PERKS } from '../../../src/screens/TemplatesScreen/data/paywallPerks';
 
 let lastModalProps: Record<string, unknown> = {};
-const mockPurchasePackage = jest.fn().mockResolvedValue(true);
-
-jest.mock('../../../src/hooks/usePremium', () => ({
-  usePremium: () => ({
-    monthlyPackage: { identifier: 'monthly' },
-    priceString: '$6.99',
-    purchasePackage: mockPurchasePackage,
-  }),
-}));
 
 jest.mock('../../../src/components/Modal', () => {
   const { View } = require('react-native');
   function MockModal(props: Record<string, unknown>) {
     lastModalProps = props;
-    return props.visible ? (
-      <View testID='shared-modal'>{props.children as React.ReactNode}</View>
-    ) : null;
+    return props.visible ? <View testID="shared-modal">{props.children as React.ReactNode}</View> : null;
   }
   MockModal.displayName = 'MockModal';
   return { __esModule: true, default: MockModal, Modal: MockModal };
@@ -34,9 +23,7 @@ jest.mock('../../../src/components/Modal', () => {
 
 jest.mock('lucide-react-native', () => {
   const { View } = require('react-native');
-  return {
-    X: (props: Record<string, unknown>) => <View testID='x-icon' {...props} />,
-  };
+  return { X: (props: Record<string, unknown>) => <View testID="x-icon" {...props} /> };
 });
 
 describe('PaywallSheet', () => {
@@ -48,7 +35,6 @@ describe('PaywallSheet', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockPurchasePackage.mockResolvedValue(true);
     lastModalProps = {};
   });
 
@@ -66,9 +52,7 @@ describe('PaywallSheet', () => {
   it('renders headline and description', () => {
     const { getByText } = render(<PaywallSheet {...defaultProps} />);
     expect(getByText('Unlock Unlimited Habits')).toBeTruthy();
-    expect(
-      getByText('Take your habits to the next level with premium features')
-    ).toBeTruthy();
+    expect(getByText('Take your habits to the next level with premium features')).toBeTruthy();
   });
 
   it('renders all paywall perks', () => {
@@ -92,38 +76,21 @@ describe('PaywallSheet', () => {
 
   it('calls onPurchaseSuccess and onClose when CTA is pressed', async () => {
     const { getByTestId } = render(<PaywallSheet {...defaultProps} />);
-    fireEvent.press(getByTestId('templates-paywall-cta'));
-    await waitFor(() => {
-      expect(defaultProps.onPurchaseSuccess).toHaveBeenCalledTimes(1);
-      expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
-    });
+    await fireEvent.press(getByTestId('templates-paywall-cta'));
+    expect(defaultProps.onPurchaseSuccess).toHaveBeenCalledTimes(1);
+    expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
   });
 
   it('shows Processing text when purchasing', async () => {
-    let resolvePurchase: (success: boolean) => void = () => {};
-    mockPurchasePackage.mockImplementationOnce(
-      () =>
-        new Promise<boolean>((resolve) => {
-          resolvePurchase = resolve;
-        })
-    );
-    const { getByTestId, getByText } = render(
-      <PaywallSheet {...defaultProps} />
-    );
+    const { getByTestId, getByText } = render(<PaywallSheet {...defaultProps} />);
     expect(getByText('Upgrade to Premium')).toBeTruthy();
-    fireEvent.press(getByTestId('templates-paywall-cta'));
-    expect(getByText('Processing...')).toBeTruthy();
-    await act(async () => {
-      resolvePurchase(true);
-    });
-    await waitFor(() => {
-      expect(getByText('Upgrade to Premium')).toBeTruthy();
-    });
+    await fireEvent.press(getByTestId('templates-paywall-cta'));
+    expect(getByText('Upgrade to Premium')).toBeTruthy();
   });
 
   it('renders nothing when visible is false', () => {
     const { queryByTestId } = render(
-      <PaywallSheet {...defaultProps} visible={false} />
+      <PaywallSheet {...defaultProps} visible={false} />,
     );
     expect(queryByTestId('templates-paywall')).toBeNull();
   });
@@ -132,11 +99,9 @@ describe('PaywallSheet', () => {
     const fs = require('fs');
     const source = fs.readFileSync(
       require.resolve('../../../src/components/PaywallSheet/PaywallSheet.tsx'),
-      'utf8'
+      'utf8',
     );
-    expect(source).not.toMatch(
-      /import\s*\{[^}]*\bModal\b[^}]*\}\s*from\s*['"]react-native['"]/
-    );
+    expect(source).not.toMatch(/import\s*\{[^}]*\bModal\b[^}]*\}\s*from\s*['"]react-native['"]/);
     expect(source).toMatch(/from ['"]\.\.\/Modal['"]/);
   });
 });

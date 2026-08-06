@@ -26,9 +26,9 @@ describe('EmojiPickerV2 Token Migration - Phase 3', () => {
       expect(categoryPillStyles.categoriesContent.paddingHorizontal).toBe(24);
     });
 
-    it('container marginBottom should use spacing.md (12)', () => {
-      expect(categoryPillStyles.container.marginBottom).toBe(spacing.md);
-      expect(categoryPillStyles.container.marginBottom).toBe(12);
+    it('categoriesScroll marginBottom should use spacing.md (12)', () => {
+      expect(categoryPillStyles.categoriesScroll.marginBottom).toBe(spacing.md);
+      expect(categoryPillStyles.categoriesScroll.marginBottom).toBe(12);
     });
 
     it('categoryPill backgroundColor should use colors.gray[100]', () => {
@@ -103,9 +103,9 @@ describe('EmojiPickerV2 Token Migration - Phase 3', () => {
       );
     });
 
-    it('emojiCell borderRadius should use borderRadius.medium (14)', () => {
+    it('emojiCell borderRadius should use borderRadius.medium (12)', () => {
       expect(gridStyles.emojiCell.borderRadius).toBe(borderRadius.medium);
-      expect(gridStyles.emojiCell.borderRadius).toBe(14);
+      expect(gridStyles.emojiCell.borderRadius).toBe(12);
     });
 
     it('emojiCellSelected borderColor should use colors.secondary[500]', () => {
@@ -172,9 +172,9 @@ describe('EmojiPickerV2 Token Migration - Phase 3', () => {
       expect(sheetStyles.noIconButton.backgroundColor).toBe(colors.gray[100]);
     });
 
-    it('noIconButton borderRadius should use borderRadius.medium (14)', () => {
+    it('noIconButton borderRadius should use borderRadius.medium (12)', () => {
       expect(sheetStyles.noIconButton.borderRadius).toBe(borderRadius.medium);
-      expect(sheetStyles.noIconButton.borderRadius).toBe(14);
+      expect(sheetStyles.noIconButton.borderRadius).toBe(12);
     });
 
     it('noIconContainer borderTopColor should use colors.gray[100]', () => {
@@ -208,9 +208,9 @@ describe('EmojiPickerV2 Token Migration - Phase 3', () => {
       expect(sheetStyles.searchBar.borderColor).toBe(colors.border);
     });
 
-    it('searchBar borderRadius should use borderRadius.large (24)', () => {
+    it('searchBar borderRadius should use borderRadius.large (16)', () => {
       expect(sheetStyles.searchBar.borderRadius).toBe(borderRadius.large);
-      expect(sheetStyles.searchBar.borderRadius).toBe(24);
+      expect(sheetStyles.searchBar.borderRadius).toBe(16);
     });
 
     it('searchBar paddingHorizontal should use spacing.base (16)', () => {
@@ -240,14 +240,14 @@ describe('EmojiPickerV2 Token Migration - Phase 3', () => {
       expect(sheetStyles.sheet.backgroundColor).toBe(colors.light.surface);
     });
 
-    it('sheet borderTopLeftRadius should use borderRadius.xl (28)', () => {
+    it('sheet borderTopLeftRadius should use borderRadius.xl (20)', () => {
       expect(sheetStyles.sheet.borderTopLeftRadius).toBe(borderRadius.xl);
-      expect(sheetStyles.sheet.borderTopLeftRadius).toBe(28);
+      expect(sheetStyles.sheet.borderTopLeftRadius).toBe(20);
     });
 
-    it('sheet borderTopRightRadius should use borderRadius.xl (28)', () => {
+    it('sheet borderTopRightRadius should use borderRadius.xl (20)', () => {
       expect(sheetStyles.sheet.borderTopRightRadius).toBe(borderRadius.xl);
-      expect(sheetStyles.sheet.borderTopRightRadius).toBe(28);
+      expect(sheetStyles.sheet.borderTopRightRadius).toBe(20);
     });
 
     it('sheet should spread shadows.modal as base', () => {
@@ -256,9 +256,9 @@ describe('EmojiPickerV2 Token Migration - Phase 3', () => {
   });
 
   describe('SuggestionsSection uses theme tokens', () => {
-    it('container borderRadius should use borderRadius.large (24)', () => {
+    it('container borderRadius should use borderRadius.large (16)', () => {
       expect(suggestionStyles.container.borderRadius).toBe(borderRadius.large);
-      expect(suggestionStyles.container.borderRadius).toBe(24);
+      expect(suggestionStyles.container.borderRadius).toBe(16);
     });
 
     it('container marginBottom should use spacing.md (12)', () => {
@@ -303,9 +303,9 @@ describe('EmojiPickerV2 Token Migration - Phase 3', () => {
       );
     });
 
-    it('cell borderRadius should use borderRadius.large (24)', () => {
+    it('cell borderRadius should use borderRadius.large (16)', () => {
       expect(suggestionCellStyles.cell.borderRadius).toBe(borderRadius.large);
-      expect(suggestionCellStyles.cell.borderRadius).toBe(24);
+      expect(suggestionCellStyles.cell.borderRadius).toBe(16);
     });
 
     it('cellSelected borderColor should use colors.secondary[500]', () => {

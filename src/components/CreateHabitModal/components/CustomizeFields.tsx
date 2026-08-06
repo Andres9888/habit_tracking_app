@@ -11,7 +11,6 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import { EmojiPicker } from './EmojiPicker';
 import { ColorPickerSection } from './ColorPickerSection';
 import { EnhancedReminderSelector } from './EnhancedReminderSelector';
-import { EffortPicker } from './EffortPicker';
 
 const labelStyle = {
   ...typography.caption,
@@ -27,8 +26,6 @@ interface CustomizeFieldsProps {
   colors: readonly string[];
   selectedColor: string;
   onColorSelect: (color: string) => void;
-  effortMinutes?: number;
-  onEffortMinutesChange: (minutes: number | undefined) => void;
   reminderEnabled: boolean;
   reminderTime: Date;
   onReminderToggle: (enabled: boolean) => void;
@@ -47,8 +44,6 @@ export function CustomizeFields({
   colors,
   selectedColor,
   onColorSelect,
-  effortMinutes,
-  onEffortMinutesChange,
   reminderEnabled,
   reminderTime,
   onReminderToggle,
@@ -83,8 +78,6 @@ export function CustomizeFields({
         selectedColor={selectedColor}
         onSelectColor={onColorSelect}
       />
-
-      <EffortPicker value={effortMinutes} onChange={onEffortMinutesChange} />
 
       <View ref={reminderSectionRef} collapsable={false}>
         <EnhancedReminderSelector

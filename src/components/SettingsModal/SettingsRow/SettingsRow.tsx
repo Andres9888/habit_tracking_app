@@ -16,6 +16,7 @@ export function SettingsRow({
   icon,
   iconBackgroundColor,
   label,
+  labelColor,
   subtitle,
   type,
   value,
@@ -51,6 +52,7 @@ export function SettingsRow({
       iconBackgroundColor={iconBackgroundColor}
       isInteractiveInfo={isInteractiveInfo}
       label={label}
+      labelColor={labelColor}
       onToggle={handleToggle}
       pulseStyle={pulseStyle}
       rightAccessory={rightAccessory}

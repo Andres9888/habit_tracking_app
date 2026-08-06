@@ -22,21 +22,31 @@ import {
 
 // Mock dependencies
 jest.mock('expo-haptics');
+jest.mock('react-native', () => {
+  const RN = jest.requireActual('react-native');
+  return {
+    ...RN,
+    Alert: {
+      alert: jest.fn(),
+    },
+    BackHandler: {
+      addEventListener: jest.fn(() => ({
+        remove: jest.fn(),
+      })),
+    },
+    Platform: {
+      OS: 'ios',
+      select: jest.fn((obj) => obj.ios),
+    },
+  };
+});
 
 describe('useUnsavedChangesGuard', () => {
   const mockHaptics = Haptics as jest.Mocked<typeof Haptics>;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    Object.defineProperty(Platform, 'OS', {
-      configurable: true,
-      value: 'ios',
-      writable: true,
-    });
-    jest.spyOn(Alert, 'alert').mockImplementation(() => {});
-    jest.spyOn(BackHandler, 'addEventListener').mockImplementation(() => ({
-      remove: jest.fn(),
-    }));
+    (Platform.OS as unknown) = 'ios';
   });
 
   describe('hasUnsavedChanges', () => {
@@ -213,7 +223,7 @@ describe('useUnsavedChangesGuard', () => {
       });
 
       expect(mockHaptics.impactAsync).toHaveBeenCalledWith(
-        Haptics.ImpactFeedbackStyle.Heavy
+        Haptics.ImpactFeedbackStyle.Medium
       );
     });
 

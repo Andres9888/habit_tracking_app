@@ -72,7 +72,7 @@ export function SyncStatusProvider({
   children,
   autoStart = true,
   onStatusChange,
-}: SyncStatusProviderProps): React.ReactNode {
+}: SyncStatusProviderProps): React.ReactElement {
   const syncStartCallbacksRef = useRef<Set<SyncStartCallback>>(new Set());
   const syncCompleteCallbacksRef = useRef<Set<SyncCompleteCallback>>(new Set());
   const syncErrorCallbacksRef = useRef<Set<SyncErrorCallback>>(new Set());
@@ -146,7 +146,7 @@ export function SyncStatusProvider({
     if (__DEV__) {
       console.error('[SyncStatusProvider] Missing SyncStatusContext.Provider');
     }
-    return children;
+    return <>{children}</>;
   }
 
   return (

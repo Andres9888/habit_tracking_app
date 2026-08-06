@@ -1,45 +1,32 @@
-/** SignOutCard — Apple-style centered red Sign Out card */
-import { Text, View } from 'react-native';
-import { AnimatedPressable } from '../../ui/AnimatedPressable';
-import { shadows } from '../../../theme';
-import { typography, fontWeights } from '../../../theme/typography';
+/** SignOutCard — routine, reversible, and on its own.
+ *
+ *  Signing out is not destructive: the account and every habit survive it. It
+ *  used to share a card with Delete account, which lent it a severity it
+ *  doesn't have and, worse, softened the row that genuinely is irreversible. */
+import { LogOut } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { SettingsRow } from '../SettingsRow';
+import { AccountGroupCard } from '../AccountGroupCard';
 
-interface SignOutCardProps {
-  isLoading: boolean;
+interface Props {
+  isSigningOut: boolean;
   onSignOut: () => void;
 }
 
-export function SignOutCard({ isLoading, onSignOut }: SignOutCardProps) {
-  const { colors: themeColors } = useThemeColors();
+export function SignOutCard({ isSigningOut, onSignOut }: Props) {
+  const { settings } = useThemeColors();
 
   return (
-    <AnimatedPressable
-      accessibilityLabel='Sign Out'
-      accessibilityRole='button'
-      onPress={onSignOut}
-    >
-      <View
-        className='overflow-hidden rounded-2xl'
-        style={{
-          backgroundColor: themeColors.card,
-          borderColor: themeColors.border,
-          borderWidth: 1,
-          ...shadows.card,
-        }}
-      >
-        <View className='items-center py-4'>
-          <Text
-            style={{
-              ...typography.body,
-              fontWeight: fontWeights.semibold,
-              color: themeColors.status.error,
-            }}
-          >
-            {isLoading ? 'Signing out...' : 'Sign Out'}
-          </Text>
-        </View>
-      </View>
-    </AnimatedPressable>
+    <AccountGroupCard>
+      <SettingsRow
+        icon={<LogOut color={settings.signOut.icon} size={iconSizes.small} />}
+        iconBackgroundColor={settings.signOut.bg}
+        label={isSigningOut ? 'Signing out…' : 'Sign out'}
+        labelColor={settings.signOut.icon}
+        type='navigation'
+        onPress={isSigningOut ? undefined : onSignOut}
+      />
+    </AccountGroupCard>
   );
 }

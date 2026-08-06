@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * CalendarTabs Component
  * Tab switcher for Month vs Year (Heatmap) calendar views

@@ -50,7 +50,6 @@ jest.mock('react-native-reanimated', () => {
     withRepeat: (animation: unknown) => animation,
     withSequence: (...animations: unknown[]) => animations[0],
     Easing: {
-      ...jest.requireActual('react-native-reanimated/mock').Easing,
       out: () => () => 0,
       inOut: () => () => 0,
       cubic: () => 0,
@@ -66,8 +65,9 @@ jest.mock('lucide-react-native', () => {
   const React = require('react');
   const { View } = require('react-native');
 
-  const createIcon = (name: string) => (props: Record<string, unknown>) =>
-    React.createElement(View, { testID: `lucide-${name}`, ...props });
+  const createIcon =
+    (name: string) => (props: Record<string, unknown>) =>
+      React.createElement(View, { testID: `lucide-${name}`, ...props });
 
   return {
     CircleArrowRight: createIcon('CircleArrowRight'),

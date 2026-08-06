@@ -82,6 +82,15 @@ const safeReactNativeUrlPolyfillAutoPath = path.join(
   'lib',
   'reactNativeUrlPolyfillAuto.js'
 );
+// See src/lib/materialCommunityIconsStub.js — react-native-paper hard-requires
+// the MaterialCommunityIcons module at import time, dragging a 1.3MB TTF into
+// every bundle for icons this app never renders.
+const materialCommunityIconsStubPath = path.join(
+  __dirname,
+  'src',
+  'lib',
+  'materialCommunityIconsStub.js'
+);
 
 // Keep existing resolver customizations
 config.resolver.assetExts.push('ttf', 'otf', 'woff', 'woff2', 'wav');
@@ -116,6 +125,16 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
     return {
       type: 'sourceFile',
       filePath: safeReactNativeUrlPolyfillAutoPath,
+    };
+  }
+
+  if (
+    moduleName === '@expo/vector-icons/MaterialCommunityIcons' ||
+    moduleName === 'react-native-vector-icons/MaterialCommunityIcons'
+  ) {
+    return {
+      type: 'sourceFile',
+      filePath: materialCommunityIconsStubPath,
     };
   }
 

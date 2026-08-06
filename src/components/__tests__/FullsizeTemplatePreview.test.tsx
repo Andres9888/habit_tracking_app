@@ -30,36 +30,22 @@ jest.mock('react-native-safe-area-context', () => ({
 // Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {
   const React = require('react');
-  const { View, Pressable, ScrollView, Text } = require('react-native');
+  const { View, Pressable, Text } = require('react-native');
 
-  const AnimatedView = React.forwardRef(
-    (props: Record<string, unknown>, ref: React.Ref<unknown>) => {
-      return React.createElement(View, { ...props, ref });
-    }
-  );
+  const AnimatedView = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => {
+    return React.createElement(View, { ...props, ref });
+  });
   AnimatedView.displayName = 'AnimatedView';
 
-  const AnimatedText = React.forwardRef(
-    (props: Record<string, unknown>, ref: React.Ref<unknown>) => {
-      return React.createElement(Text, { ...props, ref });
-    }
-  );
+  const AnimatedText = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => {
+    return React.createElement(Text, { ...props, ref });
+  });
   AnimatedText.displayName = 'AnimatedText';
-  const AnimatedScrollView = React.forwardRef(
-    (props: Record<string, unknown>, ref: React.Ref<unknown>) => {
-      return React.createElement(ScrollView, { ...props, ref });
-    }
-  );
-  AnimatedScrollView.displayName = 'AnimatedScrollView';
 
-  const createAnimatedComponent = (
-    Component: React.ComponentType<Record<string, unknown>>
-  ) => {
-    const AnimatedComponent = React.forwardRef(
-      (props: Record<string, unknown>, ref: React.Ref<unknown>) => {
-        return React.createElement(Component, { ...props, ref });
-      }
-    );
+  const createAnimatedComponent = (Component: React.ComponentType<Record<string, unknown>>) => {
+    const AnimatedComponent = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => {
+      return React.createElement(Component, { ...props, ref });
+    });
     AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`;
     return AnimatedComponent;
   };
@@ -67,7 +53,7 @@ jest.mock('react-native-reanimated', () => {
   const Animated = {
     View: AnimatedView,
     Text: AnimatedText,
-    ScrollView: AnimatedScrollView,
+    ScrollView: createAnimatedComponent(require('react-native').ScrollView),
     createAnimatedComponent,
   };
 
@@ -75,6 +61,7 @@ jest.mock('react-native-reanimated', () => {
     ...Animated,
     default: Animated,
     useAnimatedStyle: () => ({}),
+    useAnimatedScrollHandler: () => jest.fn(),
     useSharedValue: (initial: number) => ({ value: initial }),
     withSpring: (value: number) => value,
     withDelay: (_delay: number, value: number) => value,
@@ -82,48 +69,34 @@ jest.mock('react-native-reanimated', () => {
     withTiming: (value: number) => value,
     withRepeat: (value: number) => value,
     Easing: {
-      in: () => (x: number) => x,
       out: () => (x: number) => x,
+      in: () => (x: number) => x,
       inOut: () => (x: number) => x,
       ease: (x: number) => x,
+      cubic: (x: number) => x,
     },
     interpolate: () => 0,
-    interpolateColor: (
-      _value: number,
-      _inputRange: number[],
-      outputRange: string[]
-    ) => outputRange[0],
+    interpolateColor: () => '#000',
     runOnJS: (fn: Function) => fn,
-    useAnimatedScrollHandler: (
-      handlers: Record<string, (...args: unknown[]) => unknown>
-    ) => handlers,
   };
 });
 
 // Mock react-native-confetti-cannon
 jest.mock('react-native-confetti-cannon', () => {
   const React = require('react');
-  return React.forwardRef(
-    (props: Record<string, unknown>, ref: React.Ref<unknown>) => {
-      React.useImperativeHandle(ref, () => ({
-        start: jest.fn(),
-      }));
-      return null;
-    }
-  );
+  return React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => {
+    React.useImperativeHandle(ref, () => ({
+      start: jest.fn(),
+    }));
+    return null;
+  });
 });
 
 // Mock Modal component
 jest.mock('../Modal', () => {
   const React = require('react');
   const { View } = require('react-native');
-  return function MockModal({
-    children,
-    visible,
-  }: {
-    children: React.ReactNode;
-    visible: boolean;
-  }) {
+  return function MockModal({ children, visible }: { children: React.ReactNode; visible: boolean }) {
     if (!visible) return null;
     return React.createElement(View, { testID: 'modal' }, children);
   };
@@ -143,21 +116,17 @@ jest.mock('../Button/Button', () => {
 });
 
 // Mock useAppTheme
-jest.mock('../../theme', () => {
-  const actual = jest.requireActual('../../theme');
-  return {
-    ...actual,
-    useAppTheme: () => ({
-      custom: {
-        fontFamilies: {
-          primary: {
-            text: 'System',
-          },
+jest.mock('../../theme', () => ({
+  useAppTheme: () => ({
+    custom: {
+      fontFamilies: {
+        primary: {
+          text: 'System',
         },
       },
-    }),
-  };
-});
+    },
+  }),
+}));
 
 // Mock useReduceMotion
 jest.mock('../../hooks/useReduceMotion', () => ({
@@ -435,7 +404,9 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const closeButton = getByLabelText('Close preview');
+      // Relabelled from 'Close preview': the header now carries two exits, and
+      // "Close" alone did not say which destination this one leads to.
+      const closeButton = getByLabelText('Close and go to my habits');
       fireEvent.press(closeButton);
 
       expect(Haptics.impactAsync).toHaveBeenCalledWith(
@@ -456,9 +427,7 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const importButton = getByLabelText(
-        'Add Morning Meditation to my habits'
-      );
+      const importButton = getByLabelText(/Import.*habit/i);
       fireEvent.press(importButton);
 
       expect(Haptics.impactAsync).toHaveBeenCalledWith(
@@ -479,9 +448,7 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const customizeButton = getByLabelText(
-        'Customize habit before adding'
-      );
+      const customizeButton = getByLabelText('Customize habit before importing');
       fireEvent.press(customizeButton);
 
       expect(Haptics.impactAsync).toHaveBeenCalledWith(
@@ -506,7 +473,9 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const closeButton = getByLabelText('Close preview');
+      // Relabelled from 'Close preview': the header now carries two exits, and
+      // "Close" alone did not say which destination this one leads to.
+      const closeButton = getByLabelText('Close and go to my habits');
       fireEvent.press(closeButton);
 
       expect(Haptics.impactAsync).not.toHaveBeenCalled();
@@ -531,7 +500,7 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(getByText('Adding…')).toBeTruthy();
+      expect(getByText('Importing...')).toBeTruthy();
     });
 
     it('shows success state when isImported is true', () => {
@@ -549,11 +518,9 @@ describe('FullsizeTemplatePreview', () => {
 
       expect(getByText('Added!')).toBeTruthy();
       // The import button should not be shown (it's replaced with success button)
-      expect(
-        queryByLabelText('Add Morning Meditation to my habits')
-      ).toBeNull();
+      expect(queryByLabelText(/Import.*habit/i)).toBeNull();
       // Customize link should be hidden in success state
-      expect(queryByLabelText('Customize habit before adding')).toBeNull();
+      expect(queryByLabelText('Customize habit before importing')).toBeNull();
     });
 
     it('does not call onImport when already importing', () => {
@@ -569,7 +536,7 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const importButton = getByText('Adding…');
+      const importButton = getByText('Importing...');
       fireEvent.press(importButton);
 
       expect(mockOnImport).not.toHaveBeenCalled();
@@ -593,9 +560,7 @@ describe('FullsizeTemplatePreview', () => {
       expect(successButton).toBeTruthy();
 
       // There should be no import button
-      expect(
-        queryByLabelText('Add Morning Meditation to my habits')
-      ).toBeNull();
+      expect(queryByLabelText(/Import.*habit/i)).toBeNull();
 
       // onImport should never have been called
       expect(mockOnImport).not.toHaveBeenCalled();
@@ -615,8 +580,13 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const closeButton = getByLabelText('Close preview');
+      // Relabelled from 'Close preview': the header now carries two exits, and
+      // "Close" alone did not say which destination this one leads to.
+      const closeButton = getByLabelText('Close and go to my habits');
       expect(closeButton.props.accessibilityRole).toBe('button');
+      expect(closeButton.props.accessibilityHint).toBe(
+        'Double tap to close this preview'
+      );
     });
 
     it('has accessible import button with template name', () => {
@@ -631,13 +601,8 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const importButton = getByLabelText(
-        'Add Daily Reading to my habits'
-      );
+      const importButton = getByLabelText('Import Daily Reading habit');
       expect(importButton.props.accessibilityRole).toBe('button');
-      expect(importButton.props.accessibilityHint).toBe(
-        'Add this habit to your list'
-      );
     });
 
     it('has accessible customize button', () => {
@@ -652,24 +617,23 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const customizeButton = getByLabelText(
-        'Customize habit before adding'
-      );
+      const customizeButton = getByLabelText('Customize habit before importing');
       expect(customizeButton.props.accessibilityRole).toBe('button');
     });
+
   });
 
-  describe('Current research section', () => {
-    it('uses legacy tips as current how-to-start steps', () => {
+  describe('Tips for Success Section', () => {
+    it('renders how-to-start from tips when howToStart is absent', () => {
       const template = createMockTemplate();
       // Add tips to the template
-      (template as unknown).tips = [
+      (template as unknown as { tips: string[] }).tips = [
         'Start with just 2 minutes and gradually increase',
         'Practice at the same time each day',
         'Use a timer to stay focused',
       ];
 
-      const { getAllByText, getByText, queryByText } = render(
+      const { getByText } = render(
         <FullsizeTemplatePreview
           template={template}
           visible={true}
@@ -679,20 +643,15 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(getByText('The research')).toBeTruthy();
-      expect(
-        getAllByText('Morning meditation reduces cortisol by 23%.')
-      ).toBeTruthy();
       expect(getByText('How to start')).toBeTruthy();
-      expect(queryByText('TIPS FOR SUCCESS')).toBeNull();
-      expect(
-        getByText('Start with just 2 minutes and gradually increase')
-      ).toBeTruthy();
+      expect(getByText('Start with just 2 minutes and gradually increase')).toBeTruthy();
+      expect(getByText('Practice at the same time each day')).toBeTruthy();
+      expect(getByText('Use a timer to stay focused')).toBeTruthy();
     });
 
-    it('does not render tips section when tips array is empty', () => {
+    it('does not render how-to-start when tips array is empty', () => {
       const template = createMockTemplate();
-      (template as unknown).tips = [];
+      (template as unknown as { tips: string[] }).tips = [];
 
       const { queryByText } = render(
         <FullsizeTemplatePreview
@@ -704,10 +663,10 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(queryByText('TIPS FOR SUCCESS')).toBeNull();
+      expect(queryByText('How to start')).toBeNull();
     });
 
-    it('does not render tips section when tips is undefined', () => {
+    it('does not render how-to-start when tips is undefined', () => {
       const template = createMockTemplate();
       // tips is not set (undefined)
 
@@ -721,27 +680,12 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(queryByText('TIPS FOR SUCCESS')).toBeNull();
+      expect(queryByText('How to start')).toBeNull();
     });
 
-    it('renders numbered research sources in their authored order', () => {
-      const template = createMockTemplate({
-        sources: [
-          {
-            authors: 'A. Author',
-            title: 'First study',
-            journal: 'Journal One',
-            year: '2024',
-          },
-          {
-            authors: 'B. Author',
-            title: 'Second study',
-            journal: 'Journal Two',
-            year: '2025',
-          },
-        ],
-      });
-      (template as unknown).tips = ['First tip', 'Second tip'];
+    it('renders numbered tips with correct order', () => {
+      const template = createMockTemplate();
+      (template as unknown as { tips: string[] }).tips = ['First tip', 'Second tip'];
 
       const { getByText } = render(
         <FullsizeTemplatePreview
@@ -753,21 +697,35 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(getByText('01')).toBeTruthy();
-      expect(getByText('02')).toBeTruthy();
-      expect(getByText('First study')).toBeTruthy();
-      expect(getByText('Second study')).toBeTruthy();
+      expect(getByText('1')).toBeTruthy();
+      expect(getByText('2')).toBeTruthy();
       expect(getByText('First tip')).toBeTruthy();
       expect(getByText('Second tip')).toBeTruthy();
     });
 
-    it('exposes linked research sources as links', () => {
+    it('places decision sections before science when both are present', () => {
       const template = createMockTemplate({
-        scientificLink: 'https://example.com/study',
-      });
-      (template as unknown).tips = ['Tip one', 'Tip two', 'Tip three'];
+        startSmallVersion: 'One mindful breath.',
+        benefitDetails: [
+          {
+            icon: 'wave',
+            title: 'Calmer days',
+            description: 'Lower reactivity',
+          },
+        ],
+        howToStart: ['Sit quietly', 'Breathe slowly'],
+        lead: 'Meditation regulates stress.',
+        evidence: 'Goyal et al., 2014',
+        timeline: [
+          {
+            when: 'Week 1',
+            title: 'Effortful',
+            description: 'Building the cue',
+          },
+        ],
+      } as Partial<Doc<'templates'>>);
 
-      const { getAllByRole } = render(
+      const { toJSON, getByText } = render(
         <FullsizeTemplatePreview
           template={template}
           visible={true}
@@ -777,7 +735,21 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(getAllByRole('link')).toHaveLength(2);
+      expect(getByText("What you'll feel")).toBeTruthy();
+      expect(getByText('Start small')).toBeTruthy();
+      expect(getByText('How to start')).toBeTruthy();
+      expect(getByText('Why it works')).toBeTruthy();
+
+      const tree = JSON.stringify(toJSON());
+      expect(tree.indexOf("What you'll feel")).toBeLessThan(
+        tree.indexOf('Start small')
+      );
+      expect(tree.indexOf('Start small')).toBeLessThan(
+        tree.indexOf('How to start')
+      );
+      expect(tree.indexOf('How to start')).toBeLessThan(
+        tree.indexOf('Why it works')
+      );
     });
   });
 

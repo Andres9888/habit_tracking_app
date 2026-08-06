@@ -6,6 +6,7 @@
 import React from 'react';
 import { Text, type TextStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
+import type { AnimatedStyle } from 'react-native-reanimated';
 import { styles } from './styles';
 import { fontWeights } from '@/theme/typography';
 
@@ -16,7 +17,7 @@ interface CalendarDayNumberProps {
   isToday: boolean;
   showCompleted: boolean;
   staticTextColor: string;
-  textStyle: TextStyle;
+  textStyle: AnimatedStyle<TextStyle>;
   useSolidCompletedFill: boolean;
 }
 

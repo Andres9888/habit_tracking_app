@@ -1,74 +1,52 @@
 /**
  * Hero section for FullsizeTemplatePreview
- * Displays the template icon, name, and metadata pills
+ * Warm-peach gradient hero: cream icon tile, serif title, meta chips.
  */
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import { withAlpha } from '@/theme/colors';
-import { lightenColor } from '../../CreateHabitModal/components/StickyCreateBar/colorUtils';
 import { heroStyles } from '../styles';
+import { useDetailPalette } from '../detailPalette';
+import { HeroIconTile } from './HeroIconTile';
 import { HeroMetaPills } from './HeroMetaPills';
-import { buildHeroGradient } from '../utils/heroGradient';
 import type { HeroSectionProps } from './HeroSection.types';
 
-export function HeroSection({
-  template,
-  iconColor,
-  iconAnimatedStyle,
-  iconGlowStyle,
-}: HeroSectionProps) {
-  const baseGradient = buildHeroGradient(iconColor);
-  // First stop is transparent so the ScrollView's header-matching background
-  // shows through — prevents alpha-stacking that makes the hero top read
-  // darker than the ModalHeader.
-  const gradientColors: readonly [string, string, string] = [
-    'transparent',
-    baseGradient[1],
-    baseGradient[2],
-  ];
+export function HeroSection({ template, iconAnimatedStyle }: HeroSectionProps) {
+  const palette = useDetailPalette();
 
+  // Every stop is an opaque hex, and stop 0 is the exact color the ModalHeader
+  // and ScrollView background use — so there is nothing to alpha-stack. Do NOT
+  // reintroduce a 'transparent' first stop: RN interpolates it as transparent
+  // BLACK, which greys out the middle of the gradient.
   return (
     <LinearGradient
-      colors={gradientColors}
+      colors={palette.heroGradient}
+      locations={palette.heroLocations}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
       style={heroStyles.heroGradient}
     >
       <View style={heroStyles.heroContent}>
-        <Animated.View style={[heroStyles.iconWrapper, iconAnimatedStyle]}>
-          <Animated.View
-            style={[
-              heroStyles.iconGlow,
-              {
-                backgroundColor: withAlpha(iconColor, 0.18),
-                shadowColor: iconColor,
-              },
-              iconGlowStyle,
-            ]}
-          />
-          <LinearGradient
-            testID='templates-preview-icon'
-            colors={[lightenColor(iconColor, 25), iconColor]}
-            start={{ x: 0.5, y: 0 }}
-            end={{ x: 0.5, y: 1 }}
-            style={heroStyles.iconContainer}
-          >
-            <Text style={heroStyles.iconText}>{template?.icon ?? '✨'}</Text>
-          </LinearGradient>
-        </Animated.View>
+        <HeroIconTile
+          icon={template?.icon ?? '✨'}
+          iconAnimatedStyle={iconAnimatedStyle}
+        />
 
-        <Text testID='templates-preview-name' style={heroStyles.templateName}>
+        <Text
+          testID='templates-preview-name'
+          style={[heroStyles.templateName, { color: palette.textPrimary }]}
+        >
           {template?.name ?? 'Template'}
         </Text>
 
         {template?.tagline ? (
-          <Text style={heroStyles.tagline}>{template.tagline}</Text>
+          <Text style={[heroStyles.tagline, { color: palette.textSecondary }]}>
+            {template.tagline}
+          </Text>
         ) : null}
 
-        <HeroMetaPills iconColor={iconColor} template={template} />
+        <HeroMetaPills template={template} />
       </View>
     </LinearGradient>
   );

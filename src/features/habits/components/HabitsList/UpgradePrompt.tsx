@@ -11,24 +11,21 @@
  */
 
 import { Pressable, Text, View } from 'react-native';
-import Animated, {
-  FadeIn,
-  FadeInDown,
-  FadeOut,
-  FadeOutDown,
-} from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ANIMATION_DURATION, ANIMATION_VALUES } from '../../../../constants';
-import { useThemeColors } from '../../../../theme';
+import { OPACITY, ANIMATION_DURATION, ANIMATION_VALUES } from '../../../../constants';
+import { useThemeColors, colors as palette } from '../../../../theme';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
-import { UpgradePromptActions } from './UpgradePromptActions';
 
 interface UpgradePromptProps {
   onClose: () => void;
   onUpgradePress: () => void;
 }
 
-export function UpgradePrompt({ onClose, onUpgradePress }: UpgradePromptProps) {
+export function UpgradePrompt({
+  onClose,
+  onUpgradePress,
+}: UpgradePromptProps) {
   const { colors, isDark } = useThemeColors();
   const { triggerLightImpact } = useHapticFeedback();
 
@@ -82,22 +79,52 @@ export function UpgradePrompt({ onClose, onUpgradePress }: UpgradePromptProps) {
             Track unlimited habits across all areas of your life. Premium
             members build stronger routines and stay consistent 2x longer.
           </Text>
-          <View
-            className='items-center rounded-2xl px-4 py-3'
-            style={{ backgroundColor: colors.status.premiumLight }}
-          >
-            <Text
-              className='text-center text-sm font-semibold'
-              style={{ color: colors.status.premiumText }}
-            >
+          <View className='items-center rounded-2xl px-4 py-3' style={{ backgroundColor: colors.status.premiumLight }}>
+            <Text className='text-center text-sm font-semibold' style={{ color: colors.status.premiumText }}>
               $0 for 7 days · Cancel anytime
             </Text>
           </View>
-          <UpgradePromptActions
-            colors={colors}
-            onClose={handleClose}
-            onUpgradePress={onUpgradePress}
-          />
+          <Pressable
+            accessibilityHint='Start your 7-day free trial'
+            accessibilityLabel='Start 7-day free trial for premium'
+            accessibilityRole='button'
+            className='items-center rounded-full px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
+            style={({ pressed }) => ({
+              opacity: pressed ? OPACITY.strong : OPACITY.full,
+              transform: [{ scale: pressed ? 0.96 : 1 }],
+            })}
+            onPress={onUpgradePress}
+          >
+            <LinearGradient
+              className='absolute inset-0 rounded-full'
+              colors={[palette.premium[600], palette.indigo[600]]}
+              end={{ x: 1, y: 0 }}
+              start={{ x: 0, y: 0 }}
+            />
+            <Text className='text-base font-semibold text-white'>
+              Start Free Trial →
+            </Text>
+          </Pressable>
+          <Pressable
+            accessibilityHint='Dismiss this upgrade prompt'
+            accessibilityLabel='Dismiss upgrade prompt'
+            accessibilityRole='button'
+            className='items-center rounded-full border-2 px-5 py-3'
+            style={({ pressed }) => ({
+              borderColor: colors.border,
+              backgroundColor: `${colors.card}CC`,
+              opacity: pressed ? OPACITY.high : OPACITY.full,
+              transform: [{ scale: pressed ? 0.96 : 1 }],
+            })}
+            onPress={handleClose}
+          >
+            <Text
+              className='text-base font-normal'
+              style={{ color: colors.text.secondary }}
+            >
+              Maybe later
+            </Text>
+          </Pressable>
         </View>
       </Animated.View>
     </Animated.View>

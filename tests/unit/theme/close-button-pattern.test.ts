@@ -1,9 +1,11 @@
 /**
- * Current close/dismiss button contract.
- *
- * Close buttons were centralized in ModalCloseButton and ScreenHeader; this
- * suite verifies those implementations and their live consumers instead of
- * reaching into deleted modal implementations.
+ * Close/Dismiss Button Pattern Tests (Phase 4 Task 4)
+ * Verifies that modal close buttons use consistent:
+ * - Icon: X from lucide-react-native (not unicode ✕)
+ * - Color: colors.gray[500] theme token
+ * - Size: 24px icon
+ * - Hit target: 44x44pt minimum (Apple HIG)
+ * - strokeWidth: 2
  */
 
 import * as fs from 'fs';
@@ -11,147 +13,131 @@ import * as path from 'path';
 
 const SRC_ROOT = path.resolve(__dirname, '../../../src');
 
-function readSource(relativePath: string): string {
-  return fs.readFileSync(path.join(SRC_ROOT, relativePath), 'utf-8');
-}
-
-const modalCloseButtonSource = readSource('components/ui/ModalCloseButton.tsx');
-const screenHeaderSource = readSource(
-  'components/ScreenHeader/ScreenHeader.tsx'
-);
-const screenHeaderStylesSource = readSource(
-  'components/ScreenHeader/ScreenHeader.styles.ts'
-);
-
-const MODAL_CLOSE_BUTTON_CONSUMERS = [
-  'components/HabitCalendarModal/ModalHeader.tsx',
-  'components/SettingsModal/CalendarLookPage.tsx',
-  'components/SettingsModal/SettingsHeader.tsx',
-  'components/FullsizeTemplatePreview/components/ModalHeader.tsx',
-  'components/SettingsModal/AccountPage.tsx',
+/** Modal files with close/dismiss buttons that should follow the standard pattern */
+const STANDARD_CLOSE_BUTTON_FILES = [
+  'components/CreateHabitModal/components/ModalHeader/ModalHeader.tsx',
+  'components/ArchivedHabitsModal/components/ModalHeader.tsx',
+  'components/TemplateScienceModal/components/ModalHeader.tsx',
+  'components/StatsNotesModal/StatsNotesModal.tsx',
+  'components/PausedHabitsModal/PausedHabitsModal.tsx',
 ];
 
-describe('ModalCloseButton shared close control', () => {
-  it('imports X from lucide-react-native', () => {
-    expect(modalCloseButtonSource).toMatch(
-      /import\s*{\s*X\s*}\s*from\s*'lucide-react-native'/
-    );
-  });
+describe('Close button uses theme color token (colors.gray[500])', () => {
+  for (const relPath of STANDARD_CLOSE_BUTTON_FILES) {
+    const fullPath = path.join(SRC_ROOT, relPath);
 
-  it('does not use a unicode close glyph', () => {
-    expect(modalCloseButtonSource).not.toContain('✕');
-  });
-
-  it('uses theme-aware text and surface colors', () => {
-    expect(modalCloseButtonSource).toContain('useThemeColors()');
-    expect(modalCloseButtonSource).toContain('colors.text.secondary');
-    expect(modalCloseButtonSource).toContain('colors.surface');
-  });
-
-  it('has a 44pt minimum height', () => {
-    expect(modalCloseButtonSource).toMatch(/height:\s*44/);
-  });
-
-  it('has a 44pt minimum width', () => {
-    expect(modalCloseButtonSource).toMatch(/width:\s*44/);
-  });
-
-  it('exposes button semantics', () => {
-    expect(modalCloseButtonSource).toContain('accessibilityRole="button"');
-  });
-
-  it('uses AnimatedPressable for press feedback', () => {
-    expect(modalCloseButtonSource).toContain('<AnimatedPressable');
-    expect(modalCloseButtonSource).not.toMatch(/<Pressable[\s>]/);
-  });
-
-  it('uses the current solid and subtle stroke widths', () => {
-    expect(modalCloseButtonSource).toContain(
-      'strokeWidth={isSubtle ? 2 : 2.5}'
-    );
-  });
-});
-
-describe('ScreenHeader close action', () => {
-  it('imports the lucide X icon', () => {
-    expect(screenHeaderSource).toMatch(
-      /import\s*{[^}]*\bX\b[^}]*}\s*from\s*'lucide-react-native'/
-    );
-  });
-
-  it('does not use a unicode close glyph', () => {
-    expect(screenHeaderSource).not.toContain('✕');
-  });
-
-  it('selects X for the close action', () => {
-    expect(screenHeaderSource).toContain(
-      "const Icon = leftAction === 'close' ? X : ChevronLeft"
-    );
-  });
-
-  it('labels the close action for assistive technology', () => {
-    expect(screenHeaderSource).toContain(
-      "const label = leftAction === 'close' ? 'Close' : 'Go back'"
-    );
-  });
-
-  it('exposes button semantics', () => {
-    expect(screenHeaderSource).toContain('accessibilityRole="button"');
-  });
-
-  it('uses the current 2.5 stroke width', () => {
-    expect(screenHeaderSource).toContain('strokeWidth={2.5}');
-  });
-
-  it('uses a 40pt visual icon button', () => {
-    expect(screenHeaderStylesSource).toMatch(
-      /iconButton:\s*\{[\s\S]*?height:\s*40[\s\S]*?width:\s*40/
-    );
-  });
-
-  it('expands the touch target with hitSlop', () => {
-    expect(screenHeaderSource).toContain('hitSlop={8}');
-  });
-});
-
-describe('Live modal headers use the shared close control', () => {
-  for (const relativePath of MODAL_CLOSE_BUTTON_CONSUMERS) {
-    it(`${relativePath} imports ModalCloseButton`, () => {
-      const source = readSource(relativePath);
-      expect(source).toMatch(/import\s*{\s*ModalCloseButton\s*}/);
-    });
-
-    it(`${relativePath} renders ModalCloseButton`, () => {
-      const source = readSource(relativePath);
-      expect(source).toContain('<ModalCloseButton');
+    it(`${relPath} uses colors.gray[500] for X icon`, () => {
+      const content = fs.readFileSync(fullPath, 'utf-8');
+      // Should use theme token, not hardcoded hex
+      expect(content).toContain('colors.gray[500]');
+      // Should NOT have hardcoded close icon colors
+      expect(content).not.toMatch(/<X\s[^>]*color='#/);
     });
   }
 });
 
-describe('Archived habits back control', () => {
-  const source = readSource(
-    'components/ArchivedHabitsModal/components/ModalHeader.tsx'
+describe('Close button uses lucide X icon (not unicode)', () => {
+  for (const relPath of STANDARD_CLOSE_BUTTON_FILES) {
+    const fullPath = path.join(SRC_ROOT, relPath);
+
+    it(`${relPath} imports X from lucide-react-native`, () => {
+      const content = fs.readFileSync(fullPath, 'utf-8');
+      expect(content).toMatch(
+        /import\s*{[^}]*\bX\b[^}]*}\s*from\s*'lucide-react-native'/
+      );
+    });
+
+    it(`${relPath} does not use unicode ✕ for close`, () => {
+      const content = fs.readFileSync(fullPath, 'utf-8');
+      expect(content).not.toContain('✕');
+    });
+  }
+});
+
+describe('Close button has 44x44pt hit target', () => {
+  const TAILWIND_44_FILES = [
+    'components/CreateHabitModal/components/ModalHeader/ModalHeader.tsx',
+    'components/ArchivedHabitsModal/components/ModalHeader.tsx',
+    'components/StatsNotesModal/StatsNotesModal.tsx',
+    'components/PausedHabitsModal/PausedHabitsModal.tsx',
+  ];
+
+  for (const relPath of TAILWIND_44_FILES) {
+    const fullPath = path.join(SRC_ROOT, relPath);
+
+    it(`${relPath} has h-11 w-11 (44x44pt) hit target`, () => {
+      const content = fs.readFileSync(fullPath, 'utf-8');
+      // h-11 = 44px, w-11 = 44px in Tailwind
+      expect(content).toMatch(/h-11.*w-11|w-11.*h-11/);
+    });
+  }
+
+  it('TemplateScienceModal close button has 44x44pt via StyleSheet', () => {
+    const stylesPath = path.join(
+      SRC_ROOT,
+      'components/TemplateScienceModal/styles/header.styles.ts'
+    );
+    const content = fs.readFileSync(stylesPath, 'utf-8');
+    expect(content).toMatch(/height:\s*44/);
+    expect(content).toMatch(/width:\s*44/);
+  });
+});
+
+describe('Close button uses strokeWidth 2', () => {
+  for (const relPath of STANDARD_CLOSE_BUTTON_FILES) {
+    const fullPath = path.join(SRC_ROOT, relPath);
+
+    it(`${relPath} X icon has strokeWidth={2}`, () => {
+      const content = fs.readFileSync(fullPath, 'utf-8');
+      // Match <X ... strokeWidth={2} (exactly 2, not 2.5)
+      const xMatch = content.match(/<X[\s\S]*?strokeWidth=\{([\d.]+)\}/);
+      expect(xMatch).not.toBeNull();
+      expect(parseFloat(xMatch![1])).toBe(2);
+    });
+  }
+});
+
+describe('TemplateScienceModal header styles use theme tokens', () => {
+  const stylesPath = path.join(
+    SRC_ROOT,
+    'components/TemplateScienceModal/styles/header.styles.ts'
   );
 
-  it('uses ChevronLeft for back navigation', () => {
-    expect(source).toMatch(
-      /import\s*{[^}]*ChevronLeft[^}]*}\s*from\s*'lucide-react-native'/
-    );
+  it('imports colors from theme', () => {
+    const content = fs.readFileSync(stylesPath, 'utf-8');
+    expect(content).toMatch(/import.*colors.*from.*theme\/colors/);
   });
 
-  it('does not use unicode navigation glyphs', () => {
-    expect(source).not.toContain('←');
-    expect(source).not.toContain('✕');
+  it('uses colors.gray[100] for button background (not hardcoded #F3F4F6)', () => {
+    const content = fs.readFileSync(stylesPath, 'utf-8');
+    expect(content).not.toContain('#F3F4F6');
+    expect(content).toContain('colors.gray[100]');
   });
 
-  it('exposes button semantics and an accessibility label', () => {
-    expect(source).toContain("accessibilityLabel='Back to settings'");
-    expect(source).toContain("accessibilityRole='button'");
+  it('uses colors.gray[900] for header title (not hardcoded #111827)', () => {
+    const content = fs.readFileSync(stylesPath, 'utf-8');
+    expect(content).not.toContain('#111827');
+    expect(content).toContain('colors.gray[900]');
+  });
+});
+
+describe('PausedHabitsModal back button also standardized', () => {
+  const filePath = path.join(
+    SRC_ROOT,
+    'components/PausedHabitsModal/PausedHabitsModal.tsx'
+  );
+
+  it('imports ChevronLeft from lucide (not unicode ←)', () => {
+    const content = fs.readFileSync(filePath, 'utf-8');
+    expect(content).toMatch(/import.*ChevronLeft.*from.*lucide-react-native/);
+    expect(content).not.toContain('←');
   });
 
-  it('uses a 40pt control with a 24pt theme-aware icon', () => {
-    expect(source).toMatch(/width:\s*40[\s\S]*?height:\s*40/);
-    expect(source).toContain('color={colors.text.primary}');
-    expect(source).toContain('size={iconSizes.large}');
+  it('back button has 44x44pt hit target', () => {
+    const content = fs.readFileSync(filePath, 'utf-8');
+    // Both back and close buttons should have h-11 w-11
+    const matches = content.match(/h-11 w-11/g);
+    expect(matches).not.toBeNull();
+    expect(matches!.length).toBeGreaterThanOrEqual(2);
   });
 });

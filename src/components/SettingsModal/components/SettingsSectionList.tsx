@@ -20,8 +20,10 @@ export function SettingsSectionList(p: SettingsSectionListProps) {
     <>
       <SettingsPrimarySections {...p} sectionIconColor={p.sectionIconColor} />
       <SettingsSecondarySections
+        isPremium={p.isPremium}
         sectionIconColor={p.sectionIconColor}
         onFeedback={p.onFeedback}
+        onPremiumUpsell={p.onPremiumUpsell}
         onPrivacy={p.onPrivacy}
         onRate={p.onRate}
         onShare={p.onShare}

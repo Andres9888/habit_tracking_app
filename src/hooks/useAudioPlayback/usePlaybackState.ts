@@ -5,7 +5,7 @@
  */
 
 import { useState, useRef } from 'react';
-import { Audio } from 'expo-av';
+import type { AudioPlayer } from 'expo-audio';
 import { AppState, AppStateStatus } from 'react-native';
 import type { PlaybackStatus } from './types';
 import { INITIAL_PLAYBACK_STATUS } from './constants';
@@ -13,7 +13,7 @@ import { INITIAL_PLAYBACK_STATUS } from './constants';
 export interface UsePlaybackStateReturn {
   status: PlaybackStatus;
   setStatus: React.Dispatch<React.SetStateAction<PlaybackStatus>>;
-  soundRef: React.MutableRefObject<Audio.Sound | null>;
+  soundRef: React.MutableRefObject<AudioPlayer | null>;
   wasPlayingBeforeInterruptionRef: React.MutableRefObject<boolean>;
   previousAppStateRef: React.MutableRefObject<AppStateStatus>;
 }
@@ -25,7 +25,7 @@ export function usePlaybackState(): UsePlaybackStateReturn {
   const [status, setStatus] = useState<PlaybackStatus>(INITIAL_PLAYBACK_STATUS);
 
   // Sound instance ref
-  const soundRef = useRef<Audio.Sound | null>(null);
+  const soundRef = useRef<AudioPlayer | null>(null);
 
   // Track if we were playing when interrupted (for resumption)
   const wasPlayingBeforeInterruptionRef = useRef<boolean>(false);

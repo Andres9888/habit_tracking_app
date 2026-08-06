@@ -1,6 +1,6 @@
 /**
  * useAudioRecording Hook - Main orchestrator
- * Audio recording integration using expo-av for Voice Notes feature.
+ * Audio recording integration using expo-audio for Voice Notes feature.
  */
 
 import { useEffect } from 'react';
@@ -25,7 +25,9 @@ export function useAudioRecording(
 
   useEffect(() => {
     return () => {
-      hooks.recordingRef.current?.stopAndUnloadAsync().catch(() => {});
+      if (hooks.recordingRef.current?.isRecording) {
+        hooks.recordingRef.current.stop().catch(() => {});
+      }
     };
   }, [hooks.recordingRef]);
 

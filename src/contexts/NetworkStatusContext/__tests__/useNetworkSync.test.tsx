@@ -13,9 +13,9 @@ import { useNetworkSync } from '../useNetworkSync';
 
 // NetInfo state types
 const NetInfoStateType = {
-  cellular: 'CELLULAR' as const,
-  none: 'NONE' as const,
-  wifi: 'WIFI' as const,
+  cellular: 'cellular' as const,
+  none: 'none' as const,
+  wifi: 'wifi' as const,
 };
 
 // NetInfo state factory

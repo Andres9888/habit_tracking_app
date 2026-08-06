@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { FlatList, View } from 'react-native';
+import { Alert, FlatList, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { airy } from '@/theme/airyScale';
 import { useArchivedHabitsModalState } from './useArchivedHabitsModalState';
@@ -11,8 +11,12 @@ import {
 } from './components';
 import { DangerZoneFooter } from './components/DangerZoneFooter';
 import { LoadingState } from './components/LoadingState';
-import { showArchivedHabitUpgradeAlert } from './showArchivedHabitUpgradeAlert';
 import type { ArchivedHabitsModalProps, ArchivedHabit } from './types';
+
+// Module scope, not an inline arrow: as an inline function this was a new
+// *component type* on every render, so React unmounted and remounted every
+// separator in the list each time.
+const ItemSeparator = () => <View style={{ height: 14 }} />;
 
 export default function ArchivedHabitsModal({
   onBack,
@@ -20,7 +24,13 @@ export default function ArchivedHabitsModal({
   const insets = useSafeAreaInsets();
   const state = useArchivedHabitsModalState();
 
-  const handleUpgradePress = useCallback(showArchivedHabitUpgradeAlert, []);
+  const handleUpgradePress = useCallback(() => {
+    Alert.alert(
+      'Upgrade to Premium',
+      "You've reached the free limit of 3 active habits. Upgrade to premium for unlimited habits, or delete an active habit to make room.",
+      [{ text: 'OK', style: 'default' }]
+    );
+  }, []);
 
   const handleSelectPress = useCallback(() => {
     if (state.selectionMode) state.exitSelectionMode();
@@ -82,7 +92,7 @@ export default function ArchivedHabitsModal({
           }}
           data={state.archivedHabits}
           extraData={extraData}
-          ItemSeparatorComponent={() => <View style={{ height: 14 }} />}
+          ItemSeparatorComponent={ItemSeparator}
           keyExtractor={keyExtractor}
           ListFooterComponent={ListFooter}
           renderItem={renderItem}

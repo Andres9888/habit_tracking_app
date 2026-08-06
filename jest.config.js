@@ -25,16 +25,13 @@ export default {
   ],
   testPathIgnorePatterns: [
     '/node_modules/',
-    // Device-driven E2E specs are not part of the unit Jest project.
-    // The supported device boundary is Maestro (see tests/e2e/README.md).
-    '<rootDir>/tests/e2e/.*\\.e2e\\.test\\.tsx$',
     '/worktrees/',
     '/\\.worktrees/',
-    // Stray tool-created checkouts of this repo living inside the repo.
     '/\\.clonk-worktrees/',
     '/\\.next/',
     '<rootDir>/worktrees/',
     '<rootDir>/.worktrees/',
+    '<rootDir>/.clonk-worktrees/',
     '<rootDir>/website/.next/',
     '/__tests__/.*\\.snap$',
     '/tests/.*\\.snap$',
@@ -42,21 +39,21 @@ export default {
   modulePathIgnorePatterns: [
     '/worktrees/',
     '/\\.worktrees/',
-    // Stray tool-created checkouts of this repo living inside the repo.
     '/\\.clonk-worktrees/',
     '/\\.next/',
     '<rootDir>/worktrees/',
     '<rootDir>/.worktrees/',
+    '<rootDir>/.clonk-worktrees/',
     '<rootDir>/website/.next/',
   ],
   watchPathIgnorePatterns: [
     '/worktrees/',
     '/\\.worktrees/',
-    // Stray tool-created checkouts of this repo living inside the repo.
     '/\\.clonk-worktrees/',
     '/\\.next/',
     '<rootDir>/worktrees/',
     '<rootDir>/.worktrees/',
+    '<rootDir>/.clonk-worktrees/',
     '<rootDir>/website/.next/',
   ],
 };

@@ -2,9 +2,6 @@
  * Types for SwipeableActionButton component
  */
 
-import type { Animated } from 'react-native';
-import type { Swipeable } from 'react-native-gesture-handler';
-
 export interface SwipeableActionButtonProps {
   /** Icon component to display */
   icon: React.ComponentType<{
@@ -42,18 +39,4 @@ export interface SwipeColors {
   bg: string;
   text: string;
   iconBg: string;
-}
-
-export interface SwipeActionsProps {
-  dragX: Animated.AnimatedInterpolation<number>;
-  swipeColors: SwipeColors;
-  swipeLabel: string;
-  label: string;
-  swipeableRef: React.RefObject<Swipeable | null>;
-  onSwipeAction?: () => void;
-  SwipeIcon: React.ComponentType<{
-    color: string;
-    size: number;
-    strokeWidth: number;
-  }>;
 }

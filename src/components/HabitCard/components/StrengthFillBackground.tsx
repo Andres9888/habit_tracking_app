@@ -5,13 +5,13 @@
  */
 
 import React, { memo } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, type ViewStyle } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { styles } from '../HabitCard.styles';
 
 interface StrengthFillBackgroundProps {
-  strengthFillStyle: AnimatedStyle;
+  strengthFillStyle: AnimatedStyle<ViewStyle>;
   strengthColor: string;
   isDark?: boolean;
 }

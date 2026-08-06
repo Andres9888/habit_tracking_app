@@ -1,8 +1,14 @@
 /**
- * Styles for TemplateReadRow — "Habit Browser" card:
- * serif title beside a tinted icon, description, an outlined "Details" pill,
- * a recessed "START SMALL" box, and a bottom rail pairing a meta pill with a
- * labeled Add / Added pill. All colors come from the theme at render time.
+ * Styles for TemplateReadRow — "Habit Browser" card: serif title beside a
+ * tinted icon with a trailing chevron, the habit description, and a bottom
+ * rail pairing the meta line with a labeled Add / Added pill. All colors come
+ * from the theme at render time.
+ *
+ * Spacing and type scale are the original card's on purpose — the density win
+ * came from removing two whole blocks (the "Start small" box moved to the
+ * detail view, the outlined Details pill became the title-row chevron), not
+ * from tightening the metrics. Shrinking these as well made the card feel
+ * cramped for about 20px of extra gain. Don't re-tighten them.
  */
 
 import { StyleSheet } from 'react-native';
@@ -20,7 +26,8 @@ export const s = StyleSheet.create({
     marginVertical: spacing.sm,
     padding: TEMPLATE_READ_ROW_PADDING,
   },
-  // Header: tinted icon square + serif title.
+  cardImporting: { opacity: 0.72 },
+  // Header: tinted icon square + serif title + chevron.
   titleRow: { alignItems: 'center', flexDirection: 'row', gap: spacing.md },
   iconBox: {
     alignItems: 'center',
@@ -38,29 +45,21 @@ export const s = StyleSheet.create({
     lineHeight: 22,
     marginTop: spacing.md,
   },
-  // Outlined "Details ›" pill — self-start so it hugs its content.
-  detailsPill: {
-    alignItems: 'center',
+  // "Details ›" — a label, not a control. See TemplateReadRowHeader for why
+  // this is a bare word rather than the pill or the chevron that preceded it.
+  detailsLink: {
+    ...typography.bodySmall,
     alignSelf: 'flex-start',
-    borderRadius: borderRadius.full,
-    borderWidth: 1.5,
-    flexDirection: 'row',
-    gap: 4,
-    marginTop: spacing.md,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    fontSize: 14,
+    fontWeight: fontWeights.semibold,
+    marginTop: spacing.sm,
   },
-  detailsText: { ...typography.bodySmall, fontWeight: fontWeights.semibold },
-  // Recessed "START SMALL" box.
-  startBox: { borderRadius: 16, marginTop: spacing.md, padding: 14 },
-  startLabel: {
-    fontSize: 11,
-    fontWeight: fontWeights.bold,
-    letterSpacing: 0.9,
-    textTransform: 'uppercase',
-  },
-  startText: { ...typography.body, fontSize: 15, lineHeight: 21, marginTop: 4 },
-  // Bottom rail: meta pill + labeled Add / Added pill pushed right.
+  // Bottom rail: plain meta text + labeled Add / Added pill pushed right.
+  //
+  // The meta used to be a filled pill. In this card a pill means "tappable",
+  // so a third, inert pill read as a control that does nothing — and it had to
+  // be height-matched against the Add button forever. Plain text says the same
+  // thing and stays out of the way.
   footer: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -68,12 +67,5 @@ export const s = StyleSheet.create({
     marginTop: spacing.lg,
   },
   addSlot: { flexShrink: 0, marginLeft: 'auto' },
-  metaPill: {
-    alignSelf: 'flex-start',
-    borderRadius: borderRadius.full,
-    flexShrink: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-  },
-  metaPillText: { ...typography.bodySmall, fontSize: 14 },
+  metaText: { ...typography.bodySmall, flexShrink: 1, fontSize: 14 },
 });

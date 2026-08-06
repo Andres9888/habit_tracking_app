@@ -1,5 +1,5 @@
-import { Text, View } from 'react-native';
-import { RotateCcw, Check } from 'lucide-react-native';
+import { Text, View, type ViewStyle } from 'react-native';
+import { RotateCcw, Check, Lock } from 'lucide-react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { fontWeights } from '@/theme/typography';
@@ -19,7 +19,7 @@ export function ResumeButton({
   habitName: string;
   isRestoring: boolean;
   showSuccess: boolean;
-  successIconStyle: AnimatedStyle;
+  successIconStyle: AnimatedStyle<ViewStyle>;
   onRestorePress: () => void;
 }) {
   const { colors: c } = useThemeColors();
@@ -78,4 +78,38 @@ export function ResumeButton({
   );
 }
 
-export { LimitReachedResume } from './LimitReachedResume';
+export function LimitReachedResume({
+  onUpgradePress,
+}: {
+  onUpgradePress?: () => void;
+}) {
+  const { colors: c } = useThemeColors();
+  const bg = c.gray[200];
+  const fg = c.text.tertiary;
+  return (
+    <AnimatedPressable
+      accessibilityLabel='Upgrade to resume this habit'
+      accessibilityRole='button'
+      className='mt-3 flex-row items-center justify-center gap-2 self-start'
+      style={{
+        height: 34,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+        backgroundColor: bg,
+      }}
+      onPress={onUpgradePress}
+    >
+      <Lock color={fg} size={15} strokeWidth={2.5} />
+      <Text
+        style={{
+          fontSize: 14,
+          fontWeight: fontWeights.semibold,
+          color: fg,
+          letterSpacing: -0.1,
+        }}
+      >
+        Upgrade to restore
+      </Text>
+    </AnimatedPressable>
+  );
+}

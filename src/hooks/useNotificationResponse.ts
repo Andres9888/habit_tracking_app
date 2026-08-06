@@ -50,10 +50,7 @@ export function useNotificationResponse(handlers: NotificationResponseHandler) {
       let Notifications: NotificationsModule;
 
       try {
-        // Jest needs the synchronous module registry here so per-suite mocks
-        // apply before this deferred setup effect runs.
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        Notifications = require('expo-notifications') as NotificationsModule;
+        Notifications = await import('expo-notifications');
       } catch (error) {
         if (__DEV__) {
           console.warn(

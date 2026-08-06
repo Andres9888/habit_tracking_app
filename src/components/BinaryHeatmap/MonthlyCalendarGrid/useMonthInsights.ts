@@ -48,9 +48,9 @@ export function useMonthInsights(
       if (!Number.isNaN(parsed.getTime())) counts[getDay(parsed)] += 1;
     }
     let best = 0;
-    for (const [i, v] of counts.entries()) {
+    counts.forEach((v, i) => {
       if (v > counts[best]) best = i;
-    }
+    });
     const strongestDay = counts[best] > 0 ? WEEKDAY_LABELS[best] : '—';
 
     // Completion rate for the visible month, counting only elapsed days.

@@ -17,7 +17,6 @@
 import { colors } from '@/theme/colors';
 
 export const CELL_SIZE = 13;
-export const DEFAULT_TOOLTIP_POSITION = { x: 100, y: 50 };
 
 /**
  * Gap between cells (in pixels)

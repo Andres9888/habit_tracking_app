@@ -13,7 +13,8 @@
     "jest.setup.js",
     "babel.config.cjs",
     "metro.config.cjs",
-    "src/lib/reactNativeUrlPolyfillAuto.js"
+    "src/lib/reactNativeUrlPolyfillAuto.js",
+    "src/lib/materialCommunityIconsStub.js"
   ],
   "project": [
     "index.ts",

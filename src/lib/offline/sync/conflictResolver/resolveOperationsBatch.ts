@@ -73,12 +73,12 @@ async function executeBatch(
 
     const serverStates = await Promise.race([
       batchChecker(items),
-      new Promise<Map<string, boolean>>((_, reject) => {
+      new Promise<Map<string, boolean>>((_, reject) =>
         setTimeout(
           () => reject(new Error('Batch server state check timed out')),
           timeoutMs
-        );
-      }),
+        )
+      ),
     ]);
 
     return buildResultsFromStates(operations, serverStates, onEvent);

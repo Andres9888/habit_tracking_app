@@ -52,10 +52,6 @@ jest.mock('lucide-react-native', () => {
       React.createElement(View, { testID: 'icon-trophy', ...props }),
     BarChart3: (props: Record<string, unknown>) =>
       React.createElement(View, { testID: 'icon-chart', ...props }),
-    Target: (props: Record<string, unknown>) =>
-      React.createElement(View, { testID: 'icon-target', ...props }),
-    X: (props: Record<string, unknown>) =>
-      React.createElement(View, { testID: 'icon-x', ...props }),
     Zap: (props: Record<string, unknown>) =>
       React.createElement(View, { testID: 'icon-zap', ...props }),
   };

@@ -1,4 +1,5 @@
 import { subMonths } from 'date-fns';
+import { useMemo } from 'react';
 import { View } from 'react-native';
 import { MonthLabels } from './MonthLabels';
 import { DayRow } from './DayRow';
@@ -12,16 +13,28 @@ export default function HeatmapCalendar({
   monthsToShow = 6,
 }: HeatmapCalendarProps) {
   const { colors } = useThemeColors();
-  const today = new Date();
+  // All three are memoized because `months`, `today` and `completedDates` are
+  // passed to every DayRow. Rebuilding them each render churned their identity
+  // and invalidated the whole grid below, on top of re-scanning the full
+  // tracking array.
+  const today = useMemo(() => new Date(), []);
 
-  const months = Array.from({ length: monthsToShow }, (_, i) =>
-    subMonths(today, monthsToShow - 1 - i)
+  const months = useMemo(
+    () =>
+      Array.from({ length: monthsToShow }, (_, i) =>
+        subMonths(today, monthsToShow - 1 - i)
+      ),
+    [monthsToShow, today]
   );
 
-  const completedDates = new Set(
-    tracking
-      .filter((t) => t.habitId === habitId && t.completed)
-      .map((t) => t.date)
+  const completedDates = useMemo(
+    () =>
+      new Set(
+        tracking
+          .filter((t) => t.habitId === habitId && t.completed)
+          .map((t) => t.date)
+      ),
+    [habitId, tracking]
   );
 
   return (

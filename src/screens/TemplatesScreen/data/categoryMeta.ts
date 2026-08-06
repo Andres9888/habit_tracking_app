@@ -8,7 +8,7 @@ import type { CategoryMeta } from './categoryMeta.types';
 export type { CategoryMeta } from './categoryMeta.types';
 
 // Four category color families. Every category pulls from one of these,
-// so all 14 categories collapse onto 4 token-aligned hue roles:
+// so all 16 categories collapse onto 4 token-aligned hue roles:
 //   green  → body / growth / compounding        (primary scale)
 //   gold   → warmth / time / accumulation       (streak scale)
 //   purple → mind / introspection / creativity  (premium scale)
@@ -24,7 +24,21 @@ const T = {
   blue:   { bg: '#EEF4FB',           border: '#D0DFEF',           text: colors.info },
 } as const;
 
-export const CATEGORY_META: Record<string, CategoryMeta> = {
+// Pseudo-category id for the trailing "Added" group. Not a real template
+// category — buildCatalogGroups appends it explicitly, so it is intentionally
+// absent from CATEGORY_META (unknown categories collapse into "Other").
+export const ADDED_CATEGORY_ID = 'added';
+
+export const ADDED_CATEGORY_META: CategoryMeta = {
+  bgColor: T.green.bg, borderColor: T.green.border, icon: '✅',
+  isPremium: false, label: 'Added', subtitle: "Habits you're already tracking",
+  textColor: T.green.text,
+};
+
+// Literal-keyed source of truth. `satisfies` (rather than a Record annotation)
+// preserves the key union so categoryPriority.ts can prove at compile time that
+// every category is ranked in the chip rail.
+const CATEGORY_META_BY_ID = {
   andrew_huberman: { bgColor: T.green.bg, borderColor: T.green.border, icon: '🔬', isPremium: true, label: 'Huberman', subtitle: 'Neuroscience-backed protocols for peak performance', textColor: T.green.text },
   breathing: { bgColor: T.blue.bg, borderColor: T.blue.border, icon: '🌬️', isPremium: false, label: 'Breathing', subtitle: 'Regulate your nervous system with breathwork', textColor: T.blue.text },
   creativity: { bgColor: T.purple.bg, borderColor: T.purple.border, icon: '🎨', isPremium: false, label: 'Creativity', subtitle: 'Spark imagination and creative output', textColor: T.purple.text },
@@ -41,7 +55,12 @@ export const CATEGORY_META: Record<string, CategoryMeta> = {
   sleep: { bgColor: T.blue.bg, borderColor: T.blue.border, icon: '😴', isPremium: false, label: 'Sleep', subtitle: 'Wind down and optimize rest for peak recovery', textColor: T.blue.text },
   social: { bgColor: T.gold.bg, borderColor: T.gold.border, icon: '👥', isPremium: false, label: 'Social', subtitle: 'Nurture relationships and community connections', textColor: T.gold.text },
   subtraction: { bgColor: T.blue.bg, borderColor: T.blue.border, icon: '➖', isPremium: false, label: 'Less Is More', subtitle: 'Remove behaviors that drain attention, sleep, and health', textColor: T.blue.text },
-};
+} satisfies Record<string, CategoryMeta>;
+
+export type CategoryId = keyof typeof CATEGORY_META_BY_ID;
+
+// Widened view for lookups keyed by an arbitrary `template.category` string.
+export const CATEGORY_META: Record<string, CategoryMeta> = CATEGORY_META_BY_ID;
 
 export const DEFAULT_CATEGORY_META: CategoryMeta = {
   bgColor: colors.gray[100], borderColor: colors.gray[200], icon: '📌',
@@ -49,5 +68,6 @@ export const DEFAULT_CATEGORY_META: CategoryMeta = {
 };
 
 export function getCategoryMeta(categoryId: string): CategoryMeta {
+  if (categoryId === ADDED_CATEGORY_ID) return ADDED_CATEGORY_META;
   return CATEGORY_META[categoryId] ?? DEFAULT_CATEGORY_META;
 }

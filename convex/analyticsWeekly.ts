@@ -8,6 +8,7 @@ import { v } from 'convex/values';
 import { query, internalMutation } from './_generated/server';
 import type { Doc } from './_generated/dataModel';
 import {
+  buildWeeklyCompletionIndex,
   calculateHabitChanges,
   categorizeHabitChanges,
   calculateWeekOverWeekChange,
@@ -29,13 +30,18 @@ export function computeWeeklyInsights(
   const oneWeekAgoKey = oneWeekAgo.toISOString().slice(0, 10);
   const twoWeeksAgoKey = twoWeeksAgo.toISOString().slice(0, 10);
 
+  // Bucket the tracking rows once, then each habit is an O(1) lookup.
+  const completionIndex = buildWeeklyCompletionIndex(
+    trackings,
+    oneWeekAgoKey,
+    twoWeeksAgoKey
+  );
+
   // Calculate changes for each habit (pure computation, no DB calls)
   const habitChanges = activeHabits.map((habit) => {
     return calculateHabitChanges(
       habit,
-      trackings,
-      oneWeekAgoKey,
-      twoWeeksAgoKey,
+      completionIndex,
       habit.currentStreak ?? 0
     );
   });

@@ -1,13 +1,17 @@
-import type { ReactNode } from 'react';
-import ArchivedHabitsModal from '../../ArchivedHabitsModal';
+import { lazy, Suspense, type ReactNode } from 'react';
 import { SettingsModalSkeleton } from '../../SkeletonLoader';
 import { SettingsHeader } from '../SettingsHeader';
-import { AccountPage } from '../AccountPage';
-import { CalendarLookPage } from '../CalendarLookPage';
 import { SettingsContent } from '../SettingsContent';
+import { AccountPage } from '../AccountPage';
+// Statically imported: every dependency (ChainDayItem, StrengthFillBackground,
+// SettingsRow) already ships with the habit list, so lazy() bought no bundle
+// win while costing a skeleton flash on the first open of the page.
+import { CalendarLookPage } from '../CalendarLookPage';
 import type { HabitSortMode } from '../../../features/habits/types';
 import { buildSettingsContentProps } from './SettingsMainView.helpers';
 import type { SettingsMainViewProps } from './SettingsMainView.types';
+
+const ArchivedHabitsModal = lazy(() => import('../../ArchivedHabitsModal'));
 
 export function renderSettingsMainViewContent(
   props: SettingsMainViewProps,
@@ -16,10 +20,12 @@ export function renderSettingsMainViewContent(
   switch (props.view) {
     case 'archived': {
       return (
-        <ArchivedHabitsModal
-          onBack={() => props.setView('settings')}
-          onClose={props.handleClose}
-        />
+        <Suspense fallback={<SettingsModalSkeleton />}>
+          <ArchivedHabitsModal
+            onBack={() => props.setView('settings')}
+            onClose={props.handleClose}
+          />
+        </Suspense>
       );
     }
     case 'account': {

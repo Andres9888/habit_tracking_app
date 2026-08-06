@@ -19,16 +19,10 @@ export const CAPSULE_SHADOW = {
 };
 
 export const NOTIF_SIZE = 8;
-export const ICON_BUTTON_HIT_SLOP = {
-  bottom: 18,
-  left: 18,
-  right: 18,
-  top: 18,
-};
 
 export const styles = StyleSheet.create({
   capsuleBorder: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     borderRadius: CAPSULE_RADIUS,
     borderWidth: 1,
   },
@@ -46,7 +40,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   glassBg: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     borderRadius: CAPSULE_RADIUS,
     overflow: 'hidden',
   },

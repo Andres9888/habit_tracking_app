@@ -3,7 +3,6 @@
  * Produces a richer 3-stop diagonal gradient for hero surfaces.
  */
 
-import { colors } from '@/theme';
 import { withAlpha } from '@/theme/colors';
 
 /**
@@ -12,13 +11,17 @@ import { withAlpha } from '@/theme/colors';
  * Stop 1: iconColor at 25% alpha (strong top-left)
  * Stop 2: iconColor at 15% alpha (mid transition)
  * Stop 3: page background (seamless blend)
+ *
+ * `background` must match the preview's actual canvas colour so the hero does
+ * not fade toward a different surface and create a visible seam.
  */
 export function buildHeroGradient(
-  iconColor: string
+  iconColor: string,
+  background: string
 ): readonly [string, string, string] {
   return [
     withAlpha(iconColor, 0.25),
     withAlpha(iconColor, 0.15),
-    colors.background,
+    background,
   ] as const;
 }

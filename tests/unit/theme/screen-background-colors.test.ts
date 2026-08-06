@@ -17,8 +17,8 @@ function readSource(relativePath: string): string {
 }
 
 describe('colors.light.gradientMid token', () => {
-  it('exists and equals the current warm gradient midpoint', () => {
-    expect(colors.light.gradientMid).toBe('#F0EDE8');
+  it('exists and equals #f5f3f0', () => {
+    expect(colors.light.gradientMid).toBe('#f5f3f0');
     expect(colors.light.gradientMid).toBeDefined();
     expect(colors.light.gradientMid).toContain('#');
   });
@@ -34,40 +34,40 @@ describe('colors.light.gradientMid token', () => {
 describe('HabitsApp uses theme background', () => {
   const source = readSource('features/habits/HabitsApp.tsx');
 
-  it('imports the active theme colors', () => {
-    expect(source).toContain('useThemeColors');
+  it('imports colors from theme', () => {
+    expect(source).toMatch(/import.*colors.*from.*theme\/colors/);
     expect(source).toContain('colors');
     expect(source).toContain('from');
   });
 
-  it('uses the active background instead of a hardcoded hex', () => {
-    expect(source).toContain('backgroundColor: colors.background');
+  it('uses colors.light.background instead of hardcoded hex', () => {
+    expect(source).toContain('colors.light.background');
     expect(source).not.toContain('#FAF8F5');
-    expect(source).toContain('useThemeColors');
+    expect(source).toContain('light');
   });
 });
 
 describe('HabitEditScreen uses theme background', () => {
   const source = readSource('screens/HabitEditScreen/HabitEditScreen.tsx');
 
-  it('imports the active theme colors', () => {
-    expect(source).toContain('useThemeColors');
+  it('imports colors from theme', () => {
+    expect(source).toMatch(/import.*colors.*from.*theme\/colors/);
   });
 
   it('does not use bg-[#faf9f7] Tailwind class', () => {
     expect(source).not.toContain('bg-[#faf9f7]');
   });
 
-  it('uses the active surface style prop', () => {
-    expect(source).toContain('backgroundColor: themeColors.surface');
+  it('uses colors.light.background style prop', () => {
+    expect(source).toContain('colors.light.background');
   });
 });
 
 describe('CharacterScreen uses theme background', () => {
   const source = readSource('screens/CharacterScreen/CharacterScreen.tsx');
 
-  it('imports the active theme colors', () => {
-    expect(source).toContain('useThemeColors');
+  it('imports colors from theme', () => {
+    expect(source).toMatch(/import.*colors.*from.*theme\/colors/);
   });
 
   it('does not use bg-white class', () => {
@@ -75,8 +75,8 @@ describe('CharacterScreen uses theme background', () => {
     expect(source).not.toContain('bg-white"');
   });
 
-  it('uses the active background style prop', () => {
-    expect(source).toContain('backgroundColor: colors.background');
+  it('uses colors.light.background style prop', () => {
+    expect(source).toContain('colors.light.background');
   });
 });
 
@@ -85,8 +85,8 @@ describe('CharacterScreen uses theme background', () => {
 describe('HabitDetailScreen uses theme gradient tokens', () => {
   const source = readSource('screens/HabitDetailScreen/HabitDetailScreen.tsx');
 
-  it('imports the active theme colors', () => {
-    expect(source).toContain('useThemeColors');
+  it('imports colors from theme', () => {
+    expect(source).toMatch(/import.*colors.*from.*theme\/colors/);
   });
 
   it('does not hardcode gradient hex values', () => {
@@ -94,22 +94,20 @@ describe('HabitDetailScreen uses theme gradient tokens', () => {
     expect(source).not.toMatch(/#f5f3f0/i);
   });
 
-  it('uses the active background in the detail surface', () => {
-    expect(source).toContain('backgroundColor: colors.background');
+  it('uses colors.light.background in gradient', () => {
+    expect(source).toContain('colors.light.background');
   });
 
-  it('uses the shared modal shadow on the detail surface', () => {
-    expect(source).toContain('shadows.modal');
+  it('uses colors.light.gradientMid in gradient', () => {
+    expect(source).toContain('colors.light.gradientMid');
   });
 });
 
 // SignInScreen and SignInScreen.styles removed in OAuth-only migration
 
 describe('AnalyticsScreen.styles already uses theme token', () => {
-  it('container leaves its background to the active-theme screen style', () => {
-    expect(analyticsStyles.container.backgroundColor).toBeUndefined();
-    const source = readSource('screens/AnalyticsScreen/AnalyticsScreen.tsx');
-    expect(source).toContain('backgroundColor: themeColors.background');
+  it('container backgroundColor matches colors.background', () => {
+    expect(analyticsStyles.container.backgroundColor).toBe(colors.background);
   });
 
   it('colors.background equals colors.light.background', () => {

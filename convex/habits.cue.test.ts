@@ -11,6 +11,8 @@
  * - AC1f: Query return validators include cue fields
  */
 
+import { describe, it, expect } from 'vitest';
+
 /**
  * Schema validation tests - verify cue fields are defined correctly
  */

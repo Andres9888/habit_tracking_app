@@ -26,8 +26,9 @@ describe('HabitDetailScreen loading state', () => {
   });
 
   it('wraps loading state inside a Modal via ternary', () => {
-    expect(source).toContain('<Modal');
-    expect(source).toContain('<DetailLoadingState />');
+    expect(source).toMatch(
+      /<Modal[\s\S]*?\{habit \?[\s\S]*?<DetailLoadingState[\s\S]*?<\/Modal>/
+    );
   });
 
   it('does NOT return bare null when habit is missing', () => {
@@ -40,30 +41,25 @@ describe('DetailLoadingState component', () => {
   const source = readSource(
     'screens/HabitDetailScreen/components/DetailLoadingState.tsx'
   );
-  const skeletonSource = readSource(
-    'components/SkeletonLoader/HabitDetailSkeleton.tsx'
-  );
 
-  it('uses the current habit-detail skeleton', () => {
-    expect(source).toMatch(/HabitDetailSkeleton/);
+  it('uses ActivityIndicator', () => {
+    expect(source).toMatch(/ActivityIndicator/);
   });
 
-  it('uses the skeleton theme', () => {
-    expect(skeletonSource).toMatch(/useSkeletonTheme/);
+  it('uses theme color for spinner', () => {
+    expect(source).toMatch(/colors\.gray\[500\]/);
   });
 
-  it('uses the skeleton theme background color', () => {
-    expect(skeletonSource).toMatch(/backgroundColor: pageBg/);
+  it('uses theme background color', () => {
+    expect(source).toMatch(/colors\.light\.background/);
   });
 
   it('has accessibility role progressbar', () => {
-    expect(skeletonSource).toMatch(/accessibilityRole='progressbar'/);
+    expect(source).toMatch(/accessibilityRole='progressbar'/);
   });
 
   it('has accessibility label', () => {
-    expect(skeletonSource).toMatch(
-      /accessibilityLabel='Loading your habit details\.\.\.'/
-    );
+    expect(source).toMatch(/accessibilityLabel='Loading habit details'/);
   });
 });
 
@@ -82,28 +78,29 @@ describe('HabitEditScreen modal null pattern (intentional)', () => {
 
   it('returns null when not visible (modal not mounted)', () => {
     expect(source).toMatch(
-      /if\s*\(!shouldRender\s*\|\|\s*!renderedHabitId\)\s*return\s+null/
+      /if\s*\(!visible\s*\|\|\s*!habitId\)\s*return\s+null/
     );
   });
 
   it('has documentation comment explaining the null pattern', () => {
-    expect(source).toMatch(/reverse before unmount/i);
+    expect(source).toMatch(/Modal pattern.*return null.*modal.*doesn't mount/i);
   });
 });
 
 describe('CharacterScreen loading state documentation', () => {
   const source = readSource('screens/CharacterScreen/CharacterScreen.tsx');
 
-  it('uses live habit data', () => {
-    expect(source).toMatch(/useHabitData/);
+  it('uses mock data (no async fetch yet)', () => {
+    expect(source).toMatch(/MOCK_CHARACTER_DATA/);
   });
 
-  it('documents and renders the live-data skeleton state', () => {
-    expect(source).toMatch(/Show the skeleton during the initial Convex fetch/);
-    expect(source).toMatch(/CharacterScreenSkeleton/);
+  it('has loading state documentation comment', () => {
+    expect(source).toMatch(
+      /Loading state.*mock data|When connected to real data.*ActivityIndicator/
+    );
   });
 
   it('uses theme background color', () => {
-    expect(source).toMatch(/backgroundColor: colors\.background/);
+    expect(source).toMatch(/colors\.light\.background/);
   });
 });

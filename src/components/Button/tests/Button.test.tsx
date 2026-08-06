@@ -177,13 +177,13 @@ describe('Button - Phase 2', () => {
 
       it('should not call onPress when loading', () => {
         const onPress = jest.fn();
-        const { getByRole } = renderWithTheme(
+        const { getByText } = renderWithTheme(
           <Button loading onPress={onPress}>
             Loading
           </Button>
         );
 
-        fireEvent.press(getByRole('button'));
+        fireEvent.press(getByText('Loading'));
         expect(onPress).not.toHaveBeenCalled();
       });
     });

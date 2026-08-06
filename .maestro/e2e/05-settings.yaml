@@ -9,7 +9,7 @@ onFlowComplete:
 - runFlow: _shared/open-settings.yaml
 - assertVisible: Settings
 - assertVisible: Theme
-- assertVisible: Streak Reminders
+- assertVisible: Streak reminders
 - scrollUntilVisible:
     element:
       text: Archived habits
@@ -25,15 +25,15 @@ onFlowComplete:
     timeout: 5000
 - scrollUntilVisible:
     element:
-      text: Export habits data
+      text: Export my data
     direction: DOWN
     timeout: 5000
-- assertVisible: Export habits data
+- assertVisible: Export my data
 - scrollUntilVisible:
     element:
-      text: Send Feedback
+      text: Send feedback
     direction: DOWN
     timeout: 5000
-- assertVisible: Send Feedback
+- assertVisible: Send feedback
 - tapOn:
     id: close-settings-modal

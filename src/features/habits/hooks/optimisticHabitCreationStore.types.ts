@@ -7,7 +7,6 @@ export const OPTIMISTIC_HABIT_ID_PREFIX = 'temp_habit_';
 export interface OptimisticHabitCreateInput {
   color: string;
   daysOfWeek?: number[];
-  effortMinutes?: number;
   frequency?: string;
   icon?: string;
   iconColor?: string;

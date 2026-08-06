@@ -9,8 +9,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import { springs } from '@/theme/animations';
 
-const W = 48;
-const H = 28;
+// Spec 4a toggle: 50×30 pill, 26px knob, 2px inset.
+const W = 50;
+const H = 30;
 const PAD = 2;
 const THUMB = H - PAD * 2;
 const TRAVEL = W - THUMB - PAD * 2;

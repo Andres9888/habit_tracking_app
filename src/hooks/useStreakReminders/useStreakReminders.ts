@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * useStreakReminders — Smart scheduling of streak-at-risk notifications.
  */

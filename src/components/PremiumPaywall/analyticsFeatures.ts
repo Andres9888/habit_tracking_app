@@ -3,7 +3,7 @@
  */
 
 import {
-  Infinity as InfinityIcon,
+  Infinity,
   BarChart3,
   Calendar,
   Lightbulb,
@@ -16,7 +16,7 @@ export const ANALYTICS_FEATURES: readonly AnalyticsFeatureItem[] = [
   {
     description:
       'Track every habit across health, work, learning, and more — no limits.',
-    icon: InfinityIcon,
+    icon: Infinity,
     title: 'Unlimited Habits',
   },
   {
@@ -26,20 +26,17 @@ export const ANALYTICS_FEATURES: readonly AnalyticsFeatureItem[] = [
     title: 'Habit Strength Insights',
   },
   {
-    description:
-      'Beautiful calendar heatmaps that make your consistency visible.',
+    description: 'Beautiful calendar heatmaps that make your consistency visible.',
     icon: Calendar,
     title: 'Progress Heatmaps',
   },
   {
-    description:
-      'Personalized tips based on your patterns to keep you on track.',
+    description: 'Personalized tips based on your patterns to keep you on track.',
     icon: Lightbulb,
     title: 'AI-Powered Insights',
   },
   {
-    description:
-      'Spot trends, compare streaks, and understand your long-term growth.',
+    description: 'Spot trends, compare streaks, and understand your long-term growth.',
     icon: TrendingUp,
     title: 'Advanced Analytics',
   },

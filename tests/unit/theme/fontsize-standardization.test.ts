@@ -3,8 +3,8 @@
  * Verifies that component style files use typography.*.fontSize tokens
  * from @/theme/typography instead of non-standard hardcoded numeric values.
  *
- * Current branded typography scale is defined centrally in theme/typography.
- * Component styles should consume those tokens instead of duplicating values.
+ * Standard typography scale: 10, 13, 15, 17, 22, 28, 34
+ * Non-standard values replaced: 11→10, 12→13, 14→15, 16→17, 20→22
  */
 
 import { typography } from '@/theme/typography';
@@ -15,16 +15,14 @@ import { styles as heatmapToggleStyles } from '@/components/BinaryHeatmap/TimeRa
 import { dayCellStyles } from '@/components/ProgressSectionConsolidated/WeeklySummaryStrip/dayCellStyles';
 import { headerStyles } from '@/components/ProgressSectionConsolidated/WeeklySummaryStrip/headerStyles';
 import { progressStyles } from '@/components/ProgressSectionConsolidated/MilestoneProgress/styles/progress.styles';
-import { styles as syncedToastStyles } from '@/components/SyncStatus/SyncedToast/styles';
-import { styles as syncingIndicatorStyles } from '@/components/SyncStatus/SyncingIndicator/styles';
+import { styles as streakIndicatorStyles } from '@/components/StreakIndicator/StreakIndicator.styles';
+import { styles as habitsAtRiskStyles } from '@/components/HabitsAtRiskWidget/styles';
 import { SIZE_CONFIG } from '@/components/StrengthProgressBar/StrengthProgressBar.constants';
 import { statusStyles } from '@/components/HabitCard/HabitCard.statusStyles';
-import { styles as categoryPillStyles } from '@/components/EmojiPickerV2/CategoryPills.styles';
+import { styles as categoryChipStyles } from '@/components/CategoryChip/CategoryChip.styles';
 
-/** Helper: assert a component font size belongs to the live typography scale. */
-const STANDARD_SIZES = new Set(
-  Object.values(typography).map((style) => style.fontSize)
-);
+/** Helper: assert fontSize uses a typography token value (10, 13, 15, 17, 22, 28, or 34) */
+const STANDARD_SIZES = new Set([10, 13, 15, 17, 22, 28, 34]);
 function expectStandardSize(fontSize: number | undefined, label: string) {
   expect(fontSize).toBeDefined();
   expect(STANDARD_SIZES.has(fontSize!)).toBe(true);
@@ -80,14 +78,14 @@ describe('Font Size Standardization — Phase 4 Task 2', () => {
       );
     });
 
-    it('SyncedToast countText → caption (13)', () => {
-      expect(syncedToastStyles.countText.fontSize).toBe(
+    it('StreakIndicator milestoneBadgeLabel → caption (13)', () => {
+      expect(streakIndicatorStyles.milestoneBadgeLabel.fontSize).toBe(
         typography.caption.fontSize
       );
     });
 
-    it('SyncingIndicator text → caption (13)', () => {
-      expect(syncingIndicatorStyles.text.fontSize).toBe(
+    it('HabitsAtRiskWidget interventionText → caption (13)', () => {
+      expect(habitsAtRiskStyles.interventionText.fontSize).toBe(
         typography.caption.fontSize
       );
     });
@@ -104,48 +102,50 @@ describe('Font Size Standardization — Phase 4 Task 2', () => {
       );
     });
 
-    it('CategoryPill text → bodySmall (14)', () => {
-      expect(categoryPillStyles.categoryPillText.fontSize).toBe(
-        typography.bodySmall.fontSize
+    it('CategoryChip countText → caption (13)', () => {
+      expect(categoryChipStyles.countText.fontSize).toBe(
+        typography.caption.fontSize
       );
     });
   });
 
-  // ── bodySmall token mappings ──────────────────────────────
-  describe('bodySmall token mappings', () => {
-    it('HabitCard.streakStyles.streakFireIcon → bodySmall (14)', () => {
+  // ── fontSize: 14 → bodySmall (15) ────────────────────────
+  describe('fontSize: 14 replacements', () => {
+    it('HabitCard.streakStyles.streakFireIcon → bodySmall (15)', () => {
       expect(streakStyles.streakFireIcon.fontSize).toBe(
         typography.bodySmall.fontSize
       );
     });
 
-    it('SyncedToast text → caption (13)', () => {
-      expect(syncedToastStyles.text.fontSize).toBe(typography.caption.fontSize);
+    it('StreakIndicator bestStreakText → bodySmall (15)', () => {
+      expect(streakIndicatorStyles.bestStreakText.fontSize).toBe(
+        typography.bodySmall.fontSize
+      );
     });
 
-    it('HabitCard.statusStyles checkmarkText → bodySmall (14)', () => {
+    it('HabitCard.statusStyles checkmarkText → bodySmall (15)', () => {
       expect(statusStyles.checkmarkText.fontSize).toBe(
         typography.bodySmall.fontSize
       );
     });
 
-    it('SyncingIndicator countText → tabBar (10)', () => {
-      expect(syncingIndicatorStyles.countText.fontSize).toBe(
-        typography.tabBar.fontSize
-      );
-    });
-
-    it('CategoryPill label → bodySmall (14)', () => {
-      expect(categoryPillStyles.categoryPillText.fontSize).toBe(
+    it('HabitsAtRiskWidget prediction → bodySmall (15)', () => {
+      expect(habitsAtRiskStyles.prediction.fontSize).toBe(
         typography.bodySmall.fontSize
       );
     });
 
-    it('Toast icon → bodySmall (14)', () => {
+    it('CategoryChip label → bodySmall (15)', () => {
+      expect(categoryChipStyles.label.fontSize).toBe(
+        typography.bodySmall.fontSize
+      );
+    });
+
+    it('Toast icon → bodySmall (15)', () => {
       expect(toastStyles.icon.fontSize).toBe(typography.bodySmall.fontSize);
     });
 
-    it('WeeklySummaryStrip sparkleEmoji → bodySmall (14)', () => {
+    it('WeeklySummaryStrip sparkleEmoji → bodySmall (15)', () => {
       expect(headerStyles.sparkleEmoji.fontSize).toBe(
         typography.bodySmall.fontSize
       );
@@ -154,22 +154,24 @@ describe('Font Size Standardization — Phase 4 Task 2', () => {
 
   // ── fontSize: 16 → body (17) ─────────────────────────────
   describe('fontSize: 16 replacements', () => {
-    it('MilestoneProgress badgeIcon → body (17)', () => {
-      expect(progressStyles.badgeIcon.fontSize).toBe(typography.body.fontSize);
+    it('StreakIndicator fireEmoji → body (17)', () => {
+      expect(streakIndicatorStyles.fireEmoji.fontSize).toBe(
+        typography.body.fontSize
+      );
     });
 
-    it('WeeklySummaryStrip headerTitle → button (17)', () => {
-      expect(headerStyles.headerTitle.fontSize).toBe(typography.body.fontSize);
+    it('HabitsAtRiskWidget habitName → body (17)', () => {
+      expect(habitsAtRiskStyles.habitName.fontSize).toBe(
+        typography.body.fontSize
+      );
     });
 
     it('WeeklySummaryStrip headerTitle → body (17)', () => {
       expect(headerStyles.headerTitle.fontSize).toBe(typography.body.fontSize);
     });
 
-    it('CategoryPill icon → bodySmall (14)', () => {
-      expect(categoryPillStyles.categoryPillIcon.fontSize).toBe(
-        typography.bodySmall.fontSize
-      );
+    it('CategoryChip icon → body (17)', () => {
+      expect(categoryChipStyles.icon.fontSize).toBe(typography.body.fontSize);
     });
 
     it('Toast dismissIcon → body (17)', () => {
@@ -192,13 +194,15 @@ describe('Font Size Standardization — Phase 4 Task 2', () => {
       expect(SIZE_CONFIG.default.fontSize).toBe(typography.caption.fontSize);
     });
 
-    it('large fontSize → bodySmall (14)', () => {
+    it('large fontSize → bodySmall (15)', () => {
       expect(SIZE_CONFIG.large.fontSize).toBe(typography.bodySmall.fontSize);
     });
   });
 
   // ── Cross-cutting: no non-standard sizes remain ──────────
   describe('no non-standard fontSize values remain', () => {
+    const NON_STANDARD = new Set([9, 11, 12, 14, 16, 20]);
+
     function collectFontSizes(obj: Record<string, any>): number[] {
       const sizes: number[] = [];
       for (const value of Object.values(obj)) {
@@ -211,25 +215,25 @@ describe('Font Size Standardization — Phase 4 Task 2', () => {
 
     it('HabitCard.streakStyles has no non-standard sizes', () => {
       for (const size of collectFontSizes(streakStyles)) {
-        expect(STANDARD_SIZES.has(size)).toBe(true);
+        expect(NON_STANDARD.has(size)).toBe(false);
       }
     });
 
-    it('SyncedToast.styles has no non-standard sizes', () => {
-      for (const size of collectFontSizes(syncedToastStyles)) {
-        expect(STANDARD_SIZES.has(size)).toBe(true);
+    it('StreakIndicator.styles has no non-standard sizes', () => {
+      for (const size of collectFontSizes(streakIndicatorStyles)) {
+        expect(NON_STANDARD.has(size)).toBe(false);
       }
     });
 
-    it('CategoryPills.styles has no non-standard sizes', () => {
-      for (const size of collectFontSizes(categoryPillStyles)) {
-        expect(STANDARD_SIZES.has(size)).toBe(true);
+    it('CategoryChip.styles has no non-standard sizes', () => {
+      for (const size of collectFontSizes(categoryChipStyles)) {
+        expect(NON_STANDARD.has(size)).toBe(false);
       }
     });
 
     it('Toast styles has no non-standard sizes', () => {
       for (const size of collectFontSizes(toastStyles)) {
-        expect(STANDARD_SIZES.has(size)).toBe(true);
+        expect(NON_STANDARD.has(size)).toBe(false);
       }
     });
   });
@@ -244,8 +248,8 @@ describe('Font Size Standardization — Phase 4 Task 2', () => {
       expect(typography.caption.fontSize).toBe(13);
     });
 
-    it('bodySmall fontSize is 14', () => {
-      expect(typography.bodySmall.fontSize).toBe(14);
+    it('bodySmall fontSize is 15', () => {
+      expect(typography.bodySmall.fontSize).toBe(15);
     });
 
     it('body fontSize is 17', () => {

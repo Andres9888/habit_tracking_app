@@ -1,12 +1,11 @@
 /**
  * Template query functions
- * 
- * SEC-PUBLIC: All template queries are intentionally public.
- * Templates are a browsable library meant to be accessible before login
- * to encourage user onboarding. They contain no user data.
+ *
+ * SEC-PUBLIC: Catalog queries are intentionally public so templates can be
+ * browsed before login. Internal usage analytics stay internal.
  */
 import { v } from 'convex/values';
-import { query } from '../_generated/server';
+import { internalQuery, query } from '../_generated/server';
 import { categoryValidator } from './types';
 
 /**
@@ -76,7 +75,7 @@ export const getPopular = query({
 /**
  * Query: Get template usage statistics
  */
-export const getUsageStats = query({
+export const getUsageStats = internalQuery({
   args: { templateId: v.id('templates') },
   handler: async (ctx, args) => {
     const usage = await ctx.db

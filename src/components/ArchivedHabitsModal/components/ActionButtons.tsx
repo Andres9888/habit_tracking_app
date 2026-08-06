@@ -1,3 +1,4 @@
+import type { ViewStyle } from 'react-native';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { ResumeButton, LimitReachedResume } from './ActionButtonParts';
@@ -7,7 +8,7 @@ interface ActionButtonsProps {
   isRestoring: boolean;
   showSuccess: boolean;
   hasReachedLimit?: boolean;
-  successIconStyle: AnimatedStyle;
+  successIconStyle: AnimatedStyle<ViewStyle>;
   onRestorePress: () => void;
   onUpgradePress?: () => void;
 }

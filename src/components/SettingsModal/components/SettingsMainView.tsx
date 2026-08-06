@@ -9,7 +9,7 @@ import type { SettingsMainViewProps } from './SettingsMainView.types';
 
 export function SettingsMainView(props: SettingsMainViewProps) {
   const reduceMotion = useReducedMotion();
-  const ready = useDeferredMount();
+  const ready = useDeferredMount({ latchKey: 'SettingsModal' });
   const { colors: themeColors } = useThemeColors();
   const handleSortSelect = (mode: HabitSortMode) => {
     void props.setHabitSortMode(mode);
@@ -22,8 +22,10 @@ export function SettingsMainView(props: SettingsMainViewProps) {
   );
 
   const backgroundStyle = { backgroundColor: themeColors.background };
-  // Keep the existing skeleton up through the open animation: the heavy section
+  // Keep the skeleton up through the *first* open animation: the heavy section
   // tree mounts one frame after interactions settle, off the animation's path.
+  // The latch keeps later opens instant — Modal unmounts children on close, so
+  // without it every open would replay the skeleton against an already-warm tree.
   const content = renderSettingsMainViewContent(
     { ...props, isLoading: props.isLoading || !ready },
     handleSortSelect

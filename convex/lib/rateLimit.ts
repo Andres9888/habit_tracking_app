@@ -28,6 +28,8 @@ export const RATE_LIMITS = {
   'habit.toggle': { limit: 120, windowMs: 60_000 },
   'habit.update': { limit: 60, windowMs: 60_000 },
   'settings.update': { limit: 60, windowMs: 60_000 },
+  'storage.generateUploadUrl': { limit: 10, windowMs: 60 * 60_000 },
+  'storage.validateImageUpload': { limit: 20, windowMs: 60 * 60_000 },
   'templates.seed': { limit: 5, windowMs: 60_000 },
   'user.getOrCreate': { limit: 10, windowMs: 60_000 },
   'user.updateProfileImage': { limit: 10, windowMs: 60_000 },
