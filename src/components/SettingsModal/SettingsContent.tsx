@@ -6,14 +6,13 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import { useAccountActions } from './useAccountActions';
+import { DeleteAccountSheet } from '../DeleteAccountSheet';
 import { FeedbackModal } from '../FeedbackModal';
 import { airy } from '../../theme/airyScale';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsContentProps } from './types';
 import { SCROLL_STYLES } from './SettingsContent.constants';
 import { SettingsSectionList } from './components/SettingsSectionList';
-// Search field temporarily removed — filter plumbing retained (see SPEC_03).
-import { SettingsSearchProvider } from './search';
 
 const useSectionIconColor = () => {
   const { settings } = useThemeColors();
@@ -54,26 +53,33 @@ export function SettingsContent(p: SettingsContentProps) {
         style={{ backgroundColor: themeColors.background }}
         onScroll={scrollHandler}
       >
-        <SettingsSearchProvider query=''>
-          <View style={{ gap: airy.sectionGap }}>
-            <SettingsSectionList
-              {...p}
-              sectionIconColor={sectionIconColor}
-              isDeletingAccount={actions.isDeletingAccount}
-              onDeleteAccount={actions.handleDeleteAccount}
-              onFeedback={actions.handleFeedback}
-              onPrivacy={actions.openPrivacy}
-              onRate={actions.handleRateApp}
-              onShare={actions.handleShare}
-              onTerms={actions.openTerms}
-              onWhatsNew={actions.handleWhatsNew}
-            />
-          </View>
-        </SettingsSearchProvider>
+        <View style={{ gap: airy.sectionGap }}>
+          <SettingsSectionList
+            {...p}
+            sectionIconColor={sectionIconColor}
+            isDeletingAccount={actions.isDeletingAccount}
+            onDeleteAccount={actions.handleDeleteAccount}
+            onFeedback={actions.handleFeedback}
+            onPrivacy={actions.openPrivacy}
+            onRate={actions.handleRateApp}
+            onShare={actions.handleShare}
+            onTerms={actions.openTerms}
+            onWhatsNew={actions.handleWhatsNew}
+          />
+        </View>
       </Animated.ScrollView>
       <FeedbackModal
         visible={actions.showFeedbackModal}
         onClose={actions.closeFeedback}
+      />
+      <DeleteAccountSheet
+        acknowledged={actions.deleteAcknowledged}
+        isDeleting={actions.isDeletingAccount}
+        visible={actions.isDeleteSheetOpen}
+        onCancel={actions.closeDeleteSheet}
+        onConfirm={actions.confirmDeleteAccount}
+        onExportHabitsData={p.onExportHabitsData}
+        onToggleAcknowledged={actions.setDeleteAcknowledged}
       />
     </View>
   );

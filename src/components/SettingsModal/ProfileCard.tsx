@@ -1,16 +1,13 @@
-/** ProfileCard — left-aligned account hero: identity + streak + edit, then stats */
+/** ProfileCard — centered account hero: avatar + name + email (no metrics) */
 import { Text, View } from 'react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { typography, fontWeights } from '../../theme/typography';
-import { SkeletonLoader } from '../SkeletonLoader/SkeletonLoader';
+import { typography } from '../../theme/typography';
 import { EditableUserAvatar } from './EditableUserAvatar';
 import { getProfileCardShellStyle } from './profileCardShellStyle';
 import { ProfilePremiumBadge } from './ProfilePremiumBadge';
-import { ProfileStatsRow } from './ProfileStatsRow';
 import { useChangeProfileImage } from './useChangeProfileImage';
 import { useProfileDisplayImage } from './useProfileDisplayImage';
 import { useProfileDisplayName } from './useProfileDisplayName';
-import { useProfileStats } from './useProfileStats';
 
 interface ProfileCardProps {
   isPremium: boolean;
@@ -19,7 +16,6 @@ interface ProfileCardProps {
 export function ProfileCard({ isPremium }: ProfileCardProps) {
   const { colors: themeColors } = useThemeColors();
   const { email, initial, name } = useProfileDisplayName();
-  const { isLoading: statsLoading, stats } = useProfileStats();
   const { imageUrl } = useProfileDisplayImage();
   const { isUpdating, openPhotoPicker } = useChangeProfileImage();
 
@@ -29,7 +25,7 @@ export function ProfileCard({ isPremium }: ProfileCardProps) {
       style={getProfileCardShellStyle(themeColors)}
     >
       <View
-        className='flex-row items-center px-4 pb-3 pt-4'
+        className='items-center px-4 pb-5 pt-6'
         style={{ gap: 16 }}
       >
         <EditableUserAvatar
@@ -50,7 +46,7 @@ export function ProfileCard({ isPremium }: ProfileCardProps) {
           useGradient
           onPress={openPhotoPicker}
         />
-        <View className='flex-1'>
+        <View className='items-center'>
           <View className='flex-row items-center' style={{ gap: 6 }}>
             <Text
               numberOfLines={1}
@@ -75,27 +71,8 @@ export function ProfileCard({ isPremium }: ProfileCardProps) {
               {email}
             </Text>
           ) : null}
-          <View className='mt-2 flex-row items-center' style={{ gap: 5 }}>
-            {statsLoading ? (
-              <SkeletonLoader borderRadius={6} height={16} width={96} />
-            ) : (
-              <>
-                <Text style={{ fontSize: 13 }}>🔥</Text>
-                <Text
-                  style={{
-                    ...typography.bodySmall,
-                    fontWeight: fontWeights.bold,
-                    color: themeColors.status.streakText,
-                  }}
-                >
-                  {stats.currentStreak}-day streak
-                </Text>
-              </>
-            )}
-          </View>
         </View>
       </View>
-      <ProfileStatsRow isLoading={statsLoading} stats={stats} />
     </View>
   );
 }

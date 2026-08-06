@@ -60,7 +60,7 @@ export function SortDirectionSegments({
               key={isAsc ? 'asc' : 'desc'}
               accessibilityLabel={label}
               accessibilityRole='radio'
-              accessibilityState={{ selected: on }}
+              accessibilityState={{ checked: on }}
               className='flex-1 flex-row items-center justify-center gap-1 rounded-lg py-2'
               hitSlop={4}
               style={{ backgroundColor: on ? selectedBg : 'transparent' }}

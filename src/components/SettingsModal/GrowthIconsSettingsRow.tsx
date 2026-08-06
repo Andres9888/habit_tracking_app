@@ -24,11 +24,9 @@ import { ProgressEmojiPicker } from '../ProgressEmojiPicker';
 
 import { GrowthIconsCustomizeAction } from './GrowthIconsCustomizeAction';
 import { SettingsRow } from './SettingsRow';
-import { rowMatchesQuery, useSettingsSearch } from './search';
 
 export function GrowthIconsSettingsRow() {
   const { settings: settingsIcons } = useThemeColors();
-  const { query } = useSettingsSearch();
   const [expanded, setExpanded] = useState(false);
   const toggleExpanded = useCallback(() => setExpanded((v) => !v), []);
   const settings = useCachedQuery(
@@ -97,18 +95,16 @@ export function GrowthIconsSettingsRow() {
         subtitle='Used for every new habit'
         type='info'
       />
-      {rowMatchesQuery(query, 'Default growth icons') ? (
-        <ProgressEmojiPicker
-          customPreset={customPreset}
-          expanded={expanded}
-          expandedPanelStyle={{ paddingLeft: 16, paddingRight: 16 }}
-          fallback={DEFAULT_PROGRESS_EMOJIS}
-          toggleRowStyle={{ paddingLeft: 16, paddingRight: 16 }}
-          value={pickerValue}
-          onChange={handleChange}
-          onToggleExpanded={toggleExpanded}
-        />
-      ) : null}
+      <ProgressEmojiPicker
+        customPreset={customPreset}
+        expanded={expanded}
+        expandedPanelStyle={{ paddingLeft: 16, paddingRight: 16 }}
+        fallback={DEFAULT_PROGRESS_EMOJIS}
+        toggleRowStyle={{ paddingLeft: 16, paddingRight: 16 }}
+        value={pickerValue}
+        onChange={handleChange}
+        onToggleExpanded={toggleExpanded}
+      />
     </View>
   );
 }

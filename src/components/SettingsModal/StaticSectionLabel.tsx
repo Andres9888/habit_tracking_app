@@ -1,39 +1,35 @@
-/** StaticSectionLabel - iOS grouped-list section label: serif title + trailing green glyph */
+/** StaticSectionLabel — quiet sentence-case section label (sans, no icon) */
 import { ReactNode } from 'react';
 import { Text, View } from 'react-native';
-import { typography, fontWeights } from '@/theme/typography';
+import { fontFamilies, typography, fontWeights } from '@/theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { settingsSectionTitle } from './settingsSectionTitleStyle';
 
 interface StaticSectionLabelProps {
   title: string;
   subtitle?: string;
+  /** Accepted for API compatibility; main-list labels are icon-free. */
   icon?: ReactNode;
 }
 
-export function StaticSectionLabel({
-  title,
-  subtitle,
-  icon,
-}: StaticSectionLabelProps) {
+export function StaticSectionLabel({ title, subtitle }: StaticSectionLabelProps) {
   const { colors: themeColors } = useThemeColors();
 
   return (
-    <View className='flex-row items-center px-2' style={{ gap: 7 }}>
+    <View className='flex-row items-center px-3' style={{ gap: 8 }}>
       <Text
         style={{
-          ...settingsSectionTitle,
-          color: themeColors.text.primary,
+          fontFamily: fontFamilies.primary.text,
+          fontSize: 13,
+          fontWeight: fontWeights.semibold,
+          letterSpacing: -0.1,
+          color: themeColors.text.secondary,
         }}
       >
         {title}
       </Text>
-      {icon ? (
-        <View className='items-center justify-center'>{icon}</View>
-      ) : null}
       {subtitle ? (
         <Text
-          className='ml-2 rounded-full px-2 py-0.5'
+          className='rounded-full px-2 py-0.5'
           style={{
             ...typography.tabBar,
             fontWeight: fontWeights.semibold,

@@ -3,6 +3,7 @@ import Constants from 'expo-constants';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { useReducedMotion } from 'react-native-reanimated';
+import { DeleteAccountSheet } from '../DeleteAccountSheet';
 import { typography } from '../../theme/typography';
 import { ScreenHeader } from '../ScreenHeader';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
@@ -19,6 +20,7 @@ interface AccountPageProps {
   onBack: () => void;
   onClose: () => void;
   onPremiumUpsell?: () => void;
+  onExportHabitsData?: () => void | Promise<void>;
 }
 
 export function AccountPage({
@@ -26,6 +28,7 @@ export function AccountPage({
   onBack,
   onClose,
   onPremiumUpsell,
+  onExportHabitsData,
 }: AccountPageProps) {
   const insets = useSafeAreaInsets();
   const reduceMotion = useReducedMotion();
@@ -58,10 +61,10 @@ export function AccountPage({
             <ProfileCard isPremium={isPremium} />
           </AccountSection>
           <AccountSection index={1} reduceMotion={reduceMotion}>
-            <PremiumStatus isPremium={isPremium} onUpgrade={onPremiumUpsell} />
+            <AccountActionsCard />
           </AccountSection>
           <AccountSection index={2} reduceMotion={reduceMotion}>
-            <AccountActionsCard />
+            <PremiumStatus isPremium={isPremium} onUpgrade={onPremiumUpsell} />
           </AccountSection>
           <AccountSection index={3} reduceMotion={reduceMotion}>
             <AccountDangerCard
@@ -80,6 +83,15 @@ export function AccountPage({
           </Text>
         </View>
       </Animated.ScrollView>
+      <DeleteAccountSheet
+        acknowledged={actions.deleteAcknowledged}
+        isDeleting={actions.isDeletingAccount}
+        visible={actions.isDeleteSheetOpen}
+        onCancel={actions.closeDeleteSheet}
+        onConfirm={actions.confirmDeleteAccount}
+        onExportHabitsData={onExportHabitsData}
+        onToggleAcknowledged={actions.setDeleteAcknowledged}
+      />
     </View>
   );
 }

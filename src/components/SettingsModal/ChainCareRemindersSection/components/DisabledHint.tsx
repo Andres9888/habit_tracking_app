@@ -33,7 +33,7 @@ export function DisabledHint({
           color: themeColors.text.secondary,
         }}
       >
-        Get a reminder if you haven't completed a habit with an active streak by
+        Get a reminder if you haven't completed a habit with an active chain by
         your chosen time.
       </Text>
     </Animated.View>

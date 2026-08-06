@@ -1,7 +1,8 @@
 export { AboutFooter } from './AboutFooter';
-export { AboutSupportSection } from './AboutSupportSection';
+export { HelpAndAboutSection } from './HelpAndAboutSection';
 export { AppearanceSection } from './AppearanceSection';
-export { DataPrivacySection } from './DataPrivacySection';
+export { PreferencesSection } from './PreferencesSection';
 export { PremiumStatus } from './PremiumStatus';
 export { ProSettingsCard } from './ProSettingsCard';
+export { YourDataSection } from './YourDataSection';
 export { SignOutCard } from './SignOutCard';

@@ -22,7 +22,7 @@ export function PremiumUpsellRow({
 
   return (
     <Pressable
-      accessibilityLabel='Learn about custom reminder times per habit'
+      accessibilityLabel='Custom times and quiet windows are in Premium. See Premium'
       accessibilityRole='button'
       onPress={handlePress}
     >
@@ -31,13 +31,17 @@ export function PremiumUpsellRow({
         style={{ borderTopColor: insetBorder, borderTopWidth: 1 }}
       >
         <Text
-          style={{
-            ...typography.caption,
-            color: themeColors.primary[600],
-            fontWeight: fontWeights.medium,
-          }}
+          style={{ ...typography.caption, color: themeColors.text.secondary }}
         >
-          Want a different time per habit? Learn more →
+          Custom times and quiet windows are in Premium.{' '}
+          <Text
+            style={{
+              color: themeColors.status.successText,
+              fontWeight: fontWeights.semibold,
+            }}
+          >
+            See Premium
+          </Text>
         </Text>
       </View>
     </Pressable>
