@@ -4,6 +4,13 @@
  */
 import { v } from 'convex/values';
 import { mutation } from '../_generated/server';
+import { hasPremiumAccess } from '../subscriptions/premiumCheck';
+import {
+  FREE_HABIT_LIMIT,
+  canAddActiveHabit,
+  premiumRequiredError,
+} from '../subscriptions/freeTier';
+import { countActiveHabits } from './activeCount';
 import { createHabitArgs } from './types';
 import { findMaxOrderForUser } from './utils';
 import { validateDaysOfWeek, validateHabitFields } from './validation';
@@ -25,6 +32,19 @@ export const create = mutation({
     // SEC-003: Input validation
     const validated = validateHabitFields(args);
     validateDaysOfWeek(args.daysOfWeek);
+
+    // SEC-005: free-tier cap. Enforced here as well as on unarchive so the
+    // limit is a consistent product boundary rather than a restore-only
+    // surprise. Premium short-circuits before the count query runs.
+    const isPremiumUser = await hasPremiumAccess(ctx, userId);
+    if (!isPremiumUser) {
+      const activeCount = await countActiveHabits(ctx, userId);
+      if (!canAddActiveHabit(isPremiumUser, activeCount)) {
+        throw premiumRequiredError(
+          `Free plan covers ${FREE_HABIT_LIMIT} active habits. Upgrade for unlimited habits, or archive one to make room.`
+        );
+      }
+    }
 
     // Single indexed read — no need to load every habit document just to take
     // the maximum order.

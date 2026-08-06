@@ -1,6 +1,7 @@
 import { Alert } from 'react-native';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { triggerHaptic } from '@/utils/haptics';
+import { alertPremiumOrError } from '@/lib/premium/premiumAlert';
 import { cancelHabitReminder } from '@/utils/notifications';
 
 type MutationFn = (args: { habitId: Id<'habits'> }) => Promise<unknown>;
@@ -17,7 +18,10 @@ export function useBatchArchiveActions(
     } catch (error) {
       if (__DEV__) console.error('Failed to batch restore:', error);
       triggerHaptic('error');
-      Alert.alert('Error', 'Failed to restore some habits. Please try again.');
+      alertPremiumOrError(
+        error,
+        'Failed to restore some habits. Please try again.'
+      );
     }
   };
 

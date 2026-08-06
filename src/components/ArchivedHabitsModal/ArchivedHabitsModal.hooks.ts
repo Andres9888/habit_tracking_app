@@ -1,9 +1,10 @@
 import { useMutation } from 'convex/react';
-import { Alert } from 'react-native';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { triggerHaptic } from '@/utils/haptics';
 import { useCachedQuery } from '@/lib/queryCache';
+import { canAddHabit } from '@/lib/premium/freeTier';
+import { alertPremiumOrError } from '@/lib/premium/premiumAlert';
 import { useBatchArchiveActions } from './useBatchArchiveActions';
 import { useArchiveDeleteActions } from './useArchiveDeleteActions';
 
@@ -28,9 +29,18 @@ export const useArchivedHabitsModalLogic = () => {
   );
   const isPremiumUser =
     (settingsData as { hasPremium?: boolean } | null)?.hasPremium ?? false;
-  // Free habit cap removed in favour of trial-then-paywall gate at AuthGate.
-  // Restoring an archived habit is never blocked by a slot cap anymore.
-  const hasReachedHabitLimit = false;
+  const activeHabitsData = useCachedQuery(
+    api.habits.list,
+    {},
+    { entryName: 'habits.list' }
+  );
+  // Mirrors the server cap so the modal can warn *before* a restore fails.
+  // Previously hardcoded false, which left the "restore" affordance looking
+  // available right up to the point it threw.
+  const hasReachedHabitLimit = !canAddHabit(
+    isPremiumUser,
+    activeHabitsData ?? []
+  );
   const unarchiveHabit = useMutation(api.habits.unarchive);
   const removeHabit = useMutation(api.habits.remove);
   const deleteAllArchivedMutation = useMutation(api.habits.deleteAllArchived);
@@ -58,8 +68,8 @@ export const useArchivedHabitsModalLogic = () => {
     } catch (error_) {
       if (__DEV__) console.error('Failed to restore habit:', error_);
       triggerHaptic('error');
-      Alert.alert(
-        'Error',
+      alertPremiumOrError(
+        error_,
         `Failed to restore "${habitName}". Please try again.`
       );
       return false;

@@ -12,6 +12,12 @@ import {
 } from '../lib/inputValidation';
 import { progressEmojisValidator } from '../lib/progressEmojisValidator';
 import { validateDaysOfWeek } from '../habits/validation';
+import { hasPremiumAccess } from '../subscriptions/premiumCheck';
+import {
+  FREE_HABIT_LIMIT,
+  canAddActiveHabit,
+  premiumRequiredError,
+} from '../subscriptions/freeTier';
 
 /**
  * Mutation: Import a template to create a new habit
@@ -118,6 +124,20 @@ export const importTemplate = mutation({
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', userId))
       .collect();
+
+    // SEC-005: free-tier cap. The library is the main way habits get added, so
+    // gating only `habits.create` would leave the limit trivially bypassable
+    // and the "unlimited habits" offer untrue. Placed after the duplicate check
+    // so re-opening an already-imported template still resolves normally.
+    const isPremiumUser = await hasPremiumAccess(ctx, userId);
+    const activeCount = userHabits.filter(
+      (habit) => habit.archived !== true && !habit.paused
+    ).length;
+    if (!canAddActiveHabit(isPremiumUser, activeCount)) {
+      throw premiumRequiredError(
+        `Free plan covers ${FREE_HABIT_LIMIT} active habits. Upgrade for unlimited habits, or archive one to make room.`
+      );
+    }
 
     let maxOrder = 0;
     for (const h of userHabits) {

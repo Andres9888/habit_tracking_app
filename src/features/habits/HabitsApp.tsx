@@ -65,6 +65,8 @@ function HabitsAppContent() {
   });
 
   const handlers = useHabitsAppHandlers({
+    habits: list.habits,
+    isPremiumUser: list.isPremiumUser,
     openCreateHabitScreen: modals.openCreateHabitScreen,
     triggerSelection,
   });

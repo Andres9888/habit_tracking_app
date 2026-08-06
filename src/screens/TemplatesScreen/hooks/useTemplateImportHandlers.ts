@@ -4,6 +4,7 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { useImportFailureHandler } from './useImportFailureHandler';
 import { useImportFeedback } from './useImportFeedback';
 import { useImportRetryRefs } from './useImportRetryRefs';
 import { usePreviewHandlers } from './usePreviewHandlers';
@@ -16,6 +17,10 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
   const { directImportRef, templateImportRef } = useImportRetryRefs();
   const { guardImport, showAlreadyImported, showError, showSuccess } =
     useImportFeedback(o);
+  const handleImportFailure = useImportFailureHandler({
+    onShowPaywall: o.onShowPaywall,
+    showError,
+  });
   const { handleCustomizeFromPreview, handleTemplatePreview } =
     usePreviewHandlers(o);
 
@@ -46,8 +51,8 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
             1000
           );
         }
-      } catch {
-        showError(() => void directImportRef.current(id));
+      } catch (error) {
+        handleImportFailure(error, () => void directImportRef.current(id));
       } finally {
         o.setImportingTemplateId(null);
       }
@@ -55,21 +60,21 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
     [
       directImportRef,
       guardImport,
+      handleImportFailure,
       handleImportResult,
       o.importTemplate,
       o.setImportingTemplateId,
       o.setShowCustomizeModal,
-      showError,
     ]
   );
 
   const handleTemplateImport = useTemplateImportAction({
     guardImport,
+    handleImportFailure,
     handleImportResult,
     importTemplate: o.importTemplate,
     setImportingTemplateId: o.setImportingTemplateId,
     setShowCustomizeModal: o.setShowCustomizeModal,
-    showError,
     templateImportRef,
   });
 

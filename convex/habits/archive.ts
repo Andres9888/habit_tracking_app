@@ -3,10 +3,13 @@
 import { v } from 'convex/values';
 import { mutation, query } from '../_generated/server';
 import { hasPremiumAccess } from '../subscriptions/premiumCheck';
+import {
+  FREE_HABIT_LIMIT,
+  canAddActiveHabit,
+  premiumRequiredError,
+} from '../subscriptions/freeTier';
 import { fullHabitValidator } from './types';
 import { findMaxOrder } from './utils';
-
-const FREE_HABIT_LIMIT = 3;
 
 function requireAuth(identity: unknown, action: string) {
   if (!identity)
@@ -48,9 +51,9 @@ export const unarchive = mutation({
     // SEC-005: Free tier limit check on unarchive
     const nonPausedActive = activeHabits.filter((h) => !h.paused);
     const isPremiumUser = await hasPremiumAccess(ctx, identity!.subject);
-    if (!isPremiumUser && nonPausedActive.length >= FREE_HABIT_LIMIT) {
-      throw new Error(
-        `Free tier is limited to ${FREE_HABIT_LIMIT} active habits. Upgrade to premium or delete an active habit to restore this one.`
+    if (!canAddActiveHabit(isPremiumUser, nonPausedActive.length)) {
+      throw premiumRequiredError(
+        `Free plan covers ${FREE_HABIT_LIMIT} active habits. Upgrade for unlimited habits, or archive one to make room for this.`
       );
     }
     await ctx.db.patch(args.habitId, {

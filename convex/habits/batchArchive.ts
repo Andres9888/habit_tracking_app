@@ -3,10 +3,12 @@ import { v } from 'convex/values';
 import { mutation } from '../_generated/server';
 import { enforceRateLimit } from '../lib/rateLimit';
 import { hasPremiumAccess } from '../subscriptions/premiumCheck';
+import {
+  FREE_HABIT_LIMIT,
+  premiumRequiredError,
+} from '../subscriptions/freeTier';
 import { loadOwnedHabitsForBatch } from './batchGuards';
 import { findMaxOrder } from './utils';
-
-const FREE_HABIT_LIMIT = 3;
 
 export const batchArchive = mutation({
   args: { habitIds: v.array(v.id('habits')) },
@@ -68,8 +70,8 @@ export const batchUnarchive = mutation({
       nonPausedActiveHabits.length + requestedActiveHabitCount >
         FREE_HABIT_LIMIT
     ) {
-      throw new Error(
-        `Free tier is limited to ${FREE_HABIT_LIMIT} active habits. Upgrade to premium or keep some habits archived to continue.`
+      throw premiumRequiredError(
+        `Free plan covers ${FREE_HABIT_LIMIT} active habits. Upgrade for unlimited habits, or restore fewer at a time.`
       );
     }
 
