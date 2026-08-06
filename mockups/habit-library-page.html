@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Habit Library Mock</title>
+    <style>
+      :root {
+        --bg: #f7f4ee;
+        --ink: #1f2933;
+        --muted: #667085;
+        --line: #e4d9cb;
+        --card: #fffdf9;
+        --sage: #6f8f72;
+        --sage-dark: #3f614e;
+        --coral: #e8795f;
+        --gold: #d6a546;
+        --blue: #5078a8;
+        --shadow: 0 16px 36px rgba(62, 49, 36, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at 20% 0%, rgba(232, 121, 95, 0.16), transparent 34%),
+          linear-gradient(180deg, #faf7f1 0%, var(--bg) 100%);
+        color: var(--ink);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+
+      .phone {
+        width: min(430px, 100vw);
+        min-height: 100vh;
+        margin: 0 auto;
+        background: var(--bg);
+        box-shadow: 0 0 0 1px rgba(31, 41, 51, 0.04), var(--shadow);
+      }
+
+      .top {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        padding: 18px 18px 12px;
+        background: rgba(247, 244, 238, 0.94);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid rgba(228, 217, 203, 0.7);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+
+      .icon-button {
+        display: grid;
+        width: 38px;
+        height: 38px;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: #fffaf2;
+        color: var(--ink);
+        font-size: 18px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 25px;
+        line-height: 1.08;
+        letter-spacing: 0;
+      }
+
+      .sub {
+        margin: 6px 0 14px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.35;
+      }
+
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 46px;
+        padding: 0 14px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--card);
+        color: #8a7968;
+        font-size: 14px;
+      }
+
+      .filters {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 12px 0 2px;
+        scrollbar-width: none;
+      }
+
+      .chip {
+        flex: 0 0 auto;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: #fffaf2;
+        color: #50483e;
+        padding: 8px 12px;
+        font-size: 13px;
+        font-weight: 650;
+      }
+
+      .chip.active {
+        border-color: transparent;
+        background: var(--sage-dark);
+        color: white;
+      }
+
+      main {
+        padding: 14px 18px 30px;
+      }
+
+      .section {
+        margin-top: 20px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 18px;
+        line-height: 1.2;
+        letter-spacing: 0;
+      }
+
+      .link {
+        border: 0;
+        background: transparent;
+        color: var(--sage-dark);
+        font-size: 13px;
+        font-weight: 750;
+      }
+
+      .recommend {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .template {
+        display: grid;
+        grid-template-columns: 46px 1fr auto;
+        align-items: center;
+        gap: 12px;
+        min-height: 78px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--card);
+      }
+
+      .emoji {
+        display: grid;
+        width: 46px;
+        height: 46px;
+        place-items: center;
+        border-radius: 12px;
+        background: #eef2e8;
+        font-size: 23px;
+      }
+
+      .template h3 {
+        margin: 0 0 4px;
+        font-size: 15px;
+        line-height: 1.15;
+      }
+
+      .template p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.25;
+      }
+
+      .add {
+        display: grid;
+        width: 36px;
+        height: 36px;
+        place-items: center;
+        border: 0;
+        border-radius: 999px;
+        background: var(--ink);
+        color: white;
+        font-size: 22px;
+      }
+
+      .added {
+        background: #e7eee7;
+        color: var(--sage-dark);
+        font-size: 16px;
+      }
+
+      .goals {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .goal {
+        min-height: 132px;
+        padding: 13px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--card);
+      }
+
+      .goal.featured {
+        grid-column: span 2;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        min-height: 124px;
+        border-color: rgba(63, 97, 78, 0.36);
+        background: linear-gradient(135deg, #fffdf9 0%, #eef4ed 100%);
+      }
+
+      .badge {
+        display: inline-flex;
+        width: fit-content;
+        border-radius: 999px;
+        background: #f5e8c9;
+        color: #755825;
+        padding: 4px 8px;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .goal h3 {
+        margin: 9px 0 6px;
+        font-size: 16px;
+        line-height: 1.15;
+      }
+
+      .goal p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.3;
+      }
+
+      .stack {
+        display: flex;
+        align-items: center;
+        margin-top: 12px;
+      }
+
+      .stack span {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        margin-right: -6px;
+        border: 2px solid var(--card);
+        border-radius: 999px;
+        background: #f0eadf;
+        font-size: 16px;
+      }
+
+      .stats {
+        align-self: center;
+        justify-self: end;
+        width: 92px;
+        padding: 10px;
+        border-radius: 8px;
+        background: rgba(255, 253, 249, 0.78);
+        text-align: center;
+      }
+
+      .stats strong {
+        display: block;
+        font-size: 26px;
+      }
+
+      .stats small {
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .row {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+
+      .mini {
+        flex: 0 0 156px;
+        min-height: 142px;
+        padding: 13px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--card);
+      }
+
+      .mini .emoji {
+        width: 38px;
+        height: 38px;
+        font-size: 20px;
+      }
+
+      .mini h3 {
+        margin: 10px 0 5px;
+        font-size: 14px;
+        line-height: 1.15;
+      }
+
+      .mini p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.3;
+      }
+
+      .category-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        min-height: 58px;
+        margin-top: 18px;
+        padding: 0 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fffaf2;
+        color: var(--ink);
+        font-size: 15px;
+        font-weight: 800;
+      }
+
+      @media (min-width: 760px) {
+        body {
+          display: grid;
+          place-items: center;
+          padding: 30px;
+        }
+
+        .phone {
+          min-height: 860px;
+          border-radius: 32px;
+          overflow: hidden;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone">
+      <header class="top">
+        <div class="nav">
+          <button class="icon-button" aria-label="Close">‹</button>
+          <button class="icon-button" aria-label="Saved templates">♡</button>
+        </div>
+        <h1>Habit Library</h1>
+        <p class="sub">Pick a goal, then add one small habit you can actually keep.</p>
+        <div class="search">⌕ Search energy, sleep, focus...</div>
+        <div class="filters" aria-label="Quick filters">
+          <button class="chip active">Recommended</button>
+          <button class="chip">Energy</button>
+          <button class="chip">Sleep</button>
+          <button class="chip">Focus</button>
+          <button class="chip">Fitness</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="section">
+          <div class="section-head">
+            <h2>Recommended next</h2>
+            <button class="link">Refresh</button>
+          </div>
+          <div class="recommend">
+            <article class="template">
+              <div class="emoji">☀️</div>
+              <div>
+                <h3>Morning sunlight</h3>
+                <p>5 min • pairs well with your walking habit</p>
+              </div>
+              <button class="add" aria-label="Add Morning sunlight">+</button>
+            </article>
+            <article class="template">
+              <div class="emoji">💧</div>
+              <div>
+                <h3>Hydrate after waking</h3>
+                <p>1 min • easiest high-impact starter</p>
+              </div>
+              <button class="add added" aria-label="Already added">✓</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-head">
+            <h2>Browse by goal</h2>
+            <button class="link">See all</button>
+          </div>
+          <div class="goals">
+            <article class="goal featured">
+              <div>
+                <span class="badge">Best first path</span>
+                <h3>Build morning momentum</h3>
+                <p>Simple habits that make the rest of the day easier.</p>
+                <div class="stack" aria-label="Example habits">
+                  <span>☀️</span><span>💧</span><span>🧘</span><span>📓</span>
+                </div>
+              </div>
+              <div class="stats">
+                <strong>18</strong>
+                <small>habits</small>
+              </div>
+            </article>
+            <article class="goal">
+              <span class="badge">Popular</span>
+              <h3>Sleep better</h3>
+              <p>Wind-down routines and evening cues.</p>
+              <div class="stack"><span>🌙</span><span>📵</span><span>🫖</span></div>
+            </article>
+            <article class="goal">
+              <span class="badge">Quick wins</span>
+              <h3>Feel focused</h3>
+              <p>Short resets for attention and clarity.</p>
+              <div class="stack"><span>🎧</span><span>⏱️</span><span>🧠</span></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-head">
+            <h2>Recently viewed</h2>
+            <button class="link">Clear</button>
+          </div>
+          <div class="row">
+            <article class="mini">
+              <div class="emoji">📓</div>
+              <h3>Evening journal</h3>
+              <p>3 min • reflect and close the loop</p>
+            </article>
+            <article class="mini">
+              <div class="emoji">🚶</div>
+              <h3>10 minute walk</h3>
+              <p>10 min • movement reset</p>
+            </article>
+            <article class="mini">
+              <div class="emoji">🫁</div>
+              <h3>Box breathing</h3>
+              <p>2 min • calm your system</p>
+            </article>
+          </div>
+        </section>
+
+        <button class="category-link">
+          Browse all categories
+          <span>›</span>
+        </button>
+      </main>
+    </div>
+  </body>
+</html>
