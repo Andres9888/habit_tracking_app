@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Habit Detail — Plan Mock (P1–P5)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  body, h1, h2, h3, p, span, button { font-family: 'DM Sans', sans-serif !important; }
+  .mono { font-family: 'Space Mono', monospace !important; }
+
+  :root{
+    --bg:#F5F1ED; --card:#EDEAE5; --card-elevated:#FFFFFF; --surface-muted:#FAF8F5;
+    --border:#DDD8D2;
+    --text-primary:#2D2A26; --text-secondary:#6B6560; --text-tertiary:#6E6660;
+    --primary-100:#D1FAE5; --primary-400:#34D399; --primary-500:#10B981; --primary-600:#059669; --primary-700:#047857;
+    --streak-100:#FEF3CD; --streak-300:#E8B94D; --streak-600:#936A08; --streak-700:#7D5907;
+    --premium-400:#7B52C4; --premium-600:#6D3AC7; --premium-700:#5A2DA8;
+    --tone-red-bg:#FFF1EE; --tone-red-border:#FCD7CD; --tone-red-text:#9A2C1A;
+    --tone-green-bg:#E7F6EE; --tone-green-border:#A7D9BE; --tone-green-text:#0F5E2C;
+    --tone-orange-bg:#FFE8DE; --tone-orange-border:#F9B894; --tone-orange-text:#7A2E0A;
+    --parchment-bg:#FFF5E8; --parchment-border:#FED7AA; --parchment-text:#B45309; --parchment-strong:#44312A;
+  }
+
+  body { background: #E7E2DB !important; }
+
+  .phone {
+    width: 390px; background: var(--bg) !important; border-radius: 44px; border: 10px solid #1c1a18;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.45);
+    overflow: hidden; position: relative;
+  }
+  .notch { position:absolute; top:0; left:50%; transform:translateX(-50%); width:120px; height:24px; background:#1c1a18; border-bottom-left-radius:14px; border-bottom-right-radius:14px; z-index:20; }
+
+  .screen-scroll { height: 780px; overflow-y: auto; }
+  .screen-scroll::-webkit-scrollbar { display:none; }
+
+  .new-tag {
+    font-size: 9px !important; font-weight: 700 !important; letter-spacing: 0.06em;
+    color: #FFFFFF !important; background: var(--primary-600) !important;
+    padding: 2px 6px !important; border-radius: 999px !important; text-transform: uppercase;
+  }
+  .fade-band { animation: fadeIn 700ms ease-out both; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(6px);} to { opacity:1; transform:none; } }
+
+  .tab-underline { position:relative; }
+  .tab-underline.active::after {
+    content:''; position:absolute; left:8px; right:8px; bottom:-9px; height:3px; border-radius:2px;
+    background: var(--primary-600) !important;
+  }
+</style>
+</head>
+<body class="min-h-screen flex items-start justify-center gap-10 p-10 flex-wrap">
+
+<!-- ============ ANNOTATION SIDEBAR ============ -->
+<div class="w-[340px] shrink-0 pt-4">
+  <div class="sticky top-10">
+    <p class="text-xs font-bold tracking-widest uppercase mb-2" style="color:var(--primary-700)">Mock · Habit Detail</p>
+    <h1 class="text-2xl font-extrabold mb-1" style="color:var(--text-primary)">Plan P1–P5 applied</h1>
+    <p class="text-sm mb-6" style="color:var(--text-secondary)">Existing screen (right) with the five prioritized additions from the review overlaid. Green "NEW" tags mark what's added — everything else is the current experience.</p>
+
+    <div class="space-y-3">
+      <div class="rounded-2xl p-4" style="background:var(--card-elevated); border:1px solid var(--border)">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="new-tag">P1</span>
+          <span class="text-sm font-bold" style="color:var(--text-primary)">Streak-recovery card</span>
+        </div>
+        <p class="text-xs" style="color:var(--text-secondary)">Shows when a best streak just broke. "Start again today" + a soft rescue-mode upsell for free users.</p>
+      </div>
+      <div class="rounded-2xl p-4" style="background:var(--card-elevated); border:1px solid var(--border)">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="new-tag">P2</span>
+          <span class="text-sm font-bold" style="color:var(--text-primary)">Per-habit insight row</span>
+        </div>
+        <p class="text-xs" style="color:var(--text-secondary)">One line surfaced from analytics — best day + trend — inside the Strength tab instead of buried in Analytics.</p>
+      </div>
+      <div class="rounded-2xl p-4" style="background:var(--card-elevated); border:1px solid var(--border)">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="new-tag">P3</span>
+          <span class="text-sm font-bold" style="color:var(--text-primary)">Next-milestone countdown</span>
+        </div>
+        <p class="text-xs" style="color:var(--text-secondary)">Fills the 8–29 day gap between milestones with a forward-looking "3 days to your 30-day mark" cue.</p>
+      </div>
+      <div class="rounded-2xl p-4" style="background:var(--card-elevated); border:1px solid var(--border)">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="new-tag">P4</span>
+          <span class="text-sm font-bold" style="color:var(--text-primary)">Reminder shortcut</span>
+        </div>
+        <p class="text-xs" style="color:var(--text-secondary)">Quick-add row while intent is highest, deep-linking to reminder settings.</p>
+      </div>
+      <div class="rounded-2xl p-4" style="background:var(--card-elevated); border:1px solid var(--border)">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="new-tag">P5</span>
+          <span class="text-sm font-bold" style="color:var(--text-primary)">Pause action</span>
+        </div>
+        <p class="text-xs" style="color:var(--text-secondary)">Added to the header menu alongside Archive/Delete so vacations don't turn into deletions.</p>
+      </div>
+    </div>
+
+    <p class="text-xs mt-6" style="color:var(--text-tertiary)">Palette pulled from <span class="mono">src/theme/colors/core.ts</span> — warm parchment neutrals, forest-green primary, burnished-gold streak accent, purple premium.</p>
+  </div>
+</div>
+
+<!-- ============ PHONE MOCK ============ -->
+<div class="phone">
+  <div class="notch"></div>
+  <div class="screen-scroll pt-10">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between px-4 pb-3">
+      <button class="w-9 h-9 rounded-full flex items-center justify-center" style="background:var(--card-elevated)">
+        <i data-lucide="chevron-left" class="w-5 h-5" style="color:var(--text-primary)"></i>
+      </button>
+      <span class="text-sm font-bold" style="color:var(--text-primary)">Habit Details</span>
+      <button class="w-9 h-9 rounded-full flex items-center justify-center relative" id="menuBtn" style="background:var(--card-elevated)">
+        <i data-lucide="more-vertical" class="w-5 h-5" style="color:var(--text-primary)"></i>
+      </button>
+    </div>
+
+    <!-- Header menu (P5) -->
+    <div id="menuPanel" class="hidden mx-4 mb-3 rounded-2xl overflow-hidden" style="background:var(--card-elevated); border:1px solid var(--border)">
+      <button class="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold" style="color:var(--text-primary)">
+        <i data-lucide="pencil" class="w-4 h-4"></i> Edit habit
+      </button>
+      <div class="flex items-center gap-2 px-4 py-3 border-t" style="border-color:var(--border)">
+        <i data-lucide="pause-circle" class="w-4 h-4" style="color:var(--primary-700)"></i>
+        <span class="text-sm font-semibold flex-1" style="color:var(--text-primary)">Pause habit</span>
+        <span class="new-tag">P5</span>
+      </div>
+      <button class="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold border-t" style="color:var(--text-primary); border-color:var(--border)">
+        <i data-lucide="archive" class="w-4 h-4"></i> Archive
+      </button>
+      <button class="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold border-t" style="color:var(--tone-red-text); border-color:var(--border)">
+        <i data-lucide="trash-2" class="w-4 h-4"></i> Delete
+      </button>
+    </div>
+
+    <!-- Hero -->
+    <div class="mx-4 rounded-3xl p-5 mb-4" style="background:var(--card-elevated); border:1px solid var(--border)">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:var(--primary-100)">🧘</div>
+        <div>
+          <p class="text-lg font-extrabold" style="color:var(--text-primary)">Morning Meditation</p>
+          <p class="text-xs" style="color:var(--text-secondary)">Every day · 10 min</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <div class="flex-1 rounded-2xl p-4 text-center" style="background:var(--surface-muted)">
+          <p class="text-3xl font-extrabold mono" style="color:var(--text-primary)">0</p>
+          <p class="text-[11px] font-semibold uppercase tracking-wide" style="color:var(--text-tertiary)">Current streak</p>
+        </div>
+        <div class="flex-1 rounded-2xl p-4 text-center" style="background:var(--streak-100)">
+          <p class="text-3xl font-extrabold mono" style="color:var(--streak-700)">18</p>
+          <p class="text-[11px] font-semibold uppercase tracking-wide" style="color:var(--streak-600)">Best streak</p>
+        </div>
+      </div>
+
+      <!-- P3: Next-milestone countdown -->
+      <div class="mt-3 flex items-center gap-2 rounded-xl px-3 py-2 fade-band" style="background:var(--primary-100)">
+        <i data-lucide="flag" class="w-4 h-4 shrink-0" style="color:var(--primary-700)"></i>
+        <p class="text-xs font-semibold flex-1" style="color:var(--primary-700)">12 days to your 30-day mark</p>
+        <span class="new-tag">P3</span>
+      </div>
+
+      <button class="mt-4 w-full py-3.5 rounded-2xl font-bold text-sm flex items-center justify-center gap-2" style="background:var(--primary-600); color:#FFFFFF">
+        <i data-lucide="check" class="w-4 h-4"></i> Complete for today
+      </button>
+    </div>
+
+    <!-- P1: Streak recovery card -->
+    <div class="mx-4 rounded-3xl p-4 mb-4 fade-band" style="background:var(--tone-red-bg); border:1px solid var(--tone-red-border)">
+      <div class="flex items-center gap-2 mb-1">
+        <i data-lucide="heart-handshake" class="w-4 h-4" style="color:var(--tone-red-text)"></i>
+        <p class="text-sm font-extrabold flex-1" style="color:var(--tone-red-text)">Reset happens. Today is day 1 again.</p>
+        <span class="new-tag">P1</span>
+      </div>
+      <p class="text-xs mb-3" style="color:var(--tone-red-text); opacity:0.85">Your 18-day streak broke — that's still 18 days of real practice. Pick it back up today.</p>
+      <div class="flex gap-2">
+        <button class="flex-1 py-2.5 rounded-xl text-sm font-bold" style="background:var(--primary-600); color:#fff">Start again today</button>
+        <button class="flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5" style="background:#FFFFFF; color:var(--premium-700); border:1px solid var(--premium-400)">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Protect future streaks
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="mx-4 flex items-center gap-5 px-2 mb-4 border-b" style="border-color:var(--border)">
+      <button class="tab-underline active pb-3 text-sm font-bold" style="color:var(--primary-700)">Calendar</button>
+      <button class="tab-underline pb-3 text-sm font-semibold" style="color:var(--text-secondary)">Strength</button>
+      <button class="tab-underline pb-3 text-sm font-semibold" style="color:var(--text-secondary)">Goal</button>
+    </div>
+
+    <!-- Calendar tab content (condensed) -->
+    <div class="mx-4 rounded-3xl p-4 mb-4" style="background:var(--card-elevated); border:1px solid var(--border)">
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-sm font-bold" style="color:var(--text-primary)">July 2026</p>
+        <div class="flex gap-1">
+          <i data-lucide="chevron-left" class="w-4 h-4" style="color:var(--text-tertiary)"></i>
+          <i data-lucide="chevron-right" class="w-4 h-4" style="color:var(--text-tertiary)"></i>
+        </div>
+      </div>
+      <div class="grid grid-cols-7 gap-1.5">
+        <script>document.write('')</script>
+        <!-- generated grid below via loop-like manual cells -->
+      </div>
+      <div class="grid grid-cols-7 gap-1.5" id="calGrid"></div>
+    </div>
+
+    <!-- P2: Per-habit insight row -->
+    <div class="mx-4 rounded-3xl p-4 mb-4 fade-band" style="background:var(--card-elevated); border:1px solid var(--border)">
+      <div class="flex items-center gap-2 mb-2">
+        <i data-lucide="line-chart" class="w-4 h-4" style="color:var(--primary-700)"></i>
+        <p class="text-xs font-bold uppercase tracking-wide flex-1" style="color:var(--text-tertiary)">Insight</p>
+        <span class="new-tag">P2</span>
+      </div>
+      <p class="text-sm font-semibold leading-snug" style="color:var(--text-primary)">You complete this most on <span style="color:var(--primary-700)">weekday mornings</span> — up 24% over last month.</p>
+    </div>
+
+    <!-- P4: Reminder shortcut -->
+    <div class="mx-4 rounded-3xl p-4 mb-4 fade-band flex items-center gap-3" style="background:var(--card-elevated); border:1px solid var(--border)">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:var(--primary-100)">
+        <i data-lucide="bell" class="w-4 h-4" style="color:var(--primary-700)"></i>
+      </div>
+      <div class="flex-1">
+        <p class="text-sm font-bold" style="color:var(--text-primary)">Remind me</p>
+        <p class="text-xs" style="color:var(--text-secondary)">No reminder set</p>
+      </div>
+      <span class="new-tag mr-1">P4</span>
+      <i data-lucide="chevron-right" class="w-4 h-4" style="color:var(--text-tertiary)"></i>
+    </div>
+
+    <!-- Why anchor (existing, kept) -->
+    <div class="mx-4 rounded-3xl p-4 mb-8" style="background:var(--parchment-bg); border:1px solid var(--parchment-border)">
+      <p class="text-[11px] font-bold uppercase tracking-wide mb-1" style="color:var(--parchment-text)">Your why</p>
+      <p class="text-sm font-medium" style="color:var(--parchment-strong)">"Calm mornings so I show up steady for my kids."</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+  document.getElementById('menuBtn').addEventListener('click', () => {
+    document.getElementById('menuPanel').classList.toggle('hidden');
+  });
+
+  const cal = document.getElementById('calGrid');
+  const days = 30, completed = new Set([1,2,3,4,5,6,7,8,9,10,12,13,14,15,17,18]);
+  for (let i=1;i<=days;i++){
+    const cell = document.createElement('div');
+    const done = completed.has(i);
+    const isToday = i === 22;
+    cell.className = 'aspect-square rounded-md flex items-center justify-center text-[10px] font-bold mono';
+    cell.style.background = done ? 'var(--primary-500)' : 'var(--surface-muted, #FAF8F5)';
+    cell.style.color = done ? '#fff' : 'var(--text-tertiary)';
+    if (isToday) { cell.style.outline = '2px solid var(--primary-700)'; cell.style.outlineOffset='1px'; }
+    cell.textContent = i;
+    cal.appendChild(cell);
+  }
+</script>
+</body>
+</html>
