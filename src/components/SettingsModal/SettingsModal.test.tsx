@@ -55,7 +55,7 @@ describe('SettingsModal', () => {
     );
 
     await waitFor(() => expect(getByText('Look & Feel')).toBeTruthy());
-    expect(getByText('Habits')).toBeTruthy();
+    expect(getByText('Your habits & data')).toBeTruthy();
     expect(getByText('Archived habits')).toBeTruthy();
     expect(getByLabelText('Account settings')).toBeTruthy();
   });
@@ -104,13 +104,13 @@ describe('SettingsModal', () => {
     expect(queryByText('App lock')).toBeNull();
   });
 
-  it('keeps the sort picker collapsed until the row is tapped', async () => {
+  it('shows the sort controls without extra disclosure interactions', async () => {
     const { getByText, queryByText } = render(
       <SettingsModal onClose={() => {}} visible />
     );
 
     await waitFor(() => expect(getByText('Sort order')).toBeTruthy());
-    // Direction options only exist once the tray is open.
-    expect(queryByText('A → Z')).toBeNull();
+    expect(getByText('A → Z')).toBeTruthy();
+    expect(queryByText('Strength')).toBeNull();
   });
 });

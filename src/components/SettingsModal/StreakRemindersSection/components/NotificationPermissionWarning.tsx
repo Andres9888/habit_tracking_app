@@ -2,25 +2,31 @@
  *  but the OS has notifications denied, so nothing can actually be delivered.
  *  "Fix" deep-links to the system settings page for this app. */
 import { AlertTriangle } from 'lucide-react-native';
-import { Linking, Platform, Pressable, Text, View } from 'react-native';
+import { Platform } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { durations, enterEasing } from '@/theme/animations';
 import { iconSizes } from '@/theme/iconSizes';
-import { typography, fontWeights } from '@/theme/typography';
 import { triggerHaptic } from '@/utils/haptics';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { SettingsRow } from '../../SettingsRow';
 
 const SETTINGS_APP_NAME =
   Platform.OS === 'ios' ? 'iOS Settings' : 'system settings';
 
-export function NotificationPermissionWarning() {
+interface NotificationPermissionWarningProps {
+  onFix: () => void;
+}
+
+export function NotificationPermissionWarning({
+  onFix,
+}: NotificationPermissionWarningProps) {
   const { colors: themeColors } = useThemeColors();
   const reduceMotion = useReduceMotion();
 
   const handleFix = () => {
     void triggerHaptic('tap');
-    void Linking.openSettings();
+    onFix();
   };
 
   return (
@@ -32,45 +38,17 @@ export function NotificationPermissionWarning() {
           : FadeIn.duration(durations.enter).easing(enterEasing)
       }
     >
-      <View
-        className='flex-row items-center rounded-xl px-3 py-2.5'
-        style={{
-          backgroundColor: themeColors.status.warningLight,
-          gap: 10,
-        }}
-      >
-        <AlertTriangle
-          color={themeColors.status.warning}
-          size={iconSizes.small}
-        />
-        <Text
-          style={{
-            ...typography.caption,
-            color: themeColors.status.warningText,
-            flex: 1,
-            lineHeight: 18,
-          }}
-        >
-          Notifications are off in {SETTINGS_APP_NAME} — reminders can&apos;t be
-          delivered.
-        </Text>
-        <Pressable
-          accessibilityLabel='Open notification settings'
-          accessibilityRole='button'
-          hitSlop={10}
-          onPress={handleFix}
-        >
-          <Text
-            style={{
-              ...typography.caption,
-              color: themeColors.status.warning,
-              fontWeight: fontWeights.bold,
-            }}
-          >
-            Fix ›
-          </Text>
-        </Pressable>
-      </View>
+      <SettingsRow
+        icon={
+          <AlertTriangle color={themeColors.status.warning} size={iconSizes.small} />
+        }
+        iconBackgroundColor={themeColors.status.warningLight}
+        label='Reminder delivery blocked'
+        subtitle={`Allow notifications in ${SETTINGS_APP_NAME} to resume reminders.`}
+        type='info'
+        value='Open settings'
+        onPress={handleFix}
+      />
     </Animated.View>
   );
 }

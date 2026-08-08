@@ -1,18 +1,13 @@
 /** ThemePicker — Inline segmented control for light / dark / system theme */
-import { Pressable, View } from 'react-native';
-import { Moon, Smartphone, Sun } from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
 import type { DarkModePreference } from '../../../convex/settings/types';
 import { triggerHaptic } from '@/utils/haptics';
-import { useThemeColors } from '../../theme/ThemeContext';
-import { getSegmentedControlColors } from './SegmentedControl.colors';
+import { SegmentedTextPicker } from './SegmentedTextPicker';
 
-const OPTIONS: { key: DarkModePreference; label: string; Icon: typeof Sun }[] =
-  [
-    { key: 'light', label: 'Light', Icon: Sun },
-    { key: 'dark', label: 'Dark', Icon: Moon },
-    { key: 'system', label: 'System', Icon: Smartphone },
-  ];
+const OPTIONS: { key: DarkModePreference; label: string }[] = [
+  { key: 'light', label: 'Light' },
+  { key: 'dark', label: 'Dark' },
+  { key: 'system', label: 'System' },
+];
 
 interface ThemePickerProps {
   selected: DarkModePreference;
@@ -20,13 +15,6 @@ interface ThemePickerProps {
 }
 
 export function ThemePicker({ selected, onSelect }: ThemePickerProps) {
-  const { colors, isDark } = useThemeColors();
-  const {
-    containerBg,
-    selectedBg,
-    accent: selectedFg,
-  } = getSegmentedControlColors(isDark);
-
   const handleSelect = (key: DarkModePreference) => {
     if (key === selected) return;
     void triggerHaptic('selection');
@@ -34,36 +22,11 @@ export function ThemePicker({ selected, onSelect }: ThemePickerProps) {
   };
 
   return (
-    <View
-      accessibilityRole='radiogroup'
-      className='flex-row rounded-full p-[3px]'
-      style={{ backgroundColor: containerBg, gap: 2 }}
-    >
-      {OPTIONS.map(({ key, label, Icon }) => {
-        const isSelected = key === selected;
-        return (
-          <Pressable
-            key={key}
-            accessibilityLabel={label}
-            accessibilityRole='radio'
-            accessibilityState={{ selected: isSelected }}
-            className='items-center justify-center rounded-full'
-            hitSlop={8}
-            style={{
-              width: 40,
-              height: 34,
-              backgroundColor: isSelected ? selectedBg : 'transparent',
-            }}
-            onPress={() => handleSelect(key)}
-          >
-            <Icon
-              color={isSelected ? selectedFg : colors.text.secondary}
-              size={iconSizes.small}
-              strokeWidth={isSelected ? 2.5 : 2}
-            />
-          </Pressable>
-        );
-      })}
-    </View>
+    <SegmentedTextPicker
+      groupLabel='Theme'
+      options={OPTIONS}
+      selected={selected}
+      onSelect={handleSelect}
+    />
   );
 }

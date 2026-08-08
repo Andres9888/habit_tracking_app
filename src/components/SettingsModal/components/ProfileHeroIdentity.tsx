@@ -9,6 +9,7 @@ import {
   fontWeights,
 } from '../../../theme/typography';
 import { ProfilePremiumBadge } from '../ProfilePremiumBadge';
+import { daysLeftUntil } from '../sections/trialDaysLeft';
 
 interface ProfileHeroIdentityProps {
   isPremium: boolean;
@@ -26,8 +27,15 @@ export function ProfileHeroIdentity({
   name,
 }: ProfileHeroIdentityProps) {
   const { colors: themeColors } = useThemeColors();
-  const { status } = usePremium();
+  const { status, expirationDate } = usePremium();
   const badgeLabel = planBadgeLabel(status, isPremium);
+  const trialDays = daysLeftUntil(expirationDate);
+  const planLine =
+    status === 'trialing'
+      ? `Trial (${trialDays} ${trialDays === 1 ? 'day' : 'days'} left)`
+      : isPremium
+        ? 'Plan: Pro'
+        : 'Plan: Free';
 
   return (
     <View className='min-w-0 flex-1'>
@@ -58,7 +66,7 @@ export function ProfileHeroIdentity({
           color: themeColors.text.secondary,
         }}
       >
-        Edit name, photo &amp; account
+        {planLine}. Plan, billing, email &amp; sign out
       </Text>
     </View>
   );

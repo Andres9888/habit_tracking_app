@@ -15,12 +15,8 @@ interface ReminderInsetCardProps {
   insetExpandStyle: ReturnType<
     typeof import('react-native-reanimated').useAnimatedStyle
   >;
-  pickerExpandStyle: ReturnType<
-    typeof import('react-native-reanimated').useAnimatedStyle
-  >;
   enabled: boolean;
   onInsetLayout: (event: import('react-native').LayoutChangeEvent) => void;
-  onPickerLayout: (event: import('react-native').LayoutChangeEvent) => void;
   onToggleTimePicker: () => void;
   onTimeChange: (event: unknown, date?: Date) => void;
   onPremiumUpsell?: () => void;
@@ -51,27 +47,19 @@ export function ReminderInsetCard(p: ReminderInsetCardProps) {
             reminderTime={p.reminderTime}
             onToggleTimePicker={p.onToggleTimePicker}
           />
-          <Animated.View
-            pointerEvents={
-              p.showTimePicker && Platform.OS === 'ios' ? 'auto' : 'none'
-            }
-            style={p.pickerExpandStyle}
-          >
+          {Platform.OS === 'ios' ? (
             <View
               className='border-t px-3.5 pb-3'
               style={{ borderTopColor: p.insetBorder }}
-              onLayout={p.onPickerLayout}
             >
-              {Platform.OS === 'ios' ? (
-                <DateTimePicker
-                  display='spinner'
-                  mode='time'
-                  value={timeStringToDate(p.reminderTime)}
-                  onChange={p.onTimeChange}
-                />
-              ) : null}
+              <DateTimePicker
+                display='spinner'
+                mode='time'
+                value={timeStringToDate(p.reminderTime)}
+                onChange={p.onTimeChange}
+              />
             </View>
-          </Animated.View>
+          ) : null}
           {p.isPremium ? null : (
             <PremiumUpsellRow
               insetBorder={p.insetBorder}

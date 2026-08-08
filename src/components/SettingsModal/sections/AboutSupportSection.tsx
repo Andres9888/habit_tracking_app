@@ -44,6 +44,13 @@ export function AboutSupportSection({
         onPress={onRate}
       />
       <SettingsRow
+        icon={<MessageSquare color={settings.feedback.icon} size={iconSize} />}
+        iconBackgroundColor={settings.feedback.bg}
+        label='Send feedback'
+        type='navigation'
+        onPress={onFeedback}
+      />
+      <SettingsRow
         icon={<Share2 color={settings.share.icon} size={iconSize} />}
         iconBackgroundColor={settings.share.bg}
         label='Share with a friend'
@@ -56,13 +63,6 @@ export function AboutSupportSection({
         label="What's new"
         type='navigation'
         onPress={onWhatsNew}
-      />
-      <SettingsRow
-        icon={<MessageSquare color={settings.feedback.icon} size={iconSize} />}
-        iconBackgroundColor={settings.feedback.bg}
-        label='Send feedback'
-        type='navigation'
-        onPress={onFeedback}
       />
     </SettingsSection>
   );

@@ -1,5 +1,6 @@
 /** StreakRemindersSection — streak reminder notifications toggle */
 import { Platform } from 'react-native';
+import { Linking } from 'react-native';
 import { Bell } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { SettingsRow } from '../SettingsRow';
@@ -23,10 +24,8 @@ export function StreakRemindersSection(props: StreakRemindersSectionProps) {
   const { colors: themeColors, isDark, settings } = useThemeColors();
   const { isSearching } = useSettingsSearch();
   const { permissionGranted } = useNotificationPermissionStatus(props.enabled);
-  const animations = useStreakRemindersAnimations(
-    props.enabled,
-    showTimePicker
-  );
+  const remindersActuallyDeliveryOn = props.enabled && permissionGranted;
+  const animations = useStreakRemindersAnimations(props.enabled);
   const onTimeChange = animations.handleTimeChange(
     props.onChangeTime,
     setShowTimePicker
@@ -34,7 +33,16 @@ export function StreakRemindersSection(props: StreakRemindersSectionProps) {
 
   const handleToggleTimePicker = () => {
     if (Platform.OS === 'android') setShowTimePicker(true);
-    else setShowTimePicker((current) => !current);
+  };
+
+  const openNotificationSettings = () => void Linking.openSettings();
+
+  const handleToggle = (value: boolean) => {
+    if (!permissionGranted && value) {
+      openNotificationSettings();
+      return;
+    }
+    void props.onToggle(value);
   };
 
   const insetBackground = isDark
@@ -46,31 +54,33 @@ export function StreakRemindersSection(props: StreakRemindersSectionProps) {
   return (
     <SettingsSection icon={props.icon} title='Reminders'>
       {props.enabled && !permissionGranted && !isSearching ? (
-        <NotificationPermissionWarning />
+        <NotificationPermissionWarning onFix={openNotificationSettings} />
       ) : null}
       <SettingsRow
         icon={<Bell color={settings.bell.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.bell.bg}
         label='Streak reminders'
-        subtitle='Nudge before an active streak slips'
+        subtitle={
+          props.enabled && !permissionGranted
+            ? 'Blocked in settings. Not sending reminders.'
+            : 'Nudge before an active streak slips'
+        }
         type='toggle'
-        value={props.enabled}
-        onToggle={(v) => void props.onToggle(v)}
+        value={remindersActuallyDeliveryOn}
+        onToggle={handleToggle}
       />
       {isSearching ? null : (
         <>
           <ReminderInsetCard
-            enabled={props.enabled}
+            enabled={remindersActuallyDeliveryOn}
             insetBackground={insetBackground}
             insetBorder={insetBorder}
             insetCardBackground={insetCardBackground}
             insetExpandStyle={animations.insetExpand.contentAnimatedStyle}
             isPremium={props.isPremium}
-            pickerExpandStyle={animations.pickerExpand.contentAnimatedStyle}
             reminderTime={props.reminderTime}
             showTimePicker={showTimePicker}
             onInsetLayout={animations.handleInsetLayout}
-            onPickerLayout={animations.handlePickerLayout}
             onPremiumUpsell={props.onPremiumUpsell}
             onTimeChange={onTimeChange}
             onToggleTimePicker={handleToggleTimePicker}
