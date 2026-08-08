@@ -63,8 +63,6 @@ export function ModalHeader({
       >
         {onBack ? (
           <ModalBackButton
-            backgroundColor={palette.closeBg}
-            color={palette.textSecondary}
             onBack={onBack}
           />
         ) : (

@@ -13,6 +13,23 @@ import { borderRadius } from '@/theme/spacing';
 import { AnimatedPressable } from './AnimatedPressable';
 import { useThemeColors } from '../../theme/ThemeContext';
 
+type CloseButtonPalette = {
+  backgroundColor: string;
+  iconColor: string;
+  iconSize: number;
+  strokeWidth: number;
+};
+
+export const getSubtleCloseButtonVisuals = (
+  isDark: boolean,
+  colors: { text: { tertiary: string } }
+): CloseButtonPalette => ({
+  backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
+  iconColor: colors.text.tertiary,
+  iconSize: 20,
+  strokeWidth: 2,
+});
+
 interface ModalCloseButtonProps {
   /** Called when the button is pressed */
   onClose: () => void;
@@ -48,8 +65,8 @@ export function ModalCloseButton({
 }: ModalCloseButtonProps) {
   const { colors, isDark } = useThemeColors();
   const isSubtle = variant === 'subtle';
-  const resolvedIconSize = iconSize ?? (isSubtle ? 20 : 24);
-  const subtleBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
+  const subtleVisual = getSubtleCloseButtonVisuals(isDark, colors);
+  const resolvedIconSize = iconSize ?? (isSubtle ? subtleVisual.iconSize : 24);
 
   const handlePress = () => {
     if (haptic) {
@@ -71,14 +88,14 @@ export function ModalCloseButton({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: borderRadius.full,
-        backgroundColor: isSubtle ? subtleBg : colors.surface,
+        backgroundColor: isSubtle ? subtleVisual.backgroundColor : colors.surface,
       }}
       onPress={handlePress}
     >
       <X
-        color={isSubtle ? colors.text.tertiary : colors.text.secondary}
+        color={isSubtle ? subtleVisual.iconColor : colors.text.secondary}
         size={resolvedIconSize}
-        strokeWidth={isSubtle ? 2 : 2.5}
+        strokeWidth={isSubtle ? subtleVisual.strokeWidth : 2.5}
       />
     </AnimatedPressable>
   );
