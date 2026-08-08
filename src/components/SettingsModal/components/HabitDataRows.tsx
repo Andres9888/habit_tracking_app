@@ -1,16 +1,18 @@
 /** HabitDataRows — archive + export entry points.
  *  Both live in Habits now (mock decision 3B: 7 cards → 6 — a lone navigational
  *  row didn't earn its own Privacy & Security card). */
+import { useState } from 'react';
 import { BookOpen, Download } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { SettingsRow } from '../SettingsRow';
 import { useSettingsToast } from '../SettingsToast';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { ExportFormatSheet, type ExportFormat } from './ExportFormatSheet';
 
 interface HabitDataRowsProps {
   archivedHabitsCount?: number;
   onOpenArchivedHabits: () => void;
-  onExportHabitsData?: () => void | Promise<void>;
+  onExportHabitsData?: (format: ExportFormat) => void | Promise<void>;
 }
 
 export function HabitDataRows({
@@ -20,12 +22,15 @@ export function HabitDataRows({
 }: HabitDataRowsProps) {
   const { settings } = useThemeColors();
   const { showToast } = useSettingsToast();
+  const [sheetVisible, setSheetVisible] = useState(false);
 
-  // Only claim the export started if there is actually a handler to run.
-  const handleExport = () => {
+  // The toast used to fire the instant the row was tapped — before the format
+  // was chosen, and it stayed up even if the user cancelled. It now waits for a
+  // real choice and names the format it is actually writing.
+  const handleSelect = (format: ExportFormat) => {
     if (!onExportHabitsData) return;
-    void onExportHabitsData();
-    showToast('Export started…');
+    void onExportHabitsData(format);
+    showToast(`Exporting as ${format.toUpperCase()}…`);
   };
 
   return (
@@ -45,7 +50,14 @@ export function HabitDataRows({
         label='Export my data'
         subtitle='Download habits as CSV or JSON'
         type='navigation'
-        onPress={handleExport}
+        onPress={
+          onExportHabitsData ? () => setSheetVisible(true) : undefined
+        }
+      />
+      <ExportFormatSheet
+        visible={sheetVisible}
+        onClose={() => setSheetVisible(false)}
+        onSelect={handleSelect}
       />
     </>
   );

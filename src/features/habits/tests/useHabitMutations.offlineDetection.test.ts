@@ -149,9 +149,12 @@ describe('useHabitsModalsState - Offline Detection (Code Verification)', () => {
       );
     });
 
-    it('should destructure isCompleted from useHabitsTracking', () => {
+    it('should destructure isCompleted from modal tracking', () => {
       expect(useHabitsModalsStateSource).toMatch(
-        /const\s*\{[\s\S]*isCompleted[\s\S]*\}\s*=\s*useHabitsTracking/
+        /const\s*\{[\s\S]*isCompleted[\s\S]*\}\s*=\s*useModalTracking/
+      );
+      expect(useHabitsModalsStateSource).toContain(
+        'fallbackTracking: homeTracking'
       );
     });
 

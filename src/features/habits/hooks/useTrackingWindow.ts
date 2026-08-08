@@ -12,7 +12,11 @@ function buildWindowDateStrings(startDate: string, endDate: string): string[] {
   if (!startDate || !endDate) return [];
   const start = parseISO(startDate);
   const end = parseISO(endDate);
-  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || start > end) {
+  if (
+    Number.isNaN(start.getTime()) ||
+    Number.isNaN(end.getTime()) ||
+    start > end
+  ) {
     return [];
   }
   return eachDayOfInterval({ end, start }).map((d) => format(d, DATE_FMT));
@@ -30,7 +34,8 @@ function buildWindowDateStrings(startDate: string, endDate: string): string[] {
  */
 export function useTrackingWindow(
   extendedDateStrings: string[],
-  stableToday: Date
+  stableToday: Date,
+  bufferDays = WINDOW_BUFFER_DAYS
 ) {
   // Callers pass date lists in either direction (the modals-state list is
   // newest-first), so order the endpoints before treating them as a range —
@@ -45,8 +50,8 @@ export function useTrackingWindow(
   const windowEndRef = useRef('');
 
   const baseStart = useMemo(
-    () => format(addDays(stableToday, -WINDOW_BUFFER_DAYS), DATE_FMT),
-    [stableToday]
+    () => format(addDays(stableToday, -bufferDays), DATE_FMT),
+    [bufferDays, stableToday]
   );
 
   if (
@@ -59,7 +64,7 @@ export function useTrackingWindow(
   let desiredStart = baseStart;
   if (requestedStart && requestedStart < baseStart) {
     desiredStart = format(
-      addDays(parseISO(requestedStart), -WINDOW_BUFFER_DAYS),
+      addDays(parseISO(requestedStart), -bufferDays),
       DATE_FMT
     );
   }

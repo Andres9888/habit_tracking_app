@@ -21,6 +21,7 @@ export function SettingsRow({
   type,
   value,
   badge,
+  expanded,
   onPress,
   onToggle,
   rightAccessory,
@@ -48,6 +49,7 @@ export function SettingsRow({
     <SettingsRowContent
       badge={badge}
       colors={colors}
+      expanded={expanded}
       icon={icon}
       iconBackgroundColor={iconBackgroundColor}
       isInteractiveInfo={isInteractiveInfo}
@@ -68,8 +70,16 @@ export function SettingsRow({
   if (type === 'toggle' || (type === 'info' && !onPress)) return content;
   return (
     <AnimatedPressable
+      accessibilityHint={subtitle}
       accessibilityLabel={label}
       accessibilityRole='button'
+      // Without these, VoiceOver announced "Sort order, button" — no current
+      // value, no open/closed state. Both matter most on the rows that expand
+      // a picker in place rather than pushing a sub-page.
+      accessibilityState={expanded === undefined ? undefined : { expanded }}
+      accessibilityValue={
+        typeof value === 'string' ? { text: value } : undefined
+      }
       style={focusStyle}
       onPress={handleNavPress}
       {...focusHandlers}

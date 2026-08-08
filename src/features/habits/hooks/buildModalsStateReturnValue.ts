@@ -54,7 +54,6 @@ export function buildModalsStateReturnValue(
     onSettingsChange: handlers.onSettingsChange,
 
     // Extra handlers
-    onChangeCelebrationsEnabled: extra.onChangeCelebrationsEnabled,
 
     quickActionsHabit: selection.quickActionsHabit,
 
@@ -136,7 +135,6 @@ export function buildModalsStateReturnValue(
 
     openVisualizationExercise: handlers.openVisualizationExercise,
 
-    setShowHabitStrengthPercentage: () => {},
     toggleHabit: extra.handleToggleHabit,
   } as unknown as HabitsModalsState;
 }

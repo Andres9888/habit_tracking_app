@@ -27,6 +27,13 @@ export const seedTemplates = mutation({
       internal.templatesDataSeed.seedUniqueTemplates,
       internal.templatesDataSeed.seedResearchBackedTemplates,
       internal.templatesDataSeed.relabelExistingTemplates,
+      // Aug 2026 evidence review. Queued last so the corrections land on top
+      // of whatever the seed batches inserted. All three are idempotent, so an
+      // existing database can also get them by running them from the dashboard
+      // — the curation and start-small batches are still dashboard-only.
+      internal.templates.evidenceReview.mutations.seedEvidenceReviewTemplates,
+      internal.templates.evidenceReview.mutations.applyEvidenceCorrections,
+      internal.templates.evidenceReview.mutations.backfillStartSmallRound2,
     ];
     for (const job of seedJobs) await ctx.scheduler.runAfter(0, job, {});
 

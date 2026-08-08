@@ -10,22 +10,17 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
-import type { Habit } from '../types';
+import type { Habit, HabitTrackingEntry } from '../types';
 import { useHabitMutations } from './useHabitMutations';
 import { useHabitMilestones } from './useHabitMilestones';
-import { useHabitsTracking } from './useHabitsTracking';
+import { useModalTracking } from './useModalTracking';
 import { useHabitsModalsHandlers } from './useHabitsModalsHandlers';
 import { useModalVisibilityState } from './useModalVisibilityState';
 import { useHabitSelectionState } from './useHabitSelectionState';
 import { useHabitsSettings } from './useHabitsSettings';
 import { buildModalsStateReturnValue } from './buildModalsStateReturnValue';
 import { buildModalsSettersArg } from './buildModalsSettersArg';
-import {
-  generateDateStrings,
-  getTodayMidnight,
-  useSyncAllHabitStates,
-} from './modalsStateHelpers';
-import { getLocalDateString } from '@/utils/getLocalDateString';
+import { useSyncAllHabitStates } from './modalsStateHelpers';
 import { useOptimisticToggleMutation } from '../../../lib/optimistic';
 import { sanitizeSettingsPayload } from '../../../lib/settings/sanitizeSettingsPayload';
 import { updateSettingsWithFallback } from '../../../lib/settings/updateSettingsWithFallback';
@@ -33,11 +28,13 @@ import type { HabitsModalsState } from './types';
 
 interface UseHabitsModalsStateProps {
   habits: Habit[];
+  homeTracking: HabitTrackingEntry[];
   showHabitStrengthPercentage: boolean;
 }
 
 export function useHabitsModalsState({
   habits,
+  homeTracking,
   showHabitStrengthPercentage,
 }: UseHabitsModalsStateProps): HabitsModalsState {
   const visibility = useModalVisibilityState();
@@ -61,14 +58,11 @@ export function useHabitsModalsState({
   const [stickyCalendarHeaderOverride, setStickyCalendarHeaderOverride] =
     useState<boolean>();
 
-  const todayKey = getLocalDateString();
-  const trackingDates = useMemo(() => generateDateStrings(365), [todayKey]);
-  const todayMidnight = useMemo(() => getTodayMidnight(), [todayKey]);
-
-  const { tracking, getStreak, isCompleted } = useHabitsTracking(
-    trackingDates,
-    todayMidnight
-  );
+  const { tracking, getStreak, isCompleted } = useModalTracking({
+    fallbackTracking: homeTracking,
+    isExtendedViewVisible:
+      visibility.isHabitCalendarOpen || visibility.isHabitDetailOpen,
+  });
 
   // Wrap toggle mutation as plain async function
   const wrappedToggleHabit = useCallback(
@@ -157,12 +151,6 @@ export function useHabitsModalsState({
     [archiveHabit]
   );
 
-  const onChangeCelebrationsEnabled = useCallback(
-    async (value: boolean) =>
-      handlers.onSettingsChange({ showMotivationalMessages: value }),
-    [handlers]
-  );
-
   const handleToggleHabit = useCallback(
     async (args: { habitId: Id<'habits'>; date: string }) => {
       // Use optimistic toggle with offline queue support
@@ -180,7 +168,6 @@ export function useHabitsModalsState({
     handleArchive,
     handleToggleHabit,
     milestone,
-    onChangeCelebrationsEnabled,
     reduceMotionPreference,
     settings,
     showHabitStrengthPercentage,

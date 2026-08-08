@@ -1,7 +1,7 @@
 /**
  * HabitDetailSections — the card stack below the hero wash:
  *
- *   Progress → What we're noticing → Your month → [history] → note → pause
+ *   Progress → What we're noticing → Your month → [history] → note
  *
  * The note card moves into the hero once today is logged (frame 2 of the Habit
  * Flow Prototype), so it is rendered here only while today is still open — one
@@ -16,7 +16,6 @@ import { HabitDetailHistory } from './HabitDetailHistory';
 import { HabitNoteCard } from './HabitNoteCard';
 import { MonthHeatmapCard } from './MonthHeatmapCard';
 import { NoticingSection } from './NoticingSection';
-import { PauseCard } from './PauseCard';
 import { ThisWeekCard } from './ThisWeekCard';
 
 interface HabitDetailSectionsProps {
@@ -77,7 +76,6 @@ export function HabitDetailSections({
       {isCompletedToday ? null : (
         <HabitNoteCard habitId={habit._id} notes={habit.notes} />
       )}
-      <PauseCard habitId={habit._id} paused={habit.paused} />
     </View>
   );
 }

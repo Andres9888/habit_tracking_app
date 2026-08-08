@@ -14,8 +14,6 @@ import type { SettingsContentProps } from '../SettingsContent.types';
 
 interface PrimarySectionsProps extends SettingsContentProps {
   sectionIconColor: string;
-  onDeleteAccount: () => void;
-  isDeletingAccount: boolean;
 }
 
 export function SettingsPrimarySections(p: PrimarySectionsProps) {

@@ -2,7 +2,7 @@
  * HabitDetailContent — the redesigned detail stack (Claude Design, "Habit Flow
  * Prototype" in project "Habit insights page redesign"):
  *
- *   hero wash → Progress → What we're noticing → Your month → note → pause
+ *   hero wash → Progress → What we're noticing → Your month → note
  *
  * Insight-first rather than data-first: the raw calendar, strength curve and
  * goal card live behind "View history ›" (see HabitDetailHistory).

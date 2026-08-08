@@ -30,7 +30,6 @@ export interface ExtraState {
   tracking: unknown;
   reduceMotionPreference: boolean;
   handleArchive: (id: Id<'habits'>) => Promise<void>;
-  onChangeCelebrationsEnabled: (value: boolean) => Promise<void>;
   handleToggleHabit: (args: {
     habitId: Id<'habits'>;
     date: string;

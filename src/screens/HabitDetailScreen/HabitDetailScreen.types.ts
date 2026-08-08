@@ -29,7 +29,6 @@ export interface HabitDetailScreenProps {
   onDelete?: (habitId: Id<'habits'>) => void;
   onEdit?: (habit: Habit) => void;
   onOpenCalendar?: (habit: Habit) => void;
-  onPause?: (habitId: Id<'habits'>) => void;
   tracking?: HabitTrackingEntry[];
   visible: boolean;
 }

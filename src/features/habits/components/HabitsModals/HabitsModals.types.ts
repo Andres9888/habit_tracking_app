@@ -8,16 +8,15 @@ export interface HabitsModalsProps {
   state: HabitsModalsState;
 }
 
-/** Props for the SettingsModalSection component */
+/** Props for the SettingsModalSection component.
+ *  celebrationsEnabled / showHabitStrengthPercentage / setShowHabitStrengthPercentage
+ *  / openHapticTest were dropped here: Settings never rendered a control for any
+ *  of them, and the strength-% setter was a no-op stub. */
 export interface SettingsModalSectionProps {
   archivedHabitsCount: number;
-  celebrationsEnabled: boolean;
   settings: HabitsModalsState['settings'];
   showSettings: boolean;
-  showHabitStrengthPercentage: boolean;
   closeSettings: () => void;
-  openHapticTest: () => void;
-  setShowHabitStrengthPercentage: (value: boolean) => void;
   onSettingsChange: HabitsModalsState['onSettingsChange'];
 }
 
@@ -49,7 +48,6 @@ export interface CalendarAndDetailModalsProps {
   closeEditScreen: () => void;
   openHabitDetail: HabitsModalsState['openHabitDetail'];
   openEditHabit: HabitsModalsState['openEditHabit'];
-  openPauseModal: HabitsModalsState['openPauseModal'];
   openHabitCalendar: HabitsModalsState['openHabitCalendar'];
   handleArchive: (habitId: Id<'habits'>) => void | Promise<void>;
   onDeleteHabit: (habitId: Id<'habits'>) => void | Promise<void>;

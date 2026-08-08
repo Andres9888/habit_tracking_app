@@ -18,6 +18,7 @@ interface SettingsRowContentProps {
   secondaryTextColor: string;
   showTopBorder: boolean;
   showChevron?: boolean;
+  expanded?: boolean;
   subtitle?: SettingsRowProps['subtitle'];
   type: SettingsRowProps['type'];
   value: SettingsRowProps['value'];
@@ -28,6 +29,7 @@ interface SettingsRowContentProps {
 export function SettingsRowContent({
   badge,
   colors,
+  expanded,
   icon,
   iconBackgroundColor,
   isInteractiveInfo,
@@ -82,6 +84,7 @@ export function SettingsRowContent({
         <RowAccessory
           badge={badge}
           colors={colors}
+          expanded={expanded}
           label={label}
           showChevron={showChevron}
           type={type}

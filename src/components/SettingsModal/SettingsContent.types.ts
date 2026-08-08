@@ -26,7 +26,7 @@ export interface SettingsContentProps {
   onChangeHabitSortMode: (
     mode: import('../../features/habits/types').HabitSortMode
   ) => void;
-  onExportHabitsData?: () => void | Promise<void>;
+  onExportHabitsData?: (format: 'csv' | 'json') => void | Promise<void>;
   // Streak reminders
   streakRemindersEnabled: boolean;
   streakReminderTime: string;

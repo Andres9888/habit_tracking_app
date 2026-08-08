@@ -105,6 +105,7 @@ import type * as templates_curatedRemovals from "../templates/curatedRemovals.js
 import type * as templates_curatedSeedTemplates from "../templates/curatedSeedTemplates.js";
 import type * as templates_curation from "../templates/curation.js";
 import type * as templates_enrichTemplates from "../templates/enrichTemplates.js";
+import type * as templates_evidenceReview_mutations from "../templates/evidenceReview/mutations.js";
 import type * as templates_helpers from "../templates/helpers.js";
 import type * as templates_importTemplate from "../templates/importTemplate.js";
 import type * as templates_patchScienceEnrichment from "../templates/patchScienceEnrichment.js";
@@ -227,6 +228,7 @@ declare const fullApi: ApiFromModules<{
   "templates/curatedSeedTemplates": typeof templates_curatedSeedTemplates;
   "templates/curation": typeof templates_curation;
   "templates/enrichTemplates": typeof templates_enrichTemplates;
+  "templates/evidenceReview/mutations": typeof templates_evidenceReview_mutations;
   "templates/helpers": typeof templates_helpers;
   "templates/importTemplate": typeof templates_importTemplate;
   "templates/patchScienceEnrichment": typeof templates_patchScienceEnrichment;

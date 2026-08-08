@@ -31,7 +31,10 @@ export function useSettingsSearch() {
   return { query, isSearching: query.length > 0 };
 }
 
-/** True when there is no active query, or the label contains it (case-insensitive). */
+/** True when there is no active query, or the label contains it (case-insensitive).
+ *  There is no search entry point today, so the empty-query short-circuit is the
+ *  path every row actually takes — keep it ahead of any string work. */
 export function rowMatchesQuery(query: string, label: string): boolean {
-  return !query || label.toLowerCase().includes(query);
+  if (!query) return true;
+  return label.toLowerCase().includes(query);
 }

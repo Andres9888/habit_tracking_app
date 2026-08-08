@@ -34,11 +34,12 @@ export function AboutFooter({
       {links.map((link) => (
         <View key={link.key} className='flex-row items-center'>
           {/* Pressable (not Text onPress) so the 12px caption gets a real
-              touch target — Text doesn't accept hitSlop. */}
+              touch target — Text doesn't accept hitSlop. 16 keeps the tappable
+              box past 44px; 12 left it around 36. */}
           <Pressable
             accessibilityLabel={link.label}
             accessibilityRole='link'
-            hitSlop={12}
+            hitSlop={16}
             onPress={link.onPress}
           >
             <Text style={footerStyle}>{link.label}</Text>
@@ -46,7 +47,10 @@ export function AboutFooter({
           <Text style={footerStyle}> · </Text>
         </View>
       ))}
-      <Text style={footerStyle}>
+      {/* selectable so support can be sent the exact build via long-press copy —
+          the build number is only here for triage, and unselectable text made
+          users retype it. */}
+      <Text selectable style={footerStyle}>
         v{version} ({buildNumber})
       </Text>
     </View>

@@ -68,7 +68,7 @@ function HabitDetailScreenContent({
     if (displayHabit) onEdit?.(displayHabit);
   };
   // Memoized because this object is threaded down through HabitDetailContent →
-  // HabitDetailSections → ThisWeekCard / MonthHeatmapCard / PauseCard etc. As a
+  // HabitDetailSections → ThisWeekCard / MonthHeatmapCard etc. As a
   // fresh literal it defeated every memo boundary below it, so each scroll tick
   // (which flips isTitlePinned) rebuilt the whole detail stack including the
   // 42-cell month grid.

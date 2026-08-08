@@ -4,7 +4,7 @@ import { api } from '../../../../convex/_generated/api';
 import { useCachedQuery } from '../../../lib/queryCache';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { usePendingToggles } from '../../../lib/optimistic';
-import type { HabitStatus } from '../types';
+import type { HabitStatus, HabitTrackingEntry } from '../types';
 import {
   buildCompletedDatesByHabit,
   buildStreakByHabit,
@@ -17,7 +17,21 @@ import {
 } from './useHabitsTracking.helpers';
 import { useTrackingWindow } from './useTrackingWindow';
 
-export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
+interface UseHabitsTrackingOptions {
+  enabled?: boolean;
+  fallbackToLatest?: boolean;
+  fallbackTracking?: HabitTrackingEntry[];
+  windowBufferDays?: number;
+}
+
+const EMPTY_TRACKING: HabitTrackingEntry[] = [];
+
+export function useHabitsTracking(
+  extendedDateStrings: string[],
+  today: Date,
+  options: UseHabitsTrackingOptions = {}
+) {
+  const enabled = options.enabled ?? true;
   const stableToday = useMemo(
     () => normalizeToday(today),
     [today.getDate(), today.getFullYear(), today.getMonth()]
@@ -26,16 +40,22 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
   // week navigation within the buffer reuses the same subscription.
   const { windowStart, windowEnd, windowDateStrings } = useTrackingWindow(
     extendedDateStrings,
-    stableToday
+    stableToday,
+    options.windowBufferDays
   );
   const queryArgs = useMemo(
-    () => buildTrackingQueryArgs(windowStart, windowEnd),
-    [windowStart, windowEnd]
+    () =>
+      enabled && windowStart && windowEnd
+        ? buildTrackingQueryArgs(windowStart, windowEnd)
+        : 'skip',
+    [enabled, windowStart, windowEnd]
   );
+  const queriedTracking = useCachedQuery(api.habits.getTracking, queryArgs, {
+    entryName: 'habits.getTracking',
+    fallbackToLatest: options.fallbackToLatest,
+  });
   const tracking =
-    useCachedQuery(api.habits.getTracking, queryArgs, {
-      entryName: 'habits.getTracking',
-    }) ?? [];
+    queriedTracking ?? options.fallbackTracking ?? EMPTY_TRACKING;
   const pendingToggles = usePendingToggles();
   // Feeding the previous result back in lets unchanged habits keep their Set
   // identity, which is what makes the streak cache hit for everything except

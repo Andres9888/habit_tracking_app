@@ -3,13 +3,9 @@ import type { HabitsModalsProps } from './HabitsModals.types';
 export function getSettingsProps(state: HabitsModalsProps['state']) {
   return {
     archivedHabitsCount: state.archivedHabitsCount,
-    celebrationsEnabled: state.celebrationsEnabled,
     closeSettings: state.closeSettings,
     onSettingsChange: state.onSettingsChange,
-    openHapticTest: state.openHapticTest,
-    setShowHabitStrengthPercentage: state.setShowHabitStrengthPercentage,
     settings: state.settings,
-    showHabitStrengthPercentage: state.showHabitStrengthPercentage,
     showSettings: state.showSettings,
   };
 }
@@ -26,7 +22,6 @@ export function getCalendarAndDetailProps(state: HabitsModalsProps['state']) {
     openEditHabit: state.openEditHabit,
     openHabitCalendar: state.openHabitCalendar,
     openHabitDetail: state.openHabitDetail,
-    openPauseModal: state.openPauseModal,
     selectedHabit: state.selectedHabit,
     showEditScreen: state.showEditScreen,
     showHabitCalendar: state.showHabitCalendar,

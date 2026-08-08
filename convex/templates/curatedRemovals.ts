@@ -63,6 +63,13 @@ export const RECATEGORIZE: Record<string, TemplateCategory> = {
   'Six-Second Kiss': 'social',
   'Standing Social Events': 'social',
   'Stress-Reducing Conversation': 'social',
+  // Aug 2026 review: four habits sat in `productivity` because that is where
+  // they were authored, not because that is what they are. Moving them also
+  // gives the two newest categories something to hold.
+  'Fresh Air Ventilation': 'environmental_design',
+  'House Plant Care': 'mindfulness',
+  'Phone-Free Meals': 'social',
+  'Social Media Limit': 'subtraction',
 };
 
 export const RECATEGORIZE_CATEGORIES: Record<string, TemplateCategory> = {

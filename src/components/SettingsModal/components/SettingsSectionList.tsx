@@ -11,8 +11,6 @@ interface SettingsSectionListProps extends SettingsContentProps {
   onWhatsNew: () => void;
   onPrivacy: () => void;
   onTerms: () => void;
-  onDeleteAccount: () => void;
-  isDeletingAccount: boolean;
 }
 
 export function SettingsSectionList(p: SettingsSectionListProps) {

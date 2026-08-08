@@ -65,13 +65,9 @@ function getTrackingStartDate(habits: HabitDoc[]): string {
  */
 export function SettingsModalSection({
   archivedHabitsCount,
-  celebrationsEnabled,
   settings,
   showSettings,
-  showHabitStrengthPercentage,
   closeSettings,
-  openHapticTest,
-  setShowHabitStrengthPercentage,
   onSettingsChange,
 }: SettingsModalSectionProps) {
   const streakReminders = useStreakReminderSettings();
@@ -105,12 +101,8 @@ export function SettingsModalSection({
           buildExportOverviewStats(allHabits)
         );
         await exportData(exportPayload, format);
-
-        Alert.alert(
-          'Export Complete',
-          `Habits and stats exported as ${format.toUpperCase()}.`,
-          [{ text: 'OK' }]
-        );
+        // Success is reported by the in-Settings toast that fired when the
+        // format was picked — a second modal on the happy path was noise.
       } catch (error) {
         if (__DEV__) {
           console.error('Failed to export habits data:', error);
@@ -127,35 +119,12 @@ export function SettingsModalSection({
     [convex]
   );
 
-  const handleExportHabitsData = useCallback(() => {
-    Alert.alert(
-      'Export Habits & Stats',
-      'Choose a format. JSON is best for AI analysis.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'CSV',
-          onPress: () => {
-            void runHabitsExport('csv');
-          },
-        },
-        {
-          text: 'JSON (AI-friendly)',
-          onPress: () => {
-            void runHabitsExport('json');
-          },
-        },
-      ]
-    );
-  }, [runHabitsExport]);
-
   if (!showSettings && !hasOpened) return null;
 
   return (
     <Suspense fallback={null}>
       <SettingsModal
         archivedHabitsCount={archivedHabitsCount}
-        celebrationsEnabled={celebrationsEnabled}
         completionSoundEnabled={
           settings?.completionSoundEnabled ??
           DEFAULT_SETTINGS.completionSoundEnabled
@@ -169,10 +138,6 @@ export function SettingsModalSection({
         }
         isPremium={settings?.hasPremium ?? DEFAULT_SETTINGS.hasPremium}
         settingsDocument={settings as SettingsModalSettingsDocument | undefined}
-        showCharacterScreen={
-          settings?.showCharacterScreen ?? DEFAULT_SETTINGS.showCharacterScreen
-        }
-        showHabitStrengthPercentage={showHabitStrengthPercentage}
         stickyCalendarHeader={
           settings?.stickyCalendarHeader ??
           DEFAULT_SETTINGS.stickyCalendarHeader
@@ -190,19 +155,12 @@ export function SettingsModalSection({
         onChangeHabitCompletionIcon={(value) =>
           onSettingsChange({ habitCompletionIcon: value })
         }
-        onChangeShowCharacterScreen={(value) =>
-          onSettingsChange({ showCharacterScreen: value })
-        }
-        onChangeShowHabitStrengthPercentage={(value) =>
-          setShowHabitStrengthPercentage(value)
-        }
         onChangeStickyCalendarHeader={(value) =>
           onSettingsChange({ stickyCalendarHeader: value })
         }
         onChangeStreakReminderTime={streakReminders.setReminderTime}
         onClose={closeSettings}
-        onExportHabitsData={handleExportHabitsData}
-        onOpenHapticTest={openHapticTest}
+        onExportHabitsData={runHabitsExport}
         onToggleStreakReminders={streakReminders.setEnabled}
       />
     </Suspense>

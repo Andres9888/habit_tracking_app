@@ -69,13 +69,13 @@ function renderContent(overrides: Partial<Habit> = {}) {
 }
 
 describe('HabitDetailContent', () => {
-  it('renders the hero, Progress card, month heatmap and pause card', () => {
-    const { getByText } = renderContent();
+  it('renders the hero, Progress card and month heatmap', () => {
+    const { getByText, queryByText } = renderContent();
     expect(getByText('Wake-Up Movement')).toBeTruthy();
     expect(getByText('Daily habit')).toBeTruthy();
     expect(getByText('Progress')).toBeTruthy();
     expect(getByText('Your month')).toBeTruthy();
-    expect(getByText('Going away?')).toBeTruthy();
+    expect(queryByText('Going away?')).toBeNull();
   });
 
   it('shows the streak numbers in the Progress rail', () => {

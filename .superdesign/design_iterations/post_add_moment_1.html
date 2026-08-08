@@ -1,0 +1,1192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Post-add moment — BEFORE / AFTER</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ------------------------------------------------------------------
+         Tokens lifted verbatim from the app, not invented:
+           src/theme/colors/core.ts            (light.background, text.*, gray)
+           src/theme/darkColors.ts:180         (lightColors.cardPaper #F8F5F1)
+           src/theme/colors/semantic.ts        (warm palette, border #DDD8D2)
+           src/components/FullsizeTemplatePreview/detailPalette.ts
+                                               (hero gradient, add/added CTA)
+           src/theme/typography.ts             (Literata + DM Sans, 34/22/17/13)
+           src/theme/spacing.ts + airyScale.ts (radii 24 / 22 / 14 / 10 / 999)
+           .../styles/footer.styles.ts         (56px pill, 20px gutters, gap 12)
+           .../styles/hero.styles.ts + FullsizeTemplatePreview.constants.ts
+                                               (88px tile, 44px glyph, 30/36 title)
+         ------------------------------------------------------------------ */
+      :root {
+        --body: #f5f1ed;
+        --card: #f8f5f1;
+        --border: #ddd8d2;
+        --icon-tile: #faf7f0;
+        --chip-bg: rgba(250, 247, 240, 0.75);
+        --chip-border: rgba(255, 255, 255, 0.55);
+        --close-bg: rgba(250, 247, 240, 0.7);
+
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #6e6660;
+
+        --hero-0: #f6dec8;
+        --hero-1: #f3e3d2;
+
+        --add-bg: #2fa36f;
+        --add-fg: #ffffff;
+        --added-bg: #ddf2e4;
+        --added-fg: #157a4e;
+        --add-shadow: rgba(21, 122, 78, 0.28);
+
+        --primary-100: #d1fae5;
+        --primary-600: #059669;
+        --primary-700: #047857;
+        --green: #15793c;
+        --green-tint: #dcf7e4;
+
+        --toast-bg: #1a1816;
+
+        --r-card: 24px;
+        --r-sec-card: 22px;
+        --r-button: 14px;
+        --r-chip: 10px;
+        --r-pill: 999px;
+
+        --font-text: 'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
+        --font-display: 'Literata', Georgia, serif;
+
+        --page-bg: #262320;
+        --page-fg: #f2ece4;
+        --page-muted: #b3a99d;
+        --page-line: #3b3631;
+        --page-card: #2f2b27;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--page-bg);
+        color: var(--page-fg);
+        font-family: var(--font-text) !important;
+        -webkit-font-smoothing: antialiased;
+        line-height: 1.55;
+      }
+
+      .wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 48px 24px 96px;
+      }
+
+      /* ---------- page header ---------- */
+      .page-kicker {
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--page-muted);
+        font-weight: 500;
+        margin: 0 0 10px;
+      }
+      h1.page-title {
+        font-family: var(--font-display) !important;
+        font-size: 34px;
+        line-height: 41px;
+        letter-spacing: -0.85px;
+        font-weight: 700;
+        margin: 0 0 12px;
+      }
+      .page-sub {
+        max-width: 720px;
+        color: var(--page-muted);
+        font-size: 16px;
+        margin: 0;
+      }
+      .page-sub code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 13px;
+        color: #e7dfd4;
+        background: var(--page-card);
+        border: 1px solid var(--page-line);
+        border-radius: 6px;
+        padding: 1px 5px;
+      }
+
+      /* ---------- frames ---------- */
+      .frames {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 48px;
+        margin: 44px 0 8px;
+        justify-items: center;
+      }
+      @media (max-width: 900px) {
+        .frames {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 64px;
+        }
+      }
+
+      .frame-col {
+        width: 100%;
+        max-width: 430px;
+      }
+      .frame-label {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .frame-label .tag {
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: var(--r-chip);
+        border: 1px solid var(--page-line);
+        color: var(--page-muted);
+      }
+      .frame-label .tag.after {
+        color: #9fe6c0;
+        border-color: rgba(159, 230, 192, 0.35);
+        background: rgba(47, 163, 111, 0.12);
+      }
+      .frame-label .note {
+        font-size: 13px;
+        color: var(--page-muted);
+      }
+
+      .phone {
+        position: relative;
+        width: 390px;
+        height: 844px;
+        max-width: 100%;
+        border-radius: 46px;
+        background: var(--body);
+        border: 10px solid #15130f;
+        box-shadow:
+          0 30px 70px rgba(0, 0, 0, 0.45),
+          0 0 0 1px rgba(255, 255, 255, 0.05);
+        overflow: hidden;
+        font-size: 17px;
+        color: var(--text-primary);
+      }
+      /* Scale the fixed 390x844 canvas down on narrow viewports. */
+      .phone-scaler {
+        width: 410px;
+        max-width: 100%;
+      }
+      @media (max-width: 470px) {
+        .phone {
+          transform: scale(0.82);
+          transform-origin: top left;
+          margin-bottom: -150px;
+        }
+      }
+
+      .screen {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        background: var(--body);
+      }
+
+      /* header chrome — ModalHeader.tsx */
+      .chrome {
+        background: var(--hero-0);
+        padding-top: 8px;
+        flex: 0 0 auto;
+      }
+      .handle-row {
+        display: flex;
+        justify-content: center;
+      }
+      .handle {
+        width: 40px;
+        height: 4px;
+        border-radius: 4px;
+        background: var(--border);
+      }
+      .header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 20px 6px;
+      }
+      .round-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: var(--r-pill);
+        background: var(--close-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+      }
+      .round-btn.subtle {
+        background: transparent;
+        opacity: 0.55;
+      }
+
+      /* hero — HeroSection.tsx / hero.styles.ts */
+      .hero {
+        background: linear-gradient(
+          180deg,
+          var(--hero-0) 0%,
+          var(--hero-1) 62%,
+          var(--body) 100%
+        );
+        padding: 4px 24px 26px;
+        text-align: center;
+      }
+      .icon-tile {
+        width: 88px;
+        height: 88px;
+        border-radius: 24px;
+        background: var(--icon-tile);
+        margin: 0 auto 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 44px;
+        box-shadow: 0 2px 10px rgba(122, 86, 50, 0.35);
+      }
+      .hero-title {
+        font-family: var(--font-display) !important;
+        font-size: 30px;
+        line-height: 36px;
+        letter-spacing: -0.4px;
+        font-weight: 700;
+        margin: 0 0 16px;
+        color: var(--text-primary);
+      }
+      .tagline {
+        font-size: 15.5px;
+        line-height: 21px;
+        color: var(--text-secondary);
+        max-width: 300px;
+        margin: -6px auto 16px;
+      }
+      .pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: var(--r-pill);
+        border: 1px solid var(--chip-border);
+        background: var(--chip-bg);
+        padding: 8px 14px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+
+      /* body */
+      .body-scroll {
+        flex: 1 1 auto;
+        overflow: hidden;
+        background: var(--body);
+        position: relative;
+      }
+      .desc {
+        padding: 20px 20px 24px;
+        text-align: center;
+        font-size: 17px;
+        line-height: 26px;
+        color: var(--text-secondary);
+      }
+      .sec-label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin: 0 16px 12px;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: -0.2px;
+        color: var(--text-primary);
+      }
+      .sec-card {
+        margin: 0 16px 20px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--r-sec-card);
+        padding: 16px;
+        box-shadow: 0 1px 3px rgba(45, 42, 38, 0.06);
+      }
+      .benefit-row {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 4px 0;
+      }
+      .benefit-row + .benefit-row {
+        border-top: 1px solid var(--border);
+        margin-top: 12px;
+        padding-top: 14px;
+      }
+      .benefit-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 11px;
+        background: var(--added-bg);
+        color: var(--added-fg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+      }
+      .benefit-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+      }
+      .benefit-desc {
+        font-size: 13.5px;
+        line-height: 19px;
+        color: var(--text-secondary);
+        margin: 2px 0 0;
+      }
+
+      /* footer — footer.styles.ts (absolute, gradient fade, 20px gutters) */
+      .footer {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding-top: 24px;
+        background: linear-gradient(
+          180deg,
+          rgba(245, 241, 237, 0) 0%,
+          var(--body) 38%,
+          var(--body) 100%
+        );
+      }
+      .footer-inner {
+        /* paddingBottom: Math.max(bottomInset, 20) → 34 on a notched iPhone */
+        padding: 14px 20px 34px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .cta {
+        height: 56px;
+        border-radius: var(--r-pill);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-size: 17px;
+        font-weight: 700;
+      }
+      .cta-add {
+        background: var(--add-bg);
+        color: var(--add-fg);
+        box-shadow: 0 4px 14px var(--add-shadow);
+      }
+      .cta-added {
+        background: var(--added-bg);
+        color: var(--added-fg);
+      }
+      .link-row {
+        text-align: center;
+        padding: 12px 0;
+        font-size: 13px;
+        letter-spacing: 0.12px;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+
+      /* toast — TemplateAddedToast/styles.ts */
+      .toast {
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        /* In-app this sits at insets.bottom + 16 and physically covers the
+           footer link; lifted here so both are legible in one still. */
+        bottom: 158px;
+        background: var(--toast-bg);
+        border-left: 4px solid #7c9a92;
+        border-radius: var(--r-card);
+        padding: 16px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+      }
+      .toast-content {
+        display: flex;
+        gap: 12px;
+        flex: 1;
+        min-width: 0;
+        align-items: flex-start;
+      }
+      .toast-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--r-chip);
+        background: rgba(124, 154, 146, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+      .toast-name {
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 700;
+        color: #fff;
+        margin: 0;
+        /* numberOfLines={2} */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .toast-overlap-note {
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        bottom: 292px;
+        font-size: 11px;
+        letter-spacing: 0.3px;
+        color: #6f665c;
+        text-align: center;
+        background: rgba(245, 241, 237, 0.92);
+        border: 1px dashed #d8d2c8;
+        border-radius: 8px;
+        padding: 4px 8px;
+        margin: 0;
+      }
+      .home-indicator {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 9px;
+        width: 140px;
+        height: 5px;
+        border-radius: 999px;
+        background: rgba(45, 42, 38, 0.28);
+      }
+      .toast-sub {
+        font-size: 13px;
+        line-height: 18px;
+        color: rgba(255, 255, 255, 0.75);
+        margin: 2px 0 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .toast-actions {
+        min-width: 132px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .toast-pill {
+        background: #7c9a92;
+        border-radius: var(--r-button);
+        padding: 8px 12px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .toast-quiet {
+        text-align: center;
+        font-size: 13px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .toast-timer {
+        position: absolute;
+        top: -26px;
+        right: 0;
+        font-size: 11px;
+        letter-spacing: 0.4px;
+        color: rgba(255, 255, 255, 0.55);
+        background: rgba(26, 24, 22, 0.85);
+        border-radius: 6px;
+        padding: 2px 7px;
+      }
+
+      /* ---------- AFTER: post-add panel ---------- */
+      .commit-panel {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--r-card);
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        box-shadow: 0 6px 18px rgba(45, 42, 38, 0.08);
+      }
+      .commit-head {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+      }
+      .commit-check {
+        width: 26px;
+        height: 26px;
+        border-radius: var(--r-pill);
+        background: var(--added-bg);
+        color: var(--added-fg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        margin-top: 1px;
+      }
+      .commit-title {
+        margin: 0;
+        font-size: 17px;
+        line-height: 24px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .commit-sub {
+        margin: 2px 0 0;
+        font-size: 13.5px;
+        line-height: 19px;
+        color: var(--text-secondary);
+      }
+      .cue-label {
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-weight: 500;
+        color: var(--text-tertiary);
+        margin: 2px 0 -4px;
+      }
+      .cues {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .cue {
+        border-radius: var(--r-pill);
+        border: 1.5px solid var(--border);
+        background: var(--body);
+        padding: 8px 14px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+      .cue.selected {
+        background: var(--primary-100);
+        border-color: var(--primary-700);
+        color: var(--primary-700);
+      }
+      .cue.write {
+        border-style: dashed;
+      }
+      .quiet-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        padding-top: 2px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+      .quiet-row .dot {
+        width: 3px;
+        height: 3px;
+        border-radius: 999px;
+        background: var(--border);
+      }
+      .quiet-row a {
+        color: var(--text-secondary);
+        text-decoration: none;
+      }
+      .quiet-row .fwd {
+        color: var(--primary-700);
+      }
+
+      /* ---------- callouts ---------- */
+      .marker {
+        position: absolute;
+        z-index: 5;
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        background: #f0b429;
+        color: #2a2018;
+        font-size: 13px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+        border: 2px solid #fff5e0;
+      }
+      .marker.grey {
+        background: #d8d2c8;
+        border-color: #fff;
+      }
+
+      /* ---------- rationale ---------- */
+      .rationale {
+        margin-top: 72px;
+        border-top: 1px solid var(--page-line);
+        padding-top: 40px;
+      }
+      .rationale h2 {
+        font-family: var(--font-display) !important;
+        font-size: 30px;
+        line-height: 38px;
+        letter-spacing: -0.5px;
+        margin: 0 0 8px;
+        font-weight: 700;
+      }
+      .rationale h3 {
+        font-size: 20px;
+        margin: 40px 0 6px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+      }
+      .rationale p {
+        max-width: 76ch;
+        color: #ded6cb;
+        font-size: 16px;
+        margin: 12px 0;
+      }
+      .rationale ol,
+      .rationale ul {
+        max-width: 76ch;
+        color: #ded6cb;
+        font-size: 16px;
+        padding-left: 22px;
+      }
+      .rationale li {
+        margin: 12px 0;
+      }
+      .rationale li b {
+        color: #fff8ef;
+      }
+      .ref {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12.5px;
+        color: #c8bfb2;
+        background: var(--page-card);
+        border: 1px solid var(--page-line);
+        border-radius: 6px;
+        padding: 1px 6px;
+        white-space: nowrap;
+      }
+      .callout-key {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 999px;
+        background: #f0b429;
+        color: #2a2018;
+        font-size: 12px;
+        font-weight: 700;
+        margin-right: 6px;
+        vertical-align: 1px;
+      }
+      .aside {
+        border-left: 3px solid #6f665c;
+        background: var(--page-card);
+        border-radius: 0 12px 12px 0;
+        padding: 14px 18px;
+        margin: 24px 0;
+        max-width: 76ch;
+      }
+      .aside p {
+        margin: 6px 0;
+        color: #d3cbc0;
+        font-size: 15px;
+      }
+      .aside strong {
+        color: #fff8ef;
+      }
+      footer.foot {
+        margin-top: 56px;
+        padding-top: 20px;
+        border-top: 1px solid var(--page-line);
+        color: #8d8479;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <p class="page-kicker">Habit library · template detail</p>
+      <h1 class="page-title">The post-add moment</h1>
+      <p class="page-sub">
+        Both frames show the template detail screen immediately after the user
+        taps <em>Add this habit</em> — the highest-intent second in the flow.
+        BEFORE is drawn from the shipped code
+        (<code>src/components/FullsizeTemplatePreview/</code>,
+        <code>src/screens/TemplatesScreen/</code>); AFTER is the proposal. No
+        production code was changed to make this file.
+      </p>
+
+      <div class="frames">
+        <!-- ============================ BEFORE ============================ -->
+        <div class="frame-col">
+          <div class="frame-label">
+            <span class="tag">Before — today</span>
+            <span class="note">shipped behavior</span>
+          </div>
+          <div class="phone-scaler">
+            <div class="phone">
+              <div class="screen">
+                <div class="chrome">
+                  <div class="handle-row"><div class="handle"></div></div>
+                  <div class="header-row">
+                    <div class="round-btn" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    </div>
+                    <div class="round-btn subtle" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hero">
+                  <div class="icon-tile">🧘</div>
+                  <h2 class="hero-title">Meditate</h2>
+                  <p class="tagline">Ten quiet minutes that make the rest of the day less loud.</p>
+                  <div class="pills">
+                    <span class="pill">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                      Daily · 5-15 min
+                    </span>
+                    <span class="pill">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11V4h7l10 10-7 7L3 11Z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+                      Mindfulness
+                    </span>
+                    <span class="pill">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20c0-6 3-9 9-9"/><path d="M20 4c0 7-4 10-9 10H7v-2c0-5 4-8 9-8h4Z"/></svg>
+                      Steady · ~59d
+                    </span>
+                    <span class="pill">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+                      Science-backed
+                    </span>
+                  </div>
+                </div>
+
+                <div class="body-scroll">
+                  <p class="desc">
+                    A short daily sit that trains attention to come back on
+                    purpose — the skill everything else in your day borrows.
+                  </p>
+                  <div class="sec-label">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 4.6L18.5 9.5 13.9 11.4 12 16l-1.9-4.6L5.5 9.5l4.6-1.9L12 3Z"/></svg>
+                    What you'll feel
+                  </div>
+                  <div class="sec-card">
+                    <div class="benefit-row">
+                      <div class="benefit-icon">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/></svg>
+                      </div>
+                      <div>
+                        <p class="benefit-title">A slower first hour</p>
+                        <p class="benefit-desc">Mornings stop starting at a sprint.</p>
+                      </div>
+                    </div>
+                    <div class="benefit-row">
+                      <div class="benefit-icon">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>
+                      </div>
+                      <div>
+                        <p class="benefit-title">Easier to catch yourself</p>
+                        <p class="benefit-desc">You notice the spiral a beat earlier.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- footer: post-add state, exactly as shipped -->
+                <div class="footer">
+                  <div class="footer-inner">
+                    <div class="cta cta-added">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>
+                      Added
+                    </div>
+                    <div class="link-row">Find another habit</div>
+                  </div>
+                </div>
+
+                <!-- toast, as shipped: TemplateAddedToast -->
+                <div class="toast">
+                  <div class="toast-timer">auto-dismiss · 8s</div>
+                  <div class="toast-content">
+                    <div class="toast-icon">🧘</div>
+                    <div>
+                      <p class="toast-name">Added 'Meditate' to your habits</p>
+                      <p class="toast-sub">Nice start — keep the momentum going</p>
+                    </div>
+                  </div>
+                  <div class="toast-actions">
+                    <div class="toast-pill">View my habit</div>
+                    <div class="toast-quiet">Add another</div>
+                  </div>
+                </div>
+
+                <p class="toast-overlap-note">
+                  ↓ lifted for legibility — in-app it sits at the very bottom,
+                  covering the footer below
+                </p>
+                <div class="home-indicator"></div>
+
+                <div class="marker grey" style="left: 2px; bottom: 96px">A</div>
+                <div class="marker grey" style="left: 2px; bottom: 44px">B</div>
+                <div class="marker grey" style="right: 2px; bottom: 196px">C</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================ AFTER ============================ -->
+        <div class="frame-col">
+          <div class="frame-label">
+            <span class="tag after">After — proposed</span>
+            <span class="note">forward-routing post-add</span>
+          </div>
+          <div class="phone-scaler">
+            <div class="phone">
+              <div class="screen">
+                <div class="chrome">
+                  <div class="handle-row"><div class="handle"></div></div>
+                  <div class="header-row">
+                    <div class="round-btn" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    </div>
+                    <div class="round-btn subtle" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hero">
+                  <div class="icon-tile">🧘</div>
+                  <h2 class="hero-title">Meditate</h2>
+                  <p class="tagline">Ten quiet minutes that make the rest of the day less loud.</p>
+                  <div class="pills">
+                    <span class="pill">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                      Daily · 5-15 min
+                    </span>
+                    <span class="pill">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11V4h7l10 10-7 7L3 11Z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+                      Mindfulness
+                    </span>
+                    <span class="pill">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20c0-6 3-9 9-9"/><path d="M20 4c0 7-4 10-9 10H7v-2c0-5 4-8 9-8h4Z"/></svg>
+                      Steady · ~59d
+                    </span>
+                    <span class="pill">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+                      Science-backed
+                    </span>
+                  </div>
+                </div>
+
+                <div class="body-scroll">
+                  <p class="desc">
+                    A short daily sit that trains attention to come back on
+                    purpose — the skill everything else in your day borrows.
+                  </p>
+                  <div class="sec-label">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 4.6L18.5 9.5 13.9 11.4 12 16l-1.9-4.6L5.5 9.5l4.6-1.9L12 3Z"/></svg>
+                    What you'll feel
+                  </div>
+                  <div class="sec-card">
+                    <div class="benefit-row">
+                      <div class="benefit-icon">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/></svg>
+                      </div>
+                      <div>
+                        <p class="benefit-title">A slower first hour</p>
+                        <p class="benefit-desc">Mornings stop starting at a sprint.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="footer">
+                  <div class="footer-inner">
+                    <div class="commit-panel">
+                      <div class="commit-head">
+                        <div class="commit-check">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>
+                        </div>
+                        <div>
+                          <p class="commit-title">Meditate is on your list</p>
+                          <p class="commit-sub">
+                            It sticks better after something you already do.
+                            Pick a moment — you can change it later.
+                          </p>
+                        </div>
+                      </div>
+
+                      <p class="cue-label">Do it right after</p>
+                      <div class="cues">
+                        <span class="cue selected">After I pour my morning coffee</span>
+                        <span class="cue">After I brush my teeth</span>
+                        <span class="cue write">Something else…</span>
+                      </div>
+
+                      <div class="cta cta-add">Lock it in</div>
+
+                      <div class="quiet-row">
+                        <a class="fwd" href="#">See it in my habits</a>
+                        <span class="dot"></span>
+                        <a href="#">Keep browsing</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="home-indicator"></div>
+
+                <div class="marker" style="left: 2px; bottom: 306px">1</div>
+                <div class="marker" style="right: 2px; bottom: 270px">2</div>
+                <div class="marker" style="left: 2px; bottom: 196px">3</div>
+                <div class="marker" style="right: 2px; bottom: 112px">4</div>
+                <div class="marker" style="left: 2px; bottom: 52px">5</div>
+                <div class="marker" style="right: 2px; bottom: 52px">6</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================ RATIONALE ============================ -->
+      <section class="rationale">
+        <h2>Why change it</h2>
+        <p>
+          Everything below is checked against the code as it exists today, not
+          against a description of it.
+        </p>
+
+        <h3>a. What's wrong with the BEFORE</h3>
+        <ol>
+          <li>
+            <b>The CTA slot stops being a control.</b> On success
+            <span class="ref">FooterPrimaryAction.tsx:37-61</span> swaps the
+            pressable for a plain <code>Animated.View</code> — same 56px pill,
+            same weight, same position, but it has no
+            <code>onPress</code>, no <code>accessibilityRole</code>, and the
+            word on it is <em>Added</em>. The most prominent element on the
+            screen is now inert. Marker <b>A</b> in the BEFORE frame.
+          </li>
+          <li>
+            <b>The only permanent route is backward.</b>
+            <span class="ref">FooterSecondaryActions.tsx:44,65</span> relabels
+            the secondary link to "Find another habit" and points it at
+            <code>onDone</code>, which
+            <span class="ref">PreviewContent.tsx:75</span> wires to
+            <code>handleDismiss</code> — back to the library. So the durable
+            post-add affordances are: an inert pill, and a door back to
+            browsing. Marker <b>B</b>. (Worth noting: the row no longer
+            unmounts — its own docblock at
+            <span class="ref">FooterSecondaryActions.tsx:5-8</span> records
+            that fix. The dead end is now a routing problem, not a
+            missing-element problem.)
+          </li>
+          <li>
+            <b>The one forward route is on an 8-second timer.</b>
+            <span class="ref">TemplateAddedToast.tsx:96-121</span> renders
+            "View my habit" and "Add another", but the toast auto-dismisses
+            after <code>DEFAULT_DURATION = 8000</code>
+            (<span class="ref">TemplateAddedToast/constants.ts</span>). It is
+            also a transient overlay pinned to the bottom of the screen, sitting
+            directly on top of the footer it is competing with. Marker
+            <b>C</b>. After eight seconds the screen is the dead end again.
+          </li>
+          <li>
+            <b>The good post-add experience exists, but only once per
+            account.</b>
+            <span class="ref">useImportFeedback.ts:49-53</span> routes to
+            <code>MakeItStickSheet</code> only when
+            <code>habitCountRef.current === 0</code>. That sheet is exactly the
+            right moment — cue anchoring, a realistic expectation, an identity
+            line
+            (<span class="ref">MakeItStickSheet.tsx:1</span>,
+            <span class="ref">MakeItStickSheet.helpers.ts:7-12</span>). Habit
+            #2 onward never sees it.
+          </li>
+          <li>
+            <b>The habit-named toast copy never renders on the success
+            path.</b>
+            <span class="ref">useImportFeedback.ts:59-65</span> sets
+            <code>toastMessage</code> to
+            <code>`${t.name} is on your list`</code>, but
+            <span class="ref">FeedbackOverlays.tsx:39-49</span> branches on
+            <code>toastTemplateData</code> — which the same function just set to
+            a non-null object — so success always renders
+            <code>TemplateAddedToast</code>, whose title is built internally as
+            <code>Added 'Meditate' to your habits</code>
+            (<span class="ref">TemplateAddedToast.tsx:40-43</span>).
+            <code>toastMessage</code> only reaches the error <code>Toast</code>.
+            The BEFORE frame shows what actually renders.
+          </li>
+          <li>
+            <b>Nothing about the habit is decided.</b> The habit is created with
+            template defaults. No time, no cue, no anchor. The one screen where
+            the user is most willing to answer "when does this happen?" asks
+            them nothing.
+          </li>
+        </ol>
+
+        <h3>b. What the AFTER does differently</h3>
+        <ol>
+          <li>
+            <span class="callout-key">1</span><b>The confirmation becomes a
+            line of text, not a fake button.</b> "Meditate is on your list" —
+            the copy already written at
+            <span class="ref">useImportFeedback.ts:63</span>, finally on screen.
+            It sits in a card at 17px with a small green check, so nothing in
+            the footer looks pressable unless it is.
+          </li>
+          <li>
+            <span class="callout-key">2</span><b>One sentence of reason, no
+            hype.</b> "It sticks better after something you already do. Pick a
+            moment — you can change it later." It explains the ask and
+            pre-forgives the answer. No streak language, no confetti, no
+            countdown.
+          </li>
+          <li>
+            <span class="callout-key">3</span><b>Cue chips, inline, for every
+            add.</b> The same implementation-intention options
+            <code>MakeItStickSheet</code> already builds
+            (<span class="ref">MakeItStickSheet.helpers.ts:7-12</span>:
+            template <code>suggestedCue</code> first, then two defaults), pre-selecting the first
+            exactly as <span class="ref">MakeItStickSheet.tsx:35-37</span> does.
+            Three chips, one of them "Something else…". This is the ungating: the
+            first-habit-only sheet becomes the every-habit footer step.
+          </li>
+          <li>
+            <span class="callout-key">4</span><b>The primary CTA stays a
+            CTA.</b> Same 56px pill, same <code>#2FA36F</code>, same slot — the
+            label moves from "Add this habit" to "Lock it in" (the verb
+            <code>StickActions.tsx</code> already uses). The user's thumb does
+            not have to move, and the strongest element on the screen keeps
+            doing work.
+          </li>
+          <li>
+            <span class="callout-key">5</span><b>A forward exit that doesn't
+            expire.</b> "See it in my habits" routes through the
+            <code>onViewHabit</code> path that already exists end-to-end
+            (<span class="ref">useLibraryScreenActions.ts:40-43</span> →
+            <span class="ref">TemplatesModalSection.tsx:31-36</span>) — but as a
+            permanent link on the screen instead of a pill inside an
+            auto-dismissing toast.
+          </li>
+          <li>
+            <span class="callout-key">6</span><b>The backward route is kept and
+            demoted.</b> "Keep browsing" is the same
+            <code>onDone</code>/<code>handleDismiss</code> behavior as today,
+            now one of two quiet links rather than the only thing offered.
+            Browsing on is a legitimate choice; it just isn't the default.
+          </li>
+        </ol>
+        <p>
+          Also proposed, and visible by its absence in the AFTER frame: <b>no
+          toast on this screen.</b> The detail view can confirm in place, so
+          <code>TemplateAddedToast</code> would fire only for adds made from the
+          catalog grid (<code>onPopularImport</code>), where there is no footer
+          to hold the confirmation. Today the toast and the "Added" pill say the
+          same thing twice, one of them on a timer, stacked on top of each
+          other.
+        </p>
+
+        <h3>c. What gets better for the user</h3>
+        <ul>
+          <li>
+            <b>The habit gets scheduled instead of orphaned.</b> Today habit #2
+            onward lands in the list with template defaults and no anchor. The
+            AFTER asks one question, with the answer pre-filled, at the only
+            moment the user is holding the whole context in their head. A habit
+            with a cue attached is a habit with a trigger; one without is a row
+            in a list waiting to be noticed.
+          </li>
+          <li>
+            <b>Intent doesn't have to survive a timer.</b> The forward route
+            stops being a transient overlay. Nothing important disappears while
+            the user is still reading the screen — which matters most for the
+            slower, more considered readers who scrolled the evidence section
+            before adding.
+          </li>
+          <li>
+            <b>The exit is a choice, not a default.</b> When the only durable
+            affordance points back to the library, going back is what most
+            people do — not because they wanted more habits, but because it was
+            the thing on offer. Adding five unanchored habits in one session is
+            the failure mode this shape quietly encourages.
+          </li>
+          <li>
+            <b>The screen stops contradicting itself.</b> An inert pill styled
+            like the button that was there a second ago teaches people that
+            tapping did nothing. A sentence plus a live button reads correctly
+            on first glance.
+          </li>
+          <li>
+            <b>The good experience stops being a one-time event.</b> The cue
+            step already exists and is already written in this app's voice. It
+            currently fires once per account. Reusing it per-add is mostly a
+            gating change, not new surface area.
+          </li>
+        </ul>
+
+        <div class="aside">
+          <p>
+            <strong>Scope note.</strong> This is a mock. Implementing it touches
+            <code>FooterPrimaryAction.tsx</code>,
+            <code>FooterSecondaryActions.tsx</code>,
+            <code>FooterSection.tsx</code>,
+            <code>useImportFeedback.ts</code> (the
+            <code>habitCount === 0</code> gate) and the
+            <code>FeedbackOverlays</code> branch — and the 100-line ceiling in
+            <code>CLAUDE.md</code> means the post-add panel wants to be its own
+            <code>FooterPostAdd/</code> component, not more lines inside
+            <code>FooterSection</code>. No production file was modified to
+            produce this document.
+          </p>
+        </div>
+
+        <footer class="foot">
+          Rendered from repo tokens — colors
+          <code>src/theme/colors/core.ts</code> ·
+          <code>src/theme/darkColors.ts</code> ·
+          <code>detailPalette.ts</code>, type
+          <code>src/theme/typography.ts</code> (Literata + DM Sans), radii
+          <code>src/theme/airyScale.ts</code>. Light mode shown; the same
+          palette has dark-mode values in <code>detailPalette.ts</code>.
+        </footer>
+      </section>
+    </div>
+  </body>
+</html>

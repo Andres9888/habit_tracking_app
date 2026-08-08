@@ -70,6 +70,7 @@ export function AccountPage({
           />
         </View>
         <Text
+          selectable
           className='pt-6 text-center'
           style={{ ...typography.caption, color: themeColors.text.tertiary }}
         >

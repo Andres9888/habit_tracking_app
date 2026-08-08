@@ -1,759 +1,511 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Settings Page — Design Review Mock</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@700&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Settings — Before / After</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap" rel="stylesheet" />
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
-  :root {
-    /* Warm Minimal palette from design tokens */
-    --bg: #F5F1ED;
-    --card: #EDEAE5;
-    --border: #DDD8D2;
-    --text-primary: #2D2A26;
-    --text-secondary: #6B6560;
-    --text-tertiary: #6E6660;
-    --text-inverse: #FFFFFF;
-    --primary-500: #10B981;
-    --primary-600: #059669;
-    --primary-700: #047857;
-    --gray-300: #C4BFB7;
-    --error: #B53030;
-    --error-light: #DC2626;
-    --premium: #7C3AED;
-    --surface: #EDEAE5;
-    /* shadows.card token */
-    --shadow-card: 0 2px 8px rgba(45, 42, 38, 0.06);
-    /* shadows.floatingActionButton (what's currently used — too heavy) */
-    --shadow-fab: 0 4px 16px rgba(45, 42, 38, 0.08);
+  :root{
+    --bg:#F5F1ED; --card:#EDEAE5; --border:#DDD8D2; --fg:#2D2A26;
+    --fg2:#6B6560; --fg3:#6E6660; --neutral:#C4BFB7;
+    --tint:#047857; --tint-bg:#E2F1EA;
+    --amber:#8A6A33; --amber-bg:#F4E7D2;
+    --danger:#B53030; --danger-bg:#FEE2E2;
+    --radius:24px; --tile:42px; --tile-r:13px; --rowpad:20px;
+    --page:#181614; --pageFg:#EDE8E2;
   }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--page)!important;color:var(--pageFg)!important;
+    font-family:'DM Sans',-apple-system,sans-serif!important;
+    padding:40px 28px 80px;
+  }
+  h1{font-family:'Literata',serif!important;font-size:34px;font-weight:700;letter-spacing:-.6px;margin-bottom:6px}
+  .kicker{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#4ADE80;margin-bottom:8px}
+  .lede{color:#A8A19A;font-size:15px;max-width:820px;line-height:1.55;margin-bottom:36px}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  .grid{display:flex;gap:56px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
+  .col{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .col-tag{font-size:12px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;padding:6px 14px;border-radius:999px}
+  .tag-before{background:#3A1F1F;color:#FCA5A5}
+  .tag-after{background:#123227;color:#4ADE80}
 
-  body {
-    font-family: 'DM Sans', -apple-system, sans-serif;
-    background: #1a1816;
-    display: flex;
-    gap: 32px;
-    justify-content: center;
-    padding: 40px 20px;
-    min-height: 100vh;
+  /* phone */
+  .phone{
+    width:390px;background:var(--bg);border-radius:44px;
+    border:10px solid #080706;box-shadow:0 30px 70px rgba(0,0,0,.55);
+    overflow:hidden;position:relative;
   }
+  .screen{height:812px;overflow-y:auto;overflow-x:hidden;position:relative;background:var(--bg)}
+  .screen::-webkit-scrollbar{width:0}
+  .notch{height:26px}
 
-  .phone-frame {
-    width: 390px;
-    height: 844px;
-    background: var(--bg);
-    border-radius: 40px;
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    flex-shrink: 0;
-  }
+  /* settings header */
+  .shead{padding:12px 20px 12px;background:var(--bg);position:sticky;top:0;z-index:5}
+  .shead-row{display:flex;align-items:flex-start;justify-content:space-between}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--tint)}
+  .stitle{font-family:'Literata',serif!important;font-size:33px;font-weight:700;letter-spacing:-.5px;line-height:38px;color:var(--fg);margin-top:6px}
+  .closebtn{width:36px;height:36px;border-radius:18px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--fg2)}
+  .hairline{height:1px;background:var(--border);opacity:0}
+  .hairline.soft{opacity:.45;background:linear-gradient(to bottom,var(--border),transparent)}
 
-  .phone-frame .notch {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 126px;
-    height: 34px;
-    background: #1A1816;
-    border-radius: 0 0 20px 20px;
-    z-index: 10;
-  }
+  .body{padding:4px 16px 40px;display:flex;flex-direction:column;gap:16px}
 
-  .settings-scroll {
-    height: 100%;
-    overflow-y: auto;
-    padding-top: 0;
-    scrollbar-width: none;
-  }
-  .settings-scroll::-webkit-scrollbar { display: none; }
+  /* section card */
+  .sec-label{display:flex;align-items:center;gap:8px;padding:0 4px 8px;color:var(--fg2);font-size:13px;font-weight:600;letter-spacing:.3px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+  .row{display:flex;align-items:center;gap:14px;padding:var(--rowpad) 16px;position:relative}
+  .row.sub{align-items:flex-start}
+  .row + .row{border-top:1px solid var(--border)}
+  .tile{width:var(--tile);height:var(--tile);border-radius:var(--tile-r);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .tile.g{background:var(--tint-bg);color:var(--tint)}
+  .tile.a{background:var(--amber-bg);color:var(--amber)}
+  .tile.d{background:var(--danger-bg);color:var(--danger)}
+  .lbl{flex:1;min-width:0}
+  .lbl b{display:block;font-size:16px;font-weight:600;color:var(--fg);letter-spacing:-.1px}
+  .lbl span{display:block;font-size:13px;color:var(--fg2);margin-top:2px;line-height:1.35}
+  .pill{background:rgba(0,0,0,.05);border:1px solid var(--border);border-radius:10px;padding:4px 10px;font-size:13px;font-weight:600;color:var(--fg2);white-space:nowrap}
+  .chev{color:var(--neutral);display:flex;transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+  .chev.open{transform:rotate(90deg);color:var(--tint)}
+  .count{font-size:13px;font-weight:700;color:var(--fg2)}
+  .sw{width:50px;height:30px;border-radius:15px;background:var(--neutral);position:relative;flex:0 0 auto}
+  .sw.on{background:var(--tint)}
+  .sw::after{content:'';position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:12px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .2s}
+  .sw.on::after{left:23px}
+  .seg{display:flex;gap:4px;background:rgba(0,0,0,.05);border:1px solid var(--border);border-radius:12px;padding:3px}
+  .seg span{font-size:13px;font-weight:600;color:var(--fg2);padding:5px 11px;border-radius:9px}
+  .seg span.on{background:var(--bg);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.08)}
 
-  .header {
-    padding: 60px 16px 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    background: var(--bg);
-    z-index: 5;
-  }
-  .drag-indicator {
-    width: 36px;
-    height: 5px;
-    background: var(--border);
-    border-radius: 3px;
-    margin-bottom: 12px;
-  }
-  .header-row {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .header-spacer { width: 40px; height: 40px; }
-  .header h1 {
-    font-family: 'DM Sans', sans-serif !important;
-    font-size: 22px !important;
-    font-weight: 700 !important;
-    color: var(--text-primary) !important;
-    letter-spacing: -0.5px !important;
-  }
-  .close-btn {
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    background: var(--card);
-    display: flex; align-items: center; justify-content: center;
-    border: none; cursor: pointer;
-  }
+  /* inline expanded picker */
+  .inset{background:rgba(0,0,0,.025);border-top:1px solid var(--border);padding:12px 16px 16px}
+  .opts{display:flex;flex-direction:column;gap:2px}
+  .opt{display:flex;align-items:center;justify-content:space-between;padding:11px 12px;border-radius:12px;font-size:15px;color:var(--fg)}
+  .opt.on{background:var(--tint-bg);color:var(--tint);font-weight:600}
 
-  .section-content {
-    padding: 0 16px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
+  /* premium */
+  .premium{border-radius:var(--radius);padding:16px;background:linear-gradient(135deg,#1E3A32,#12241E);border:1px solid rgba(52,211,153,.28);color:#E6F2EC;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+  .premium .ptop{display:flex;align-items:center;gap:12px}
+  .premium .ptile{width:42px;height:42px;border-radius:13px;background:rgba(52,211,153,.16);display:flex;align-items:center;justify-content:center;color:#4ADE80}
+  .premium b{display:block;font-size:16px;font-weight:700}
+  .premium small{display:block;font-size:13px;color:#9DBBB0;margin-top:2px}
+  .premium .cta{margin-left:auto;background:#34D399;color:#06281E;font-size:13px;font-weight:700;padding:8px 14px;border-radius:12px}
+  .skel{border-radius:var(--radius);height:86px;background:linear-gradient(90deg,var(--card),#E4E0DA,var(--card));background-size:200% 100%;animation:sh 1.6s infinite;border:1px solid var(--border)}
+  @keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-  .section-label-row {
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-  }
-  .section-label-spacer { width: 40px; margin-right: 16px; }
-  .section-label {
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-secondary) !important;
-  }
+  /* footer */
+  .foot{display:flex;justify-content:center;align-items:center;gap:6px;padding-top:6px;font-size:12px;color:var(--fg3)}
+  .foot a{color:var(--fg3);text-decoration:none}
+  .foot .hit{padding:2px 4px;border-radius:6px}
+  .foot .hit.big{padding:10px 10px;border:1px dashed rgba(74,222,128,.5)}
 
-  .section-card {
-    background: var(--card);
-    border-radius: 16px;
-    overflow: hidden;
-  }
+  /* toast / sheet overlays */
+  .toast{position:absolute;left:50%;transform:translateX(-50%);bottom:26px;background:#26221E;color:#F3EFE9;font-size:14px;font-weight:500;padding:12px 18px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);z-index:20}
+  .toast.bad{border:1px solid #7F3B3B}
+  .toast.good{border:1px solid rgba(52,211,153,.4)}
+  .dim{position:absolute;inset:0;background:rgba(20,17,15,.42);z-index:15}
+  .alert{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:270px;background:#F2EFEA;border-radius:14px;overflow:hidden;z-index:16;box-shadow:0 20px 50px rgba(0,0,0,.4);text-align:center}
+  .alert .at{padding:18px 16px 14px}
+  .alert .at b{font-size:16px;color:#1C1A17;display:block}
+  .alert .at span{font-size:13px;color:#4A4642;display:block;margin-top:4px;line-height:1.35}
+  .alert .ab{border-top:1px solid #D5D0C9;font-size:16px;color:#0B6BCB;padding:12px}
+  .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-radius:28px 28px 0 0;border-top:1px solid var(--border);z-index:16;padding:10px 16px 28px;box-shadow:0 -14px 40px rgba(0,0,0,.25)}
+  .grab{width:38px;height:4px;border-radius:2px;background:var(--neutral);margin:4px auto 12px}
+  .sheet h3{font-family:'Literata',serif!important;font-size:21px;font-weight:700;color:var(--fg);margin-bottom:2px}
+  .sheet p{font-size:13px;color:var(--fg2);margin-bottom:14px}
+  .fmt{display:flex;align-items:center;gap:14px;padding:16px;border:1px solid var(--border);background:var(--card);border-radius:16px}
+  .fmt + .fmt{margin-top:8px}
+  .fmt b{display:block;font-size:16px;font-weight:600;color:var(--fg)}
+  .fmt span{display:block;font-size:13px;color:var(--fg2);margin-top:1px}
+  .badge{margin-left:auto;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--tint);background:var(--tint-bg);padding:5px 9px;border-radius:8px}
 
-  .label-tag {
-    font-size: 8px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    margin-left: 8px;
-    vertical-align: middle;
-  }
-  .tag-before {
-    background: #FEE2E2;
-    color: #B91C1C;
-  }
-  .tag-after {
-    background: #D1FAE5;
-    color: #047857;
-  }
+  /* annotation pins */
+  .pin{position:absolute;z-index:30;width:26px;height:26px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#0B0A09;box-shadow:0 3px 10px rgba(0,0,0,.4)}
+  .pin.b{background:#FCA5A5}
+  .pin.a{background:#4ADE80}
 
-  /* ─── Row styling ─── */
-  .settings-row {
-    display: flex;
-    align-items: center;
-    padding: 16px;
-    gap: 0;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-  }
-  .settings-row:last-child,
-  .settings-row.no-border {
-    border-bottom: none;
-  }
-
-  .row-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 16px;
-    flex-shrink: 0;
-  }
-
-  .row-text {
-    flex: 1;
-    min-width: 0;
-  }
-  .row-label {
-    font-size: 17px !important;
-    font-weight: 600 !important;
-    color: var(--text-primary) !important;
-    line-height: 1.3;
-  }
-  .row-subtitle {
-    font-size: 13px !important;
-    color: var(--text-secondary) !important;
-    margin-top: 3px;
-    line-height: 1.35;
-  }
-
-  /* Toggle switch */
-  .toggle {
-    width: 51px; height: 31px;
-    border-radius: 16px;
-    position: relative;
-    cursor: pointer;
-    flex-shrink: 0;
-    transition: background 0.2s;
-  }
-  .toggle.off { background: var(--gray-300); }
-  .toggle.on { background: var(--primary-600); }
-  .toggle::after {
-    content: '';
-    position: absolute;
-    width: 27px; height: 27px;
-    border-radius: 50%;
-    background: white;
-    top: 2px;
-    transition: left 0.2s;
-  }
-  .toggle.off::after { left: 2px; }
-  .toggle.on::after { left: 22px; }
-
-  /* Chevron */
-  .chevron {
-    color: var(--text-secondary);
-    flex-shrink: 0;
-  }
-  .row-value {
-    font-size: 17px !important;
-    font-weight: 500 !important;
-    color: var(--text-secondary) !important;
-    margin-right: 4px;
-  }
-
-  /* Badge */
-  .badge {
-    background: var(--surface);
-    border-radius: 11px;
-    padding: 2px 8px;
-    font-size: 12px !important;
-    font-weight: 700 !important;
-    color: var(--text-secondary) !important;
-    margin-right: 8px;
-  }
-
-  /* Sound picker tray */
-  .sound-tray {
-    display: flex;
-    align-items: center;
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--border);
-    background: rgba(0,0,0,0.02);
-  }
-  .sound-tray-spacer { width: 40px; margin-right: 16px; }
-  .sound-pills {
-    flex: 1;
-    display: flex;
-    gap: 8px;
-  }
-  .sound-pill {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 8px 0;
-    border-radius: 12px;
-    font-size: 13px !important;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .sound-pill.active {
-    background: rgba(5, 150, 105, 0.08);
-    color: var(--primary-600) !important;
-    font-weight: 600 !important;
-  }
-  .sound-pill.inactive {
-    background: rgba(0,0,0,0.03);
-    color: var(--text-secondary) !important;
-    font-weight: 400 !important;
-  }
-
-  /* Profile row */
-  .avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white !important;
-    font-size: 18px !important;
-    font-weight: 700 !important;
-    margin-right: 12px;
-    flex-shrink: 0;
-  }
-
-  /* Danger buttons */
-  .danger-text {
-    font-size: 15px !important;
-    font-weight: 500 !important;
-    text-align: center;
-    padding: 14px 0;
-  }
-
-  .delete-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 14px 0;
-  }
-
-  /* Version column header */
-  .column-header {
-    text-align: center;
-    padding: 10px 0 6px;
-  }
-  .column-header h2 {
-    font-family: 'DM Sans', sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 700 !important;
-    color: #F5F1ED !important;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
-  .column-header p {
-    font-size: 11px !important;
-    color: #9CA3AF !important;
-    margin-top: 2px;
-  }
-
-  /* Annotation callouts */
-  .annotation {
-    position: absolute;
-    right: -8px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 20;
-  }
-  .annotation-dot {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    color: white !important;
-    cursor: default;
-  }
-  .annotation-dot.issue { background: #DC2626; }
-  .annotation-dot.fix { background: #059669; }
-
-  /* Issue highlight */
-  .highlight-issue {
-    outline: 2px dashed #DC2626;
-    outline-offset: -2px;
-  }
-  .highlight-fix {
-    outline: 2px solid #059669;
-    outline-offset: -2px;
-  }
-
-  /* Legend at bottom */
-  .legend {
-    color: #9CA3AF;
-    font-size: 12px;
-    max-width: 820px;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
-  .legend h3 {
-    font-size: 14px !important;
-    font-weight: 700 !important;
-    color: #F5F1ED !important;
-    margin-bottom: 12px;
-  }
-  .legend-item {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-    align-items: flex-start;
-  }
-  .legend-num {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    color: white !important;
-    flex-shrink: 0;
-  }
-  .legend-text {
-    line-height: 1.5;
-  }
-  .legend-text strong {
-    color: #E5E7EB !important;
-  }
+  /* legend */
+  .legend{max-width:1200px;margin:56px auto 0}
+  .legend h2{font-family:'Literata',serif!important;font-size:24px;font-weight:700;margin-bottom:18px}
+  .lrow{display:grid;grid-template-columns:34px 1fr 1fr;gap:18px;padding:16px 0;border-top:1px solid #2C2926;align-items:start}
+  .lnum{width:26px;height:26px;border-radius:13px;background:#4ADE80;color:#0B0A09;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+  .lrow h4{font-size:14px;font-weight:700;margin-bottom:5px}
+  .lrow p{font-size:14px;line-height:1.5;color:#A8A19A}
+  .lrow .bad h4{color:#FCA5A5}
+  .lrow .good h4{color:#4ADE80}
+  code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12.5px;background:#232020;padding:2px 6px;border-radius:5px;color:#D9D2CA}
 </style>
 </head>
 <body>
 
-<div style="display: flex; flex-direction: column; gap: 32px;">
-  <!-- Side by side phones -->
-  <div style="display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;">
+<div class="kicker">Chain Day · Settings</div>
+<h1>Settings review — before / after</h1>
+<p class="lede">Live mock of the ten findings from the code review. Left is what ships today; right is the proposed fix. Numbered pins map to the legend below — red pins mark the defect, green pins mark the fix.</p>
 
-    <!-- ═══════════ BEFORE ═══════════ -->
-    <div>
-      <div class="column-header">
-        <h2>Current <span class="label-tag tag-before">Before</span></h2>
-        <p>Hard-coded colors, heavy shadows, inconsistent padding</p>
-      </div>
-      <div class="phone-frame">
+<div class="grid">
+
+  <!-- ══════════════ BEFORE ══════════════ -->
+  <div class="col">
+    <div class="col-tag tag-before">Before — today</div>
+    <div class="phone">
+      <div class="screen">
         <div class="notch"></div>
-        <div class="settings-scroll">
-          <div class="header">
-            <div class="drag-indicator"></div>
-            <div class="header-row">
-              <div class="header-spacer"></div>
-              <h1>Settings</h1>
-              <div class="close-btn"><i data-lucide="x" style="width:16px;height:16px;color:var(--text-secondary)"></i></div>
-            </div>
-          </div>
-          <div class="section-content">
 
-            <!-- Appearance -->
+        <div class="shead">
+          <div class="shead-row">
             <div>
-              <div class="section-label-row"><div class="section-label-spacer"></div><span class="section-label">Appearance</span></div>
-              <div class="section-card" style="box-shadow: var(--shadow-fab); margin-top: 8px;" class="highlight-issue">
-                <div class="settings-row">
-                  <div class="row-icon" style="background:#E8F5E9"><i data-lucide="rows-3" style="width:16px;height:16px;color:#2E7D32"></i></div>
-                  <div class="row-text"><div class="row-label">Compact habit cards</div><div class="row-subtitle">Show smaller cards to fit more on screen</div></div>
-                  <div class="toggle off"></div>
-                </div>
-                <div class="settings-row">
-                  <div class="row-icon" style="background:#E3F2FD"><i data-lucide="circle" style="width:16px;height:16px;color:#1565C0"></i></div>
-                  <div class="row-text"><div class="row-label">Circular day markers</div><div class="row-subtitle">Use circles instead of squares on the calendar</div></div>
-                  <div class="toggle on"></div>
-                </div>
-                <div class="settings-row">
-                  <div class="row-icon" style="background:#F3E5F5"><i data-lucide="droplets" style="width:16px;height:16px;color:#7B1FA2"></i></div>
-                  <div class="row-text"><div class="row-label">Gradient streak fill</div><div class="row-subtitle">Add a color gradient to active streak cells</div></div>
-                  <div class="toggle on"></div>
-                </div>
-                <div class="settings-row no-border">
-                  <div class="row-icon" style="background:#FFF3E0"><i data-lucide="check" style="width:16px;height:16px;color:#E65100"></i></div>
-                  <div class="row-text"><div class="row-label">Completion icon</div><div class="row-subtitle">Choose between checkmark and chain link</div></div>
-                  <div class="toggle off"></div>
-                </div>
-              </div>
+              <div class="eyebrow">Chain Day</div>
+              <div class="stitle">Settings</div>
             </div>
-
-            <!-- Behavior -->
-            <div>
-              <div class="section-label-row"><div class="section-label-spacer"></div><span class="section-label">Behavior</span></div>
-              <div class="section-card" style="box-shadow: var(--shadow-fab); margin-top: 8px;">
-                <div class="settings-row">
-                  <div class="row-icon" style="background:#E0F2F1"><i data-lucide="arrow-up-down" style="width:16px;height:16px;color:#00695C"></i></div>
-                  <div class="row-text"><div class="row-label">Sort Order</div><div class="row-subtitle">Choose how your habits are ordered</div></div>
-                  <span class="row-value">Custom</span>
-                  <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text-secondary)"></i>
-                </div>
-                <div class="settings-row">
-                  <div class="row-icon" style="background:#FBE9E7"><i data-lucide="volume-2" style="width:16px;height:16px;color:#BF360C"></i></div>
-                  <div class="row-text"><div class="row-label">Completion sound</div><div class="row-subtitle">Hear a sound when you check off a habit</div></div>
-                  <div class="toggle on"></div>
-                </div>
-                <!-- Sound picker -->
-                <div class="sound-tray">
-                  <div class="sound-tray-spacer"></div>
-                  <div class="sound-pills">
-                    <div class="sound-pill active" style="background:rgba(5,150,105,0.08);color:#059669 !important">
-                      <i data-lucide="volume-1" style="width:14px;height:14px;color:#059669"></i> Ding
-                    </div>
-                    <div class="sound-pill inactive">
-                      <i data-lucide="droplet" style="width:14px;height:14px;color:var(--text-secondary)"></i> Pop
-                    </div>
-                    <div class="sound-pill inactive">
-                      <i data-lucide="trending-up" style="width:14px;height:14px;color:var(--text-secondary)"></i> Rise
-                    </div>
-                  </div>
-                </div>
-                <!-- Pin calendar — NO SUBTITLE (issue) -->
-                <div class="settings-row no-border" style="position:relative;">
-                  <div class="row-icon" style="background:#E8EAF6"><i data-lucide="calendar" style="width:16px;height:16px;color:#283593"></i></div>
-                  <div class="row-text"><div class="row-label">Pin calendar header</div></div>
-                  <div class="toggle off"></div>
-                  <div class="annotation"><div class="annotation-dot issue">4</div></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Data -->
-            <div>
-              <div class="section-label-row"><div class="section-label-spacer"></div><span class="section-label">Data</span></div>
-              <div class="section-card" style="box-shadow: var(--shadow-fab); margin-top: 8px;">
-                <div class="settings-row no-border">
-                  <div class="row-icon" style="background:#FFF8E1"><i data-lucide="book-open" style="width:16px;height:16px;color:#F57F17"></i></div>
-                  <div class="row-text"><div class="row-label">Archived Habits</div><div class="row-subtitle">View and restore hidden habits</div></div>
-                  <span class="badge">3</span>
-                  <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text-secondary)"></i>
-                </div>
-              </div>
-            </div>
-
-            <!-- Notifications -->
-            <div>
-              <div class="section-label-row"><div class="section-label-spacer"></div><span class="section-label">Notifications</span></div>
-              <div class="section-card" style="box-shadow: var(--shadow-fab); margin-top: 8px;">
-                <div class="settings-row no-border">
-                  <div class="row-icon" style="background:#FCE4EC"><i data-lucide="bell" style="width:16px;height:16px;color:#C62828"></i></div>
-                  <div class="row-text"><div class="row-label">Streak Reminders</div></div>
-                  <div class="toggle off"></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Account — BEFORE (issues highlighted) -->
-            <div>
-              <div class="section-label-row"><div class="section-label-spacer"></div><span class="section-label">Account</span></div>
-              <div class="section-card" style="box-shadow: var(--shadow-fab); margin-top: 8px; position: relative;">
-                <!-- Profile row — inconsistent padding -->
-                <div style="display:flex;align-items:center;padding:14px 16px;gap:12px;position:relative;">
-                  <!-- Hard-coded #7c3aed -->
-                  <div class="avatar" style="background:#7c3aed;">A</div>
-                  <div class="row-text">
-                    <div class="row-label">Andres</div>
-                    <div class="row-subtitle">andres@example.com</div>
-                  </div>
-                  <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text-secondary)"></i>
-                  <div class="annotation" style="right:-8px"><div class="annotation-dot issue">1</div></div>
-                </div>
-                <!-- Custom 0.5px divider with hardcoded color -->
-                <div style="height:0.5px;background:#e7e5e4;margin:0 14px;position:relative;">
-                  <div class="annotation" style="right:-22px"><div class="annotation-dot issue">3</div></div>
-                </div>
-                <!-- Sign Out — hardcoded #ef4444, no haptics -->
-                <div style="text-align:center;padding:14px 0;position:relative;">
-                  <span class="danger-text" style="color:#ef4444 !important;">Sign Out</span>
-                  <div class="annotation" style="right:-8px"><div class="annotation-dot issue">1</div></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Delete Account — hardcoded color -->
-            <div class="delete-row" style="position:relative;">
-              <i data-lucide="trash-2" style="width:15px;height:15px;color:#ef4444"></i>
-              <span class="danger-text" style="color:#ef4444 !important;">Delete Account</span>
-              <div class="annotation" style="position:absolute;right:8px"><div class="annotation-dot issue">1</div></div>
-            </div>
-
-            <!-- Version — hardcoded -->
-            <div style="text-align:center;padding:4px 0 20px;position:relative;">
-              <span style="font-size:13px;color:var(--text-secondary);">Version 1.0.0 (1)</span>
-              <div class="annotation" style="position:absolute;right:40px;top:50%;transform:translateY(-50%)"><div class="annotation-dot issue">5</div></div>
-            </div>
-
+            <div class="closebtn"><i data-lucide="x" style="width:18px;height:18px"></i></div>
           </div>
         </div>
-      </div>
-    </div>
+        <!-- 6: hairline snaps 0→1 -->
+        <div class="hairline" style="opacity:1;position:relative">
+          <div class="pin b" style="right:14px;top:-13px">6</div>
+        </div>
 
-    <!-- ═══════════ AFTER ═══════════ -->
-    <div>
-      <div class="column-header">
-        <h2>Proposed <span class="label-tag tag-after">After</span></h2>
-        <p>Token colors, correct shadows, consistent patterns</p>
-      </div>
-      <div class="phone-frame">
-        <div class="notch"></div>
-        <div class="settings-scroll">
-          <div class="header">
-            <div class="drag-indicator"></div>
-            <div class="header-row">
-              <div class="header-spacer"></div>
-              <h1>Settings</h1>
-              <div class="close-btn"><i data-lucide="x" style="width:16px;height:16px;color:var(--text-secondary)"></i></div>
+        <div class="body">
+
+          <!-- profile hero -->
+          <div class="card" style="position:relative">
+            <div class="row">
+              <div class="tile g" style="width:46px;height:46px;border-radius:23px;font-weight:700;font-size:18px">A</div>
+              <div class="lbl"><b>Andres</b><span>Tap to edit profile &amp; account</span></div>
+              <div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div>
             </div>
           </div>
-          <div class="section-content">
 
-            <!-- Appearance — correct shadow -->
-            <div>
-              <div class="section-label-row"><div class="section-label-spacer"></div><span class="section-label">Appearance</span></div>
-              <div class="section-card" style="box-shadow: var(--shadow-card); margin-top: 8px;">
-                <div class="settings-row">
-                  <div class="row-icon" style="background:#E8F5E9"><i data-lucide="rows-3" style="width:16px;height:16px;color:#2E7D32"></i></div>
-                  <div class="row-text"><div class="row-label">Compact habit cards</div><div class="row-subtitle">Show smaller cards to fit more on screen</div></div>
-                  <div class="toggle off"></div>
-                </div>
-                <div class="settings-row">
-                  <div class="row-icon" style="background:#E3F2FD"><i data-lucide="circle" style="width:16px;height:16px;color:#1565C0"></i></div>
-                  <div class="row-text"><div class="row-label">Circular day markers</div><div class="row-subtitle">Use circles instead of squares on the calendar</div></div>
-                  <div class="toggle on"></div>
-                </div>
-                <div class="settings-row">
-                  <div class="row-icon" style="background:#F3E5F5"><i data-lucide="droplets" style="width:16px;height:16px;color:#7B1FA2"></i></div>
-                  <div class="row-text"><div class="row-label">Gradient streak fill</div><div class="row-subtitle">Add a color gradient to active streak cells</div></div>
-                  <div class="toggle on"></div>
-                </div>
-                <div class="settings-row no-border">
-                  <div class="row-icon" style="background:#FFF3E0"><i data-lucide="check" style="width:16px;height:16px;color:#E65100"></i></div>
-                  <div class="row-text"><div class="row-label">Completion icon</div><div class="row-subtitle">Choose between checkmark and chain link</div></div>
-                  <div class="toggle off"></div>
-                </div>
+          <!-- look & feel -->
+          <div>
+            <div class="sec-label"><i data-lucide="palette" style="width:16px;height:16px;color:var(--tint)"></i> Look &amp; Feel</div>
+            <div class="card">
+              <div class="row sub">
+                <div class="tile g"><i data-lucide="calendar-days" style="width:18px;height:18px"></i></div>
+                <div class="lbl"><b>Calendar look</b><span>Day shape, fill, chain style &amp; preview</span></div>
+                <div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div>
+              </div>
+              <div class="row">
+                <div class="tile g"><i data-lucide="moon" style="width:18px;height:18px"></i></div>
+                <div class="lbl"><b>Theme</b></div>
+                <div class="seg"><span>Light</span><span class="on">Dark</span><span>Auto</span></div>
+              </div>
+              <div class="row sub">
+                <div class="tile g"><i data-lucide="rows-3" style="width:18px;height:18px"></i></div>
+                <div class="lbl"><b>Compact habit cards</b><span>Fit more on screen</span></div>
+                <div class="sw"></div>
               </div>
             </div>
+          </div>
 
-            <!-- Behavior — correct shadow + subtitle added -->
-            <div>
-              <div class="section-label-row"><div class="section-label-spacer"></div><span class="section-label">Behavior</span></div>
-              <div class="section-card" style="box-shadow: var(--shadow-card); margin-top: 8px;">
-                <div class="settings-row">
-                  <div class="row-icon" style="background:#E0F2F1"><i data-lucide="arrow-up-down" style="width:16px;height:16px;color:#00695C"></i></div>
-                  <div class="row-text"><div class="row-label">Sort Order</div><div class="row-subtitle">Choose how your habits are ordered</div></div>
-                  <span class="row-value">Custom</span>
-                  <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text-secondary)"></i>
-                </div>
-                <div class="settings-row">
-                  <div class="row-icon" style="background:#FBE9E7"><i data-lucide="volume-2" style="width:16px;height:16px;color:#BF360C"></i></div>
-                  <div class="row-text"><div class="row-label">Completion sound</div><div class="row-subtitle">Hear a sound when you check off a habit</div></div>
-                  <div class="toggle on"></div>
-                </div>
-                <div class="sound-tray">
-                  <div class="sound-tray-spacer"></div>
-                  <div class="sound-pills">
-                    <div class="sound-pill active" style="background:rgba(5,150,105,0.08);color:#059669 !important">
-                      <i data-lucide="volume-1" style="width:14px;height:14px;color:#059669"></i> Ding
-                    </div>
-                    <div class="sound-pill inactive">
-                      <i data-lucide="droplet" style="width:14px;height:14px;color:var(--text-secondary)"></i> Pop
-                    </div>
-                    <div class="sound-pill inactive">
-                      <i data-lucide="trending-up" style="width:14px;height:14px;color:var(--text-secondary)"></i> Rise
-                    </div>
-                  </div>
-                </div>
-                <!-- Pin calendar — NOW HAS SUBTITLE -->
-                <div class="settings-row no-border highlight-fix" style="position:relative;">
-                  <div class="row-icon" style="background:#E8EAF6"><i data-lucide="calendar" style="width:16px;height:16px;color:#283593"></i></div>
-                  <div class="row-text">
-                    <div class="row-label">Pin calendar header</div>
-                    <div class="row-subtitle">Keep the month header visible when scrolling</div>
-                  </div>
-                  <div class="toggle off"></div>
-                  <div class="annotation"><div class="annotation-dot fix">4</div></div>
-                </div>
+          <!-- habits -->
+          <div style="position:relative">
+            <div class="sec-label"><i data-lucide="sliders-horizontal" style="width:16px;height:16px;color:var(--tint)"></i> Habits</div>
+            <div class="card">
+              <!-- 3 + 4: selection row, chevron never moves, SR says only "Sort order" -->
+              <div class="row sub">
+                <div class="pin b" style="left:-11px;top:16px">3</div>
+                <div class="tile g"><i data-lucide="arrow-up-down" style="width:18px;height:18px"></i></div>
+                <div class="lbl"><b>Sort order</b><span>How habits are ordered</span></div>
+                <div class="pill">Newest first</div>
+                <div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div>
+              </div>
+              <div class="row sub">
+                <div class="tile a"><i data-lucide="book-open" style="width:18px;height:18px"></i></div>
+                <div class="lbl"><b>Archived habits</b><span>View and restore hidden habits</span></div>
+                <div class="count">3</div>
+                <div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div>
+              </div>
+              <!-- 1: export -->
+              <div class="row sub" style="background:rgba(181,48,48,.05)">
+                <div class="pin b" style="left:-11px;top:16px">1</div>
+                <div class="tile a"><i data-lucide="download" style="width:18px;height:18px"></i></div>
+                <div class="lbl"><b>Export my data</b><span>Download habits as CSV or JSON</span></div>
+                <div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div>
               </div>
             </div>
+          </div>
 
-            <!-- Data -->
-            <div>
-              <div class="section-label-row"><div class="section-label-spacer"></div><span class="section-label">Data</span></div>
-              <div class="section-card" style="box-shadow: var(--shadow-card); margin-top: 8px;">
-                <div class="settings-row no-border">
-                  <div class="row-icon" style="background:#FFF8E1"><i data-lucide="book-open" style="width:16px;height:16px;color:#F57F17"></i></div>
-                  <div class="row-text"><div class="row-label">Archived Habits</div><div class="row-subtitle">View and restore hidden habits</div></div>
-                  <span class="badge">3</span>
-                  <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text-secondary)"></i>
-                </div>
+          <!-- 2: missing rows ghost -->
+          <div style="position:relative">
+            <div class="pin b" style="left:-11px;top:8px">2</div>
+            <div style="border:1.5px dashed rgba(181,48,48,.45);border-radius:var(--radius);padding:16px;background:rgba(181,48,48,.04)">
+              <div style="font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--danger);margin-bottom:8px">Not rendered anywhere</div>
+              <div style="font-size:13.5px;color:var(--fg2);line-height:1.6">
+                <code>celebrationsEnabled</code> · <code>showHabitStrengthPercentage</code><br>
+                <code>showCharacterScreen</code> · <code>onOpenHapticTest</code><br>
+                <span style="color:var(--danger)">Props accepted, values persisted — no UI to change them.</span>
               </div>
             </div>
+          </div>
 
-            <!-- Notifications -->
-            <div>
-              <div class="section-label-row"><div class="section-label-spacer"></div><span class="section-label">Notifications</span></div>
-              <div class="section-card" style="box-shadow: var(--shadow-card); margin-top: 8px;">
-                <div class="settings-row no-border">
-                  <div class="row-icon" style="background:#FCE4EC"><i data-lucide="bell" style="width:16px;height:16px;color:#C62828"></i></div>
-                  <div class="row-text"><div class="row-label">Streak Reminders</div></div>
-                  <div class="toggle off"></div>
-                </div>
-              </div>
+          <!-- 7: premium loading pop -->
+          <div style="position:relative">
+            <div class="pin b" style="left:-11px;top:8px">7</div>
+            <div class="skel"></div>
+          </div>
+
+          <!-- support -->
+          <div>
+            <div class="sec-label"><i data-lucide="heart" style="width:16px;height:16px;color:var(--tint)"></i> Support</div>
+            <div class="card">
+              <div class="row"><div class="tile a"><i data-lucide="star" style="width:18px;height:18px"></i></div><div class="lbl"><b>Rate Chain Day</b></div><div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div></div>
+              <div class="row"><div class="tile a"><i data-lucide="share-2" style="width:18px;height:18px"></i></div><div class="lbl"><b>Share with a friend</b></div><div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div></div>
+              <div class="row"><div class="tile a"><i data-lucide="sparkles" style="width:18px;height:18px"></i></div><div class="lbl"><b>What's new</b></div><div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div></div>
+              <div class="row"><div class="tile a"><i data-lucide="message-square" style="width:18px;height:18px"></i></div><div class="lbl"><b>Send feedback</b></div><div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div></div>
             </div>
+          </div>
 
-            <!-- Account — AFTER (fixes applied) -->
-            <div>
-              <div class="section-label-row"><div class="section-label-spacer"></div><span class="section-label">Account</span></div>
-              <div class="section-card highlight-fix" style="box-shadow: var(--shadow-card); margin-top: 8px; position: relative;">
-                <!-- Profile row — FIXED: py-4 (16px) matching SettingsRow -->
-                <div class="settings-row" style="gap:12px;position:relative;">
-                  <!-- FIXED: uses themeColors.status.premium token -->
-                  <div class="avatar" style="background:var(--premium);">A</div>
-                  <div class="row-text">
-                    <div class="row-label">Andres</div>
-                    <div class="row-subtitle">andres@example.com</div>
-                  </div>
-                  <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text-secondary)"></i>
-                  <div class="annotation" style="right:-8px"><div class="annotation-dot fix">1</div></div>
-                </div>
-                <!-- FIXED: uses border-b pattern matching SettingsRow (full-width, theme border) -->
-                <!-- Sign Out — FIXED: uses themeColors.status.error + haptics -->
-                <div class="settings-row no-border" style="justify-content:center;position:relative;">
-                  <span class="danger-text" style="color:var(--error-light) !important;">Sign Out</span>
-                  <div class="annotation" style="position:absolute;right:-8px"><div class="annotation-dot fix">1</div></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Delete Account — FIXED: uses theme error token -->
-            <div class="delete-row" style="position:relative;">
-              <i data-lucide="trash-2" style="width:15px;height:15px;color:var(--error-light)"></i>
-              <span class="danger-text" style="color:var(--error-light) !important;">Delete Account</span>
-              <div class="annotation" style="position:absolute;right:8px"><div class="annotation-dot fix">1</div></div>
-            </div>
-
-            <!-- Version — FIXED: reads from expo-constants -->
-            <div style="text-align:center;padding:4px 0 20px;position:relative;" class="highlight-fix">
-              <span style="font-size:13px;color:var(--text-secondary);">Version 2.4.1 (47)</span>
-              <div class="annotation" style="position:absolute;right:40px;top:50%;transform:translateY(-50%)"><div class="annotation-dot fix">5</div></div>
-            </div>
-
+          <!-- 5 + 10: footer -->
+          <div class="foot" style="position:relative">
+            <div class="pin b" style="left:8px;top:-6px">5</div>
+            <span class="hit"><a>Privacy</a></span><span>·</span>
+            <span class="hit"><a>Terms</a></span><span>·</span>
+            <span>v1.4.2 (312)</span>
+            <div class="pin b" style="right:2px;top:-6px">10</div>
           </div>
         </div>
+
+        <!-- 1: the lie — toast fires instantly, alert still asking -->
+        <div class="dim"></div>
+        <div class="alert">
+          <div class="at"><b>Export Habits &amp; Stats</b><span>Choose a format. JSON is best for AI analysis.</span></div>
+          <div class="ab">Cancel</div>
+          <div class="ab">CSV</div>
+          <div class="ab">JSON (AI-friendly)</div>
+        </div>
+        <div class="toast bad">Export started…&nbsp; <span style="color:#FCA5A5;font-weight:700">← nothing started</span></div>
       </div>
     </div>
-
   </div>
 
-  <!-- Legend -->
-  <div class="legend" style="margin-top: 8px;">
-    <h3>Issues & Fixes</h3>
-    <div class="legend-item">
-      <div class="legend-num" style="background:#DC2626">1</div>
-      <div class="legend-text"><strong>Hard-coded hex colors</strong> — Avatar (#7c3aed), Sign Out (#ef4444), Delete (#ef4444), divider (#e7e5e4) bypass theme system. Won't adapt in dark mode. Fix: use <code>themeColors.status.premium</code>, <code>themeColors.status.error</code>, <code>themeColors.border</code></div>
+  <!-- ══════════════ AFTER ══════════════ -->
+  <div class="col">
+    <div class="col-tag tag-after">After — proposed</div>
+    <div class="phone">
+      <div class="screen">
+        <div class="notch"></div>
+
+        <div class="shead">
+          <div class="shead-row">
+            <div>
+              <div class="eyebrow">Chain Day</div>
+              <div class="stitle">Settings</div>
+            </div>
+            <div class="closebtn"><i data-lucide="x" style="width:18px;height:18px"></i></div>
+          </div>
+        </div>
+        <!-- 6: interpolated fade -->
+        <div class="hairline soft" style="position:relative">
+          <div class="pin a" style="right:14px;top:-13px">6</div>
+        </div>
+
+        <div class="body">
+
+          <div class="card">
+            <div class="row">
+              <div class="tile g" style="width:46px;height:46px;border-radius:23px;font-weight:700;font-size:18px">A</div>
+              <div class="lbl"><b>Andres</b><span>Tap to edit profile &amp; account</span></div>
+              <div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="sec-label"><i data-lucide="palette" style="width:16px;height:16px;color:var(--tint)"></i> Look &amp; Feel</div>
+            <div class="card">
+              <div class="row sub">
+                <div class="tile g"><i data-lucide="calendar-days" style="width:18px;height:18px"></i></div>
+                <div class="lbl"><b>Calendar look</b><span>Day shape, fill, chain style &amp; preview</span></div>
+                <div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div>
+              </div>
+              <div class="row">
+                <div class="tile g"><i data-lucide="moon" style="width:18px;height:18px"></i></div>
+                <div class="lbl"><b>Theme</b></div>
+                <div class="seg"><span>Light</span><span class="on">Dark</span><span>Auto</span></div>
+              </div>
+              <div class="row sub">
+                <div class="tile g"><i data-lucide="rows-3" style="width:18px;height:18px"></i></div>
+                <div class="lbl"><b>Compact habit cards</b><span>Fit more on screen</span></div>
+                <div class="sw"></div>
+              </div>
+              <!-- 2: restored rows -->
+              <div class="row sub" style="position:relative;background:rgba(4,120,87,.045)">
+                <div class="pin a" style="left:-11px;top:16px">2</div>
+                <div class="tile g"><i data-lucide="percent" style="width:18px;height:18px"></i></div>
+                <div class="lbl"><b>Show strength %</b><span>Numeric strength on each habit card</span></div>
+                <div class="sw on"></div>
+              </div>
+              <div class="row sub" style="background:rgba(4,120,87,.045)">
+                <div class="tile g"><i data-lucide="party-popper" style="width:18px;height:18px"></i></div>
+                <div class="lbl"><b>Celebrations</b><span>Confetti when a chain completes</span></div>
+                <div class="sw on"></div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="sec-label"><i data-lucide="sliders-horizontal" style="width:16px;height:16px;color:var(--tint)"></i> Habits</div>
+            <div class="card">
+              <!-- 3 + 4: expanded state, rotated chevron, SR value announced -->
+              <div class="row sub" style="position:relative;background:rgba(4,120,87,.05)">
+                <div class="pin a" style="left:-11px;top:16px">3</div>
+                <div class="tile g"><i data-lucide="arrow-up-down" style="width:18px;height:18px"></i></div>
+                <div class="lbl"><b>Sort order</b><span>How habits are ordered</span></div>
+                <div class="pill" style="background:var(--tint-bg);border-color:rgba(4,120,87,.3);color:var(--tint)">Newest first</div>
+                <div class="chev open"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div>
+              </div>
+              <div class="inset" style="position:relative">
+                <div class="pin a" style="right:-11px;top:14px">4</div>
+                <div class="opts">
+                  <div class="opt on">Newest first <i data-lucide="check" style="width:17px;height:17px"></i></div>
+                  <div class="opt">Oldest first</div>
+                  <div class="opt">Strongest first</div>
+                  <div class="opt">Alphabetical</div>
+                </div>
+                <div style="margin-top:10px;font-size:11.5px;color:var(--tint);background:var(--tint-bg);border-radius:9px;padding:8px 10px;line-height:1.45">
+                  <b>VoiceOver:</b> “Sort order, Newest first, expanded, button”
+                </div>
+              </div>
+              <div class="row sub">
+                <div class="tile a"><i data-lucide="book-open" style="width:18px;height:18px"></i></div>
+                <div class="lbl"><b>Archived habits</b><span>View and restore hidden habits</span></div>
+                <div class="count">3</div>
+                <div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div>
+              </div>
+              <div class="row sub" style="position:relative;background:rgba(4,120,87,.05)">
+                <div class="pin a" style="left:-11px;top:16px">1</div>
+                <div class="tile a"><i data-lucide="download" style="width:18px;height:18px"></i></div>
+                <div class="lbl"><b>Export my data</b><span>Download habits as CSV or JSON</span></div>
+                <div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 7 + 8: premium reserved height, no pop, stagger tightened -->
+          <div style="position:relative">
+            <div class="pin a" style="left:-11px;top:8px">7</div>
+            <div class="premium">
+              <div class="ptop">
+                <div class="ptile"><i data-lucide="crown" style="width:20px;height:20px"></i></div>
+                <div><b>Chain Day Premium</b><small>Unlimited habits, custom reminders</small></div>
+                <div class="cta">Upgrade</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="position:relative">
+            <div class="pin a" style="left:-11px;top:22px">8</div>
+            <div class="sec-label"><i data-lucide="heart" style="width:16px;height:16px;color:var(--tint)"></i> Support</div>
+            <div class="card">
+              <div class="row"><div class="tile a"><i data-lucide="star" style="width:18px;height:18px"></i></div><div class="lbl"><b>Rate Chain Day</b></div><div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div></div>
+              <div class="row"><div class="tile a"><i data-lucide="share-2" style="width:18px;height:18px"></i></div><div class="lbl"><b>Share with a friend</b></div><div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div></div>
+              <div class="row"><div class="tile a"><i data-lucide="sparkles" style="width:18px;height:18px"></i></div><div class="lbl"><b>What's new</b></div><div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div></div>
+              <div class="row"><div class="tile a"><i data-lucide="message-square" style="width:18px;height:18px"></i></div><div class="lbl"><b>Send feedback</b></div><div class="chev"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></div></div>
+            </div>
+          </div>
+
+          <!-- 5 + 10 -->
+          <div class="foot" style="position:relative;gap:2px">
+            <div class="pin a" style="left:0;top:-14px">5</div>
+            <span class="hit big"><a>Privacy</a></span><span>·</span>
+            <span class="hit big"><a>Terms</a></span><span>·</span>
+            <span class="hit big" style="border-style:solid;border-color:rgba(74,222,128,.35)">v1.4.2 (312) <i data-lucide="copy" style="width:11px;height:11px;vertical-align:-1px"></i></span>
+            <div class="pin a" style="right:-8px;top:-14px">10</div>
+          </div>
+          <div style="height:180px"></div>
+        </div>
+
+        <!-- 1: one in-app sheet, no toast until a format is chosen -->
+        <div class="dim"></div>
+        <div class="sheet">
+          <div class="grab"></div>
+          <h3>Export your data</h3>
+          <p>Habits, streaks and daily tracking — 3 archived habits included.</p>
+          <div class="fmt">
+            <div class="tile a"><i data-lucide="file-spreadsheet" style="width:18px;height:18px"></i></div>
+            <div><b>CSV</b><span>Opens in Numbers or Excel</span></div>
+          </div>
+          <div class="fmt">
+            <div class="tile g"><i data-lucide="braces" style="width:18px;height:18px"></i></div>
+            <div><b>JSON</b><span>Full fidelity, best for AI analysis</span></div>
+            <div class="badge">Recommended</div>
+          </div>
+          <div style="margin-top:12px;font-size:12px;color:var(--fg2);text-align:center">Toast only fires once a format is picked — and it names it: <b style="color:var(--tint)">“Exporting as JSON…”</b></div>
+        </div>
+      </div>
     </div>
-    <div class="legend-item">
-      <div class="legend-num" style="background:#DC2626">2</div>
-      <div class="legend-text"><strong>Shadow too heavy</strong> — Section cards use FAB-level elevation (height:4, radius:16, opacity:0.08). Fix: use <code>shadows.card</code> token (height:2, radius:8, opacity:0.06) — visible as subtler, more appropriate depth</div>
-    </div>
-    <div class="legend-item">
-      <div class="legend-num" style="background:#DC2626">3</div>
-      <div class="legend-text"><strong>Inconsistent divider</strong> — Account uses custom 0.5px inset divider while SettingsRow uses full-width border-b. Fix: adopt SettingsRow's <code>border-b</code> + <code>borderColor: themeColors.border</code> pattern</div>
-    </div>
-    <div class="legend-item">
-      <div class="legend-num" style="background:#DC2626">4</div>
-      <div class="legend-text"><strong>Missing subtitle</strong> — "Pin calendar header" is the only toggle without explanatory text. Fix: add <code>subtitle='Keep the month header visible when scrolling'</code></div>
-    </div>
-    <div class="legend-item">
-      <div class="legend-num" style="background:#DC2626">5</div>
-      <div class="legend-text"><strong>Hardcoded version</strong> — Shows "1.0.0 (1)" as string literals. Fix: read from <code>expo-constants</code> for actual app version and build number</div>
-    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════ LEGEND ══════════════ -->
+<div class="legend">
+  <h2>What changed</h2>
+
+  <div class="lrow">
+    <div class="lnum">1</div>
+    <div class="bad"><h4>Export toast lies</h4><p><code>HabitDataRows.tsx:25</code> fires “Export started…” on tap — before the format Alert even opens, and it stays on screen if you hit Cancel. Three feedback systems in one flow: toast, then Alert, then another Alert.</p></div>
+    <div class="good"><h4>One in-app sheet, honest copy</h4><p>Native Alert chain → a themed sheet matching the rest of Settings. Toast moves after the choice and names the format. Cancel leaves no trace.</p></div>
+  </div>
+
+  <div class="lrow">
+    <div class="lnum">2</div>
+    <div class="bad"><h4>Four orphaned settings</h4><p><code>types.ts</code> accepts <code>celebrationsEnabled</code>, <code>showHabitStrengthPercentage</code>, <code>showCharacterScreen</code>, <code>onOpenHapticTest</code>. Values persist in Convex; no row renders them.</p></div>
+    <div class="good"><h4>Restore or delete — decide</h4><p>Mock shows them restored into Look &amp; Feel. If the handoff removal was intentional, strip the props and the Convex fields instead of leaving dead plumbing.</p></div>
+  </div>
+
+  <div class="lrow">
+    <div class="lnum">3</div>
+    <div class="bad"><h4>Sort order has no disclosure affordance</h4><p>Right-chevron implies navigation, but tap expands inline. Chevron never rotates. Section sits low — picker can open below the fold with no scroll-into-view.</p></div>
+    <div class="good"><h4>Rotating chevron + tinted open state</h4><p>Chevron rotates 90°, pill goes green, row tints. Scroll-into-view on expand. Now visually distinct from Calendar look (sub-page) and Theme (inline segments).</p></div>
+  </div>
+
+  <div class="lrow">
+    <div class="lnum">4</div>
+    <div class="bad"><h4>Screen reader value gap</h4><p><code>SettingsRow.tsx:71</code> exposes only <code>accessibilityLabel={label}</code>. VoiceOver reads “Sort order, button” — no current value, no expanded state.</p></div>
+    <div class="good"><h4>accessibilityValue + accessibilityState</h4><p>“Sort order, Newest first, expanded, button.” Same fix covers every selection row and both toggles.</p></div>
+  </div>
+
+  <div class="lrow">
+    <div class="lnum">5</div>
+    <div class="bad"><h4>Footer targets under 44px</h4><p>12px caption + <code>hitSlop={12}</code> ≈ 36px tall. Below the HIG minimum.</p></div>
+    <div class="good"><h4>hitSlop 16</h4><p>Pushes Privacy / Terms past 44px without changing the quiet visual weight of the line.</p></div>
+  </div>
+
+  <div class="lrow">
+    <div class="lnum">6</div>
+    <div class="bad"><h4>Scroll hairline snaps</h4><p><code>SettingsContent.tsx:36</code> flips opacity 0→1 the instant scrollY passes 4px. Reads as a flicker on light scrolls.</p></div>
+    <div class="good"><h4>Interpolate over ~12px</h4><p>Fades in with the scroll instead of popping.</p></div>
+  </div>
+
+  <div class="lrow">
+    <div class="lnum">7</div>
+    <div class="bad"><h4>Premium card pops in</h4><p><code>ProSettingsCard.tsx:19</code> returns null while subscription state loads, then a full card appears — everything below jumps.</p></div>
+    <div class="good"><h4>Reserve height, fade in</h4><p>Placeholder holds the space; card fades once <code>usePremium</code> resolves. No reflow.</p></div>
+  </div>
+
+  <div class="lrow">
+    <div class="lnum">8</div>
+    <div class="bad"><h4>Stagger index gap</h4><p>Primary sections animate 0–3, secondary hardcodes 5–7. Index 4 is skipped — and when the premium card is null (premium users) Support and footer still wait out the later delays.</p></div>
+    <div class="good"><h4>Compute indexes from rendered children</h4><p>Tail arrives on time whether or not the premium card renders.</p></div>
+  </div>
+
+  <div class="lrow">
+    <div class="lnum">9</div>
+    <div class="bad"><h4>Dead plumbing</h4><p><code>onDeleteAccount</code> / <code>isDeletingAccount</code> threaded through three components and rendered by none — the Account sub-page owns its own via <code>useAccountActions</code>. The search provider also wraps everything with <code>query=''</code> while every row runs <code>rowMatchesQuery</code> per render.</p></div>
+    <div class="good"><h4>Cut the props, gate the filter</h4><p>Not visible in the mock. Drop the delete props; short-circuit <code>rowMatchesQuery</code> when the query is empty so rows stop paying for a feature with no entry point.</p></div>
+  </div>
+
+  <div class="lrow">
+    <div class="lnum">10</div>
+    <div class="bad"><h4>Version isn’t copyable</h4><p>Build number is kept for support triage, but neither the footer nor the Account page marks the text <code>selectable</code>.</p></div>
+    <div class="good"><h4>Tap to copy</h4><p><code>selectable</code> + tap-to-copy with a confirmation toast. Support gets the exact build in one message.</p></div>
   </div>
 </div>
 
-<script>
-  lucide.createIcons();
-</script>
+<script>lucide.createIcons();</script>
 </body>
 </html>

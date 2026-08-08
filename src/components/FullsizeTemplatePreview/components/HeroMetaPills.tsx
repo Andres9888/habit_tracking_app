@@ -1,14 +1,8 @@
 /**
- * Hero metadata chips — cadence+duration, category, difficulty, and the
- * Science-backed marker when the template earns it.
+ * Hero metadata chips — cadence+duration, category, and difficulty.
  *
  * The "Habit Detail" mock shows a 3-chip row; popularity moved out of the hero
  * so the chips describe the commitment, not the crowd.
- *
- * The page argues desire before proof, which is right — but the differentiator
- * still has to be legible on arrival. The full evidence case stays where it
- * was, at the bottom; only the marker sits up here, gated on the same rule as
- * the WhyItWorksCard badge so the two can never disagree.
  *
  * The difficulty chip reads `getAutomaticityMeta`, not `growthType` directly:
  * the timeline is the page's source of truth for days-to-automatic.
@@ -16,13 +10,12 @@
 
 import React from 'react';
 import { View } from 'react-native';
-import { Clock, ShieldCheck, Sprout, Tag } from 'lucide-react-native';
+import { Clock, Sprout, Tag } from 'lucide-react-native';
 
 import { iconSizes } from '@/theme/iconSizes';
 import { heroStyles } from '../styles';
 import { useDetailPalette } from '../detailPalette';
 import { getAutomaticityMeta } from '../utils/automaticityMeta';
-import { isScienceBacked } from '../utils/scienceBadge';
 import {
   FREQUENCY_LABELS,
   CATEGORY_LABELS,
@@ -61,14 +54,6 @@ export function HeroMetaPills({ template }: HeroMetaPillsProps) {
       {automaticity ? (
         <MetadataPill icon={<Sprout {...iconProps} />}>
           {`${automaticity.label} · ~${automaticity.days}d`}
-        </MetadataPill>
-      ) : null}
-      {isScienceBacked(template) ? (
-        <MetadataPill
-          testID='templates-preview-science-chip'
-          icon={<ShieldCheck {...iconProps} />}
-        >
-          Science-backed
         </MetadataPill>
       ) : null}
     </View>

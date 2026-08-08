@@ -1,6 +1,8 @@
 /** SettingsContent - Settings layout: Profile → Look & Feel → Reminders → Habits → Premium → Support */
 import { View } from 'react-native';
 import Animated, {
+  Extrapolation,
+  interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -12,6 +14,8 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsContentProps } from './types';
 import { SCROLL_STYLES } from './SettingsContent.constants';
 import { SettingsSectionList } from './components/SettingsSectionList';
+import { SettingsScrollProvider } from './SettingsScrollContext';
+import { useEnsureVisible } from './useEnsureVisible';
 import { SettingsToastProvider } from './SettingsToast';
 // No search field — filter plumbing retained so rows/sections can self-filter
 // if a search entry point ever returns.
@@ -33,11 +37,20 @@ export function SettingsContent(p: SettingsContentProps) {
       scrollY.value = e.contentOffset.y;
     },
   });
+  // Fade the hairline in across the first 12px of travel. A hard 0→1 flip at
+  // 4px reads as a flicker on the small scrolls that rubber-band back to top.
   const borderStyle = useAnimatedStyle(() => ({
-    opacity: scrollY.value > 4 ? 1 : 0,
+    opacity: interpolate(
+      scrollY.value,
+      [0, 12],
+      [0, 1],
+      Extrapolation.CLAMP
+    ),
   }));
 
   const actions = useAccountActions();
+  const { ensureVisible, onScrollViewLayout, scrollRef } =
+    useEnsureVisible(scrollY);
 
   return (
     <SettingsToastProvider>
@@ -49,6 +62,7 @@ export function SettingsContent(p: SettingsContentProps) {
           ]}
         />
         <Animated.ScrollView
+          ref={scrollRef}
           className='flex-1 px-4'
           contentContainerStyle={{
             paddingBottom: bottomPadding,
@@ -58,23 +72,24 @@ export function SettingsContent(p: SettingsContentProps) {
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
           style={{ backgroundColor: themeColors.background }}
+          onLayout={onScrollViewLayout}
           onScroll={scrollHandler}
         >
           <SettingsSearchProvider query=''>
-            <View style={{ gap: airy.sectionGap }}>
-              <SettingsSectionList
-                {...p}
-                sectionIconColor={sectionIconColor}
-                isDeletingAccount={actions.isDeletingAccount}
-                onDeleteAccount={actions.handleDeleteAccount}
-                onFeedback={actions.handleFeedback}
-                onPrivacy={actions.openPrivacy}
-                onRate={actions.handleRateApp}
-                onShare={actions.handleShare}
-                onTerms={actions.openTerms}
-                onWhatsNew={actions.handleWhatsNew}
-              />
-            </View>
+            <SettingsScrollProvider ensureVisible={ensureVisible}>
+              <View style={{ gap: airy.sectionGap }}>
+                <SettingsSectionList
+                  {...p}
+                  sectionIconColor={sectionIconColor}
+                  onFeedback={actions.handleFeedback}
+                  onPrivacy={actions.openPrivacy}
+                  onRate={actions.handleRateApp}
+                  onShare={actions.handleShare}
+                  onTerms={actions.openTerms}
+                  onWhatsNew={actions.handleWhatsNew}
+                />
+              </View>
+            </SettingsScrollProvider>
           </SettingsSearchProvider>
         </Animated.ScrollView>
         <FeedbackModal
