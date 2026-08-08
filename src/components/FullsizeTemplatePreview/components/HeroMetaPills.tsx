@@ -16,13 +16,12 @@
 
 import React from 'react';
 import { View } from 'react-native';
-import { Clock, ShieldCheck, Sprout, Tag } from 'lucide-react-native';
+import { Clock, Sprout, Tag } from 'lucide-react-native';
 
 import { iconSizes } from '@/theme/iconSizes';
 import { heroStyles } from '../styles';
 import { useDetailPalette } from '../detailPalette';
 import { getAutomaticityMeta } from '../utils/automaticityMeta';
-import { isScienceBacked } from '../utils/scienceBadge';
 import {
   FREQUENCY_LABELS,
   CATEGORY_LABELS,
@@ -61,14 +60,6 @@ export function HeroMetaPills({ template }: HeroMetaPillsProps) {
       {automaticity ? (
         <MetadataPill icon={<Sprout {...iconProps} />}>
           {`${automaticity.label} · ~${automaticity.days}d`}
-        </MetadataPill>
-      ) : null}
-      {isScienceBacked(template) ? (
-        <MetadataPill
-          testID='templates-preview-science-chip'
-          icon={<ShieldCheck {...iconProps} />}
-        >
-          Science-backed
         </MetadataPill>
       ) : null}
     </View>

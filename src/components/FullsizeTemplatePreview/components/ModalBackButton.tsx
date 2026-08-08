@@ -19,12 +19,14 @@ import { StyleSheet } from 'react-native';
 
 import { iconSizes } from '@/theme/iconSizes';
 import { borderRadius } from '@/theme/spacing';
+import { getSubtleCloseButtonVisuals } from '../../ui/ModalCloseButton';
 import { triggerHaptic } from '@/utils/haptics';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 
 interface ModalBackButtonProps {
-  color: string;
-  backgroundColor: string;
+  color?: string;
+  backgroundColor?: string;
   onBack: () => void;
 }
 
@@ -33,6 +35,11 @@ export function ModalBackButton({
   backgroundColor,
   onBack,
 }: ModalBackButtonProps) {
+  const { colors, isDark } = useThemeColors();
+  const subtleVisual = getSubtleCloseButtonVisuals(isDark, colors);
+  const resolvedColor = color ?? subtleVisual.iconColor;
+  const resolvedBackgroundColor = backgroundColor ?? subtleVisual.backgroundColor;
+
   return (
     <AnimatedPressable
       accessibilityHint='Returns to the habit library where you left off'
@@ -40,13 +47,17 @@ export function ModalBackButton({
       accessibilityRole='button'
       hitSlop={8}
       testID='templates-preview-back'
-      style={[s.backButton, { backgroundColor }]}
+      style={[s.backButton, { backgroundColor: resolvedBackgroundColor }]}
       onPress={() => {
         triggerHaptic('tap');
         onBack();
       }}
     >
-      <ChevronLeft color={color} size={iconSizes.large} strokeWidth={2.5} />
+      <ChevronLeft
+        color={resolvedColor}
+        size={iconSizes.medium}
+        strokeWidth={subtleVisual.strokeWidth}
+      />
     </AnimatedPressable>
   );
 }
