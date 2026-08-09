@@ -2,6 +2,7 @@
  * Composition wrapper for all Templates screen modals
  */
 
+import type { ImportOutcome } from '../hooks/useImportResultHandler';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import { PackConfirmSheet } from '../../../components/PackConfirmSheet';
 import { PaywallSheet } from '../../../components/PaywallSheet';
@@ -27,11 +28,13 @@ interface TemplatesScreenModalsProps {
   /** Detail modal X — dismisses the whole flow onto the home screen. */
   onExitToHome: () => void;
   onCustomize: (template: Doc<'templates'>) => void;
-  onDirectImport: (templateId: Id<'templates'>) => Promise<void>;
+  onDirectImport: (
+    templateId: Id<'templates'>
+  ) => Promise<ImportOutcome | undefined>;
   onImport: (
     templateId: Id<'templates'>,
     customizations?: TemplateCustomizations
-  ) => Promise<void>;
+  ) => Promise<ImportOutcome | undefined>;
   packConfirmPack: PremiumPack | null;
   packConfirmVisible: boolean;
   onPackCancel: () => void;

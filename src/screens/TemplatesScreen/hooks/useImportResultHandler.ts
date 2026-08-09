@@ -19,25 +19,27 @@ interface UseImportResultHandlerOptions {
   showSuccess: (habitId: Id<'habits'>) => void;
 }
 
+export type ImportOutcome = 'added' | 'exists' | 'failed';
+
 export function useImportResultHandler(o: UseImportResultHandlerOptions) {
   return useCallback(
-    (res: ImportResult, templateId: Id<'templates'>) => {
+    (res: ImportResult, templateId: Id<'templates'>): ImportOutcome => {
       if (res.alreadyExists) {
         o.setImportedTemplateIds((p) => new Set(p).add(templateId));
         if (res.habitId) o.showAlreadyImported(res.habitId);
         else o.showError();
-        return true;
+        return 'exists';
       }
       if (res.success && res.habitId) {
         o.setImportedTemplateIds((p) => new Set(p).add(templateId));
         o.showSuccess(res.habitId);
-        return true;
+        return 'added';
       }
-      if (res.success) {
-        o.showError();
-        return false;
-      }
-      return false;
+      // A result that is neither an add nor a duplicate is a failure the user
+      // must hear about — a bare return here strands them on a spinner that
+      // clears into silence.
+      o.showError();
+      return 'failed';
     },
     [
       o.setImportedTemplateIds,

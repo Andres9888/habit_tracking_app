@@ -67,7 +67,7 @@ export function useLibraryScreenActions({
         templateId: id,
         source: 'details',
       });
-      await handlers.handleDirectImport(id);
+      return handlers.handleDirectImport(id);
     },
     [handlers]
   );

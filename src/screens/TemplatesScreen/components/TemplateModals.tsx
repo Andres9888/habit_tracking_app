@@ -2,6 +2,7 @@
  * Template preview modals — fullsize details + customize bottom sheet.
  */
 
+import type { ImportOutcome } from '../hooks/useImportResultHandler';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import FullsizeTemplatePreview from '../../../components/FullsizeTemplatePreview';
 import TemplatePreviewModal from '../../templates/TemplatePreviewModal';
@@ -23,11 +24,13 @@ interface TemplateModalsProps {
   /** Detail modal X — dismisses the overlay and the library behind it. */
   onExitToHome: () => void;
   onCustomize: (template: Doc<'templates'>) => void;
-  onDirectImport: (templateId: Id<'templates'>) => Promise<void>;
+  onDirectImport: (
+    templateId: Id<'templates'>
+  ) => Promise<ImportOutcome | undefined>;
   onImport: (
     templateId: Id<'templates'>,
     customizations?: TemplateCustomizations
-  ) => Promise<void>;
+  ) => Promise<ImportOutcome | undefined>;
 }
 
 export function TemplateModals({

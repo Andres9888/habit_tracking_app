@@ -35,19 +35,22 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
 
   const handleDirectImport = useCallback(
     async (id: Id<'templates'>) => {
-      if (guardImport()) return;
+      if (guardImport()) return undefined;
       try {
         o.setImportingTemplateId(id);
         const res = await o.importTemplate({ templateId: id });
-        if (handleImportResult(res, id)) {
+        const outcome = handleImportResult(res, id);
+        if (outcome !== 'failed') {
           if (timeoutRef.current) clearTimeout(timeoutRef.current);
           timeoutRef.current = setTimeout(
             () => o.setShowCustomizeModal(false),
             1000
           );
         }
+        return outcome;
       } catch {
         showError(() => void directImportRef.current(id));
+        return undefined;
       } finally {
         o.setImportingTemplateId(null);
       }
