@@ -45,4 +45,5 @@ export { listArchived, listArchivedCount } from './habits/archive';
 export { listPaused } from './habits/pause';
 export { getTracking } from './habits/getTracking';
 export { getHabitTracking } from './habits/getHabitTracking';
+export { getHabitScience } from './habits/getHabitScience';
 export { getStats } from './habits/stats';
