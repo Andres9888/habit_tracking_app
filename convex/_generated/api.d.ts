@@ -66,6 +66,7 @@ import type * as habits_remove from "../habits/remove.js";
 import type * as habits_reorder from "../habits/reorder.js";
 import type * as habits_stats from "../habits/stats.js";
 import type * as habits_toggle from "../habits/toggle.js";
+import type * as habits_trackingCompletionPatch from "../habits/trackingCompletionPatch.js";
 import type * as habits_types from "../habits/types.js";
 import type * as habits_update from "../habits/update.js";
 import type * as habits_utils from "../habits/utils.js";
@@ -189,6 +190,7 @@ declare const fullApi: ApiFromModules<{
   "habits/reorder": typeof habits_reorder;
   "habits/stats": typeof habits_stats;
   "habits/toggle": typeof habits_toggle;
+  "habits/trackingCompletionPatch": typeof habits_trackingCompletionPatch;
   "habits/types": typeof habits_types;
   "habits/update": typeof habits_update;
   "habits/utils": typeof habits_utils;

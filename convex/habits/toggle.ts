@@ -12,6 +12,7 @@ import {
 } from '../habitStrength';
 import { calculateStreakFromHistory } from '../streakUtils';
 import { enforceRateLimit } from '../lib/rateLimit';
+import { trackingCompletionPatch } from './trackingCompletionPatch';
 import {
   getTodayForTimezone,
   getTrackingCutoffKey,
@@ -24,6 +25,8 @@ export const toggleHabit = mutation({
   args: {
     date: v.string(),
     habitId: v.id('habits'),
+    /** Absent/undefined treated as full. Only set when completing. */
+    kind: v.optional(v.union(v.literal('full'), v.literal('minimal'))),
     timezone: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
@@ -51,14 +54,18 @@ export const toggleHabit = mutation({
       .unique();
 
     const newCompletedStatus = existing ? !existing.completed : true;
+    const completion = trackingCompletionPatch(
+      newCompletedStatus,
+      newCompletedStatus ? args.kind : undefined
+    );
     await (existing
       ? ctx.db.patch(existing._id, {
-          completed: newCompletedStatus,
+          ...completion,
           // Backfill userId on legacy records missing it
           ...(existing.userId ? {} : { userId: identity.subject }),
         })
       : ctx.db.insert('tracking', {
-          completed: true,
+          ...completion,
           date: args.date,
           habitId: args.habitId,
           userId: identity.subject,
@@ -155,11 +162,15 @@ export const recalculateStreakAndStrength = internalMutation({
         strengthLevel: snapshot.strengthLevel,
         strengthUpdatedAt: Date.now(),
       };
-      const streakData = calculateStreakFromHistory(tracking, evaluationDateKey, {
-        pausedAt: habit.pausedAt,
-        resumedAt: habit.resumedAt,
-        timezone: args.timezone,
-      });
+      const streakData = calculateStreakFromHistory(
+        tracking,
+        evaluationDateKey,
+        {
+          pausedAt: habit.pausedAt,
+          resumedAt: habit.resumedAt,
+          timezone: args.timezone,
+        }
+      );
       streakPatch = {
         // Guarded with the stored value because the tracking read above is
         // windowed: a best streak set outside the lookback window is not

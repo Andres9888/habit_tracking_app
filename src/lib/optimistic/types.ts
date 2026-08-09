@@ -40,6 +40,8 @@ export interface ToggleOperationPayload {
   date: string;
   /** Whether toggling to completed (true) or incomplete (false) */
   toCompleted: boolean;
+  /** Completion intensity when marking complete. Absent means full. */
+  kind?: 'full' | 'minimal';
 }
 
 /**

@@ -13,8 +13,12 @@ export async function toggleCompletion(
   operation: ToggleCompletionOperation,
   mutations: ConvexMutations
 ) {
-  const { habitId, date } = operation.payload;
-  await mutations.toggleHabit({ habitId, date });
+  const { habitId, date, kind, toCompleted } = operation.payload;
+  await mutations.toggleHabit({
+    habitId,
+    date,
+    ...(toCompleted && kind ? { kind } : {}),
+  });
 }
 
 export async function createHabit(

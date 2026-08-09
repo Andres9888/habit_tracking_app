@@ -32,6 +32,7 @@ export const useHabitDetailScreenState = ({
   const [pendingToggleDate, setPendingToggleDate] = useState<string | null>(
     null
   );
+  const [pendingMinimal, setPendingMinimal] = useState(false);
 
   // Today's date
   const today = useMemo(() => getLocalDateString(), []);
@@ -47,6 +48,16 @@ export const useHabitDetailScreenState = ({
     if (dates.length === 0) return '';
     return dates.sort().join(',');
   }, [habitId, tracking]);
+
+  const todayKind = useMemo((): 'full' | 'minimal' | undefined => {
+    if (!habitId || !tracking) return;
+    const entry = tracking.find(
+      (row) =>
+        row && row.habitId === habitId && row.date === today && row.completed
+    );
+    if (!entry) return;
+    return entry.kind === 'minimal' ? 'minimal' : 'full';
+  }, [habitId, today, tracking]);
 
   // Completed dates set - only recalculates when the actual dates change
   // Note: ''.split(',') returns [''] not [], so we must check for empty string first
@@ -73,15 +84,20 @@ export const useHabitDetailScreenState = ({
     optimisticToggle
   );
 
+  const isMinimalToday =
+    optimistic.isCompletedToday && (pendingMinimal || todayKind === 'minimal');
+
   return {
     bestStreak: optimistic.bestStreak,
     completedDates,
     currentStreak: optimistic.currentStreak,
     isCompletedToday: optimistic.isCompletedToday,
+    isMinimalToday,
     pendingArchive,
     pendingDelete,
     pendingToggleDate,
     setPendingToggleDate,
+    setPendingMinimal,
     setPendingArchive,
     setPendingDelete,
     totalCompletions: optimistic.totalCompletions,

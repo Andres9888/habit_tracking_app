@@ -29,9 +29,11 @@ interface HabitDetailContentProps {
   completedDates: Set<string>;
   habit: Habit;
   isCompletedToday: boolean;
+  isMinimalToday?: boolean;
   pendingToggleDate?: string | null;
   visible?: boolean;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
+  onMinimalToday: () => void;
   onEdit?: () => void;
   onPinnedChange?: (pinned: boolean) => void;
 }
@@ -40,9 +42,11 @@ export function HabitDetailContent({
   completedDates,
   habit,
   isCompletedToday,
+  isMinimalToday = false,
   pendingToggleDate = null,
   visible = true,
   onDayPress,
+  onMinimalToday,
   onEdit,
   onPinnedChange,
 }: HabitDetailContentProps) {
@@ -89,6 +93,7 @@ export function HabitDetailContent({
         daysDone={insights.yearCompletions}
         habit={habit}
         isCompletedToday={isCompletedToday}
+        isMinimalToday={isMinimalToday}
         isMissedYesterday={isMissedYesterday({
           completedDates: insights.doneDates,
           daysOfWeek: habit.daysOfWeek,
@@ -96,6 +101,7 @@ export function HabitDetailContent({
         })}
         isToggling={pendingToggleDate === getLocalDateString()}
         onDayPress={onDayPress}
+        onMinimalToday={onMinimalToday}
       />
       <View style={{ backgroundColor: palette.bandGradient[2] }}>
         <HabitDetailSections

@@ -24,7 +24,11 @@ export function useToggleHabitWithTimezone() {
   const rawToggle = useMutation(api.habits.toggleHabit);
 
   const toggleHabit = useCallback(
-    (args: { date: string; habitId: Id<'habits'> }) => {
+    (args: {
+      date: string;
+      habitId: Id<'habits'>;
+      kind?: 'full' | 'minimal';
+    }) => {
       // Re-read timezone on every toggle to handle timezone switching
       const currentTimezone = getUserTimezone();
       return rawToggle({ ...args, timezone: currentTimezone });

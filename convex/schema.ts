@@ -414,6 +414,11 @@ const applicationTables = {
     completed: v.boolean(),
     date: v.string(),
     habitId: v.id('habits'),
+    /**
+     * Completion intensity. Absent/undefined means 'full' so legacy rows stay
+     * valid without migration. 'minimal' is the 2-minute escape hatch.
+     */
+    kind: v.optional(v.union(v.literal('full'), v.literal('minimal'))),
     // Legacy minutes completion value from removed minutes-goal feature.
     minutes: v.optional(v.number()),
     userId: v.optional(v.string()),

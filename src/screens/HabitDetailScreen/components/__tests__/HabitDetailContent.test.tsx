@@ -64,6 +64,7 @@ function renderContent(overrides: Partial<Habit> = {}) {
       habit={{ ...habit, ...overrides }}
       isCompletedToday={false}
       onDayPress={jest.fn()}
+      onMinimalToday={jest.fn()}
     />
   );
 }
@@ -91,6 +92,7 @@ describe('HabitDetailContent', () => {
         completedDates={new Set<string>()}
         habit={habit}
         onDayPress={jest.fn()}
+        onMinimalToday={jest.fn()}
       />
     );
     expect(queryByText('Complete today')).toBeNull();
@@ -102,7 +104,7 @@ describe('HabitDetailContent', () => {
     expect(getByLabelText(/Habit strength 68 percent/)).toBeTruthy();
     // The milestone bar is the only streak display on this screen.
     expect(queryByText('9 day streak')).toBeNull();
-    expect(getByText('3 days from your best streak ever')).toBeTruthy();
+    expect(getByText('21 days to your next milestone — day 30')).toBeTruthy();
   });
 
   it('quotes the user’s why in the hero band when yesterday was kept', () => {
@@ -130,9 +132,52 @@ describe('HabitDetailContent', () => {
         completedDates={new Set<string>()}
         habit={habit}
         onDayPress={jest.fn()}
+        onMinimalToday={jest.fn()}
       />
     );
     expect(queryByText(/One miss/)).toBeNull();
+  });
+
+  it('offers the 2-minute version while today is still open', () => {
+    const onMinimalToday = jest.fn();
+    const { getByLabelText } = render(
+      <HabitDetailContent
+        completedDates={new Set<string>()}
+        habit={habit}
+        isCompletedToday={false}
+        onDayPress={jest.fn()}
+        onMinimalToday={onMinimalToday}
+      />
+    );
+    fireEvent.press(getByLabelText('Do the 2-minute version — it counts'));
+    expect(onMinimalToday).toHaveBeenCalledTimes(1);
+  });
+
+  it('hides the 2-minute version once today is complete', () => {
+    const { queryByLabelText } = render(
+      <HabitDetailContent
+        isCompletedToday
+        completedDates={new Set<string>()}
+        habit={habit}
+        onDayPress={jest.fn()}
+        onMinimalToday={jest.fn()}
+      />
+    );
+    expect(queryByLabelText('Do the 2-minute version — it counts')).toBeNull();
+  });
+
+  it('shows the 2-min caption on the check-in card for minimal completions', () => {
+    const { getByText } = render(
+      <HabitDetailContent
+        isCompletedToday
+        isMinimalToday
+        completedDates={new Set<string>()}
+        habit={habit}
+        onDayPress={jest.fn()}
+        onMinimalToday={jest.fn()}
+      />
+    );
+    expect(getByText('2-min version')).toBeTruthy();
   });
 
   it('omits the why pill entirely when no motivation is set', () => {

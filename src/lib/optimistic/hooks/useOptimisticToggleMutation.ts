@@ -41,6 +41,7 @@ export function useOptimisticToggleMutation(
   serverMutation: (args: {
     habitId: Id<'habits'>;
     date: string;
+    kind?: 'full' | 'minimal';
   }) => Promise<unknown>,
   getCurrentStatus: (habitId: Id<'habits'>, date: string) => boolean,
   options?: OptimisticToggleOptions
@@ -51,6 +52,7 @@ export function useOptimisticToggleMutation(
     async (args: {
       habitId: Id<'habits'>;
       date: string;
+      kind?: 'full' | 'minimal';
     }): Promise<ToggleMutationResult> => {
       const currentlyCompleted = getCurrentStatus(args.habitId, args.date);
       const toCompleted = !currentlyCompleted;
@@ -59,6 +61,7 @@ export function useOptimisticToggleMutation(
         date: args.date,
         habitId: args.habitId,
         toCompleted,
+        ...(toCompleted && args.kind ? { kind: args.kind } : {}),
       };
 
       // If offline, queue immediately without attempting server call
@@ -83,7 +86,11 @@ export function useOptimisticToggleMutation(
 
       // Online path: try server mutation
       try {
-        await serverMutation(args);
+        await serverMutation({
+          date: args.date,
+          habitId: args.habitId,
+          ...(toCompleted && args.kind ? { kind: args.kind } : {}),
+        });
         optimisticStore.confirm(operationId);
         return { queued: false };
       } catch (error) {

@@ -1,44 +1,58 @@
 /**
- * useCalendarHandlers
- * Calendar toggle handler for habit detail screen
- *
- * Features:
- * - Haptic feedback on interactions
- * - Accessible error handling
- * - Screen reader announcements for state changes
- * - Timezone-aware habit toggling
+ * useCalendarHandlers — calendar toggle + swipe actions for habit detail.
+ * Routes completions through the optimistic/offline-queue path.
  */
-
 import { useCallback, useRef } from 'react';
-import { Alert, AccessibilityInfo } from 'react-native';
 import type { Id } from '../../../convex/_generated/dataModel';
-import { triggerHaptic } from '../../utils/haptics';
+import { useIsOnline } from '../../contexts/NetworkStatusContext/hooks';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
+import { useOptimisticToggleMutation } from '../../lib/optimistic';
+import { getLocalDateString } from '../../utils/getLocalDateString';
 import type { Habit } from './HabitDetailScreen.types';
-import { ERROR_MESSAGES } from '../../constants/errorMessages';
+import { runHabitDayToggle } from './runHabitDayToggle';
 import { useSwipeActions } from './useSwipeActions';
 
 interface UseCalendarHandlersProps {
   habit: Habit | null;
+  completedDates: Set<string>;
+  isCompletedToday: boolean;
   onArchive?: (habitId: Id<'habits'>) => void;
   onClose: () => void;
   onDelete?: (habitId: Id<'habits'>) => void;
   setPendingArchive: (pending: boolean) => void;
   setPendingDelete: (pending: boolean) => void;
   setPendingToggleDate: (date: string | null) => void;
+  setPendingMinimal: (pending: boolean) => void;
 }
 
 export const useCalendarHandlers = ({
   habit,
+  completedDates,
+  isCompletedToday,
   onArchive,
   onClose,
   onDelete,
   setPendingArchive,
   setPendingDelete,
   setPendingToggleDate,
+  setPendingMinimal,
 }: UseCalendarHandlersProps) => {
+  const isOnline = useIsOnline();
   const toggleHabitMutation = useToggleHabitWithTimezone();
   const togglingRef = useRef(false);
+  const completedRef = useRef(isCompletedToday);
+  completedRef.current = isCompletedToday;
+  const datesRef = useRef(completedDates);
+  datesRef.current = completedDates;
+
+  const optimisticToggle = useOptimisticToggleMutation(
+    toggleHabitMutation,
+    (_habitId, date) => {
+      if (date === getLocalDateString()) return completedRef.current;
+      return datesRef.current.has(date);
+    },
+    { isOnline }
+  );
 
   const swipeActions = useSwipeActions({
     habit,
@@ -49,49 +63,47 @@ export const useCalendarHandlers = ({
     setPendingDelete,
   });
 
+  const runToggle = useCallback(
+    (date: string, wasCompleted: boolean, kind?: 'full' | 'minimal') => {
+      if (togglingRef.current || !habit?._id) return;
+      togglingRef.current = true;
+      void runHabitDayToggle({
+        date,
+        habitId: habit._id,
+        habitName: habit.name,
+        kind,
+        setPendingMinimal,
+        setPendingToggleDate,
+        toggle: optimisticToggle,
+        wasCompleted,
+      }).finally(() => {
+        togglingRef.current = false;
+      });
+    },
+    [
+      habit?._id,
+      habit?.name,
+      optimisticToggle,
+      setPendingMinimal,
+      setPendingToggleDate,
+    ]
+  );
+
   const handleCalendarDayPress = useCallback(
     (date: string, wasCompleted: boolean): void => {
-      if (togglingRef.current || !habit?._id) return;
-
-      const inputDate = new Date(date);
-      const todayDate = new Date();
-      inputDate.setHours(0, 0, 0, 0);
-      todayDate.setHours(0, 0, 0, 0);
-      if (inputDate > todayDate) return;
-
-      togglingRef.current = true;
-      setPendingToggleDate(date);
-      void triggerHaptic(wasCompleted ? 'toggle' : 'success');
-
-      const dateFormatted = new Date(date).toLocaleDateString('en-US', {
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric',
-      });
-      const newState = wasCompleted ? 'marked incomplete' : 'marked complete';
-
-      void toggleHabitMutation({ date, habitId: habit._id })
-        .then(() => {
-          const announcement = `${habit.name} on ${dateFormatted} ${newState}.`;
-          if (__DEV__) console.log('A11y announcement:', announcement);
-          setTimeout(() => {
-            AccessibilityInfo.announceForAccessibility(announcement);
-          }, 200);
-        })
-        .catch((error: unknown) => {
-          if (__DEV__) console.error('Failed to toggle habit:', error);
-          Alert.alert('Error', ERROR_MESSAGES.DATA_OPS.TOGGLE_HABIT_FAILED);
-        })
-        .finally(() => {
-          togglingRef.current = false;
-          setPendingToggleDate(null);
-        });
+      runToggle(date, wasCompleted);
     },
-    [habit?._id, habit?.name, toggleHabitMutation, setPendingToggleDate]
+    [runToggle]
   );
+
+  const handleMinimalCompleteToday = useCallback((): void => {
+    if (isCompletedToday) return;
+    runToggle(getLocalDateString(), false, 'minimal');
+  }, [isCompletedToday, runToggle]);
 
   return {
     handleCalendarDayPress,
+    handleMinimalCompleteToday,
     ...swipeActions,
   };
 };

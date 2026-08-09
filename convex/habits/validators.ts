@@ -93,6 +93,7 @@ export const trackingRecordValidator = v.object({
   completed: v.boolean(),
   date: v.string(),
   habitId: v.id('habits'),
+  kind: v.optional(v.union(v.literal('full'), v.literal('minimal'))),
   // Legacy minutes completion value from removed minutes-goal feature.
   minutes: v.optional(v.number()),
   userId: v.optional(v.string()),

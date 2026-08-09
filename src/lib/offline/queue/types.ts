@@ -38,6 +38,8 @@ export interface ToggleCompletionPayload {
   date: string;
   /** Whether the habit is being marked complete (true) or incomplete (false) */
   toCompleted: boolean;
+  /** Completion intensity when marking complete. Absent means full. */
+  kind?: 'full' | 'minimal';
 }
 
 /**

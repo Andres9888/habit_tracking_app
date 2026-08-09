@@ -56,12 +56,15 @@ function HabitDetailScreenContent({
     visible,
   });
   const calendarHandlers = useCalendarHandlers({
+    completedDates: screenState.completedDates,
     habit: displayHabit,
+    isCompletedToday: screenState.isCompletedToday,
     onArchive,
     onClose,
     onDelete,
     setPendingArchive: screenState.setPendingArchive,
     setPendingDelete: screenState.setPendingDelete,
+    setPendingMinimal: screenState.setPendingMinimal,
     setPendingToggleDate: screenState.setPendingToggleDate,
   });
   const handleEdit = () => {
@@ -123,10 +126,12 @@ function HabitDetailScreenContent({
                   completedDates={screenState.completedDates}
                   habit={habitWithStreaks}
                   isCompletedToday={screenState.isCompletedToday}
+                  isMinimalToday={screenState.isMinimalToday}
                   pendingToggleDate={screenState.pendingToggleDate}
                   visible={visible}
                   onDayPress={calendarHandlers.handleCalendarDayPress}
                   onEdit={handleEdit}
+                  onMinimalToday={calendarHandlers.handleMinimalCompleteToday}
                   onPinnedChange={handlePinnedChange}
                 />
               </View>

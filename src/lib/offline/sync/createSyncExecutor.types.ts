@@ -4,6 +4,7 @@ export interface ConvexMutations {
   toggleHabit: (args: {
     habitId: Id<'habits'>;
     date: string;
+    kind?: 'full' | 'minimal';
   }) => Promise<unknown>;
   createHabit: (args: {
     name: string;

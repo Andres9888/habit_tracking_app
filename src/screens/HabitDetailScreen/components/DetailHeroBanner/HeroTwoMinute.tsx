@@ -1,77 +1,55 @@
 /**
- * HeroTwoMinute — "Only have 2 minutes?" escape hatch under the complete bar.
- *
- * Tapping it reveals a smaller-ask framing rather than logging anything: the
- * point is to lower the bar on a bad day, not to record a different kind of
- * completion (the data model has one completion per day).
+ * HeroTwoMinute — secondary outline CTA that logs today's completion as minimal.
+ * Hidden by the parent once today is already complete.
  */
-import { useState } from 'react';
 import { Pressable, Text } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
-import { useReduceMotion } from '../../../../hooks/useReduceMotion';
-import { durations } from '../../../../theme/animations';
 import { borderRadius, spacing } from '../../../../theme/spacing';
 import { fontWeights } from '../../../../theme/typography';
 import type { InsightPalette } from '../../insightPalette';
 
 interface HeroTwoMinuteProps {
-  /** Open on mount — the recovery state leads with the smaller ask. */
-  defaultExpanded?: boolean;
-  hint: string;
+  disabled?: boolean;
   palette: InsightPalette;
+  onPress: () => void;
 }
 
 export function HeroTwoMinute({
-  defaultExpanded = false,
-  hint,
+  disabled = false,
   palette,
+  onPress,
 }: HeroTwoMinuteProps) {
-  const [expanded, setExpanded] = useState(defaultExpanded);
-  const reduceMotion = useReduceMotion();
-
   return (
-    <>
-      <Pressable
-        accessibilityHint='Shows a smaller version of this habit to fall back on'
-        accessibilityLabel='Only have 2 minutes?'
-        accessibilityRole='button'
-        accessibilityState={{ expanded }}
-        hitSlop={12}
+    <Pressable
+      accessibilityHint='Logs today as the smaller 2-minute version of this habit'
+      accessibilityLabel='Do the 2-minute version — it counts'
+      accessibilityRole='button'
+      accessibilityState={{ disabled }}
+      disabled={disabled}
+      hitSlop={8}
+      style={{
+        alignItems: 'center',
+        borderColor: palette.ctaGreen,
+        borderRadius: borderRadius.medium,
+        borderWidth: 1.5,
+        justifyContent: 'center',
+        marginTop: spacing.md,
+        minHeight: 44,
+        opacity: disabled ? 0.5 : 1,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+      }}
+      onPress={onPress}
+    >
+      <Text
         style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginTop: spacing.md,
-          minHeight: 24,
+          color: palette.ctaGreen,
+          fontSize: 14,
+          fontWeight: fontWeights.semibold,
+          textAlign: 'center',
         }}
-        onPress={() => setExpanded((open) => !open)}
       >
-        <Text
-          style={{
-            color: palette.ctaGreen,
-            fontSize: 13,
-            fontWeight: fontWeights.semibold,
-          }}
-        >
-          {expanded ? 'Only have 2 minutes? ↓' : 'Only have 2 minutes? →'}
-        </Text>
-      </Pressable>
-      {expanded ? (
-        <Animated.Text
-          entering={reduceMotion ? undefined : FadeIn.duration(durations.quick)}
-          style={{
-            backgroundColor: palette.bandSoft,
-            borderRadius: borderRadius.medium,
-            color: palette.bandMuted,
-            fontSize: 13,
-            lineHeight: 19,
-            marginTop: spacing.sm,
-            paddingHorizontal: 15,
-            paddingVertical: 12,
-          }}
-        >
-          {hint}
-        </Animated.Text>
-      ) : null}
-    </>
+        Do the 2-minute version — it counts
+      </Text>
+    </Pressable>
   );
 }

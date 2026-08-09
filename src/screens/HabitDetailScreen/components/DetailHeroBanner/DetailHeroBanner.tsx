@@ -29,10 +29,13 @@ interface DetailHeroBannerProps {
   daysDone: number;
   habit: Habit;
   isCompletedToday: boolean;
+  /** Today's completion used the 2-minute version. */
+  isMinimalToday?: boolean;
   /** Yesterday was scheduled and skipped — show the recovery state. */
   isMissedYesterday: boolean;
   isToggling: boolean;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
+  onMinimalToday: () => void;
 }
 
 export function DetailHeroBanner({
@@ -40,9 +43,11 @@ export function DetailHeroBanner({
   daysDone,
   habit,
   isCompletedToday,
+  isMinimalToday = false,
   isMissedYesterday,
   isToggling,
   onDayPress,
+  onMinimalToday,
 }: DetailHeroBannerProps) {
   const palette = useInsightPalette();
   const wash = isCompletedToday
@@ -76,9 +81,10 @@ export function DetailHeroBanner({
         completedAtLabel={completedAtLabel}
         habit={habit}
         isCompletedToday={isCompletedToday}
-        isRecovering={isMissedYesterday}
+        isMinimalToday={isMinimalToday}
         isToggling={isToggling}
         palette={palette}
+        onMinimalToday={onMinimalToday}
         onToggleToday={() => onDayPress(getLocalDateString(), isCompletedToday)}
       />
     </LinearGradient>

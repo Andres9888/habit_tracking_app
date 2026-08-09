@@ -1,11 +1,5 @@
 /**
- * HeroTodayActions — the part of the hero that changes when today is logged.
- *
- * Open (frame 1): filled "Complete today" block + the two-minute escape hatch.
- * Logged (frame 2): the check-in confirmation + the note prompt, which the
- * design moves up into the band at exactly this moment. HabitDetailContent drops
- * the foot-of-stack note card while this one is showing so there is never one
- * note bound to two inputs.
+ * HeroTodayActions — open: complete + 2-minute CTA; logged: check-in + note.
  */
 import { View } from 'react-native';
 import type { Habit } from '../../../../features/habits/types';
@@ -13,8 +7,8 @@ import { spacing } from '../../../../theme/spacing';
 import type { InsightPalette } from '../../insightPalette';
 import { DetailCompleteButton } from '../DetailCompleteButton';
 import { HabitNoteCard } from '../HabitNoteCard';
-import { milestoneCaption, nextMilestoneProgress } from '../ThisWeekCard';
-import { twoMinuteHint } from './DetailHeroBanner.utils';
+import { nextMilestoneProgress } from '../ThisWeekCard';
+import { checkInCaption } from './checkInCaption';
 import { HeroCheckInCard } from './HeroCheckInCard';
 import { HeroTwoMinute } from './HeroTwoMinute';
 
@@ -22,10 +16,11 @@ interface HeroTodayActionsProps {
   completedAtLabel?: string;
   habit: Habit;
   isCompletedToday: boolean;
-  /** Yesterday was missed — open the two-minute hatch by default. */
-  isRecovering?: boolean;
+  /** Today's completion was the 2-minute version. */
+  isMinimalToday?: boolean;
   isToggling: boolean;
   palette: InsightPalette;
+  onMinimalToday: () => void;
   onToggleToday: () => void;
 }
 
@@ -33,14 +28,15 @@ export function HeroTodayActions({
   completedAtLabel,
   habit,
   isCompletedToday,
-  isRecovering = false,
+  isMinimalToday = false,
   isToggling,
+  onMinimalToday,
   onToggleToday,
   palette,
 }: HeroTodayActionsProps) {
   const currentStreak = habit.currentStreak ?? 0;
   const progress = nextMilestoneProgress(currentStreak);
-  const caption = progress ? milestoneCaption(progress) : undefined;
+  const caption = checkInCaption({ isMinimal: isMinimalToday, progress });
 
   if (isCompletedToday) {
     return (
@@ -71,9 +67,9 @@ export function HeroTodayActions({
         onPress={onToggleToday}
       />
       <HeroTwoMinute
-        defaultExpanded={isRecovering}
-        hint={twoMinuteHint(habit)}
+        disabled={isToggling}
         palette={palette}
+        onPress={onMinimalToday}
       />
     </View>
   );
