@@ -72,7 +72,6 @@ export function PreviewContent({
         importButtonStyle={animatedStyles.importButtonStyle}
         isImported={isImported}
         isImporting={isImporting}
-        startSmallVersion={template?.startSmallVersion}
         successPillStyle={animatedStyles.successPillStyle}
         templateName={template?.name ?? ''}
         onCustomize={handlers.handleCustomize}

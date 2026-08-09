@@ -89,7 +89,8 @@ export function buildDetailPalette(
     gold: isDark ? '#F0C462' : '#E8B94D',
     goldFill: isDark ? 'rgba(240,196,98,0.18)' : '#F2E3B8',
 
-    addBg: isDark ? '#2FA36F' : '#2FA36F',
+    // Light darkened for WCAG 4.5:1 on white label; dark keeps the brighter green.
+    addBg: isDark ? '#2FA36F' : '#1F8A5B',
     addFg: '#FFFFFF',
     addedBg: isDark ? 'rgba(52,211,153,0.16)' : '#DDF2E4',
     addedFg: isDark ? '#4ADE9E' : '#157A4E',

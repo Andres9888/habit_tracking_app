@@ -40,20 +40,14 @@ export const footerStyles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 999,
     elevation: 6,
+    height: 56,
     justifyContent: 'center',
-    minHeight: 56,
-    paddingVertical: 10,
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.28,
     shadowRadius: 14,
   },
+  // Single row for label or spinner+label — subline was removed (duplicated Start small).
   importButtonContent: {
-    alignItems: 'center',
-    gap: 2,
-    justifyContent: 'center',
-    paddingHorizontal: 16,
-  },
-  importButtonRow: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: 8,
@@ -62,12 +56,6 @@ export const footerStyles = StyleSheet.create({
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: fontWeights.bold,
-  },
-  importSubline: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 12,
-    fontWeight: fontWeights.semibold,
-    opacity: 0.85,
   },
   successButton: {
     alignItems: 'center',

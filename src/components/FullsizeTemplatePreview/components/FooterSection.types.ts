@@ -16,8 +16,6 @@ export interface FooterSectionProps {
   customizeButtonStyle: object;
   checkmarkAnimatedStyle: object;
   successPillStyle: object;
-  /** Shown under the Add CTA while deciding; omitted once imported. */
-  startSmallVersion?: string;
   createPressHandlers: (
     scale: SharedValue<number>,
     scaleValue?: number

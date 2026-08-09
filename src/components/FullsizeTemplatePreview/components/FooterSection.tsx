@@ -24,7 +24,6 @@ export function FooterSection({
   customizeButtonStyle,
   checkmarkAnimatedStyle,
   successPillStyle,
-  startSmallVersion,
   createPressHandlers,
   importButtonScale,
   customizeButtonScale,
@@ -60,7 +59,6 @@ export function FooterSection({
             importLabel={IMPORT_LABEL}
             isImported={isImported}
             isImporting={isImporting}
-            startSmallVersion={startSmallVersion}
             successPillStyle={successPillStyle}
             templateName={templateName}
             onImport={onImport}

@@ -1,6 +1,6 @@
 /**
  * Science drill-down — "Why it works" credibility card styles: accent bar,
- * gradient header with badge + read-paper pill, and the lead/evidence body.
+ * gradient header with read-paper pill, and the lead/evidence body.
  *
  * Layout only — colors come from `useDetailPalette()` at the call site.
  */
@@ -8,11 +8,13 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
+import { airy } from '../../../theme/airyScale';
 import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 
 export const scienceWhyStyles = StyleSheet.create({
   whyCard: {
-    borderRadius: 22,
+    // airy.cardRadius (24) — same token as science card + start-small panel.
+    borderRadius: airy.cardRadius,
     borderWidth: 1,
     overflow: 'hidden',
     position: 'relative',
@@ -28,38 +30,15 @@ export const scienceWhyStyles = StyleSheet.create({
     width: 4,
     zIndex: 2,
   },
-  // Mock lays the badge and Read-paper pill out as one row. Their combined
-  // intrinsic width overflows the card on a 375pt screen (and on any screen
-  // once Dynamic Type is on), so the row wraps rather than clipping the pill
-  // off the card edge.
+  // Pill-only header (badge removed — claim already on hero chip + overline).
   whyHeader: {
     alignItems: 'center',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     paddingHorizontal: spacing.base,
     paddingLeft: spacing.base + 2,
     paddingVertical: 14,
-  },
-  whyBadge: {
-    alignItems: 'center',
-    borderRadius: borderRadius.full,
-    flexDirection: 'row',
-    flexShrink: 1,
-    gap: 6,
-    paddingHorizontal: 13,
-    paddingVertical: 7,
-    ...shadows.subtle,
-  },
-  whyBadgeText: {
-    flexShrink: 1,
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.caption.fontSize,
-    fontWeight: fontWeights.bold,
-    letterSpacing: 1.1,
-    textTransform: 'uppercase',
   },
   whyReadBtn: {
     alignItems: 'center',

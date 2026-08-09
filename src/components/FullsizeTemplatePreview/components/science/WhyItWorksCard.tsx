@@ -1,9 +1,11 @@
 /**
- * "Why it works" — themed credibility card: accent bar, gradient header with a
- * Science-backed badge + Read paper pill, then a Literata lead and cited stat.
+ * "Why it works" — themed credibility card: accent bar, optional Read paper
+ * header, then a Literata lead and cited stat.
  *
- * SecLabel sits above the card like the other five sections. The badge is
- * claim-gated: it only appears when the template actually carries evidence.
+ * SecLabel sits above the card like the other five sections. The gradient
+ * header (paper pill only) is claim-gated via isScienceBacked and omitted
+ * when there is no paper link — the Science-backed claim already lives on
+ * the hero chip + THE EVIDENCE overline.
  */
 
 import React from 'react';
@@ -28,10 +30,11 @@ export function WhyItWorksCard({ template }: { template: Template }) {
 
   if (!lead && !evidence) return null;
 
-  // Eligibility lives in `isScienceBacked` so this badge and the hero chip can
+  // Eligibility lives in `isScienceBacked` so this header and the hero chip can
   // never disagree. It gates on authored backing only — never on the
-  // `scientificReference` fallback merged into `evidence` above.
-  const showHeader = isScienceBacked(template);
+  // `scientificReference` fallback merged into `evidence` above. Paper is
+  // required too: without it the header would be an empty gradient strip.
+  const showHeader = isScienceBacked(template) && Boolean(paper);
 
   return (
     <View>

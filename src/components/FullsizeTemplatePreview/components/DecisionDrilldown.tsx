@@ -2,9 +2,10 @@
  * Decision drill-down — outcome and actionability before evidence:
  * what you'll feel → start small → how to start.
  *
- * Shares the science-stack padding/gap rhythm so card widths stay consistent
- * when blocks are data-gated away. paddingBottom matches the stack gap so the
- * following ScienceDrilldown (paddingTop: 0) continues the same rhythm.
+ * Shares the science-stack padding/gap so card widths stay consistent when
+ * blocks are data-gated away. ScienceDrilldown does not continue this rhythm —
+ * it opens with an evidenceBreak chapter seam (~44px) so credibility reads as
+ * a new chapter, not the next card in the same list.
  */
 
 import React from 'react';
@@ -28,10 +29,8 @@ function hasDecisionContent(template: Template): boolean {
 export function DecisionDrilldown({ template }: { template: Template }) {
   if (!hasDecisionContent(template)) return null;
 
-  // paddingTop: 0 — DescriptionSection already provides spacing.lg below;
-  // keeping stack paddingTop would double the seam before the first block.
   return (
-    <View style={[s.stack, { paddingTop: 0 }]}>
+    <View style={s.stack}>
       <BenefitsBlock template={template} />
       <StartSmallSection startSmallVersion={template?.startSmallVersion} />
       <HowToStartBlock template={template} />

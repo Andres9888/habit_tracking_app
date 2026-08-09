@@ -34,7 +34,7 @@ export function ScienceDrilldown({ template }: { template: Template }) {
   if (!hasScienceContent(template)) return null;
 
   return (
-    <View style={[s.stack, { gap: 0, paddingTop: 0 }]}>
+    <View style={[s.stack, { gap: 0 }]}>
       <View style={s.evidenceBreak}>
         <View style={[s.evidenceRule, { backgroundColor: palette.border }]} />
         <Text style={[s.evidenceOverline, { color: palette.textSecondary }]}>

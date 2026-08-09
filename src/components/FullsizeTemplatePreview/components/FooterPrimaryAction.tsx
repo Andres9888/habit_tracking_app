@@ -2,8 +2,8 @@
  * Primary footer action for the template preview:
  * the import CTA, or the success pill once added.
  *
- * When a start-small version exists, a quiet subline under the label previews
- * the floor commitment before the tap — only while not yet imported.
+ * Single-line label only — Start small lives in its own panel above; a CTA
+ * subline duplicated that string, truncated, and failed contrast.
  */
 
 import React from 'react';
@@ -29,8 +29,6 @@ interface FooterPrimaryActionProps {
   importLabel: string;
   isImported: boolean;
   isImporting: boolean;
-  /** Floor version shown under the CTA while still deciding. */
-  startSmallVersion?: string;
   successPillStyle: object;
   templateName: string;
   onImport: () => void;
@@ -38,7 +36,6 @@ interface FooterPrimaryActionProps {
 
 export function FooterPrimaryAction(p: FooterPrimaryActionProps) {
   const palette = useDetailPalette();
-  const startWith = p.startSmallVersion?.trim();
 
   if (p.isImported) {
     return (
@@ -83,32 +80,16 @@ export function FooterPrimaryAction(p: FooterPrimaryActionProps) {
       onPress={p.onImport}
       {...p.createPressHandlers(p.importButtonScale)}
     >
-      {p.isImporting ? (
-        <View style={footerStyles.importButtonRow}>
+      <View style={footerStyles.importButtonContent}>
+        {p.isImporting ? (
           <ActivityIndicator color={palette.addFg} size='small' />
-          <Text
-            style={[footerStyles.importButtonText, { color: palette.addFg }]}
-          >
-            Adding…
-          </Text>
-        </View>
-      ) : (
-        <View style={footerStyles.importButtonContent}>
-          <Text
-            style={[footerStyles.importButtonText, { color: palette.addFg }]}
-          >
-            {p.importLabel}
-          </Text>
-          {startWith ? (
-            <Text
-              numberOfLines={1}
-              style={[footerStyles.importSubline, { color: palette.addFg }]}
-            >
-              {`Start with: ${startWith}`}
-            </Text>
-          ) : null}
-        </View>
-      )}
+        ) : null}
+        <Text
+          style={[footerStyles.importButtonText, { color: palette.addFg }]}
+        >
+          {p.isImporting ? 'Adding…' : p.importLabel}
+        </Text>
+      </View>
     </AnimatedPressable>
   );
 }
