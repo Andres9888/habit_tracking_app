@@ -41,11 +41,11 @@ export function BenefitsBlock({ template }: { template: Template }) {
               <View
                 style={[
                   b.benefitIcon,
-                  { backgroundColor: palette.addedBg },
+                  { backgroundColor: palette.greenTint },
                 ]}
               >
                 <Glyph
-                  color={palette.addedFg}
+                  color={palette.green}
                   size={iconSizes.medium - 1}
                   strokeWidth={2}
                 />

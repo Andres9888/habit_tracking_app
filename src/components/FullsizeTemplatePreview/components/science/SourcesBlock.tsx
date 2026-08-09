@@ -6,10 +6,11 @@
  * section used to be titled "The research" unconditionally, and because
  * `scientificReference` is populated on every template the fallback rendered a
  * research heading on all 318 — including the ~50 that correctly do NOT earn
- * the badge, over a row reading "Cirillo (2006) - The Pomodoro Technique" with
- * no authors, journal or year. The badge disappeared and the research framing
- * survived one section later, which undid the gate. When nothing here is
- * primary literature the section says "Further reading" instead.
+ * the badge. When nothing here is primary literature the section says
+ * "Further reading" instead.
+ *
+ * Disclaimer lives inside the card as a quiet footer so the page's last
+ * standalone voice is the timeline's miss-a-day reassurance, not the lawyer.
  */
 
 import React from 'react';
@@ -90,10 +91,16 @@ export function SourcesBlock({ template }: { template: Template }) {
             </AnimatedPressable>
           );
         })}
+        <Text
+          style={[
+            b.disclaimer,
+            divider,
+            { color: palette.textQuiet },
+          ]}
+        >
+          Summaries are educational, not medical advice.
+        </Text>
       </View>
-      <Text style={[b.disclaimer, { color: palette.textQuiet }]}>
-        Summaries are educational, not medical advice.
-      </Text>
     </View>
   );
 }

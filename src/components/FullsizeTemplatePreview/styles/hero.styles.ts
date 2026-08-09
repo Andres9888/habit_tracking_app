@@ -31,7 +31,7 @@ export const heroStyles = StyleSheet.create({
   heroGradient: {
     overflow: 'hidden',
     paddingBottom: 26,
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     paddingTop: 4,
     position: 'relative',
   },
@@ -68,7 +68,6 @@ export const heroStyles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 8,
     justifyContent: 'center',
-    paddingHorizontal: 4,
   },
   templateName: {
     alignSelf: 'stretch',

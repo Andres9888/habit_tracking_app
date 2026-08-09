@@ -30,8 +30,10 @@ export const scienceResearchStyles = StyleSheet.create({
   sourceMeta: { ...typography.caption, marginTop: 2 },
   sourceJournal: { fontStyle: 'italic' },
   disclaimer: {
-    ...typography.caption,
-    marginTop: spacing.sm,
-    paddingLeft: spacing.xs,
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 12,
+    lineHeight: 16,
+    paddingHorizontal: spacing.base,
+    paddingVertical: 12,
   },
 });

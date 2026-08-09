@@ -35,7 +35,11 @@ export function PreviewContent({
   return (
     <Animated.View
       testID='templates-preview-modal'
-      style={[layoutStyles.container, animatedStyles.contentStyle]}
+      style={[
+        layoutStyles.container,
+        { backgroundColor: palette.body },
+        animatedStyles.contentStyle,
+      ]}
     >
       <ModalHeader
         animatedBgStyle={animatedBgStyle}
@@ -68,6 +72,7 @@ export function PreviewContent({
         importButtonStyle={animatedStyles.importButtonStyle}
         isImported={isImported}
         isImporting={isImporting}
+        startSmallVersion={template?.startSmallVersion}
         successPillStyle={animatedStyles.successPillStyle}
         templateName={template?.name ?? ''}
         onCustomize={handlers.handleCustomize}

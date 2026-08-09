@@ -42,8 +42,8 @@ export function HowToStartBlock({ template }: { template: Template }) {
               { paddingBottom: i === steps.length - 1 ? 0 : 14 },
             ]}
           >
-            <View style={[b.stepNum, { backgroundColor: palette.addedBg }]}>
-              <Text style={[b.stepNumText, { color: palette.addedFg }]}>
+            <View style={[b.stepNum, { backgroundColor: palette.greenTint }]}>
+              <Text style={[b.stepNumText, { color: palette.green }]}>
                 {i + 1}
               </Text>
             </View>

@@ -38,7 +38,7 @@ export function useScienceCard(): ScienceCard {
         { overflow: 'hidden', padding: 0 },
       ],
       divider: { borderTopColor: palette.border, borderTopWidth: 1 },
-      glyph: palette.textSecondary,
+      glyph: palette.textPrimary,
     };
   }, [palette]);
 }

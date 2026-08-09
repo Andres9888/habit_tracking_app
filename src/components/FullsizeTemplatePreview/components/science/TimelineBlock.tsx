@@ -45,7 +45,7 @@ export function TimelineBlock({ template }: { template: Template }) {
                         }
                       : {
                           backgroundColor: palette.card,
-                          borderColor: palette.addBg,
+                          borderColor: palette.green,
                         },
                   ]}
                 >

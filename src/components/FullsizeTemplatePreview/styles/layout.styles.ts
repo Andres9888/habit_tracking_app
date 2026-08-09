@@ -1,9 +1,9 @@
 /**
- * Layout styles for FullsizeTemplatePreview
+ * Layout styles for FullsizeTemplatePreview.
+ * Container background is applied at the call site via useDetailPalette().
  */
 
 import { StyleSheet } from 'react-native';
-import { colors } from '@/theme/colors';
 
 export const layoutStyles = StyleSheet.create({
   bottomSpacer: {
@@ -17,7 +17,6 @@ export const layoutStyles = StyleSheet.create({
     width: 40,
   },
   container: {
-    backgroundColor: colors.gray[50],
     flex: 1,
   },
   contentContainer: {
@@ -26,7 +25,7 @@ export const layoutStyles = StyleSheet.create({
   header: {
     alignItems: 'flex-end',
     paddingBottom: 8,
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     zIndex: 10,
   },
 });

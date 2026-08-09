@@ -16,7 +16,9 @@ export const scienceWhyStyles = StyleSheet.create({
     borderWidth: 1,
     overflow: 'hidden',
     position: 'relative',
-    ...shadows.card,
+    // Warm-paper contrast dissolves the default 0.06 card shadow; cardLifted
+    // is the theme's documented remedy (surfaces.ts / spacing.ts).
+    ...shadows.cardLifted,
   },
   whyAccentBar: {
     bottom: 0,
@@ -78,14 +80,6 @@ export const scienceWhyStyles = StyleSheet.create({
     paddingHorizontal: spacing.base,
     paddingLeft: spacing.base + 2,
     paddingVertical: spacing.base,
-  },
-  whyOverline: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.caption.fontSize,
-    fontWeight: fontWeights.bold,
-    letterSpacing: 1.5,
-    marginBottom: spacing.sm,
-    textTransform: 'uppercase',
   },
   whyLead: {
     fontFamily: fontFamilies.primary.display,

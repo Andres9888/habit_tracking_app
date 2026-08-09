@@ -81,7 +81,7 @@ export function buildDetailPalette(
     textPrimary: colors.text.primary,
     textSecondary: colors.text.secondary,
     textTertiary: colors.text.tertiary,
-    textQuiet: isDark ? colors.gray[400] : colors.gray[400],
+    textQuiet: isDark ? colors.gray[400] : colors.gray[500],
 
     green: isDark ? '#4ADE9E' : '#15793C',
     greenTint: isDark ? 'rgba(52,211,153,0.14)' : '#DCF7E4',
