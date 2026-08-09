@@ -13,13 +13,14 @@ import {
   exitEasing,
 } from '../../../theme/animations';
 import { CatalogFilteredList } from './CatalogFilteredList';
+import type { OnTemplatePreview } from '../TemplatesScreen.types';
 
 interface CatalogFilteredBranchProps {
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
   listEmptyComponent?: ReactElement;
   onImport: (template: Doc<'templates'>) => void;
-  onPreview: (template: Doc<'templates'>) => void;
+  onPreview: OnTemplatePreview;
   selectedCategoryId: string;
   templates: Doc<'templates'>[];
 }

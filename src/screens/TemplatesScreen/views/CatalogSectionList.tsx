@@ -13,6 +13,7 @@ import { TemplateReadRow } from '../components/ExploreAllSection/TemplateReadRow
 import { TEMPLATE_READ_ROW_PADDING } from '../components/ExploreAllSection/TemplateReadRow.styles';
 import { SectionHeader } from '../components/SectionHeader';
 import type { CategoryGroup } from '../components/ExploreAllSection/ExploreAllSection.types';
+import type { OnTemplatePreview } from '../TemplatesScreen.types';
 
 interface CatalogSectionListProps {
   groups: CategoryGroup[];
@@ -21,7 +22,7 @@ interface CatalogSectionListProps {
   /** Rendered when a search clears every section. */
   listEmptyComponent?: ReactElement;
   onImport: (template: Doc<'templates'>) => void;
-  onPreview: (template: Doc<'templates'>) => void;
+  onPreview: OnTemplatePreview;
 }
 
 interface CatalogSection {

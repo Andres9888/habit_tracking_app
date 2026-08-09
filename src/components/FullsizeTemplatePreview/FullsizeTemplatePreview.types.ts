@@ -4,7 +4,13 @@
 
 import type { SharedValue } from 'react-native-reanimated';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
-import type { TemplatePreviewAnchor } from '../../screens/TemplatesScreen/TemplatesScreen.types';
+
+/**
+ * Scroll target when the preview opens: default top, or jump to the science
+ * group. Canonical home is here — the screens layer re-exports it, so the
+ * component never depends on a screen module.
+ */
+export type TemplatePreviewAnchor = 'top' | 'science';
 
 /** Props for the main FullsizeTemplatePreview component */
 export interface FullsizeTemplatePreviewProps {

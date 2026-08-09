@@ -4,6 +4,7 @@
 
 import type { ReactNode } from 'react';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
+import type { OnTemplatePreview } from '../TemplatesScreen.types';
 
 export interface MainBrowseViewProps {
   allTemplates: Doc<'templates'>[];
@@ -14,5 +15,5 @@ export interface MainBrowseViewProps {
   modals: ReactNode;
   onClose: () => void;
   onPopularImport: (template: Doc<'templates'>) => void;
-  onPreview: (template: Doc<'templates'>) => void;
+  onPreview: OnTemplatePreview;
 }

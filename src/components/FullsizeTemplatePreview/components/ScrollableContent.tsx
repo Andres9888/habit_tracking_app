@@ -8,7 +8,7 @@ import Animated, {
   type AnimatedStyle,
   type useAnimatedScrollHandler,
 } from 'react-native-reanimated';
-import type { TemplatePreviewAnchor } from '@/screens/TemplatesScreen/TemplatesScreen.types';
+import type { TemplatePreviewAnchor } from '../FullsizeTemplatePreview.types';
 import { HeroSection } from './HeroSection';
 import { DescriptionSection } from './DescriptionSection';
 import { DecisionDrilldown } from './DecisionDrilldown';
@@ -70,9 +70,14 @@ export function ScrollableContent({
         scrollRef.current?.scrollTo({ animated: false, y });
         hasScrolledRef.current = true;
       },
-      () => {}
+      () => {
+        // Measurement can fail before first layout settles; landing at the
+        // end (science is the last group) beats silently ignoring the link.
+        scrollRef.current?.scrollToEnd({ animated: false });
+        hasScrolledRef.current = true;
+      }
     );
-  }, [canAnchorScience, initialAnchor, reducedMotion, visible]);
+  }, [canAnchorScience, initialAnchor, visible]);
 
   return (
     <Animated.ScrollView

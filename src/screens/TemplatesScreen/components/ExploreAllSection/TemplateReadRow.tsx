@@ -15,13 +15,14 @@ import { useBrowserPalette } from '../../browserPalette';
 import { TemplateReadRowFooter } from './TemplateReadRowFooter';
 import { TemplateReadRowHeader } from './TemplateReadRowHeader';
 import { s } from './TemplateReadRow.styles';
+import type { OnTemplatePreview } from '../../TemplatesScreen.types';
 
 interface TemplateReadRowProps {
   isImported: boolean;
   isImporting: boolean;
   item: Doc<'templates'>;
   onImport: (template: Doc<'templates'>) => void;
-  onPreview: (template: Doc<'templates'>) => void;
+  onPreview: OnTemplatePreview;
 }
 
 function TemplateReadRowImpl({

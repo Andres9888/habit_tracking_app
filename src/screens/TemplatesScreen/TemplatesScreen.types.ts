@@ -31,7 +31,8 @@ export interface ScrollMetrics {
 }
 
 /** Scroll target when opening the fullsize habit preview. */
-export type TemplatePreviewAnchor = 'top' | 'science';
+export type { TemplatePreviewAnchor } from '../../components/FullsizeTemplatePreview/FullsizeTemplatePreview.types';
+import type { TemplatePreviewAnchor } from '../../components/FullsizeTemplatePreview/FullsizeTemplatePreview.types';
 
 export type OnTemplatePreview = (
   template: Doc<'templates'>,

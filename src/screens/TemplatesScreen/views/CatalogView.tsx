@@ -15,6 +15,7 @@ import { CatalogHeader } from './CatalogHeader';
 import { CATALOG_ALL_ID, CatalogChipRail } from './CatalogChipRail';
 import { CatalogFilteredBranch } from './CatalogFilteredBranch';
 import { CatalogSectionList } from './CatalogSectionList';
+import type { OnTemplatePreview } from '../TemplatesScreen.types';
 
 interface CatalogViewProps {
   allTemplates: Doc<'templates'>[];
@@ -24,7 +25,7 @@ interface CatalogViewProps {
   initialCategoryId?: string;
   onBack: () => void;
   onImport: (template: Doc<'templates'>) => void;
-  onPreview: (template: Doc<'templates'>) => void;
+  onPreview: OnTemplatePreview;
 }
 
 export function CatalogView(p: CatalogViewProps) {
