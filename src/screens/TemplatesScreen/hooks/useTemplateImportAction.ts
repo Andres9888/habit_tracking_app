@@ -42,7 +42,9 @@ export function useTemplateImportAction(o: UseTemplateImportActionOptions) {
             trackLibraryEvent({
               type: 'template_added',
               templateId: id,
-              source: 'details',
+              // This path is only reached from the customize sheet; the
+              // preview's direct Add goes through handleDetailsDirectImport.
+              source: 'customize',
             });
           }
           o.setShowCustomizeModal(false);

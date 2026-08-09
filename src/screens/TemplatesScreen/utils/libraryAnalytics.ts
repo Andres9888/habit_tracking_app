@@ -6,7 +6,8 @@ export type TemplateImportSource =
   | 'popular'
   | 'prescription'
   | 'catalog'
-  | 'details';
+  | 'details'
+  | 'customize';
 
 export type LibraryAnalyticsEvent =
   | {

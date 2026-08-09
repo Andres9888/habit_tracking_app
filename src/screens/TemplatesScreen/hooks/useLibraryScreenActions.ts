@@ -44,13 +44,18 @@ export function useLibraryScreenActions({
 
   const makeImportHandler = useCallback(
     (source: TemplateImportSource) => (template: Doc<'templates'>) => {
-      trackLibraryEvent({
-        type: 'template_added',
-        templateId: template._id,
-        source,
-      });
       state.setPreviewTemplate(template);
-      void handlers.handleDirectImport(template._id);
+      // Tracked on the confirmed outcome, not on the tap — failed and
+      // duplicate imports must not count as adds.
+      void handlers.handleDirectImport(template._id).then((outcome) => {
+        if (outcome === 'added') {
+          trackLibraryEvent({
+            type: 'template_added',
+            templateId: template._id,
+            source,
+          });
+        }
+      });
     },
     [handlers, state]
   );
@@ -62,12 +67,15 @@ export function useLibraryScreenActions({
 
   const handleDetailsDirectImport = useCallback(
     async (id: Id<'templates'>) => {
-      trackLibraryEvent({
-        type: 'template_added',
-        templateId: id,
-        source: 'details',
-      });
-      return handlers.handleDirectImport(id);
+      const outcome = await handlers.handleDirectImport(id);
+      if (outcome === 'added') {
+        trackLibraryEvent({
+          type: 'template_added',
+          templateId: id,
+          source: 'details',
+        });
+      }
+      return outcome;
     },
     [handlers]
   );
