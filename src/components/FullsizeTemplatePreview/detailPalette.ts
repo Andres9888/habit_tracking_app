@@ -90,7 +90,9 @@ export function buildDetailPalette(
     goldFill: isDark ? 'rgba(240,196,98,0.18)' : '#F2E3B8',
 
     // Light darkened for WCAG 4.5:1 on white label; dark keeps the brighter green.
-    addBg: isDark ? '#2FA36F' : '#1F8A5B',
+    // Light value measured at 4.86:1 against white (WCAG AA for the 17px
+    // bold CTA label; #1F8A5B sat at 4.33 and failed).
+    addBg: isDark ? '#2FA36F' : '#1E8153',
     addFg: '#FFFFFF',
     addedBg: isDark ? 'rgba(52,211,153,0.16)' : '#DDF2E4',
     addedFg: isDark ? '#4ADE9E' : '#157A4E',

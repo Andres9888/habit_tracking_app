@@ -9,10 +9,13 @@ import type { Template } from '../../../types/template';
 export function hasScienceContent(template: Template | null | undefined): boolean {
   if (!template) return false;
   const hasWhy = Boolean(template.lead?.trim() || template.evidence?.trim());
-  const hasTimeline = Boolean(template.timeline && template.timeline.length > 0);
   const hasSources = Boolean(
     (template.sources && template.sources.length > 0) ||
       template.scientificReference?.trim()
   );
-  return hasWhy || hasTimeline || hasSources;
+  // A timeline alone is expectations, not evidence — it must not open a
+  // section labelled "THE EVIDENCE". Timeline renders only alongside actual
+  // backing (every current template carries a scientificReference, so this
+  // gate is prophylactic, not behavior-changing today).
+  return hasWhy || hasSources;
 }

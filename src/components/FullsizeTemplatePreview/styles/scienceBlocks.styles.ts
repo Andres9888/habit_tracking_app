@@ -17,7 +17,7 @@ export const scienceBlockStyles = StyleSheet.create({
     flexDirection: 'row',
     gap: spacing.md,
     paddingHorizontal: spacing.base,
-    paddingVertical: 13,
+    paddingVertical: 14,
   },
   benefitIcon: {
     alignItems: 'center',

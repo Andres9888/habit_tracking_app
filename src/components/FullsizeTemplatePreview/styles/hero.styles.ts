@@ -22,10 +22,12 @@ export const heroStyles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
   },
+  // Left-aligned: this paragraph is the hinge where the centered hero hands
+  // off to the left-aligned card stack — center-ragging it across the full
+  // gutter width made the transition lurch.
   descriptionText: {
     fontFamily: fontFamilies.primary.text,
     ...HERO_DESCRIPTION,
-    textAlign: 'center',
   },
   heroContent: { alignItems: 'center' },
   heroGradient: {
@@ -79,10 +81,9 @@ export const heroStyles = StyleSheet.create({
   },
   tagline: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15.5,
-    lineHeight: 21,
+    fontSize: 14,
+    lineHeight: 20,
     marginBottom: 16,
-    marginTop: -6,
     maxWidth: 300,
     textAlign: 'center',
   },

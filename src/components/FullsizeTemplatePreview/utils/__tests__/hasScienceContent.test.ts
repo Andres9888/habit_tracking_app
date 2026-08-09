@@ -34,7 +34,7 @@ describe('hasScienceContent', () => {
     expect(hasScienceContent(template({ evidence: 'Study Y' }))).toBe(true);
   });
 
-  it('returns true when timeline is present', () => {
+  it('returns false for a timeline alone — expectations are not evidence', () => {
     expect(
       hasScienceContent(
         template({
@@ -43,7 +43,7 @@ describe('hasScienceContent', () => {
           ],
         })
       )
-    ).toBe(true);
+    ).toBe(false);
   });
 
   it('returns true when sources or scientificReference is present', () => {

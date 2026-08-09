@@ -14,7 +14,7 @@ export const scienceResearchStyles = StyleSheet.create({
     flexDirection: 'row',
     gap: spacing.md,
     paddingHorizontal: spacing.base,
-    paddingVertical: 12,
+    paddingVertical: 14,
   },
   sourceNum: {
     fontFamily: fontFamilies.monospace,
@@ -34,6 +34,6 @@ export const scienceResearchStyles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     paddingHorizontal: spacing.base,
-    paddingVertical: 12,
+    paddingVertical: 14,
   },
 });
