@@ -39,12 +39,7 @@ export type OnTemplatePreview = (
   anchor?: TemplatePreviewAnchor
 ) => void;
 
-// Template import customizations
-export interface TemplateCustomizations {
-  daysOfWeek?: number[];
-  icon?: string;
-  iconColor?: string;
-  name?: string;
-  preferredTime?: string;
-  reminderTime?: string;
-}
+// Single source of truth: the customize sheet owns the full shape. A narrow
+// screen-side copy silently dropped progressEmojis/streakGoal/strengthAlgorithm
+// at the type level while the values traveled at runtime.
+export type { TemplateCustomizations } from '../templates/TemplatePreviewModal/types';
