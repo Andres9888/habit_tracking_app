@@ -105,6 +105,9 @@ export function useImportFeedback(o: FeedbackOptions) {
     ]
   );
 
+  // Staged for premium: will return true to route the add into the paywall
+  // once gating ships. Serialization of concurrent imports lives in
+  // useTemplateImportHandlers, not here.
   const guardImport = useCallback(() => false, []);
 
   return { guardImport, showAlreadyImported, showError, showSuccess };

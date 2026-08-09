@@ -100,10 +100,3 @@ export function useTemplatesData() {
   };
 }
 
-// Re-export filtered hooks for convenience
-export {
-  useCategoryCounts,
-  useFilteredTemplates,
-  useScienceCountsByCategory,
-  useTemplatesByCategory,
-} from './useFilteredTemplates';
