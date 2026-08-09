@@ -7,6 +7,8 @@ import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandle
 
 interface UseTemplateImportActionOptions {
   guardImport: () => boolean;
+  /** Shared with handleDirectImport — one import at a time across both paths. */
+  inFlightRef: MutableRefObject<boolean>;
   handleImportResult: (
     res: Awaited<
       ReturnType<UseTemplateImportHandlersOptions['importTemplate']>
@@ -28,10 +30,12 @@ interface UseTemplateImportActionOptions {
 export function useTemplateImportAction(o: UseTemplateImportActionOptions) {
   return useCallback(
     async (id: Id<'templates'>, c?: TemplateCustomizations) => {
+      if (o.inFlightRef.current) return undefined;
       if (o.guardImport()) {
         o.setShowCustomizeModal(false);
-        return;
+        return undefined;
       }
+      o.inFlightRef.current = true;
       try {
         o.setImportingTemplateId(id);
         const args = { ...(c ? { customizations: c } : {}), templateId: id };
@@ -54,11 +58,13 @@ export function useTemplateImportAction(o: UseTemplateImportActionOptions) {
         o.setShowCustomizeModal(false);
         o.showError(() => void o.templateImportRef.current(id, c));
       } finally {
+        o.inFlightRef.current = false;
         o.setImportingTemplateId(null);
       }
     },
     [
       o.guardImport,
+      o.inFlightRef,
       o.handleImportResult,
       o.importTemplate,
       o.setImportingTemplateId,

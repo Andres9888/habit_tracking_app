@@ -13,6 +13,10 @@ import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandle
 
 export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // One import at a time: the spinner state is a single scalar, so a second
+  // concurrent mutation would have its indicator cleared by whichever finishes
+  // first — and per-row `disabled` doesn't stop taps on *other* cards.
+  const importInFlightRef = useRef(false);
   const { directImportRef, templateImportRef } = useImportRetryRefs();
   const { guardImport, showAlreadyImported, showError, showSuccess } =
     useImportFeedback(o);
@@ -35,7 +39,8 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
 
   const handleDirectImport = useCallback(
     async (id: Id<'templates'>) => {
-      if (guardImport()) return undefined;
+      if (importInFlightRef.current || guardImport()) return undefined;
+      importInFlightRef.current = true;
       try {
         o.setImportingTemplateId(id);
         const res = await o.importTemplate({ templateId: id });
@@ -52,6 +57,7 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
         showError(() => void directImportRef.current(id));
         return undefined;
       } finally {
+        importInFlightRef.current = false;
         o.setImportingTemplateId(null);
       }
     },
@@ -69,6 +75,7 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
   const handleTemplateImport = useTemplateImportAction({
     guardImport,
     handleImportResult,
+    inFlightRef: importInFlightRef,
     importTemplate: o.importTemplate,
     setImportingTemplateId: o.setImportingTemplateId,
     setShowCustomizeModal: o.setShowCustomizeModal,
