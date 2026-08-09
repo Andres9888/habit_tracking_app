@@ -7,6 +7,8 @@ export interface InsightEntry {
   /** Local date string, YYYY-MM-DD. */
   date: string;
   completed: boolean;
+  /** Per-day journal note, when present. */
+  note?: string;
 }
 
 /** Per-weekday completion tally over the analysed window. */
@@ -79,4 +81,6 @@ export interface HabitInsights {
   yearRatePct: number;
   /** Epoch ms of today's completion, when today is already logged. */
   todayCompletedAt?: number;
+  /** Per-day journal notes keyed by YYYY-MM-DD. */
+  notesByDate: Record<string, string>;
 }

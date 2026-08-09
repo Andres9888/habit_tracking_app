@@ -34,6 +34,7 @@ interface DetailHeroBannerProps {
   /** Yesterday was scheduled and skipped — show the recovery state. */
   isMissedYesterday: boolean;
   isToggling: boolean;
+  todayNote?: string;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
   onMinimalToday: () => void;
 }
@@ -48,6 +49,7 @@ export function DetailHeroBanner({
   isToggling,
   onDayPress,
   onMinimalToday,
+  todayNote,
 }: DetailHeroBannerProps) {
   const palette = useInsightPalette();
   const wash = isCompletedToday
@@ -84,6 +86,7 @@ export function DetailHeroBanner({
         isMinimalToday={isMinimalToday}
         isToggling={isToggling}
         palette={palette}
+        todayNote={todayNote}
         onMinimalToday={onMinimalToday}
         onToggleToday={() => onDayPress(getLocalDateString(), isCompletedToday)}
       />

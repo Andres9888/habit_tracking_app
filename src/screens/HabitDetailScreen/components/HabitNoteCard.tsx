@@ -1,113 +1,63 @@
 /**
- * HabitNoteCard — the note slot from the design.
- *
- * Two placements: 'dashed' at the foot of the stack while today is still open,
- * and 'onBand' inside the hero right after a check-in (frame 2 of the Habit
- * Flow Prototype), where the design surfaces the prompt at the moment it's most
- * likely to be answered. HabitDetailContent renders exactly one of the two.
- *
- * NOTE ON SCOPE: the design labels this "Today's note", but `tracking` rows
- * carry no note field, so this writes the habit-level `habit.notes` via
- * `habits.updateNotes`. It is therefore one running note per habit, not one per
- * day — labelled honestly as "Note" until a per-day note column exists.
+ * HabitNoteCard — per-day journal note on a completion.
+ * Disabled until that day is complete (never silently creates a completion).
  */
 import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { useMutation } from 'convex/react';
-import { ThemedTextInput } from '../../../components/ui/TextInput';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
-import { borderRadius } from '../../../theme/spacing';
-import { fontWeights } from '../../../theme/typography';
-import { useInsightPalette, type InsightPalette } from '../insightPalette';
+import { getLocalDateString } from '../../../utils/getLocalDateString';
+import { useInsightPalette } from '../insightPalette';
+import { HabitAboutNote } from './HabitAboutNote';
+import { HabitNoteField } from './HabitNoteField';
 
 interface HabitNoteCardProps {
+  canEdit: boolean;
+  date: string;
   habitId: Id<'habits'>;
-  notes?: string;
+  habitNotes?: string;
+  note?: string;
   variant?: 'dashed' | 'onBand';
 }
 
-function frameStyle(variant: 'dashed' | 'onBand', palette: InsightPalette) {
-  if (variant === 'onBand') {
-    return {
-      backgroundColor: palette.card,
-      borderColor: palette.bandHairline,
-      borderRadius: borderRadius.medium,
-      borderWidth: 1,
-    };
-  }
-  return {
-    borderColor: palette.cardBorder,
-    borderRadius: borderRadius.large,
-    borderStyle: 'dashed' as const,
-    borderWidth: 1.5,
-  };
-}
-
 export function HabitNoteCard({
+  canEdit,
+  date,
   habitId,
-  notes,
+  habitNotes,
+  note,
   variant = 'dashed',
 }: HabitNoteCardProps) {
   const palette = useInsightPalette();
-  const updateNotes = useMutation(api.habits.updateNotes);
-  const [draft, setDraft] = useState(notes ?? '');
+  const updateNote = useMutation(api.habits.updateTrackingNote);
+  const [draft, setDraft] = useState(note ?? '');
+  const isToday = date === getLocalDateString();
 
-  // Re-seed when switching habits inside the persistent detail modal.
-  useEffect(() => setDraft(notes ?? ''), [habitId, notes]);
+  useEffect(() => setDraft(note ?? ''), [date, habitId, note]);
 
   const commit = () => {
+    if (!canEdit) return;
     const next = draft.trim();
-    if (next === (notes ?? '').trim()) return;
-    void updateNotes({ habitId, notes: next });
+    if (next === (note ?? '').trim()) return;
+    void updateNote({ date, habitId, note: next });
   };
 
   return (
-    <View
-      style={{
-        paddingHorizontal: variant === 'onBand' ? 16 : 18,
-        paddingVertical: 14,
-        ...frameStyle(variant, palette),
-      }}
-    >
-      <View
-        style={{
-          alignItems: 'center',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Text
-          style={{
-            color: palette.textTertiary,
-            fontSize: 11,
-            fontWeight: fontWeights.bold,
-            letterSpacing: 1.5,
-            textTransform: 'uppercase',
-          }}
-        >
-          Note
-        </Text>
-        <Text style={{ color: palette.textTertiary, fontSize: 11 }}>
-          optional
-        </Text>
-      </View>
-      <ThemedTextInput
-        multiline
-        accessibilityLabel='Note for this habit'
-        placeholder='How is this one going?'
-        style={{
-          color: palette.textPrimary,
-          fontSize: 14,
-          lineHeight: 20,
-          marginTop: 8,
-          minHeight: 24,
-          padding: 0,
-        }}
-        value={draft}
+    <View style={{ gap: 10 }}>
+      <HabitNoteField
+        canEdit={canEdit}
+        draft={draft}
+        isToday={isToday}
+        label={isToday ? "Today's note" : `Note for ${date}`}
+        palette={palette}
+        variant={variant}
         onBlur={commit}
         onChangeText={setDraft}
       />
+      {habitNotes?.trim() ? (
+        <HabitAboutNote note={habitNotes.trim()} palette={palette} />
+      ) : null}
     </View>
   );
 }

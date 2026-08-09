@@ -18,6 +18,7 @@ import type { HabitInsights, InsightEntry } from './types';
 const EMPTY: HabitInsights = {
   daysOfData: 0,
   doneDates: new Set<string>(),
+  notesByDate: {},
   oneFix: null,
   working: null,
   yearCompletions: 0,
@@ -61,6 +62,7 @@ export function useHabitInsights({
       completed: row.completed,
       createdAt: row._creationTime,
       date: row.date,
+      ...(row.note ? { note: row.note } : {}),
     }));
     return buildInsights({
       daysOfWeek,

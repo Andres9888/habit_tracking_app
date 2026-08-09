@@ -69,6 +69,8 @@ import type * as habits_toggle from "../habits/toggle.js";
 import type * as habits_trackingCompletionPatch from "../habits/trackingCompletionPatch.js";
 import type * as habits_types from "../habits/types.js";
 import type * as habits_update from "../habits/update.js";
+import type * as habits_updateTrackingNote from "../habits/updateTrackingNote.js";
+import type * as habits_updateTrackingNoteGuard from "../habits/updateTrackingNoteGuard.js";
 import type * as habits_utils from "../habits/utils.js";
 import type * as habits_validation from "../habits/validation.js";
 import type * as habits_validators from "../habits/validators.js";
@@ -193,6 +195,8 @@ declare const fullApi: ApiFromModules<{
   "habits/trackingCompletionPatch": typeof habits_trackingCompletionPatch;
   "habits/types": typeof habits_types;
   "habits/update": typeof habits_update;
+  "habits/updateTrackingNote": typeof habits_updateTrackingNote;
+  "habits/updateTrackingNoteGuard": typeof habits_updateTrackingNoteGuard;
   "habits/utils": typeof habits_utils;
   "habits/validation": typeof habits_validation;
   "habits/validators": typeof habits_validators;

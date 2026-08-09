@@ -25,6 +25,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 export { create } from './habits/create';
 export { update, updateNotes } from './habits/update';
+export { updateTrackingNote } from './habits/updateTrackingNote';
 export { archive, deleteAllArchived, unarchive } from './habits/archive';
 export { batchArchive, batchUnarchive } from './habits/batchArchive';
 export { batchRemove } from './habits/batchRemove';
