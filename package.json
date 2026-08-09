@@ -157,7 +157,7 @@
     "vite": "^6.2.0"
   },
   "overrides": {
-    "brace-expansion": "^2.1.2",
+    "brace-expansion": "^5.0.8",
     "convex": "1.21.0",
     "minimatch": "^10.2.4",
     "rollup": "^4.59.0",
