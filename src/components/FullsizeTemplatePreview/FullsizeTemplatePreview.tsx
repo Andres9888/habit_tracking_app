@@ -3,7 +3,7 @@
  * A fullsize preview modal for template cards
  */
 
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Modal from '../Modal';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
@@ -67,12 +67,13 @@ function FullsizeTemplatePreviewComponent({
     ...successAnimations,
   });
 
-  // Block the hardware back mid-import for the same reason the backdrop is
-  // blocked: the add is in flight and unmounting under it strands the result.
-  useHardwareBack({
-    enabled: visible && !isImporting,
-    onBack: handlers.handleDismiss,
-  });
+  // Swallow — don't unregister — hardware back mid-import: removing the
+  // listener would let the press fall through to the navigation stack under
+  // the modal, unmounting the state owner while the mutation runs.
+  const handleHardwareBack = useCallback(() => {
+    if (!isImporting) handlers.handleDismiss();
+  }, [handlers, isImporting]);
+  useHardwareBack({ enabled: visible, onBack: handleHardwareBack });
 
   if (!shouldRender || !effectiveTemplate) return null;
 

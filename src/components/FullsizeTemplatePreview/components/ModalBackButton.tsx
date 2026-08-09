@@ -27,12 +27,15 @@ import { AnimatedPressable } from '../../ui/AnimatedPressable';
 interface ModalBackButtonProps {
   color?: string;
   backgroundColor?: string;
+  /** Inert while an import is in flight — leaving would strand the result. */
+  disabled?: boolean;
   onBack: () => void;
 }
 
 export function ModalBackButton({
   color,
   backgroundColor,
+  disabled = false,
   onBack,
 }: ModalBackButtonProps) {
   const { colors, isDark } = useThemeColors();
@@ -45,9 +48,14 @@ export function ModalBackButton({
       accessibilityHint='Returns to the habit library where you left off'
       accessibilityLabel='Back to habit library'
       accessibilityRole='button'
+      disabled={disabled}
       hitSlop={8}
       testID='templates-preview-back'
-      style={[s.backButton, { backgroundColor: resolvedBackgroundColor }]}
+      style={[
+        s.backButton,
+        { backgroundColor: resolvedBackgroundColor },
+        disabled && s.backButtonDisabled,
+      ]}
       onPress={() => {
         triggerHaptic('tap');
         onBack();
@@ -70,4 +78,5 @@ const s = StyleSheet.create({
     justifyContent: 'center',
     width: 44,
   },
+  backButtonDisabled: { opacity: 0.4 },
 });

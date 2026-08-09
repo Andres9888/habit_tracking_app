@@ -33,6 +33,8 @@ export const getSubtleCloseButtonVisuals = (
 interface ModalCloseButtonProps {
   /** Called when the button is pressed */
   onClose: () => void;
+  /** Inert + dimmed — for moments when leaving would strand in-flight work */
+  disabled?: boolean;
   /** Accessibility label override */
   label?: string;
   /** Accessibility hint — use when "Close" alone doesn't say where it lands */
@@ -55,6 +57,7 @@ interface ModalCloseButtonProps {
 
 export function ModalCloseButton({
   onClose,
+  disabled = false,
   label = 'Close',
   hint,
   hitSlop,
@@ -80,6 +83,7 @@ export function ModalCloseButton({
       accessibilityHint={hint}
       accessibilityLabel={label}
       accessibilityRole="button"
+      disabled={disabled}
       hitSlop={hitSlop}
       testID={testID}
       style={{
@@ -89,6 +93,7 @@ export function ModalCloseButton({
         justifyContent: 'center',
         borderRadius: borderRadius.full,
         backgroundColor: isSubtle ? subtleVisual.backgroundColor : colors.surface,
+        opacity: disabled ? 0.4 : 1,
       }}
       onPress={handlePress}
     >

@@ -42,6 +42,7 @@ export function PreviewContent({
         closeButtonAnimatedOpacityStyle={
           animatedStyles.closeButtonAnimatedOpacityStyle
         }
+        isImporting={isImporting}
         tintColor={headerTint}
         topInset={insets.top}
         onBack={handlers.handleBack}

@@ -22,6 +22,8 @@ import { useDetailPalette } from '../detailPalette';
 interface ModalHeaderProps {
   topInset: number;
   closeButtonAnimatedOpacityStyle: object;
+  /** Disables both exits: leaving mid-import strands the in-flight add. */
+  isImporting?: boolean;
   /** Back to the Habit Library. Omit to hide the back control entirely. */
   onBack?: () => void;
   /** Exit the whole flow to the home screen. */
@@ -34,6 +36,7 @@ interface ModalHeaderProps {
 export function ModalHeader({
   topInset,
   closeButtonAnimatedOpacityStyle,
+  isImporting = false,
   onBack,
   onClose,
   tintColor,
@@ -63,12 +66,14 @@ export function ModalHeader({
       >
         {onBack ? (
           <ModalBackButton
+            disabled={isImporting}
             onBack={onBack}
           />
         ) : (
           <View />
         )}
         <ModalCloseButton
+          disabled={isImporting}
           hint='Leaves the habit library and returns to your habits'
           hitSlop={8}
           label='Close and go to my habits'
