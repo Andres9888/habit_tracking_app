@@ -1,10 +1,11 @@
 /**
- * Streak milestones — shared copy for round-number streak achievements
- * (7 / 30 / 100 / 365 days). Used by the today-screen CompletionToast and
- * DayCompleteBeat so the milestone moment reads the same wherever a completion
- * happens. (The habit-detail screen states streaks via its milestone bar
- * instead — see ThisWeekCard/MilestoneBar.)
+ * Streak milestones — shared thresholds and copy for round-number streak
+ * achievements (7 / 30 / 100 / 365 days). Used by the today-screen
+ * CompletionToast / DayCompleteBeat and by the habit-detail MilestoneBar.
  */
+
+/** Ordered near-term streak milestones. Source of truth for progress UI. */
+export const MILESTONE_THRESHOLDS = [7, 30, 100, 365] as const;
 
 /** Calm one-line message per milestone streak length. */
 export const MILESTONE_MESSAGES: Record<number, string> = {

@@ -1,67 +1,55 @@
 /**
- * MilestoneBar — current streak measured against the next thing worth beating.
- *
- * The numbers themselves live in WeekStatsRow directly above, so per the Habit
- * Flow Prototype this is just a hairline track and a centred caption — no
- * numeral prefix.
- *
- * The target is the personal best while one is ahead of you; once you match or
- * pass it the bar re-aims at the next round milestone so it never sits full.
+ * MilestoneBar — near-term streak milestone hook on the Progress card.
+ * Purely informational: no premium chip, upsell, or paywall.
  */
 import { Text, View } from 'react-native';
 import { borderRadius } from '../../../../theme/spacing';
 import type { InsightPalette } from '../../insightPalette';
-import { milestoneTarget, milestoneCaption } from './milestoneTarget';
+import { milestoneCaption, nextMilestoneProgress } from './milestoneTarget';
 
 interface MilestoneBarProps {
-  bestStreak: number;
   currentStreak: number;
   palette: InsightPalette;
 }
 
-export function MilestoneBar({
-  bestStreak,
-  currentStreak,
-  palette,
-}: MilestoneBarProps) {
-  const { target, isBest } = milestoneTarget(currentStreak, bestStreak);
-  const fillPct =
-    target === 0 ? 0 : Math.min(100, (currentStreak / target) * 100);
-  const caption = milestoneCaption(currentStreak, target, isBest);
+export function MilestoneBar({ currentStreak, palette }: MilestoneBarProps) {
+  const progress = nextMilestoneProgress(currentStreak);
+  if (!progress) return null;
+
+  const caption = milestoneCaption(progress);
 
   return (
     <View
-      accessibilityLabel={`Current streak ${currentStreak} of ${target}. ${caption}`}
+      accessibilityLabel={caption}
       accessibilityRole='progressbar'
+      style={{ marginTop: 4 }}
     >
+      <Text
+        style={{
+          color: palette.textSecondary,
+          fontSize: 13,
+          marginBottom: 6,
+        }}
+      >
+        {caption}
+      </Text>
       <View
         style={{
           backgroundColor: palette.cellEmpty,
           borderRadius: borderRadius.full,
-          height: 7,
-          marginTop: 4,
+          height: 6,
           overflow: 'hidden',
         }}
       >
         <View
           style={{
-            backgroundColor: palette.amberBar,
+            backgroundColor: palette.green,
             borderRadius: borderRadius.full,
             height: '100%',
-            width: `${fillPct}%`,
+            width: `${progress.fillPct}%`,
           }}
         />
       </View>
-      <Text
-        style={{
-          color: palette.textSecondary,
-          fontSize: 13,
-          marginTop: 8,
-          textAlign: 'center',
-        }}
-      >
-        {caption}
-      </Text>
     </View>
   );
 }

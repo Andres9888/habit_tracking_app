@@ -13,7 +13,7 @@ import { spacing } from '../../../../theme/spacing';
 import type { InsightPalette } from '../../insightPalette';
 import { DetailCompleteButton } from '../DetailCompleteButton';
 import { HabitNoteCard } from '../HabitNoteCard';
-import { milestoneCaption, milestoneTarget } from '../ThisWeekCard';
+import { milestoneCaption, nextMilestoneProgress } from '../ThisWeekCard';
 import { twoMinuteHint } from './DetailHeroBanner.utils';
 import { HeroCheckInCard } from './HeroCheckInCard';
 import { HeroTwoMinute } from './HeroTwoMinute';
@@ -39,16 +39,14 @@ export function HeroTodayActions({
   palette,
 }: HeroTodayActionsProps) {
   const currentStreak = habit.currentStreak ?? 0;
-  const { isBest, target } = milestoneTarget(
-    currentStreak,
-    habit.bestStreak ?? 0
-  );
+  const progress = nextMilestoneProgress(currentStreak);
+  const caption = progress ? milestoneCaption(progress) : undefined;
 
   if (isCompletedToday) {
     return (
       <View style={{ gap: spacing.base, paddingHorizontal: 20 }}>
         <HeroCheckInCard
-          caption={milestoneCaption(currentStreak, target, isBest)}
+          caption={caption}
           completedAtLabel={completedAtLabel}
           disabled={isToggling}
           palette={palette}

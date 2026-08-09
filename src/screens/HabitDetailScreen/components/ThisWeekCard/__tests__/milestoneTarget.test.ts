@@ -1,36 +1,63 @@
-import { milestoneCaption, milestoneTarget } from '../milestoneTarget';
+import { milestoneCaption, nextMilestoneProgress } from '../milestoneTarget';
 
-describe('milestoneTarget', () => {
-  it('aims at the personal best while it is still ahead', () => {
-    expect(milestoneTarget(9, 12)).toEqual({ isBest: true, target: 12 });
+describe('nextMilestoneProgress', () => {
+  it('aims at day 7 before the first milestone', () => {
+    const progress = nextMilestoneProgress(3);
+    expect(progress).toEqual({
+      fillPct: expect.closeTo((3 / 7) * 100),
+      isFirst: true,
+      remaining: 4,
+      target: 7,
+    });
   });
 
-  it('re-aims at the next round milestone once the best is matched', () => {
-    expect(milestoneTarget(12, 12)).toEqual({ isBest: false, target: 14 });
+  it('advances to day 30 once streak reaches 7', () => {
+    expect(nextMilestoneProgress(7)).toEqual({
+      fillPct: 0,
+      isFirst: false,
+      remaining: 23,
+      target: 30,
+    });
   });
 
-  it('never sits full past the last named milestone', () => {
-    const { target } = milestoneTarget(400, 400);
-    expect(target).toBe(730);
+  it('fills between day 7 and day 30', () => {
+    const progress = nextMilestoneProgress(18);
+    expect(progress?.target).toBe(30);
+    expect(progress?.remaining).toBe(12);
+    expect(progress?.fillPct).toBeCloseTo((11 / 23) * 100);
+    expect(progress?.isFirst).toBe(false);
+  });
+
+  it('aims at day 100 after day 30', () => {
+    expect(nextMilestoneProgress(30)?.target).toBe(100);
+  });
+
+  it('aims at day 365 after day 100', () => {
+    expect(nextMilestoneProgress(100)?.target).toBe(365);
+  });
+
+  it('returns null once every milestone is passed', () => {
+    expect(nextMilestoneProgress(365)).toBeNull();
+    expect(nextMilestoneProgress(400)).toBeNull();
   });
 });
 
 describe('milestoneCaption', () => {
-  it('counts down to the personal best', () => {
-    expect(milestoneCaption(9, 12, true)).toBe(
-      '3 days from your best streak ever'
+  it('uses first-milestone wording before day 7', () => {
+    expect(milestoneCaption(nextMilestoneProgress(3)!)).toBe(
+      '4 days to your first milestone — day 7'
+    );
+  });
+
+  it('drops first after the first milestone', () => {
+    expect(milestoneCaption(nextMilestoneProgress(18)!)).toBe(
+      '12 days to your next milestone — day 30'
     );
   });
 
   it('singularises the final day', () => {
-    expect(milestoneCaption(11, 12, true)).toBe(
-      '1 day from your best streak ever'
-    );
-  });
-
-  it('frames a zero streak as a fresh start', () => {
-    expect(milestoneCaption(0, 12, true)).toBe(
-      'Your best run is 12 days — today starts the next one'
+    expect(milestoneCaption(nextMilestoneProgress(6)!)).toBe(
+      '1 day to your first milestone — day 7'
     );
   });
 });

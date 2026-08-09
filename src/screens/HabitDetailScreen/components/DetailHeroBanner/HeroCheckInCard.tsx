@@ -19,8 +19,8 @@ interface HeroCheckInCardProps {
   streakDay: number;
   /** Local timestamp of the completion, when known. */
   completedAtLabel?: string;
-  /** Milestone caption, e.g. "2 days from your best streak ever". */
-  caption: string;
+  /** Quiet secondary line — milestone countdown or "2-min version". */
+  caption?: string;
   palette: InsightPalette;
   disabled?: boolean;
   onUndo: () => void;
@@ -37,11 +37,14 @@ export function HeroCheckInCard({
   const headline = completedAtLabel
     ? `Day ${streakDay} — done at ${completedAtLabel}`
     : `Day ${streakDay} — done`;
+  const a11yLabel = caption
+    ? `${headline}. ${caption}. Tap to undo.`
+    : `${headline}. Tap to undo.`;
 
   return (
     <Pressable
       accessibilityHint='Tap to un-mark today'
-      accessibilityLabel={`${headline}. ${caption}. Tap to undo.`}
+      accessibilityLabel={a11yLabel}
       accessibilityRole='button'
       accessibilityState={{ checked: true, disabled }}
       disabled={disabled}
@@ -80,15 +83,17 @@ export function HeroCheckInCard({
         >
           {headline}
         </Text>
-        <Text
-          style={{
-            color: palette.onGreenMuted,
-            fontSize: 13,
-            marginTop: 1,
-          }}
-        >
-          {caption}
-        </Text>
+        {caption ? (
+          <Text
+            style={{
+              color: palette.onGreenMuted,
+              fontSize: 13,
+              marginTop: 1,
+            }}
+          >
+            {caption}
+          </Text>
+        ) : null}
       </View>
     </Pressable>
   );

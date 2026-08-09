@@ -86,11 +86,7 @@ export function ThisWeekCard({
       </View>
 
       <WeekStatsRow palette={palette} stats={stats} />
-      <MilestoneBar
-        bestStreak={bestStreak}
-        currentStreak={currentStreak}
-        palette={palette}
-      />
+      <MilestoneBar currentStreak={currentStreak} palette={palette} />
     </Animated.View>
   );
 }
