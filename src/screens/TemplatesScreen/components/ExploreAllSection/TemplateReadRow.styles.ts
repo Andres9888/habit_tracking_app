@@ -27,6 +27,21 @@ export const s = StyleSheet.create({
     padding: TEMPLATE_READ_ROW_PADDING,
   },
   cardImporting: { opacity: 0.72 },
+  // Science chip: quiet outlined pill under the description — an entry point,
+  // not a badge, so it stays in the card's secondary text color.
+  scienceChip: {
+    alignSelf: 'flex-start',
+    borderRadius: borderRadius.full,
+    borderWidth: 1,
+    marginTop: spacing.sm,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  scienceChipText: {
+    ...typography.bodySmall,
+    fontSize: 12,
+    fontWeight: fontWeights.semibold,
+  },
   // Header: tinted icon square + serif title + chevron.
   titleRow: { alignItems: 'center', flexDirection: 'row', gap: spacing.md },
   iconBox: {

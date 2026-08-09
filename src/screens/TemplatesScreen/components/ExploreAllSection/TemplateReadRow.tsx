@@ -9,7 +9,9 @@
  */
 
 import { memo, useCallback } from 'react';
+import { Text } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { hasScienceContent } from '@/components/FullsizeTemplatePreview/utils/hasScienceContent';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useBrowserPalette } from '../../browserPalette';
 import { TemplateReadRowFooter } from './TemplateReadRowFooter';
@@ -63,6 +65,23 @@ function TemplateReadRowImpl({
         item={item}
         onPreview={onPreview}
       />
+      {hasScienceContent(item) ? (
+        // Browse-level entry to the evidence: opens the detail view already
+        // scrolled to the science group. Nested Pressable — the inner target
+        // wins the touch, so the card's open-details press is unaffected.
+        <AnimatedPressable
+          accessibilityLabel={`See the science for ${item.name}`}
+          accessibilityRole='button'
+          disabled={isImporting}
+          hitSlop={6}
+          style={[s.scienceChip, { borderColor: palette.border }]}
+          onPress={() => onPreview(item, 'science')}
+        >
+          <Text style={[s.scienceChipText, { color: palette.textSecondary }]}>
+            The science
+          </Text>
+        </AnimatedPressable>
+      ) : null}
       <TemplateReadRowFooter
         isImported={isImported}
         isImporting={isImporting}
