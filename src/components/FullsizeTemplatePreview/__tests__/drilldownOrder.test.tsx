@@ -7,6 +7,7 @@ import { render } from '@testing-library/react-native';
 
 import { DecisionDrilldown } from '../components/DecisionDrilldown';
 import { ScienceDrilldown } from '../components/science/ScienceDrilldown';
+import { ScrollableContent } from '../components/ScrollableContent';
 import type { Template } from '../../../types/template';
 import type { Id } from '../../../../convex/_generated/dataModel';
 
@@ -233,5 +234,26 @@ describe('combined decision then science order', () => {
     expect(howTo).toBeGreaterThan(benefits);
     expect(why).toBeGreaterThan(howTo);
     expect(research).toBeGreaterThan(why);
+  });
+});
+
+describe('production order in ScrollableContent', () => {
+  // The fragment test above proves each group's internal order; only this one
+  // proves the page's order — the fragment would stay green if the groups
+  // were swapped inside ScrollableContent itself.
+  it('renders hero → description → decision → science', () => {
+    const { toJSON } = render(
+      <ScrollableContent iconAnimatedStyle={{}} template={richTemplate} />
+    );
+    const json = JSON.stringify(toJSON());
+    const order = textOrder(json, [
+      'Meditate',
+      'A quiet reset.',
+      "What you'll feel",
+      'Why it works',
+      'The research',
+    ]);
+    expect(order.every((i) => i > -1)).toBe(true);
+    expect(order).toEqual([...order].sort((a, b) => a - b));
   });
 });
