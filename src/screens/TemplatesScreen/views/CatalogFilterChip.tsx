@@ -15,11 +15,10 @@ interface CatalogFilterChipProps {
   isSelected: boolean;
   label: string;
   /**
-   * Paints the chip idle even while selected, without touching what it
-   * reports to assistive tech. For "All", which is the absence of a filter
-   * rather than a filter — see CatalogChipRail.
+   * Swaps the solid ink pill for an outline when selected. For "All", which
+   * is current far more often than any category — see CatalogChipRail.
    */
-  mutedWhenSelected?: boolean;
+  quietSelected?: boolean;
   /** Emoji-free label for screen readers. Falls back to `label`. */
   spokenLabel?: string;
   onLayout: (chipId: string) => (event: LayoutChangeEvent) => void;
@@ -31,33 +30,39 @@ export function CatalogFilterChip({
   count,
   isSelected,
   label,
-  mutedWhenSelected,
+  quietSelected,
   spokenLabel,
   onLayout,
   onSelect,
 }: CatalogFilterChipProps) {
   const palette = useBrowserPalette();
-  // Ink-pill selected state — dark pill with inverted label, matching the
-  // reference catalog design. Paint and semantics deliberately diverge for
-  // muted chips: they stay visually idle but keep reporting their true
-  // selected state below, so VoiceOver still describes the rail correctly.
-  const showsSelected = isSelected && !mutedWhenSelected;
-  const chipColors = showsSelected
+  // Three paint tiers, all saying the same thing at different volumes, so a
+  // selected chip never looks idle: solid ink pill for a chosen category,
+  // ink outline over the idle fill for a quiet selection, flat idle for the
+  // rest. Painting a selected chip as idle was tried and reverted — it left
+  // the rail with nothing marked, which reads as unloaded rather than
+  // unfiltered, and it let the zero-match dimming below make the current
+  // view look disabled.
+  const chipColors = isSelected
     ? {
-        backgroundColor: palette.chipActive,
+        backgroundColor: quietSelected ? palette.chipIdle : palette.chipActive,
         borderColor: palette.chipActive,
       }
     : {
         backgroundColor: palette.chipIdle,
         borderColor: palette.chipIdle,
       };
-  const labelColor = showsSelected
-    ? palette.textInverse
+  const labelColor = isSelected
+    ? quietSelected
+      ? palette.textPrimary
+      : palette.textInverse
     : palette.textSecondary;
   const hasCount = count !== undefined;
   // Zero-match chips stay in the rail rather than unmounting — the rail must
-  // not reflow mid-search — but dim to read as unavailable.
-  const isEmptyMatch = hasCount && count === 0;
+  // not reflow mid-search — but dim to read as unavailable. Never the
+  // selected chip: whatever the user is currently looking at must not render
+  // as disabled, and a zero-match category is still tappable.
+  const isEmptyMatch = hasCount && count === 0 && !isSelected;
   const a11yLabel = spokenLabel ?? label;
 
   return (
