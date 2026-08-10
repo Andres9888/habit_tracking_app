@@ -33,7 +33,7 @@ function setup(outcome: 'added' | 'exists' | 'failed' | undefined) {
       state: state as never,
     })
   );
-  return { actions: result.current, handlers };
+  return { actions: result.current, handlers, state };
 }
 
 beforeEach(() => jest.clearAllMocks());
@@ -69,7 +69,7 @@ describe('template_added analytics', () => {
   });
 
   it('details path fires exactly once on success', async () => {
-    const { actions } = setup('added');
+    const { actions, handlers } = setup('added');
     await act(async () => {
       await actions.handleDetailsDirectImport(tid);
     });
@@ -79,6 +79,7 @@ describe('template_added analytics', () => {
       templateId: tid,
       source: 'details',
     });
+    expect(handlers.handleDirectImport).toHaveBeenCalledWith(tid, 'inline');
   });
 
   it('details path does not fire on failure', async () => {

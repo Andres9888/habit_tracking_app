@@ -75,10 +75,15 @@ export function PreviewContent({
         successPillStyle={animatedStyles.successPillStyle}
         templateName={template?.name ?? ''}
         onCustomize={handlers.handleCustomize}
-        // "Find another habit" means the library, not the home screen — so it
-        // follows the back path, not the X path.
-        onDone={handlers.handleDismiss}
+        // #1423 has no safe Library -> Habit Detail completion contract yet.
+        // The primary action therefore uses the low-risk home/Today fallback:
+        // hide the preview first, then let the Library owner dismiss itself.
+        onGoToToday={handlers.handleClose}
         onImport={handlers.handleImport}
+        // Strictly the back handler, never the generic dismiss: dismiss falls
+        // through to close when no library is mounted, which would collapse
+        // both panel actions onto one destination.
+        onKeepExploring={handlers.handleBack}
       />
     </Animated.View>
   );

@@ -1,10 +1,8 @@
 /**
  * Secondary footer action for the template preview.
  *
- * Pre-add it is "Customize"; post-add it is the way out. The added state used
- * to unmount this row entirely, which parked the user on a several-screen
- * article about a habit they had just committed to, with no next step offered
- * at the highest-intent moment in the flow.
+ * Pre-add customization action. Post-add actions live together in the single
+ * persistent commit panel so confirmation and navigation never compete.
  */
 
 import React from 'react';
@@ -24,45 +22,29 @@ interface FooterSecondaryActionsProps {
   ) => PressHandlers;
   customizeButtonScale: SharedValue<number>;
   customizeButtonStyle: object;
-  isImported: boolean;
   isImporting: boolean;
   onCustomize: () => void;
-  onDone: () => void;
 }
 
 export function FooterSecondaryActions({
   createPressHandlers,
   customizeButtonScale,
   customizeButtonStyle,
-  isImported,
   isImporting,
   onCustomize,
-  onDone,
 }: FooterSecondaryActionsProps) {
   const palette = useDetailPalette();
-
-  const label = isImported ? 'Find another habit' : 'Customize';
 
   return (
     <AnimatedPressable
       accessible
-      accessibilityHint={
-        isImported
-          ? 'Close this habit and return to the library'
-          : 'Customize habit details before adding'
-      }
-      accessibilityLabel={
-        isImported ? 'Find another habit' : 'Customize habit before adding'
-      }
+      accessibilityHint='Customize habit details before adding'
+      accessibilityLabel='Customize habit before adding'
       accessibilityRole='button'
       disabled={isImporting}
-      testID={
-        isImported
-          ? 'templates-preview-find-another'
-          : 'templates-preview-customize'
-      }
+      testID='templates-preview-customize'
       style={[footerStyles.customizeLink, customizeButtonStyle]}
-      onPress={isImported ? onDone : onCustomize}
+      onPress={onCustomize}
       {...createPressHandlers(customizeButtonScale, 0.98)}
     >
       <Text
@@ -71,7 +53,7 @@ export function FooterSecondaryActions({
           { color: palette.textSecondary },
         ]}
       >
-        {label}
+        Customize
       </Text>
     </AnimatedPressable>
   );

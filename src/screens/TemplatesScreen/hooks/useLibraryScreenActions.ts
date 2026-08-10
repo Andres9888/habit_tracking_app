@@ -67,7 +67,10 @@ export function useLibraryScreenActions({
 
   const handleDetailsDirectImport = useCallback(
     async (id: Id<'templates'>) => {
-      const outcome = await handlers.handleDirectImport(id);
+      // The drill-down owns its persistent post-add confirmation. Keeping
+      // success inline prevents the toast / first-import cue sheet from
+      // stacking over the same state. Errors still use the shared toast.
+      const outcome = await handlers.handleDirectImport(id, 'inline');
       if (outcome === 'added') {
         trackLibraryEvent({
           type: 'template_added',

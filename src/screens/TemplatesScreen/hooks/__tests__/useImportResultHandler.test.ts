@@ -48,4 +48,20 @@ describe('useImportResultHandler', () => {
     expect(handle({}, tid)).toBe('failed');
     expect(o.showError).toHaveBeenCalled();
   });
+
+  it('keeps a detail success inline without raising success feedback', () => {
+    const { handle, o } = setup();
+    expect(handle({ success: true, habitId: hid }, tid, 'inline')).toBe(
+      'added'
+    );
+    expect(o.setImportedTemplateIds).toHaveBeenCalled();
+    expect(o.showSuccess).not.toHaveBeenCalled();
+    expect(o.showAlreadyImported).not.toHaveBeenCalled();
+  });
+
+  it('still reports malformed duplicate results in inline mode', () => {
+    const { handle, o } = setup();
+    expect(handle({ alreadyExists: true }, tid, 'inline')).toBe('exists');
+    expect(o.showError).toHaveBeenCalledTimes(1);
+  });
 });

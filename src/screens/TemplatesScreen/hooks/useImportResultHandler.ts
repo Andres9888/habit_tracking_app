@@ -20,19 +20,26 @@ interface UseImportResultHandlerOptions {
 }
 
 export type ImportOutcome = 'added' | 'exists' | 'failed';
+export type ImportFeedbackMode = 'inline' | 'overlay';
 
 export function useImportResultHandler(o: UseImportResultHandlerOptions) {
   return useCallback(
-    (res: ImportResult, templateId: Id<'templates'>): ImportOutcome => {
+    (
+      res: ImportResult,
+      templateId: Id<'templates'>,
+      feedbackMode: ImportFeedbackMode = 'overlay'
+    ): ImportOutcome => {
       if (res.alreadyExists) {
         o.setImportedTemplateIds((p) => new Set(p).add(templateId));
-        if (res.habitId) o.showAlreadyImported(res.habitId);
-        else o.showError();
+        if (!res.habitId) o.showError();
+        else if (feedbackMode === 'overlay') {
+          o.showAlreadyImported(res.habitId);
+        }
         return 'exists';
       }
       if (res.success && res.habitId) {
         o.setImportedTemplateIds((p) => new Set(p).add(templateId));
-        o.showSuccess(res.habitId);
+        if (feedbackMode === 'overlay') o.showSuccess(res.habitId);
         return 'added';
       }
       // A result that is neither an add nor a duplicate is a failure the user

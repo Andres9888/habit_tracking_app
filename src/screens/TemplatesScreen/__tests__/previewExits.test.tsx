@@ -8,7 +8,12 @@
  */
 
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import {
+  fireEvent,
+  render,
+  screen,
+  within,
+} from '@testing-library/react-native';
 import { useQuery } from 'convex/react';
 import { queryCacheStore } from '../../../lib/queryCache/store/state';
 import TemplatesScreen from '../TemplatesScreen';
@@ -125,13 +130,66 @@ describe('template detail exits', () => {
     expect(onCloseLibrary).toHaveBeenCalledTimes(1);
   });
 
-  it('sends the post-add secondary action back to the library, not home', () => {
+  it('keeps the post-add secondary action explicit and in the library', () => {
     mockImportedIds = ['template-1'];
     const onCloseLibrary = openPreview();
 
-    fireEvent.press(screen.getByTestId('templates-preview-find-another'));
+    expect(screen.getByText('Keep exploring habits')).toBeTruthy();
+    fireEvent.press(screen.getByTestId('templates-preview-keep-exploring'));
 
     expect(onCloseLibrary).not.toHaveBeenCalled();
     expect(screen.getByTestId('templates-catalog-view')).toBeTruthy();
+  });
+
+  it('uses the safe Today fallback for the explicit post-add primary action', () => {
+    mockImportedIds = ['template-1'];
+    const onCloseLibrary = openPreview();
+
+    expect(
+      screen.getByText('Go to Today and complete Daily walk')
+    ).toBeTruthy();
+    fireEvent.press(screen.getByTestId('templates-preview-go-to-today'));
+
+    expect(onCloseLibrary).toHaveBeenCalledTimes(1);
+  });
+
+  it('uses truthful status copy when revisiting an added habit', () => {
+    mockImportedIds = ['template-1'];
+    openPreview();
+
+    // Membership, not an event: this panel also renders on every later visit,
+    // so "just added" / "your chain starts now" would be false here.
+    expect(screen.getByText('Daily walk is in your habits')).toBeTruthy();
+    expect(
+      screen.getByText("Complete it from Today when it's due.")
+    ).toBeTruthy();
+  });
+
+  it('shows one post-add surface, not the old stacked pair', () => {
+    mockImportedIds = ['template-1'];
+    openPreview();
+
+    // Exactly one confirmation node, and none of the retired surfaces:
+    // the "Added" pill, the "Find another habit" link, or an overlay toast
+    // repeating the same news on top of the panel.
+    const panels = screen.getAllByTestId('templates-preview-added');
+    expect(panels).toHaveLength(1);
+    expect(screen.queryByTestId('templates-preview-find-another')).toBeNull();
+    expect(screen.queryByText('Find another habit')).toBeNull();
+    // Scoped to the panel: the catalog has its own "Added" category chip, so a
+    // global text query would pass for the wrong reason.
+    expect(within(panels[0]).queryByText('Added')).toBeNull();
+    expect(screen.queryByTestId('templates-toast')).toBeNull();
+    expect(screen.queryByTestId('make-it-stick-sheet')).toBeNull();
+  });
+
+  it('keeps the pre-add footer free of the commit panel', () => {
+    openPreview();
+
+    expect(screen.queryByTestId('templates-preview-added')).toBeNull();
+    expect(screen.queryByTestId('templates-preview-go-to-today')).toBeNull();
+    expect(screen.queryByTestId('templates-preview-keep-exploring')).toBeNull();
+    expect(screen.getByTestId('templates-preview-quick-add')).toBeTruthy();
+    expect(screen.getByTestId('templates-preview-customize')).toBeTruthy();
   });
 });

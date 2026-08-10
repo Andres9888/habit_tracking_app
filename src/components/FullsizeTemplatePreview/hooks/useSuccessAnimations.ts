@@ -6,7 +6,7 @@
  * No full-screen glow, no confetti — see plan file.
  */
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { useSharedValue, withSpring } from 'react-native-reanimated';
 import { triggerHaptic } from '@/utils/haptics';
 import { springs } from '@/theme/animations';
@@ -22,6 +22,7 @@ export const useSuccessAnimations = ({
 }: UseSuccessAnimationsProps) => {
   const checkmarkScale = useSharedValue(0);
   const successPillScale = useSharedValue(0.95);
+  const wasImportedRef = useRef(isImported);
 
   const triggerSuccessHaptic = useCallback(() => {
     triggerHaptic('success');
@@ -33,7 +34,9 @@ export const useSuccessAnimations = ({
         checkmarkScale.value = 1;
         successPillScale.value = 1;
       } else {
-        triggerSuccessHaptic();
+        // Reopening a habit added earlier is status, not a new success, so
+        // only the false -> true transition earns the celebratory haptic.
+        if (!wasImportedRef.current) triggerSuccessHaptic();
         successPillScale.value = withSpring(1, springs.standard);
         checkmarkScale.value = withSpring(1, springs.bouncy);
       }
@@ -41,6 +44,7 @@ export const useSuccessAnimations = ({
       checkmarkScale.value = 0;
       successPillScale.value = 0.95;
     }
+    wasImportedRef.current = isImported;
   }, [isImported, reducedMotion, triggerSuccessHaptic]);
 
   return {

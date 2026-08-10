@@ -10,8 +10,6 @@ import React from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
-import { Check } from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
 import { footerStyles } from '../styles';
 import { useDetailPalette } from '../detailPalette';
 import type { PressHandlers } from '../FullsizeTemplatePreview.types';
@@ -19,7 +17,6 @@ import type { PressHandlers } from '../FullsizeTemplatePreview.types';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface FooterPrimaryActionProps {
-  checkmarkAnimatedStyle: object;
   createPressHandlers: (
     scale: SharedValue<number>,
     scaleValue?: number
@@ -27,41 +24,13 @@ interface FooterPrimaryActionProps {
   importButtonScale: SharedValue<number>;
   importButtonStyle: object;
   importLabel: string;
-  isImported: boolean;
   isImporting: boolean;
-  successPillStyle: object;
   templateName: string;
   onImport: () => void;
 }
 
 export function FooterPrimaryAction(p: FooterPrimaryActionProps) {
   const palette = useDetailPalette();
-
-  if (p.isImported) {
-    return (
-      <Animated.View
-        testID='templates-preview-added'
-        style={[
-          footerStyles.successButton,
-          { backgroundColor: palette.addedBg },
-          p.successPillStyle,
-        ]}
-      >
-        <Animated.View style={p.checkmarkAnimatedStyle}>
-          <Check
-            color={palette.addedFg}
-            size={iconSizes.large}
-            strokeWidth={3}
-          />
-        </Animated.View>
-        <Text
-          style={[footerStyles.successButtonText, { color: palette.addedFg }]}
-        >
-          Added
-        </Text>
-      </Animated.View>
-    );
-  }
 
   return (
     <AnimatedPressable
@@ -84,9 +53,7 @@ export function FooterPrimaryAction(p: FooterPrimaryActionProps) {
         {p.isImporting ? (
           <ActivityIndicator color={palette.addFg} size='small' />
         ) : null}
-        <Text
-          style={[footerStyles.importButtonText, { color: palette.addFg }]}
-        >
+        <Text style={[footerStyles.importButtonText, { color: palette.addFg }]}>
           {p.isImporting ? 'Adding…' : p.importLabel}
         </Text>
       </View>

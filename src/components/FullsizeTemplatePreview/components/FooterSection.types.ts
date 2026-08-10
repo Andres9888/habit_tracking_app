@@ -24,6 +24,12 @@ export interface FooterSectionProps {
   customizeButtonScale: SharedValue<number>;
   onImport: () => void;
   onCustomize: () => void;
-  /** Post-add exit — the page has nothing left to offer once the habit is in. */
-  onDone: () => void;
+  /** Safe #1423 fallback: dismiss the preview and Library to Today. */
+  onGoToToday: () => void;
+  /**
+   * Library-back handler, so browsing state survives. Undefined when no
+   * library is mounted behind the preview — the action is then omitted
+   * rather than aliased onto the exit the primary already owns.
+   */
+  onKeepExploring?: () => void;
 }

@@ -516,11 +516,14 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(getByText('Added!')).toBeTruthy();
-      // The import button should not be shown (it's replaced with success button)
+      expect(getByText(`${template.name} is in your habits`)).toBeTruthy();
+      // The import button should not be shown (it's replaced by the panel)
       expect(queryByLabelText(/Import.*habit/i)).toBeNull();
       // Customize link should be hidden in success state
       expect(queryByLabelText('Customize habit before importing')).toBeNull();
+      // No library behind this caller, so the library-back action is omitted
+      // rather than silently duplicating the primary's exit-to-home.
+      expect(queryByText('Keep exploring habits')).toBeNull();
     });
 
     it('does not call onImport when already importing', () => {
@@ -555,9 +558,9 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      // In imported state, the button shows "Added!" - it's not pressable
-      const successButton = getByText('Added!');
-      expect(successButton).toBeTruthy();
+      // In the imported state the CTA is replaced by the commit panel, whose
+      // status line is not pressable.
+      expect(getByText(`${template.name} is in your habits`)).toBeTruthy();
 
       // There should be no import button
       expect(queryByLabelText(/Import.*habit/i)).toBeNull();

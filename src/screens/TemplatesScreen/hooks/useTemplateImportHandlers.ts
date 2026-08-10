@@ -7,7 +7,10 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 import { useImportFeedback } from './useImportFeedback';
 import { useImportRetryRefs } from './useImportRetryRefs';
 import { usePreviewHandlers } from './usePreviewHandlers';
-import { useImportResultHandler } from './useImportResultHandler';
+import {
+  useImportResultHandler,
+  type ImportFeedbackMode,
+} from './useImportResultHandler';
 import { useTemplateImportAction } from './useTemplateImportAction';
 import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandlers.types';
 
@@ -38,13 +41,16 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
   });
 
   const handleDirectImport = useCallback(
-    async (id: Id<'templates'>) => {
+    async (
+      id: Id<'templates'>,
+      feedbackMode: ImportFeedbackMode = 'overlay'
+    ) => {
       if (importInFlightRef.current || guardImport()) return undefined;
       importInFlightRef.current = true;
       try {
         o.setImportingTemplateId(id);
         const res = await o.importTemplate({ templateId: id });
-        const outcome = handleImportResult(res, id);
+        const outcome = handleImportResult(res, id, feedbackMode);
         if (outcome !== 'failed') {
           if (timeoutRef.current) clearTimeout(timeoutRef.current);
           timeoutRef.current = setTimeout(
