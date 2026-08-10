@@ -50,6 +50,14 @@ export function CatalogView(p: CatalogViewProps) {
   });
   const showShelves = selectedCategoryId === CATALOG_ALL_ID;
 
+  // Chips toggle: tapping the already-active chip drops the filter and lands
+  // back on "All". Tapping "All" itself is a no-op — it is already the
+  // unfiltered state, so toggling it off would have nowhere to go.
+  const handleSelectCategory = (categoryId: string) =>
+    setSelectedCategoryId((current) =>
+      current === categoryId ? CATALOG_ALL_ID : categoryId
+    );
+
   const emptyState = (
     <CatalogEmptyState
       categoryLabel={showShelves ? undefined : selectedCategoryLabel}
@@ -78,7 +86,7 @@ export function CatalogView(p: CatalogViewProps) {
         categories={chipCategories}
         selectedCategoryId={selectedCategoryId}
         totalCount={isSearching ? totalMatches : undefined}
-        onSelectCategory={setSelectedCategoryId}
+        onSelectCategory={handleSelectCategory}
       />
       {showShelves ? (
         <CatalogSectionList
