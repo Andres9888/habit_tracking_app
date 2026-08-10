@@ -8,6 +8,7 @@
  */
 
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { useQuery } from 'convex/react';
 import { queryCacheStore } from '../../../lib/queryCache/store/state';
@@ -44,9 +45,23 @@ function isSelected(label: string) {
   );
 }
 
+function backgroundOf(label: string) {
+  return StyleSheet.flatten(screen.getByLabelText(label).props.style)
+    ?.backgroundColor;
+}
+
+// A second category so the rail has an idle chip to compare paint against.
+const sleepTemplate = {
+  _id: 'template-2',
+  _creationTime: 0,
+  category: 'sleep',
+  description: 'Lights out at the same time.',
+  name: 'Fixed bedtime',
+};
+
 describe('catalog chip toggle', () => {
   beforeEach(() => {
-    mockUseQuery.mockImplementation(() => [template]);
+    mockUseQuery.mockImplementation(() => [template, sleepTemplate]);
   });
 
   afterEach(() => {
@@ -74,5 +89,21 @@ describe('catalog chip toggle', () => {
     fireEvent.press(screen.getByLabelText('All'));
 
     expect(isSelected('All')).toBe(true);
+  });
+
+  it('never paints the All chip as selected', () => {
+    render(<TemplatesScreen />);
+
+    // At rest All IS the selection, but it must look identical to any idle
+    // category chip — an ink pill here reads as an already-applied filter.
+    expect(isSelected('All')).toBe(true);
+    expect(backgroundOf('All')).toBe(backgroundOf('Sleep'));
+
+    fireEvent.press(screen.getByLabelText('Health'));
+
+    // A real category chip still gets the ink pill, so the muted treatment is
+    // specific to All rather than the selected style being broken outright.
+    expect(backgroundOf('Health')).not.toBe(backgroundOf('Sleep'));
+    expect(backgroundOf('All')).toBe(backgroundOf('Sleep'));
   });
 });

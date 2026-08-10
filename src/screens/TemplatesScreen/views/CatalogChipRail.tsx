@@ -85,6 +85,11 @@ export function CatalogChipRail({
         count={totalCount}
         isSelected={selectedCategoryId === CATALOG_ALL_ID}
         label='All'
+        // "All" is the absence of a filter, not a filter: an ink pill here on
+        // first open reads as "something is already filtering this list". The
+        // unfiltered state is announced by the body instead, which switches to
+        // sectioned shelves, and by the rail scrolling back to the start.
+        mutedWhenSelected
         onLayout={handleChipLayout}
         onSelect={onSelectCategory}
       />

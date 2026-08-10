@@ -14,6 +14,12 @@ interface CatalogFilterChipProps {
   count?: number;
   isSelected: boolean;
   label: string;
+  /**
+   * Paints the chip idle even while selected, without touching what it
+   * reports to assistive tech. For "All", which is the absence of a filter
+   * rather than a filter — see CatalogChipRail.
+   */
+  mutedWhenSelected?: boolean;
   /** Emoji-free label for screen readers. Falls back to `label`. */
   spokenLabel?: string;
   onLayout: (chipId: string) => (event: LayoutChangeEvent) => void;
@@ -25,14 +31,18 @@ export function CatalogFilterChip({
   count,
   isSelected,
   label,
+  mutedWhenSelected,
   spokenLabel,
   onLayout,
   onSelect,
 }: CatalogFilterChipProps) {
   const palette = useBrowserPalette();
   // Ink-pill selected state — dark pill with inverted label, matching the
-  // reference catalog design.
-  const chipColors = isSelected
+  // reference catalog design. Paint and semantics deliberately diverge for
+  // muted chips: they stay visually idle but keep reporting their true
+  // selected state below, so VoiceOver still describes the rail correctly.
+  const showsSelected = isSelected && !mutedWhenSelected;
+  const chipColors = showsSelected
     ? {
         backgroundColor: palette.chipActive,
         borderColor: palette.chipActive,
@@ -41,7 +51,9 @@ export function CatalogFilterChip({
         backgroundColor: palette.chipIdle,
         borderColor: palette.chipIdle,
       };
-  const labelColor = isSelected ? palette.textInverse : palette.textSecondary;
+  const labelColor = showsSelected
+    ? palette.textInverse
+    : palette.textSecondary;
   const hasCount = count !== undefined;
   // Zero-match chips stay in the rail rather than unmounting — the rail must
   // not reflow mid-search — but dim to read as unavailable.
@@ -67,9 +79,7 @@ export function CatalogFilterChip({
       >
         <Text style={[s.chipLabel, { color: labelColor }]}>
           {label}
-          {hasCount ? (
-            <Text style={s.chipCount}>{`  ${count}`}</Text>
-          ) : null}
+          {hasCount ? <Text style={s.chipCount}>{`  ${count}`}</Text> : null}
         </Text>
       </AnimatedPressable>
     </View>
