@@ -25,6 +25,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 export { create } from './habits/create';
 export { update, updateNotes } from './habits/update';
+export { updateTrackingNote } from './habits/updateTrackingNote';
 export { archive, deleteAllArchived, unarchive } from './habits/archive';
 export { batchArchive, batchUnarchive } from './habits/batchArchive';
 export { batchRemove } from './habits/batchRemove';
@@ -44,4 +45,5 @@ export { listArchived, listArchivedCount } from './habits/archive';
 export { listPaused } from './habits/pause';
 export { getTracking } from './habits/getTracking';
 export { getHabitTracking } from './habits/getHabitTracking';
+export { getHabitScience } from './habits/getHabitScience';
 export { getStats } from './habits/stats';

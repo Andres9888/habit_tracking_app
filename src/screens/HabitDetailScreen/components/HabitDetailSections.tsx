@@ -1,16 +1,11 @@
 /**
- * HabitDetailSections — the card stack below the hero wash:
- *
- *   Progress → What we're noticing → Your month → [history] → note
- *
- * The note card moves into the hero once today is logged (frame 2 of the Habit
- * Flow Prototype), so it is rendered here only while today is still open — one
- * note, one input.
+ * HabitDetailSections — Progress → noticing → month → [history] → note.
  */
 import { useState } from 'react';
 import { View } from 'react-native';
 import type { Habit } from '../../../features/habits/types';
 import { spacing } from '../../../theme/spacing';
+import { getLocalDateString } from '../../../utils/getLocalDateString';
 import type { HabitInsights } from '../insights';
 import { HabitDetailHistory } from './HabitDetailHistory';
 import { HabitNoteCard } from './HabitNoteCard';
@@ -24,6 +19,7 @@ interface HabitDetailSectionsProps {
   insights: HabitInsights;
   isCompletedToday: boolean;
   pendingToggleDate?: string | null;
+  selectedNoteDate: string;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
   onEdit?: () => void;
 }
@@ -34,10 +30,13 @@ export function HabitDetailSections({
   insights,
   isCompletedToday,
   pendingToggleDate = null,
+  selectedNoteDate,
   onDayPress,
   onEdit,
 }: HabitDetailSectionsProps) {
   const [showHistory, setShowHistory] = useState(false);
+  const today = getLocalDateString();
+  const heroOwnsTodayNote = isCompletedToday && selectedNoteDate === today;
 
   return (
     <View style={{ gap: spacing.md, padding: 20, paddingBottom: 40 }}>
@@ -73,8 +72,14 @@ export function HabitDetailSections({
           onDayPress={onDayPress}
         />
       ) : null}
-      {isCompletedToday ? null : (
-        <HabitNoteCard habitId={habit._id} notes={habit.notes} />
+      {heroOwnsTodayNote ? null : (
+        <HabitNoteCard
+          canEdit={completedDates.has(selectedNoteDate)}
+          date={selectedNoteDate}
+          habitId={habit._id}
+          habitNotes={habit.notes}
+          note={insights.notesByDate[selectedNoteDate]}
+        />
       )}
     </View>
   );

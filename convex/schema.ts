@@ -421,6 +421,8 @@ const applicationTables = {
     kind: v.optional(v.union(v.literal('full'), v.literal('minimal'))),
     // Legacy minutes completion value from removed minutes-goal feature.
     minutes: v.optional(v.number()),
+    /** Optional journal note for this check-in day. */
+    note: v.optional(v.string()),
     userId: v.optional(v.string()),
   })
     .index('by_habit_and_date', ['habitId', 'date'])

@@ -4,6 +4,7 @@
 import { View } from 'react-native';
 import type { Habit } from '../../../../features/habits/types';
 import { spacing } from '../../../../theme/spacing';
+import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import type { InsightPalette } from '../../insightPalette';
 import { DetailCompleteButton } from '../DetailCompleteButton';
 import { HabitNoteCard } from '../HabitNoteCard';
@@ -16,10 +17,10 @@ interface HeroTodayActionsProps {
   completedAtLabel?: string;
   habit: Habit;
   isCompletedToday: boolean;
-  /** Today's completion was the 2-minute version. */
   isMinimalToday?: boolean;
   isToggling: boolean;
   palette: InsightPalette;
+  todayNote?: string;
   onMinimalToday: () => void;
   onToggleToday: () => void;
 }
@@ -33,6 +34,7 @@ export function HeroTodayActions({
   onMinimalToday,
   onToggleToday,
   palette,
+  todayNote,
 }: HeroTodayActionsProps) {
   const currentStreak = habit.currentStreak ?? 0;
   const progress = nextMilestoneProgress(currentStreak);
@@ -50,8 +52,11 @@ export function HeroTodayActions({
           onUndo={onToggleToday}
         />
         <HabitNoteCard
+          canEdit
+          date={getLocalDateString()}
           habitId={habit._id}
-          notes={habit.notes}
+          habitNotes={habit.notes}
+          note={todayNote}
           variant='onBand'
         />
       </View>

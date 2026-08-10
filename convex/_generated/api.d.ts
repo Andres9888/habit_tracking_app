@@ -52,6 +52,7 @@ import type * as habits_cleanupLegacyGoalFields from "../habits/cleanupLegacyGoa
 import type * as habits_create from "../habits/create.js";
 import type * as habits_deleteTrackingChunk from "../habits/deleteTrackingChunk.js";
 import type * as habits_get from "../habits/get.js";
+import type * as habits_getHabitScience from "../habits/getHabitScience.js";
 import type * as habits_getHabitTracking from "../habits/getHabitTracking.js";
 import type * as habits_getTracking from "../habits/getTracking.js";
 import type * as habits_list from "../habits/list.js";
@@ -69,6 +70,8 @@ import type * as habits_toggle from "../habits/toggle.js";
 import type * as habits_trackingCompletionPatch from "../habits/trackingCompletionPatch.js";
 import type * as habits_types from "../habits/types.js";
 import type * as habits_update from "../habits/update.js";
+import type * as habits_updateTrackingNote from "../habits/updateTrackingNote.js";
+import type * as habits_updateTrackingNoteGuard from "../habits/updateTrackingNoteGuard.js";
 import type * as habits_utils from "../habits/utils.js";
 import type * as habits_validation from "../habits/validation.js";
 import type * as habits_validators from "../habits/validators.js";
@@ -176,6 +179,7 @@ declare const fullApi: ApiFromModules<{
   "habits/create": typeof habits_create;
   "habits/deleteTrackingChunk": typeof habits_deleteTrackingChunk;
   "habits/get": typeof habits_get;
+  "habits/getHabitScience": typeof habits_getHabitScience;
   "habits/getHabitTracking": typeof habits_getHabitTracking;
   "habits/getTracking": typeof habits_getTracking;
   "habits/list": typeof habits_list;
@@ -193,6 +197,8 @@ declare const fullApi: ApiFromModules<{
   "habits/trackingCompletionPatch": typeof habits_trackingCompletionPatch;
   "habits/types": typeof habits_types;
   "habits/update": typeof habits_update;
+  "habits/updateTrackingNote": typeof habits_updateTrackingNote;
+  "habits/updateTrackingNoteGuard": typeof habits_updateTrackingNoteGuard;
   "habits/utils": typeof habits_utils;
   "habits/validation": typeof habits_validation;
   "habits/validators": typeof habits_validators;

@@ -1,28 +1,18 @@
 /**
- * HabitDetailContent — the redesigned detail stack (Claude Design, "Habit Flow
- * Prototype" in project "Habit insights page redesign"):
- *
- *   hero wash → Progress → What we're noticing → Your month → note
- *
- * Insight-first rather than data-first: the raw calendar, strength curve and
- * goal card live behind "View history ›" (see HabitDetailHistory).
+ * HabitDetailContent — hero wash → Progress → noticing → month → note.
  */
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import {
   ScrollView,
-  View,
   type NativeSyntheticEvent,
   type NativeScrollEvent,
 } from 'react-native';
-import { format } from 'date-fns';
 import type { Habit } from '../../../features/habits/types';
 import { getLocalDateString } from '../../../utils/getLocalDateString';
-import { isMissedYesterday, useHabitInsights } from '../insights';
+import { useHabitInsights } from '../insights';
 import { useInsightPalette } from '../insightPalette';
-import { DetailHeroBanner } from './DetailHeroBanner';
-import { HabitDetailSections } from './HabitDetailSections';
+import { HabitDetailScrollBody } from './HabitDetailScrollBody';
 
-/** Scroll depth at which the header swaps to the pinned habit title. */
 const PIN_OFFSET = 96;
 
 interface HabitDetailContentProps {
@@ -51,6 +41,8 @@ export function HabitDetailContent({
   onPinnedChange,
 }: HabitDetailContentProps) {
   const palette = useInsightPalette();
+  const today = getLocalDateString();
+  const [selectedNoteDate, setSelectedNoteDate] = useState(today);
   const wash = isCompletedToday
     ? palette.bandGradientDone
     : palette.bandGradient;
@@ -69,13 +61,15 @@ export function HabitDetailContent({
     [onPinnedChange]
   );
 
+  const handleDayPress = useCallback(
+    (date: string, isCompleted: boolean) => {
+      setSelectedNoteDate(date);
+      onDayPress(date, isCompleted);
+    },
+    [onDayPress]
+  );
+
   return (
-    // The ScrollView takes the hero's FIRST gradient stop, and the sections
-    // below take the page background. Without this, bouncing at the top exposes
-    // the background behind the tinted hero — the seam that
-    // FullsizeTemplatePreview/components/PreviewContent.tsx:29-30 warns about.
-    // This is also why every band stop must be opaque hex, never withAlpha:
-    // the header tint, hero stop 0 and this overscroll tint all read wash[0].
     <ScrollView
       bounces
       className='flex-1'
@@ -84,36 +78,20 @@ export function HabitDetailContent({
       style={{ backgroundColor: wash[0] }}
       onScroll={handleScroll}
     >
-      <DetailHeroBanner
-        completedAtLabel={
-          insights.todayCompletedAt
-            ? format(new Date(insights.todayCompletedAt), 'h:mm a')
-            : undefined
-        }
-        daysDone={insights.yearCompletions}
+      <HabitDetailScrollBody
         habit={habit}
+        insights={insights}
         isCompletedToday={isCompletedToday}
         isMinimalToday={isMinimalToday}
-        isMissedYesterday={isMissedYesterday({
-          completedDates: insights.doneDates,
-          daysOfWeek: habit.daysOfWeek,
-          isCompletedToday,
-        })}
-        isToggling={pendingToggleDate === getLocalDateString()}
-        onDayPress={onDayPress}
+        noteDates={new Set([...completedDates, ...insights.doneDates])}
+        pendingToggleDate={pendingToggleDate}
+        selectedNoteDate={selectedNoteDate}
+        today={today}
+        washEnd={palette.bandGradient[2]}
+        onDayPress={handleDayPress}
+        onEdit={onEdit}
         onMinimalToday={onMinimalToday}
       />
-      <View style={{ backgroundColor: palette.bandGradient[2] }}>
-        <HabitDetailSections
-          completedDates={completedDates}
-          habit={habit}
-          insights={insights}
-          isCompletedToday={isCompletedToday}
-          pendingToggleDate={pendingToggleDate}
-          onDayPress={onDayPress}
-          onEdit={onEdit}
-        />
-      </View>
     </ScrollView>
   );
 }
