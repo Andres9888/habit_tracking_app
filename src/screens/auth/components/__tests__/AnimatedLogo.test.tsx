@@ -4,13 +4,22 @@ import * as Reanimated from 'react-native-reanimated';
 import { AnimatedLogo } from '../AnimatedLogo';
 
 // Mock expo-linear-gradient
-jest.mock('expo-linear-gradient', () => ({
-  LinearGradient: ({ children }: { children: React.ReactNode }) => children,
-}));
+jest.mock('expo-linear-gradient', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  return {
+    LinearGradient: ({
+      children,
+      ...props
+    }: {
+      children?: React.ReactNode;
+    }) => React.createElement(View, props, children),
+  };
+});
 
-// Mock lucide-react-native
 jest.mock('lucide-react-native', () => ({
   Check: () => null,
+  Link: () => null,
 }));
 
 describe('AnimatedLogo', () => {

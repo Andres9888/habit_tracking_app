@@ -86,8 +86,8 @@ describe('Habit Name Validation', () => {
     expect(validateHabitName(undefined).isValid).toBe(false);
   });
 
-  it('should reject habit names that are too short', () => {
-    expect(validateHabitName('a').isValid).toBe(false);
+  it('should accept single-character habit names', () => {
+    expect(validateHabitName('a').isValid).toBe(true);
   });
 
   it('should reject habit names that are too long', () => {

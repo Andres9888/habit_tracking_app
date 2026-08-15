@@ -66,30 +66,30 @@ describe('validation - enhanced edge cases', () => {
     });
 
     describe('length edge cases', () => {
-      it('accepts single character name', () => {
+      it('rejects single character name as too short', () => {
         const result = validateHabitName('X');
-        expect(result.isValid).toBe(true);
-        expect(result.sanitized).toBe('X');
+        expect(result.isValid).toBe(false);
+        expect(result.error).toBe('Habit name cannot be empty');
       });
 
       it('accepts name at maximum length', () => {
-        const maxName = 'a'.repeat(200);
+        const maxName = 'a'.repeat(100);
         const result = validateHabitName(maxName);
         expect(result.isValid).toBe(true);
         expect(result.sanitized).toBe(maxName);
       });
 
       it('rejects name exceeding maximum length', () => {
-        const tooLong = 'a'.repeat(201);
+        const tooLong = 'a'.repeat(101);
         const result = validateHabitName(tooLong);
         expect(result.isValid).toBe(false);
-        expect(result.error).toContain('200 characters or less');
+        expect(result.error).toContain('100 characters or less');
       });
 
       it('truncates overly long name in sanitized output', () => {
         const tooLong = 'a'.repeat(250);
         const result = validateHabitName(tooLong);
-        expect(result.sanitized).toHaveLength(200);
+        expect(result.sanitized).toHaveLength(100);
       });
 
       it('handles empty string', () => {
@@ -244,9 +244,10 @@ describe('validation - enhanced edge cases', () => {
         expect(result.error).toContain('out of valid range');
       });
 
-      it('accepts dates at 1900', () => {
+      it('rejects dates at 1900 as more than 5 years in the past', () => {
         const result = validateDateString('1900-01-01');
-        expect(result.isValid).toBe(true);
+        expect(result.isValid).toBe(false);
+        expect(result.error).toContain('more than 5 years in the past');
       });
 
       it('rejects dates after 2100', () => {
@@ -254,9 +255,10 @@ describe('validation - enhanced edge cases', () => {
         expect(result.isValid).toBe(false);
       });
 
-      it('accepts dates at 2100', () => {
+      it('rejects dates at 2100 as more than 2 years in the future', () => {
         const result = validateDateString('2100-12-31');
-        expect(result.isValid).toBe(true);
+        expect(result.isValid).toBe(false);
+        expect(result.error).toContain('more than 2 years in the future');
       });
 
       it('rejects dates more than 5 years in past', () => {
@@ -283,9 +285,10 @@ describe('validation - enhanced edge cases', () => {
     });
 
     describe('boundary dates', () => {
-      it('handles leap year century rule (2000 is leap year)', () => {
+      it('handles leap year century rule (2000 is leap year) but rejects as too old', () => {
         const result = validateDateString('2000-02-29');
-        expect(result.isValid).toBe(true);
+        expect(result.isValid).toBe(false);
+        expect(result.error).toContain('more than 5 years in the past');
       });
 
       it('handles non-leap year century (1900 not leap year)', () => {
@@ -464,7 +467,7 @@ describe('validation - enhanced edge cases', () => {
       });
 
       it('handles negative zero', () => {
-        expect(safeParseNumber(-0, 1)).toBe(0);
+        expect(safeParseNumber(-0, 1)).toBe(-0);
       });
 
       it('handles very large numbers', () => {

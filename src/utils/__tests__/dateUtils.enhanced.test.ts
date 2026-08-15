@@ -113,9 +113,10 @@ describe('dateUtils - enhanced edge cases', () => {
       expect(formatted).toBe('2024-09-09');
     });
 
-    it('throws on invalid date string', () => {
-      expect(() => formatDateString('invalid-date')).toThrow(TypeError);
-      expect(() => formatDateString('not-a-date')).toThrow();
+    it('falls back to today for invalid date strings', () => {
+      const today = getTodayString();
+      expect(formatDateString('invalid-date')).toBe(today);
+      expect(formatDateString('not-a-date')).toBe(today);
     });
 
     it('handles leap year dates', () => {

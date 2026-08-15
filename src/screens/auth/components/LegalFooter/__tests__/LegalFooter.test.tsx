@@ -2,11 +2,9 @@ import React from 'react';
 import { Linking } from 'react-native';
 import { render, fireEvent } from '@testing-library/react-native';
 import { LegalFooter } from '../LegalFooter';
+import { EXTERNAL_URLS } from '@/constants/urls';
 
-// Mock Linking
-jest.mock('react-native/Libraries/Linking/Linking', () => ({
-  openURL: jest.fn(),
-}));
+jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined);
 
 describe('LegalFooter', () => {
   beforeEach(() => {
@@ -51,9 +49,7 @@ describe('LegalFooter', () => {
 
       fireEvent.press(getByLabelText('Terms of Service'));
 
-      expect(Linking.openURL).toHaveBeenCalledWith(
-        'https://dailyhabits.app/terms'
-      );
+      expect(Linking.openURL).toHaveBeenCalledWith(EXTERNAL_URLS.TERMS);
     });
 
     it('opens Privacy URL when Privacy link is pressed', () => {
@@ -61,9 +57,7 @@ describe('LegalFooter', () => {
 
       fireEvent.press(getByLabelText('Privacy Policy'));
 
-      expect(Linking.openURL).toHaveBeenCalledWith(
-        'https://dailyhabits.app/privacy'
-      );
+      expect(Linking.openURL).toHaveBeenCalledWith(EXTERNAL_URLS.PRIVACY);
     });
   });
 });

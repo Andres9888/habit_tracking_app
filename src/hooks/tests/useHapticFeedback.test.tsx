@@ -1,5 +1,6 @@
 import { act, render } from '@testing-library/react-native';
 import React, { useEffect } from 'react';
+import { AccessibilityInfo, Platform } from 'react-native';
 
 import { useHapticFeedback } from '../useHapticFeedback';
 
@@ -19,17 +20,13 @@ jest.mock('expo-haptics', () => ({
   selectionAsync: jest.fn().mockResolvedValue(undefined),
 }));
 
-jest.mock('react-native', () => {
-  const actual = jest.requireActual('react-native');
-  return {
-    ...actual,
-    AccessibilityInfo: {
-      addEventListener: jest.fn(() => ({ remove: jest.fn() })),
-      isReduceMotionEnabled: jest.fn(() => Promise.resolve(false)),
-    },
-    Platform: { ...actual.Platform, OS: 'ios' as const },
-  };
-});
+Object.defineProperty(Platform, 'OS', { configurable: true, value: 'ios' });
+jest
+  .spyOn(AccessibilityInfo, 'addEventListener')
+  .mockReturnValue({ remove: jest.fn() } as never);
+jest
+  .spyOn(AccessibilityInfo, 'isReduceMotionEnabled')
+  .mockResolvedValue(false);
 
 describe('useHapticFeedback', () => {
   const hapticsMock = jest.requireMock('expo-haptics');

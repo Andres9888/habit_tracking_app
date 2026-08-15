@@ -222,16 +222,18 @@ describe('SocialSignInButton', () => {
         <SocialSignInButton {...defaultProps} />
       );
 
-      // Google button
       const googleButton = getByRole('button');
-      expect(googleButton.props.onPressIn).toBeDefined();
-      expect(googleButton.props.onPressOut).toBeDefined();
+      fireEvent(googleButton, 'pressIn');
+      fireEvent(googleButton, 'pressOut');
+      fireEvent.press(googleButton);
+      expect(mockOnPress).toHaveBeenCalledTimes(1);
 
-      // Apple button
       rerender(<SocialSignInButton {...defaultProps} provider='apple' />);
       const appleButton = getByRole('button');
-      expect(appleButton.props.onPressIn).toBeDefined();
-      expect(appleButton.props.onPressOut).toBeDefined();
+      fireEvent(appleButton, 'pressIn');
+      fireEvent(appleButton, 'pressOut');
+      fireEvent.press(appleButton);
+      expect(mockOnPress).toHaveBeenCalledTimes(2);
     });
   });
 });

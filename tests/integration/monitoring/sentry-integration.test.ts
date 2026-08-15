@@ -43,14 +43,14 @@ jest.mock('@sentry/react-native', () => ({
 }));
 
 describe('Sentry Configuration', () => {
-  const originalEnv = process.env;
-
-  beforeEach(() => {
-    process.env = { ...originalEnv };
-  });
+  const originalDsn = process.env.EXPO_PUBLIC_SENTRY_DSN;
 
   afterEach(() => {
-    process.env = originalEnv;
+    if (originalDsn === undefined) {
+      delete process.env.EXPO_PUBLIC_SENTRY_DSN;
+    } else {
+      process.env.EXPO_PUBLIC_SENTRY_DSN = originalDsn;
+    }
   });
 
   describe('buildSentryConfig', () => {

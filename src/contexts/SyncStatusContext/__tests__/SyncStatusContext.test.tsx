@@ -51,6 +51,7 @@ jest.mock('../../../lib/offline/sync/useSyncOrchestrator', () => ({
     return {
       state: mockState,
       hasPendingOperations: mockHasPendingOperations,
+      pendingOperationCount: mockHasPendingOperations ? 1 : 0,
       isOnline: true,
       triggerSync: mockTriggerSync,
       subscribe: (listener: (event: { type: string }) => void) => {

@@ -22,6 +22,11 @@ jest.mock('expo-image-picker', () => ({
   MediaTypeOptions: {
     Images: 'Images',
   },
+  PermissionStatus: {
+    GRANTED: 'granted',
+    DENIED: 'denied',
+    UNDETERMINED: 'undetermined',
+  },
 }));
 
 // Mock react-native

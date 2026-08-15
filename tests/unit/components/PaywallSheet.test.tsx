@@ -5,11 +5,12 @@
  */
 
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { PaywallSheet } from '../../../src/components/PaywallSheet';
 import { PAYWALL_PERKS } from '../../../src/screens/TemplatesScreen/data/paywallPerks';
 
 let lastModalProps: Record<string, unknown> = {};
+const mockPurchasePackage = jest.fn().mockResolvedValue(true);
 
 jest.mock('../../../src/components/Modal', () => {
   const { View } = require('react-native');
@@ -26,6 +27,14 @@ jest.mock('lucide-react-native', () => {
   return { X: (props: Record<string, unknown>) => <View testID="x-icon" {...props} /> };
 });
 
+jest.mock('../../../src/hooks/usePremium', () => ({
+  usePremium: () => ({
+    monthlyPackage: { identifier: 'monthly' },
+    priceString: '$6.99',
+    purchasePackage: (...args: unknown[]) => mockPurchasePackage(...args),
+  }),
+}));
+
 describe('PaywallSheet', () => {
   const defaultProps = {
     onClose: jest.fn(),
@@ -36,6 +45,7 @@ describe('PaywallSheet', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     lastModalProps = {};
+    mockPurchasePackage.mockResolvedValue(true);
   });
 
   it('uses the shared Modal with bottomSheet variant', () => {
@@ -82,10 +92,13 @@ describe('PaywallSheet', () => {
   });
 
   it('shows Processing text when purchasing', async () => {
+    mockPurchasePackage.mockImplementation(() => new Promise(() => {}));
     const { getByTestId, getByText } = render(<PaywallSheet {...defaultProps} />);
     expect(getByText('Upgrade to Premium')).toBeTruthy();
-    await fireEvent.press(getByTestId('templates-paywall-cta'));
-    expect(getByText('Upgrade to Premium')).toBeTruthy();
+    fireEvent.press(getByTestId('templates-paywall-cta'));
+    await waitFor(() => {
+      expect(getByText('Processing...')).toBeTruthy();
+    });
   });
 
   it('renders nothing when visible is false', () => {

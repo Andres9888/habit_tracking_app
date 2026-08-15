@@ -7,31 +7,27 @@
 
 import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react-native';
-import NetInfo from '@react-native-community/netinfo';
+import * as Network from 'expo-network';
 import { NetworkStatusProvider } from '../NetworkStatusProvider';
 import { useNetworkSync } from '../useNetworkSync';
 
-// NetInfo state types
-const NetInfoStateType = {
-  cellular: 'cellular' as const,
-  none: 'none' as const,
-  wifi: 'wifi' as const,
+const NetworkStateType = {
+  cellular: 'CELLULAR' as const,
+  none: 'NONE' as const,
+  wifi: 'WIFI' as const,
 };
 
-// NetInfo state factory
-interface NetInfoState {
+interface NetworkState {
   isConnected: boolean | null;
   isInternetReachable: boolean | null;
   type: string;
-  details: { isConnectionExpensive?: boolean } | null;
 }
 
-const createNetInfoState = (
+const createNetworkState = (
   isConnected: boolean,
   isInternetReachable: boolean | null = null,
-  type = NetInfoStateType.wifi
-): NetInfoState => ({
-  details: { isConnectionExpensive: type === NetInfoStateType.cellular },
+  type = NetworkStateType.wifi
+): NetworkState => ({
   isConnected,
   isInternetReachable,
   type,
@@ -45,27 +41,29 @@ const createWrapper = () => {
 };
 
 describe('useNetworkSync', () => {
-  let mockNetInfoListeners: ((state: NetInfoState) => void)[] = [];
+  let mockNetworkListeners: ((state: NetworkState) => void)[] = [];
 
   beforeEach(() => {
     jest.clearAllMocks();
     jest.useFakeTimers();
-    mockNetInfoListeners = [];
+    mockNetworkListeners = [];
 
-    // Default: connected via wifi
-    (NetInfo.fetch as jest.Mock).mockResolvedValue(
-      createNetInfoState(true, true, NetInfoStateType.wifi)
+    (Network.getNetworkStateAsync as jest.Mock).mockResolvedValue(
+      createNetworkState(true, true, NetworkStateType.wifi)
     );
 
-    // Capture addEventListener callbacks
-    (NetInfo.addEventListener as jest.Mock).mockImplementation((callback) => {
-      mockNetInfoListeners.push(callback);
-      return () => {
-        mockNetInfoListeners = mockNetInfoListeners.filter(
-          (l) => l !== callback
-        );
-      };
-    });
+    (Network.addNetworkStateListener as jest.Mock).mockImplementation(
+      (callback) => {
+        mockNetworkListeners.push(callback);
+        return {
+          remove: () => {
+            mockNetworkListeners = mockNetworkListeners.filter(
+              (l) => l !== callback
+            );
+          },
+        };
+      }
+    );
   });
 
   afterEach(() => {
@@ -73,8 +71,8 @@ describe('useNetworkSync', () => {
   });
 
   // Helper to simulate network state change
-  const simulateNetworkChange = (state: NetInfoState) => {
-    mockNetInfoListeners.forEach((listener) => listener(state));
+  const simulateNetworkChange = (state: NetworkState) => {
+    mockNetworkListeners.forEach((listener) => listener(state));
   };
 
   describe('initialization', () => {
@@ -91,8 +89,8 @@ describe('useNetworkSync', () => {
     });
 
     it('returns offline state when network is disconnected', async () => {
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(false, false, NetInfoStateType.none)
+      (Network.getNetworkStateAsync as jest.Mock).mockResolvedValue(
+        createNetworkState(false, false, NetworkStateType.none)
       );
 
       const { result } = renderHook(() => useNetworkSync(), {
@@ -118,7 +116,7 @@ describe('useNetworkSync', () => {
       // Go offline
       act(() => {
         simulateNetworkChange(
-          createNetInfoState(false, false, NetInfoStateType.none)
+          createNetworkState(false, false, NetworkStateType.none)
         );
       });
 
@@ -129,8 +127,8 @@ describe('useNetworkSync', () => {
 
     it('updates isOnline when coming back online', async () => {
       // Start offline
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(false, false, NetInfoStateType.none)
+      (Network.getNetworkStateAsync as jest.Mock).mockResolvedValue(
+        createNetworkState(false, false, NetworkStateType.none)
       );
 
       const { result } = renderHook(() => useNetworkSync(), {
@@ -144,7 +142,7 @@ describe('useNetworkSync', () => {
       // Go online
       act(() => {
         simulateNetworkChange(
-          createNetInfoState(true, true, NetInfoStateType.wifi)
+          createNetworkState(true, true, NetworkStateType.wifi)
         );
       });
 
@@ -159,8 +157,8 @@ describe('useNetworkSync', () => {
       const onOnline = jest.fn();
 
       // Start offline
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(false, false, NetInfoStateType.none)
+      (Network.getNetworkStateAsync as jest.Mock).mockResolvedValue(
+        createNetworkState(false, false, NetworkStateType.none)
       );
 
       const { result } = renderHook(() => useNetworkSync({ onOnline }), {
@@ -174,7 +172,7 @@ describe('useNetworkSync', () => {
       // Go online
       act(() => {
         simulateNetworkChange(
-          createNetInfoState(true, true, NetInfoStateType.wifi)
+          createNetworkState(true, true, NetworkStateType.wifi)
         );
       });
 
@@ -197,7 +195,7 @@ describe('useNetworkSync', () => {
       // Go offline
       act(() => {
         simulateNetworkChange(
-          createNetInfoState(false, false, NetInfoStateType.none)
+          createNetworkState(false, false, NetworkStateType.none)
         );
       });
 
@@ -212,8 +210,8 @@ describe('useNetworkSync', () => {
       const onSyncStart = jest.fn();
 
       // Start offline
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(false, false, NetInfoStateType.none)
+      (Network.getNetworkStateAsync as jest.Mock).mockResolvedValue(
+        createNetworkState(false, false, NetworkStateType.none)
       );
 
       const { result } = renderHook(
@@ -228,7 +226,7 @@ describe('useNetworkSync', () => {
       // Go online
       act(() => {
         simulateNetworkChange(
-          createNetInfoState(true, true, NetInfoStateType.wifi)
+          createNetworkState(true, true, NetworkStateType.wifi)
         );
       });
 
@@ -244,8 +242,8 @@ describe('useNetworkSync', () => {
       const onSyncStart = jest.fn();
 
       // Start offline
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(false, false, NetInfoStateType.none)
+      (Network.getNetworkStateAsync as jest.Mock).mockResolvedValue(
+        createNetworkState(false, false, NetworkStateType.none)
       );
 
       const { result } = renderHook(
@@ -260,7 +258,7 @@ describe('useNetworkSync', () => {
       // Go online
       act(() => {
         simulateNetworkChange(
-          createNetInfoState(true, true, NetInfoStateType.wifi)
+          createNetworkState(true, true, NetworkStateType.wifi)
         );
       });
 

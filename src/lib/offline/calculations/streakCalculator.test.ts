@@ -447,10 +447,8 @@ describe('streakCalculator', () => {
         '2026-01-22',
       ]);
 
-      // Note: This function counts from most recent <= today backward
-      // If there's a gap from most recent to today, it still counts the streak
-      // This matches src/utils/streak.ts behavior
-      expect(computeCurrentStreakFromDates(completedDates, todayDate)).toBe(3);
+      // Last completion is more than one day before today, so the streak is broken
+      expect(computeCurrentStreakFromDates(completedDates, todayDate)).toBe(0);
     });
 
     it('handles single isolated completion', () => {

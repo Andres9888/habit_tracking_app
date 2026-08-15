@@ -4,6 +4,7 @@
  */
 
 import * as Haptics from 'expo-haptics';
+import { Platform } from 'react-native';
 
 import { HapticPatterns } from '../patterns';
 import { triggerHaptic, triggerHapticAsync } from '../haptics';
@@ -24,13 +25,7 @@ jest.mock('expo-haptics', () => ({
   selectionAsync: jest.fn().mockResolvedValue(undefined),
 }));
 
-jest.mock('react-native', () => {
-  const actual = jest.requireActual('react-native');
-  return {
-    ...actual,
-    Platform: { ...actual.Platform, OS: 'ios' as const },
-  };
-});
+Object.defineProperty(Platform, 'OS', { configurable: true, value: 'ios' });
 
 describe('HapticPatterns', () => {
   afterEach(() => jest.clearAllMocks());

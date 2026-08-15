@@ -20,25 +20,16 @@ import {
   type UseUnsavedChangesGuardOptions,
 } from '../useUnsavedChangesGuard';
 
-// Mock dependencies
 jest.mock('expo-haptics');
-jest.mock('react-native', () => {
-  const RN = jest.requireActual('react-native');
-  return {
-    ...RN,
-    Alert: {
-      alert: jest.fn(),
-    },
-    BackHandler: {
-      addEventListener: jest.fn(() => ({
-        remove: jest.fn(),
-      })),
-    },
-    Platform: {
-      OS: 'ios',
-      select: jest.fn((obj) => obj.ios),
-    },
-  };
+
+jest.spyOn(Alert, 'alert').mockImplementation(jest.fn());
+jest.spyOn(BackHandler, 'addEventListener').mockReturnValue({
+  remove: jest.fn(),
+} as never);
+Object.defineProperty(Platform, 'OS', { configurable: true, writable: true, value: 'ios' });
+Object.defineProperty(Platform, 'select', {
+  configurable: true,
+  value: jest.fn((obj: { ios?: unknown }) => obj.ios),
 });
 
 describe('useUnsavedChangesGuard', () => {
@@ -222,9 +213,7 @@ describe('useUnsavedChangesGuard', () => {
         result.current.confirmDiscard(jest.fn());
       });
 
-      expect(mockHaptics.impactAsync).toHaveBeenCalledWith(
-        Haptics.ImpactFeedbackStyle.Medium
-      );
+      expect(mockHaptics.impactAsync).toHaveBeenCalledWith('heavy');
     });
 
     it('calls callback and onDiscard when discard is pressed', () => {

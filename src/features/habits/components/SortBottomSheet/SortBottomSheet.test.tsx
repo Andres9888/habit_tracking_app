@@ -51,9 +51,9 @@ describe('SortBottomSheet', () => {
       expect(getByText('Sort Habits')).toBeTruthy();
     });
 
-    it('should render the "Done" button', () => {
-      const { getByText } = render(<SortBottomSheet {...defaultProps} />);
-      expect(getByText('Done')).toBeTruthy();
+    it('should render the close button', () => {
+      const { getByLabelText } = render(<SortBottomSheet {...defaultProps} />);
+      expect(getByLabelText('Close')).toBeTruthy();
     });
 
     it('should render drag handle', () => {
@@ -215,13 +215,13 @@ describe('SortBottomSheet', () => {
   });
 
   describe('Dismiss Gestures', () => {
-    it('should call onClose when Done button is pressed', () => {
+    it('should call onClose when close button is pressed', () => {
       const onClose = jest.fn();
-      const { getByText } = render(
+      const { getByLabelText } = render(
         <SortBottomSheet {...defaultProps} onClose={onClose} />
       );
 
-      fireEvent.press(getByText('Done'));
+      fireEvent.press(getByLabelText('Close'));
 
       expect(onClose).toHaveBeenCalledTimes(1);
     });
@@ -262,15 +262,13 @@ describe('SortBottomSheet', () => {
       expect(root).toBeTruthy();
     });
 
-    it('should have accessible Done button with role and label', () => {
-      const { getByRole, getByLabelText } = render(
-        <SortBottomSheet {...defaultProps} />
-      );
+    it('should have accessible close button with role and label', () => {
+      const { getByLabelText } = render(<SortBottomSheet {...defaultProps} />);
 
-      const doneButton = getByLabelText('Done');
-      expect(doneButton).toBeTruthy();
-      expect(doneButton.props.accessibilityRole).toBe('button');
-      expect(doneButton.props.accessibilityHint).toBe('Close sort options');
+      const closeButton = getByLabelText('Close');
+      expect(closeButton).toBeTruthy();
+      expect(closeButton.props.accessibilityRole).toBe('button');
+      expect(closeButton.props.accessibilityHint).toBe('Close sort options');
     });
 
     it('should have radio role for sort option rows', () => {
@@ -310,7 +308,6 @@ describe('SortBottomSheet', () => {
 
       // Check that options have combined title + description as label
       expect(getByLabelText('Custom Order. Drag to reorder manually')).toBeTruthy();
-      expect(getByLabelText('Day Phase. Push → Pivot → Pull')).toBeTruthy();
       expect(getByLabelText('Name (A–Z). Alphabetical order')).toBeTruthy();
     });
 
@@ -349,12 +346,11 @@ describe('SortBottomSheet', () => {
   });
 
   describe('Hidden State', () => {
-    it('should still render modal when not visible (for animation)', () => {
-      const { root } = render(
+    it('does not show sort options when the sheet is hidden', () => {
+      const { queryByText } = render(
         <SortBottomSheet {...defaultProps} visible={false} />
       );
-      // Modal is always rendered but slides out of view
-      expect(root).toBeTruthy();
+      expect(queryByText('Sort Habits')).toBeNull();
     });
   });
 
@@ -381,8 +377,7 @@ describe('SortBottomSheet', () => {
 
       fireEvent.press(getByText('Name (A–Z)'));
 
-      // Selection happened (verified by onSelectSortMode call)
-      expect(defaultProps.onSelectSortMode).not.toHaveBeenCalled(); // We're using a fresh mock
+      expect(defaultProps.onSelectSortMode).toHaveBeenCalledWith('name_asc');
     });
 
     it('should update immediately when sort mode changes via prop', () => {

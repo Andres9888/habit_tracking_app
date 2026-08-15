@@ -25,6 +25,18 @@ function settleInteractions() {
 describe('useDeferredMount', () => {
   beforeEach(() => {
     jest.useFakeTimers();
+    jest
+      .spyOn(InteractionManager, 'runAfterInteractions')
+      .mockImplementation((cb) => {
+        const id = setTimeout(cb, 0);
+        return { cancel: () => clearTimeout(id) };
+      });
+    jest.spyOn(global, 'requestAnimationFrame').mockImplementation((cb) => {
+      return setTimeout(() => cb(Date.now()), 16) as unknown as number;
+    });
+    jest.spyOn(global, 'cancelAnimationFrame').mockImplementation((id) => {
+      clearTimeout(id as unknown as NodeJS.Timeout);
+    });
     resetDeferredMountLatches();
   });
 
@@ -63,6 +75,7 @@ describe('useDeferredMount', () => {
     first.unmount();
 
     const spy = jest.spyOn(InteractionManager, 'runAfterInteractions');
+    spy.mockClear();
     const second = renderHook(() =>
       useDeferredMount({ latchKey: 'SettingsModal' })
     );

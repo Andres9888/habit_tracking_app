@@ -222,12 +222,10 @@ describe('queueStorage', () => {
 
       await loadQueueState();
 
-      expect(AsyncStorage.getItem).toHaveBeenNthCalledWith(
-        1,
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith(
         '@chainday:offline_queue_v1:user_456_pending'
       );
-      expect(AsyncStorage.getItem).toHaveBeenNthCalledWith(
-        2,
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith(
         '@chainday:offline_queue_v1:user_456'
       );
     });

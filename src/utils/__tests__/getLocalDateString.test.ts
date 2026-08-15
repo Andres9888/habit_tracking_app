@@ -146,12 +146,11 @@ describe('getLocalDateString', () => {
         expect(getLocalDateString(evening)).toBe('2024-02-15');
       });
 
-      it('handles invalid date gracefully', () => {
+      it('throws on invalid date', () => {
         const invalidDate = new Date('invalid');
-        const result = getLocalDateString(invalidDate);
-
-        // Should return NaN-NaN-NaN for invalid dates
-        expect(result).toContain('NaN');
+        expect(() => getLocalDateString(invalidDate)).toThrow(
+          'Invalid date passed to getLocalDateString'
+        );
       });
     });
   });

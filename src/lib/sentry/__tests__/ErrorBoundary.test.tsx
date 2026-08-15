@@ -80,10 +80,8 @@ describe('SentryErrorBoundary', () => {
         </SentryErrorBoundary>
       );
 
-      expect(getByText('Something went wrong')).toBeTruthy();
-      expect(
-        getByText("We've been notified and are working to fix this.")
-      ).toBeTruthy();
+      expect(getByText('Oops! Something went wrong')).toBeTruthy();
+      expect(getByText("Don't worry — your data is safe.")).toBeTruthy();
     });
 
     it('shows Try Again button in fallback', () => {
@@ -147,7 +145,7 @@ describe('SentryErrorBoundary', () => {
       );
 
       expect(getByText('Custom Error View')).toBeTruthy();
-      expect(queryByText('Something went wrong')).toBeNull();
+      expect(queryByText('Oops! Something went wrong')).toBeNull();
     });
   });
 
@@ -169,7 +167,7 @@ describe('SentryErrorBoundary', () => {
       );
 
       // Error state is shown
-      expect(getByText('Something went wrong')).toBeTruthy();
+      expect(getByText('Oops! Something went wrong')).toBeTruthy();
 
       // Fix the condition and press Try Again
       shouldThrow = false;

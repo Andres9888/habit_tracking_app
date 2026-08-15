@@ -55,7 +55,7 @@ describe('getUpsellSubtitle', () => {
   });
 
   it('falls back to price, then to generic copy', () => {
-    expect(getUpsellSubtitle('$4.99', null)).toBe('Everything unlocked — $4.99/mo');
-    expect(getUpsellSubtitle(null, null)).toBe('Everything unlocked');
+    expect(getUpsellSubtitle('$4.99', null)).toBe('Unlock everything — $4.99/mo');
+    expect(getUpsellSubtitle(null, null)).toBe('Unlock everything');
   });
 });

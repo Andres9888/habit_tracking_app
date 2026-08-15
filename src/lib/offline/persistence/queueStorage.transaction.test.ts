@@ -240,10 +240,12 @@ describe('queueStorage - transaction safety', () => {
       expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
         OFFLINE_QUEUE_STORAGE_KEY
       );
-      expect(AsyncStorage.multiRemove).toHaveBeenCalledWith([
-        getPendingKey(OFFLINE_QUEUE_STORAGE_KEY),
-        expect.stringContaining('_backup'),
-      ]);
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
+        getPendingKey(OFFLINE_QUEUE_STORAGE_KEY)
+      );
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
+        expect.stringContaining('_backup')
+      );
     });
   });
 

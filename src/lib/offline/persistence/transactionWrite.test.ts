@@ -192,10 +192,8 @@ describe('transactionWrite', () => {
 
       await recoverTransaction('@mykey', validator);
 
-      expect(AsyncStorage.multiRemove).toHaveBeenCalledWith([
-        '@mykey_pending',
-        '@mykey_backup',
-      ]);
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith('@mykey_pending');
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith('@mykey_backup');
     });
 
     it('returns not recovered when validation fails', async () => {
@@ -229,7 +227,7 @@ describe('transactionWrite', () => {
 
       await recoverTransaction('@mykey', validator);
 
-      expect(AsyncStorage.multiRemove).toHaveBeenCalled();
+      expect(AsyncStorage.removeItem).toHaveBeenCalled();
     });
 
     it('logs success on recovery', async () => {
@@ -256,10 +254,8 @@ describe('transactionWrite', () => {
     it('removes pending and backup keys', async () => {
       await cleanupTransaction('@mykey');
 
-      expect(AsyncStorage.multiRemove).toHaveBeenCalledWith([
-        '@mykey_pending',
-        '@mykey_backup',
-      ]);
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith('@mykey_pending');
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith('@mykey_backup');
     });
   });
 
