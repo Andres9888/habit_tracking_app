@@ -15,6 +15,8 @@ import type { InsightPalette } from '../../insightPalette';
 import { CalendarYearSection } from '../CalendarYearSection';
 import { InsightCard } from '../InsightCard';
 
+const NOOP_MONTH = (_dateString: string) => {};
+
 interface YearGlanceCardProps {
   caption?: string | null;
   completedDates: Set<string>;
@@ -23,6 +25,7 @@ interface YearGlanceCardProps {
   palette: InsightPalette;
   /** "Jan – Jul", derived from the elapsed months. */
   rangeLabel?: string;
+  onNavigateToMonth?: (dateString: string) => void;
 }
 
 export function YearGlanceCard({
@@ -32,6 +35,7 @@ export function YearGlanceCard({
   habitCreatedAt,
   palette,
   rangeLabel,
+  onNavigateToMonth,
 }: YearGlanceCardProps) {
   return (
     <InsightCard palette={palette}>
@@ -42,7 +46,7 @@ export function YearGlanceCard({
           habitColor={habitColor}
           habitCreatedAt={habitCreatedAt}
           rangeLabel={rangeLabel}
-          onNavigateToMonth={() => {}}
+          onNavigateToMonth={onNavigateToMonth ?? NOOP_MONTH}
         />
       </View>
     </InsightCard>

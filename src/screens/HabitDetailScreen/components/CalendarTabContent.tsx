@@ -2,9 +2,7 @@
  * CalendarTabContent — one unified card: interactive monthly grid on top,
  * "Year at a glance" below a divider (tap a year cell to jump the month).
  */
-import { useCallback, useState } from 'react';
 import { View } from 'react-native';
-import { parseISO, startOfMonth } from 'date-fns';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { durations, enterEasing } from '../../../theme/animations';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
@@ -14,6 +12,7 @@ import { colors as palette } from '../../../theme/colors';
 import { shadows } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { CalendarYearSection } from './CalendarYearSection';
+import { useCalendarMonth } from './useCalendarMonth';
 
 interface CalendarTabContentProps {
   completedDates: Set<string>;
@@ -26,6 +25,9 @@ interface CalendarTabContentProps {
   yearCaption?: string | null;
   /** "Jan – Jul", derived from the elapsed months. */
   yearRangeLabel?: string;
+  /** Controlled month. When omitted the grid starts on the current month. */
+  month?: Date;
+  onMonthChange?: (month: Date) => void;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
 }
 
@@ -38,16 +40,14 @@ export function CalendarTabContent({
   showYearSection = true,
   yearCaption,
   yearRangeLabel,
+  month,
+  onMonthChange,
 }: CalendarTabContentProps) {
   const { colors, isDark } = useThemeColors();
-  const [currentMonth, setCurrentMonth] = useState(() =>
-    startOfMonth(new Date())
+  const { currentMonth, navigateToMonth, setCurrentMonth } = useCalendarMonth(
+    month,
+    onMonthChange
   );
-
-  const navigateToMonth = useCallback((dateString: string) => {
-    const parsed = parseISO(dateString);
-    if (!Number.isNaN(parsed.getTime())) setCurrentMonth(startOfMonth(parsed));
-  }, []);
 
   return (
     <Animated.View

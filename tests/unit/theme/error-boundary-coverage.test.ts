@@ -71,22 +71,21 @@ describe('Secondary ErrorBoundary in CalendarAndDetailModals', () => {
   });
 });
 
-describe('Secondary ErrorBoundary in HabitDetailContent', () => {
-  const source = readSource(
-    'screens/HabitDetailScreen/components/HabitDetailContent.tsx'
-  );
-
-  it('imports ErrorBoundary component', () => {
+describe('Secondary ErrorBoundary in habit detail flow screens', () => {
+  it('wraps HabitStrengthSection on Analytics', () => {
+    const source = readSource(
+      'screens/HabitDetailScreen/components/HabitAnalyticsScreen/HabitAnalyticsScreen.tsx'
+    );
     expect(source).toMatch(/import.*ErrorBoundary/);
-  });
-
-  it('wraps HabitStrengthSection with ErrorBoundary', () => {
     expect(source).toMatch(
       /<ErrorBoundary>[\s\S]*?<HabitStrengthSection[\s\S]*?<\/ErrorBoundary>/
     );
   });
 
-  it('wraps calendar section via CalendarTabContent', () => {
+  it('hosts the calendar on History', () => {
+    const source = readSource(
+      'screens/HabitDetailScreen/components/HabitHistoryScreen/HabitHistoryScreen.tsx'
+    );
     expect(source).toMatch(/<CalendarTabContent[\s\S]*?\/>/);
   });
 });

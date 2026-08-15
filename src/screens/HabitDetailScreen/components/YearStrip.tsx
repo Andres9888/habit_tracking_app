@@ -70,7 +70,8 @@ export function YearStrip({
           textAlign: 'center',
         }}
       >
-        {gridData.stats.completionRate}% this year · tap to jump
+        {gridData.stats.completions}{' '}
+        {gridData.stats.completions === 1 ? 'day' : 'days'} logged
       </Text>
     </View>
   );

@@ -1,44 +1,40 @@
 /**
- * HabitDetailSections — the card stack below the hero wash:
- *
- *   Progress → What we're noticing → Your month → [history] → note → pause
- *
- * The note card moves into the hero once today is logged (frame 2 of the Habit
- * Flow Prototype), so it is rendered here only while today is still open — one
- * note, one input.
+ * HabitDetailSections — recommitment stack below the hero:
+ * Progress → History/Analytics doors → one insight line → pause.
  */
-import { useState } from 'react';
 import { View } from 'react-native';
 import type { Habit } from '../../../features/habits/types';
 import { spacing } from '../../../theme/spacing';
+import { getLocalDateString } from '../../../utils/getLocalDateString';
 import type { HabitInsights } from '../insights';
-import { HabitDetailHistory } from './HabitDetailHistory';
-import { HabitNoteCard } from './HabitNoteCard';
-import { MonthHeatmapCard } from './MonthHeatmapCard';
-import { NoticingSection } from './NoticingSection';
+import type { InsightId } from '../useDetailFlow';
+import { InsightLine } from './InsightLine';
 import { PauseCard } from './PauseCard';
+import { RecordDoors } from './RecordDoors';
 import { ThisWeekCard } from './ThisWeekCard';
 
 interface HabitDetailSectionsProps {
   completedDates: Set<string>;
   habit: Habit;
   insights: HabitInsights;
-  isCompletedToday: boolean;
-  pendingToggleDate?: string | null;
-  onDayPress: (dateString: string, isCompleted: boolean) => void;
-  onEdit?: () => void;
+  onDayPress: (date: string, isCompleted: boolean) => void;
+  onOpenAnalytics: () => void;
+  onOpenDay: (date: string) => void;
+  onOpenHistory: () => void;
+  onOpenInsight: (id: InsightId) => void;
 }
 
 export function HabitDetailSections({
   completedDates,
   habit,
   insights,
-  isCompletedToday,
-  pendingToggleDate = null,
   onDayPress,
-  onEdit,
+  onOpenAnalytics,
+  onOpenDay,
+  onOpenHistory,
+  onOpenInsight,
 }: HabitDetailSectionsProps) {
-  const [showHistory, setShowHistory] = useState(false);
+  const today = getLocalDateString();
 
   return (
     <View style={{ gap: spacing.md, padding: 20, paddingBottom: 40 }}>
@@ -48,35 +44,17 @@ export function HabitDetailSections({
         currentStreak={habit.currentStreak ?? 0}
         daysOfWeek={habit.daysOfWeek}
         yearCompletions={insights.yearCompletions}
-        onDayPress={onDayPress}
+        onDayPress={(date, done) => {
+          if (date > today) return;
+          if (date === today) onDayPress(date, done);
+          else onOpenDay(date);
+        }}
       />
-      <NoticingSection
-        cue={habit.cueAfterBehavior}
-        habitId={habit._id}
-        insights={insights}
-        onAdjustReminder={() => onEdit?.()}
+      <RecordDoors
+        onOpenAnalytics={onOpenAnalytics}
+        onOpenHistory={onOpenHistory}
       />
-      <MonthHeatmapCard
-        completedDates={completedDates}
-        daysOfWeek={habit.daysOfWeek}
-        yearRatePct={insights.yearRatePct}
-        onDayPress={onDayPress}
-        onViewHistory={() => setShowHistory((open) => !open)}
-      />
-      {showHistory ? (
-        <HabitDetailHistory
-          completedDates={completedDates}
-          doneDates={insights.doneDates}
-          habit={habit}
-          pendingToggleDate={pendingToggleDate}
-          yearCompletions={insights.yearCompletions}
-          yearRatePct={insights.yearRatePct}
-          onDayPress={onDayPress}
-        />
-      ) : null}
-      {isCompletedToday ? null : (
-        <HabitNoteCard habitId={habit._id} notes={habit.notes} />
-      )}
+      <InsightLine insights={insights} onPress={onOpenInsight} />
       <PauseCard habitId={habit._id} paused={habit.paused} />
     </View>
   );

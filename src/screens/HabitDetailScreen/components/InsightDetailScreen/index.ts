@@ -1,0 +1,1 @@
+export { InsightDetailScreen } from './InsightDetailScreen';

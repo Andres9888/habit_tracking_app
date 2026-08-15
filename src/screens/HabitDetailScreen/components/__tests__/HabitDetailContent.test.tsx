@@ -1,14 +1,11 @@
 /**
- * Smoke coverage for the redesigned detail stack: the sections the design
- * mandates are present, the conditional insight section stays quiet without
- * enough history, and the history disclosure is closed until asked for.
+ * Smoke coverage for the recommitment stack: hero, Progress, record doors,
+ * and pause. History and Analytics are their own screens.
  */
 import { fireEvent, render } from '@testing-library/react-native';
 import type { Habit } from '../../../../features/habits/types';
 import { HabitDetailContent } from '../HabitDetailContent';
 
-// Tracking rows the insight layer reads. Mutable so a test can decide whether
-// yesterday was a miss, which drives the recovery state in the hero.
 const trackingRows: {
   completed: boolean;
   date: string;
@@ -28,7 +25,6 @@ function ymd(offsetDays: number): string {
   ].join('-');
 }
 
-/** Logs yesterday so the hero shows the why pill rather than recovery. */
 function completeYesterday() {
   trackingRows.push({
     _creationTime: Date.now(),
@@ -41,12 +37,6 @@ beforeEach(() => {
   trackingRows.length = 0;
 });
 
-// The history disclosure pulls in the strength chart + goal card; both are
-// covered by their own suites and are heavy to mount here.
-jest.mock('../HabitDetailHistory', () => ({
-  HabitDetailHistory: () => null,
-}));
-
 const habit = {
   _id: 'habit_1',
   bestStreak: 12,
@@ -57,25 +47,48 @@ const habit = {
   why: 'Have energy for the kids before the day takes over.',
 } as unknown as Habit;
 
-function renderContent(overrides: Partial<Habit> = {}) {
+function renderContent(
+  overrides: Partial<Habit> = {},
+  handlers: {
+    onOpenAnalytics?: () => void;
+    onOpenHistory?: () => void;
+  } = {}
+) {
   return render(
     <HabitDetailContent
       completedDates={new Set<string>()}
       habit={{ ...habit, ...overrides }}
       isCompletedToday={false}
       onDayPress={jest.fn()}
+      onOpenAnalytics={handlers.onOpenAnalytics}
+      onOpenHistory={handlers.onOpenHistory}
     />
   );
 }
 
 describe('HabitDetailContent', () => {
-  it('renders the hero, Progress card, month heatmap and pause card', () => {
+  it('renders the hero, Progress card, record doors and pause card', () => {
     const { getByText } = renderContent();
     expect(getByText('Wake-Up Movement')).toBeTruthy();
     expect(getByText('Daily habit')).toBeTruthy();
     expect(getByText('Progress')).toBeTruthy();
-    expect(getByText('Your month')).toBeTruthy();
+    expect(getByText('The record')).toBeTruthy();
+    expect(getByText('History')).toBeTruthy();
+    expect(getByText('Analytics')).toBeTruthy();
     expect(getByText('Going away?')).toBeTruthy();
+  });
+
+  it('opens History and Analytics from the record doors', () => {
+    const onOpenHistory = jest.fn();
+    const onOpenAnalytics = jest.fn();
+    const { getByLabelText } = renderContent(
+      {},
+      { onOpenAnalytics, onOpenHistory }
+    );
+    fireEvent.press(getByLabelText('History'));
+    fireEvent.press(getByLabelText('Analytics'));
+    expect(onOpenHistory).toHaveBeenCalledTimes(1);
+    expect(onOpenAnalytics).toHaveBeenCalledTimes(1);
   });
 
   it('shows the streak numbers in the Progress rail', () => {
@@ -100,7 +113,6 @@ describe('HabitDetailContent', () => {
   it('shows the strength dial rather than a streak counter in the hero', () => {
     const { getByLabelText, getByText, queryByText } = renderContent();
     expect(getByLabelText(/Habit strength 68 percent/)).toBeTruthy();
-    // The milestone bar is the only streak display on this screen.
     expect(queryByText('9 day streak')).toBeNull();
     expect(getByText('3 days from your best streak ever')).toBeTruthy();
   });
@@ -111,14 +123,12 @@ describe('HabitDetailContent', () => {
     expect(getByText(/Have energy for the kids/)).toBeTruthy();
   });
 
-  // MVP "Ship" item from the design's scope note.
   it('swaps the why pill for the recovery state when yesterday was missed', () => {
     const { getByText, queryByText } = renderContent();
     expect(
       getByText(/One miss doesn’t erase 12 days|One miss doesn't erase 12 days/)
     ).toBeTruthy();
     expect(queryByText(/Have energy for the kids/)).toBeNull();
-    // The numbers that survive the reset are still on screen.
     expect(getByText('Best streak')).toBeTruthy();
   });
 
@@ -155,12 +165,5 @@ describe('HabitDetailContent', () => {
       woopWish: undefined,
     });
     expect(queryByText(/Your why/)).toBeNull();
-  });
-
-  it('keeps the full history collapsed until View history is tapped', () => {
-    const { getByLabelText } = renderContent();
-    // Present and pressable; the disclosure body itself is mocked out above.
-    fireEvent.press(getByLabelText('View history ›'));
-    expect(getByLabelText('View history ›')).toBeTruthy();
   });
 });

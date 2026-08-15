@@ -1,10 +1,9 @@
 /**
  * HabitNoteCard — the note slot from the design.
  *
- * Two placements: 'dashed' at the foot of the stack while today is still open,
- * and 'onBand' inside the hero right after a check-in (frame 2 of the Habit
- * Flow Prototype), where the design surfaces the prompt at the moment it's most
- * likely to be answered. HabitDetailContent renders exactly one of the two.
+ * Two placements: 'dashed' on History, and 'onBand' inside the hero right after
+ * a check-in, where the design surfaces the prompt at the moment it's most
+ * likely to be answered.
  *
  * NOTE ON SCOPE: the design labels this "Today's note", but `tracking` rows
  * carry no note field, so this writes the habit-level `habit.notes` via

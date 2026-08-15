@@ -12,13 +12,17 @@ import {
   DetailBandHeader,
   DetailLoadingState,
   getHabitDisplayName,
-  HabitDetailContent,
   HabitDetailModals,
 } from './components';
+import { DetailFlowSwitch } from './components/DetailFlowSwitch';
+import { FlowHeader } from './components/FlowHeader';
 import { buildModalsProps } from './HabitDetailScreen.constants';
 import type { HabitDetailScreenProps } from './HabitDetailScreen.types';
 import { useCalendarHandlers } from './useCalendarHandlers';
+import { useDetailFlow } from './useDetailFlow';
+import { useDetailFlowActions } from './useDetailFlowActions';
 import { useHabitDetailScreenState } from './useHabitDetailScreenState';
+import { useResetDetailFlow } from './useResetDetailFlow';
 
 // Module-scoped so the default prop is referentially stable. As an inline `[]`
 // literal it was a new array on every render, which meant the tracking-keyed
@@ -67,11 +71,8 @@ function HabitDetailScreenContent({
   const handleEdit = () => {
     if (displayHabit) onEdit?.(displayHabit);
   };
-  // Memoized because this object is threaded down through HabitDetailContent →
-  // HabitDetailSections → ThisWeekCard / MonthHeatmapCard / PauseCard etc. As a
-  // fresh literal it defeated every memo boundary below it, so each scroll tick
-  // (which flips isTitlePinned) rebuilt the whole detail stack including the
-  // 42-cell month grid.
+  // Memoized because this object is threaded down through the detail stack.
+  // As a fresh literal it defeated memo boundaries below it.
   const habitWithStreaks = useMemo(
     () =>
       displayHabit
@@ -87,6 +88,13 @@ function HabitDetailScreenContent({
   const handlePinnedChange = useCallback((pinned: boolean) => {
     setIsTitlePinned(pinned);
   }, []);
+  const flow = useDetailFlow();
+  const actions = useDetailFlowActions(flow.go);
+  useResetDetailFlow(flow.reset, visible, displayHabit?._id);
+  const handleRequestClose = () => {
+    if (flow.route === 'detail') onClose();
+    else flow.back();
+  };
 
   return (
     <Modal
@@ -96,7 +104,7 @@ function HabitDetailScreenContent({
       animationType='slide'
       presentationStyle='overFullScreen'
       visible={visible}
-      onRequestClose={onClose}
+      onRequestClose={handleRequestClose}
     >
       {displayHabit && habitWithStreaks ? (
         <>
@@ -112,21 +120,35 @@ function HabitDetailScreenContent({
                 className='flex-1 overflow-hidden rounded-t-3xl'
                 style={{ backgroundColor: colors.background, ...shadows.modal }}
               >
-                <DetailBandHeader
-                  isCompletedToday={screenState.isCompletedToday}
-                  isTitlePinned={isTitlePinned}
-                  title={getHabitDisplayName(displayHabit)}
-                  onClose={onClose}
-                  onEdit={handleEdit}
-                />
-                <HabitDetailContent
+                {flow.route === 'detail' ? (
+                  <DetailBandHeader
+                    isCompletedToday={screenState.isCompletedToday}
+                    isTitlePinned={isTitlePinned}
+                    title={getHabitDisplayName(displayHabit)}
+                    onClose={onClose}
+                    onEdit={handleEdit}
+                  />
+                ) : (
+                  <FlowHeader
+                    backLabel={flow.backLabel}
+                    title={flow.title}
+                    onBack={flow.back}
+                  />
+                )}
+                <DetailFlowSwitch
                   completedDates={screenState.completedDates}
                   habit={habitWithStreaks}
                   isCompletedToday={screenState.isCompletedToday}
+                  params={flow.params}
                   pendingToggleDate={screenState.pendingToggleDate}
+                  route={flow.route}
                   visible={visible}
                   onDayPress={calendarHandlers.handleCalendarDayPress}
                   onEdit={handleEdit}
+                  onOpenAnalytics={actions.openAnalytics}
+                  onOpenDay={actions.openDay}
+                  onOpenHistory={actions.openHistory}
+                  onOpenInsight={actions.openInsight}
                   onPinnedChange={handlePinnedChange}
                 />
               </View>

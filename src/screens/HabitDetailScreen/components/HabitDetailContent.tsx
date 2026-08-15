@@ -1,11 +1,6 @@
 /**
- * HabitDetailContent — the redesigned detail stack (Claude Design, "Habit Flow
- * Prototype" in project "Habit insights page redesign"):
- *
- *   hero wash → Progress → What we're noticing → Your month → note → pause
- *
- * Insight-first rather than data-first: the raw calendar, strength curve and
- * goal card live behind "View history ›" (see HabitDetailHistory).
+ * HabitDetailContent — recommitment surface:
+ *   hero wash → Progress → History/Analytics doors → one insight line → pause
  */
 import { useCallback } from 'react';
 import {
@@ -19,6 +14,7 @@ import type { Habit } from '../../../features/habits/types';
 import { getLocalDateString } from '../../../utils/getLocalDateString';
 import { isMissedYesterday, useHabitInsights } from '../insights';
 import { useInsightPalette } from '../insightPalette';
+import type { InsightId } from '../useDetailFlow';
 import { DetailHeroBanner } from './DetailHeroBanner';
 import { HabitDetailSections } from './HabitDetailSections';
 
@@ -32,7 +28,10 @@ interface HabitDetailContentProps {
   pendingToggleDate?: string | null;
   visible?: boolean;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
-  onEdit?: () => void;
+  onOpenAnalytics?: () => void;
+  onOpenDay?: (date: string) => void;
+  onOpenHistory?: () => void;
+  onOpenInsight?: (id: InsightId) => void;
   onPinnedChange?: (pinned: boolean) => void;
 }
 
@@ -43,7 +42,10 @@ export function HabitDetailContent({
   pendingToggleDate = null,
   visible = true,
   onDayPress,
-  onEdit,
+  onOpenAnalytics,
+  onOpenDay,
+  onOpenHistory,
+  onOpenInsight,
   onPinnedChange,
 }: HabitDetailContentProps) {
   const palette = useInsightPalette();
@@ -102,10 +104,11 @@ export function HabitDetailContent({
           completedDates={completedDates}
           habit={habit}
           insights={insights}
-          isCompletedToday={isCompletedToday}
-          pendingToggleDate={pendingToggleDate}
           onDayPress={onDayPress}
-          onEdit={onEdit}
+          onOpenAnalytics={onOpenAnalytics ?? (() => {})}
+          onOpenDay={onOpenDay ?? (() => {})}
+          onOpenHistory={onOpenHistory ?? (() => {})}
+          onOpenInsight={onOpenInsight ?? (() => {})}
         />
       </View>
     </ScrollView>
