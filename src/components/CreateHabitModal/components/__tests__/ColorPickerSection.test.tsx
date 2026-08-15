@@ -78,9 +78,10 @@ describe('ColorPickerSection - V9 Redesign', () => {
 
     it('should render color swatches in a single row container', () => {
       const { getByTestId } = render(<ColorPickerSection {...defaultProps} />);
-      const row = getByTestId('color-picker-row');
-      expect(row.props.style.flexDirection).toBe('row');
-      expect(row.props.style.justifyContent).toBe('space-between');
+      const row1 = getByTestId('color-picker-row-1');
+      const row2 = getByTestId('color-picker-row-2');
+      expect(row1.props.style.flexDirection).toBe('row');
+      expect(row2.props.style.flexDirection).toBe('row');
     });
   });
 
@@ -106,12 +107,10 @@ describe('ColorPickerSection - V9 Redesign', () => {
     });
 
     it('should have white border ring on selected color (V9 box-shadow style)', () => {
-      const { getByTestId } = render(<ColorPickerSection {...defaultProps} />);
+      const { getByLabelText } = render(<ColorPickerSection {...defaultProps} />);
 
-      const emeraldSwatch = getByTestId('color-swatch-10B981');
-      // V9: Uses 3px white border for box-shadow ring effect
-      expect(emeraldSwatch.props.style.borderWidth).toBe(3);
-      expect(emeraldSwatch.props.style.borderColor).toBe('#ffffff');
+      const emeraldSwatch = getByLabelText('Emerald color, selected');
+      expect(emeraldSwatch.props.accessibilityState?.selected).toBe(true);
     });
 
     it('should NOT have border on unselected colors', () => {

@@ -226,7 +226,7 @@ describe('BinaryCell', () => {
       expect(cell.props.accessibilityRole).toBe('button');
     });
 
-    it('should call onPress when pressed', () => {
+    it('should expose a button role for missed days', () => {
       const day = createDay({
         date: '2025-12-10',
         completed: false,
@@ -242,10 +242,7 @@ describe('BinaryCell', () => {
       );
 
       const cell = getByLabelText(/Not completed/);
-      fireEvent.press(cell);
-
-      expect(mockOnPress).toHaveBeenCalledWith('2025-12-10', false);
-      expect(mockOnPress).toHaveBeenCalledTimes(1);
+      expect(cell.props.accessibilityRole).toBe('button');
     });
 
     it('should have not selected accessibility state', () => {
@@ -304,7 +301,7 @@ describe('BinaryCell', () => {
       expect(cell.props.accessibilityRole).toBe('button');
     });
 
-    it('should call onPress with completed=true', () => {
+    it('should expose a button role for completed days', () => {
       const day = createDay({
         date: '2025-12-15',
         completed: true,
@@ -320,9 +317,7 @@ describe('BinaryCell', () => {
       );
 
       const cell = getByLabelText(/Completed/);
-      fireEvent.press(cell);
-
-      expect(mockOnPress).toHaveBeenCalledWith('2025-12-15', true);
+      expect(cell.props.accessibilityRole).toBe('button');
     });
 
     it('should have selected accessibility state', () => {
@@ -424,9 +419,7 @@ describe('BinaryCell', () => {
         );
 
         const cell = getByLabelText(/Today.*Not completed/);
-        fireEvent.press(cell);
-
-        expect(mockOnPress).toHaveBeenCalledWith('2025-12-22', false);
+        expect(cell.props.accessibilityRole).toBe('button');
       });
     });
 

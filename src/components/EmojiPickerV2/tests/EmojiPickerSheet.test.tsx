@@ -12,7 +12,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View } from 'react-native';
 
 // Mock expo-blur
 jest.mock('expo-blur', () => {
@@ -41,49 +40,14 @@ jest.mock('react-native-gesture-handler', () => {
         onEnd: function () {
           return this;
         },
+        runOnJS: function () {
+          return this;
+        },
       }),
     },
     GestureHandlerRootView: RealView,
     PanGestureHandler: RealView,
     State: {},
-  };
-});
-
-// Mock reanimated with proper Animated component
-jest.mock('react-native-reanimated', () => {
-  const RealReact = jest.requireActual('react');
-  const { View, Pressable } = jest.requireActual('react-native');
-
-  const AnimatedView = RealReact.forwardRef(
-    (props: Record<string, unknown>, ref: React.Ref<typeof View>) =>
-      RealReact.createElement(View, { ...props, ref })
-  );
-  AnimatedView.displayName = 'AnimatedView';
-
-  const Animated = {
-    View: AnimatedView,
-    createAnimatedComponent: (Component: React.ComponentType<unknown>) => {
-      const AnimatedComponent = RealReact.forwardRef(
-        (props: Record<string, unknown>, ref: React.Ref<unknown>) =>
-          RealReact.createElement(Component, { ...props, ref })
-      );
-      AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`;
-      return AnimatedComponent;
-    },
-  };
-
-  return {
-    __esModule: true,
-    default: Animated,
-    useSharedValue: (value: number) => ({ value }),
-    useAnimatedStyle: () => ({}),
-    withSpring: (toValue: number) => toValue,
-    withTiming: (toValue: number) => toValue,
-    withSequence: (..._animations: unknown[]) => 0,
-    runOnJS: (fn: () => void) => fn,
-    interpolate: (value: number, inputRange: number[], outputRange: number[]) =>
-      outputRange[0],
-    Extrapolation: { CLAMP: 'clamp' },
   };
 });
 

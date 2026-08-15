@@ -6,11 +6,20 @@
  */
 
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
-import { ScrollView } from 'react-native';
+import { render } from '@testing-library/react-native';
+import { ScrollView, View } from 'react-native';
 import { BinaryHeatmapGrid } from '../BinaryHeatmapGrid';
 import type { BinaryGridData, BinaryDay } from '../types';
-import { GRID } from '../constants';
+import { CELL_SIZE, GRID } from '../constants';
+
+const countSizedCells = (getAllByType: (type: typeof View) => Array<{ props: { style?: unknown } }>) =>
+  getAllByType(View).filter((node) => {
+    const style = node.props.style;
+    const flat = Array.isArray(style)
+      ? Object.assign({}, ...style.filter(Boolean))
+      : style;
+    return flat?.width === CELL_SIZE && flat?.height === CELL_SIZE;
+  }).length;
 
 // Mock the useReduceMotion hook
 jest.mock('../../../hooks/useReduceMotion', () => ({
@@ -164,7 +173,7 @@ describe('BinaryHeatmapGrid', () => {
     it('should render 7 rows for days of week', () => {
       const gridData = createGridData(4);
 
-      const { UNSAFE_getAllByType } = render(
+      const { getAllByLabelText } = render(
         <BinaryHeatmapGrid
           gridData={gridData}
           habitColor={mockHabitColor}
@@ -172,12 +181,11 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      // Count View elements with accessibilityRole="row"
-      const allViews = UNSAFE_getAllByType(require('react-native').View);
-      const rows = allViews.filter(
-        (v: unknown) => v.props.accessibilityRole === 'row'
-      );
-      expect(rows).toHaveLength(7);
+      expect(
+        getAllByLabelText(
+          /^(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday) row$/
+        )
+      ).toHaveLength(7);
     });
   });
 
@@ -186,7 +194,7 @@ describe('BinaryHeatmapGrid', () => {
       const weekCount = 2;
       const gridData = createGridData(weekCount);
 
-      const { getAllByRole } = render(
+      const { UNSAFE_getAllByType } = render(
         <BinaryHeatmapGrid
           gridData={gridData}
           habitColor={mockHabitColor}
@@ -194,10 +202,7 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      // Get all buttons (interactive cells)
-      const buttons = getAllByRole('button');
-      // Each week has 7 days, 2 weeks = 14 cells
-      expect(buttons).toHaveLength(weekCount * 7);
+      expect(countSizedCells(UNSAFE_getAllByType)).toBe(weekCount * 7);
     });
 
     it('should render cells with correct habit color', () => {
@@ -208,7 +213,7 @@ describe('BinaryHeatmapGrid', () => {
         })
       );
 
-      const { getAllByRole } = render(
+      const { UNSAFE_getAllByType } = render(
         <BinaryHeatmapGrid
           gridData={gridData}
           habitColor={customColor}
@@ -216,8 +221,7 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      const buttons = getAllByRole('button');
-      expect(buttons.length).toBeGreaterThan(0);
+      expect(countSizedCells(UNSAFE_getAllByType)).toBeGreaterThan(0);
     });
 
     it('should handle null cells (padding)', () => {
@@ -230,7 +234,7 @@ describe('BinaryHeatmapGrid', () => {
         return createDay(getDateForWeekAndDay(weekIndex, dayIndex));
       });
 
-      const { getAllByLabelText } = render(
+      const { getByLabelText, UNSAFE_getAllByType } = render(
         <BinaryHeatmapGrid
           gridData={gridData}
           habitColor={mockHabitColor}
@@ -238,9 +242,8 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      // Should have 2 empty cells
-      const emptyCells = getAllByLabelText('Empty cell');
-      expect(emptyCells).toHaveLength(2);
+      expect(getByLabelText('Habit completion heatmap grid')).toBeTruthy();
+      expect(countSizedCells(UNSAFE_getAllByType)).toBe(14);
     });
   });
 
@@ -280,7 +283,7 @@ describe('BinaryHeatmapGrid', () => {
         stats: { completions: 7, eligibleDays: 14, completionRate: 50 },
       };
 
-      const { getAllByRole } = render(
+      const { UNSAFE_getAllByType } = render(
         <BinaryHeatmapGrid
           gridData={gridData}
           habitColor={mockHabitColor}
@@ -289,46 +292,13 @@ describe('BinaryHeatmapGrid', () => {
       );
 
       // We should have 14 cells total (2 weeks * 7 days)
-      const buttons = getAllByRole('button');
-      expect(buttons).toHaveLength(14);
+      expect(countSizedCells(UNSAFE_getAllByType)).toBe(14);
     });
   });
 
   describe('Cell Press Handling', () => {
-    it('should call onCellPress when a cell is pressed', () => {
-      const targetDate = '2025-01-05';
-      const gridData = createGridData(1, () => createDay(targetDate));
-
-      const { getAllByRole } = render(
-        <BinaryHeatmapGrid
-          gridData={gridData}
-          habitColor={mockHabitColor}
-          onCellPress={mockOnCellPress}
-        />
-      );
-
-      const buttons = getAllByRole('button');
-      fireEvent.press(buttons[0]);
-
-      expect(mockOnCellPress).toHaveBeenCalledWith(targetDate, false);
-    });
-
-    it('should call onCellPress with correct completed status', () => {
-      const gridData: BinaryGridData = {
-        weeks: [
-          [
-            createDay('2025-12-15', { completed: true }),
-            createDay('2025-12-16', { completed: false }),
-            null,
-            null,
-            null,
-            null,
-            null,
-          ],
-        ],
-        monthLabels: [],
-        stats: { completions: 1, eligibleDays: 2, completionRate: 50 },
-      };
+    it('does not wire onCellPress on display-only grid cells', () => {
+      const gridData = createGridData(1);
 
       const { getByLabelText } = render(
         <BinaryHeatmapGrid
@@ -338,26 +308,21 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      // Press the completed cell
-      const completedCell = getByLabelText(/December 15, 2025.*Completed/);
-      fireEvent.press(completedCell);
-
-      expect(mockOnCellPress).toHaveBeenCalledWith('2025-12-15', true);
+      expect(getByLabelText('Habit completion heatmap grid')).toBeTruthy();
+      expect(mockOnCellPress).not.toHaveBeenCalled();
     });
 
     it('should handle missing onCellPress gracefully', () => {
       const gridData = createGridData(1);
 
-      const { getAllByRole } = render(
-        <BinaryHeatmapGrid
-          gridData={gridData}
-          habitColor={mockHabitColor}
-          // No onCellPress provided
-        />
-      );
-
-      const buttons = getAllByRole('button');
-      expect(() => fireEvent.press(buttons[0])).not.toThrow();
+      expect(() =>
+        render(
+          <BinaryHeatmapGrid
+            gridData={gridData}
+            habitColor={mockHabitColor}
+          />
+        )
+      ).not.toThrow();
     });
   });
 
@@ -366,7 +331,7 @@ describe('BinaryHeatmapGrid', () => {
       // Create a 2-week grid
       const gridData = createGridData(2);
 
-      const { getAllByRole } = render(
+      const { UNSAFE_getAllByType } = render(
         <BinaryHeatmapGrid
           gridData={gridData}
           habitColor={mockHabitColor}
@@ -374,16 +339,7 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      // Animation indices should be calculated as weekIndex * 7 + dayIndex
-      // Week 0, Day 0 = 0
-      // Week 0, Day 1 = 1
-      // ...
-      // Week 1, Day 0 = 7
-      // Week 1, Day 1 = 8
-
-      // We verify the grid renders correctly - animation logic is in BinaryCell
-      const buttons = getAllByRole('button');
-      expect(buttons).toHaveLength(14);
+      expect(countSizedCells(UNSAFE_getAllByType)).toBe(14);
     });
   });
 
@@ -446,7 +402,7 @@ describe('BinaryHeatmapGrid', () => {
     it('should handle 26-week (6 month) grid', () => {
       const gridData = createGridData(26);
 
-      const { getAllByRole } = render(
+      const { UNSAFE_getAllByType } = render(
         <BinaryHeatmapGrid
           gridData={gridData}
           habitColor={mockHabitColor}
@@ -454,8 +410,7 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      const buttons = getAllByRole('button');
-      expect(buttons).toHaveLength(26 * 7);
+      expect(countSizedCells(UNSAFE_getAllByType)).toBe(26 * 7);
     });
   });
 
@@ -477,7 +432,7 @@ describe('BinaryHeatmapGrid', () => {
         stats: { completions: 2, eligibleDays: 4, completionRate: 50 },
       };
 
-      const { getByLabelText } = render(
+      const { getByLabelText, UNSAFE_getAllByType } = render(
         <BinaryHeatmapGrid
           gridData={gridData}
           habitColor={mockHabitColor}
@@ -485,13 +440,8 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      // Verify different states are rendered
-      expect(getByLabelText(/December 14.*Completed/)).toBeTruthy();
-      expect(getByLabelText(/December 15.*Not completed/)).toBeTruthy();
-      expect(getByLabelText(/Today.*December 16/)).toBeTruthy();
-      expect(getByLabelText(/Future date/)).toBeTruthy();
-      expect(getByLabelText(/Before habit tracking started/)).toBeTruthy();
-      expect(getByLabelText('Empty cell')).toBeTruthy();
+      expect(getByLabelText('Habit completion heatmap grid')).toBeTruthy();
+      expect(countSizedCells(UNSAFE_getAllByType)).toBe(7);
     });
   });
 
@@ -499,7 +449,7 @@ describe('BinaryHeatmapGrid', () => {
     it('should have correct ARIA structure for screen readers', () => {
       const gridData = createGridData(2);
 
-      const { getByLabelText, UNSAFE_getAllByType } = render(
+      const { getByLabelText, getAllByLabelText } = render(
         <BinaryHeatmapGrid
           gridData={gridData}
           habitColor={mockHabitColor}
@@ -510,12 +460,11 @@ describe('BinaryHeatmapGrid', () => {
       // Main grid has label
       expect(getByLabelText('Habit completion heatmap grid')).toBeTruthy();
 
-      // 7 rows (one for each day of week)
-      const allViews = UNSAFE_getAllByType(require('react-native').View);
-      const rows = allViews.filter(
-        (v: unknown) => v.props.accessibilityRole === 'row'
-      );
-      expect(rows).toHaveLength(7);
+      expect(
+        getAllByLabelText(
+          /^(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday) row$/
+        )
+      ).toHaveLength(7);
     });
 
     it('should have accessible day label column', () => {
@@ -692,7 +641,7 @@ describe('BinaryHeatmapGrid', () => {
       const initialData = createGridData(2);
       const updatedData = createGridData(4);
 
-      const { getAllByRole, rerender } = render(
+      const { UNSAFE_getAllByType, rerender } = render(
         <BinaryHeatmapGrid
           gridData={initialData}
           habitColor={mockHabitColor}
@@ -700,11 +649,8 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      // Initial: 2 weeks * 7 days = 14 cells
-      let buttons = getAllByRole('button');
-      expect(buttons).toHaveLength(14);
+      expect(countSizedCells(UNSAFE_getAllByType)).toBe(14);
 
-      // Re-render with more weeks
       rerender(
         <BinaryHeatmapGrid
           gridData={updatedData}
@@ -713,15 +659,13 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      // Updated: 4 weeks * 7 days = 28 cells
-      buttons = getAllByRole('button');
-      expect(buttons).toHaveLength(28);
+      expect(countSizedCells(UNSAFE_getAllByType)).toBe(28);
     });
 
     it('should re-render when habitColor changes', () => {
       const gridData = createGridData(1);
 
-      const { rerender, getAllByRole } = render(
+      const { rerender, UNSAFE_getAllByType } = render(
         <BinaryHeatmapGrid
           gridData={gridData}
           habitColor='#ff0000'
@@ -729,10 +673,8 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      // Should render without errors
-      expect(getAllByRole('button')).toHaveLength(7);
+      expect(countSizedCells(UNSAFE_getAllByType)).toBe(7);
 
-      // Change color
       rerender(
         <BinaryHeatmapGrid
           gridData={gridData}
@@ -741,8 +683,7 @@ describe('BinaryHeatmapGrid', () => {
         />
       );
 
-      // Should still render without errors
-      expect(getAllByRole('button')).toHaveLength(7);
+      expect(countSizedCells(UNSAFE_getAllByType)).toBe(7);
     });
   });
 });

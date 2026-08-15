@@ -20,6 +20,13 @@ import {
   QUICK_PICK_TEMPLATES,
   type QuickPickTemplate,
 } from '../QuickPicksRow';
+import { HUBERMAN_PHASES } from '../../../../constants/hubermanPhases';
+
+const quickPickLabel = (name: string) => {
+  const template = QUICK_PICK_TEMPLATES.find((item) => item.name === name);
+  const phase = template ? HUBERMAN_PHASES[template.timeOfDay].shortLabel : '';
+  return `Quick pick: ${name}, ${phase}`;
+};
 
 // Mock useHapticFeedback
 const mockTriggerSelection = jest.fn();
@@ -114,7 +121,7 @@ describe('QuickPicksRow - V5 Redesign', () => {
       const { getByLabelText } = render(<QuickPicksRow {...defaultProps} />);
 
       QUICK_PICK_TEMPLATES.forEach((template) => {
-        expect(getByLabelText(`Quick pick: ${template.name}`)).toBeDefined();
+        expect(getByLabelText(quickPickLabel(template.name))).toBeDefined();
       });
     });
   });
@@ -125,7 +132,7 @@ describe('QuickPicksRow - V5 Redesign', () => {
         <QuickPicksRow {...defaultProps} selectedTemplateId='meditate' />
       );
 
-      const selectedButton = getByLabelText('Quick pick: Meditate');
+      const selectedButton = getByLabelText('Quick pick: Meditate, Push');
       expect(selectedButton.props.accessibilityState?.selected).toBe(true);
     });
 
@@ -134,7 +141,7 @@ describe('QuickPicksRow - V5 Redesign', () => {
         <QuickPicksRow {...defaultProps} selectedTemplateId='meditate' />
       );
 
-      const nonSelectedButton = getByLabelText('Quick pick: Read');
+      const nonSelectedButton = getByLabelText('Quick pick: Read, Pull');
       expect(nonSelectedButton.props.accessibilityState?.selected).toBe(false);
     });
 
@@ -144,7 +151,7 @@ describe('QuickPicksRow - V5 Redesign', () => {
       );
 
       QUICK_PICK_TEMPLATES.forEach((template) => {
-        const button = getByLabelText(`Quick pick: ${template.name}`);
+        const button = getByLabelText(quickPickLabel(template.name));
         expect(button.props.accessibilityState?.selected).toBe(false);
       });
     });
@@ -154,7 +161,7 @@ describe('QuickPicksRow - V5 Redesign', () => {
     it('should call onSelectTemplate when template card is pressed', () => {
       const { getByLabelText } = render(<QuickPicksRow {...defaultProps} />);
 
-      const meditateCard = getByLabelText('Quick pick: Meditate');
+      const meditateCard = getByLabelText('Quick pick: Meditate, Push');
       fireEvent.press(meditateCard);
 
       expect(mockOnSelectTemplate).toHaveBeenCalledTimes(1);
@@ -179,7 +186,7 @@ describe('QuickPicksRow - V5 Redesign', () => {
     it('should trigger haptic feedback on template selection', () => {
       const { getByLabelText } = render(<QuickPicksRow {...defaultProps} />);
 
-      const readCard = getByLabelText('Quick pick: Read');
+      const readCard = getByLabelText('Quick pick: Read, Pull');
       fireEvent.press(readCard);
 
       expect(mockTriggerSelection).toHaveBeenCalledTimes(1);
@@ -200,7 +207,7 @@ describe('QuickPicksRow - V5 Redesign', () => {
       const { getByLabelText } = render(<QuickPicksRow {...defaultProps} />);
 
       QUICK_PICK_TEMPLATES.forEach((template) => {
-        const button = getByLabelText(`Quick pick: ${template.name}`);
+        const button = getByLabelText(quickPickLabel(template.name));
         expect(button.props.accessibilityRole).toBe('button');
       });
     });
@@ -215,7 +222,7 @@ describe('QuickPicksRow - V5 Redesign', () => {
     it('should announce template selection for screen readers', () => {
       const { getByLabelText } = render(<QuickPicksRow {...defaultProps} />);
 
-      const meditateCard = getByLabelText('Quick pick: Meditate');
+      const meditateCard = getByLabelText('Quick pick: Meditate, Push');
       fireEvent.press(meditateCard);
 
       expect(AccessibilityInfo.announceForAccessibility).toHaveBeenCalledWith(
@@ -228,12 +235,12 @@ describe('QuickPicksRow - V5 Redesign', () => {
         <QuickPicksRow {...defaultProps} selectedTemplateId='exercise' />
       );
 
-      const exerciseCard = getByLabelText('Quick pick: Exercise');
+      const exerciseCard = getByLabelText('Quick pick: Exercise, Push');
       expect(exerciseCard.props.accessibilityState).toEqual(
         expect.objectContaining({ selected: true })
       );
 
-      const readCard = getByLabelText('Quick pick: Read');
+      const readCard = getByLabelText('Quick pick: Read, Pull');
       expect(readCard.props.accessibilityState).toEqual(
         expect.objectContaining({ selected: false })
       );
@@ -305,7 +312,7 @@ describe('QuickPicksRow - V5 Redesign', () => {
         <QuickPicksRow {...defaultProps} selectedTemplateId='exercise' />
       );
 
-      const selectedCard = getByLabelText('Quick pick: Exercise');
+      const selectedCard = getByLabelText('Quick pick: Exercise, Push');
       expect(selectedCard.props.accessibilityState?.selected).toBe(true);
     });
 
@@ -321,7 +328,7 @@ describe('QuickPicksRow - V5 Redesign', () => {
     it('✅ AC5: onSelect callback fires with template data', () => {
       const { getByLabelText } = render(<QuickPicksRow {...defaultProps} />);
 
-      const journalCard = getByLabelText('Quick pick: Journal');
+      const journalCard = getByLabelText('Quick pick: Journal, Pull');
       fireEvent.press(journalCard);
 
       expect(mockOnSelectTemplate).toHaveBeenCalledWith(
@@ -338,7 +345,7 @@ describe('QuickPicksRow - V5 Redesign', () => {
     it('✅ AC6: Haptic feedback on selection', () => {
       const { getByLabelText } = render(<QuickPicksRow {...defaultProps} />);
 
-      const hydrateCard = getByLabelText('Quick pick: Hydrate');
+      const hydrateCard = getByLabelText('Quick pick: Hydrate, Push');
       fireEvent.press(hydrateCard);
 
       expect(mockTriggerSelection).toHaveBeenCalled();

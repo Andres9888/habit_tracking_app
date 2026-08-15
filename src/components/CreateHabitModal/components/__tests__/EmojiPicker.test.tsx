@@ -59,13 +59,13 @@ describe('EmojiPicker - V8 Smart Suggestions', () => {
     it('should render 6 emoji chips by default', () => {
       const { getAllByRole } = render(<EmojiPicker {...defaultProps} />);
       const buttons = getAllByRole('button');
-      // 6 emoji chips + 1 "+" button = 7 buttons
-      expect(buttons.length).toBe(7);
+      // 9 emoji chips + 1 browse button = 10 buttons
+      expect(buttons.length).toBe(10);
     });
 
     it('should render "+" button to browse all icons', () => {
       const { getByLabelText } = render(<EmojiPicker {...defaultProps} />);
-      expect(getByLabelText('Browse all icons')).toBeDefined();
+      expect(getByLabelText('Browse more emojis')).toBeDefined();
     });
 
     it('should display default emojis when no habit name is provided', () => {
@@ -141,31 +141,30 @@ describe('EmojiPicker - V8 Smart Suggestions', () => {
       });
 
       const buttons = getAllByRole('button');
-      // Should still have 6 emoji chips + 1 "+" button
-      expect(buttons.length).toBe(7);
+      // Should still have 9 emoji chips + 1 browse button
+      expect(buttons.length).toBe(10);
     });
 
     it('should debounce suggestion updates', async () => {
       const { rerender, getByLabelText, queryByLabelText } = render(
-        <EmojiPicker {...defaultProps} habitName='' />
+        <EmojiPicker {...defaultProps} habitName='Meditate' />
       );
 
-      // Initially shows default emojis
-      expect(getByLabelText('Select emoji 🎯')).toBeDefined();
-
-      // Update habit name
-      rerender(<EmojiPicker {...defaultProps} habitName='Run' />);
-
-      // Immediately after update, should still show old emojis (debounce hasn't fired)
-      // Note: The default includes 🎯, so we check if 🏃 is NOT yet present
-      expect(queryByLabelText('Select emoji 🏃')).toBeNull();
-
-      // After debounce
       await act(async () => {
         jest.advanceTimersByTime(350);
       });
 
-      expect(getByLabelText('Select emoji 🏃')).toBeDefined();
+      expect(getByLabelText('Select emoji 🧘')).toBeDefined();
+
+      rerender(<EmojiPicker {...defaultProps} habitName='Journal' />);
+
+      expect(queryByLabelText('Select emoji ✍️')).toBeNull();
+
+      await act(async () => {
+        jest.advanceTimersByTime(350);
+      });
+
+      expect(getByLabelText('Select emoji ✍️')).toBeDefined();
     });
   });
 
@@ -204,7 +203,7 @@ describe('EmojiPicker - V8 Smart Suggestions', () => {
         <EmojiPicker {...defaultProps} />
       );
 
-      const plusButton = getByLabelText('Browse all icons');
+      const plusButton = getByLabelText('Browse more emojis');
       fireEvent.press(plusButton);
 
       // The EmojiPickerSheet should now be visible
@@ -228,15 +227,15 @@ describe('EmojiPicker - V8 Smart Suggestions', () => {
     it('should have accessible label for "+" button', () => {
       const { getByLabelText } = render(<EmojiPicker {...defaultProps} />);
 
-      expect(getByLabelText('Browse all icons')).toBeDefined();
+      expect(getByLabelText('Browse more emojis')).toBeDefined();
     });
 
     it('should have accessibility hint for "+" button', () => {
       const { getByLabelText } = render(<EmojiPicker {...defaultProps} />);
 
-      const plusButton = getByLabelText('Browse all icons');
+      const plusButton = getByLabelText('Browse more emojis');
       expect(plusButton.props.accessibilityHint).toBe(
-        'Opens full emoji picker'
+        'Opens full emoji picker with hundreds of options'
       );
     });
 
@@ -270,8 +269,8 @@ describe('EmojiPicker - V8 Smart Suggestions', () => {
 
       // Filter out "+" button by counting emoji buttons specifically
       const buttons = getAllByRole('button');
-      // 6 emoji chips + 1 "+" button = 7 buttons
-      expect(buttons.length).toBe(7);
+      // 9 emoji chips + 1 browse button = 10 buttons
+      expect(buttons.length).toBe(10);
     });
 
     it('✅ AC2: Dynamic suggestions based on habit name', async () => {
@@ -295,7 +294,7 @@ describe('EmojiPicker - V8 Smart Suggestions', () => {
     it('✅ AC3: Dashed "+" button opens full EmojiPickerSheet', () => {
       const { getByLabelText } = render(<EmojiPicker {...defaultProps} />);
 
-      const plusButton = getByLabelText('Browse all icons');
+      const plusButton = getByLabelText('Browse more emojis');
       fireEvent.press(plusButton);
 
       const { EmojiPickerSheet } = require('../../../EmojiPickerV2');
@@ -313,20 +312,22 @@ describe('EmojiPicker - V8 Smart Suggestions', () => {
 
     it('✅ AC5: Debounced suggestions for smooth animation', async () => {
       const { rerender, queryByLabelText, getByLabelText } = render(
-        <EmojiPicker {...defaultProps} habitName='' />
+        <EmojiPicker {...defaultProps} habitName='Meditate' />
       );
 
-      rerender(<EmojiPicker {...defaultProps} habitName='Run' />);
-
-      // Before debounce - should not have updated yet
-      expect(queryByLabelText('Select emoji 🏃')).toBeNull();
-
-      // After debounce
       await act(async () => {
         jest.advanceTimersByTime(350);
       });
 
-      expect(getByLabelText('Select emoji 🏃')).toBeDefined();
+      rerender(<EmojiPicker {...defaultProps} habitName='Journal' />);
+
+      expect(queryByLabelText('Select emoji ✍️')).toBeNull();
+
+      await act(async () => {
+        jest.advanceTimersByTime(350);
+      });
+
+      expect(getByLabelText('Select emoji ✍️')).toBeDefined();
     });
   });
 });

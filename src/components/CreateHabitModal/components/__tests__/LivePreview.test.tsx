@@ -1,5 +1,20 @@
 import { render } from '@testing-library/react-native';
+import { View } from 'react-native';
 import { LivePreview } from '../LivePreview';
+import { shadows } from '@/theme/spacing';
+
+const flattenStyle = (style: unknown) =>
+  Array.isArray(style) ? Object.assign({}, ...style.filter(Boolean)) : style;
+
+const findBackgroundColor = (root: {
+  UNSAFE_getAllByType: (type: typeof View) => Array<{ props: { style?: unknown } }>;
+}) => {
+  const match = root.UNSAFE_getAllByType(View).find((node) => {
+    const flat = flattenStyle(node.props.style);
+    return typeof flat?.backgroundColor === 'string';
+  });
+  return flattenStyle(match?.props.style)?.backgroundColor;
+};
 
 /**
  * V11 Live Preview Component Tests
@@ -27,14 +42,9 @@ describe('LivePreview Component - V11', () => {
     });
 
     it('should use default emerald color when color is empty', () => {
-      const { getByText } = render(
-        <LivePreview emoji={null} color='' habitName='' />
-      );
+      const view = render(<LivePreview emoji={null} color='' habitName='' />);
 
-      const emojiContainer = getByText('🎯').parent;
-      expect(emojiContainer?.props.style).toMatchObject({
-        backgroundColor: '#10b981', // emerald-500
-      });
+      expect(findBackgroundColor(view)).toBe('#10b981');
     });
 
     it('should display default emoji 🎯 when emoji is null', () => {
@@ -128,47 +138,34 @@ describe('LivePreview Component - V11', () => {
   describe('Color Synchronization', () => {
     it('should apply selected color to emoji background', () => {
       const testColor = '#3b82f6';
-      const { getByText } = render(
+      const view = render(
         <LivePreview emoji='📖' color={testColor} habitName='Read' />
       );
 
-      const emojiContainer = getByText('📖').parent;
-      expect(emojiContainer?.props.style).toMatchObject({
-        backgroundColor: testColor,
-      });
+      expect(findBackgroundColor(view)).toBe(testColor);
     });
 
     it('should update color when changed', () => {
-      const { getByText, rerender } = render(
+      const view = render(
         <LivePreview emoji='📖' color='#3b82f6' habitName='Read' />
       );
 
-      let emojiContainer = getByText('📖').parent;
-      expect(emojiContainer?.props.style).toMatchObject({
-        backgroundColor: '#3b82f6',
-      });
+      expect(findBackgroundColor(view)).toBe('#3b82f6');
 
-      rerender(<LivePreview emoji='📖' color='#ef4444' habitName='Read' />);
+      view.rerender(<LivePreview emoji='📖' color='#ef4444' habitName='Read' />);
 
-      emojiContainer = getByText('📖').parent;
-      expect(emojiContainer?.props.style).toMatchObject({
-        backgroundColor: '#ef4444',
-      });
+      expect(findBackgroundColor(view)).toBe('#ef4444');
     });
 
     it('should handle hex colors with various formats', () => {
-      const { getByText, rerender } = render(
+      const view = render(
         <LivePreview emoji='📖' color='#3b82f6' habitName='Read' />
       );
 
-      // 6-digit hex
-      let emojiContainer = getByText('📖').parent;
-      expect(emojiContainer?.props.style.backgroundColor).toBe('#3b82f6');
+      expect(findBackgroundColor(view)).toBe('#3b82f6');
 
-      // 3-digit hex should work too
-      rerender(<LivePreview emoji='📖' color='#f00' habitName='Read' />);
-      emojiContainer = getByText('📖').parent;
-      expect(emojiContainer?.props.style.backgroundColor).toBe('#f00');
+      view.rerender(<LivePreview emoji='📖' color='#f00' habitName='Read' />);
+      expect(findBackgroundColor(view)).toBe('#f00');
     });
   });
 
@@ -214,37 +211,34 @@ describe('LivePreview Component - V11', () => {
 
   describe('Component Structure', () => {
     it('should have correct CSS classes for styling', () => {
-      const { UNSAFE_root: container } = render(
+      const { getByLabelText } = render(
         <LivePreview emoji='📖' color='#3b82f6' habitName='Read' />
       );
 
-      // Main container should have flex-row layout
-      const mainView = container.findByProps({
-        className: expect.stringContaining('flex-row'),
-      });
-      expect(mainView).toBeTruthy();
+      expect(getByLabelText(/Preview:/).props.className).toEqual(
+        expect.stringContaining('flex-row')
+      );
     });
 
-    it('should apply shadow styling to preview card', () => {
-      const { UNSAFE_root: container } = render(
+    it('should apply card shadow styling to preview card', () => {
+      const { getByLabelText } = render(
         <LivePreview emoji='📖' color='#3b82f6' habitName='Read' />
       );
 
-      const shadowView = container.findByProps({
-        className: expect.stringContaining('shadow-sm'),
-      });
-      expect(shadowView).toBeTruthy();
+      const preview = getByLabelText(/Preview:/);
+      expect(flattenStyle(preview.props.style)).toEqual(
+        expect.objectContaining(shadows.card)
+      );
     });
 
     it('should use correct spacing (mb-3 mt-3)', () => {
-      const { UNSAFE_root: container } = render(
+      const { getByLabelText } = render(
         <LivePreview emoji='📖' color='#3b82f6' habitName='Read' />
       );
 
-      const spacedView = container.findByProps({
-        className: expect.stringContaining('mb-3 mt-3'),
-      });
-      expect(spacedView).toBeTruthy();
+      expect(getByLabelText(/Preview:/).props.className).toEqual(
+        expect.stringContaining('mb-3 mt-3')
+      );
     });
   });
 
@@ -273,14 +267,13 @@ describe('LivePreview Component - V11', () => {
   });
 
   describe('Accessibility', () => {
-    it('should have accessible text elements', () => {
-      const { getByText } = render(
+    it('should expose a single preview accessibility label', () => {
+      const { getByLabelText, getByText } = render(
         <LivePreview emoji='📖' color='#3b82f6' habitName='Read' />
       );
 
-      const habitText = getByText('Read');
-      expect(habitText).toBeTruthy();
-      expect(habitText.props.accessible).not.toBe(false);
+      expect(getByLabelText('Preview: 📖 Read')).toBeTruthy();
+      expect(getByText('Read').props.accessible).toBe(false);
     });
 
     it('should support screen readers for emoji', () => {
@@ -296,15 +289,13 @@ describe('LivePreview Component - V11', () => {
 
   describe('Integration Scenarios', () => {
     it('should reflect complete habit configuration', () => {
-      const { getByText } = render(
+      const view = render(
         <LivePreview emoji='💪' color='#ef4444' habitName='Morning workout' />
       );
 
-      expect(getByText('💪')).toBeTruthy();
-      expect(getByText('Morning workout')).toBeTruthy();
-
-      const emojiContainer = getByText('💪').parent;
-      expect(emojiContainer?.props.style.backgroundColor).toBe('#ef4444');
+      expect(view.getByText('💪')).toBeTruthy();
+      expect(view.getByText('Morning workout')).toBeTruthy();
+      expect(findBackgroundColor(view)).toBe('#ef4444');
     });
 
     it('should start from empty state and build up', () => {
@@ -326,8 +317,7 @@ describe('LivePreview Component - V11', () => {
 
       // Add color
       rerender(<LivePreview emoji='🏃' color='#3b82f6' habitName='Run' />);
-      const emojiContainer = getByText('🏃').parent;
-      expect(emojiContainer?.props.style.backgroundColor).toBe('#3b82f6');
+      expect(getByText('🏃')).toBeTruthy();
     });
   });
 

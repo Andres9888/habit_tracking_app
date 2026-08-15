@@ -11,51 +11,6 @@
 
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-
-// Mock reanimated with proper Animated component
-jest.mock('react-native-reanimated', () => {
-  const RealReact = jest.requireActual('react');
-  const { View, Pressable } = jest.requireActual('react-native');
-
-  const AnimatedView = RealReact.forwardRef(
-    (props: Record<string, unknown>, ref: React.Ref<typeof View>) =>
-      RealReact.createElement(View, { ...props, ref })
-  );
-  AnimatedView.displayName = 'AnimatedView';
-
-  const AnimatedPressable = RealReact.forwardRef(
-    (props: Record<string, unknown>, ref: React.Ref<typeof Pressable>) =>
-      RealReact.createElement(Pressable, { ...props, ref })
-  );
-  AnimatedPressable.displayName = 'AnimatedPressable';
-
-  const Animated = {
-    View: AnimatedView,
-    createAnimatedComponent: (Component: React.ComponentType<unknown>) => {
-      const AnimatedComponent = RealReact.forwardRef(
-        (props: Record<string, unknown>, ref: React.Ref<unknown>) =>
-          RealReact.createElement(Component, { ...props, ref })
-      );
-      AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`;
-      return AnimatedComponent;
-    },
-  };
-
-  return {
-    __esModule: true,
-    default: Animated,
-    useSharedValue: (value: number) => ({ value }),
-    useAnimatedStyle: () => ({}),
-    withSpring: (toValue: number) => toValue,
-    withTiming: (toValue: number) => toValue,
-    withSequence: (..._animations: unknown[]) => 0,
-    runOnJS: (fn: () => void) => fn,
-    interpolate: (value: number, inputRange: number[], outputRange: number[]) => outputRange[0],
-    Extrapolation: { CLAMP: 'clamp' },
-  };
-});
-
-// Import the component after mocks
 import { EmojiGrid } from '../EmojiGrid';
 
 const mockOnEmojiSelect = jest.fn();

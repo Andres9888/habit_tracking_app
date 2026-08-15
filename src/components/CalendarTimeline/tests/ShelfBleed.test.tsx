@@ -30,7 +30,7 @@ describe('ShelfBleed', () => {
   it('uses light shelf color by default', () => {
     const { getByTestId } = render(<ShelfBleed />);
     expect(getByTestId('gradient').props.colors).toEqual([
-      '#F0EDE8',
+      '#FAF8F5',
       'transparent',
     ]);
   });

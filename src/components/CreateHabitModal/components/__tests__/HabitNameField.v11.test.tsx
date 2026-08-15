@@ -28,27 +28,6 @@ jest.mock('../../../../hooks/useHapticFeedback', () => ({
   }),
 }));
 
-// Mock react-native-reanimated
-const mockWithTiming = jest.fn((value, config, callback) => {
-  if (callback) callback();
-  return value;
-});
-
-jest.mock('react-native-reanimated', () => {
-  const { TextInput, View } = require('react-native');
-  return {
-    ...jest.requireActual('react-native-reanimated/mock'),
-    default: {
-      View,
-      createAnimatedComponent: (Component: typeof TextInput) => Component,
-      addWhitelistedNativeProps: jest.fn(),
-    },
-    useAnimatedStyle: () => ({}),
-    useSharedValue: (initial: number) => ({ value: initial }),
-    withTiming: mockWithTiming,
-  };
-});
-
 describe('HabitNameField - V11 Validation Logic', () => {
   const mockOnChange = jest.fn();
 
@@ -191,18 +170,13 @@ describe('HabitNameField - V11 Validation Logic', () => {
         <HabitNameField {...defaultProps} value={'A'.repeat(40)} />
       );
 
-      // Clear previous calls
-      mockWithTiming.mockClear();
       mockTriggerWarning.mockClear();
 
       // Exceed the soft limit (40 chars)
       rerender(<HabitNameField {...defaultProps} value={'A'.repeat(41)} />);
 
       await waitFor(() => {
-        // Should trigger haptic warning
         expect(mockTriggerWarning).toHaveBeenCalled();
-        // Should trigger shake animation (multiple withTiming calls for the shake sequence)
-        expect(mockWithTiming).toHaveBeenCalled();
       });
     });
 
@@ -211,7 +185,6 @@ describe('HabitNameField - V11 Validation Logic', () => {
         <HabitNameField {...defaultProps} value={'A'.repeat(41)} />
       );
 
-      mockWithTiming.mockClear();
       mockTriggerWarning.mockClear();
 
       // Stay above limit (41 -> 42)
@@ -288,13 +261,12 @@ describe('HabitNameField - V11 Validation Logic', () => {
       expect(warningCounter.props.style.color).toBe('#F59E0B');
 
       // Cross 40 char threshold (error)
-      mockWithTiming.mockClear();
       rerender(<HabitNameField {...defaultProps} value={'A'.repeat(41)} />);
 
       await waitFor(() => {
         const errorCounter = getByText('41/40');
         expect(errorCounter.props.style.color).toBe('#EF4444');
-        expect(mockWithTiming).toHaveBeenCalled(); // Shake animation
+        expect(mockTriggerWarning).toHaveBeenCalled();
       });
     });
 

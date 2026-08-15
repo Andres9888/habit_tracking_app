@@ -52,6 +52,7 @@ describe('DayHabitsBottomSheet', () => {
       _creationTime: Date.now(),
       createdAt: Date.now(),
       name: 'Morning Routine',
+      icon: '🌅',
       emoji: '🌅',
       notes: '',
       dayPhase: 'push',
@@ -64,6 +65,7 @@ describe('DayHabitsBottomSheet', () => {
       _creationTime: Date.now(),
       createdAt: Date.now(),
       name: 'Exercise',
+      icon: '🏃',
       emoji: '🏃',
       notes: '',
       dayPhase: 'pivot',
@@ -76,6 +78,7 @@ describe('DayHabitsBottomSheet', () => {
       _creationTime: Date.now(),
       createdAt: Date.now(),
       name: 'Read 30 mins',
+      icon: '📚',
       emoji: '📚',
       notes: '',
       dayPhase: 'pull',
@@ -113,9 +116,11 @@ describe('DayHabitsBottomSheet', () => {
       expect(getByText('Monday, Jan 15')).toBeTruthy();
     });
 
-    it('should render the "Done" button', () => {
-      const { getByText } = render(<DayHabitsBottomSheet {...defaultProps} />);
-      expect(getByText('Done')).toBeTruthy();
+    it('should render the Close button', () => {
+      const { getByLabelText } = render(
+        <DayHabitsBottomSheet {...defaultProps} />
+      );
+      expect(getByLabelText('Close')).toBeTruthy();
     });
 
     it('should render completion count in header', () => {
@@ -144,17 +149,20 @@ describe('DayHabitsBottomSheet', () => {
       const { getByText } = render(
         <DayHabitsBottomSheet {...defaultProps} habits={[]} />
       );
-      expect(getByText('No habits yet')).toBeTruthy();
+      expect(getByText('No Habits Yet')).toBeTruthy();
       expect(
         getByText('Create your first habit to start tracking')
       ).toBeTruthy();
     });
 
-    it('should show emoji in empty state', () => {
-      const { getByText } = render(
+    it('should render the empty-state description without a leftover emoji', () => {
+      const { getByText, queryByText } = render(
         <DayHabitsBottomSheet {...defaultProps} habits={[]} />
       );
-      expect(getByText('📝')).toBeTruthy();
+      expect(
+        getByText('Create your first habit to start tracking')
+      ).toBeTruthy();
+      expect(queryByText('📝')).toBeNull();
     });
 
     it('should not show completion count when no habits', () => {
@@ -246,14 +254,13 @@ describe('DayHabitsBottomSheet', () => {
   });
 
   describe('Dismiss Gestures', () => {
-    it('should call onClose when Done button is pressed', () => {
+    it('should call onClose when Close button is pressed', () => {
       const onClose = jest.fn();
       const { getByLabelText } = render(
         <DayHabitsBottomSheet {...defaultProps} onClose={onClose} />
       );
 
-      // Use accessibility label to target the button
-      fireEvent.press(getByLabelText('Done'));
+      fireEvent.press(getByLabelText('Close'));
 
       expect(onClose).toHaveBeenCalledTimes(1);
     });
@@ -279,15 +286,15 @@ describe('DayHabitsBottomSheet', () => {
       expect(root).toBeTruthy();
     });
 
-    it('should have accessible Done button with role and label', () => {
+    it('should have accessible Close button with role and label', () => {
       const { getByLabelText } = render(
         <DayHabitsBottomSheet {...defaultProps} />
       );
 
-      const doneButton = getByLabelText('Done');
-      expect(doneButton).toBeTruthy();
-      expect(doneButton.props.accessibilityRole).toBe('button');
-      expect(doneButton.props.accessibilityHint).toBe('Close habit list');
+      const closeButton = getByLabelText('Close');
+      expect(closeButton).toBeTruthy();
+      expect(closeButton.props.accessibilityRole).toBe('button');
+      expect(closeButton.props.accessibilityHint).toBe('Close habit list');
     });
 
     it('should have checkbox role for habit rows', () => {
@@ -364,6 +371,7 @@ describe('DayHabitsBottomSheet', () => {
       const habitsWithoutEmoji = [
         {
           ...mockHabits[0],
+          icon: undefined,
           emoji: undefined,
         },
       ] as unknown as Habit[];
