@@ -5,8 +5,6 @@
 
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { View } from 'react-native';
-import ReanimatedMock from 'react-native-reanimated/mock';
 import { HabitCard } from '../HabitCard';
 import { useQuery, useMutation } from 'convex/react';
 import * as Haptics from 'expo-haptics';
@@ -26,34 +24,35 @@ jest.mock('expo-haptics', () => ({
   selectionAsync: jest.fn(),
 }));
 
-// Mock react-native-gesture-handler
-jest.mock('react-native-gesture-handler', () => ({
-  Gesture: {
-    LongPress: () => ({
-      minDuration: jest.fn().mockReturnThis(),
-      onStart: jest.fn().mockReturnThis(),
-    }),
-    Pan: () => ({
-      activeOffsetX: jest.fn().mockReturnThis(),
-      onEnd: jest.fn().mockReturnThis(),
-      onUpdate: jest.fn().mockReturnThis(),
-    }),
-    Race: jest.fn((...args) => args),
-    Simultaneous: jest.fn((...args) => args),
-    Tap: () => ({
-      onBegin: jest.fn().mockReturnThis(),
-      onEnd: jest.fn().mockReturnThis(),
-      onFinalize: jest.fn().mockReturnThis(),
-    }),
-  },
-  GestureDetector: ({ children }: { children: React.ReactNode }) => children,
-  PanGestureHandler: View,
-  State: {},
-}));
+jest.mock('react-native-gesture-handler', () => {
+  const { View } = require('react-native');
+  return {
+    Gesture: {
+      LongPress: () => ({
+        minDuration: jest.fn().mockReturnThis(),
+        onStart: jest.fn().mockReturnThis(),
+      }),
+      Pan: () => ({
+        activeOffsetX: jest.fn().mockReturnThis(),
+        onEnd: jest.fn().mockReturnThis(),
+        onUpdate: jest.fn().mockReturnThis(),
+      }),
+      Race: jest.fn((...args) => args),
+      Simultaneous: jest.fn((...args) => args),
+      Tap: () => ({
+        onBegin: jest.fn().mockReturnThis(),
+        onEnd: jest.fn().mockReturnThis(),
+        onFinalize: jest.fn().mockReturnThis(),
+      }),
+    },
+    GestureDetector: ({ children }: { children: React.ReactNode }) => children,
+    PanGestureHandler: View,
+    State: {},
+  };
+});
 
-// Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {
-  const Reanimated = ReanimatedMock;
+  const Reanimated = require('react-native-reanimated/mock');
   Reanimated.default.call = () => {};
   return {
     ...Reanimated,
@@ -65,7 +64,7 @@ jest.mock('react-native-reanimated', () => {
 });
 
 // Mock theme
-jest.mock('../../theme', () => ({
+jest.mock('../../../theme', () => ({
   useAppTheme: () => ({
     custom: {
       borderRadius: {

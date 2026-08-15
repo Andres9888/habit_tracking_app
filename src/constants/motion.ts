@@ -12,6 +12,13 @@ import { Easing } from 'react-native';
 import type { WithSpringConfig } from 'react-native-reanimated';
 import { durations, springs } from '@/theme/animations';
 
+type EasingFn = (t: number) => number;
+const identity: EasingFn = (t) => t;
+const wrap =
+  (fn?: (easing: EasingFn) => EasingFn) => (easing: EasingFn) =>
+    (fn ?? ((value) => value))(easing);
+const easing = Easing ?? { cubic: identity, ease: identity };
+
 export const Motion = {
   duration: {
     base: durations.quick,
@@ -23,11 +30,11 @@ export const Motion = {
     reveal: durations.reveal,
   },
   easing: {
-    inCubic: Easing.in(Easing.cubic),
-    inEase: Easing.in(Easing.ease),
-    inOutEase: Easing.inOut(Easing.ease),
-    outCubic: Easing.out(Easing.cubic),
-    outEase: Easing.out(Easing.ease),
+    inCubic: wrap(easing.in)(easing.cubic ?? identity),
+    inEase: wrap(easing.in)(easing.ease ?? identity),
+    inOutEase: wrap(easing.inOut)(easing.ease ?? identity),
+    outCubic: wrap(easing.out)(easing.cubic ?? identity),
+    outEase: wrap(easing.out)(easing.ease ?? identity),
   },
 } as const;
 

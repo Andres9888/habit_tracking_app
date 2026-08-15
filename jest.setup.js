@@ -126,6 +126,39 @@ jest.mock('expo-secure-store', () => ({
   setItemAsync: jest.fn(),
 }));
 
+jest.mock('expo-audio', () => ({
+  createAudioPlayer: () => ({
+    pause: jest.fn(),
+    play: jest.fn(),
+    remove: jest.fn(),
+    replace: jest.fn(),
+  }),
+  setAudioModeAsync: jest.fn(),
+}));
+
+jest.mock('react-native-safe-area-context', () => {
+  const React = require('react');
+  const inset = { bottom: 0, left: 0, right: 0, top: 0 };
+  const frame = { height: 844, width: 390, x: 0, y: 0 };
+  const SafeAreaInsetsContext = React.createContext(inset);
+  const SafeAreaFrameContext = React.createContext(frame);
+  const Provider = ({ children }) =>
+    React.createElement(
+      SafeAreaInsetsContext.Provider,
+      { value: inset },
+      React.createElement(SafeAreaFrameContext.Provider, { value: frame }, children)
+    );
+  return {
+    SafeAreaFrameContext,
+    SafeAreaInsetsContext,
+    SafeAreaProvider: Provider,
+    SafeAreaView: ({ children }) => children,
+    initialWindowMetrics: { frame, insets: inset },
+    useSafeAreaFrame: () => frame,
+    useSafeAreaInsets: () => inset,
+  };
+});
+
 // Mock expo-haptics
 jest.mock('expo-haptics', () => ({
   impactAsync: jest.fn(),

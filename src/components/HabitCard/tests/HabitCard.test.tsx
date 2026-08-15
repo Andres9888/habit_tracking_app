@@ -13,6 +13,12 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { extendedTheme } from '../../../theme';
 import { HabitCard } from '../HabitCard';
 
+jest.mock('../../StreakMilestoneCelebration', () => ({
+  StreakMilestoneProvider: ({ children }: { children: React.ReactNode }) =>
+    children,
+  useStreakMilestone: () => ({ checkAndCelebrate: jest.fn() }),
+}));
+
 // Wrapper with theme and gesture handler
 const renderWithProviders = (component: React.ReactElement) => {
   return render(

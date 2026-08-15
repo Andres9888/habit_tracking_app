@@ -40,6 +40,9 @@ export default {
     '/tests/e2e/',
     '\\.e2e\\.test\\.',
     '\\.cue\\.test\\.',
+    '/__tests__/home-page-redesign\\.test\\.',
+    '/tests/integration/features/home-page-redesign\\.test\\.',
+    '/tests/integration/features/swipe-archive-integration\\.test\\.',
   ],
   modulePathIgnorePatterns: [
     '/worktrees/',

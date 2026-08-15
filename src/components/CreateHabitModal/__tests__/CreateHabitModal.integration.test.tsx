@@ -115,9 +115,13 @@ jest.mock('reanimated-color-picker', () => {
 });
 
 // Mock ColorPickerSheet to avoid complex dependencies
-jest.mock('../ColorPickerSheet', () => ({
-  ColorPickerSheet: jest.fn(() => null),
-}));
+jest.mock(
+  '../ColorPickerSheet',
+  () => ({
+    ColorPickerSheet: jest.fn(() => null),
+  }),
+  { virtual: true }
+);
 
 // Mock SafeAreaProvider
 jest.mock('react-native-safe-area-context', () => ({

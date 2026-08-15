@@ -2,27 +2,6 @@
 
 exports[`TimePickerModal Snapshots Hidden State iOS modal hidden when visible=false 1`] = `null`;
 
-exports[`TimePickerModal Snapshots Native Handset Platform renders Native Handset picker (no modal wrapper) 1`] = `
-<View
-  testID="mock-datetime-picker"
->
-  <Text>
-    Display: 
-    clock
-  </Text>
-  <Text>
-    Mode: 
-    time
-  </Text>
-  <Text>
-    Value: 
-    2024-06-14T18:00:00.000Z
-  </Text>
-</View>
-`;
-
-exports[`TimePickerModal Snapshots Native Handset Platform returns null when not visible on Native Handset 1`] = `null`;
-
 exports[`TimePickerModal Snapshots Native handset platform renders the native picker without a modal wrapper 1`] = `
 <View
   testID="mock-datetime-picker"
@@ -37,7 +16,7 @@ exports[`TimePickerModal Snapshots Native handset platform renders the native pi
   </Text>
   <Text>
     Value: 
-    2024-06-14T16:00:00.000Z
+    2024-06-15T12:00:00.000Z
   </Text>
 </View>
 `;
@@ -46,6 +25,7 @@ exports[`TimePickerModal Snapshots Native handset platform returns null when not
 
 exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at evening time (8:00 PM) 1`] = `
 <Modal
+  accessibilityViewIsModal={true}
   animationType="fade"
   onRequestClose={[Function]}
   testID="time-picker-modal"
@@ -151,7 +131,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at evening tim
           </Text>
           <Text>
             Value: 
-            2024-06-15T02:00:00.000Z
+            2024-06-15T20:00:00.000Z
           </Text>
         </View>
       </View>
@@ -229,7 +209,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at evening tim
             }
           }
           accessible={true}
-          className="h-12 flex-1 items-center justify-center rounded-xl bg-emerald-500 active:bg-emerald-600"
+          className="h-12 flex-1 items-center justify-center rounded-xl active:opacity-90"
           collapsable={false}
           focusable={true}
           onBlur={[Function]}
@@ -241,6 +221,11 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at evening tim
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "backgroundColor": "#059669",
+            }
+          }
         >
           <Text
             className="text-base font-semibold text-white"
@@ -256,6 +241,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at evening tim
 
 exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at morning time (7:00 AM) 1`] = `
 <Modal
+  accessibilityViewIsModal={true}
   animationType="fade"
   onRequestClose={[Function]}
   testID="time-picker-modal"
@@ -361,7 +347,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at morning tim
           </Text>
           <Text>
             Value: 
-            2024-06-14T13:00:00.000Z
+            2024-06-15T07:00:00.000Z
           </Text>
         </View>
       </View>
@@ -439,7 +425,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at morning tim
             }
           }
           accessible={true}
-          className="h-12 flex-1 items-center justify-center rounded-xl bg-emerald-500 active:bg-emerald-600"
+          className="h-12 flex-1 items-center justify-center rounded-xl active:opacity-90"
           collapsable={false}
           focusable={true}
           onBlur={[Function]}
@@ -451,6 +437,11 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at morning tim
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "backgroundColor": "#059669",
+            }
+          }
         >
           <Text
             className="text-base font-semibold text-white"
@@ -466,6 +457,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at morning tim
 
 exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with custom title 1`] = `
 <Modal
+  accessibilityViewIsModal={true}
   animationType="fade"
   onRequestClose={[Function]}
   testID="time-picker-modal"
@@ -571,7 +563,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with custom ti
           </Text>
           <Text>
             Value: 
-            2024-06-14T18:00:00.000Z
+            2024-06-15T12:00:00.000Z
           </Text>
         </View>
       </View>
@@ -649,7 +641,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with custom ti
             }
           }
           accessible={true}
-          className="h-12 flex-1 items-center justify-center rounded-xl bg-emerald-500 active:bg-emerald-600"
+          className="h-12 flex-1 items-center justify-center rounded-xl active:opacity-90"
           collapsable={false}
           focusable={true}
           onBlur={[Function]}
@@ -661,6 +653,11 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with custom ti
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "backgroundColor": "#059669",
+            }
+          }
         >
           <Text
             className="text-base font-semibold text-white"
@@ -676,6 +673,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with custom ti
 
 exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with default title 1`] = `
 <Modal
+  accessibilityViewIsModal={true}
   animationType="fade"
   onRequestClose={[Function]}
   testID="time-picker-modal"
@@ -781,7 +779,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with default t
           </Text>
           <Text>
             Value: 
-            2024-06-14T18:00:00.000Z
+            2024-06-15T12:00:00.000Z
           </Text>
         </View>
       </View>
@@ -859,7 +857,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with default t
             }
           }
           accessible={true}
-          className="h-12 flex-1 items-center justify-center rounded-xl bg-emerald-500 active:bg-emerald-600"
+          className="h-12 flex-1 items-center justify-center rounded-xl active:opacity-90"
           collapsable={false}
           focusable={true}
           onBlur={[Function]}
@@ -871,6 +869,11 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with default t
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "backgroundColor": "#059669",
+            }
+          }
         >
           <Text
             className="text-base font-semibold text-white"
@@ -886,6 +889,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with default t
 
 exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with minutes (6:30 AM) 1`] = `
 <Modal
+  accessibilityViewIsModal={true}
   animationType="fade"
   onRequestClose={[Function]}
   testID="time-picker-modal"
@@ -991,7 +995,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with minutes (
           </Text>
           <Text>
             Value: 
-            2024-06-14T12:30:00.000Z
+            2024-06-15T06:30:00.000Z
           </Text>
         </View>
       </View>
@@ -1069,7 +1073,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with minutes (
             }
           }
           accessible={true}
-          className="h-12 flex-1 items-center justify-center rounded-xl bg-emerald-500 active:bg-emerald-600"
+          className="h-12 flex-1 items-center justify-center rounded-xl active:opacity-90"
           collapsable={false}
           focusable={true}
           onBlur={[Function]}
@@ -1081,6 +1085,11 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with minutes (
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "backgroundColor": "#059669",
+            }
+          }
         >
           <Text
             className="text-base font-semibold text-white"
