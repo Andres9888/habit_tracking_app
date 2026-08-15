@@ -7,7 +7,10 @@ jest.mock('convex/react', () => ({
   useConvex: () => ({ query: jest.fn() }),
 }));
 
-const existing = { _id: 'habits:existing', name: 'Drink water' } as unknown as Habit;
+const existing = {
+  _id: 'habits:existing',
+  name: 'Drink water',
+} as unknown as Habit;
 const imported = { _id: 'habits:new', name: 'Meditate' } as unknown as Habit;
 
 function setup(
