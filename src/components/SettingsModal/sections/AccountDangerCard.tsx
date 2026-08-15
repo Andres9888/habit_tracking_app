@@ -14,11 +14,13 @@ import { DangerZoneNotice } from './DangerZoneNotice';
 
 interface Props {
   isDeletingAccount: boolean;
+  needsIdentityCleanup: boolean;
   onDeleteAccount: () => void;
 }
 
 export function AccountDangerCard({
   isDeletingAccount,
+  needsIdentityCleanup,
   onDeleteAccount,
 }: Props) {
   const { settings } = useThemeColors();
@@ -30,9 +32,19 @@ export function AccountDangerCard({
           <Trash2 color={settings.deleteAccount.icon} size={iconSizes.small} />
         }
         iconBackgroundColor={settings.deleteAccount.bg}
-        label={isDeletingAccount ? 'Deleting account…' : 'Delete account'}
+        label={
+          isDeletingAccount
+            ? 'Deleting account…'
+            : needsIdentityCleanup
+              ? 'Finish deleting account'
+              : 'Delete account'
+        }
         labelColor={settings.deleteAccount.icon}
-        subtitle='Permanently removes all your data'
+        subtitle={
+          needsIdentityCleanup
+            ? 'Your data is gone — remove your sign-in profile'
+            : 'Permanently removes all your data'
+        }
         type='navigation'
         onPress={isDeletingAccount ? undefined : onDeleteAccount}
       />

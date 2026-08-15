@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Habit Detail — recommitment flow map</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    width:100%!important;min-height:100%!important;
+    background:#1A1816!important;color:#EDE8E2!important;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  }
+  @media(min-width:1200px){
+    html,body{height:100%!important;overflow:hidden!important}
+  }
+  h1,h2,.serif{font-family:Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif!important}
+
+  input{position:absolute;opacity:0;pointer-events:none}
+
+  .board{
+    width:100%;min-height:100%;display:grid;
+    grid-template-columns:1fr;
+    grid-template-rows:auto auto auto auto auto;
+    gap:14px;padding:16px 14px 20px;
+  }
+  @media(min-width:1200px){
+    .board{
+      height:100%;min-height:0;
+      grid-template-columns:340px 1fr 280px;
+      grid-template-rows:auto 1fr auto;
+      gap:16px;padding:18px 20px 16px;
+    }
+    .phone{grid-column:1;grid-row:2}
+    .map{grid-column:2;grid-row:2}
+    .cap{grid-column:3;grid-row:2}
+  }
+  .hero{grid-column:1/-1;order:0}
+  .map{order:1}
+  .phone{order:2}
+  .cap{order:3}
+  .foot{order:4}
+  .eyebrow{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#7FD0A3;margin-bottom:4px}
+  h1{font-size:26px;font-weight:700;letter-spacing:-.4px;line-height:1.15}
+  .lede{font-size:13px;color:#A29B93;margin-top:4px}
+
+  /* phone */
+  .phone{
+    background:#0F0E0D;border-radius:32px;padding:8px;
+    box-shadow:0 18px 40px rgba(0,0,0,.45);min-height:520px;height:520px;
+  }
+  @media(min-width:1200px){
+    .phone{height:100%;min-height:0}
+  }
+  .screen{
+    display:none;height:100%;border-radius:24px;overflow:hidden;
+    background:#F5F1ED;color:#2D2A26;flex-direction:column;
+    font-size:12px;line-height:1.35;
+  }
+  #v-home:checked ~ .board .s-home,
+  #v-detail:checked ~ .board .s-detail,
+  #v-inspect:checked ~ .board .s-inspect,
+  #v-confirm:checked ~ .board .s-confirm,
+  #v-analytics:checked ~ .board .s-analytics,
+  #v-pane:checked ~ .board .s-pane,
+  #v-wrong:checked ~ .board .s-wrong{display:flex}
+
+  .pad{padding:28px 12px 10px;flex:1;overflow:hidden}
+  .bar{display:flex;align-items:flex-end;justify-content:space-around;border-top:1px solid #DDD8D2;background:#FBFAF6;padding:8px 6px 12px;font-size:8px;color:#8A8580}
+  .fab{width:36px;height:36px;border-radius:18px;background:#0C7C59;color:#fff;display:grid;place-items:center;margin-top:-16px;font-size:16px;font-weight:700}
+  .ht{font-family:Iowan Old Style,Palatino,Georgia,serif!important;font-size:22px;font-weight:700;color:#22301F}
+  .row{display:flex;gap:8px;align-items:center;background:#fff;border:1px solid #DDD8D2;border-radius:12px;padding:8px 10px;margin-top:6px}
+  .row.lit{box-shadow:0 0 0 2px #0C7C59}
+  .chk{width:20px;height:20px;border-radius:10px;border:2px solid #C9C4BC;flex:none}
+  .chk.on{background:#0C7C59;border-color:#0C7C59;color:#fff;display:grid;place-items:center;font-size:11px}
+  .hero-card{background:linear-gradient(180deg,#E3EDE6,#F5F1ED);border-radius:14px;padding:10px;text-align:center;margin-bottom:8px}
+  .dial{width:52px;height:52px;border-radius:50%;margin:0 auto 6px;background:conic-gradient(#0C7C59 0 12%,#DDD8D2 12% 100%);display:grid;place-items:center}
+  .dial span{width:38px;height:38px;border-radius:50%;background:#F1F4EE;display:grid;place-items:center;font-size:8px;font-weight:700;color:#0B5D42;text-align:center;line-height:10px}
+  .cta{background:#0C7C59;color:#fff;border:0;border-radius:10px;padding:8px;font-weight:700;width:100%;font-size:12px}
+  .twomin{margin-top:5px;border:1.5px solid #0C7C59;color:#0B5D42;background:#fff;border-radius:9px;padding:6px;font-weight:600;width:100%;font-size:11px}
+  .miss{background:#F0DFC8;color:#7A4A1E;border-radius:10px;padding:7px 8px;font-size:10.5px;margin-bottom:8px}
+  .card{background:#fff;border:1px solid #DDD8D2;border-radius:12px;padding:8px;margin-bottom:6px}
+  .hd{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8A8F82;font-weight:700;margin-bottom:6px}
+  .dots{display:flex;justify-content:space-between}
+  .dot{width:20px;height:20px;border-radius:10px;border:1.5px solid #D8D4C8;display:grid;place-items:center;font-size:9px}
+  .dot.d{background:#0C7C59;border-color:#0C7C59;color:#fff}
+  .dot.m{background:#F0DFC8;border-color:#D7A93F;color:#7A4A1E}
+  .dot.t{border-color:#0C7C59;border-style:dashed}
+  .dot.o{opacity:.3}
+  .heat{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+  .cell{aspect-ratio:1;border-radius:3px;background:#DDD8D2}
+  .cell.d{background:#0C7C59}.cell.m{background:#E8C48A}.cell.u{opacity:.4}
+  .see{display:block;width:100%;text-align:right;margin-top:6px;font-size:11px;font-weight:700;color:#0C7C59;background:none;border:0}
+  .muted{font-size:10px;color:#6B6560}
+  .sheet{background:#fff;border-radius:16px 16px 0 0;padding:10px 12px 14px;box-shadow:0 -8px 24px rgba(0,0,0,.12)}
+  .shk{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8A8F82}
+  .sht{font-family:Iowan Old Style,Palatino,Georgia,serif!important;font-size:15px;margin:3px 0 6px}
+  .note{border:1px solid #DDD8D2;background:#FBFAF6;border-radius:8px;padding:7px;color:#9A9E90;font-size:11px;margin-bottom:8px}
+  .sec{width:100%;border:1.5px solid #0C7C59;color:#0B5D42;background:#fff;border-radius:9px;padding:8px;font-weight:700;font-size:12px}
+  .alert{position:absolute;inset:8px;background:rgba(26,24,22,.45);display:flex;align-items:center;justify-content:center;border-radius:24px}
+  .abox{background:#fff;border-radius:12px;padding:12px;width:86%;text-align:center}
+  .abox b{display:block;margin-bottom:4px}
+  .abox p{font-size:11px;color:#6B6560;margin-bottom:8px}
+  .ar{display:flex;gap:6px}
+  .ar span{flex:1;border-radius:8px;padding:7px;font-weight:700;font-size:11px}
+  .ar .c{background:#EEECEA}.ar .g{background:#0C7C59;color:#fff}
+  .phone{position:relative}
+  .pill{display:flex;justify-content:space-between;background:#fff;border:1px solid #DDD8D2;border-radius:10px;padding:8px 10px;margin-top:6px;font-size:11px}
+  .wrongbox{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;color:#7A4A1E}
+  .xbig{font-size:28px;color:#E06B5A;margin-bottom:8px}
+
+  /* map */
+  .map{
+    background:#232120;border:1px solid #3B3733;border-radius:18px;
+    padding:14px 16px;display:flex;flex-direction:column;min-height:0;
+  }
+  .maptop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .maptop h2{font-size:15px}
+  .leg{font-size:10px;color:#A29B93;display:flex;gap:12px}
+  .leg b.ok{color:#7FD0A3}.leg b.no{color:#E06B5A}
+
+  .flow{
+    flex:1;display:grid;
+    grid-template-columns:1fr 16px 1fr 16px 1fr 16px 1fr;
+    grid-template-rows:auto 14px auto 14px auto;
+    align-items:stretch;gap:0 0;
+  }
+  .node{
+    display:block;background:#332F2B;border:1.5px solid #3B3733;border-radius:12px;
+    padding:8px 10px;cursor:pointer;color:#EDE8E2;text-align:left;
+  }
+  .node:hover{border-color:#5A544D}
+  .node .k{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7E766E}
+  .node .t{font-size:13px;font-weight:700;margin-top:2px}
+  .node .d{font-size:10px;color:#A29B93;margin-top:2px}
+  .node.bad{border-style:dashed;border-color:#5E3A33;opacity:.7}
+  .arr{display:flex;align-items:center;justify-content:center;color:#7FD0A3;font-size:14px;font-weight:700}
+  .arr.v{align-items:flex-start;padding-top:8px}
+  .arr.bad{color:#E06B5A}
+  .el{grid-column:span 7;text-align:center;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8FD9B2;align-self:center}
+
+  #v-home:checked ~ .board label[for=v-home],
+  #v-detail:checked ~ .board label[for=v-detail],
+  #v-inspect:checked ~ .board label[for=v-inspect],
+  #v-confirm:checked ~ .board label[for=v-confirm],
+  #v-analytics:checked ~ .board label[for=v-analytics],
+  #v-pane:checked ~ .board label[for=v-pane],
+  #v-wrong:checked ~ .board label[for=v-wrong]{
+    background:#1E3B2C;border-color:#7FD0A3;box-shadow:0 0 0 3px rgba(127,208,163,.16)
+  }
+  #v-wrong:checked ~ .board label[for=v-wrong]{background:#3B241F;border-color:#E06B5A}
+
+  .cap{
+    background:#232120;border:1px solid #3B3733;border-radius:18px;padding:14px 16px;
+    display:flex;flex-direction:column;gap:10px;min-height:0;overflow:hidden;
+  }
+  .ck{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#7FD0A3}
+  .cap h2{font-size:18px;line-height:1.2}
+  .cap p{font-size:12.5px;line-height:18px;color:#C9C2BA}
+  .rule{background:#1E3B2C;border:1px solid #2F5A42;border-radius:10px;padding:10px;font-size:12px;line-height:17px}
+  .dont{background:#3B241F;border:1px solid #5E3A33;border-radius:10px;padding:10px;font-size:12px;line-height:17px;color:#FFBCAF}
+  .copy{display:none}
+  #v-home:checked ~ .board .c-home,
+  #v-detail:checked ~ .board .c-detail,
+  #v-inspect:checked ~ .board .c-inspect,
+  #v-confirm:checked ~ .board .c-confirm,
+  #v-analytics:checked ~ .board .c-analytics,
+  #v-pane:checked ~ .board .c-pane,
+  #v-wrong:checked ~ .board .c-wrong{display:flex;flex-direction:column;gap:10px}
+
+  .foot{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+  .chip{border:1px solid #3B3733;border-radius:999px;padding:4px 10px;font-size:10px;color:#C9C2BA}
+  .chip.no{border-color:#5E3A33;color:#FFBCAF;border-style:dashed}
+
+  .map{min-height:280px}
+  .flow{grid-template-columns:1fr;grid-template-rows:none;gap:8px}
+  .arr,.el{display:none}
+  @media(min-width:1200px){
+    .flow{
+      grid-template-columns:1fr 16px 1fr 16px 1fr 16px 1fr;
+      grid-template-rows:auto 14px auto 14px auto;
+      gap:0;
+    }
+    .arr{display:flex}
+    .el{display:block}
+  }
+</style>
+</head>
+<body>
+<input type="radio" name="v" id="v-home" checked>
+<input type="radio" name="v" id="v-detail">
+<input type="radio" name="v" id="v-inspect">
+<input type="radio" name="v" id="v-confirm">
+<input type="radio" name="v" id="v-analytics">
+<input type="radio" name="v" id="v-pane">
+<input type="radio" name="v" id="v-wrong">
+
+<div class="board">
+  <header class="hero">
+    <div class="eyebrow">Open design · signed 12 Aug 2026 · Kimi K3 + Codex GPT-5.6 Sol</div>
+    <h1>Habit Detail is a recommitment surface — not a dashboard</h1>
+    <p class="lede">Click a node. Home checks off. Detail recommits. Analytics asks how you’re doing. Dashed red = do not ship.</p>
+  </header>
+
+  <div class="phone">
+    <div class="screen s-home">
+      <div class="pad">
+        <div class="ht">Today</div>
+        <p class="muted">Wed 12 Aug · 2 of 3 done</p>
+        <div class="row"><div class="chk on">✓</div><div>Morning sunlight</div></div>
+        <div class="row lit"><div class="chk"></div><div>Read 10 pages</div></div>
+        <div class="row"><div class="chk on">✓</div><div>Walk after lunch</div></div>
+      </div>
+      <div class="bar"><span>Settings</span><div class="fab">+</div><span>Analytics</span><span>Templates</span></div>
+    </div>
+    <div class="screen s-detail">
+      <div class="pad">
+        <div class="hero-card">
+          <div class="dial"><span>Starting<br>Out</span></div>
+          <div class="ht" style="font-size:18px">Read 10 pages</div>
+          <p class="muted">Daily · after I pour coffee</p>
+          <button class="cta" type="button">Complete today</button>
+          <button class="twomin" type="button">Read one page — it counts</button>
+        </div>
+        <div class="miss">Yesterday was a miss. Tap the day to leave a note — that does not complete it.</div>
+        <div class="card">
+          <div class="hd">This week</div>
+          <div class="dots">
+            <div class="dot d">✓</div><div class="dot d">✓</div><div class="dot m">!</div>
+            <div class="dot t"></div><div class="dot o"></div><div class="dot o"></div><div class="dot o"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="hd">Your month</div>
+          <div class="heat">
+            <div class="cell u"></div><div class="cell d"></div><div class="cell d"></div><div class="cell m"></div><div class="cell d"></div><div class="cell d"></div><div class="cell d"></div>
+            <div class="cell d"></div><div class="cell m"></div><div class="cell d"></div><div class="cell d"></div><div class="cell"></div><div class="cell u"></div><div class="cell u"></div>
+          </div>
+          <span class="see">See analytics ›</span>
+        </div>
+      </div>
+    </div>
+    <div class="screen s-inspect">
+      <div class="pad" style="opacity:.35">
+        <div class="hero-card"><div class="ht" style="font-size:16px">Read 10 pages</div></div>
+      </div>
+      <div class="sheet">
+        <div class="shk">Wednesday · Missed</div>
+        <div class="sht">What got in the way?</div>
+        <div class="note">Optional. Status stays missed.</div>
+        <button class="sec" type="button">I actually did this</button>
+      </div>
+    </div>
+    <div class="screen s-confirm">
+      <div class="alert">
+        <div class="abox">
+          <b>Mark complete?</b>
+          <p>A note alone never does this. Confirm, then toggleHabit.</p>
+          <div class="ar"><span class="c">Cancel</span><span class="g">Mark complete</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="screen s-analytics">
+      <div class="pad">
+        <div class="ht" style="font-size:20px">Analytics</div>
+        <div class="card"><div class="hd">This week</div><b>4/7 days</b></div>
+        <div class="pill"><span>Strongest</span><b>Morning sunlight ›</b></div>
+        <div class="pill"><span>Needs care</span><b>Read 10 pages ›</b></div>
+        <p class="muted" style="margin-top:8px">Ranking tap → pane. Never Detail.</p>
+      </div>
+    </div>
+    <div class="screen s-pane">
+      <div class="pad">
+        <p class="muted">‹ Back</p>
+        <div class="ht" style="font-size:18px">Read 10 pages</div>
+        <p class="muted">Starting Out · 12%</p>
+        <div class="card"><div class="hd">How strength works</div><p class="muted">Existing explainer. Percent lives here, not on Detail.</p></div>
+        <div class="card"><div class="hd">History · view only</div>
+          <div class="heat"><div class="cell d"></div><div class="cell d"></div><div class="cell m"></div><div class="cell d"></div><div class="cell"></div><div class="cell u"></div><div class="cell u"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="screen s-wrong">
+      <div class="wrongbox">
+        <div>
+          <div class="xbig">✕</div>
+          <div class="ht" style="font-size:16px">Do not ship</div>
+          <p class="muted" style="margin-top:8px">Rankings must not open Detail. Calendar tap must not toggle. A miss note must not complete.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="map">
+    <div class="maptop">
+      <h2>Flow map</h2>
+      <div class="leg"><span><b class="ok">—</b> signed</span><span><b class="no">- -</b> refuse</span></div>
+    </div>
+    <div class="flow">
+      <label class="node" for="v-home"><div class="k">Surface</div><div class="t">Home list</div><div class="d">Fastest check-off</div></label>
+      <div class="arr">→</div>
+      <label class="node" for="v-detail"><div class="k">Surface</div><div class="t">Habit Detail</div><div class="d">Recommit now</div></label>
+      <div class="arr">→</div>
+      <label class="node" for="v-inspect"><div class="k">Inspect</div><div class="t">Day inspector</div><div class="d">Tap ≠ toggle</div></label>
+      <div class="arr">→</div>
+      <label class="node" for="v-confirm"><div class="k">Write</div><div class="t">Confirm + toggle</div><div class="d">I actually did this</div></label>
+
+      <div class="el">tap habit &nbsp;·&nbsp; calendar inspects &nbsp;·&nbsp; then confirm</div>
+
+      <label class="node" for="v-analytics"><div class="k">Tab</div><div class="t">Analytics</div><div class="d">How am I doing</div></label>
+      <div class="arr">→</div>
+      <label class="node" for="v-pane"><div class="k">Pane</div><div class="t">Per-habit pane</div><div class="d">Starting Out · 12%</div></label>
+      <div class="arr">→</div>
+      <label class="node" for="v-detail" style="opacity:.35"><div class="k">From Detail</div><div class="t">See analytics ›</div><div class="d">Closes Detail</div></label>
+      <div class="arr bad">↛</div>
+      <label class="node bad" for="v-wrong"><div class="k">Refuse</div><div class="t">Rankings → Detail</div><div class="d">Silent calendar toggle</div></label>
+    </div>
+  </section>
+
+  <aside class="cap">
+    <div class="copy c-home">
+      <div class="ck">Surface</div>
+      <h2>Home list</h2>
+      <p>Four-slot bar: Settings · FAB · Analytics · Templates. Analytics is not selected here.</p>
+      <div class="rule">Tap a habit → Detail. Tap Analytics → all-habits dashboard.</div>
+      <div class="dont">History and percents do not live here.</div>
+    </div>
+    <div class="copy c-detail">
+      <div class="ck">Surface</div>
+      <h2>Habit Detail</h2>
+      <p>Word-only strength. Concrete 2-min CTA from startSmallVersion. Cue is when, not what.</p>
+      <div class="rule">Complete today / 2-min still toggle today. Calendar does not.</div>
+      <div class="dont">No unexplained percent. No View history ›. No extra charts.</div>
+    </div>
+    <div class="copy c-inspect">
+      <div class="ck">Inspect</div>
+      <h2>Day inspector</h2>
+      <p>Done, missed, today are inspectable. Off, future, and pre-create are not buttons.</p>
+      <div class="rule">Calendar tap inspects. It never silently toggles.</div>
+      <div class="dont">A miss note must never set completed: true.</div>
+    </div>
+    <div class="copy c-confirm">
+      <div class="ck">Recover</div>
+      <h2>Confirm, then toggle</h2>
+      <p>The only way to complete a missed day from the inspector.</p>
+      <div class="rule">toggleHabit comes from the hero or this confirm — never the calendar tap.</div>
+      <div class="dont">Do not auto-complete because a note was saved.</div>
+    </div>
+    <div class="copy c-analytics">
+      <div class="ck">Surface</div>
+      <h2>Analytics · all habits</h2>
+      <p>Full-screen modal, same pattern as Templates. Bottom-bar Analytics lands here with no focused habit.</p>
+      <div class="rule">Strongest / rankings / insight taps open the pane, not Detail.</div>
+      <div class="dont">Do not hide Analytics behind Detail history.</div>
+    </div>
+    <div class="copy c-pane">
+      <div class="ck">Analytics</div>
+      <h2>Per-habit pane</h2>
+      <p>Name + Starting Out · 12% + the history that used to live on Detail.</p>
+      <div class="rule">See analytics › closes Detail and opens this pane.</div>
+      <div class="dont">Calendars here are view-only. Back returns to all-habits.</div>
+    </div>
+    <div class="copy c-wrong">
+      <div class="ck">Refused</div>
+      <h2>Paths that must not exist</h2>
+      <p>These are why Detail felt like a dashboard and the calendar felt untrustworthy.</p>
+      <div class="rule">Refuse ranking → Detail, calendar → silent toggle, note → completion.</div>
+      <div class="dont">Also refuse invented science, streak freeze, extra Detail charts.</div>
+    </div>
+  </aside>
+
+  <div class="foot">
+    <span class="chip">Date-state trust</span>
+    <span class="chip">2-min CTA = startSmallVersion</span>
+    <span class="chip">Strength word on Detail</span>
+    <span class="chip">Percent on Analytics</span>
+    <span class="chip">Analytics is a tab</span>
+    <span class="chip no">No invented science</span>
+    <span class="chip no">No streak freeze</span>
+    <span class="chip no">Note ≠ complete</span>
+  </div>
+</div>
+</body>
+</html>

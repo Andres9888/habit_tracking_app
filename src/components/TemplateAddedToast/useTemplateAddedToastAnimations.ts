@@ -39,7 +39,6 @@ export function useTemplateAddedToastAnimations({
 }: Params) {
   const translateY = useSharedValue(120);
   const opacity = useSharedValue(0);
-  const scale = useSharedValue(0.85);
   const iconScale = useSharedValue(0);
   const haptic = useHapticFeedback();
   const onDismissRef = useRef(onDismiss);
@@ -58,14 +57,13 @@ export function useTemplateAddedToastAnimations({
       if (fromSwipe) haptic.triggerLightImpact();
       translateY.value = withSpring(120, SPRING_EXIT);
       opacity.value = withTiming(0, { duration: 280 });
-      scale.value = withTiming(0.9, { duration: 280 });
       iconScale.value = withTiming(0, { duration: 200 });
       if (onDismissRef.current) {
         if (timerRef.current) clearTimeout(timerRef.current);
         timerRef.current = setTimeout(() => onDismissRef.current?.(), 300);
       }
     },
-    [translateY, opacity, scale, iconScale, haptic]
+    [translateY, opacity, iconScale, haptic]
   );
 
   useEffect(() => {
@@ -75,10 +73,6 @@ export function useTemplateAddedToastAnimations({
       }
       translateY.value = withSpring(0, SPRING_BOUNCY);
       opacity.value = withTiming(1, { duration: 250 });
-      scale.value = withSequence(
-        withSpring(1.02, SPRING_BOUNCY),
-        withSpring(1, SPRING_EXIT)
-      );
       iconScale.value = withDelay(
         200,
         withSequence(withSpring(1.15, SPRING_ICON), withSpring(1, SPRING_EXIT))
@@ -90,7 +84,6 @@ export function useTemplateAddedToastAnimations({
     } else {
       translateY.value = withSpring(120, SPRING_EXIT);
       opacity.value = withTiming(0, { duration: 280 });
-      scale.value = withTiming(0.85, { duration: 280 });
       iconScale.value = withTiming(0, { duration: 200 });
     }
   }, [
@@ -98,7 +91,6 @@ export function useTemplateAddedToastAnimations({
     duration,
     translateY,
     opacity,
-    scale,
     iconScale,
     handleDismiss,
     haptic,
@@ -127,7 +119,10 @@ export function useTemplateAddedToastAnimations({
 
   const toastStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
-    transform: [{ translateY: translateY.value }, { scale: scale.value }],
+    // Keep text at a stable 1:1 scale. Scaling the entire card makes iOS
+    // temporarily rasterize its text at the spring's intermediate resolution,
+    // which looks blurry on high-density displays until the animation settles.
+    transform: [{ translateY: translateY.value }],
   }));
   const iconStyle = useAnimatedStyle(() => ({
     transform: [{ scale: iconScale.value }],

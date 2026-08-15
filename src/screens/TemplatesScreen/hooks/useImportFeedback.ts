@@ -1,7 +1,3 @@
-/**
- * Feedback helpers for template import operations (toasts, guards)
- */
-
 import { useCallback, useRef } from 'react';
 import { colors } from '@/theme/colors';
 import type { Id } from '../../../../convex/_generated/dataModel';
@@ -20,6 +16,7 @@ type FeedbackOptions = Pick<
   | 'setToastTemplateData'
   | 'userHabitCount'
 >;
+type FeedbackTemplate = FeedbackOptions['previewTemplate'];
 
 export function useImportFeedback(o: FeedbackOptions) {
   const previewRef = useRef(o.previewTemplate);
@@ -31,11 +28,15 @@ export function useImportFeedback(o: FeedbackOptions) {
     (
       habitId: Id<'habits'>,
       variant: 'success' | 'already_exists',
-      templateOverride?: FeedbackOptions['previewTemplate']
+      templateOverride?: FeedbackTemplate
     ) => {
       const t = templateOverride ?? previewRef.current;
       const data = t
-        ? { color: t.iconColor ?? colors.primary[500], icon: t.icon ?? '✓', name: t.name }
+        ? {
+            color: t.iconColor ?? colors.primary[500],
+            icon: t.icon ?? '✓',
+            name: t.name,
+          }
         : null;
 
       o.setFeedbackHabitId(habitId);
@@ -77,12 +78,14 @@ export function useImportFeedback(o: FeedbackOptions) {
   );
 
   const showSuccess = useCallback(
-    (habitId: Id<'habits'>) => showImportFeedback(habitId, 'success'),
+    (habitId: Id<'habits'>, templateOverride?: FeedbackTemplate) =>
+      showImportFeedback(habitId, 'success', templateOverride),
     [showImportFeedback]
   );
 
   const showAlreadyImported = useCallback(
-    (habitId: Id<'habits'>) => showImportFeedback(habitId, 'already_exists'),
+    (habitId: Id<'habits'>, templateOverride?: FeedbackTemplate) =>
+      showImportFeedback(habitId, 'already_exists', templateOverride),
     [showImportFeedback]
   );
 
@@ -105,9 +108,6 @@ export function useImportFeedback(o: FeedbackOptions) {
     ]
   );
 
-  // Staged for premium: will return true to route the add into the paywall
-  // once gating ships. Serialization of concurrent imports lives in
-  // useTemplateImportHandlers, not here.
   const guardImport = useCallback(() => false, []);
 
   return { guardImport, showAlreadyImported, showError, showSuccess };

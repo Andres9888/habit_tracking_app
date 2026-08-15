@@ -3,81 +3,121 @@
  *
  * SEC-002: Ensures webhook requests are authentic and from RevenueCat
  *
- * RevenueCat sends an HMAC-SHA256 signature in the X-RevenueCat-Signature header.
- * We verify this by computing our own HMAC using the shared secret.
+ * RevenueCat sends an HMAC-SHA256 signature in the
+ * X-RevenueCat-Webhook-Signature header as:
+ *   t=<unix_timestamp>,v1=<hmac_sha256_hex>
+ * We verify this by computing HMAC-SHA256 over:
+ *   <timestamp>.<raw_json_body>
  *
  * @see https://www.revenuecat.com/docs/integrations/webhooks#signature-verification
  */
 
-// The shared secret should be set in the Convex environment variables
-const REVENUECAT_WEBHOOK_SECRET = process.env.REVENUECAT_WEBHOOK_SECRET ?? '';
+import {
+  computeRevenueCatSignatureHex,
+  timingSafeEqualHex,
+} from './revenuecatSignatureCrypto';
+import { parseRevenueCatSignatureHeader } from './parseRevenueCatSignatureHeader';
+
+export const REVENUECAT_WEBHOOK_SIGNATURE_HEADER =
+  'X-RevenueCat-Webhook-Signature';
+export const DEFAULT_REVENUECAT_WEBHOOK_TOLERANCE_SECONDS = 300;
+
+export interface RevenueCatSignatureVerifierOptions {
+  currentUnixTimestampSeconds?: number;
+  env?: Readonly<Record<string, string | undefined>>;
+  secret?: string;
+  toleranceSeconds?: number;
+}
+
+interface RevenueCatVerificationContext {
+  currentUnixTimestampSeconds: number;
+  secret: string;
+  toleranceSeconds: number;
+}
 
 /**
  * Verifies that a webhook request came from RevenueCat
  *
  * @param body - The raw request body as a string
- * @param signature - The X-RevenueCat-Signature header value
+ * @param signatureHeader - The X-RevenueCat-Webhook-Signature header value
  * @returns true if the signature is valid, false otherwise
  */
 export async function verifyRevenueCatSignature(
   body: string,
-  signature: string
+  signatureHeader: string,
+  options: RevenueCatSignatureVerifierOptions = {}
 ): Promise<boolean> {
-  // SECURITY: Reject all webhooks when secret is missing.
-  // This prevents accidental signature-bypass configuration from reaching production.
-  if (!REVENUECAT_WEBHOOK_SECRET) {
-    console.error(
-      '[RevenueCat] CRITICAL: No webhook secret configured - rejecting webhook'
-    );
-    return false;
-  }
-
-  if (!signature) {
-    console.error('[RevenueCat] No signature provided');
-    return false;
-  }
-
   try {
-    // Use Web Crypto API (available in Convex runtime)
-    const encoder = new TextEncoder();
-    const keyData = encoder.encode(REVENUECAT_WEBHOOK_SECRET);
-    const data = encoder.encode(body);
+    const parsedHeader = parseRevenueCatSignatureHeader(signatureHeader);
+    if (!parsedHeader) {
+      console.error('[RevenueCat] Invalid webhook signature header');
+      return false;
+    }
 
-    // Import the secret key
-    const key = await crypto.subtle.importKey(
-      'raw',
-      keyData,
-      { hash: 'SHA-256', name: 'HMAC' },
-      false,
-      ['sign']
+    const context = resolveVerificationContext(options);
+    if (!context) return false;
+    if (!isTimestampFresh(parsedHeader.timestamp, context)) {
+      console.error('[RevenueCat] Webhook signature timestamp outside tolerance');
+      return false;
+    }
+
+    const signedPayload = `${parsedHeader.timestamp}.${body}`;
+    const computedSignature = await computeRevenueCatSignatureHex(
+      signedPayload,
+      context.secret
     );
 
-    // Compute the HMAC
-    const signatureBytes = await crypto.subtle.sign('HMAC', key, data);
-
-    // Convert to hex string
-    const computedSignature = [...new Uint8Array(signatureBytes)]
-      .map((b) => b.toString(16).padStart(2, '0'))
-      .join('');
-
-    // Compare signatures (timing-safe comparison)
-    return timingSafeEqual(computedSignature, signature);
+    return timingSafeEqualHex(computedSignature, parsedHeader.signatureHex);
   } catch (error) {
     console.error('[RevenueCat] Signature verification error:', error);
     return false;
   }
 }
 
-/**
- * Timing-safe string comparison to prevent timing attacks.
- * Avoids early exit on length mismatch so comparison time is constant.
- * HMAC-SHA256 hex is always 64 chars, so length differs only for malformed input.
- */
-function timingSafeEqual(a: string, b: string): boolean {
-  const len = Math.max(a.length, b.length);
-  let result = a.length ^ b.length; // Non-zero if lengths differ
-  for (let i = 0; i < len; i++) {
-    result |= (a.codePointAt(i) || 0) ^ (b.codePointAt(i) || 0);
+function resolveVerificationContext(
+  options: RevenueCatSignatureVerifierOptions
+): RevenueCatVerificationContext | undefined {
+  const secret = resolveRevenueCatWebhookSecret(options);
+  if (!secret) {
+    console.error(
+      '[RevenueCat] CRITICAL: No webhook secret configured - rejecting webhook'
+    );
+    return undefined;
   }
-  return result === 0;
+
+  const toleranceSeconds =
+    options.toleranceSeconds ?? DEFAULT_REVENUECAT_WEBHOOK_TOLERANCE_SECONDS;
+  const currentUnixTimestampSeconds =
+    options.currentUnixTimestampSeconds ?? Math.floor(Date.now() / 1000);
+  if (!Number.isInteger(toleranceSeconds) || toleranceSeconds < 0) {
+    console.error('[RevenueCat] Invalid webhook signature tolerance');
+    return undefined;
+  }
+  if (!Number.isInteger(currentUnixTimestampSeconds)) {
+    console.error('[RevenueCat] Invalid current time for signature verification');
+    return undefined;
+  }
+  return { currentUnixTimestampSeconds, secret, toleranceSeconds };
+}
+
+function isTimestampFresh(
+  timestamp: number,
+  context: RevenueCatVerificationContext
+): boolean {
+  return (
+    Math.abs(context.currentUnixTimestampSeconds - timestamp) <=
+    context.toleranceSeconds
+  );
+}
+
+function resolveRevenueCatWebhookSecret(
+  options: RevenueCatSignatureVerifierOptions
+): string | undefined {
+  if (typeof options.secret === 'string') {
+    return options.secret.length > 0 ? options.secret : undefined;
+  }
+
+  const env = options.env ?? process.env;
+  const secret = env.REVENUECAT_WEBHOOK_SECRET;
+  return typeof secret === 'string' && secret.length > 0 ? secret : undefined;
 }

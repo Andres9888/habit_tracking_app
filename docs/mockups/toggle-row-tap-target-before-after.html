@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toggle Row Tap Target - Before/After Comparison</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+  .container { max-width: 1400px; margin: 0 auto; }
+  h1 {
+    text-align: center; color: white; margin-bottom: 8px;
+    font-size: 38px; text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  }
+  .subtitle {
+    text-align: center; color: rgba(255,255,255,0.85);
+    margin-bottom: 32px; font-size: 16px;
+  }
+  .subtitle code {
+    background: rgba(0,0,0,0.25); padding: 2px 8px; border-radius: 6px;
+    font-size: 14px;
+  }
+  .hint-bar {
+    text-align: center; color: white; background: rgba(0,0,0,0.2);
+    border-radius: 12px; padding: 12px 20px; margin: 0 auto 32px;
+    max-width: 720px; font-size: 15px;
+  }
+  .comparison {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px;
+  }
+  @media (max-width: 1024px) { .comparison { grid-template-columns: 1fr; } }
+  .panel {
+    background: white; border-radius: 20px; padding: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .panel h2 { font-size: 26px; margin-bottom: 10px; color: #1f2937; }
+  .label {
+    display: inline-block; padding: 6px 14px; border-radius: 20px;
+    font-size: 13px; font-weight: 600; margin-bottom: 6px;
+  }
+  .before-label { background: #fee2e2; color: #dc2626; }
+  .after-label { background: #d1fae5; color: #059669; }
+  .panel-desc { font-size: 14px; color: #6b7280; margin-bottom: 20px; line-height: 1.5; }
+  .phone {
+    background: #f9fafb; border-radius: 16px; padding: 20px;
+    border: 1px solid #e5e7eb;
+  }
+  .section {
+    background: white; border-radius: 12px; overflow: hidden;
+    border: 1px solid #e5e7eb;
+  }
+  .section-title {
+    padding: 12px 16px; font-size: 13px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px; color: #6b7280;
+    background: #f9fafb; border-bottom: 1px solid #e5e7eb;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title .glyph { color: #047857; }
+
+  .row {
+    padding: 14px 16px; display: flex; align-items: flex-start; gap: 14px;
+    position: relative; user-select: none;
+  }
+  .row + .row { border-top: 1px solid #f3f4f6; }
+  .icon-tile {
+    width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+  }
+  .tile-bell { background: #ecfdf5; }
+  .tile-sound { background: #eff6ff; }
+  .row-text { flex: 1; min-width: 0; padding-top: 1px; }
+  .row-label { font-size: 16px; color: #111827; font-weight: 500; }
+  .row-sub { font-size: 13px; color: #6b7280; margin-top: 2px; line-height: 1.35; }
+
+  /* iOS-style switch */
+  .switch {
+    width: 51px; height: 31px; border-radius: 16px; background: #e5e7eb;
+    position: relative; transition: background 0.2s ease; flex-shrink: 0;
+    margin-top: 3px; cursor: pointer;
+  }
+  .switch.on { background: #34d399; }
+  .switch::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 27px; height: 27px; border-radius: 50%; background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.2s ease;
+  }
+  .switch.on::after { transform: translateX(20px); }
+
+  /* tap target visualization overlays */
+  .show-targets .target-zone { outline: 2px dashed; outline-offset: -2px; border-radius: 8px; }
+  .show-targets .zone-live { outline-color: #059669; background: rgba(52, 211, 153, 0.10); }
+  .show-targets .zone-dead-marker { outline: 2px dashed #dc2626; outline-offset: -2px; border-radius: 8px; background: rgba(220, 38, 38, 0.05); }
+
+  /* BEFORE: only the switch is live */
+  .panel-before .row { cursor: default; }
+  .panel-before .row.shake { animation: shake 0.35s ease; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+  .dead-toast {
+    position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+    background: #dc2626; color: white; font-size: 12px; font-weight: 600;
+    padding: 4px 10px; border-radius: 8px; opacity: 0; pointer-events: none;
+    transition: opacity 0.2s ease; white-space: nowrap; z-index: 5;
+  }
+  .dead-toast.visible { opacity: 1; }
+
+  /* AFTER: whole row is live */
+  .panel-after .row { cursor: pointer; transition: background 0.15s ease; }
+  .panel-after .row:active { background: #f3f4f6; }
+
+  .measure {
+    display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap;
+  }
+  .measure .chip {
+    font-size: 13px; padding: 8px 12px; border-radius: 10px; font-weight: 600;
+  }
+  .chip-bad { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+  .chip-good { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+
+  .toggle-targets-btn {
+    display: block; margin: 0 auto 32px; padding: 12px 24px;
+    border-radius: 12px; border: none; cursor: pointer;
+    background: white; color: #065f46; font-size: 15px; font-weight: 700;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  }
+  .toggle-targets-btn:active { transform: translateY(1px); }
+
+  .impl-note {
+    background: white; border-radius: 20px; padding: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3); margin-top: 8px;
+  }
+  .impl-note h3 { font-size: 20px; color: #1f2937; margin-bottom: 12px; }
+  .impl-note p { font-size: 14px; color: #4b5563; line-height: 1.6; margin-bottom: 10px; }
+  .impl-note code {
+    background: #f3f4f6; padding: 2px 6px; border-radius: 5px;
+    font-size: 13px; color: #047857;
+  }
+  .impl-note pre {
+    background: #111827; color: #e5e7eb; border-radius: 12px;
+    padding: 16px 18px; font-size: 13px; line-height: 1.55;
+    overflow-x: auto; margin: 10px 0;
+  }
+  .impl-note pre .cm { color: #6b7280; }
+  .impl-note pre .kw { color: #34d399; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Toggle Row Tap Target</h1>
+  <p class="subtitle">Finding #1 — <code>SettingsRow.tsx:70</code> returns toggle rows without the <code>AnimatedPressable</code> wrap, so only the 51&times;31pt switch responds to taps</p>
+
+  <div class="hint-bar">
+    ▶ Both panels are live. Tap the row text in each panel and feel the difference. Use the button below to overlay the actual tap targets.
+  </div>
+
+  <button class="toggle-targets-btn" onclick="document.body.classList.toggle('show-targets'); this.textContent = document.body.classList.contains('show-targets') ? 'Hide tap targets' : 'Show tap targets';">Show tap targets</button>
+
+  <div class="comparison">
+
+    <!-- BEFORE -->
+    <div class="panel panel-before">
+      <span class="label before-label">BEFORE — current</span>
+      <h2>Switch-only target</h2>
+      <p class="panel-desc">Tapping the label, subtitle, or icon does nothing. Live area is the switch alone — roughly 8% of the row. iOS Settings, Android system settings, and this app's own navigation rows all respond across the full row.</p>
+      <div class="phone">
+        <div class="section">
+          <div class="section-title"><span class="glyph">🔔</span> Reminders</div>
+          <div class="row" id="b-row1" onclick="deadTap(event, 'b-row1')">
+            <div class="dead-toast" id="b-row1-toast">Nothing happens</div>
+            <div class="icon-tile tile-bell zone-dead-marker">🔔</div>
+            <div class="row-text zone-dead-marker">
+              <div class="row-label">Streak reminders</div>
+              <div class="row-sub">Nudge before an active streak slips</div>
+            </div>
+            <div class="switch on target-zone zone-live" onclick="flip(event, this)"></div>
+          </div>
+          <div class="row" id="b-row2" onclick="deadTap(event, 'b-row2')">
+            <div class="dead-toast" id="b-row2-toast">Nothing happens</div>
+            <div class="icon-tile tile-sound zone-dead-marker">🔊</div>
+            <div class="row-text zone-dead-marker">
+              <div class="row-label">Completion sound</div>
+              <div class="row-sub">Play a chime when you finish a habit</div>
+            </div>
+            <div class="switch target-zone zone-live" onclick="flip(event, this)"></div>
+          </div>
+        </div>
+      </div>
+      <div class="measure">
+        <span class="chip chip-bad">Live target: 51&times;31pt (switch only)</span>
+        <span class="chip chip-bad">~92% of row is dead</span>
+      </div>
+    </div>
+
+    <!-- AFTER -->
+    <div class="panel panel-after">
+      <span class="label after-label">AFTER — proposed</span>
+      <h2>Whole-row target</h2>
+      <p class="panel-desc">The entire row is one pressable that flips the switch — matching platform convention and the app's other row types. The switch stays as the visual state indicator; press feedback uses the row highlight, same as navigation rows.</p>
+      <div class="phone">
+        <div class="section">
+          <div class="section-title"><span class="glyph">🔔</span> Reminders</div>
+          <div class="row target-zone zone-live" onclick="flip(event, this.querySelector('.switch'))">
+            <div class="icon-tile tile-bell">🔔</div>
+            <div class="row-text">
+              <div class="row-label">Streak reminders</div>
+              <div class="row-sub">Nudge before an active streak slips</div>
+            </div>
+            <div class="switch on"></div>
+          </div>
+          <div class="row target-zone zone-live" onclick="flip(event, this.querySelector('.switch'))">
+            <div class="icon-tile tile-sound">🔊</div>
+            <div class="row-text">
+              <div class="row-label">Completion sound</div>
+              <div class="row-sub">Play a chime when you finish a habit</div>
+            </div>
+            <div class="switch"></div>
+          </div>
+        </div>
+      </div>
+      <div class="measure">
+        <span class="chip chip-good">Live target: full row (~343&times;64pt)</span>
+        <span class="chip chip-good">~13&times; larger target</span>
+        <span class="chip chip-good">Matches nav/selection rows</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="impl-note">
+    <h3>Implementation sketch</h3>
+    <p><code>SettingsRow.tsx:70</code> currently short-circuits: <code>if (type === 'toggle' || (type === 'info' &amp;&amp; !onPress)) return content;</code>. Change: only the non-interactive info case returns bare content; toggle rows get the same <code>AnimatedPressable</code> wrap as navigation rows, pressing calls <code>handleToggle(!value)</code>.</p>
+<pre><span class="cm">// SettingsRow.tsx — after</span>
+<span class="kw">if</span> (type === 'info' &amp;&amp; !onPress) <span class="kw">return</span> content;
+
+<span class="kw">const</span> isToggle = type === 'toggle';
+<span class="kw">return</span> (
+  &lt;AnimatedPressable
+    accessibilityRole={isToggle ? 'switch' : 'button'}
+    accessibilityState={isToggle ? { checked: !!value } : pressableState}
+    onPress={isToggle ? () =&gt; handleToggle(!value) : handleNavPress}
+    ...
+  &gt;
+    {content}
+  &lt;/AnimatedPressable&gt;
+);</pre>
+    <p><b>A11y:</b> row becomes the single <code>switch</code> element (role <code>switch</code>, state <code>checked</code>); mark the inner <code>AnimatedToggle</code> <code>accessible={false}</code> so VoiceOver doesn't announce it twice. Net a11y win — one large focusable target instead of a tiny one.</p>
+    <p><b>Keep:</b> existing pulse animation + haptic in <code>SettingsRow.hooks.ts</code> — trigger from row press, unchanged when the switch itself is dragged. <b>Repo gotcha honored:</b> plain style arrays on Pressable, no function-form styles.</p>
+    <p><b>Touched files:</b> <code>SettingsRow.tsx</code>, <code>RowAccessory.tsx</code> (pass-through <code>accessible={false}</code>), <code>AnimatedToggle.tsx</code>. No API change for callers.</p>
+  </div>
+</div>
+
+<script>
+  function flip(e, sw) {
+    e.stopPropagation();
+    sw.classList.toggle('on');
+  }
+  function deadTap(e, id) {
+    const row = document.getElementById(id);
+    const toast = document.getElementById(id + '-toast');
+    row.classList.remove('shake');
+    void row.offsetWidth; // restart animation
+    row.classList.add('shake');
+    toast.classList.add('visible');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => toast.classList.remove('visible'), 900);
+  }
+</script>
+</body>
+</html>

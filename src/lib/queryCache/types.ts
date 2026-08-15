@@ -6,6 +6,7 @@ export type QueryCacheEntryName =
   | 'habits.list'
   | 'habits.listArchived'
   | 'settings.get'
+  | 'templates.getImportedTemplateHabits'
   | 'templates.getImportedTemplateIds'
   | 'templates.list';
 

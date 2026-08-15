@@ -39,6 +39,14 @@ const DEFINITIONS: Record<QueryCacheEntryName, CacheEntryDefinition> = {
   // v2 rejects rows that may contain defaults returned before Convex auth was
   // server-confirmed. Those rows can otherwise reopen the first-paint flash.
   'settings.get': { name: 'settings.get', storage: 'secure', version: 2 },
+  // Contains private habit IDs paired with their public source templates.
+  // Secure persistence keeps the post-add focus target correct when offline.
+  'templates.getImportedTemplateHabits': {
+    latestFallback: true,
+    name: 'templates.getImportedTemplateHabits',
+    storage: 'secure',
+    version: 1,
+  },
   // 'plain': only opaque template IDs (no habit content); keys are
   // user-scoped and cleared on logout via clearQueryCacheForScope.
   'templates.getImportedTemplateIds': {

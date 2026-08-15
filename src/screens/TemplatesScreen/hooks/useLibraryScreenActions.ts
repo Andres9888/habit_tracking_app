@@ -47,15 +47,17 @@ export function useLibraryScreenActions({
       state.setPreviewTemplate(template);
       // Tracked on the confirmed outcome, not on the tap — failed and
       // duplicate imports must not count as adds.
-      void handlers.handleDirectImport(template._id).then((outcome) => {
-        if (outcome === 'added') {
-          trackLibraryEvent({
-            type: 'template_added',
-            templateId: template._id,
-            source,
-          });
-        }
-      });
+      void handlers
+        .handleDirectImport(template._id, 'overlay', template)
+        .then((outcome) => {
+          if (outcome === 'added') {
+            trackLibraryEvent({
+              type: 'template_added',
+              templateId: template._id,
+              source,
+            });
+          }
+        });
     },
     [handlers, state]
   );

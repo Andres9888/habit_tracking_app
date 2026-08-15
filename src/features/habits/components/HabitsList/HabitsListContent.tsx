@@ -71,6 +71,19 @@ export function HabitsListContent({
     [handlers, props, state]
   );
 
+  // Virtualization means the focus target may never have been measured. Fall
+  // back to the estimate the failure reports rather than leaving the user
+  // parked at the top with nothing having happened.
+  const handleScrollToIndexFailed = useCallback(
+    (info: { averageItemLength: number; index: number }) => {
+      state.listRef.current?.scrollToOffset({
+        animated: true,
+        offset: info.averageItemLength * info.index,
+      });
+    },
+    [state.listRef]
+  );
+
   const renderHabitItem = useCallback(
     (p: RenderItemParams<Habit>) =>
       renderHabitRow({
@@ -97,6 +110,7 @@ export function HabitsListContent({
         {stickyEnabled ? listHeaderComponent : null}
         <View style={{ flex: 1, overflow: 'hidden' }}>
           <DraggableFlatList<Habit>
+            ref={state.listRef}
             ListHeaderComponent={
               stickyEnabled ? undefined : (
                 <HeaderWrapper style={headerWrapperStyle}>
@@ -113,20 +127,21 @@ export function HabitsListContent({
             }
             contentContainerStyle={contentContainerStyle}
             data={list.habits}
-            initialNumToRender={6}
+            initialNumToRender={8}
             keyExtractor={handlers.keyExtractor}
-            maxToRenderPerBatch={6}
+            maxToRenderPerBatch={8}
             removeClippedSubviews
             renderItem={renderHabitItem}
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={false}
-            updateCellsBatchingPeriod={32}
-            windowSize={5}
+            updateCellsBatchingPeriod={16}
+            windowSize={7}
             onDragBegin={handlers.handleDragBegin}
             onDragEnd={(params) => {
               void list.handleDragEnd(params);
             }}
             onScroll={scrollHandler}
+            onScrollToIndexFailed={handleScrollToIndexFailed}
           />
         </View>
         <HabitsListModals

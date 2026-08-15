@@ -24,6 +24,7 @@ interface UseHandlersProps {
   reducedMotion: boolean;
   onClose: () => void;
   onBack?: () => void;
+  onGoToToday?: () => void;
   onImport: (templateId: Id<'templates'>) => void;
   onCustomize: (template: Doc<'templates'>) => void;
 }
@@ -35,6 +36,7 @@ export const useHandlers = ({
   reducedMotion,
   onClose,
   onBack,
+  onGoToToday,
   onImport,
   onCustomize,
 }: UseHandlersProps) => {
@@ -44,6 +46,15 @@ export const useHandlers = ({
     }
     onClose();
   }, [onClose, reducedMotion]);
+
+  // Same destination as close; kept separate so the caller can tell "I chose
+  // to go complete this habit" apart from "I dismissed the library".
+  const handleGoToToday = useCallback(() => {
+    if (!reducedMotion) {
+      triggerHaptic('tap');
+    }
+    (onGoToToday ?? onClose)();
+  }, [onClose, onGoToToday, reducedMotion]);
 
   const handleBack = useCallback(() => {
     if (!onBack) return;
@@ -82,6 +93,7 @@ export const useHandlers = ({
     handleBack: onBack ? handleBack : undefined,
     handleDismiss,
     handleCustomize,
+    handleGoToToday,
     handleImport,
   };
 };

@@ -6,15 +6,29 @@ import { Platform } from 'react-native';
 import { getPurchasesClient, state } from './client';
 import { getPurchasesInitializationContext } from './getPurchasesInitializationContext';
 
-export async function initializePurchases(userId?: string): Promise<void> {
-  if (state.initialized) {
-    return;
+let initializationPromise: Promise<boolean> | null = null;
+let identityQueue: Promise<void> = Promise.resolve();
+// undefined means this module did not perform the SDK configuration (for
+// example after Fast Refresh); null means it configured an anonymous user.
+let configuredUserId: string | null | undefined;
+
+export function initializePurchases(userId?: string): Promise<boolean> {
+  if (Platform.OS === 'web') return Promise.resolve(false);
+  if (state.initialized) return Promise.resolve(true);
+
+  if (!initializationPromise) {
+    initializationPromise = performInitialization(userId).finally(() => {
+      // A failed attempt must not poison every later sign-in attempt.
+      initializationPromise = null;
+    });
   }
 
+  return initializationPromise;
+}
+
+async function performInitialization(userId?: string): Promise<boolean> {
   const initializationContext = getPurchasesInitializationContext();
-  if (!initializationContext) {
-    return;
-  }
+  if (!initializationContext) return false;
 
   try {
     initializationContext.client.configure({
@@ -22,52 +36,60 @@ export async function initializePurchases(userId?: string): Promise<void> {
       appUserID: userId,
     });
     state.initialized = true;
+    configuredUserId = userId ?? null;
+    return true;
   } catch (error) {
     if (__DEV__) {
       console.error('[Purchases] Failed to initialize:', error);
     }
+    return false;
   }
 }
 
-export async function identifyUser(userId: string): Promise<void> {
-  if (Platform.OS === 'web' || !state.initialized) {
-    if (__DEV__ && Platform.OS !== 'web' && !state.initialized) {
-      console.warn('[Purchases] SDK not initialized, skipping identify');
-    }
-    return;
-  }
+export function identifyUser(userId: string): Promise<void> {
+  return enqueueIdentityTransition(async () => {
+    const initialized = await initializePurchases(userId);
+    if (!initialized || configuredUserId === userId) return;
 
-  const client = getPurchasesClient();
-  if (!client) {
-    return;
-  }
+    const client = getPurchasesClient();
+    if (!client) return;
 
-  try {
-    await client.logIn(userId);
-  } catch (error) {
-    if (__DEV__) {
-      console.error('[Purchases] Failed to identify user:', error);
+    try {
+      await client.logIn(userId);
+      configuredUserId = userId;
+    } catch (error) {
+      if (__DEV__) {
+        console.error('[Purchases] Failed to identify user:', error);
+      }
     }
-  }
+  });
 }
 
-export async function logoutPurchases(): Promise<void> {
-  if (Platform.OS === 'web' || !state.initialized) {
-    return;
-  }
+export function logoutPurchases(): Promise<void> {
+  return enqueueIdentityTransition(async () => {
+    if (Platform.OS === 'web' || !state.initialized) return;
+    if (configuredUserId === null) return;
 
-  const client = getPurchasesClient();
-  if (!client) {
-    return;
-  }
+    const client = getPurchasesClient();
+    if (!client) return;
 
-  try {
-    await client.logOut();
-  } catch (error) {
-    if (__DEV__) {
-      console.error('[Purchases] Failed to logout:', error);
+    try {
+      await client.logOut();
+      configuredUserId = null;
+    } catch (error) {
+      if (__DEV__) {
+        console.error('[Purchases] Failed to logout:', error);
+      }
     }
-  }
+  });
+}
+
+function enqueueIdentityTransition(task: () => Promise<void>): Promise<void> {
+  const nextTransition = identityQueue.then(task, task);
+  // Keep the queue usable even if a future transition stops handling its own
+  // error. The caller still receives the original transition promise.
+  identityQueue = nextTransition.catch(() => {});
+  return nextTransition;
 }
 
 export function isPurchasesAvailable(): boolean {

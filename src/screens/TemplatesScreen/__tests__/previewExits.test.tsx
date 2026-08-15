@@ -12,22 +12,32 @@ import {
   fireEvent,
   render,
   screen,
+  waitFor,
   within,
 } from '@testing-library/react-native';
-import { useQuery } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
 import { queryCacheStore } from '../../../lib/queryCache/store/state';
+import { requestHabitFocus } from '../../../features/habits/hooks/habitFocusStore';
 import TemplatesScreen from '../TemplatesScreen';
 
 jest.mock('convex/react', () => ({
   useQuery: jest.fn(),
-  useMutation: () => jest.fn(),
+  useMutation: jest.fn(),
   ConvexProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
+jest.mock('../../../features/habits/hooks/habitFocusStore', () => ({
+  requestHabitFocus: jest.fn(),
 }));
 
 // Mocked per-query rather than blanket-mocking useQuery: the added-state test
 // needs getImportedTemplateIds to return an id while templates.list returns a
 // row, and those two cannot be the same value.
 let mockImportedIds: string[] = [];
+let mockImportedTemplateHabits: Array<{
+  habitId: string;
+  templateId: string;
+}> = [];
 jest.mock('../../../lib/queryCache', () => ({
   useCachedQuery: (
     _query: unknown,
@@ -38,22 +48,28 @@ jest.mock('../../../lib/queryCache', () => ({
     if (options?.entryName === 'templates.getImportedTemplateIds') {
       return mockImportedIds;
     }
+    if (options?.entryName === 'templates.getImportedTemplateHabits') {
+      return mockImportedTemplateHabits;
+    }
     if (options?.entryName === 'settings.get') return { hasPremium: false };
     return [];
   },
 }));
 
-const mockTemplates = [
+const defaultTemplate = {
+  _id: 'template-1',
+  _creationTime: 0,
+  category: 'health_fitness',
+  description: 'Walk after lunch.',
+  frequency: 'daily',
+  icon: '🚶',
+  iconColor: '#10B981',
+  name: 'Daily walk',
+  scientificReference: 'Some reference',
+};
+let mockTemplates = [
   {
-    _id: 'template-1',
-    _creationTime: 0,
-    category: 'health_fitness',
-    description: 'Walk after lunch.',
-    frequency: 'daily',
-    icon: '🚶',
-    iconColor: '#10B981',
-    name: 'Daily walk',
-    scientificReference: 'Some reference',
+    ...defaultTemplate,
   },
 ];
 
@@ -69,6 +85,9 @@ jest.mock('expo-linear-gradient', () => ({
 jest.mock('@/utils/haptics', () => ({ triggerHaptic: jest.fn() }));
 
 const mockUseQuery = useQuery as jest.Mock;
+const mockUseMutation = useMutation as jest.Mock;
+const mockRequestHabitFocus = requestHabitFocus as jest.Mock;
+const mockImportTemplate = jest.fn();
 
 /** Renders the library and opens the detail modal for the seeded habit. */
 function openPreview() {
@@ -81,6 +100,13 @@ function openPreview() {
 describe('template detail exits', () => {
   beforeEach(() => {
     mockImportedIds = [];
+    mockImportedTemplateHabits = [];
+    mockTemplates = [{ ...defaultTemplate }];
+    mockImportTemplate.mockResolvedValue({
+      habitId: 'habit-1',
+      success: true,
+    });
+    mockUseMutation.mockReturnValue(mockImportTemplate);
     mockUseQuery.mockImplementation(() => mockTemplates);
   });
 
@@ -143,6 +169,9 @@ describe('template detail exits', () => {
 
   it('uses the safe Today fallback for the explicit post-add primary action', () => {
     mockImportedIds = ['template-1'];
+    mockImportedTemplateHabits = [
+      { habitId: 'habit-1', templateId: 'template-1' },
+    ];
     const onCloseLibrary = openPreview();
 
     expect(
@@ -150,6 +179,43 @@ describe('template detail exits', () => {
     ).toBeTruthy();
     fireEvent.press(screen.getByTestId('templates-preview-go-to-today'));
 
+    expect(mockRequestHabitFocus).toHaveBeenCalledWith('habit-1');
+    expect(onCloseLibrary).toHaveBeenCalledTimes(1);
+  });
+
+  it('focuses template B after importing template A', async () => {
+    mockTemplates = [
+      { ...defaultTemplate },
+      {
+        ...defaultTemplate,
+        _id: 'template-2',
+        description: 'Read before bed.',
+        icon: '📚',
+        name: 'Evening reading',
+      },
+    ];
+    mockImportedIds = ['template-2'];
+    mockImportedTemplateHabits = [
+      { habitId: 'habit-b', templateId: 'template-2' },
+    ];
+    mockImportTemplate.mockResolvedValue({
+      habitId: 'habit-a',
+      success: true,
+    });
+
+    const onCloseLibrary = openPreview();
+    fireEvent.press(screen.getByTestId('templates-preview-quick-add'));
+    await waitFor(() =>
+      expect(screen.getByTestId('templates-preview-added')).toBeTruthy()
+    );
+    fireEvent.press(screen.getByTestId('templates-preview-keep-exploring'));
+
+    fireEvent.press(screen.getByLabelText('Evening reading habit'));
+    fireEvent.press(screen.getByTestId('templates-preview-go-to-today'));
+
+    expect(mockRequestHabitFocus).toHaveBeenCalledTimes(1);
+    expect(mockRequestHabitFocus).toHaveBeenCalledWith('habit-b');
+    expect(mockRequestHabitFocus).not.toHaveBeenCalledWith('habit-a');
     expect(onCloseLibrary).toHaveBeenCalledTimes(1);
   });
 

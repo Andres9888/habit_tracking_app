@@ -1,5 +1,10 @@
 # App Store Release Sprint Plan
 
+> **Archived plan.** Use
+> [`App Store Submission Checklist.md`](./App%20Store%20Submission%20Checklist.md)
+> as the current source of truth. This sprint predates the ChainDay release
+> configuration and is retained only for historical context.
+
 **Target**: App Store submission in ~2-3 weeks
 **Pace**: 2-4 work sessions per day
 **Start Date**: _______________
@@ -183,4 +188,3 @@ _Use this section to track issues as they arise:_
 -
 -
 -
-

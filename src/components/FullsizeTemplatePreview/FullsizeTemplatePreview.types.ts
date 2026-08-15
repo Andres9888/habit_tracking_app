@@ -32,6 +32,13 @@ export interface FullsizeTemplatePreviewProps {
    * control is hidden and dismissals fall through to `onClose`.
    */
   onBack?: () => void;
+  /**
+   * The post-add primary action ("Go to Today and complete X"). Same
+   * destination as `onClose`, but a distinct entry point: it is the only exit
+   * that means "take me to the habit I just added", so the caller can focus
+   * that row on Today. Falls back to `onClose` when omitted.
+   */
+  onGoToToday?: () => void;
   /** Direct import handler (skips customization) */
   onImport: (templateId: Id<'templates'>) => void;
   /** Customize handler (opens existing TemplatePreviewModal) */

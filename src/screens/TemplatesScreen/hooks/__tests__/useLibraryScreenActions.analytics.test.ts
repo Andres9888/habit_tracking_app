@@ -40,8 +40,13 @@ beforeEach(() => jest.clearAllMocks());
 
 describe('template_added analytics', () => {
   it('popular import fires once with its source on success', async () => {
-    const { actions } = setup('added');
+    const { actions, handlers } = setup('added');
     await act(async () => actions.handlePopularImport(template));
+    expect(handlers.handleDirectImport).toHaveBeenCalledWith(
+      tid,
+      'overlay',
+      template
+    );
     expect(trackLibraryEvent).toHaveBeenCalledTimes(1);
     expect(trackLibraryEvent).toHaveBeenCalledWith({
       type: 'template_added',

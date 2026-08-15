@@ -77,8 +77,10 @@ export function PreviewContent({
         onCustomize={handlers.handleCustomize}
         // #1423 has no safe Library -> Habit Detail completion contract yet.
         // The primary action therefore uses the low-risk home/Today fallback:
-        // hide the preview first, then let the Library owner dismiss itself.
-        onGoToToday={handlers.handleClose}
+        // hide the preview first, then let the Library owner dismiss itself —
+        // and, unlike the header X, ask Today to scroll the new habit into
+        // view so the promised "complete it" target is on screen on arrival.
+        onGoToToday={handlers.handleGoToToday}
         onImport={handlers.handleImport}
         // Strictly the back handler, never the generic dismiss: dismiss falls
         // through to close when no library is mounted, which would collapse

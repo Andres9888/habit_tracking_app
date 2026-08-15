@@ -1,14 +1,9 @@
 /**
- * The single post-add surface in the drill-down.
+ * The drill-down's binding of the shared post-add confirmation panel.
  *
- * It replaces the old two-surface state (an "Added" pill stacked above a
- * "Find another habit" link, plus an overlay toast saying the same thing a
- * third time). Confirmation and the two ways forward now live in one
- * persistent panel, so nothing competes and nothing is announced twice.
- *
- * Both actions name where they go. The primary uses the existing
- * exit-to-home contract (the header X) rather than opening Habit Detail —
- * see #1423 — so there is no modal-over-modal transition to sequence.
+ * The primary uses the existing exit-to-home contract (the header X) rather
+ * than opening Habit Detail — see #1423 — so there is no modal-over-modal
+ * transition to sequence.
  *
  * `onKeepExploring` is optional on purpose: it must be the library-back
  * handler and nothing else. A caller that renders the preview with no library
@@ -18,15 +13,10 @@
  */
 
 import React from 'react';
-import { Pressable, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
-import { footerStyles } from '../styles';
+import { HabitAddedPanel } from '../../HabitAddedPanel';
 import { useDetailPalette } from '../detailPalette';
 import type { PressHandlers } from '../FullsizeTemplatePreview.types';
-import { PostAddCommitHeader } from './PostAddCommitHeader';
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface PostAddCommitPanelProps {
   checkmarkAnimatedStyle: object;
@@ -57,65 +47,35 @@ export function PostAddCommitPanel({
   onKeepExploring,
 }: PostAddCommitPanelProps) {
   const palette = useDetailPalette();
-  const primaryLabel = `Go to Today and complete ${templateName}`;
 
   return (
-    <Animated.View
-      accessibilityLiveRegion='polite'
+    <HabitAddedPanel
+      checkStyle={checkmarkAnimatedStyle}
+      headline={`${templateName} is in your habits`}
+      message="Complete it from Today when it's due."
+      palette={palette}
+      style={successPanelStyle}
       testID='templates-preview-added'
-      style={[
-        footerStyles.successPanel,
-        { backgroundColor: palette.card, borderColor: palette.border },
-        successPanelStyle,
-      ]}
-    >
-      <PostAddCommitHeader
-        checkmarkAnimatedStyle={checkmarkAnimatedStyle}
-        templateName={templateName}
-      />
-      <AnimatedPressable
-        accessible
-        accessibilityHint='Closes the habit library and returns to Today'
-        accessibilityLabel={primaryLabel}
-        accessibilityRole='button'
-        testID='templates-preview-go-to-today'
-        style={[
-          footerStyles.successPrimaryButton,
-          { backgroundColor: palette.addBg },
-          primaryButtonStyle,
-        ]}
-        onPress={onGoToToday}
-        {...createPressHandlers(primaryButtonScale)}
-      >
-        <Text
-          maxFontSizeMultiplier={1.5}
-          numberOfLines={2}
-          style={[footerStyles.successPrimaryText, { color: palette.addFg }]}
-        >
-          {primaryLabel}
-        </Text>
-      </AnimatedPressable>
-      {onKeepExploring ? (
-        <AnimatedPressable
-          accessible
-          accessibilityHint='Returns to the habit library, which stays open'
-          accessibilityLabel='Keep exploring habits'
-          accessibilityRole='button'
-          testID='templates-preview-keep-exploring'
-          style={[footerStyles.customizeLink, secondaryButtonStyle]}
-          onPress={onKeepExploring}
-          {...createPressHandlers(secondaryButtonScale, 0.98)}
-        >
-          <Text
-            style={[
-              footerStyles.customizeLinkText,
-              { color: palette.textSecondary },
-            ]}
-          >
-            Keep exploring habits
-          </Text>
-        </AnimatedPressable>
-      ) : null}
-    </Animated.View>
+      primary={{
+        hint: 'Closes the habit library and returns to Today',
+        label: `Go to Today and complete ${templateName}`,
+        pressHandlers: createPressHandlers(primaryButtonScale),
+        style: primaryButtonStyle,
+        testID: 'templates-preview-go-to-today',
+        onPress: onGoToToday,
+      }}
+      secondary={
+        onKeepExploring
+          ? {
+              hint: 'Returns to the habit library, which stays open',
+              label: 'Keep exploring habits',
+              pressHandlers: createPressHandlers(secondaryButtonScale, 0.98),
+              style: secondaryButtonStyle,
+              testID: 'templates-preview-keep-exploring',
+              onPress: onKeepExploring,
+            }
+          : undefined
+      }
+    />
   );
 }

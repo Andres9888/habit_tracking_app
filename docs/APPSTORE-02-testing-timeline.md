@@ -1,5 +1,10 @@
 # App Store Testing Timeline
 
+> **Archived plan.** Use
+> [`App Store Submission Checklist.md`](./App%20Store%20Submission%20Checklist.md)
+> for current gates and evidence. Dates, pricing, device sizes, and task status
+> below are historical.
+
 **Created:** 2026-01-27
 **Goal:** Ship to App Store
 **Value Driver:** Revenue activation - can't monetize until live

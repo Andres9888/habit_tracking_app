@@ -1,162 +1,197 @@
-/**
- * Security Test Suite: RevenueCat Webhook Signature Verification (SEC-005)
- *
- * Tests for SEC-002: Server-side RevenueCat webhook premium validation.
- * Verifies HMAC-SHA256 signature verification prevents webhook spoofing.
- */
+import {
+  DEFAULT_REVENUECAT_WEBHOOK_TOLERANCE_SECONDS,
+  REVENUECAT_WEBHOOK_SIGNATURE_HEADER,
+  verifyRevenueCatSignature,
+} from './revenuecatSignature';
 
 describe('SEC-002: RevenueCat Webhook Signature Verification', () => {
-  describe('Timing-Safe String Comparison', () => {
-    /**
-     * Timing-safe comparison prevents timing attacks where attackers
-     * can determine correct characters by measuring response time.
-     */
-    const timingSafeEqual = (a: string, b: string): boolean => {
-      if (a.length !== b.length) return false;
-      let result = 0;
-      for (let i = 0; i < a.length; i++) {
-        result |= a.charCodeAt(i) ^ b.charCodeAt(i);
-      }
-      return result === 0;
-    };
-
-    it('should return true for identical strings', () => {
-      expect(timingSafeEqual('abc123', 'abc123')).toBe(true);
-      expect(timingSafeEqual('', '')).toBe(true);
-    });
-
-    it('should return false for different strings', () => {
-      expect(timingSafeEqual('abc123', 'abc124')).toBe(false);
-      expect(timingSafeEqual('abc', 'abd')).toBe(false);
-    });
-
-    it('should return false for different lengths', () => {
-      expect(timingSafeEqual('abc', 'abcd')).toBe(false);
-      expect(timingSafeEqual('abcd', 'abc')).toBe(false);
-    });
-
-    it('should handle hex signatures (64 chars for SHA-256)', () => {
-      const sig1 = 'a'.repeat(64);
-      const sig2 = 'a'.repeat(63) + 'b';
-      expect(timingSafeEqual(sig1, sig1)).toBe(true);
-      expect(timingSafeEqual(sig1, sig2)).toBe(false);
-    });
+  const secret = 'rc_test_secret';
+  const currentUnixTimestampSeconds = 1_700_000_000;
+  const body = JSON.stringify({
+    event: {
+      app_user_id: 'user_123',
+      id: 'event_123',
+      type: 'INITIAL_PURCHASE',
+    },
   });
 
-  describe('HMAC-SHA256 Signature Format', () => {
-    it('should validate signature is hex-encoded', () => {
-      const validHex = /^[0-9a-f]{64}$/i;
-
-      expect(validHex.test('a'.repeat(64))).toBe(true);
-      expect(validHex.test('abcdef0123456789'.repeat(4))).toBe(true);
-
-      // Invalid formats
-      expect(validHex.test('xyz')).toBe(false); // Too short
-      expect(validHex.test('g'.repeat(64))).toBe(false); // Invalid hex char
-    });
-
-    it('should reject empty signatures', () => {
-      const isValidSignature = (sig: string): boolean => {
-        return !!sig && /^[0-9a-f]{64}$/i.test(sig);
-      };
-
-      expect(isValidSignature('')).toBe(false);
-      expect(isValidSignature('   ')).toBe(false);
-    });
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
   });
 
-  describe('Webhook Request Validation', () => {
-    it('should require X-RevenueCat-Signature header', () => {
-      const validateWebhookRequest = (
-        headers: Record<string, string | undefined>
-      ): { valid: boolean; error?: string } => {
-        const signature = headers['x-revenuecat-signature'];
-        if (!signature) {
-          return { valid: false, error: 'Missing signature header' };
-        }
-        return { valid: true };
-      };
-
-      expect(validateWebhookRequest({})).toEqual({
-        valid: false,
-        error: 'Missing signature header',
-      });
-
-      expect(
-        validateWebhookRequest({ 'x-revenuecat-signature': 'abc123' })
-      ).toEqual({ valid: true });
-    });
-
-    it('should require POST method', () => {
-      const validateMethod = (method: string): boolean => {
-        return method.toUpperCase() === 'POST';
-      };
-
-      expect(validateMethod('POST')).toBe(true);
-      expect(validateMethod('post')).toBe(true);
-      expect(validateMethod('GET')).toBe(false);
-      expect(validateMethod('PUT')).toBe(false);
-    });
-
-    it('should require Content-Type application/json', () => {
-      const validateContentType = (
-        contentType: string | undefined
-      ): boolean => {
-        if (!contentType) return false;
-        return contentType.toLowerCase().includes('application/json');
-      };
-
-      expect(validateContentType('application/json')).toBe(true);
-      expect(validateContentType('application/json; charset=utf-8')).toBe(true);
-      expect(validateContentType('text/plain')).toBe(false);
-      expect(validateContentType(undefined)).toBe(false);
-    });
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
-  describe('Premium Status Update Security', () => {
-    /**
-     * Only server-side webhook should update premium status.
-     * Client-side premium status must NEVER be trusted.
-     */
-    it('should only allow internal mutations to update premium', () => {
-      // Internal mutations are identified by:
-      // 1. Being called from webhook handler (server-side)
-      // 2. Not exposed in public API
-      // 3. Requiring valid webhook signature verification first
-
-      const isInternalMutation = (mutationName: string): boolean => {
-        const internalMutations = [
-          'grantPremium',
-          'revokePremium',
-          'setBillingIssue',
-        ];
-        return internalMutations.includes(mutationName);
-      };
-
-      expect(isInternalMutation('grantPremium')).toBe(true);
-      expect(isInternalMutation('updatePremium')).toBe(false);
+  it('accepts a valid RevenueCat signature header', async () => {
+    const header = await createSignatureHeader({
+      body,
+      secret,
+      timestamp: currentUnixTimestampSeconds,
     });
 
-    it('should track subscription audit fields', () => {
-      interface SubscriptionAudit {
-        createdAt: number;
-        updatedAt: number;
-        originalTransactionId?: string;
-        latestEventType?: string;
-      }
+    await expect(
+      verifyRevenueCatSignature(body, header, {
+        currentUnixTimestampSeconds,
+        secret,
+      })
+    ).resolves.toBe(true);
+  });
 
-      const auditFields: SubscriptionAudit = {
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-        originalTransactionId: 'rc_123',
-        latestEventType: 'INITIAL_PURCHASE',
-      };
-
-      // Audit fields should be present
-      expect(auditFields).toHaveProperty('createdAt');
-      expect(auditFields).toHaveProperty('updatedAt');
-      expect(auditFields).toHaveProperty('originalTransactionId');
-      expect(auditFields).toHaveProperty('latestEventType');
+  it('rejects a tampered body even when the header is otherwise valid', async () => {
+    const header = await createSignatureHeader({
+      body,
+      secret,
+      timestamp: currentUnixTimestampSeconds,
     });
+    const tamperedBody = `${body}\n`;
+
+    await expect(
+      verifyRevenueCatSignature(tamperedBody, header, {
+        currentUnixTimestampSeconds,
+        secret,
+      })
+    ).resolves.toBe(false);
+  });
+
+  it('rejects a signature created with a different secret', async () => {
+    const header = await createSignatureHeader({
+      body,
+      secret: 'wrong_secret',
+      timestamp: currentUnixTimestampSeconds,
+    });
+
+    await expect(
+      verifyRevenueCatSignature(body, header, {
+        currentUnixTimestampSeconds,
+        secret,
+      })
+    ).resolves.toBe(false);
+  });
+
+  it.each([
+    '',
+    't=1700000000',
+    'v1=abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789',
+    't=1700000000,v1=xyz',
+    't=1700000000,t=1700000001,v1=abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789',
+    't=1700000000,v1=abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789,v0=legacy',
+    't=not-a-number,v1=abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789',
+  ])('rejects malformed signature header: %s', async (header) => {
+    await expect(
+      verifyRevenueCatSignature(body, header, {
+        currentUnixTimestampSeconds,
+        secret,
+      })
+    ).resolves.toBe(false);
+  });
+
+  it('rejects timestamps older than the tolerance window', async () => {
+    const expiredTimestamp =
+      currentUnixTimestampSeconds -
+      DEFAULT_REVENUECAT_WEBHOOK_TOLERANCE_SECONDS -
+      1;
+    const header = await createSignatureHeader({
+      body,
+      secret,
+      timestamp: expiredTimestamp,
+    });
+
+    await expect(
+      verifyRevenueCatSignature(body, header, {
+        currentUnixTimestampSeconds,
+        secret,
+      })
+    ).resolves.toBe(false);
+  });
+
+  it('rejects timestamps newer than the tolerance window', async () => {
+    const futureTimestamp =
+      currentUnixTimestampSeconds +
+      DEFAULT_REVENUECAT_WEBHOOK_TOLERANCE_SECONDS +
+      1;
+    const header = await createSignatureHeader({
+      body,
+      secret,
+      timestamp: futureTimestamp,
+    });
+
+    await expect(
+      verifyRevenueCatSignature(body, header, {
+        currentUnixTimestampSeconds,
+        secret,
+      })
+    ).resolves.toBe(false);
+  });
+
+  it('accepts timestamps exactly on the tolerance boundary', async () => {
+    const boundaryTimestamp =
+      currentUnixTimestampSeconds -
+      DEFAULT_REVENUECAT_WEBHOOK_TOLERANCE_SECONDS;
+    const header = await createSignatureHeader({
+      body,
+      secret,
+      timestamp: boundaryTimestamp,
+    });
+
+    await expect(
+      verifyRevenueCatSignature(body, header, {
+        currentUnixTimestampSeconds,
+        secret,
+      })
+    ).resolves.toBe(true);
+  });
+
+  it('rejects verification when the webhook secret is missing', async () => {
+    const header = await createSignatureHeader({
+      body,
+      secret,
+      timestamp: currentUnixTimestampSeconds,
+    });
+
+    await expect(
+      verifyRevenueCatSignature(body, header, {
+        currentUnixTimestampSeconds,
+        env: {},
+      })
+    ).resolves.toBe(false);
+  });
+
+  it('uses the official RevenueCat webhook signature header name', () => {
+    expect(REVENUECAT_WEBHOOK_SIGNATURE_HEADER).toBe(
+      'X-RevenueCat-Webhook-Signature'
+    );
+    expect(REVENUECAT_WEBHOOK_SIGNATURE_HEADER).not.toBe(
+      'X-RevenueCat-Signature'
+    );
   });
 });
+
+async function createSignatureHeader({
+  body,
+  secret,
+  timestamp,
+}: {
+  body: string;
+  secret: string;
+  timestamp: number;
+}): Promise<string> {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(secret),
+    { hash: 'SHA-256', name: 'HMAC' },
+    false,
+    ['sign']
+  );
+  const signature = await crypto.subtle.sign(
+    'HMAC',
+    key,
+    encoder.encode(`${timestamp}.${body}`)
+  );
+
+  return `t=${timestamp},v1=${Array.from(
+    new Uint8Array(signature),
+    (byte) => byte.toString(16).padStart(2, '0')
+  ).join('')}`;
+}

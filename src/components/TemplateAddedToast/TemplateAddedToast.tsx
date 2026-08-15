@@ -1,19 +1,32 @@
 /**
- * TemplateAddedToast Component
- * Action card shown after importing a habit template.
+ * Post-add confirmation for adds made straight from the library catalog
+ * (the "+ Add" on a row), where there is no drill-down footer to hold it.
+ *
+ * It renders the same HabitAddedPanel the drill-down shows, floated above the
+ * catalog: same heading, same two ways forward, same colors. The old dark
+ * capsule said "Added 'X' to your habits" beside a 132px action column, which
+ * truncated any real template name and read as a different product from the
+ * confirmation one tap deeper.
+ *
+ * Destinations differ from the drill-down's on purpose: the library's
+ * `onViewHabit` closes the library and focuses the matching card on Today, so
+ * the primary names the exact habit the user will land on.
  */
 
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useAppTheme } from '../../theme';
+import { HabitAddedPanel, useHabitAddedPalette } from '../HabitAddedPanel';
 import type { TemplateAddedToastProps } from './types';
-import { DEFAULT_DURATION, FALLBACK_COLOR } from './constants';
+import { DEFAULT_DURATION } from './constants';
 import { styles } from './styles';
+import { buildToastCopy } from './copy';
 import { useTemplateAddedToastAnimations } from './useTemplateAddedToastAnimations';
+
+const ACTION_HANDOFF_DELAY_MS = 320;
 
 export function TemplateAddedToast({
   visible,
@@ -28,8 +41,8 @@ export function TemplateAddedToast({
   style,
 }: TemplateAddedToastProps) {
   const theme = useAppTheme();
+  const palette = useHabitAddedPalette();
   const insets = useSafeAreaInsets();
-  const color = templateData?.color ?? FALLBACK_COLOR;
   const viewHabit = onViewHabit ?? onViewHabits;
 
   const { toastStyle, iconStyle, handleDismiss, panGesture } =
@@ -37,90 +50,59 @@ export function TemplateAddedToast({
 
   if (!visible || !templateData) return null;
 
-  const title =
-    variant === 'already_exists'
-      ? `'${templateData.name}' is already in your habits`
-      : `Added '${templateData.name}' to your habits`;
-  const encouragement =
-    variant === 'success' && sessionImportCount > 1
-      ? `Nice — you've added ${sessionImportCount} today`
-      : variant === 'success'
-        ? 'Nice start — keep the momentum going'
-        : 'You can open it to review or track progress';
-  const primaryLabel =
-    variant === 'already_exists' ? 'Open existing habit' : 'View my habit';
+  const copy = buildToastCopy({
+    name: templateData.name,
+    sessionImportCount,
+    variant,
+  });
 
   return (
     <View
-      pointerEvents='box-none'
+      pointerEvents='auto'
+      testID='templates-toast-container'
       style={[styles.container, { bottom: insets.bottom + 16 }]}
     >
       <GestureDetector gesture={panGesture}>
-        <View collapsable={false}>
-          <Animated.View
-            accessible
+        <View collapsable={false} style={styles.gestureArea}>
+          <HabitAddedPanel
+            checkStyle={iconStyle}
+            headline={copy.headline}
+            headlineTestID='templates-toast-name'
+            message={copy.message}
+            palette={palette}
+            style={[styles.toast, theme.custom.shadows.card, toastStyle, style]}
             testID='templates-toast'
-            accessibilityLabel={title}
-            accessibilityLiveRegion='polite'
-            accessibilityRole='alert'
-            style={[
-              styles.toast,
-              {
-                borderLeftColor: color,
-                borderLeftWidth: 4,
-                ...theme.custom.shadows.card,
-              },
-              toastStyle,
-              style,
-            ]}
-          >
-            <View style={styles.content}>
-              <Animated.View
-                style={[
-                  styles.iconBadge,
-                  { backgroundColor: `${color}25` },
-                  iconStyle,
-                ]}
-              >
-                <Text style={styles.iconText}>{templateData.icon}</Text>
-              </Animated.View>
-              <View style={styles.copy}>
-                <Text testID='templates-toast-name' numberOfLines={2} style={styles.nameText}>
-                  {title}
-                </Text>
-                <Text numberOfLines={2} style={styles.subText}>
-                  {encouragement}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.actionColumn}>
-              {viewHabit ? (
-                <Pressable
-                  accessibilityLabel={primaryLabel}
-                  accessibilityRole='button'
-                  style={[styles.actionPill, { backgroundColor: color }]}
-                  onPress={() => {
-                    handleDismiss();
-                    viewHabit();
-                  }}
-                >
-                  <Text style={styles.actionText}>{primaryLabel}</Text>
-                </Pressable>
-              ) : null}
-              {onAddAnother ? (
-                <Pressable
-                  accessibilityLabel='Add another habit'
-                  accessibilityRole='button'
-                  onPress={() => {
-                    handleDismiss();
-                    onAddAnother();
-                  }}
-                >
-                  <Text style={styles.addAnotherText}>Add another</Text>
-                </Pressable>
-              ) : null}
-            </View>
-          </Animated.View>
+            primary={
+              viewHabit
+                ? {
+                    hint: 'Closes the habit library and scrolls to this habit on Today',
+                    label: copy.primaryLabel,
+                    onPress: () => {
+                      handleDismiss();
+                      // Keep the library mounted until this touch has fully
+                      // ended. Closing it synchronously lets the release land
+                      // on a Habit Home card and open Habit Details.
+                      setTimeout(viewHabit, ACTION_HANDOFF_DELAY_MS);
+                    },
+                  }
+                : {
+                    label: 'Keep exploring habits',
+                    onPress: () => handleDismiss(),
+                  }
+            }
+            secondary={
+              onAddAnother && viewHabit
+                ? {
+                    hint: 'Returns to the habit library, which stays open',
+                    label: 'Keep exploring habits',
+                    onPress: () => {
+                      handleDismiss();
+                      onAddAnother();
+                    },
+                  }
+                : undefined
+            }
+          />
         </View>
       </GestureDetector>
     </View>

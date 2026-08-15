@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings Live Audit — Before/After</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #047857 0%, #064e3b 100%);
+    padding: 40px 20px; min-height: 100vh;
+  }
+  .container { max-width: 1400px; margin: 0 auto; }
+  h1 { text-align: center; color: white; font-size: 38px; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+  .lede {
+    text-align: center; color: rgba(255,255,255,0.88); font-size: 16px;
+    max-width: 780px; margin: 10px auto 36px; line-height: 1.55;
+  }
+  .lede b { color: #fff; }
+
+  .finding {
+    background: white; border-radius: 22px; padding: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3); margin-bottom: 36px;
+  }
+  .finding > h2 {
+    font-size: 25px; color: #111827; margin-bottom: 6px;
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  }
+  .rank {
+    background: #047857; color: white; font-size: 13px; font-weight: 700;
+    padding: 4px 11px; border-radius: 20px; letter-spacing: 0.4px;
+  }
+  .finding > .where {
+    font-size: 13px; color: #6b7280; margin-bottom: 22px; font-family: ui-monospace, Menlo, monospace;
+  }
+
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  @media (max-width: 1080px) { .pair { grid-template-columns: 1fr; } }
+  .side .tag {
+    display: inline-block; padding: 5px 13px; border-radius: 20px;
+    font-size: 12.5px; font-weight: 700; margin-bottom: 6px; letter-spacing: 0.3px;
+  }
+  .tag-before { background: #fee2e2; color: #dc2626; }
+  .tag-after { background: #d1fae5; color: #059669; }
+  .side .caption { font-size: 13.5px; color: #6b7280; margin-bottom: 14px; line-height: 1.5; min-height: 40px; }
+
+  /* --- phone chrome --- */
+  .phone { background: #f5f3ef; border-radius: 18px; padding: 14px; border: 1px solid #e5e7eb; }
+  .card {
+    background: #fbfaf8; border-radius: 14px; border: 1px solid #e8e5df;
+    overflow: hidden;
+  }
+  .sec-h {
+    font-size: 20px; font-weight: 700; color: #1f2937; padding: 2px 2px 10px;
+    font-family: Georgia, 'Times New Roman', serif;
+  }
+  .row { display: flex; align-items: flex-start; gap: 13px; padding: 13px 14px; }
+  .row + .row { border-top: 1px solid #efece6; }
+  .tile {
+    width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
+  }
+  .t-green { background: #dcfce7; }
+  .t-amber { background: #fef3c7; }
+  .rtext { flex: 1; min-width: 0; }
+  .rlabel { font-size: 15.5px; font-weight: 600; color: #111827; }
+  .rlabel.clip { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rsub { font-size: 12.5px; color: #6b7280; margin-top: 3px; line-height: 1.35; }
+  .rsub.clip2 {
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .pill {
+    background: #eceae4; color: #4b5563; font-size: 13px; font-weight: 600;
+    padding: 7px 12px; border-radius: 9px; white-space: nowrap; flex-shrink: 0;
+  }
+  .pill-green { background: #d1fae5; color: #047857; font-weight: 700; }
+  .sw {
+    width: 51px; height: 31px; border-radius: 16px; background: #d8d5cf;
+    position: relative; flex-shrink: 0; margin-top: 2px;
+  }
+  .sw.on { background: #34d399; }
+  .sw::after {
+    content: ''; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px;
+    border-radius: 50%; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  }
+  .sw.on::after { transform: translateX(20px); }
+
+  .inset { background: rgba(0,0,0,0.02); padding: 8px 14px 10px; }
+  .inset-card { border: 1px solid #e8e5df; border-radius: 14px; background: #fbfaf8; overflow: hidden; }
+  .inset-row { display: flex; align-items: center; gap: 12px; padding: 11px 13px; }
+  .inset-row .lbl { flex: 1; font-size: 15px; font-weight: 600; color: #111827; }
+  .wheel {
+    border-top: 1px solid #e8e5df; padding: 8px 0 10px; text-align: center;
+    background: #fbfaf8; position: relative; height: 178px; overflow: hidden;
+  }
+  .wheel .band {
+    position: absolute; left: 8%; right: 8%; top: 50%; transform: translateY(-50%);
+    height: 42px; background: #eceae4; border-radius: 9px;
+  }
+  .wheel .cols { position: relative; display: flex; justify-content: center; gap: 34px; padding-top: 4px; }
+  .wheel .col { display: flex; flex-direction: column; gap: 5px; font-size: 19px; color: #9ca3af; }
+  .wheel .col span:nth-child(4) { color: #111827; font-weight: 500; }
+  .wheel .col span:nth-child(1), .wheel .col span:nth-child(7) { opacity: 0.35; }
+  .learn { border-top: 1px solid #e8e5df; padding: 11px 13px; font-size: 13.5px; color: #047857; }
+
+  .dead-badge {
+    position: absolute; top: 8px; right: 10px; background: #dc2626; color: white;
+    font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 7px; z-index: 2;
+  }
+  .dead { position: relative; }
+  .dead::before {
+    content: ''; position: absolute; inset: 0; z-index: 1;
+    background: repeating-linear-gradient(45deg, rgba(220,38,38,0.07) 0 10px, rgba(220,38,38,0.13) 10px 20px);
+    pointer-events: none;
+  }
+  .contradiction {
+    display: flex; align-items: center; gap: 8px; margin-top: 12px;
+    background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px;
+    padding: 9px 12px; font-size: 12.5px; color: #b91c1c; font-weight: 600;
+  }
+  .resolved {
+    display: flex; align-items: center; gap: 8px; margin-top: 12px;
+    background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px;
+    padding: 9px 12px; font-size: 12.5px; color: #047857; font-weight: 600;
+  }
+  .measure { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .chip { font-size: 12.5px; padding: 7px 11px; border-radius: 9px; font-weight: 600; }
+  .chip-bad { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+  .chip-good { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+
+  .why { margin-top: 26px; border-top: 1px solid #f0eeea; padding-top: 20px; }
+  .why h3 { font-size: 15px; color: #047857; letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 12px; }
+  .why p { font-size: 14.5px; color: #374151; line-height: 1.65; margin-bottom: 10px; }
+  .why p:last-child { margin-bottom: 0; }
+  .why b { color: #111827; }
+  code {
+    background: #f3f4f6; padding: 2px 6px; border-radius: 5px;
+    font-size: 13px; color: #047857; font-family: ui-monospace, Menlo, monospace;
+  }
+  pre {
+    background: #111827; color: #e5e7eb; border-radius: 12px; padding: 15px 17px;
+    font-size: 12.8px; line-height: 1.6; overflow-x: auto; margin: 12px 0 4px;
+    font-family: ui-monospace, Menlo, monospace;
+  }
+  pre .del { color: #fca5a5; }
+  pre .add { color: #6ee7b7; }
+  pre .cm { color: #6b7280; }
+
+  /* profile / account rows */
+  .prow { display: flex; align-items: center; gap: 13px; padding: 13px 14px; }
+  .avatar {
+    width: 52px; height: 52px; border-radius: 13px; flex-shrink: 0;
+    background: linear-gradient(140deg, #7dd3fc, #4b5563 60%, #1f2937);
+  }
+  .pname { font-size: 18px; font-weight: 700; color: #111827; font-family: Georgia, serif; }
+  .chev { color: #b6b2aa; font-size: 19px; flex-shrink: 0; }
+  .footnote { text-align: center; color: rgba(255,255,255,0.75); font-size: 13.5px; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Settings — Live Audit</h1>
+  <p class="lede">
+    Three issues found by driving the <b>actual app on the simulator</b>, not by reading code. Each one is reproduced below exactly as it rendered on device, with the root cause traced to a line and the fix beside it.
+  </p>
+
+  <!-- ============ FINDING 1 ============ -->
+  <div class="finding">
+    <h2><span class="rank">FINDING 1</span> The reminder card contradicts its own switch</h2>
+    <p class="where">StreakRemindersSection.tsx:28 · StreakRemindersSection.hooks.ts:19</p>
+
+    <div class="pair">
+      <div class="side">
+        <span class="tag tag-before">BEFORE — on device right now</span>
+        <p class="caption">Notifications are denied at the OS level. The switch reads OFF and says reminders aren't sending — yet the whole scheduling card sits open below it, showing a time that will never fire. Every control in it is inert.</p>
+        <div class="phone">
+          <div class="sec-h">Reminders</div>
+          <div class="card">
+            <div class="row">
+              <div class="tile t-amber">⚠️</div>
+              <div class="rtext">
+                <div class="rlabel clip">Reminder deli…</div>
+                <div class="rsub clip2">Allow notifications in iOS Settings to res…</div>
+              </div>
+              <div class="pill">Open settings</div>
+            </div>
+            <div class="row">
+              <div class="tile t-green">🔔</div>
+              <div class="rtext">
+                <div class="rlabel">Streak reminders</div>
+                <div class="rsub">Blocked in settings. Not sending reminders.</div>
+              </div>
+              <div class="sw"></div>
+            </div>
+            <div class="inset dead">
+              <div class="dead-badge">TAP-DEAD</div>
+              <div class="inset-card">
+                <div class="inset-row">
+                  <span class="lbl">Remind me at</span>
+                  <span class="pill pill-green">8:00 PM</span>
+                </div>
+                <div class="wheel">
+                  <div class="band"></div>
+                  <div class="cols">
+                    <div class="col"><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span></div>
+                    <div class="col"><span>57</span><span>58</span><span>59</span><span>00</span><span>01</span><span>02</span><span>03</span></div>
+                    <div class="col"><span>&nbsp;</span><span>&nbsp;</span><span>AM</span><span>PM</span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span></div>
+                  </div>
+                </div>
+                <div class="learn">Want a different time per habit? Learn more →</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="contradiction">✕ Switch says OFF · card says “reminding you at 8:00 PM”</div>
+      </div>
+
+      <div class="side">
+        <span class="tag tag-after">AFTER</span>
+        <p class="caption">The card collapses with the switch it belongs to. What's left is one clear state and one clear action: notifications are off, here's where to turn them back on.</p>
+        <div class="phone">
+          <div class="sec-h">Reminders</div>
+          <div class="card">
+            <div class="row">
+              <div class="tile t-amber">⚠️</div>
+              <div class="rtext">
+                <div class="rlabel">Notifications are off</div>
+                <div class="rsub">Turn them on in iOS Settings to resume reminders.</div>
+              </div>
+              <div class="pill">Open settings</div>
+            </div>
+            <div class="row">
+              <div class="tile t-green">🔔</div>
+              <div class="rtext">
+                <div class="rlabel">Streak reminders</div>
+                <div class="rsub">Nudge before an active streak slips</div>
+              </div>
+              <div class="sw"></div>
+            </div>
+          </div>
+        </div>
+        <div class="resolved">✓ One state, one action — nothing claims to be scheduled</div>
+      </div>
+    </div>
+
+    <div class="why">
+      <h3>Why this happens</h3>
+      <p>The section computes two different truths and hands them to two different consumers. <code>remindersActuallyDeliveryOn = enabled &amp;&amp; permissionGranted</code> drives the switch and the card's <code>pointerEvents</code>, but the expand animation is fed the raw <code>props.enabled</code>:</p>
+<pre><span class="cm">// StreakRemindersSection.tsx:28 — the animation never learns about permission</span>
+<span class="del">- const animations = useStreakRemindersAnimations(props.enabled);</span>
+<span class="add">+ const animations = useStreakRemindersAnimations(remindersActuallyDeliveryOn);</span></pre>
+      <p>So with reminders enabled in-app but denied by iOS, the height animation expands (<code>enabled === true</code>) while the switch renders off and <code>pointerEvents='none'</code> kills every touch inside. The result is a card that looks live, looks scheduled, and silently absorbs taps.</p>
+      <p><b>Why it matters:</b> this is the one screen state where the app is <i>not doing</i> what the user asked. It has to read as unambiguous — a visible “8:00 PM” next to a switch that says nothing is sending teaches users the setting is broken rather than blocked. One-line change; <code>remindersActuallyDeliveryOn</code> is already in scope on the line above.</p>
+      <p><b>Bonus:</b> once the card is gone, the “Blocked in settings. Not sending reminders.” subtitle on the switch is redundant with the warning row directly above it — the row can go back to its normal “Nudge before an active streak slips” copy, as shown.</p>
+    </div>
+  </div>
+
+  <!-- ============ FINDING 2 ============ -->
+  <div class="finding">
+    <h2><span class="rank">FINDING 2</span> A permanently-open time wheel, and a pill that does nothing</h2>
+    <p class="where">ReminderInsetCard.tsx:52 · StreakRemindersSection.tsx:35 · ReminderTimeRow.tsx:24</p>
+
+    <div class="pair">
+      <div class="side">
+        <span class="tag tag-before">BEFORE</span>
+        <p class="caption">On iOS the spinner is always mounted — roughly 40% of the visible sheet spent on a control most users touch once. The “8:00 PM” pill above it looks tappable and fires a haptic, but its handler is Android-only, so nothing happens.</p>
+        <div class="phone">
+          <div class="card">
+            <div class="inset-card">
+              <div class="inset-row">
+                <span class="lbl">Remind me at</span>
+                <span class="pill pill-green">8:00 PM</span>
+              </div>
+              <div class="wheel dead">
+                <div class="dead-badge">~200pt, always on</div>
+                <div class="band"></div>
+                <div class="cols">
+                  <div class="col"><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span></div>
+                  <div class="col"><span>57</span><span>58</span><span>59</span><span>00</span><span>01</span><span>02</span><span>03</span></div>
+                  <div class="col"><span>&nbsp;</span><span>&nbsp;</span><span>AM</span><span>PM</span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span></div>
+                </div>
+              </div>
+              <div class="learn">Want a different time per habit? Learn more →</div>
+            </div>
+          </div>
+        </div>
+        <div class="measure">
+          <span class="chip chip-bad">Pill: haptic fires, no-op on iOS</span>
+          <span class="chip chip-bad">Pushes “Your habits &amp; data” off-screen</span>
+        </div>
+      </div>
+
+      <div class="side">
+        <span class="tag tag-after">AFTER</span>
+        <p class="caption">The native compact picker <i>is</i> the pill — same visual weight, but tapping it opens the system time popover. The wheel appears on demand and the section collapses to two rows, so the next section is reachable without a scroll.</p>
+        <div class="phone">
+          <div class="card">
+            <div class="inset-card">
+              <div class="inset-row">
+                <span class="lbl">Remind me at</span>
+                <span class="pill pill-green">8:00 PM</span>
+              </div>
+              <div class="learn">Want a different time per habit? Learn more →</div>
+            </div>
+          </div>
+          <div style="height:10px"></div>
+          <div class="sec-h">Your habits &amp; data</div>
+          <div class="card">
+            <div class="row">
+              <div class="tile t-amber">📖</div>
+              <div class="rtext"><div class="rlabel">Archived habits</div><div class="rsub">View and restore hidden habits</div></div>
+              <div class="pill">44</div>
+            </div>
+          </div>
+        </div>
+        <div class="measure">
+          <span class="chip chip-good">~200pt reclaimed</span>
+          <span class="chip chip-good">Pill actually opens the picker</span>
+          <span class="chip chip-good">Matches Android's tap-to-open</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="why">
+      <h3>Why this happens</h3>
+      <p>Two halves of the same feature disagree about the platform. The picker renders unconditionally on iOS:</p>
+<pre><span class="cm">// ReminderInsetCard.tsx:52</span>
+{Platform.OS === 'ios' ? ( &lt;DateTimePicker display=<span class="del">'spinner'</span> … /&gt; ) : null}
+
+<span class="cm">// StreakRemindersSection.tsx:35 — the toggle handler ignores iOS entirely</span>
+const handleToggleTimePicker = () =&gt; {
+  if (Platform.OS === 'android') setShowTimePicker(true);
+};</pre>
+      <p>Because the spinner is always visible on iOS, nothing needed to open it — so the handler was written for Android only. But <code>ReminderTimeRow</code> still wraps the pill in an <code>AnimatedPressable</code> that fires <code>triggerHaptic('selection')</code> before calling that no-op. The user gets tactile confirmation that <i>something</i> happened, and then nothing does. That's worse than a plainly non-interactive label.</p>
+      <p><b>The fix is one prop plus one branch:</b> switch to <code>display='compact'</code> and let the native control own its own popover — then the custom pill and its dead handler can be deleted outright, since the compact picker renders as that same tinted pill. Alternatively keep the pill and make the handler set <code>showTimePicker</code> on both platforms.</p>
+      <p><b>Why it matters:</b> reminder time is a set-once decision. Spending the most valuable third of the sheet on it permanently — and burying “Your habits &amp; data” below the fold — inverts the frequency ranking of the whole screen.</p>
+    </div>
+  </div>
+
+  <!-- ============ FINDING 3 ============ -->
+  <div class="finding">
+    <h2><span class="rank">FINDING 3</span> The copy that matters most is the copy getting cut</h2>
+    <p class="where">RowLabel.tsx:29 · NotificationPermissionWarning.tsx:44 · ProfileHeroIdentity.tsx:69</p>
+
+    <div class="pair">
+      <div class="side">
+        <span class="tag tag-before">BEFORE</span>
+        <p class="caption">Three truncations, all on device. The warning that explains a broken feature is cut mid-word — twice. The profile subtitle says “Plan” twice and still runs out of room.</p>
+        <div class="phone">
+          <div class="card" style="margin-bottom:12px">
+            <div class="prow">
+              <div class="avatar"></div>
+              <div class="rtext">
+                <div class="pname">Andres Gutierrez</div>
+                <div class="rsub clip" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Plan: Free. Plan, billing, email &amp; sign…</div>
+              </div>
+              <div class="chev">›</div>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:12px">
+            <div class="row">
+              <div class="tile t-amber">⚠️</div>
+              <div class="rtext">
+                <div class="rlabel clip">Reminder deli…</div>
+                <div class="rsub clip2">Allow notifications in iOS Settings to res…</div>
+              </div>
+              <div class="pill">Open settings</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="row">
+              <div class="tile t-green">✉️</div>
+              <div class="rtext">
+                <div class="rlabel">Email</div>
+                <div class="rsub">Managed by your sign-in provider</div>
+              </div>
+              <div class="pill">andres9888@gmai…</div>
+            </div>
+          </div>
+        </div>
+        <div class="measure"><span class="chip chip-bad">Label truncates at 1 line on <code>type='info'</code></span></div>
+      </div>
+
+      <div class="side">
+        <span class="tag tag-after">AFTER</span>
+        <p class="caption">Shorter labels that fit beside their pill, and the email moved under its label where it has the full row width. Nothing here needs a bigger screen — just copy sized to the space it actually has.</p>
+        <div class="phone">
+          <div class="card" style="margin-bottom:12px">
+            <div class="prow">
+              <div class="avatar"></div>
+              <div class="rtext">
+                <div class="pname">Andres Gutierrez</div>
+                <div class="rsub">Free plan · billing, email &amp; sign out</div>
+              </div>
+              <div class="chev">›</div>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:12px">
+            <div class="row">
+              <div class="tile t-amber">⚠️</div>
+              <div class="rtext">
+                <div class="rlabel">Notifications are off</div>
+                <div class="rsub">Turn them on in iOS Settings to resume reminders.</div>
+              </div>
+              <div class="pill">Open settings</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="row">
+              <div class="tile t-green">✉️</div>
+              <div class="rtext">
+                <div class="rlabel">Email</div>
+                <div class="rsub" style="color:#111827;font-size:14px;margin-top:4px">andres9888@gmail.com</div>
+                <div class="rsub">Managed by your sign-in provider</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="measure"><span class="chip chip-good">Every string readable at default text size</span></div>
+      </div>
+    </div>
+
+    <div class="why">
+      <h3>Why this happens</h3>
+      <p>The row component gives info rows half the lines it gives everything else:</p>
+<pre><span class="cm">// RowLabel.tsx:29</span>
+numberOfLines={type === 'toggle' || type === 'navigation' ? 2 : 1}</pre>
+      <p>The permission warning is a <code>type='info'</code> row carrying both a value pill (<code>'Open settings'</code>) and the longest label in the module — <code>'Reminder delivery blocked'</code>. One line minus the pill's width leaves room for about thirteen characters, hence “Reminder deli…”. The subtitle gets two lines but the same squeezed column, so it dies at “to res…”.</p>
+      <p>The profile line is a plain authoring bug: <code>ProfileHeroIdentity.tsx:69</code> renders <code>{planLine}. Plan, billing, email &amp; sign out</code> where <code>planLine</code> is already <code>'Plan: Free'</code> — so the word appears twice before the ellipsis eats the rest.</p>
+      <p><b>Why it matters:</b> truncation is never uniformly bad — it's bad in proportion to how much the reader needed that string. Here it lands on the one row explaining why a feature is dead, and on the row that tells someone which plan they're paying for. <b>Prefer shortening the copy over raising <code>numberOfLines</code></b>: two-line labels beside a pill would fix the clipping but make every info row taller and ragged. “Notifications are off” is both shorter and clearer than “Reminder delivery blocked”.</p>
+    </div>
+  </div>
+
+  <p class="footnote">Reproduced from live simulator captures · iPhone 17 · light and dark both verified</p>
+</div>
+</body>
+</html>

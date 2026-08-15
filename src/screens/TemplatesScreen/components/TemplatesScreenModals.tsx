@@ -27,6 +27,8 @@ interface TemplatesScreenModalsProps {
   onClosePaywall: () => void;
   /** Detail modal X — dismisses the whole flow onto the home screen. */
   onExitToHome: () => void;
+  /** Post-add primary — exits to Today and focuses the habit just added. */
+  onGoToToday: () => void;
   onCustomize: (template: Doc<'templates'>) => void;
   onDirectImport: (
     templateId: Id<'templates'>
@@ -56,6 +58,7 @@ export function TemplatesScreenModals(p: TemplatesScreenModalsProps) {
         onCustomize={p.onCustomize}
         onExitToHome={p.onExitToHome}
         onDirectImport={p.onDirectImport}
+        onGoToToday={p.onGoToToday}
         onImport={p.onImport}
       />
       <PaywallSheet visible={p.showPaywall} onClose={p.onClosePaywall} />

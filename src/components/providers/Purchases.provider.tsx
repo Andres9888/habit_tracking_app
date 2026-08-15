@@ -5,8 +5,8 @@
  * Must be placed inside ClerkProvider and ConvexClerkProvider.
  *
  * Performance optimizations:
- * - Defers initialization with requestIdleCallback to avoid blocking startup
- * - Only initializes when idle or after a short timeout
+ * - Defers authenticated SDK initialization until the main thread is idle
+ * - Cancels a pending identity task when the Clerk user changes
  */
 
 import { useUser } from '@clerk/clerk-expo';
@@ -15,11 +15,7 @@ import { useEffect } from 'react';
 
 import { TIMEOUTS } from '../../lib/timing/config';
 import { scheduleWhenIdle } from '../../lib/timing/scheduleWhenIdle';
-import {
-  identifyUser,
-  initializePurchases,
-  logoutPurchases,
-} from '../../lib/purchases';
+import { identifyUser, logoutPurchases } from '../../lib/purchases';
 
 function logPurchasesTaskError(action: string) {
   return (error: unknown) => {
@@ -37,25 +33,22 @@ export function PurchasesProvider({ children }: PropsWithChildren) {
   const { isSignedIn, user } = useUser();
 
   useEffect(() => {
-    return scheduleWhenIdle(
-      () => {
-        runPurchasesTask(initializePurchases(), 'initialize');
-      },
-      {
-        fallbackDelayMs: TIMEOUTS.PURCHASES_INIT,
-        timeoutMs: TIMEOUTS.REQUEST_IDLE_CALLBACK,
-      }
-    );
-  }, []);
-
-  useEffect(() => {
     if (isSignedIn && user?.id) {
-      runPurchasesTask(identifyUser(user.id), 'identify user');
-      return;
+      const userId = user.id;
+      return scheduleWhenIdle(
+        () => runPurchasesTask(identifyUser(userId), 'identify user'),
+        {
+          fallbackDelayMs: TIMEOUTS.PURCHASES_INIT,
+          timeoutMs: TIMEOUTS.REQUEST_IDLE_CALLBACK,
+        }
+      );
     }
 
-    if (!isSignedIn) {
+    if (isSignedIn === false) {
+      // Logout is deliberately not deferred: account changes must not leave the
+      // previous user's entitlement identity active during the idle window.
       runPurchasesTask(logoutPurchases(), 'logout');
+      return;
     }
   }, [isSignedIn, user?.id]);
 

@@ -16,6 +16,10 @@ interface UseTemplateImportActionOptions {
     id: Id<'templates'>
   ) => ImportOutcome;
   importTemplate: UseTemplateImportHandlersOptions['importTemplate'];
+  recordImportedHabit: (
+    templateId: Id<'templates'>,
+    habitId: Id<'habits'> | undefined
+  ) => void;
   setImportingTemplateId: UseTemplateImportHandlersOptions['setImportingTemplateId'];
   setShowCustomizeModal: UseTemplateImportHandlersOptions['setShowCustomizeModal'];
   showError: (retry: () => void) => void;
@@ -30,10 +34,10 @@ interface UseTemplateImportActionOptions {
 export function useTemplateImportAction(o: UseTemplateImportActionOptions) {
   return useCallback(
     async (id: Id<'templates'>, c?: TemplateCustomizations) => {
-      if (o.inFlightRef.current) return undefined;
+      if (o.inFlightRef.current) return;
       if (o.guardImport()) {
         o.setShowCustomizeModal(false);
-        return undefined;
+        return;
       }
       o.inFlightRef.current = true;
       try {
@@ -42,6 +46,7 @@ export function useTemplateImportAction(o: UseTemplateImportActionOptions) {
         const res = await o.importTemplate(args);
         const outcome = o.handleImportResult(res, id);
         if (outcome !== 'failed') {
+          o.recordImportedHabit(id, res.habitId);
           if (outcome === 'added') {
             trackLibraryEvent({
               type: 'template_added',
@@ -67,6 +72,7 @@ export function useTemplateImportAction(o: UseTemplateImportActionOptions) {
       o.inFlightRef,
       o.handleImportResult,
       o.importTemplate,
+      o.recordImportedHabit,
       o.setImportingTemplateId,
       o.setShowCustomizeModal,
       o.showError,

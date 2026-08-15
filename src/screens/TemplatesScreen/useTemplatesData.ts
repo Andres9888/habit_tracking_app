@@ -1,50 +1,9 @@
-/**
- * Data fetching hooks for templates
- */
-
 import { useMutation } from 'convex/react';
 import { useMemo } from 'react';
 import { api } from '../../../convex/_generated/api';
 import { useCachedQuery } from '../../lib/queryCache';
-import type { CategoryFilter } from '../templates/templates.types';
-import type { Doc } from '../../../convex/_generated/dataModel';
-import { CATEGORY_META } from './data/categoryMeta';
-
-const FALLBACK_CATEGORIES: CategoryFilter[] = [
-  { icon: '✨', id: 'all', label: 'All' },
-];
-
-function getCategoriesFromTemplates(templates: Doc<'templates'>[] | undefined) {
-  if (!templates || templates.length === 0) {
-    return FALLBACK_CATEGORIES;
-  }
-
-  const uniqueCategories = [
-    ...new Set(templates.map((template) => template.category).filter(Boolean)),
-  ].sort();
-
-  const normalized = uniqueCategories.map((category) => {
-    const id = category as string;
-    const canonical = CATEGORY_META[id];
-    const metadata = canonical
-      ? { icon: canonical.icon, label: canonical.label }
-      : {
-          icon: '📌',
-          label:
-            typeof category === 'string'
-              ? category.charAt(0).toUpperCase() +
-                category.slice(1).replaceAll('_', ' ')
-              : 'Template',
-        };
-
-    return {
-      ...metadata,
-      id: category as CategoryFilter['id'],
-    };
-  });
-
-  return [...FALLBACK_CATEGORIES, ...normalized];
-}
+import type { Id } from '../../../convex/_generated/dataModel';
+import { getCategoriesFromTemplates } from './data/getCategoriesFromTemplates';
 
 export function useTemplatesData() {
   const allTemplates = useCachedQuery(
@@ -71,6 +30,11 @@ export function useTemplatesData() {
     {},
     { entryName: 'templates.getImportedTemplateIds' }
   );
+  const importedTemplateHabits = useCachedQuery(
+    api.templates.getImportedTemplateHabits,
+    {},
+    { entryName: 'templates.getImportedTemplateHabits' }
+  );
   const isLoading = allTemplates === undefined;
   const userHabitCount = userHabits?.length ?? 0;
   const isPremiumUser = settings?.hasPremium ?? false;
@@ -84,6 +48,15 @@ export function useTemplatesData() {
       Array.isArray(importedIds) ? new Set(importedIds.map(String)) : undefined,
     [importedIds]
   );
+  const initialImportedHabitIds = useMemo(() => {
+    if (!Array.isArray(importedTemplateHabits)) return;
+    return new Map<Id<'templates'>, Id<'habits'>>(
+      importedTemplateHabits.map(({ habitId, templateId }) => [
+        templateId,
+        habitId,
+      ])
+    );
+  }, [importedTemplateHabits]);
 
   const importTemplate = useMutation(api.templates.importTemplate);
   const seedTemplates = useMutation(api.templates.seedTemplates);
@@ -92,6 +65,7 @@ export function useTemplatesData() {
     allTemplates,
     categories,
     importTemplate,
+    initialImportedHabitIds,
     initialImportedIds,
     isLoading,
     isPremiumUser,
@@ -99,4 +73,3 @@ export function useTemplatesData() {
     userHabitCount,
   };
 }
-

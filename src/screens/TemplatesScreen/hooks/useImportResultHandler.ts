@@ -4,7 +4,7 @@
  */
 
 import { useCallback } from 'react';
-import type { Id } from '../../../../convex/_generated/dataModel';
+import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 
 interface ImportResult {
   alreadyExists?: boolean;
@@ -14,9 +14,15 @@ interface ImportResult {
 
 interface UseImportResultHandlerOptions {
   setImportedTemplateIds: (update: (prev: Set<string>) => Set<string>) => void;
-  showAlreadyImported: (habitId: Id<'habits'>) => void;
+  showAlreadyImported: (
+    habitId: Id<'habits'>,
+    templateOverride?: Doc<'templates'> | null
+  ) => void;
   showError: (onRetry?: () => void) => void;
-  showSuccess: (habitId: Id<'habits'>) => void;
+  showSuccess: (
+    habitId: Id<'habits'>,
+    templateOverride?: Doc<'templates'> | null
+  ) => void;
 }
 
 export type ImportOutcome = 'added' | 'exists' | 'failed';
@@ -27,19 +33,27 @@ export function useImportResultHandler(o: UseImportResultHandlerOptions) {
     (
       res: ImportResult,
       templateId: Id<'templates'>,
-      feedbackMode: ImportFeedbackMode = 'overlay'
+      feedbackMode: ImportFeedbackMode = 'overlay',
+      feedbackTemplate?: Doc<'templates'> | null
     ): ImportOutcome => {
       if (res.alreadyExists) {
         o.setImportedTemplateIds((p) => new Set(p).add(templateId));
         if (!res.habitId) o.showError();
         else if (feedbackMode === 'overlay') {
-          o.showAlreadyImported(res.habitId);
+          if (feedbackTemplate === undefined) {
+            o.showAlreadyImported(res.habitId);
+          } else {
+            o.showAlreadyImported(res.habitId, feedbackTemplate);
+          }
         }
         return 'exists';
       }
       if (res.success && res.habitId) {
         o.setImportedTemplateIds((p) => new Set(p).add(templateId));
-        if (feedbackMode === 'overlay') o.showSuccess(res.habitId);
+        if (feedbackMode === 'overlay') {
+          if (feedbackTemplate === undefined) o.showSuccess(res.habitId);
+          else o.showSuccess(res.habitId, feedbackTemplate);
+        }
         return 'added';
       }
       // A result that is neither an add nor a duplicate is a failure the user

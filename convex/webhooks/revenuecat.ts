@@ -12,7 +12,10 @@
 
 import { httpAction } from '../_generated/server';
 import { internal } from '../_generated/api';
-import { verifyRevenueCatSignature } from './revenuecatSignature';
+import {
+  REVENUECAT_WEBHOOK_SIGNATURE_HEADER,
+  verifyRevenueCatSignature,
+} from './revenuecatSignature';
 import { validateWebhookTimestamp } from '../subscriptions/premiumCheck';
 
 // RevenueCat webhook event types we handle
@@ -50,7 +53,8 @@ function getWebhookEventTimestamp(
 export const revenuecatWebhook = httpAction(async (ctx, request) => {
   try {
     const body = await request.text();
-    const signature = request.headers.get('X-RevenueCat-Signature') ?? '';
+    const signature =
+      request.headers.get(REVENUECAT_WEBHOOK_SIGNATURE_HEADER) ?? '';
 
     // Verify webhook signature
     const isValid = await verifyRevenueCatSignature(body, signature);

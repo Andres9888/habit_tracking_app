@@ -20,6 +20,7 @@ export function useTemplateHandlers(opts: UseTemplateHandlersOptions) {
   });
 
   const imports = useTemplateImportHandlers({
+    initialImportedHabitIds: opts.initialImportedHabitIds,
     importTemplate: opts.importTemplate,
     isPremiumUser: opts.isPremiumUser,
     onShowPaywall: opts.onShowPaywall,
@@ -77,5 +78,9 @@ export function useTemplateHandlers(opts: UseTemplateHandlersOptions) {
 
     handleTemplatePreview: imports.handleTemplatePreview,
     handleToggleCategory: navigation.handleToggleCategory,
+
+    /** Exact template-to-habit targets for the go-to-Today focus action. */
+    importedHabitIdsByTemplateRef: imports.importedHabitIdsByTemplateRef,
+    recordImportedHabit: imports.recordImportedHabit,
   };
 }

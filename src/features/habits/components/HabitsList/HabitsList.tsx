@@ -25,6 +25,7 @@
 import { useHabitRenderItem } from '../../hooks/useHabitRenderItem';
 import { useHabitsListState } from './useHabitsListState';
 import { useHabitsListHandlers } from './useHabitsListHandlers';
+import { useHabitFocusScroll } from './useHabitFocusScroll';
 import { HabitsListContent } from './HabitsListContent';
 import { ENTRANCE_STAGGER_DELAY } from './constants';
 import type { HabitsListProps } from './HabitsList.types';
@@ -45,6 +46,14 @@ export function HabitsList(props: HabitsListProps) {
       setShouldTriggerHabitEntrance: state.setShouldTriggerHabitEntrance,
       shouldTriggerHabitEntrance: state.shouldTriggerHabitEntrance,
     },
+  });
+
+  // Services a "Go to Today and complete X" request from the Habit Library.
+  useHabitFocusScroll({
+    habits: list.habits,
+    listRef: state.listRef,
+    reduceMotion: list.reduceMotionPreference,
+    setJustCreatedHabitId: state.setJustCreatedHabitId,
   });
 
   const renderItem = useHabitRenderItem({

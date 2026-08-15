@@ -24,7 +24,6 @@ import type * as analyticsDistribution from "../analyticsDistribution.js";
 import type * as analyticsOverview from "../analyticsOverview.js";
 import type * as analyticsTrend from "../analyticsTrend.js";
 import type * as analyticsWeekly from "../analyticsWeekly.js";
-import type * as auth from "../auth.js";
 import type * as categories from "../categories.js";
 import type * as config_apiConstants from "../config/apiConstants.js";
 import type * as crons from "../crons.js";
@@ -110,6 +109,7 @@ import type * as templates_curatedSeedTemplates from "../templates/curatedSeedTe
 import type * as templates_curation from "../templates/curation.js";
 import type * as templates_enrichTemplates from "../templates/enrichTemplates.js";
 import type * as templates_evidenceReview_mutations from "../templates/evidenceReview/mutations.js";
+import type * as templates_getImportedTemplateHabits from "../templates/getImportedTemplateHabits.js";
 import type * as templates_helpers from "../templates/helpers.js";
 import type * as templates_importTemplate from "../templates/importTemplate.js";
 import type * as templates_patchScienceEnrichment from "../templates/patchScienceEnrichment.js";
@@ -128,8 +128,10 @@ import type * as tracking_strengthUpdater from "../tracking/strengthUpdater.js";
 import type * as tracking from "../tracking.js";
 import type * as users from "../users.js";
 import type * as usersProfileImage from "../usersProfileImage.js";
+import type * as webhooks_parseRevenueCatSignatureHeader from "../webhooks/parseRevenueCatSignatureHeader.js";
 import type * as webhooks_revenuecat from "../webhooks/revenuecat.js";
 import type * as webhooks_revenuecatSignature from "../webhooks/revenuecatSignature.js";
+import type * as webhooks_revenuecatSignatureCrypto from "../webhooks/revenuecatSignatureCrypto.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -151,7 +153,6 @@ declare const fullApi: ApiFromModules<{
   analyticsOverview: typeof analyticsOverview;
   analyticsTrend: typeof analyticsTrend;
   analyticsWeekly: typeof analyticsWeekly;
-  auth: typeof auth;
   categories: typeof categories;
   "config/apiConstants": typeof config_apiConstants;
   crons: typeof crons;
@@ -237,6 +238,7 @@ declare const fullApi: ApiFromModules<{
   "templates/curation": typeof templates_curation;
   "templates/enrichTemplates": typeof templates_enrichTemplates;
   "templates/evidenceReview/mutations": typeof templates_evidenceReview_mutations;
+  "templates/getImportedTemplateHabits": typeof templates_getImportedTemplateHabits;
   "templates/helpers": typeof templates_helpers;
   "templates/importTemplate": typeof templates_importTemplate;
   "templates/patchScienceEnrichment": typeof templates_patchScienceEnrichment;
@@ -255,8 +257,10 @@ declare const fullApi: ApiFromModules<{
   tracking: typeof tracking;
   users: typeof users;
   usersProfileImage: typeof usersProfileImage;
+  "webhooks/parseRevenueCatSignatureHeader": typeof webhooks_parseRevenueCatSignatureHeader;
   "webhooks/revenuecat": typeof webhooks_revenuecat;
   "webhooks/revenuecatSignature": typeof webhooks_revenuecatSignature;
+  "webhooks/revenuecatSignatureCrypto": typeof webhooks_revenuecatSignatureCrypto;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

@@ -1,5 +1,9 @@
 # App Store Pre-Submission Fixes - Phase 01
 
+> **Archived status snapshot.** Current launch tasks live in
+> [`App Store Submission Checklist.md`](./App%20Store%20Submission%20Checklist.md).
+> The completion counts and paths below were not revalidated after 2026-02-09.
+
 **Created:** 2026-01-27
 **Updated:** 2026-02-01
 **Priority:** CRITICAL - Blocking App Store submission

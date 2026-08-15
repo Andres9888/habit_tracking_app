@@ -14,6 +14,7 @@ import type {
 
 export interface UseTemplateHandlersOptions {
   flatListRef: React.RefObject<FlatList<Doc<'templates'>> | null>;
+  initialImportedHabitIds?: ReadonlyMap<Id<'templates'>, Id<'habits'>>;
   importTemplate: (args: {
     templateId: Id<'templates'>;
     customizations?: TemplateCustomizations;

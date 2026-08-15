@@ -1,0 +1,358 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Habit Details — Before / After</title>
+<style>
+  :root {
+    --paper: #FAFAF7;
+    --ink: #22271F;
+    --muted: #6B7167;
+    --line: #E3E2DA;
+    --card: #FFFFFF;
+    --accent: #0C7C59;
+    --accent-soft: #E3EDE6;
+    --warn: #B0723A;
+    --warn-soft: #F0DFC8;
+    --chip-ink: #FFFFFF;
+    --serif: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    --sans: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  :root:not([data-theme="light"]) { }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #191C18;
+      --ink: #E8E9E2;
+      --muted: #9AA096;
+      --line: #32362F;
+      --card: #21251F;
+      --accent: #3FA57F;
+      --accent-soft: #24352C;
+      --warn: #D19257;
+      --warn-soft: #3B2F1F;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #191C18;
+    --ink: #E8E9E2;
+    --muted: #9AA096;
+    --line: #32362F;
+    --card: #21251F;
+    --accent: #3FA57F;
+    --accent-soft: #24352C;
+    --warn: #D19257;
+    --warn-soft: #3B2F1F;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 48px 24px 96px; }
+
+  .eyebrow {
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin: 0 0 10px;
+  }
+  h1 {
+    font-family: var(--serif); font-size: clamp(30px, 4.5vw, 44px);
+    line-height: 1.12; margin: 0 0 14px; text-wrap: balance; font-weight: 600;
+  }
+  .lede { font-size: 17px; color: var(--muted); max-width: 62ch; margin: 0 0 8px; }
+  h2 {
+    font-family: var(--serif); font-size: 26px; font-weight: 600;
+    margin: 72px 0 6px; text-wrap: balance;
+  }
+  h2 + p.sub { margin: 0 0 28px; color: var(--muted); max-width: 64ch; }
+  h3 { font-size: 15px; margin: 32px 0 12px; }
+
+  /* ---- diagnosis strip ---- */
+  .diag { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 36px; }
+  .diag div {
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    padding: 16px 18px; font-size: 14px;
+  }
+  .diag b { display: block; margin-bottom: 4px; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--warn); }
+  @media (max-width: 720px) { .diag { grid-template-columns: 1fr; } }
+
+  /* ---- phone pair ---- */
+  .pair { display: flex; gap: 36px; flex-wrap: wrap; align-items: flex-start; margin-top: 20px; }
+  .col { flex: 1 1 320px; min-width: 300px; max-width: 420px; }
+  .col-label {
+    display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; padding: 4px 12px; border-radius: 999px; margin-bottom: 14px;
+  }
+  .col-label.before { background: var(--warn-soft); color: var(--warn); }
+  .col-label.after { background: var(--accent-soft); color: var(--accent); }
+
+  .phone {
+    width: 100%; max-width: 340px; border-radius: 42px; padding: 10px;
+    background: #23261F; box-shadow: 0 18px 40px rgba(20,25,18,.28);
+  }
+  .screen {
+    border-radius: 34px; overflow: hidden; background: #F7F5EF; color: #2A2E27;
+    font-size: 13.5px; line-height: 1.45; min-height: 600px;
+  }
+  .statusbar { display: flex; justify-content: space-between; padding: 12px 22px 4px; font-size: 11px; color: #7A7F74; font-variant-numeric: tabular-nums; }
+  .screen .pad { padding: 8px 16px 22px; }
+
+  /* in-phone primitives — deliberately fixed light palette (product renders light) */
+  .hero {
+    border-radius: 20px; padding: 16px 16px 18px; margin-bottom: 12px;
+    background: linear-gradient(160deg, #E9EFE7 0%, #D9EBDF 60%, #CFE3D8 100%);
+  }
+  .hero .sched { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #5A6B5D; font-weight: 700; }
+  .hero .name { font-family: var(--serif); font-size: 24px; font-weight: 600; color: #22301F; margin: 2px 0 8px; display: flex; align-items: center; justify-content: space-between; }
+  .dial {
+    width: 44px; height: 44px; border-radius: 50%; flex: none;
+    background: conic-gradient(#0C7C59 0 12%, #ffffff88 12% 100%);
+    display: grid; place-items: center; font-size: 10px; font-weight: 700; color: #0B5D42;
+  }
+  .dial span { background: #F1F4EE; border-radius: 50%; width: 34px; height: 34px; display: grid; place-items: center; }
+  .why {
+    display: inline-block; background: #ffffffb0; border-radius: 999px; padding: 5px 12px;
+    font-size: 12px; color: #44523F; margin-bottom: 12px; font-style: italic;
+  }
+  .cta {
+    display: block; text-align: center; background: #0C7C59; color: #fff;
+    border-radius: 14px; padding: 13px; font-weight: 700; font-size: 15px;
+  }
+  .twomin { text-align: center; font-size: 12.5px; color: #5A6B5D; margin-top: 10px; text-decoration: underline; text-underline-offset: 3px; }
+  .twomin-btn {
+    display: block; text-align: center; margin-top: 8px; border: 1.5px solid #0C7C59;
+    color: #0B5D42; border-radius: 12px; padding: 9px; font-weight: 600; font-size: 13px; background: #ffffff90;
+  }
+
+  .card-m { background: #fff; border: 1px solid #E7E3D8; border-radius: 16px; padding: 14px 15px; margin-bottom: 12px; }
+  .card-m .hd { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #8A8F82; font-weight: 700; margin-bottom: 10px; }
+  .dots { display: flex; justify-content: space-between; margin-bottom: 12px; }
+  .dots i {
+    width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid #D8D4C8;
+    display: grid; place-items: center; font-style: normal; font-size: 10px; color: #9A9E90;
+  }
+  .dots i.on { background: #0C7C59; border-color: #0C7C59; color: #fff; font-weight: 700; }
+  .stats { display: flex; text-align: center; font-variant-numeric: tabular-nums; }
+  .stats div { flex: 1; }
+  .stats b { display: block; font-size: 17px; color: #22301F; }
+  .stats span { font-size: 10.5px; color: #8A8F82; }
+
+  .dashed {
+    border: 1.5px dashed #CFCBBE; border-radius: 16px; padding: 18px 15px; margin-bottom: 12px;
+    text-align: center; color: #8A8F82; font-size: 12.5px; background: #F5F2EA;
+  }
+  .sci { background: #FBF0E3; border: 1px solid #F0DFC8; }
+  .sci .src { display: inline-block; margin-top: 8px; font-size: 10.5px; background: #fff; border-radius: 999px; padding: 3px 10px; color: #B0723A; font-weight: 600; }
+  .sci .until { margin-top: 10px; font-size: 11px; color: #8A8F82; }
+  .sci .untilbar { height: 4px; border-radius: 2px; background: #F0DFC8; margin-top: 5px; overflow: hidden; }
+  .sci .untilbar i { display: block; height: 100%; width: 21%; background: #E5893B; }
+
+  .milestone { font-size: 12px; color: #44523F; }
+  .milestone .bar { height: 6px; border-radius: 3px; background: #E3EDE6; margin-top: 6px; overflow: hidden; }
+  .milestone .bar i { display: block; height: 100%; width: 43%; background: #0C7C59; }
+  .plus {
+    display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .06em;
+    background: #22301F; color: #F5E9C8; border-radius: 999px; padding: 3px 9px; margin-top: 8px;
+  }
+  .notefield {
+    border: 1px solid #E0DCCF; background: #FBFAF6; border-radius: 10px;
+    padding: 9px 12px; color: #9A9E90; font-size: 12.5px; margin-top: 4px;
+  }
+
+  .empty { text-align: center; padding: 130px 20px 0; color: #8A8F82; }
+  .empty .glyph { font-size: 40px; margin-bottom: 12px; }
+  .empty b { display: block; color: #44523F; font-size: 16px; margin-bottom: 6px; font-family: var(--serif); }
+  .bottombar {
+    position: sticky; bottom: 0; display: flex; justify-content: space-around;
+    border-top: 1px solid #E7E3D8; background: #FBFAF6; padding: 12px 0 16px; margin-top: 140px;
+    font-size: 11px; color: #8A8F82;
+  }
+
+  .tpl { display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid #E7E3D8; border-radius: 14px; padding: 12px 13px; margin-bottom: 9px; }
+  .tpl .ico { width: 34px; height: 34px; border-radius: 10px; background: #E3EDE6; display: grid; place-items: center; font-size: 16px; flex: none; }
+  .tpl b { display: block; font-size: 13.5px; color: #22301F; }
+  .tpl span { font-size: 11px; color: #8A8F82; }
+  .steplab { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #8A8F82; font-weight: 700; margin: 6px 0 4px; }
+  .obtitle { font-family: var(--serif); font-size: 21px; color: #22301F; margin: 0 0 4px; font-weight: 600; }
+  .obsub { font-size: 12.5px; color: #6B7167; margin-bottom: 14px; }
+  .trial { text-align: center; font-size: 11px; color: #8A8F82; margin-top: 9px; }
+
+  /* callout tags inside mocks */
+  .tag {
+    display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%;
+    font-size: 11px; font-weight: 700; color: var(--chip-ink); vertical-align: 2px; margin-left: 6px;
+    font-style: normal;
+  }
+  .tag.b { background: #B0723A; }
+  .tag.a { background: #0C7C59; }
+
+  .legend { margin: 18px 0 0; padding: 0; list-style: none; font-size: 14px; }
+  .legend li { display: flex; gap: 10px; margin-bottom: 10px; max-width: 58ch; }
+  .legend .tag { flex: none; margin: 3px 0 0; }
+  .legend b { font-weight: 650; }
+  .pillar {
+    font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--accent); background: var(--accent-soft); border-radius: 4px; padding: 1px 6px; margin-left: 6px; white-space: nowrap;
+  }
+
+  /* plan table */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; margin-top: 20px; }
+  table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 13.5px; background: var(--card); }
+  th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  tr:last-child td { border-bottom: none; }
+  code { font-family: var(--mono); font-size: 12px; background: var(--accent-soft); border-radius: 4px; padding: 1px 5px; }
+  td .ord { font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+  .note { font-size: 13px; color: var(--muted); margin-top: 14px; max-width: 66ch; }
+  a:focus-visible, .cta:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">Design review · Offer Engineering</p>
+  <h1>The app already is the offer. Users just never see it.</h1>
+  <p class="lede">Framework: people buy pain-removal (80%) over promised results (20%), and pay for speed and ease — via Done-For-You, Process, and Support. The codebase scores 3/3 pillars. The <em>live</em> experience delivers roughly 1/3, because the highest-value surfaces are flag-disabled or inert. Two mock pairs below: first touch, and the Habit Detail page during days 0–14.</p>
+
+  <div class="diag">
+    <div><b>Funnel off</b>16-step onboarding + trial paywall fully built, disabled in <code>featureFlags.ts</code>. New user lands on an empty list. Revenue = $0 by construction.</div>
+    <div><b>Dead first 14 days</b>Detail-page insights gate on 14 days of data — placeholder shown during the exact window most users churn.</div>
+    <div><b>Fake escape hatch</b>“Only have 2 minutes?” logs nothing. The one feature aimed at hard days doesn’t count the rep.</div>
+  </div>
+
+  <h2>Pair 1 — First touch</h2>
+  <p class="sub">What a new user sees 10 seconds after signing in. The “after” is not new work — it is the already-built <code>OnboardingFlowV2</code> plan-preview step, turned on.</p>
+
+  <div class="pair">
+    <div class="col">
+      <span class="col-label before">Before · today, flags off</span>
+      <div class="phone"><div class="screen">
+        <div class="statusbar"><span>9:41</span><span>◦◦◦</span></div>
+        <div class="pad">
+          <div class="obtitle" style="margin-top:6px">Habits</div>
+          <div class="empty">
+            <div class="glyph">☘︎</div>
+            <b>No habits yet</b>
+            Tap + to create your first habit.<i class="tag b">1</i>
+          </div>
+          <div class="bottombar"><span>＋ Add</span><span>Templates</span><span>Settings</span></div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="col">
+      <span class="col-label after">After · flag on, zero new UI</span>
+      <div class="phone"><div class="screen">
+        <div class="statusbar"><span>9:41</span><span>◦◦◦</span></div>
+        <div class="pad">
+          <div class="steplab">Step 12 of 16 · Your plan</div>
+          <p class="obtitle">Your first chain, built for you</p>
+          <p class="obsub">Based on your goal — <em>more energy, less doom-scrolling</em> — start with these three. Small on purpose.</p>
+          <div class="tpl"><div class="ico">🚶</div><div><b>Morning walk · 10 min</b><span>Automatic in ~66 days · anchors after coffee</span></div></div>
+          <div class="tpl"><div class="ico">📖</div><div><b>Read 10 pages</b><span>Replaces first evening scroll</span></div></div>
+          <div class="tpl"><div class="ico">🧺</div><div><b>2-minute tidy</b><span>Easiest win — protects the chain</span></div></div>
+          <a class="cta" style="margin-top:14px">Start my plan<i class="tag a" style="background:#ffffff;color:#0C7C59">2</i></a>
+          <div class="trial">7-day free trial · cancel anytime</div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+
+  <ul class="legend">
+    <li><i class="tag b">1</i><span><b>Before:</b> the user does 100% of the thinking on an empty screen — 0/3 framework pillars at the moment of peak motivation. The pain the funnel manufactures (pain points → amplification → plan) never happens, so the paywall never has an emotional moment to close against.</span></li>
+    <li><i class="tag a">2</i><span><b>After:</b> pre-built 3-habit chain with automaticity estimates and auto-import.<span class="pillar">DFY</span><span class="pillar">Process</span> Trial CTA lands at the emotional peak — exactly the framework’s “sell pain-relief, not promises.”</span></li>
+  </ul>
+
+  <h2>Pair 2 — Habit Detail, day 3 of 14</h2>
+  <p class="sub">The page you asked about, in the state most users actually meet it: too early for personal insights, streak fragile, motivation dipping. Same layout, three fixes and one revenue touchpoint.</p>
+
+  <div class="pair">
+    <div class="col">
+      <span class="col-label before">Before · current build</span>
+      <div class="phone"><div class="screen">
+        <div class="statusbar"><span>18:22</span><span>✕ &nbsp; ✎</span></div>
+        <div class="pad">
+          <div class="hero">
+            <div class="sched">Every day · Morning</div>
+            <div class="name">Morning walk <span class="dial"><span>12%</span></span></div>
+            <span class="why">“More energy for my kids”</span>
+            <a class="cta">Complete today</a>
+            <div class="twomin">Only have 2 minutes?<i class="tag b">1</i></div>
+          </div>
+          <div class="card-m">
+            <div class="hd">Progress</div>
+            <div class="dots"><i class="on">M</i><i class="on">T</i><i>W</i><i>T</i><i>F</i><i>S</i><i>S</i></div>
+            <div class="stats"><div><b>2</b><span>streak</span></div><div><b>2</b><span>best</span></div><div><b>2</b><span>this year</span></div></div>
+          </div>
+          <div class="dashed">What we’re noticing<br><b style="color:#6B7167">Insights unlock after 14 days of data.</b><br>11 days to go.<i class="tag b">2</i></div>
+          <div class="card-m">
+            <div class="hd">Notes</div>
+            <div class="notefield">One running note for this habit…<i class="tag b">3</i></div>
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="col">
+      <span class="col-label after">After · proposed</span>
+      <div class="phone"><div class="screen">
+        <div class="statusbar"><span>18:22</span><span>✕ &nbsp; ✎</span></div>
+        <div class="pad">
+          <div class="hero">
+            <div class="sched">Every day · Morning</div>
+            <div class="name">Morning walk <span class="dial"><span>12%</span></span></div>
+            <span class="why">“More energy for my kids”</span>
+            <a class="cta">Complete today</a>
+            <a class="twomin-btn">Do the 2-minute version — it counts<i class="tag a">4</i></a>
+          </div>
+          <div class="card-m">
+            <div class="hd">Progress</div>
+            <div class="dots"><i class="on">M</i><i class="on">T</i><i>W</i><i>T</i><i>F</i><i>S</i><i>S</i></div>
+            <div class="stats"><div><b>2</b><span>streak</span></div><div><b>2</b><span>best</span></div><div><b>2</b><span>this year</span></div></div>
+            <div class="milestone" style="margin-top:12px">4 days to your first milestone — day 7 <span class="plus">🛡 Streak shield · Plus</span><i class="tag a">7</i><div class="bar"><i></i></div></div>
+          </div>
+          <div class="card-m sci">
+            <div class="hd" style="color:#B0723A">While your data grows</div>
+            <b style="font-size:13.5px;color:#4A3A26">Anchor it to something you already do.</b><br>
+            <span style="color:#6B6152">Walkers who tie this to an existing routine — “right after coffee” — stick with it about twice as long.</span><i class="tag a">5</i><br>
+            <span class="src">From the science · Tiny Habits, BJ Fogg</span>
+            <div class="until">Your personal insights take over in 11 days<div class="untilbar"><i></i></div></div>
+          </div>
+          <div class="card-m">
+            <div class="hd">Today’s note</div>
+            <div class="notefield">How did it go today?<i class="tag a">6</i></div>
+          </div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+
+  <ul class="legend">
+    <li><i class="tag b">1</i><span><b>Before:</b> the 2-minute link is framing only — <code>HeroTwoMinute.tsx</code> logs nothing. User taps it on their worst day and the app shrugs. That is the moment the framework says to remove pain, and we add it.</span></li>
+    <li><i class="tag b">2</i><span><b>Before:</b> the “Noticing” section — the page’s core value — is a dashed placeholder for the exact 14 days when churn peaks. The page is weakest when the user is weakest.</span></li>
+    <li><i class="tag b">3</i><span><b>Before:</b> one habit-level note. Users expect a per-day journal tied to each check-in; a single running blob discourages writing anything.</span></li>
+    <li><i class="tag a">4</i><span><b>After:</b> 2-minute version is a real logging action (counts as completion, flagged as minimal). Protects the streak, keeps the identity vote.<span class="pillar">Support</span></span></li>
+    <li><i class="tag a">5</i><span><b>After:</b> provisional insight sourced from the habit’s own template science (already curated in <code>scienceEnrichment/*.data.ts</code>) fills days 0–14, with an honest “your data takes over” progress line.<span class="pillar">Process</span><span class="pillar">DFY</span></span></li>
+    <li><i class="tag a">6</i><span><b>After:</b> per-day note attached to the check-in, promoted into the card the user already touches daily.<span class="pillar">Support</span></span></li>
+    <li><i class="tag a">7</i><span><b>After:</b> single, quiet premium touchpoint — streak shield on the milestone hook. Highest-emotion surface finally has one monetization moment; deliberately not on the recovery card (never sell against shame).</span></li>
+  </ul>
+
+  <h2>Implementation plan — for Opus</h2>
+  <p class="sub">Ordered by revenue impact. Phases 1–2 are config + copy plumbing; 3–5 touch the detail screen; 6 is schema. Full spec with acceptance criteria in <code>docs/plans/offer-engineering-plan.md</code>.</p>
+
+  <div class="tablewrap"><table>
+    <tr><th></th><th>Change</th><th>Where</th><th>Acceptance</th></tr>
+    <tr><td class="ord">1</td><td>Enable onboarding + paywall (staged rollout)</td><td><code>src/constants/featureFlags.ts</code></td><td>New user hits 16-step funnel → trial paywall; existing users unaffected; kill switch retained</td></tr>
+    <tr><td class="ord">2</td><td>Provisional science insights for days 0–14</td><td><code>HabitDetailScreen/insights/buildInsights.ts</code>, <code>NoticingSection/</code>, template <code>scienceEnrichment</code> data</td><td>Placeholder replaced by template-sourced tip + countdown bar; real insights take over at 14 days unchanged</td></tr>
+    <tr><td class="ord">3</td><td>2-minute version logs a completion</td><td><code>HeroTwoMinute.tsx</code>, <code>HeroTodayActions.tsx</code>, <code>convex/schema.ts</code> (completion <code>kind: 'minimal'</code>)</td><td>Tap logs today, streak preserved, check-in card shows “2-min version” caption, undo works</td></tr>
+    <tr><td class="ord">4</td><td>Milestone hook + streak-shield Plus chip</td><td><code>ThisWeekCard/MilestoneBar</code>, <code>premiumCheck.ts</code></td><td>“N days to milestone” always visible; chip opens paywall sheet for free users, toggles shield for Plus</td></tr>
+    <tr><td class="ord">5</td><td>Per-day notes</td><td><code>HabitNoteCard.tsx</code>, <code>HeroCheckInCard</code>, <code>convex</code> completions table</td><td>Note saved per date; habit-level note migrated as day-0 entry; visible from heatmap day tap</td></tr>
+    <tr><td class="ord">6</td><td>Wire or delete orphaned Analytics + Character screens</td><td><code>src/screens/AnalyticsScreen</code>, <code>CharacterScreen</code></td><td>Decision recorded; no unreachable screens shipped</td></tr>
+  </table></div>
+
+  <p class="note">Measure after phase 1: onboarding completion → trial start → paid conversion, and D7/D14 retention split by cohort (flag on/off). The framework’s promise discipline applies to store copy too — sell “never lose a streak to one bad week” (specific pain removed), not “transform your life” (big promise, high perceived difficulty).</p>
+  <p class="note">Mock typography approximates the app’s Literata + DM Sans pairing with system faces; in-phone palette is lifted from <code>insightPalette.ts</code> / <code>insightBand.ts</code>.</p>
+</div>

@@ -23,12 +23,21 @@ function logMissingApiKey(): void {
   }
 }
 
-function setVerboseLogLevel(
+function configurePurchasesLogging(
   client: NonNullable<ReturnType<typeof getPurchasesClient>>
 ): void {
-  if (__DEV__ && state.module?.LOG_LEVEL?.VERBOSE !== undefined) {
-    client.setLogLevel(state.module.LOG_LEVEL.VERBOSE);
-  }
+  if (!__DEV__ || !state.module?.LOG_LEVEL) return;
+
+  // RevenueCat's default JS handler forwards SDK failures to console.error,
+  // which opens React Native LogBox as a modal overlay. A local StoreKit /
+  // offerings misconfiguration must remain visible in Metro without making
+  // every development build untappable.
+  client.setLogHandler((level, message) => {
+    if (level === state.module?.LOG_LEVEL.ERROR) {
+      console.log('[RevenueCat error]', message);
+    }
+  });
+  client.setLogLevel(state.module.LOG_LEVEL.WARN);
 }
 
 export function getPurchasesInitializationContext():
@@ -54,7 +63,7 @@ export function getPurchasesInitializationContext():
     return null;
   }
 
-  setVerboseLogLevel(client);
+  configurePurchasesLogging(client);
 
   return { apiKey, client };
 }

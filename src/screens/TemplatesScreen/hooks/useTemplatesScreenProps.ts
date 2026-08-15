@@ -16,6 +16,7 @@ export function useTemplatesScreenProps() {
 
   const handlers = useTemplateHandlers({
     flatListRef: state.flatListRef,
+    initialImportedHabitIds: data.initialImportedHabitIds,
     importTemplate: data.importTemplate,
     previewTemplate: state.previewTemplate,
     isPremiumUser: data.isPremiumUser,
@@ -48,6 +49,7 @@ export function useTemplatesScreenProps() {
   const packConfirm = usePackConfirm({
     allTemplates: data.allTemplates,
     importTemplate: data.importTemplate,
+    onImported: handlers.recordImportedHabit,
     onComplete: (count) =>
       state.setSessionImportCount((current) => current + count),
     setImportedIds: state.setImportedTemplateIds,

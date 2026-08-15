@@ -10,7 +10,14 @@ import type { PremiumPack } from '../data/premiumPacks';
 
 interface PackConfirmOptions {
   allTemplates: { _id: Id<'templates'>; name: string }[] | undefined;
-  importTemplate: (args: { templateId: Id<'templates'> }) => Promise<{ success: boolean }>;
+  importTemplate: (args: { templateId: Id<'templates'> }) => Promise<{
+    habitId?: Id<'habits'>;
+    success: boolean;
+  }>;
+  onImported: (
+    templateId: Id<'templates'>,
+    habitId: Id<'habits'> | undefined
+  ) => void;
   onComplete: (count: number) => void;
   setImportedIds: Dispatch<SetStateAction<Set<string>>>;
 }
@@ -35,14 +42,17 @@ export function usePackConfirm(o: PackConfirmOptions) {
       try {
         const res = await o.importTemplate({ templateId: t._id });
         if (res.success) {
+          o.onImported(t._id, res.habitId);
           o.setImportedIds((prev) => new Set(prev).add(t._id));
           count++;
         }
-      } catch { /* skip failed individual imports */ }
+      } catch {
+        /* skip failed individual imports */
+      }
     }
     setSelectedPack(null);
     if (count > 0) o.onComplete(count);
-  }, [selectedPack, o.allTemplates, o.importTemplate, o.setImportedIds, o.onComplete]);
+  }, [selectedPack, o]);
 
   return { handleCancel, handleConfirm, handlePackPress, selectedPack };
 }

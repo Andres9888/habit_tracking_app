@@ -2,9 +2,11 @@
  * Handlers for template preview and import operations
  */
 
-import { useCallback, useEffect, useRef } from 'react';
-import type { Id } from '../../../../convex/_generated/dataModel';
+import { useCallback, useRef } from 'react';
+import type { Doc, Id } from '../../../../convex/_generated/dataModel';
+import { useDismissCustomizeTimeout } from './useDismissCustomizeTimeout';
 import { useImportFeedback } from './useImportFeedback';
+import { useImportedHabitTargets } from './useImportedHabitTargets';
 import { useImportRetryRefs } from './useImportRetryRefs';
 import { usePreviewHandlers } from './usePreviewHandlers';
 import {
@@ -15,22 +17,18 @@ import { useTemplateImportAction } from './useTemplateImportAction';
 import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandlers.types';
 
 export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // One import at a time: the spinner state is a single scalar, so a second
-  // concurrent mutation would have its indicator cleared by whichever finishes
-  // first — and per-row `disabled` doesn't stop taps on *other* cards.
+  // The spinner state is scalar, so serialize imports across all cards.
   const importInFlightRef = useRef(false);
+  // Resolve focus from the open template, never a global last-added ID.
+  const { importedHabitIdsByTemplateRef, recordImportedHabit } =
+    useImportedHabitTargets(o.initialImportedHabitIds);
   const { directImportRef, templateImportRef } = useImportRetryRefs();
   const { guardImport, showAlreadyImported, showError, showSuccess } =
     useImportFeedback(o);
   const { handleCustomizeFromPreview, handleTemplatePreview } =
     usePreviewHandlers(o);
-
-  useEffect(
-    () => () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    },
-    []
+  const scheduleCustomizeDismiss = useDismissCustomizeTimeout(() =>
+    o.setShowCustomizeModal(false)
   );
 
   const handleImportResult = useImportResultHandler({
@@ -43,25 +41,28 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
   const handleDirectImport = useCallback(
     async (
       id: Id<'templates'>,
-      feedbackMode: ImportFeedbackMode = 'overlay'
+      feedbackMode: ImportFeedbackMode = 'overlay',
+      feedbackTemplate?: Doc<'templates'> | null
     ) => {
-      if (importInFlightRef.current || guardImport()) return undefined;
+      if (importInFlightRef.current || guardImport()) return;
       importInFlightRef.current = true;
       try {
         o.setImportingTemplateId(id);
         const res = await o.importTemplate({ templateId: id });
-        const outcome = handleImportResult(res, id, feedbackMode);
-        if (outcome !== 'failed') {
-          if (timeoutRef.current) clearTimeout(timeoutRef.current);
-          timeoutRef.current = setTimeout(
-            () => o.setShowCustomizeModal(false),
-            1000
-          );
-        }
+        const outcome = handleImportResult(
+          res,
+          id,
+          feedbackMode,
+          feedbackTemplate
+        );
+        if (outcome !== 'failed') recordImportedHabit(id, res.habitId);
+        if (outcome !== 'failed') scheduleCustomizeDismiss();
         return outcome;
       } catch {
-        showError(() => void directImportRef.current(id));
-        return undefined;
+        showError(
+          () => void directImportRef.current(id, feedbackMode, feedbackTemplate)
+        );
+        return;
       } finally {
         importInFlightRef.current = false;
         o.setImportingTemplateId(null);
@@ -73,7 +74,8 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
       handleImportResult,
       o.importTemplate,
       o.setImportingTemplateId,
-      o.setShowCustomizeModal,
+      recordImportedHabit,
+      scheduleCustomizeDismiss,
       showError,
     ]
   );
@@ -83,6 +85,7 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
     handleImportResult,
     inFlightRef: importInFlightRef,
     importTemplate: o.importTemplate,
+    recordImportedHabit,
     setImportingTemplateId: o.setImportingTemplateId,
     setShowCustomizeModal: o.setShowCustomizeModal,
     showError,
@@ -95,7 +98,9 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
   return {
     handleCustomizeFromPreview,
     handleDirectImport,
+    importedHabitIdsByTemplateRef,
     handleTemplateImport,
     handleTemplatePreview,
+    recordImportedHabit,
   };
 }

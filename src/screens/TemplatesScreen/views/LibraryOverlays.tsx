@@ -8,6 +8,7 @@
  */
 
 import { TemplatesScreenModals } from '../components';
+import { requestHabitFocus } from '../../../features/habits/hooks/habitFocusStore';
 import { useLibraryScreenActions } from '../hooks/useLibraryScreenActions';
 import type { useTemplatesScreenProps } from '../hooks/useTemplatesScreenProps';
 import { FeedbackOverlays } from './FeedbackOverlays';
@@ -66,6 +67,16 @@ export function LibraryModals({
     state.setShowFullsizePreview(false);
     onCloseLibrary?.();
   };
+  // Resolve the focus target from the template currently on screen. Using a
+  // global "last added" ID here makes importing A, then opening B, focus A.
+  const handleGoToToday = () => {
+    const templateId = state.previewTemplate?._id;
+    const habitId = templateId
+      ? handlers.importedHabitIdsByTemplateRef.current.get(templateId)
+      : undefined;
+    if (habitId) requestHabitFocus(habitId);
+    handleExitToHome();
+  };
 
   return (
     <TemplatesScreenModals
@@ -82,6 +93,7 @@ export function LibraryModals({
       onExitToHome={handleExitToHome}
       onCustomize={handlers.handleCustomizeFromPreview}
       onDirectImport={actions.handleDetailsDirectImport}
+      onGoToToday={handleGoToToday}
       onImport={handlers.handleTemplateImport}
       packConfirmPack={packConfirm.selectedPack}
       packConfirmVisible={!!packConfirm.selectedPack}

@@ -97,6 +97,7 @@ declare module 'react-native-purchases' {
     logOut(): Promise<CustomerInfo>;
     restorePurchases(): Promise<CustomerInfo>;
     setLogLevel(level: LOG_LEVEL): void;
+    setLogHandler(handler: (level: LOG_LEVEL, message: string) => void): void;
     addCustomerInfoUpdateListener(listener: CustomerInfoUpdateListener): void;
     removeCustomerInfoUpdateListener(listener: CustomerInfoUpdateListener): void;
   }

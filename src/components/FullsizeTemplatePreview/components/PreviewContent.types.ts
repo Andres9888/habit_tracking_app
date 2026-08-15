@@ -27,6 +27,8 @@ export interface PreviewContentHandlers {
   /** Back when a library is behind us, close otherwise. */
   handleDismiss: () => void;
   handleCustomize: () => void;
+  /** Post-add primary action: exit to Today with the new habit in focus. */
+  handleGoToToday: () => void;
   handleImport: () => void;
 }
 

@@ -66,6 +66,7 @@ export function AccountPage({
         <View style={{ marginTop: 56 }}>
           <AccountDangerCard
             isDeletingAccount={actions.isDeletingAccount}
+            needsIdentityCleanup={actions.needsIdentityCleanup}
             onDeleteAccount={actions.handleDeleteAccount}
           />
         </View>

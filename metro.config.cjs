@@ -13,7 +13,6 @@ function getDependencyFingerprint() {
   const fingerprintTargets = [
     'package.json',
     'package-lock.json',
-    'bun.lock',
     'yarn.lock',
     'pnpm-lock.yaml',
     path.join('node_modules', '.package-lock.json'),

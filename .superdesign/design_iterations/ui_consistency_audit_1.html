@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UI/UX Consistency &amp; Motion Audit — Habit Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS — mirrored 1:1 from src/theme/colors/core.ts
+   ============================================================ */
+:root{
+  --canvas:#F5F1ED;      /* colors.light.background */
+  --surface:#EDEAE5;     /* colors.light.card       */
+  --elevated:#FFFFFF;    /* colors.light.cardElevated */
+  --muted:#FAF8F5;       /* colors.light.surfaceMuted */
+  --border:#DDD8D2;      /* colors.gray[200]        */
+  --ink-900:#1A1816;
+  --ink-800:#2D2A26;
+  --ink-700:#3D3833;
+  --ink-600:#524D47;
+  --ink-500:#6B6560;
+  --ink-400:#6E6660;
+  --ink-300:#C4BFB7;
+  --green-700:#047857;
+  --green-600:#059669;
+  --green-500:#10B981;
+  --green-100:#D1FAE5;
+  --gold-700:#7D5907;
+  --gold-600:#936A08;
+  --gold-500:#8B6208;
+  --gold-100:#FEF3CD;
+  --err:#B53030;
+  --err-100:#FEE2E2;
+
+  --r-card:24px;   /* airy.cardRadius */
+  --r-btn:14px;    /* airy.buttonRadius */
+  --r-chip:10px;   /* airy.chipRadius */
+  --r-modal:28px;  /* airy.modalRadius */
+
+  --s-xs:4px; --s-sm:8px; --s-md:12px; --s-base:16px; --s-lg:24px; --s-xl:32px; --s-2xl:48px;
+
+  --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'Space Mono',ui-monospace,monospace;
+
+  --shadow-card:0 1px 2px rgba(26,24,22,.04), 0 4px 16px rgba(26,24,22,.06);
+  --shadow-lift:0 8px 32px rgba(26,24,22,.10);
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0 !important;
+  background:var(--canvas) !important;
+  color:var(--ink-800) !important;
+  font-family:var(--font) !important;
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{margin:0;font-weight:800 !important;letter-spacing:-.02em;color:var(--ink-900) !important;line-height:1.15;}
+p{margin:0;}
+code,.mono{font-family:var(--mono) !important;font-size:.82em;}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 var(--s-lg);}
+
+/* ---------- HERO ---------- */
+.hero{
+  padding:72px 0 56px;
+  background:
+    radial-gradient(900px 400px at 15% -10%, rgba(5,150,105,.10), transparent 60%),
+    radial-gradient(700px 380px at 92% 0%, rgba(139,98,8,.09), transparent 62%);
+  border-bottom:1px solid var(--border);
+}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--green-700);background:var(--green-100);
+  padding:7px 14px;border-radius:999px;margin-bottom:20px;
+}
+.hero h1{font-size:clamp(34px,5.6vw,58px);max-width:19ch;}
+.hero .sub{margin-top:18px;font-size:clamp(16px,2vw,19px);color:var(--ink-600);max-width:62ch;}
+
+/* ---------- SCORECARD ---------- */
+.score{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-top:38px;}
+.score .cell{
+  background:var(--elevated);border:1px solid var(--border);
+  border-radius:var(--r-card);padding:18px 18px 16px;position:relative;overflow:hidden;
+}
+.score .cell::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--tone,var(--ink-300));}
+.score .n{font-family:var(--mono);font-size:30px;font-weight:700;color:var(--ink-900);line-height:1;}
+.score .n small{font-size:14px;color:var(--ink-400);font-weight:400;}
+.score .k{margin-top:8px;font-size:12.5px;color:var(--ink-500);line-height:1.35;}
+.bad{--tone:var(--err);} .warn{--tone:var(--gold-600);} .ok{--tone:var(--green-600);}
+
+/* ---------- SECTIONS ---------- */
+section{padding:64px 0;border-bottom:1px solid var(--border);}
+.sec-head{display:flex;align-items:flex-start;gap:18px;margin-bottom:8px;}
+.sec-num{
+  flex:0 0 auto;width:44px;height:44px;border-radius:14px;
+  background:var(--ink-900);color:var(--canvas);
+  display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:15px;
+}
+.sec-head h2{font-size:clamp(23px,3vw,31px);}
+.sec-head .tag{
+  display:inline-block;margin-top:9px;font-size:11px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;padding:4px 10px;border-radius:999px;
+}
+.t-crit{background:var(--err-100);color:var(--err);}
+.t-high{background:var(--gold-100);color:var(--gold-700);}
+.t-med{background:#E7E3DD;color:var(--ink-600);}
+.lede{margin:16px 0 30px 62px;max-width:76ch;color:var(--ink-600);font-size:16.5px;}
+@media(max-width:700px){.lede{margin-left:0;}}
+
+/* ---------- BEFORE / AFTER ---------- */
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+@media(max-width:860px){.ba{grid-template-columns:1fr;}}
+.pane{
+  background:var(--elevated);border:1px solid var(--border);border-radius:var(--r-card);
+  padding:20px;position:relative;
+}
+.pane.before{background:var(--muted);border-color:#E4DED6;}
+.pane-h{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding-bottom:14px;margin-bottom:18px;border-bottom:1px dashed var(--border);
+}
+.pane-h .lbl{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;}
+.before .lbl{color:var(--err);}
+.after .lbl{color:var(--green-700);}
+.pane-h .note{font-size:11.5px;color:var(--ink-400);font-family:var(--mono);}
+
+/* ---------- APP CHROME (phone frame) ---------- */
+.phone{
+  width:100%;max-width:330px;margin:0 auto;background:var(--canvas);
+  border:1px solid var(--border);border-radius:30px;padding:14px 12px 18px;
+  box-shadow:var(--shadow-card);position:relative;overflow:hidden;min-height:320px;
+}
+.phone-top{display:flex;justify-content:space-between;align-items:center;padding:2px 6px 12px;}
+.phone-top .title{font-size:20px;font-weight:800;color:var(--ink-900);letter-spacing:-.02em;}
+
+/* habit card — mirrors HabitCard.styles.ts */
+.hcard{
+  display:flex;align-items:center;gap:12px;
+  background:var(--elevated);border:1px solid var(--border);
+  border-radius:var(--r-card);padding:16px;min-height:72px;
+  margin-bottom:8px;box-shadow:var(--shadow-card);
+  position:relative;overflow:hidden;cursor:pointer;
+  will-change:transform;
+}
+.hcard .accent{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--green-600);}
+.hcard .emo{font-size:24px;line-height:1;}
+.hcard .meta{flex:1;min-width:0;}
+.hcard .nm{font-weight:600;font-size:15px;color:var(--ink-800);letter-spacing:-.01em;}
+.hcard .sub{font-size:12px;color:var(--ink-500);margin-top:2px;}
+.hcard .streak{
+  font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--gold-700);
+  background:var(--gold-100);padding:4px 8px;border-radius:var(--r-chip);white-space:nowrap;
+}
+.hcard .chk{
+  width:28px;height:28px;border-radius:999px;border:2px solid var(--border);
+  display:grid;place-items:center;color:transparent;font-size:14px;font-weight:800;flex:0 0 auto;
+}
+.hcard.done .chk{background:var(--green-600);border-color:var(--green-600);color:#fff;}
+.hcard.done .nm{opacity:.55;text-decoration:line-through;}
+
+/* ---------- BUTTONS ---------- */
+.btn{
+  font-family:var(--font);font-weight:600;font-size:14.5px;
+  border:1px solid transparent;border-radius:var(--r-btn);
+  padding:12px 20px;cursor:pointer;user-select:none;
+  display:inline-flex;align-items:center;gap:8px;justify-content:center;
+  will-change:transform;
+}
+.btn-primary{background:var(--green-600);color:#fff;}
+.btn-secondary{background:transparent;color:var(--green-700);border-color:var(--green-600);}
+.btn-ghost{background:transparent;color:var(--ink-600);}
+.btn-sm{padding:8px 14px;font-size:13px;border-radius:12px;}
+.btn:focus-visible{outline:2px solid var(--green-500);outline-offset:2px;}
+
+.btn-row{display:flex;flex-wrap:wrap;gap:10px;}
+
+/* ---------- DEMO CHROME ---------- */
+.demo-strip{
+  margin-top:16px;padding-top:14px;border-top:1px dashed var(--border);
+  font-size:12px;color:var(--ink-400);font-family:var(--mono);line-height:1.7;
+}
+.readout{
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-500);
+  background:var(--muted);border:1px solid var(--border);border-radius:10px;
+  padding:8px 10px;margin-top:12px;min-height:34px;
+}
+.after .readout{background:var(--green-100);border-color:#BFEEDA;color:var(--green-700);}
+
+/* ---------- TOAST ---------- */
+.toast-stage{position:relative;height:190px;background:var(--canvas);border:1px dashed var(--border);border-radius:18px;overflow:hidden;}
+.toast{
+  position:absolute;left:12px;right:12px;bottom:12px;
+  background:var(--ink-900);color:var(--muted);
+  border-radius:16px;padding:13px 15px;
+  display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:500;
+  opacity:0;transform:translateY(100px);box-shadow:var(--shadow-lift);
+}
+.toast .undo{margin-left:auto;color:var(--green-500);font-weight:700;font-size:12.5px;cursor:pointer;}
+.toast.t2{bottom:74px;} .toast.t3{bottom:136px;}
+.toast .dot{width:8px;height:8px;border-radius:999px;background:var(--green-500);flex:0 0 auto;}
+
+/* ---------- INVENTORY ---------- */
+.inv{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  font-family:var(--mono);font-size:10.5px;padding:5px 9px;border-radius:8px;
+  background:var(--elevated);border:1px solid var(--border);color:var(--ink-500);
+}
+.chip.dup{background:var(--err-100);border-color:#F3C9C9;color:var(--err);}
+.chip.keep{background:var(--green-100);border-color:#BFEEDA;color:var(--green-700);font-weight:700;}
+
+/* ---------- TABLE ---------- */
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:8px;}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:13.5px;}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-400);font-weight:700;}
+td.num{font-family:var(--mono);font-weight:700;color:var(--ink-900);white-space:nowrap;}
+td .path{font-family:var(--mono);font-size:11.5px;color:var(--ink-500);display:block;margin-top:3px;word-break:break-all;}
+
+/* ---------- WHY CALLOUT ---------- */
+.why{
+  margin-top:22px;background:var(--elevated);border:1px solid var(--border);
+  border-left:3px solid var(--green-600);border-radius:0 18px 18px 0;padding:18px 22px;
+}
+.why h4{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--green-700) !important;margin-bottom:8px;}
+.why p{color:var(--ink-600);font-size:15px;}
+.why p + p{margin-top:10px;}
+
+/* ---------- PLAN ---------- */
+.phases{display:grid;gap:14px;}
+.phase{
+  display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:start;
+  background:var(--elevated);border:1px solid var(--border);border-radius:var(--r-card);padding:20px 22px;
+}
+@media(max-width:760px){.phase{grid-template-columns:1fr;gap:10px;}}
+.phase .p-n{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--canvas);background:var(--green-700);padding:6px 11px;border-radius:9px;white-space:nowrap;}
+.phase h4{font-size:17px;margin-bottom:6px;}
+.phase ul{margin:8px 0 0;padding-left:18px;color:var(--ink-600);font-size:14.5px;}
+.phase li{margin-bottom:4px;}
+.phase .cost{font-family:var(--mono);font-size:12px;color:var(--ink-400);text-align:right;white-space:nowrap;}
+
+/* ---------- CONTROLS ---------- */
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px;}
+.switch{display:inline-flex;align-items:center;gap:9px;font-size:13px;color:var(--ink-600);cursor:pointer;user-select:none;}
+.switch input{appearance:none;width:40px;height:23px;border-radius:999px;background:var(--ink-300);position:relative;cursor:pointer;transition:background .18s;}
+.switch input::after{content:'';position:absolute;top:2.5px;left:2.5px;width:18px;height:18px;border-radius:999px;background:#fff;transition:transform .18s;}
+.switch input:checked{background:var(--green-600);}
+.switch input:checked::after{transform:translateX(17px);}
+
+footer{padding:52px 0 68px;color:var(--ink-400);font-size:13px;}
+footer .mono{color:var(--ink-500);}
+</style>
+</head>
+<body>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow">● Design system audit · 1,007 TSX files scanned</span>
+    <h1>The system is written. The app doesn't fully speak it yet.</h1>
+    <p class="sub">
+      <code>src/theme/</code> already defines a complete motion, spacing and color language — 20 duration
+      tokens, 14 spring presets, an 8px grid, a WCAG-checked warm-minimal palette. The gap isn't design.
+      The gap is <strong>adoption</strong>: canonical primitives exist but are bypassed, and motion values are
+      re-invented per component. Below: what that costs, and the exact before/after.
+    </p>
+
+    <div class="score">
+      <div class="cell bad"><div class="n">4<small>/41</small></div><div class="k">files import the canonical <code>Button</code> — 37 bespoke button components exist alongside it</div></div>
+      <div class="cell bad"><div class="n">42</div><div class="k">files render a raw RN <code>&lt;Modal&gt;</code>; the shared <code>Modal</code> is used in 4</div></div>
+      <div class="cell bad"><div class="n">68<small>/88</small></div><div class="k">files with <code>entering=</code> animations never consult <code>useReduceMotion</code></div></div>
+      <div class="cell warn"><div class="n">172</div><div class="k">hardcoded <code>duration:</code> literals outside <code>src/theme</code></div></div>
+      <div class="cell warn"><div class="n">75<small>/247</small></div><div class="k">tappable surfaces use <code>AnimatedPressable</code>; 172 use raw <code>Pressable</code></div></div>
+      <div class="cell ok"><div class="n">98%</div><div class="k">of <code>onPress</code> sites carry an <code>accessibilityLabel</code> — a11y labelling is genuinely solid</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ 01 PRESS ============================ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">01</div>
+      <div>
+        <h2>Press feedback drifts per component</h2>
+        <span class="tag t-crit">Critical · felt on every tap</span>
+      </div>
+    </div>
+    <p class="lede">
+      Five different press scales are in the codebase (<code>0.90 / 0.92 / 0.95 / 0.96 / 0.97 / 0.98</code>),
+      applied through three different mechanisms — <code>usePressAnimation</code>, ad-hoc <code>withSpring</code>,
+      and raw <code>withTiming(…, {duration: 50})</code>. Tap the cards below. The "before" pane is the app today.
+    </p>
+
+    <div class="controls">
+      <label class="switch"><input type="checkbox" id="rm-toggle"><span>Simulate <code>Reduce Motion</code> enabled</span></label>
+      <span class="mono" style="font-size:12px;color:var(--ink-400)">← flip this and re-tap both panes</span>
+    </div>
+
+    <div class="ba">
+      <div class="pane before">
+        <div class="pane-h"><span class="lbl">Before — today</span><span class="note">6 scales · 3 mechanisms</span></div>
+        <div class="phone">
+          <div class="phone-top"><span class="title">Today</span></div>
+          <div class="hcard" data-press="before" data-scale=".92" data-mech="withTiming 50ms — EmojiCell.tsx:22">
+            <span class="accent"></span><span class="emo">🏃</span>
+            <span class="meta"><span class="nm">Morning run</span><span class="sub">withTiming(0.92, 50ms)</span></span>
+            <span class="streak">12d</span><span class="chk">✓</span>
+          </div>
+          <div class="hcard" data-press="before" data-scale=".95" data-mech="withSpring damping 12">
+            <span class="accent"></span><span class="emo">📖</span>
+            <span class="meta"><span class="nm">Read 20 pages</span><span class="sub">withSpring(0.95, d12)</span></span>
+            <span class="streak">4d</span><span class="chk">✓</span>
+          </div>
+          <div class="hcard" data-press="before" data-scale=".97" data-mech="usePressAnimation default">
+            <span class="accent"></span><span class="emo">🧘</span>
+            <span class="meta"><span class="nm">Meditate</span><span class="sub">usePressAnimation(0.97)</span></span>
+            <span class="streak">31d</span><span class="chk">✓</span>
+          </div>
+          <div class="btn-row" style="margin-top:12px">
+            <button class="btn btn-primary btn-sm" data-press="before" data-scale=".90" data-mech="withSpring(0.9) — ad hoc">Add habit</button>
+            <button class="btn btn-secondary btn-sm" data-press="before" data-scale=".98" data-mech="withSpring(0.98) — ad hoc">Skip</button>
+          </div>
+        </div>
+        <div class="readout" id="ro-before">Tap anything above →</div>
+        <div class="demo-strip">Every row answers your finger differently. Nothing is broken, so nothing gets fixed — it just reads as "slightly cheap".</div>
+      </div>
+
+      <div class="pane after">
+        <div class="pane-h"><span class="lbl">After — proposed</span><span class="note">1 scale · 1 spring · 1 hook</span></div>
+        <div class="phone">
+          <div class="phone-top"><span class="title">Today</span></div>
+          <div class="hcard" data-press="after" data-mech="AnimatedPressable · springs.standard">
+            <span class="accent"></span><span class="emo">🏃</span>
+            <span class="meta"><span class="nm">Morning run</span><span class="sub">scale 0.97 · d18 / s150</span></span>
+            <span class="streak">12d</span><span class="chk">✓</span>
+          </div>
+          <div class="hcard" data-press="after" data-mech="AnimatedPressable · springs.standard">
+            <span class="accent"></span><span class="emo">📖</span>
+            <span class="meta"><span class="nm">Read 20 pages</span><span class="sub">scale 0.97 · d18 / s150</span></span>
+            <span class="streak">4d</span><span class="chk">✓</span>
+          </div>
+          <div class="hcard" data-press="after" data-mech="AnimatedPressable · springs.standard">
+            <span class="accent"></span><span class="emo">🧘</span>
+            <span class="meta"><span class="nm">Meditate</span><span class="sub">scale 0.97 · d18 / s150</span></span>
+            <span class="streak">31d</span><span class="chk">✓</span>
+          </div>
+          <div class="btn-row" style="margin-top:12px">
+            <button class="btn btn-primary btn-sm" data-press="after" data-mech="Button variant=primary">Add habit</button>
+            <button class="btn btn-secondary btn-sm" data-press="after" data-mech="Button variant=secondary">Skip</button>
+          </div>
+        </div>
+        <div class="readout" id="ro-after">Tap anything above →</div>
+        <div class="demo-strip">One physical law for the whole app. Press depth encodes <em>nothing</em> — so the eye stops decoding it and just reads content.</div>
+      </div>
+    </div>
+
+    <div class="why">
+      <h4>Why this matters</h4>
+      <p>Press feedback is the app's handshake — it fires hundreds of times per session and is the single most-repeated
+      micro-interaction. When the same gesture returns six different physical responses, users can't build a motor model
+      of the interface. It reads as <em>unfinished</em> long before anyone can name why.</p>
+      <p>It is also the cheapest fix in this document: <code>springs.standard</code> and <code>AnimatedPressable</code>
+      already exist and already handle focus rings, 44pt hit-slop and reduced motion. The work is deletion, not authoring.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 TOASTS ============================ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">02</div>
+      <div>
+        <h2>Eight toast systems, six dwell times, three fade curves</h2>
+        <span class="tag t-crit">Critical · fragmentation</span>
+      </div>
+    </div>
+    <p class="lede">
+      <code>Toast</code>, <code>CompletionToast</code>, <code>DeleteUndoToast</code>, <code>ArchiveUndoToast</code>,
+      <code>TemplateAddedToast</code>, <code>SettingsToast</code>, <code>SyncedToast</code>, <code>WebToaster</code>.
+      They agree on position (<code>insets.bottom + 16</code>) and disagree on everything else. Fire them below.
+    </p>
+
+    <div class="ba">
+      <div class="pane before">
+        <div class="pane-h"><span class="lbl">Before — today</span><span class="note">2000–8000ms dwell</span></div>
+        <div class="toast-stage" id="stage-before">
+          <div class="toast t1"><span class="dot"></span><span>Habit completed</span></div>
+          <div class="toast t2"><span class="dot" style="background:var(--gold-500)"></span><span>Habit deleted</span><span class="undo">UNDO</span></div>
+          <div class="toast t3"><span class="dot" style="background:var(--green-500)"></span><span>Template added</span></div>
+        </div>
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn btn-ghost btn-sm" style="border:1px solid var(--border)" data-fire="before">Fire all three</button>
+        </div>
+        <div class="readout" id="ro-toast-before">Three toasts, three personalities.</div>
+        <div class="demo-strip">
+CompletionToast · fade 280ms · scale overshoot 1.02 · dwell 2500<br>
+Toast · fade 200ms · no overshoot · dwell 3000<br>
+TemplateAddedToast · fade 250/350ms · staggered · dwell 8000<br>
+DeleteUndoToast · dwell 5000 · SyncedToast · dwell 2000
+        </div>
+      </div>
+
+      <div class="pane after">
+        <div class="pane-h"><span class="lbl">After — proposed</span><span class="note">3 intents · 1 engine</span></div>
+        <div class="toast-stage" id="stage-after">
+          <div class="toast t1"><span class="dot"></span><span>Habit completed</span></div>
+          <div class="toast t2"><span class="dot" style="background:var(--gold-500)"></span><span>Habit deleted</span><span class="undo">UNDO</span></div>
+          <div class="toast t3"><span class="dot" style="background:var(--green-500)"></span><span>Template added</span></div>
+        </div>
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn btn-ghost btn-sm" style="border:1px solid var(--border)" data-fire="after">Fire all three</button>
+        </div>
+        <div class="readout" id="ro-toast-after">One engine. Dwell encodes urgency, not authorship.</div>
+        <div class="demo-strip">
+intent="info" &nbsp;→ dwell 2500ms (durations.toast.info)<br>
+intent="undo" &nbsp;→ dwell 5000ms — reversible, needs read time<br>
+intent="celebrate" → dwell 4000ms + springs.celebration<br>
+All: enter springs.standard · exit withTiming(durations.transition)
+        </div>
+      </div>
+    </div>
+
+    <div class="why">
+      <h4>Why this matters</h4>
+      <p>Dwell time is a promise about how long the user has to act. Today it varies from 2s to 8s with no rule behind it,
+      so an <em>undo</em> affordance can vanish faster than a purely informational message. That's not inconsistency —
+      that's a usability defect wearing inconsistency's clothes.</p>
+      <p>Collapsing to one <code>&lt;Toast intent&gt;</code> also deletes ~7 animation hooks and ~600 lines, which
+      directly serves the ≤100-line file ceiling in <code>CLAUDE.md</code>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ENTRANCE ============================ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">03</div>
+      <div>
+        <h2>List entrance ignores its own spec</h2>
+        <span class="tag t-high">High · first impression</span>
+      </div>
+    </div>
+    <p class="lede">
+      <code>theme/animations.ts</code> states the rule at the top of the file: <em>"280ms cubic ease-out, 60ms stagger,
+      max 5 items, no springify."</em> In practice <code>FadeIn.duration(300)</code> appears in 7 files,
+      <code>.duration(150)</code> in 7 more, and stagger is uncapped — so a 20-habit list animates for 1.2 seconds
+      before it settles.
+    </p>
+
+    <div class="ba">
+      <div class="pane before">
+        <div class="pane-h"><span class="lbl">Before — today</span><span class="note">uncapped stagger · mixed durations</span></div>
+        <div class="phone" id="list-before">
+          <div class="phone-top"><span class="title">Today</span></div>
+        </div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn btn-ghost btn-sm" style="border:1px solid var(--border)" data-replay="before">Replay entrance</button>
+        </div>
+        <div class="readout" id="ro-list-before">8 items × 60ms stagger + 300ms = 720ms tail</div>
+      </div>
+
+      <div class="pane after">
+        <div class="pane-h"><span class="lbl">After — proposed</span><span class="note">280ms · stagger capped at 5</span></div>
+        <div class="phone" id="list-after">
+          <div class="phone-top"><span class="title">Today</span></div>
+        </div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn btn-ghost btn-sm" style="border:1px solid var(--border)" data-replay="after">Replay entrance</button>
+        </div>
+        <div class="readout" id="ro-list-after">Items 6+ inherit index 5's delay → 560ms total, always</div>
+      </div>
+    </div>
+
+    <div class="why">
+      <h4>Why this matters</h4>
+      <p>Stagger is a hierarchy cue — it tells the eye "these arrived together, in this order." Past roughly five items
+      it stops communicating and becomes a wait. The spec already caps it at 5; the code just never enforced the cap,
+      so entrance cost scales linearly with how successful the user is at using the app. The person with 20 habits — your
+      best user — gets the worst launch.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 INVENTORY ============================ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">04</div>
+      <div>
+        <h2>Canonical primitives exist and are routed around</h2>
+        <span class="tag t-crit">Critical · structural</span>
+      </div>
+    </div>
+    <p class="lede">
+      This is the root cause behind sections 01–03. Shared components were built, then bypassed — so every new surface
+      re-derives its own motion, padding and color. Green = the one that should survive.
+    </p>
+
+    <div class="ba">
+      <div class="pane before">
+        <div class="pane-h"><span class="lbl">Before — 37 button components</span><span class="note">4 files use the shared one</span></div>
+        <div class="inv">
+          <span class="chip keep">Button.tsx ✓</span>
+          <span class="chip dup">ActionButtons</span><span class="chip dup">AnimatedColorButton</span>
+          <span class="chip dup">ColorButton</span><span class="chip dup">CreateButton</span>
+          <span class="chip dup">CustomColorButton</span><span class="chip dup">CustomTimeButton</span>
+          <span class="chip dup">DetailCompleteButton</span><span class="chip dup">DismissButton</span>
+          <span class="chip dup">ExportButton</span><span class="chip dup">HeaderButton</span>
+          <span class="chip dup">ModalBackButton</span><span class="chip dup">ModalCloseButton</span>
+          <span class="chip dup">NavigationButtons</span><span class="chip dup">PresetButton</span>
+          <span class="chip dup">QuickTimeButton</span><span class="chip dup">ReminderOptionButton</span>
+          <span class="chip dup">RetryButton</span><span class="chip dup">SaveButton</span>
+          <span class="chip dup">ShareButton</span><span class="chip dup">SocialSignInButton</span>
+          <span class="chip dup">StreakGoalStepButton</span><span class="chip dup">SwipeableActionButton</span>
+          <span class="chip dup">SyncButton</span><span class="chip dup">TabButton</span>
+          <span class="chip dup">TemplateReadRowAddButton</span><span class="chip dup">TimeOfDayButton</span>
+          <span class="chip dup">+ 10 more</span>
+        </div>
+        <div style="height:18px"></div>
+        <div class="pane-h" style="margin-bottom:14px"><span class="lbl">Before — 8 toasts · 12 empty states</span><span class="note">4 section headers</span></div>
+        <div class="inv">
+          <span class="chip keep">Toast ✓</span><span class="chip dup">CompletionToast</span>
+          <span class="chip dup">DeleteUndoToast</span><span class="chip dup">ArchiveUndoToast</span>
+          <span class="chip dup">TemplateAddedToast</span><span class="chip dup">SettingsToast</span>
+          <span class="chip dup">SyncedToast</span><span class="chip dup">WebToaster</span>
+          <span class="chip keep">EmptyState ✓</span><span class="chip dup">GoalEmptyIntro</span>
+          <span class="chip dup">GoalTabEmptyState</span><span class="chip dup">EmptyStrengthState</span>
+          <span class="chip dup">CatalogEmptyState</span><span class="chip dup">TemplatesEmptyState</span>
+          <span class="chip dup">StrengthEmptyState</span><span class="chip dup">+ 5 more</span>
+        </div>
+      </div>
+
+      <div class="pane after">
+        <div class="pane-h"><span class="lbl">After — variants, not components</span><span class="note">1 API each</span></div>
+        <div style="font-family:var(--mono);font-size:12.5px;line-height:2.05;color:var(--ink-600)">
+          <div><span style="color:var(--green-700);font-weight:700">&lt;Button</span> variant=<span style="color:var(--gold-700)">primary|secondary|ghost|icon</span></div>
+          <div style="padding-left:22px">size=<span style="color:var(--gold-700)">sm|md|lg</span> loading icon fullWidth<span style="color:var(--green-700);font-weight:700"> /&gt;</span></div>
+          <div style="height:8px"></div>
+          <div><span style="color:var(--green-700);font-weight:700">&lt;Toast</span> intent=<span style="color:var(--gold-700)">info|undo|celebrate</span><span style="color:var(--green-700);font-weight:700"> /&gt;</span></div>
+          <div style="height:8px"></div>
+          <div><span style="color:var(--green-700);font-weight:700">&lt;EmptyState</span> icon title body action<span style="color:var(--green-700);font-weight:700"> /&gt;</span></div>
+          <div style="height:8px"></div>
+          <div><span style="color:var(--green-700);font-weight:700">&lt;Sheet</span> snapPoints detent<span style="color:var(--green-700);font-weight:700"> /&gt;</span> <span style="color:var(--ink-400)">// replaces 42 raw &lt;Modal&gt;</span></div>
+          <div style="height:8px"></div>
+          <div><span style="color:var(--green-700);font-weight:700">&lt;SectionHeader</span> title action<span style="color:var(--green-700);font-weight:700"> /&gt;</span></div>
+        </div>
+        <div style="margin-top:20px" class="btn-row">
+          <button class="btn btn-primary" data-press="after" data-mech="Button variant=primary size=md">Primary</button>
+          <button class="btn btn-secondary" data-press="after" data-mech="Button variant=secondary size=md">Secondary</button>
+          <button class="btn btn-ghost" data-press="after" data-mech="Button variant=ghost size=md">Ghost</button>
+        </div>
+        <div class="readout">One component, N variants. New surfaces inherit correctness instead of re-deriving it.</div>
+      </div>
+    </div>
+
+    <div class="why">
+      <h4>Why this matters</h4>
+      <p>Every bespoke button is a place where a future design decision has to be applied by hand — and will be
+      forgotten in at least one of 37 places. Consistency isn't maintained by discipline; it's maintained by there
+      being only one place to change.</p>
+      <p>The decomposition initiative in <code>CLAUDE.md</code> pushes files under 100 lines. Consolidation is the
+      version of that which reduces total lines rather than redistributing them.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 05 REDUCE MOTION ============================ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">05</div>
+      <div>
+        <h2>Reduce Motion is honoured in 20 of 88 animated surfaces</h2>
+        <span class="tag t-high">High · accessibility</span>
+      </div>
+    </div>
+    <p class="lede">
+      <code>useReduceMotion</code> exists and is wired correctly into <code>useFocusRing</code>,
+      <code>useHaptics</code> and <code>HabitCard</code>'s celebration. But of the 88 files using
+      <code>entering=</code>, 68 animate unconditionally. Toggle the switch in section 01 and re-tap —
+      the "after" pane responds, the "before" pane does not.
+    </p>
+
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Surface</th><th>Reduce Motion today</th><th>After</th></tr></thead>
+        <tbody>
+          <tr><td>HabitCard completion celebration<span class="path">HabitCard/useHabitCardAnimations.ts</span></td><td class="num" style="color:var(--green-700)">✓ honoured</td><td>unchanged</td></tr>
+          <tr><td>Focus ring<span class="path">utils/accessibility/useFocusRing.ts</span></td><td class="num" style="color:var(--green-700)">✓ honoured</td><td>unchanged</td></tr>
+          <tr><td>Haptics<span class="path">utils/haptics/useHaptics.ts</span></td><td class="num" style="color:var(--green-700)">✓ honoured</td><td>unchanged</td></tr>
+          <tr><td>List entrance stagger<span class="path">SkeletonLoader/HabitsPageSkeleton.tsx:36</span></td><td class="num" style="color:var(--err)">✗ always animates</td><td>opacity-only fade</td></tr>
+          <tr><td>Toast enter/exit<span class="path">Toast/useToastAnimations.ts, ×7 siblings</span></td><td class="num" style="color:var(--err)">✗ always animates</td><td>instant + dwell preserved</td></tr>
+          <tr><td>Modal / sheet slide<span class="path">Modal/useModalGestures.ts:90</span></td><td class="num" style="color:var(--err)">✗ always animates</td><td>cross-fade</td></tr>
+          <tr><td>Emoji cell press pop<span class="path">EmojiPickerV2/EmojiGrid/EmojiCell.tsx:22</span></td><td class="num" style="color:var(--err)">✗ always animates</td><td>no transform</td></tr>
+          <tr><td>Name-field error shake<span class="path">CreateHabitModal/useHabitNameFieldAnimation.ts:42</span></td><td class="num" style="color:var(--err)">✗ 4× 50ms shake</td><td>color + icon only</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="why">
+      <h4>Why this matters</h4>
+      <p>For users with vestibular sensitivity, the 4×50ms error shake on the habit-name field is the worst offender
+      in the app — it fires on a validation failure, exactly when someone is already frustrated, and there is no way
+      to turn it off. That's a shipping accessibility bug, not a polish item.</p>
+      <p>The fix is a single wrapper: route every <code>entering=</code> through one <code>useEntrance()</code> helper
+      that already reads the preference. Then reduce-motion coverage becomes structural rather than per-author memory.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 06 TOKEN DRIFT ============================ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">06</div>
+      <div>
+        <h2>Token drift, ranked by blast radius</h2>
+        <span class="tag t-med">Medium · slow leak</span>
+      </div>
+    </div>
+    <p class="lede">
+      Tokens are well-used (508 <code>spacing.*</code>, 549 <code>typography.*</code> references) — this is drift,
+      not absence. The values below sit outside the scale entirely, so they can never be tuned centrally.
+    </p>
+
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Drift</th><th>Count</th><th>Off-scale values found</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td>Hardcoded <code>duration:</code><span class="path">outside src/theme</span></td><td class="num">172</td><td class="mono">50, 80, 120, 140, 160, 185, 250, 260, 350, 500, 620</td><td>map to <code>durations.*</code>; add the 2–3 genuinely missing tokens</td></tr>
+          <tr><td>Hardcoded <code>padding/margin:</code></td><td class="num">834</td><td class="mono">non-multiples of 4 present</td><td>codemod to <code>spacing.*</code>; ESLint <code>no-restricted-syntax</code></td></tr>
+          <tr><td>Inline hex colors<span class="path">production files only</span></td><td class="num">~120</td><td class="mono">QuickActionsSheet/ActionItem (22), AchievementCard (18), InfoModal (12)</td><td>move to <code>colors.*</code> — these break dark mode</td></tr>
+          <tr><td>Hardcoded <code>fontSize:</code></td><td class="num">269</td><td class="mono">StreakGoalCard dashboard.styles.ts (15)</td><td><code>typography.*</code> — required for Dynamic Type</td></tr>
+          <tr><td>Hardcoded <code>borderRadius:</code></td><td class="num">94</td><td class="mono">bypasses the <code>airy</code> scale lever</td><td><code>borderRadius.*</code> / <code>airy.*</code></td></tr>
+          <tr><td>Ad-hoc spring configs<span class="path">damping literals outside theme</span></td><td class="num">39</td><td class="mono">damping 8, 10, 12, 15, 28, 32 — 32 isn't a preset</td><td><code>springs.*</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="why">
+      <h4>Why this matters</h4>
+      <p>The inline hex colors are the urgent subset. <code>darkColors.ts</code> exists and dark mode is applied at
+      render time via <code>useThemeColors()</code> — any literal <code>#RRGGBB</code> in a StyleSheet silently opts
+      that element out. Those ~120 sites are dark-mode bugs that haven't been reported yet.</p>
+      <p>The rest is a slow leak: <code>airy.ts</code> is designed as a single lever that rescales the whole app
+      (<code>AIRY_SCALE = false</code> restores canonical). Every hardcoded radius and pad is a piece of UI that lever
+      no longer reaches.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PLAN ============================ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">→</div>
+      <div>
+        <h2>The plan</h2>
+        <span class="tag t-med">Sequenced so each phase makes the next cheaper</span>
+      </div>
+    </div>
+    <p class="lede">
+      Ordered by <em>felt impact per unit of risk</em>. Phases 1 and 2 are mostly deletion and are independently
+      shippable. Phase 0 is what prevents all of this from regrowing.
+    </p>
+
+    <div class="phases">
+      <div class="phase">
+        <span class="p-n">PHASE 0</span>
+        <div>
+          <h4>Close the tap — enforcement before cleanup</h4>
+          <ul>
+            <li>ESLint <code>no-restricted-syntax</code>: literal <code>duration:</code>, <code>damping:</code>, <code>#hex</code> in <code>StyleSheet.create</code> → error</li>
+            <li>ESLint <code>no-restricted-imports</code>: raw <code>Modal</code> from <code>react-native</code> outside <code>components/Sheet</code></li>
+            <li>Warn on <code>&lt;Pressable</code> with <code>onPress</code> outside <code>components/ui</code></li>
+            <li>Ship as <strong>warn</strong>, same ramp the <code>max-lines</code> rule used</li>
+          </ul>
+        </div>
+        <span class="cost">~0.5d<br>zero risk</span>
+      </div>
+
+      <div class="phase">
+        <span class="p-n">PHASE 1</span>
+        <div>
+          <h4>Unify press feedback &amp; entrance</h4>
+          <ul>
+            <li>Delete all ad-hoc press scales → <code>AnimatedPressable</code> / <code>Button</code> (§01)</li>
+            <li>Add <code>useEntrance()</code> wrapping <code>useReduceMotion</code> + <code>durations.enter</code> + capped stagger (§03, §05)</li>
+            <li>Kill the 4×50ms name-field shake — replace with color + icon (§05)</li>
+          </ul>
+        </div>
+        <span class="cost">~2d<br>highest felt gain</span>
+      </div>
+
+      <div class="phase">
+        <span class="p-n">PHASE 2</span>
+        <div>
+          <h4>Collapse the toast family</h4>
+          <ul>
+            <li>One <code>&lt;Toast intent="info|undo|celebrate"&gt;</code> · one animation hook</li>
+            <li>Dwell becomes a function of intent, not of author (§02)</li>
+            <li>Migrate 7 call-site families; delete ~600 lines</li>
+          </ul>
+        </div>
+        <span class="cost">~2d<br>net line reduction</span>
+      </div>
+
+      <div class="phase">
+        <span class="p-n">PHASE 3</span>
+        <div>
+          <h4>Dark-mode-breaking color literals</h4>
+          <ul>
+            <li>~120 production inline hex → <code>colors.*</code> / <code>useThemeColors()</code></li>
+            <li>Start with <code>QuickActionsSheet/ActionItem</code>, <code>AchievementCard</code>, <code>InfoModal</code></li>
+            <li>Screenshot diff in dark mode as the acceptance gate</li>
+          </ul>
+        </div>
+        <span class="cost">~1.5d<br>fixes latent bugs</span>
+      </div>
+
+      <div class="phase">
+        <span class="p-n">PHASE 4</span>
+        <div>
+          <h4>Button &amp; Sheet consolidation</h4>
+          <ul>
+            <li>37 button components → <code>Button</code> variants; keep only genuinely-domain ones (<code>FloatingActionButton</code>, <code>SwipeableActionButton</code>)</li>
+            <li>42 raw <code>&lt;Modal&gt;</code> → <code>&lt;Sheet&gt;</code> with shared backdrop, detents, gesture dismiss</li>
+            <li>12 empty states → <code>EmptyState</code>; 4 section headers → one</li>
+          </ul>
+        </div>
+        <span class="cost">~5d<br>largest, do last</span>
+      </div>
+
+      <div class="phase">
+        <span class="p-n">PHASE 5</span>
+        <div>
+          <h4>Codemod the remaining scalars</h4>
+          <ul>
+            <li>Automated <code>padding/margin/fontSize/borderRadius</code> → tokens</li>
+            <li>Flip every Phase 0 ESLint rule from <strong>warn</strong> to <strong>error</strong></li>
+          </ul>
+        </div>
+        <span class="cost">~1d<br>mechanical</span>
+      </div>
+    </div>
+
+    <div class="why">
+      <h4>Why this order</h4>
+      <p>Phase 0 first because cleanup without enforcement regrows — the theme files already prove the app knows
+      the right values and drifts from them anyway. Phase 4 is deliberately last: it's the largest diff and the most
+      merge-conflict-prone, and it becomes far cheaper once Phases 1–2 have already established what the shared
+      motion contract is.</p>
+      <p>Phases 1, 2 and 3 are each independently shippable and independently visible. Nothing here requires a
+      redesign — the design already exists in <code>src/theme/</code>. This is the app learning to speak it.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><span class="mono">ui_consistency_audit_1.html</span> — evidence gathered from a static scan of
+    <span class="mono">src/</span> (1,007 <span class="mono">.tsx</span> files). Counts exclude
+    <span class="mono">__tests__</span> unless stated. Palette and radii mirrored from
+    <span class="mono">src/theme/colors/core.ts</span> and <span class="mono">src/theme/airyScale.ts</span>.</p>
+    <p style="margin-top:10px">Interactive panes above are a fidelity mock of the motion contract — not the RN build.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduceMotion = false;
+  var rmToggle = document.getElementById('rm-toggle');
+  rmToggle.addEventListener('change', function(){ reduceMotion = rmToggle.checked; });
+
+  /* ---- spring approximations of Reanimated withSpring(damping, stiffness) ---- */
+  function springCss(d, s){
+    // higher stiffness -> shorter, higher damping -> less overshoot
+    var dur = Math.round(1000 * Math.sqrt(1/s) * (d/14));
+    dur = Math.max(90, Math.min(dur, 420));
+    var overshoot = d < 14 ? 'cubic-bezier(.2,1.6,.4,1)' : 'cubic-bezier(.2,.9,.3,1)';
+    return dur + 'ms ' + overshoot;
+  }
+
+  /* ============ 01 PRESS ============ */
+  var roBefore = document.getElementById('ro-before');
+  var roAfter  = document.getElementById('ro-after');
+
+  document.querySelectorAll('[data-press]').forEach(function(el){
+    var mode = el.getAttribute('data-press');
+    var isAfter = mode === 'after';
+
+    function down(){
+      var scale, timing, label;
+      if (isAfter){
+        if (reduceMotion){ scale = 1; timing = '0ms linear'; }
+        else { scale = 0.97; timing = springCss(18,150); }
+        label = el.getAttribute('data-mech') + (reduceMotion ? ' · reduceMotion → no transform' : ' · scale 0.97 · d18/s150');
+        roAfter.textContent = label;
+      } else {
+        scale = parseFloat(el.getAttribute('data-scale'));
+        var mech = el.getAttribute('data-mech');
+        // before pane ignores reduce motion — that is the bug
+        if (mech.indexOf('withTiming') === 0) timing = '50ms linear';
+        else if (mech.indexOf('damping 12') > -1) timing = springCss(12,150);
+        else if (mech.indexOf('usePressAnimation') > -1) timing = springCss(18,150);
+        else timing = springCss(15,300);
+        label = mech + ' · scale ' + scale + (reduceMotion ? ' · reduceMotion IGNORED' : '');
+        roBefore.textContent = label;
+      }
+      el.style.transition = 'transform ' + timing;
+      el.style.transform = 'scale(' + scale + ')';
+    }
+    function up(){ el.style.transform = 'scale(1)'; }
+
+    el.addEventListener('pointerdown', down);
+    el.addEventListener('pointerup', up);
+    el.addEventListener('pointerleave', up);
+    el.addEventListener('pointercancel', up);
+  });
+
+  /* ============ 02 TOASTS ============ */
+  // [enterMs, dwellMs, exitMs, overshoot]
+  var beforeSpecs = [
+    {enter:280, dwell:2500, exit:280, over:1.02, name:'CompletionToast'},
+    {enter:200, dwell:5000, exit:200, over:1,    name:'DeleteUndoToast'},
+    {enter:250, dwell:8000, exit:350, over:1,    name:'TemplateAddedToast'}
+  ];
+  var afterSpecs = [
+    {enter:280, dwell:2500, exit:220, over:1,    name:'intent=info'},
+    {enter:280, dwell:5000, exit:220, over:1,    name:'intent=undo'},
+    {enter:280, dwell:4000, exit:220, over:1.02, name:'intent=celebrate'}
+  ];
+
+  var timers = [];
+  function fire(stageId, specs, readoutId, prefix){
+    timers.forEach(clearTimeout); timers = [];
+    var stage = document.getElementById(stageId);
+    var toasts = stage.querySelectorAll('.toast');
+    var ro = document.getElementById(readoutId);
+    var maxDwell = 0;
+
+    toasts.forEach(function(t, i){
+      var sp = specs[i];
+      maxDwell = Math.max(maxDwell, sp.enter + sp.dwell);
+      t.style.transition = 'none';
+      t.style.opacity = '0';
+      t.style.transform = 'translateY(100px) scale(1)';
+
+      timers.push(setTimeout(function(){
+        t.style.transition = 'opacity '+sp.enter+'ms cubic-bezier(.2,.9,.3,1), transform '+sp.enter+'ms cubic-bezier(.2,.9,.3,1)';
+        t.style.opacity = '1';
+        t.style.transform = 'translateY(0) scale('+sp.over+')';
+        if (sp.over !== 1){
+          timers.push(setTimeout(function(){ t.style.transform = 'translateY(0) scale(1)'; }, sp.enter));
+        }
+      }, 40 + i*70));
+
+      timers.push(setTimeout(function(){
+        t.style.transition = 'opacity '+sp.exit+'ms cubic-bezier(.4,0,1,1), transform '+sp.exit+'ms cubic-bezier(.4,0,1,1)';
+        t.style.opacity = '0';
+        t.style.transform = 'translateY(100px) scale(1)';
+      }, sp.enter + sp.dwell));
+    });
+
+    ro.textContent = prefix + ' · last toast leaves at ' + (maxDwell/1000).toFixed(1) + 's';
+  }
+
+  document.querySelectorAll('[data-fire]').forEach(function(b){
+    b.addEventListener('click', function(){
+      if (b.getAttribute('data-fire') === 'before'){
+        fire('stage-before', beforeSpecs, 'ro-toast-before', '2500 / 5000 / 8000ms — no rule');
+      } else {
+        fire('stage-after', afterSpecs, 'ro-toast-after', 'info 2.5s · undo 5s · celebrate 4s — dwell = urgency');
+      }
+    });
+  });
+
+  /* ============ 03 LIST ENTRANCE ============ */
+  var HABITS = [
+    ['🏃','Morning run','12d'], ['📖','Read 20 pages','4d'], ['🧘','Meditate','31d'],
+    ['💧','Drink water','8d'], ['🥗','Cook dinner','2d'], ['✍️','Journal','19d'],
+    ['🎸','Practice guitar','6d'], ['😴','Lights out 11pm','23d']
+  ];
+
+  function buildList(id){
+    var host = document.getElementById(id);
+    HABITS.forEach(function(h){
+      var d = document.createElement('div');
+      d.className = 'hcard';
+      d.innerHTML = '<span class="accent"></span><span class="emo">'+h[0]+'</span>'+
+        '<span class="meta"><span class="nm">'+h[1]+'</span></span>'+
+        '<span class="streak">'+h[2]+'</span><span class="chk">✓</span>';
+      d.style.minHeight = '56px';
+      d.style.padding = '10px 14px';
+      host.appendChild(d);
+    });
+  }
+  buildList('list-before'); buildList('list-after');
+
+  function replay(id, mode, readoutId){
+    var cards = document.getElementById(id).querySelectorAll('.hcard');
+    var ro = document.getElementById(readoutId);
+    var total = 0;
+    cards.forEach(function(c, i){
+      var dur, delay;
+      if (mode === 'after'){
+        dur = 280;
+        delay = Math.min(i, 5) * 60;      // spec: cap stagger at 5 items
+      } else {
+        dur = (i % 2 === 0) ? 300 : 280;   // real drift: FadeIn.duration(300) vs 280
+        delay = i * 60;                    // uncapped
+      }
+      total = Math.max(total, dur + delay);
+      c.style.transition = 'none';
+      c.style.opacity = '0';
+      c.style.transform = 'translateY(14px)';
+      setTimeout(function(){
+        c.style.transition = 'opacity '+dur+'ms cubic-bezier(.33,1,.68,1), transform '+dur+'ms cubic-bezier(.33,1,.68,1)';
+        c.style.opacity = '1';
+        c.style.transform = 'translateY(0)';
+      }, 30 + delay);
+    });
+    ro.textContent = (mode === 'after'
+      ? 'stagger capped at index 5 → settles at '
+      : 'uncapped stagger, mixed 280/300ms → settles at ') + total + 'ms';
+  }
+
+  document.querySelectorAll('[data-replay]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var m = b.getAttribute('data-replay');
+      replay('list-'+m, m, 'ro-list-'+m);
+    });
+  });
+
+  // auto-play both lists once on first scroll into view
+  var seen = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting && !seen){
+        seen = true;
+        replay('list-before','before','ro-list-before');
+        setTimeout(function(){ replay('list-after','after','ro-list-after'); }, 900);
+      }
+    });
+  }, {threshold:.35});
+  io.observe(document.getElementById('list-before'));
+})();
+</script>
+</body>
+</html>

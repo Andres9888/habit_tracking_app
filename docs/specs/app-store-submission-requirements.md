@@ -1,5 +1,9 @@
 # App Store Submission Requirements - Daily Habits
 
+> **Archived specification.** The current ChainDay launch tracker is
+> [`../App Store Submission Checklist.md`](../App%20Store%20Submission%20Checklist.md).
+> Bundle IDs, versions, screenshot requirements, and status below are historical.
+
 ## Overview
 This document outlines all requirements needed to submit the Daily Habits app to the Apple App Store. Complete each section systematically before submission.
 

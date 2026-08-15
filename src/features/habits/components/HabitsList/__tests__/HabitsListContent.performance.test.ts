@@ -13,10 +13,11 @@ describe('habits list interaction performance', () => {
       'components/HabitsList/HabitsListContent.tsx'
     );
 
-    expect(source).toContain('initialNumToRender={6}');
-    expect(source).toContain('maxToRenderPerBatch={6}');
+    expect(source).toContain('initialNumToRender={8}');
+    expect(source).toContain('maxToRenderPerBatch={8}');
     expect(source).toContain('removeClippedSubviews');
-    expect(source).toContain('windowSize={5}');
+    expect(source).toContain('updateCellsBatchingPeriod={16}');
+    expect(source).toContain('windowSize={7}');
   });
 
   it('defers card recalculation without deferring date navigation', () => {

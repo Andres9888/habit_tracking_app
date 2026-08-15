@@ -475,11 +475,14 @@ http.route({
   path: '/revenuecat-webhook',
   method: 'POST',
   handler: httpAction(async (ctx, request) => {
-    // Verify webhook signature (recommended)
-    const signature = request.headers.get('X-RevenueCat-Signature');
-    // TODO: Verify signature with shared secret
+    // Verify the timestamped HMAC before parsing the raw request body.
+    const rawBody = await request.text();
+    const signature =
+      request.headers.get('X-RevenueCat-Webhook-Signature') ?? '';
+    const isValid = await verifyRevenueCatSignature(rawBody, signature);
+    if (!isValid) return new Response('Invalid signature', { status: 401 });
 
-    const body = await request.json();
+    const body = JSON.parse(rawBody);
     const { event, app_user_id } = body;
 
     // Handle subscription events
@@ -566,7 +569,7 @@ subscriptions: defineTable({
 
 | Item                           | Status  | Notes                                             |
 | ------------------------------ | ------- | ------------------------------------------------- |
-| Webhook signature verification | ⚠️ TODO | Implement HMAC verification with shared secret    |
+| Webhook signature verification | ✅      | Timestamped HMAC over the raw body, with replay tolerance |
 | Server-side entitlement check  | ✅      | RevenueCat validates receipts server-side         |
 | No client-side premium logic   | ✅      | All premium checks go through `usePremium` hook   |
 | User ID validation             | ⚠️ TODO | Ensure webhook user ID matches authenticated user |

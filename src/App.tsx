@@ -5,6 +5,8 @@ import '../global.css';
 // the barrel ships ~3.9MB of unused TTFs. This subpath pulls only the one face.
 import { Literata_700Bold } from '@expo-google-fonts/literata/700Bold';
 import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
 import { Text as RNText, TextInput as RNTextInput } from 'react-native';
 import { AppProviders } from './app/AppProviders';
 import { initializeAppMonitoring } from './app/initializeAppMonitoring';
@@ -12,6 +14,11 @@ import { AuthGate } from './components/auth/AuthGate';
 import { MAX_FONT_SIZE_MULTIPLIER_BODY } from './utils/accessibility/textScaling';
 
 initializeAppMonitoring();
+
+// App initially renders null while the display font loads. Keep the native
+// splash visible during that gap, then dismiss it explicitly once React can
+// render the startup UI instead of relying on the automatic first-frame hook.
+void SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
 // Global Dynamic Type cap: without this, ~1,200 <Text> sites scale unbounded
 // and break fixed-height layouts (cards, tab bar, day cells). RN honors
@@ -34,7 +41,15 @@ export default function App() {
   // All Literata text styles render bold, so one face covers them; without
   // this load the serif silently falls back to the system sans.
   const [fontsLoaded, fontError] = useFonts({ Literata: Literata_700Bold });
-  if (!fontsLoaded && !fontError) return null;
+  const isFontReady = fontsLoaded || Boolean(fontError);
+
+  useEffect(() => {
+    if (isFontReady) {
+      void SplashScreen.hideAsync().catch(() => undefined);
+    }
+  }, [isFontReady]);
+
+  if (!isFontReady) return null;
 
   return (
     <AppProviders>

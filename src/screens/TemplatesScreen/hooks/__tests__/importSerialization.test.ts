@@ -40,7 +40,10 @@ it('a second direct import while one is in flight is refused', async () => {
   const importTemplate = jest
     .fn()
     .mockImplementationOnce(
-      () => new Promise((res) => { resolveFirst = res; })
+      () =>
+        new Promise((res) => {
+          resolveFirst = res;
+        })
     )
     .mockResolvedValue({ success: true, habitId: 'h2' });
 
@@ -64,7 +67,10 @@ it('a customize import is refused while a direct import is in flight', async () 
   const importTemplate = jest
     .fn()
     .mockImplementationOnce(
-      () => new Promise((res) => { resolveFirst = res; })
+      () =>
+        new Promise((res) => {
+          resolveFirst = res;
+        })
     )
     .mockResolvedValue({ success: true, habitId: 'h2' });
 
@@ -98,4 +104,27 @@ it('imports run again after the first completes', async () => {
   });
 
   expect(importTemplate).toHaveBeenCalledTimes(2);
+});
+
+it('keeps an exact habit target for every direct and customized import', async () => {
+  const importTemplate = jest
+    .fn()
+    .mockResolvedValueOnce({ success: true, habitId: 'h1' })
+    .mockResolvedValueOnce({ success: true, habitId: 'h2' });
+
+  const { result } = renderHook(() =>
+    useTemplateImportHandlers(makeOptions(importTemplate))
+  );
+
+  await act(async () => {
+    await result.current.handleDirectImport(t1);
+    await result.current.handleTemplateImport(t2, { name: 'Custom two' });
+  });
+
+  expect(result.current.importedHabitIdsByTemplateRef.current.get(t1)).toBe(
+    'h1'
+  );
+  expect(result.current.importedHabitIdsByTemplateRef.current.get(t2)).toBe(
+    'h2'
+  );
 });

@@ -19,6 +19,7 @@ export type ImportFn = (args: {
 }>;
 
 export interface UseTemplateImportHandlersOptions {
+  initialImportedHabitIds?: ReadonlyMap<Id<'templates'>, Id<'habits'>>;
   importTemplate: ImportFn;
   previewTemplate: Doc<'templates'> | null;
   isPremiumUser: boolean;

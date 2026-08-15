@@ -1,8 +1,10 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useCallback } from 'react';
 import { View } from 'react-native';
 
+import type { Id } from '../../../../../convex/_generated/dataModel';
 import ErrorBoundary from '../../../../components/ErrorBoundary';
 import Modal from '../../../../components/Modal';
+import { requestHabitFocus } from '../../hooks/habitFocusStore';
 import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
@@ -11,28 +13,30 @@ const TemplatesScreen = lazy(
   () => import('../../../../screens/TemplatesScreen')
 );
 
+export function useGoToHabitCard(closeTemplatesScreen: () => void) {
+  return useCallback(
+    (habitId: Id<'habits'>) => {
+      requestHabitFocus(habitId);
+      closeTemplatesScreen();
+    },
+    [closeTemplatesScreen]
+  );
+}
+
 /**
  * Templates modal section - displays templates screen in full-screen modal
  */
 export function TemplatesModalSection({
   closeTemplatesScreen,
-  habits,
-  openHabitDetail,
   showTemplatesScreen,
 }: TemplatesModalSectionProps) {
   const { colors } = useThemeColors();
   const { trigger } = useHaptics();
+  const handleViewHabit = useGoToHabitCard(closeTemplatesScreen);
 
   const handleClose = () => {
     trigger('tap');
     closeTemplatesScreen();
-  };
-
-  const handleViewHabit = (habitId: string) => {
-    const habit = habits.find((item) => item._id === habitId);
-    if (!habit) return;
-    closeTemplatesScreen();
-    openHabitDetail(habit);
   };
 
   return (

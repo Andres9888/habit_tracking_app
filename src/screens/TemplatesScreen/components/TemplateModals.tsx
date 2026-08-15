@@ -23,6 +23,8 @@ interface TemplateModalsProps {
   onCloseCustomize: () => void;
   /** Detail modal X — dismisses the overlay and the library behind it. */
   onExitToHome: () => void;
+  /** Post-add primary — same exit as X, plus focus on the added habit. */
+  onGoToToday: () => void;
   onCustomize: (template: Doc<'templates'>) => void;
   onDirectImport: (
     templateId: Id<'templates'>
@@ -45,6 +47,7 @@ export function TemplateModals({
   onExitToHome,
   onCustomize,
   onDirectImport,
+  onGoToToday,
   onImport,
 }: TemplateModalsProps) {
   const isImported = previewTemplate
@@ -65,6 +68,7 @@ export function TemplateModals({
         onBack={onBackToLibrary}
         onClose={onExitToHome}
         onCustomize={onCustomize}
+        onGoToToday={onGoToToday}
         onImport={onDirectImport}
       />
       <TemplatePreviewModal

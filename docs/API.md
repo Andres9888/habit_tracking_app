@@ -38,11 +38,13 @@ is no REST layer except one webhook (below). ~62 public functions.
 
 Exactly one, defined in `convex/router.ts`:
 
-- `POST /revenuecat-webhook` → `webhooks/revenuecat.ts`. Verifies an
-  HMAC-SHA256 `X-RevenueCat-Signature` (timing-safe), rejects invalid (401) and
-  malformed (400) before any write, dedups on `event.id` (replay protection),
-  then routes to the internal grant/revoke mutations. This is the **only** path
-  that may set premium entitlements.
+- `POST /revenuecat-webhook` → `webhooks/revenuecat.ts`. Verifies RevenueCat's
+  timestamped HMAC-SHA256 `X-RevenueCat-Webhook-Signature` over
+  `<timestamp>.<raw_json_body>` using a timing-safe comparison and a five-minute
+  delivery tolerance. It rejects invalid signatures (401) and malformed payloads
+  (400) before any write, dedups on `event.id`, then routes to the internal
+  grant/revoke mutations. This is the **only** path that may set premium
+  entitlements.
 
 ## Generating types
 

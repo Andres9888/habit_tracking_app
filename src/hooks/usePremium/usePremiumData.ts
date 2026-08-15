@@ -70,8 +70,10 @@ export function usePremiumData(): PremiumData {
           setPackages(offeringsResult.current?.availablePackages ?? null);
         }
       } catch (error_) {
-        if (__DEV__)
-          console.error('[usePremium] Failed to fetch data:', error_);
+        // The failure is represented in hook state and the paywall renders its
+        // unavailable fallback. Keep it in Metro without promoting this
+        // handled provider/configuration failure to a blocking LogBox error.
+        if (__DEV__) console.log('[usePremium] Failed to fetch data:', error_);
         if (isMounted) {
           setError('Failed to load subscription info');
         }

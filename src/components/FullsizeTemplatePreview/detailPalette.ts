@@ -13,6 +13,7 @@
 import { useMemo } from 'react';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SemanticColors } from '../../theme/darkColors';
+import { buildHabitAddedPalette } from '../HabitAddedPanel/palette';
 
 export interface DetailPalette {
   /** Hero gradient stops, top → bottom. Last stop must equal `body`. */
@@ -58,6 +59,10 @@ export function buildDetailPalette(
   isDark: boolean
 ): DetailPalette {
   const body = colors.background;
+  // The add / added CTA colors are shared with the library's post-add toast —
+  // one definition, in HabitAddedPanel/palette, so contrast fixes can't drift
+  // between the two surfaces that render the same confirmation.
+  const added = buildHabitAddedPalette(colors, isDark);
 
   return {
     // Light: mock's #F6DEC8 → #F3E3D2 → canvas. Dark: the same warm amber wash
@@ -70,8 +75,8 @@ export function buildDetailPalette(
     heroLocations: [0, 0.62, 1],
 
     body,
-    card: isDark ? colors.card : colors.cardPaper,
-    border: colors.border,
+    card: added.card,
+    border: added.border,
     iconTile: isDark ? colors.cardPaper : '#FAF7F0',
     chipBg: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(250,247,240,0.75)',
     chipBorder: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.55)',
@@ -89,13 +94,10 @@ export function buildDetailPalette(
     gold: isDark ? '#F0C462' : '#E8B94D',
     goldFill: isDark ? 'rgba(240,196,98,0.18)' : '#F2E3B8',
 
-    // Light darkened for WCAG 4.5:1 on white label; dark keeps the brighter green.
-    // Light value measured at 4.86:1 against white (WCAG AA for the 17px
-    // bold CTA label; #1F8A5B sat at 4.33 and failed).
-    addBg: isDark ? '#2FA36F' : '#1E8153',
-    addFg: '#FFFFFF',
-    addedBg: isDark ? 'rgba(52,211,153,0.16)' : '#DDF2E4',
-    addedFg: isDark ? '#4ADE9E' : '#157A4E',
+    addBg: added.addBg,
+    addFg: added.addFg,
+    addedBg: added.addedBg,
+    addedFg: added.addedFg,
     addShadow: isDark ? 'rgba(0,0,0,0.5)' : 'rgba(21,122,78,0.28)',
   };
 }

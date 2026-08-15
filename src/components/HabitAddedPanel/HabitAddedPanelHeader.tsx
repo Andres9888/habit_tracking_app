@@ -1,5 +1,5 @@
 /**
- * Status heading for the persistent post-add commit panel.
+ * Status heading for the post-add confirmation panel.
  *
  * The copy states membership, not an event: the panel is shown both right
  * after an add and every later time the habit is reopened, so "just added" or
@@ -12,29 +12,26 @@ import { Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import { footerStyles } from '../styles';
-import { useDetailPalette } from '../detailPalette';
+import { habitAddedPanelStyles as s } from './styles';
+import type { HabitAddedPanelProps } from './types';
 
-interface PostAddCommitHeaderProps {
-  checkmarkAnimatedStyle: object;
-  templateName: string;
-}
+type HeaderProps = Pick<
+  HabitAddedPanelProps,
+  'checkStyle' | 'headline' | 'message' | 'palette'
+> & { headlineTestID?: string };
 
-export function PostAddCommitHeader({
-  checkmarkAnimatedStyle,
-  templateName,
-}: PostAddCommitHeaderProps) {
-  const palette = useDetailPalette();
-
+export function HabitAddedPanelHeader({
+  checkStyle,
+  headline,
+  headlineTestID,
+  message,
+  palette,
+}: HeaderProps) {
   return (
     <>
-      <View style={footerStyles.successPanelHeader}>
+      <View style={s.header}>
         <Animated.View
-          style={[
-            footerStyles.successCheck,
-            { backgroundColor: palette.addedBg },
-            checkmarkAnimatedStyle,
-          ]}
+          style={[s.check, { backgroundColor: palette.addedBg }, checkStyle]}
         >
           <Check
             color={palette.addedFg}
@@ -45,16 +42,17 @@ export function PostAddCommitHeader({
         <Text
           accessibilityRole='header'
           maxFontSizeMultiplier={1.6}
-          style={[footerStyles.successHeading, { color: palette.textPrimary }]}
+          testID={headlineTestID}
+          style={[s.headline, { color: palette.textPrimary }]}
         >
-          {templateName} is in your habits
+          {headline}
         </Text>
       </View>
       <Text
         maxFontSizeMultiplier={1.6}
-        style={[footerStyles.successMessage, { color: palette.textSecondary }]}
+        style={[s.message, { color: palette.textSecondary }]}
       >
-        Complete it from Today when it's due.
+        {message}
       </Text>
     </>
   );
