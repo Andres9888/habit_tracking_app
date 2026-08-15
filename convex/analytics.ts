@@ -12,13 +12,15 @@
  * - analyticsWeekly.ts - Weekly insights
  */
 
+import { v } from 'convex/values';
 import { query } from './_generated/server';
-import { getDateString, getDaysAgo } from './analytics/index';
+import { dateKeysEndingOn } from './analytics/dateKeys';
 import { computeOverviewStats } from './analyticsOverview';
 import { computeStrengthDistribution } from './analyticsDistribution';
 import { computeTrend } from './analyticsTrend';
 import { computeCompliance } from './analyticsCompliance';
 import { computeWeeklyInsights } from './analyticsWeekly';
+import { getTodayForTimezone } from './habits/utils';
 
 // Re-export types and helpers
 export * from './analytics/index';
@@ -47,8 +49,8 @@ export { getWeeklyInsights, generateWeeklyInsights } from './analyticsWeekly';
  * sub-report needs), then computes all five reports from the shared data.
  */
 export const getAnalyticsDashboard = query({
-  args: {},
-  handler: async (ctx) => {
+  args: { timezone: v.optional(v.string()) },
+  handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return null;
 
@@ -59,7 +61,8 @@ export const getAnalyticsDashboard = query({
     const activeHabits = habits.filter((h) => !h.archived && !h.paused);
     const habitIds = new Set(activeHabits.map((h) => h._id));
 
-    const ninetyDaysAgoStr = getDateString(getDaysAgo(89));
+    const todayKey = getTodayForTimezone(args.timezone);
+    const ninetyDaysAgoStr = dateKeysEndingOn(todayKey, 90)[0];
     const allTrackings = await ctx.db
       .query('tracking')
       .withIndex('by_user_and_date', (q) =>
@@ -69,11 +72,11 @@ export const getAnalyticsDashboard = query({
     const trackings = allTrackings.filter((t) => habitIds.has(t.habitId));
 
     return {
-      complianceData: computeCompliance(activeHabits, trackings),
+      complianceData: computeCompliance(activeHabits, trackings, todayKey),
       overviewStats: computeOverviewStats(activeHabits),
       strengthDistribution: computeStrengthDistribution(activeHabits),
-      trendData: computeTrend(activeHabits, trackings),
-      weeklyInsights: computeWeeklyInsights(activeHabits, trackings),
+      trendData: computeTrend(activeHabits, trackings, todayKey),
+      weeklyInsights: computeWeeklyInsights(activeHabits, trackings, todayKey),
     };
   },
 });

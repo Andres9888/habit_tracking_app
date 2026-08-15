@@ -13,6 +13,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as analytics_dateKeys from "../analytics/dateKeys.js";
 import type * as analytics_helpers from "../analytics/helpers.js";
 import type * as analytics_index from "../analytics/index.js";
 import type * as analytics_streakHelpers from "../analytics/streakHelpers.js";
@@ -64,8 +65,10 @@ import type * as habits_recalcStaleHelpers from "../habits/recalcStaleHelpers.js
 import type * as habits_recalculateStaleStrength from "../habits/recalculateStaleStrength.js";
 import type * as habits_remove from "../habits/remove.js";
 import type * as habits_reorder from "../habits/reorder.js";
+import type * as habits_skipPausedDays from "../habits/skipPausedDays.js";
 import type * as habits_stats from "../habits/stats.js";
 import type * as habits_toggle from "../habits/toggle.js";
+import type * as habits_toggleState from "../habits/toggleState.js";
 import type * as habits_trackingCompletionPatch from "../habits/trackingCompletionPatch.js";
 import type * as habits_types from "../habits/types.js";
 import type * as habits_update from "../habits/update.js";
@@ -93,6 +96,7 @@ import type * as storageValidation from "../storageValidation.js";
 import type * as streakUtils_dateHelpers from "../streakUtils/dateHelpers.js";
 import type * as streakUtils_historyCalculation from "../streakUtils/historyCalculation.js";
 import type * as streakUtils_index from "../streakUtils/index.js";
+import type * as streakUtils_pausePeriod from "../streakUtils/pausePeriod.js";
 import type * as streakUtils_types from "../streakUtils/types.js";
 import type * as streakUtils_updateStreak from "../streakUtils/updateStreak.js";
 import type * as streakUtils from "../streakUtils.js";
@@ -142,6 +146,7 @@ import type * as webhooks_revenuecatSignatureCrypto from "../webhooks/revenuecat
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  "analytics/dateKeys": typeof analytics_dateKeys;
   "analytics/helpers": typeof analytics_helpers;
   "analytics/index": typeof analytics_index;
   "analytics/streakHelpers": typeof analytics_streakHelpers;
@@ -193,8 +198,10 @@ declare const fullApi: ApiFromModules<{
   "habits/recalculateStaleStrength": typeof habits_recalculateStaleStrength;
   "habits/remove": typeof habits_remove;
   "habits/reorder": typeof habits_reorder;
+  "habits/skipPausedDays": typeof habits_skipPausedDays;
   "habits/stats": typeof habits_stats;
   "habits/toggle": typeof habits_toggle;
+  "habits/toggleState": typeof habits_toggleState;
   "habits/trackingCompletionPatch": typeof habits_trackingCompletionPatch;
   "habits/types": typeof habits_types;
   "habits/update": typeof habits_update;
@@ -222,6 +229,7 @@ declare const fullApi: ApiFromModules<{
   "streakUtils/dateHelpers": typeof streakUtils_dateHelpers;
   "streakUtils/historyCalculation": typeof streakUtils_historyCalculation;
   "streakUtils/index": typeof streakUtils_index;
+  "streakUtils/pausePeriod": typeof streakUtils_pausePeriod;
   "streakUtils/types": typeof streakUtils_types;
   "streakUtils/updateStreak": typeof streakUtils_updateStreak;
   streakUtils: typeof streakUtils;

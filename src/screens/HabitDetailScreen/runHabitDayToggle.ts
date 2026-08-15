@@ -2,6 +2,7 @@
 import { AccessibilityInfo, Alert } from 'react-native';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { ERROR_MESSAGES } from '../../constants/errorMessages';
+import { parseDateKeyLocal } from '../../utils/getLocalDateString';
 import { triggerHaptic } from '../../utils/haptics';
 
 type ToggleFn = (args: {
@@ -31,7 +32,7 @@ export function runHabitDayToggle(options: {
     wasCompleted,
   } = options;
 
-  const inputDate = new Date(date);
+  const inputDate = parseDateKeyLocal(date);
   const todayDate = new Date();
   inputDate.setHours(0, 0, 0, 0);
   todayDate.setHours(0, 0, 0, 0);
@@ -41,7 +42,7 @@ export function runHabitDayToggle(options: {
   setPendingMinimal(!wasCompleted && kind === 'minimal');
   void triggerHaptic(wasCompleted ? 'toggle' : 'success');
 
-  const dateFormatted = new Date(date).toLocaleDateString('en-US', {
+  const dateFormatted = parseDateKeyLocal(date).toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'long',
     day: 'numeric',

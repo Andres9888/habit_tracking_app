@@ -12,6 +12,8 @@ import {
 } from '../habitStrength';
 import { calculateStreakFromHistory } from '../streakUtils';
 import { enforceRateLimit } from '../lib/rateLimit';
+import { skipPausedDays } from './skipPausedDays';
+import { resolveCompletedStatus } from './toggleState';
 import { trackingCompletionPatch } from './trackingCompletionPatch';
 import {
   getTodayForTimezone,
@@ -23,6 +25,7 @@ import {
 
 export const toggleHabit = mutation({
   args: {
+    completed: v.optional(v.boolean()),
     date: v.string(),
     habitId: v.id('habits'),
     /** Absent/undefined treated as full. Only set when completing. */
@@ -53,7 +56,11 @@ export const toggleHabit = mutation({
       )
       .unique();
 
-    const newCompletedStatus = existing ? !existing.completed : true;
+    const { next: newCompletedStatus, noop } = resolveCompletedStatus(
+      existing?.completed,
+      args.completed
+    );
+    if (noop) return null;
     const completion = trackingCompletionPatch(
       newCompletedStatus,
       newCompletedStatus ? args.kind : undefined
@@ -154,6 +161,7 @@ export const recalculateStreakAndStrength = internalMutation({
       const snapshot = calculateMomentumStrengthSnapshot({
         habitCreatedAt: habit.createdAt,
         mode,
+        skipDate: skipPausedDays(habit, args.timezone),
         throughDate: evaluationDateKey,
         tracking,
       });

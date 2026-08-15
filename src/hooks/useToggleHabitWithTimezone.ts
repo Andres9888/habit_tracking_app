@@ -25,6 +25,7 @@ export function useToggleHabitWithTimezone() {
 
   const toggleHabit = useCallback(
     (args: {
+      completed?: boolean;
       date: string;
       habitId: Id<'habits'>;
       kind?: 'full' | 'minimal';

@@ -7,18 +7,20 @@
 
 import { api } from '../../../../convex/_generated/api';
 import { useCachedQuery, useCachedQuerySavedAt } from '../../../lib/queryCache';
+import { getUserTimezone } from '../../../utils/timezone';
 
 export const useAnalyticsQueries = () => {
+  const timezone = getUserTimezone();
   const dashboard = useCachedQuery(
     api.analytics.getAnalyticsDashboard,
-    {},
+    { timezone },
     {
       entryName: 'analytics.getAnalyticsDashboard',
     }
   );
   const cacheSavedAt = useCachedQuerySavedAt(
     'analytics.getAnalyticsDashboard',
-    {}
+    { timezone }
   );
 
   const weeklyInsightsRaw = dashboard?.weeklyInsights;

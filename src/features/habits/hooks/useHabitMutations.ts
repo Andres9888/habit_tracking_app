@@ -7,10 +7,13 @@
  * @see docs/offline-habit-sync.md T011
  */
 
+import { useCallback } from 'react';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import type { Id } from '../../../../convex/_generated/dataModel';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
 import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
+import { getUserTimezone } from '../../../utils/timezone';
 
 export interface UseHabitMutationsResult {
   toggleHabit: ReturnType<typeof useMutation<typeof api.habits.toggleHabit>>;
@@ -48,8 +51,18 @@ export function useHabitMutations(): UseHabitMutationsResult {
   const isOnline = useIsOnline();
   const toggleHabit = useToggleHabitWithTimezone();
   const archiveHabit = useMutation(api.habits.archive);
-  const pauseHabit = useMutation(api.habits.pause);
-  const resumeHabit = useMutation(api.habits.resume);
+  const rawPauseHabit = useMutation(api.habits.pause);
+  const rawResumeHabit = useMutation(api.habits.resume);
+  const pauseHabit = useCallback(
+    (args: { habitId: Id<'habits'> }) =>
+      rawPauseHabit({ ...args, timezone: getUserTimezone() }),
+    [rawPauseHabit]
+  ) as typeof rawPauseHabit;
+  const resumeHabit = useCallback(
+    (args: { habitId: Id<'habits'> }) =>
+      rawResumeHabit({ ...args, timezone: getUserTimezone() }),
+    [rawResumeHabit]
+  ) as typeof rawResumeHabit;
   const removeHabit = useMutation(api.habits.remove);
   const reorderHabits = useMutation(api.habits.reorderHabits);
   const updateSettings = useMutation(api.settings.update);

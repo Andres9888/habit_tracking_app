@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { formatDateKeyLabel } from '../../utils/getLocalDateString';
 import { styles } from './styles';
 import type { TrendData } from './types';
 
@@ -19,7 +20,7 @@ export function ChartTooltip({ selectedPoint }: ChartTooltipProps) {
   return (
     <View style={styles.tooltip}>
       <Text style={styles.tooltipDate}>
-        {new Date(selectedPoint.date).toLocaleDateString()}
+        {formatDateKeyLabel(selectedPoint.date)}
       </Text>
       <Text style={styles.tooltipValue}>
         {Math.round(selectedPoint.averageStrength)}% Average Strength

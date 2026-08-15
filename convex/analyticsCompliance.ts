@@ -4,13 +4,12 @@
  * Provides 90-day compliance data for heatmap visualization.
  */
 
+import { v } from 'convex/values';
 import { query } from './_generated/server';
 import type { Doc, Id } from './_generated/dataModel';
-import {
-  getDateString,
-  getDaysAgo,
-  getCompletionLevel,
-} from './analytics/index';
+import { getCompletionLevel } from './analytics/index';
+import { dateKeysEndingOn } from './analytics/dateKeys';
+import { getTodayForTimezone } from './habits/utils';
 
 /**
  * Pure computation of 90-day heatmap data from already-fetched habits/tracking.
@@ -18,7 +17,8 @@ import {
  */
 export function computeCompliance(
   activeHabits: Array<{ _id: Id<'habits'> }>,
-  trackings: Doc<'tracking'>[]
+  trackings: Doc<'tracking'>[],
+  todayKey = getTodayForTimezone()
 ) {
   const habitIds = new Set(activeHabits.map((h) => h._id));
   const heatmapData: Array<{
@@ -39,10 +39,7 @@ export function computeCompliance(
     completionsByDate.set(t.date, (completionsByDate.get(t.date) ?? 0) + 1);
   }
 
-  for (let i = 89; i >= 0; i--) {
-    const date = getDaysAgo(i);
-    const dateStr = getDateString(date);
-
+  for (const dateStr of dateKeysEndingOn(todayKey, 90)) {
     const completedCount = completionsByDate.get(dateStr) ?? 0;
 
     const completionRate =
@@ -68,8 +65,8 @@ export function computeCompliance(
  * PERF: Single user-level tracking query bounded to the 90-day window.
  */
 export const getComplianceData = query({
-  args: {},
-  handler: async (ctx) => {
+  args: { timezone: v.optional(v.string()) },
+  handler: async (ctx, args) => {
     // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return [];
@@ -82,8 +79,8 @@ export const getComplianceData = query({
     const activeHabits = habits.filter((h) => !h.archived && !h.paused);
     const habitIds = new Set(activeHabits.map((h) => h._id));
 
-    // PERF: Limit tracking query to 90-day window instead of loading all records
-    const ninetyDaysAgoStr = getDateString(getDaysAgo(89));
+    const todayKey = getTodayForTimezone(args.timezone);
+    const ninetyDaysAgoStr = dateKeysEndingOn(todayKey, 90)[0];
     const allTrackings = await ctx.db
       .query('tracking')
       .withIndex('by_user_and_date', (q) =>
@@ -94,6 +91,6 @@ export const getComplianceData = query({
     // Filter to only active habits
     const trackings = allTrackings.filter((t) => habitIds.has(t.habitId));
 
-    return computeCompliance(activeHabits, trackings);
+    return computeCompliance(activeHabits, trackings, todayKey);
   },
 });

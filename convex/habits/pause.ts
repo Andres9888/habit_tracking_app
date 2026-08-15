@@ -34,6 +34,7 @@ export const pause = mutation({
       accessibilityAtPause: habit.accessibility,
       paused: true,
       pausedAt: Date.now(),
+      resumedAt: undefined,
       strengthAtPause: habit.strength,
     });
 
