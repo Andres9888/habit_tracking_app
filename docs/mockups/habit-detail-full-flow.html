@@ -1,0 +1,2542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ChainDay · Habit Detail — Full Flow Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..600&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   ChainDay — Habit Detail full flow
+   Prototype only. No production app code is referenced here.
+   Visual system: warm paper canvas, sage hero band, deep green
+   primary action, amber reserved exclusively for recovery.
+   ============================================================ */
+
+:root {
+  /* surfaces */
+  --paper:        #F5F1ED;
+  --card:         #FFFFFF;
+  --sage-1:       #E3EDE6;
+  --sage-2:       #EDF0E9;
+  --sage-tint:    #EAF1EC;
+  --neutral-fill: #EFEAE3;
+
+  /* green */
+  --green:        #0C7C59;
+  --green-deep:   #0B5D42;
+  --green-soft:   #2E9A74;
+  --green-wash:   #E8F2EC;
+  --green-track:  #DCE7DF;
+
+  /* recovery amber — used on the recovery state only */
+  --amber:        #FBF0E3;
+  --amber-border: #F0DFC8;
+  --amber-ink:    #8A5A26;
+
+  /* ink */
+  --ink:          #1E241F;
+  --ink-2:        #4A544C;
+  --ink-3:        #7D867E;
+  --ink-4:        #ADAA9F;
+  --ink-disabled: #C7C1B6;
+  --danger:       #963F30;
+
+  /* lines + shadow */
+  --hairline:     #E7E0D7;
+  --hairline-2:   #F0EBE4;
+  --shadow-card:  0 1px 2px rgba(58, 48, 36, .04), 0 8px 20px -14px rgba(58, 48, 36, .22);
+  --shadow-btn:   0 10px 22px -12px rgba(12, 124, 89, .62);
+  --shadow-phone: 0 2px 6px rgba(0,0,0,.28), 0 40px 90px -30px rgba(0,0,0,.55);
+
+  --sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --serif: "Literata", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+
+/* several blocks below set display:flex, which would otherwise beat [hidden] */
+[hidden] { display: none !important; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 700px at 18% -10%, #2C332C 0%, transparent 62%),
+    linear-gradient(170deg, #23281F 0%, #1A1E19 55%, #151814 100%);
+  font-family: var(--sans);
+  color: #E9E4DA;
+  -webkit-font-smoothing: antialiased;
+  padding: 40px 32px 64px;
+}
+
+/* ------------------------------------------------------------
+   Desktop stage
+   ------------------------------------------------------------ */
+
+.stage {
+  max-width: 1220px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 430px minmax(420px, 1fr);
+  gap: 56px;
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .stage { grid-template-columns: 1fr; justify-items: center; gap: 40px; }
+  .docs { max-width: 640px; }
+}
+
+.stage-head {
+  max-width: 1220px;
+  margin: 0 auto 34px;
+}
+.stage-head .kicker {
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #8FAE9C;
+  font-weight: 600;
+  margin: 0 0 10px;
+}
+.stage-head h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 30px;
+  letter-spacing: -.01em;
+  margin: 0 0 8px;
+  color: #F4F0E7;
+}
+.stage-head p {
+  margin: 0;
+  max-width: 720px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #A6A99D;
+}
+
+/* ------------------------------------------------------------
+   iPhone 15 frame
+   ------------------------------------------------------------ */
+
+.phone-col { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+.phone {
+  position: relative;
+  width: 417px;             /* 393 screen + 12px bezel each side */
+  height: 876px;
+  border-radius: 68px;
+  padding: 12px;
+  background:
+    linear-gradient(150deg, #6E6B66 0%, #38352F 16%, #2A2823 42%, #35322C 62%, #6B6862 84%, #33302B 100%);
+  box-shadow: var(--shadow-phone);
+  flex: none;
+}
+.phone::after {           /* inner bezel highlight */
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border-radius: 58px;
+  border: 1px solid rgba(255,255,255,.10);
+  pointer-events: none;
+  z-index: 6;
+}
+/* side buttons */
+.phone .btn-side {
+  position: absolute;
+  background: linear-gradient(180deg, #5C5952, #37342E);
+  border-radius: 2px;
+}
+.btn-side.silent { left: -2px; top: 168px;  width: 3px; height: 30px; }
+.btn-side.volup  { left: -2px; top: 226px;  width: 3px; height: 58px; }
+.btn-side.voldn  { left: -2px; top: 300px;  width: 3px; height: 58px; }
+.btn-side.power  { right: -2px; top: 254px; width: 3px; height: 92px; }
+
+.viewport {
+  position: relative;
+  width: 393px;
+  height: 852px;
+  border-radius: 56px;
+  overflow: hidden;
+  background: var(--paper);
+  isolation: isolate;
+}
+
+/* status bar ------------------------------------------------ */
+.statusbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 54px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 30px 0;
+  pointer-events: none;
+}
+.statusbar .time {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  width: 62px;
+}
+.statusbar .indicators { display: flex; align-items: center; gap: 6px; }
+
+.dynamic-island {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 125px;
+  height: 36px;
+  border-radius: 20px;
+  background: #08090A;
+  z-index: 6;
+  pointer-events: none;
+}
+.dynamic-island::after {   /* camera lens */
+  content: "";
+  position: absolute;
+  right: 11px; top: 50%;
+  transform: translateY(-50%);
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #2A3441 0%, #131820 52%, #05070A 100%);
+}
+
+/* home indicator -------------------------------------------- */
+.home-indicator {
+  position: absolute;
+  bottom: 9px; left: 50%;
+  transform: translateX(-50%);
+  width: 140px; height: 5px;
+  border-radius: 3px;
+  background: rgba(30, 36, 31, .34);
+  z-index: 10;    /* stays visible over the note sheet, as on iOS */
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------
+   Screen system
+   ------------------------------------------------------------ */
+
+.screens { position: absolute; inset: 0; }
+
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(28px);
+  transition: opacity .24s ease, transform .32s cubic-bezier(.22,.72,.28,1);
+}
+.screens[data-dir="pop"] .screen { transform: translateX(-22px); }
+/* must out-specify the [data-dir] rule above, or the active screen stays offset */
+.screens[data-dir] .screen.is-active { opacity: 1; pointer-events: auto; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .screen { transition: opacity .12s linear; transform: none !important; }
+}
+
+.scroll {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  padding-bottom: 42px;   /* home indicator safe area */
+}
+.scroll::-webkit-scrollbar { width: 0; height: 0; }
+
+/* nav bar --------------------------------------------------- */
+.navbar {
+  flex: none;
+  padding: 54px 20px 2px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  z-index: 4;
+}
+.navbar.on-hero { background: linear-gradient(180deg, var(--sage-1) 0%, rgba(227,237,230,0) 100%); }
+.navbar .nav-title {
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -.005em;
+  text-align: center;
+  white-space: nowrap;
+}
+.navbar .nav-right { display: flex; justify-content: flex-end; }
+
+.icon-btn {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline);
+  background: rgba(255,255,255,.86);
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background .15s ease, transform .12s ease, border-color .15s ease;
+}
+.icon-btn:hover { background: #fff; border-color: #DCD4C8; }
+.icon-btn:active { transform: scale(.94); }
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 44px;
+  padding: 0 12px 0 6px;
+  border: 0;
+  background: none;
+  color: var(--green);
+  font-family: var(--sans);
+  font-size: 15.5px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 12px;
+  margin-left: -6px;
+}
+.back-btn:hover { background: rgba(12,124,89,.07); }
+.back-btn:active { transform: scale(.97); }
+
+.text-btn {
+  height: 44px;
+  padding: 0 8px;
+  border: 0;
+  background: none;
+  color: var(--green);
+  font-family: var(--sans);
+  font-size: 15.5px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 12px;
+}
+.text-btn:hover { background: rgba(12,124,89,.07); }
+
+/* ------------------------------------------------------------
+   Shared blocks
+   ------------------------------------------------------------ */
+
+.page { padding: 0 20px; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.eyebrow {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 8px 4px;
+}
+
+.serif { font-family: var(--serif); }
+
+/* primary action -------------------------------------------- */
+.action-slot {
+  padding: 11px 0 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-primary {
+  width: 100%;
+  height: 56px;
+  border: 0;
+  border-radius: 17px;
+  background: var(--green);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: -.005em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  cursor: pointer;
+  box-shadow: var(--shadow-btn);
+  transition: background .15s ease, transform .12s ease, box-shadow .15s ease;
+}
+.btn-primary:hover { background: var(--green-deep); }
+.btn-primary:active { transform: scale(.985); box-shadow: 0 6px 14px -10px rgba(12,124,89,.6); }
+
+.btn-done {
+  width: 100%;
+  height: 56px;
+  border: 1.5px solid rgba(12,124,89,.32);
+  border-radius: 17px;
+  background: var(--green-wash);
+  color: var(--green-deep);
+  font-family: var(--sans);
+  font-size: 16.5px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  cursor: default;
+  box-shadow: none;
+}
+
+/* .action-note and .action-pair are swapped between states and must be the
+   exact same height, otherwise the History / Analytics rows below shift. */
+.action-note {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  text-align: center;
+  padding: 0 12px;
+}
+
+.action-pair {
+  height: 48px;
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: 15px;
+  overflow: hidden;
+}
+.action-pair .divider { background: var(--hairline); height: 24px; }
+.action-pair button {
+  height: 46px;   /* + 1px border top and bottom = 48px, matching .action-note */
+  border: 0;
+  background: none;
+  font-family: var(--sans);
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--ink-2);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+.action-pair button:hover { background: #FAF8F5; color: var(--ink); }
+.action-pair button svg { color: var(--ink-3); }
+
+/* grouped nav rows ------------------------------------------ */
+.rowgroup { overflow: hidden; }
+.row {
+  width: 100%;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 10px 15px;
+  border: 0;
+  background: none;
+  font-family: var(--sans);
+  text-align: left;
+  cursor: pointer;
+  transition: background .14s ease;
+}
+.row:hover { background: #FAF8F5; }
+.row:active { background: #F4F1EC; }
+.row + .row { border-top: 1px solid var(--hairline-2); }
+
+.tile {
+  flex: none;
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: var(--sage-tint);
+  color: var(--green);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.tile.amber { background: #F7EEE1; color: var(--amber-ink); }
+
+.row-text { flex: 1; min-width: 0; }
+.row-title, .row-sub { display: block; }
+.row-title {
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -.005em;
+  line-height: 1.25;
+}
+.row-sub {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin-top: 2px;
+  line-height: 1.35;
+}
+.chev { flex: none; color: var(--ink-4); }
+
+/* ------------------------------------------------------------
+   Screen 1–3 · Habit Detail
+   ------------------------------------------------------------ */
+
+.hero {
+  background: linear-gradient(180deg, var(--sage-1) 0%, var(--sage-2) 46%, var(--paper) 100%);
+  padding: 0 20px 12px;
+  text-align: center;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 1.16;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  margin: 0 0 6px;
+}
+.hero .schedule {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #5F6C62;
+  letter-spacing: .012em;
+  margin: 0 0 10px;
+}
+
+.dial { position: relative; width: 120px; height: 120px; margin: 0 auto; }
+.dial svg { display: block; }
+.dial .readout {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+}
+.dial .value {
+  font-family: var(--serif);
+  font-size: 35px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.dial .band {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-top: 5px;
+}
+.dial-caption {
+  font-size: 11px;
+  color: #6B7A70;
+  margin: 6px 0 0;
+  letter-spacing: .005em;
+}
+
+/* why card — one line, as written in the spec */
+.why {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 13px 15px;
+}
+.why .why-body { flex: 1; }
+.why p {
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.42;
+  color: var(--ink-2);
+  margin: 0;
+}
+.why p .lead {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-right: 5px;
+}
+.why p em { font-style: italic; }
+
+/* recovery panel — amber lives here and nowhere else */
+.recovery {
+  background: var(--amber);
+  border: 1px solid var(--amber-border);
+  border-radius: 20px;
+  padding: 15px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.recovery .tile { background: #F4E3CC; color: var(--amber-ink); }
+.recovery .eyebrow { color: var(--amber-ink); }
+.recovery p {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  line-height: 1.45;
+  color: #4C3D28;
+  margin: 5px 0 0;
+}
+
+/* week strip */
+.week { padding: 13px 14px 14px; }
+.week-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 2px 12px;
+}
+.week-head .t { font-size: 13.5px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+.week-head .range { font-size: 11px; color: var(--ink-4); font-variant-numeric: tabular-nums; margin-top: 2px; }
+.week-head .r {
+  font-size: 12px;
+  color: var(--ink-3);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  padding-top: 1px;
+}
+.week-head .r strong { color: var(--ink-2); font-weight: 600; }
+
+.week-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+.week-day { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.week-day .dow {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-4);
+  letter-spacing: .04em;
+}
+.week-day.is-today .dow { color: var(--green); }
+.week-day .num {
+  font-size: 10.5px;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+}
+.week-day.is-today .num { color: var(--ink-2); font-weight: 600; }
+
+.pip {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1.5px solid transparent;
+}
+.pip.done   { background: var(--green); border-color: var(--green); color: #fff; }
+.pip.today  { border: 2px solid var(--green); background: #fff; }
+.pip.today::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+.pip.miss   { border: 1.5px dashed #D6CFC3; background: #fff; color: var(--ink-4); }
+.pip.future { background: var(--neutral-fill); border-color: var(--neutral-fill); }
+
+/* grounded insight line */
+.insight-line {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 4px 6px 0;
+}
+.insight-line .spark { flex: none; color: var(--green); margin-top: 1px; }
+.insight-line p {
+  margin: 0;
+  font-size: 12.8px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+.insight-line strong { color: var(--ink-2); font-weight: 600; }
+
+/* ------------------------------------------------------------
+   Screen 4 · History
+   ------------------------------------------------------------ */
+
+.month-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 2px 14px;
+}
+.month-bar .label {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -.01em;
+}
+.month-bar .nav { display: flex; gap: 6px; }
+.month-bar .icon-btn:disabled { opacity: .38; cursor: not-allowed; background: transparent; }
+
+.cal { padding: 14px 12px 12px; }
+.cal-dow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 8px;
+}
+.cal-dow span {
+  text-align: center;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--ink-4);
+}
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  row-gap: 5px;
+  justify-items: center;
+}
+.cell {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  background: none;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  transition: transform .12s ease;
+}
+.cell.empty { visibility: hidden; }
+.cell.done   { background: var(--green); border-color: var(--green); color: #fff; font-weight: 600; }
+.cell.done:hover { background: var(--green-deep); }
+.cell.miss   { border: 1.5px dashed #D6CFC3; color: var(--ink-3); }
+.cell.miss:hover { border-color: #BCB3A4; }
+.cell.today  { border: 2px solid var(--green); color: var(--green); font-weight: 700; }
+.cell.future { background: #F6F3EE; color: var(--ink-disabled); cursor: not-allowed; }
+.cell:active:not(.future) { transform: scale(.92); }
+.cell.today.done { background: var(--green); color: #fff; border-color: var(--green-deep); }
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  padding: 14px 4px 2px;
+  margin-top: 12px;
+  border-top: 1px solid var(--hairline-2);
+}
+.legend .item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.legend .swatch {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  flex: none;
+}
+.legend .swatch.done   { background: var(--green); }
+.legend .swatch.miss   { border: 1.5px dashed #CFC7B9; }
+.legend .swatch.today  { border: 2px solid var(--green); }
+.legend .swatch.future { background: #F6F3EE; border: 1px solid #ECE6DD; }
+
+/* entry list */
+.entry {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  min-height: 64px;
+  border: 0;
+  background: none;
+  font-family: var(--sans);
+  text-align: left;
+  cursor: pointer;
+}
+.entry:hover { background: #FAF8F5; }
+.entry + .entry { border-top: 1px solid var(--hairline-2); }
+.entry .mark {
+  flex: none;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.entry .mark.done { background: var(--green); color: #fff; }
+.entry .mark.miss { border: 1.5px dashed #D6CFC3; color: var(--ink-4); }
+.entry .body { flex: 1; min-width: 0; }
+.entry .d {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.entry .d .state { font-size: 12px; font-weight: 500; color: var(--ink-3); }
+.entry .note {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--serif);
+  font-style: italic;
+}
+
+/* ------------------------------------------------------------
+   Screen 5 · Day Detail
+   ------------------------------------------------------------ */
+
+.day-head { padding: 8px 2px 18px; }
+.day-head h2 {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -.015em;
+  line-height: 1.2;
+  color: var(--ink);
+  margin: 0;
+}
+.day-head .rel { font-size: 12.5px; color: var(--ink-3); margin-top: 6px; }
+
+.status-card { padding: 16px; display: flex; align-items: center; gap: 13px; }
+.status-card .badge {
+  flex: none;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.status-card .badge.done { background: var(--green); color: #fff; }
+.status-card .badge.miss { border: 1.5px dashed #D6CFC3; color: var(--ink-4); }
+.status-card .s-title { display: block; font-size: 16px; font-weight: 600; color: var(--ink); }
+.status-card .s-sub { display: block; font-size: 12.5px; color: var(--ink-3); margin-top: 3px; }
+
+.note-card { padding: 15px 16px; }
+.note-card .note-body {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 8px 0 0;
+}
+.note-card .note-empty {
+  font-size: 13.5px;
+  color: var(--ink-3);
+  margin: 8px 0 0;
+}
+
+.secondary-row {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 16px;
+  border: 0;
+  background: none;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink-2);
+  cursor: pointer;
+  text-align: left;
+}
+.secondary-row:hover { background: #FAF8F5; }
+.secondary-row + .secondary-row { border-top: 1px solid var(--hairline-2); }
+.secondary-row svg { color: var(--ink-3); flex: none; }
+.secondary-row.destructive { color: var(--danger); }
+.secondary-row.destructive svg { color: var(--danger); }
+
+/* step to the day either side without going back to the calendar */
+.daystep {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 20px;
+}
+.daystep button {
+  min-height: 62px;
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+  padding: 11px 12px;
+  cursor: pointer;
+  font-family: var(--sans);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ink);
+  transition: background .14s ease;
+}
+.daystep button:hover:not(:disabled) { background: #FAF8F5; }
+.daystep button:disabled { opacity: .4; cursor: not-allowed; box-shadow: none; }
+.daystep button svg { flex: none; color: var(--ink-4); }
+.daystep .lbl { min-width: 0; }
+.daystep .k {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.daystep .v {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-top: 2px;
+  white-space: nowrap;
+}
+.daystep .next { justify-content: flex-end; text-align: right; }
+
+.footnote {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--ink-4);
+  padding: 14px 6px 0;
+  text-align: center;
+}
+
+/* ------------------------------------------------------------
+   Screen 6 · Analytics
+   ------------------------------------------------------------ */
+
+.segmented {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  padding: 3px;
+  background: #E9E3DA;
+  border-radius: 13px;
+  margin: 4px 0 18px;
+}
+.segmented button {
+  height: 42px;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: background .16s ease, color .16s ease, box-shadow .16s ease;
+}
+.segmented button[aria-selected="true"] {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgba(58,48,36,.12);
+}
+
+.chart-card { padding: 16px 14px 14px; }
+.chart-head { padding: 0 2px 14px; }
+.chart-head .h {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -.005em;
+}
+.chart-head .sub { font-size: 12.5px; color: var(--ink-3); margin-top: 3px; }
+
+.chart-foot {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hairline-2);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-3);
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+/* ------------------------------------------------------------
+   Screen 7 · Insight Detail
+   ------------------------------------------------------------ */
+
+.insight-head { padding: 8px 2px 16px; }
+.insight-head h2 {
+  font-family: var(--serif);
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  margin: 8px 0 0;
+}
+.prose {
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: var(--ink-2);
+  padding: 16px;
+  margin: 0;
+}
+.prose strong { font-weight: 600; color: var(--ink); }
+
+.statstrip {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  align-items: center;
+  padding: 14px 8px;
+}
+.statstrip .divider { background: var(--hairline-2); height: 34px; }
+.statstrip .stat { text-align: center; }
+.statstrip .stat .v {
+  display: block;
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.01em;
+}
+.statstrip .stat .k {
+  display: block;
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-top: 3px;
+}
+
+.nextstep {
+  background: var(--sage-tint);
+  border: 1px solid #D8E5DC;
+  border-radius: 20px;
+  padding: 15px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.nextstep .tile { background: #DCEAE1; }
+.nextstep .eyebrow { color: var(--green-deep); }
+.nextstep p {
+  font-size: 14px;
+  line-height: 1.55;
+  color: #33463C;
+  margin: 5px 0 0;
+}
+
+/* ------------------------------------------------------------
+   Note sheet
+   ------------------------------------------------------------ */
+
+.sheet-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(28, 32, 27, .34);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s ease;
+  z-index: 8;
+}
+.sheet-scrim.is-open { opacity: 1; pointer-events: auto; }
+
+.sheet {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  background: var(--card);
+  border-radius: 26px 26px 56px 56px;
+  padding: 12px 20px 34px;
+  transform: translateY(102%);
+  transition: transform .3s cubic-bezier(.22,.72,.28,1);
+  z-index: 9;
+  box-shadow: 0 -12px 40px -18px rgba(40,34,26,.5);
+}
+.sheet.is-open { transform: none; }
+.sheet .grabber {
+  width: 38px; height: 5px;
+  border-radius: 3px;
+  background: #E2DCD2;
+  margin: 0 auto 14px;
+}
+.sheet h3 {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+.sheet .hint { font-size: 12.5px; color: var(--ink-3); margin: 0 0 14px; }
+.sheet textarea {
+  width: 100%;
+  min-height: 96px;
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  padding: 12px 13px;
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: #FCFAF7;
+  resize: none;
+  outline: none;
+}
+.sheet textarea:focus { border-color: rgba(12,124,89,.5); background: #fff; }
+.sheet .sheet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.sheet .sheet-actions .cancel {
+  height: 50px;
+  border-radius: 15px;
+  border: 1px solid var(--hairline);
+  background: #fff;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.sheet .sheet-actions .save {
+  height: 50px;
+  border-radius: 15px;
+  border: 0;
+  background: var(--green);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.sheet .sheet-actions .save:hover { background: var(--green-deep); }
+
+/* ------------------------------------------------------------
+   Docs panel (desktop only, beside the phone)
+   ------------------------------------------------------------ */
+
+.docs { width: 100%; }
+
+.panel {
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 20px;
+  padding: 22px 24px;
+  margin-bottom: 20px;
+}
+.panel > h2 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #8FAE9C;
+  margin: 0 0 16px;
+}
+
+.flow { width: 100%; height: auto; display: block; }
+.flow .node rect {
+  fill: rgba(255,255,255,.05);
+  stroke: rgba(255,255,255,.18);
+  stroke-width: 1;
+  transition: fill .18s ease, stroke .18s ease;
+}
+.flow .node text {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  fill: #D6D2C7;
+  transition: fill .18s ease;
+}
+.flow .node .sub { font-size: 9.5px; fill: #8A8E82; letter-spacing: .06em; }
+.flow .node { cursor: pointer; }
+.flow .node:hover rect { fill: rgba(255,255,255,.10); stroke: rgba(255,255,255,.3); }
+.flow .node.is-current rect { fill: rgba(12,124,89,.9); stroke: #35A97E; }
+.flow .node.is-current text { fill: #FFFFFF; }
+.flow .node.is-current .sub { fill: #BFE3D2; }
+.flow .edge { fill: none; stroke: #5E6A5F; stroke-width: 1.3; }
+.flow .edge.back { stroke: #454E45; stroke-dasharray: 3 4; stroke-width: 1.1; }
+
+.flow-legend {
+  display: flex;
+  gap: 18px;
+  margin-top: 12px;
+  font-size: 11px;
+  color: #8A8E82;
+}
+.flow-legend .k { display: inline-flex; align-items: center; gap: 7px; }
+.flow-legend .line { width: 22px; height: 0; border-top: 1.3px solid #5E6A5F; }
+.flow-legend .line.dash { border-top: 1.1px dashed #6A736A; }
+
+table.routes { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+table.routes th {
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #7C8177;
+  font-weight: 700;
+  padding: 0 10px 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+table.routes td {
+  padding: 9px 10px 9px 0;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  color: #B7B3A8;
+  vertical-align: top;
+}
+table.routes td.from, table.routes td.to { color: #E3DFD4; font-weight: 500; white-space: nowrap; }
+table.routes td.label { color: #8FAE9C; }
+
+.own { display: grid; gap: 14px; }
+.own .o {
+  padding-left: 14px;
+  border-left: 2px solid rgba(255,255,255,.12);
+}
+.own .o.is-detail { border-left-color: #0C7C59; }
+.own .o h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #EDE9DE;
+  margin: 0 0 4px;
+}
+.own .o p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #9EA298;
+}
+.own .o .owns { color: #8FAE9C; }
+
+.notes-list { margin: 0; padding-left: 18px; }
+.notes-list li {
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: #9EA298;
+  margin-bottom: 7px;
+}
+.notes-list li strong { color: #D6D2C7; font-weight: 600; }
+
+.screen-readout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #8A8E82;
+}
+.screen-readout .dot { width: 7px; height: 7px; border-radius: 50%; background: #35A97E; }
+.screen-readout b { color: #D6D2C7; font-weight: 600; }
+
+/* focus visibility across the prototype (textarea has its own focus style) */
+button:focus-visible, .node:focus-visible {
+  outline: 2px solid #35A97E;
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+</style>
+</head>
+<body>
+
+<header class="stage-head">
+  <p class="kicker">ChainDay · Prototype</p>
+  <h1>Habit Detail — full flow</h1>
+  <p>A recommitment surface, not a stats dashboard. Habit Detail answers “what do I do now,” keeps a small trustworthy snapshot, and hands the record to History and the interpretation to Analytics. Seven screen states, every route clickable.</p>
+</header>
+
+<div class="stage">
+
+  <!-- ==========================================================
+       PHONE
+       ========================================================== -->
+  <div class="phone-col">
+    <div class="phone">
+      <span class="btn-side silent"></span>
+      <span class="btn-side volup"></span>
+      <span class="btn-side voldn"></span>
+      <span class="btn-side power"></span>
+
+      <div class="viewport">
+
+        <!-- status bar -->
+        <div class="statusbar">
+          <span class="time">9:41</span>
+          <span class="indicators">
+            <!-- cellular -->
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="none" aria-hidden="true">
+              <rect x="0"  y="8"   width="3" height="4"  rx="1" fill="#1E241F"/>
+              <rect x="5"  y="5.5" width="3" height="6.5" rx="1" fill="#1E241F"/>
+              <rect x="10" y="3"   width="3" height="9"  rx="1" fill="#1E241F"/>
+              <rect x="15" y="0.5" width="3" height="11.5" rx="1" fill="#1E241F"/>
+            </svg>
+            <!-- wifi -->
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+              <path d="M1 4.2A10.4 10.4 0 0 1 15 4.2" stroke="#1E241F" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M3.6 6.9a6.7 6.7 0 0 1 8.8 0" stroke="#1E241F" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M6.3 9.6a2.7 2.7 0 0 1 3.4 0" stroke="#1E241F" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+            <!-- battery -->
+            <svg width="27" height="13" viewBox="0 0 27 13" fill="none" aria-hidden="true">
+              <rect x="0.6" y="0.6" width="22" height="11.8" rx="3.4" stroke="#1E241F" stroke-opacity=".38" stroke-width="1.1"/>
+              <rect x="2.2" y="2.2" width="16.5" height="8.6" rx="2.2" fill="#1E241F"/>
+              <path d="M24.4 4.4a2.6 2.6 0 0 1 0 4.2z" fill="#1E241F" fill-opacity=".4"/>
+            </svg>
+          </span>
+        </div>
+        <div class="dynamic-island"></div>
+
+        <!-- screens -->
+        <div class="screens" id="screens" data-dir="push">
+
+          <!-- ==================================================
+               SCREEN · HABIT DETAIL (ready / completed / recovery)
+               ================================================== -->
+          <section class="screen" id="s-detail" data-detail="ready" aria-label="Habit detail">
+            <div class="navbar on-hero">
+              <div>
+                <button class="icon-btn" data-nav="home" aria-label="Back to Today">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+              </div>
+              <span></span>
+              <div class="nav-right">
+                <button class="text-btn" data-noop>Edit</button>
+              </div>
+            </div>
+
+            <div class="scroll">
+              <div class="hero">
+                <h1>Wake-Up Movement</h1>
+                <p class="schedule">Morning routine · Daily</p>
+
+                <div class="dial">
+                  <svg width="120" height="120" viewBox="0 0 120 120" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="dialGrad" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#0C7C59"/>
+                        <stop offset="100%" stop-color="#3AA37C"/>
+                      </linearGradient>
+                    </defs>
+                    <circle cx="60" cy="60" r="49" fill="none" stroke="var(--green-track)" stroke-width="8.5"/>
+                    <circle id="dialArc" cx="60" cy="60" r="49" fill="none" stroke="url(#dialGrad)" stroke-width="8.5"
+                            stroke-linecap="round" stroke-dasharray="307.88" stroke-dashoffset="178.57"
+                            transform="rotate(-90 60 60)"/>
+                    <circle id="dialDot" cx="83.6" cy="102.9" r="4.6" fill="#0C7C59" stroke="#EDF0E9" stroke-width="2.4"/>
+                  </svg>
+                  <div class="readout">
+                    <span class="value" id="dialValue">42</span>
+                    <span class="band" id="dialBand">Building</span>
+                  </div>
+                </div>
+                <p class="dial-caption">Habit strength · a snapshot, not a score</p>
+              </div>
+
+              <div class="page">
+                <!-- why card (ready + completed) -->
+                <div class="card why" id="whyCard">
+                  <span class="tile">
+                    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6"/><path d="m4.9 8.9 1.4 1.4"/><path d="M2 17h2"/><path d="M20 17h2"/><path d="m17.7 10.3 1.4-1.4"/><path d="M17 17a5 5 0 0 0-10 0"/><path d="M2 21h20"/></svg>
+                  </span>
+                  <div class="why-body">
+                    <p><span class="lead">Your why</span><em>start the day with energy, not pressure.</em></p>
+                  </div>
+                </div>
+
+                <!-- recovery panel (recovery only) -->
+                <div class="recovery" id="recoveryPanel" hidden>
+                  <span class="tile">
+                    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+                  </span>
+                  <div class="why-body">
+                    <span class="eyebrow">Pick it back up</span>
+                    <p>Yesterday wasn’t logged. Start again with today’s two-minute version.</p>
+                  </div>
+                </div>
+
+                <!-- action slot: fixed shape so the rows below never shift -->
+                <div class="action-slot">
+                  <button class="btn-primary" id="primaryBtn" data-act="complete">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    <span id="primaryLabel">Complete today</span>
+                  </button>
+
+                  <div class="action-note" id="actionNote">Logs today’s date. You can undo anytime.</div>
+
+                  <div class="action-pair" id="actionPair" hidden>
+                    <button data-act="undo">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+                      Undo
+                    </button>
+                    <span class="divider"></span>
+                    <button data-act="note-today">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.4 3.6a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                      <span id="noteTodayLabel">Add a note</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- week strip -->
+                <div class="card week" style="margin-top:10px">
+                  <div class="week-head">
+                    <span>
+                      <span class="t">This week</span>
+                      <span class="range" style="display:block">Aug 10 – 16</span>
+                    </span>
+                    <span class="r" id="weekFoot"></span>
+                  </div>
+                  <div class="week-grid" id="weekGrid"></div>
+                </div>
+
+                <!-- grouped navigation: fixed position in every state -->
+                <p class="section-label" style="margin-top:14px">The record</p>
+                <div class="card rowgroup">
+                  <button class="row" data-go="history">
+                    <span class="tile">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="3"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/><path d="M7.5 14h2M11 14h2M14.5 14h2M7.5 17.5h2M11 17.5h2"/></svg>
+                    </span>
+                    <span class="row-text">
+                      <span class="row-title">History</span>
+                      <span class="row-sub">Dates, notes, and edits</span>
+                    </span>
+                    <svg class="chev" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  </button>
+                  <button class="row" data-go="analytics">
+                    <span class="tile">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16.5A1.5 1.5 0 0 0 4.5 21H21"/><rect x="7" y="12" width="3.2" height="5" rx="1"/><rect x="12.4" y="8" width="3.2" height="9" rx="1"/><rect x="17.8" y="5" width="3.2" height="12" rx="1"/></svg>
+                    </span>
+                    <span class="row-text">
+                      <span class="row-title">Analytics</span>
+                      <span class="row-sub">Patterns from real check-ins</span>
+                    </span>
+                    <svg class="chev" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  </button>
+                </div>
+
+                <!-- grounded insight line -->
+                <div class="insight-line" style="margin-top:16px">
+                  <span class="spark">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 8-8"/><path d="M15 7h5v5"/></svg>
+                  </span>
+                  <p id="detailInsight"></p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ==================================================
+               SCREEN · HISTORY
+               ================================================== -->
+          <section class="screen" id="s-history" aria-label="History">
+            <div class="navbar">
+              <div>
+                <button class="back-btn" data-back>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                  Detail
+                </button>
+              </div>
+              <span class="nav-title">History</span>
+              <div class="nav-right"></div>
+            </div>
+
+            <div class="scroll">
+              <div class="page">
+                <div class="month-bar">
+                  <span class="label" id="monthLabel">August 2026</span>
+                  <span class="nav">
+                    <button class="icon-btn" id="prevMonth" aria-label="Previous month">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    </button>
+                    <button class="icon-btn" id="nextMonth" aria-label="Next month">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                    </button>
+                  </span>
+                </div>
+
+                <div class="card cal">
+                  <div class="cal-dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+                  <div class="cal-grid" id="calGrid"></div>
+                  <div class="legend">
+                    <span class="item"><span class="swatch done"></span>Completed</span>
+                    <span class="item"><span class="swatch miss"></span>No entry</span>
+                    <span class="item"><span class="swatch today"></span>Today</span>
+                    <span class="item"><span class="swatch future"></span>Upcoming</span>
+                  </div>
+                </div>
+
+                <p class="section-label" style="margin-top:22px">Logged entries</p>
+                <div class="card rowgroup" id="entryList"></div>
+
+                <p class="footnote">Tap any past date to see or correct that day.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ==================================================
+               SCREEN · DAY DETAIL
+               ================================================== -->
+          <section class="screen" id="s-day" aria-label="Day detail">
+            <div class="navbar">
+              <div>
+                <button class="back-btn" data-back>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                  History
+                </button>
+              </div>
+              <span class="nav-title">Entry</span>
+              <div class="nav-right"></div>
+            </div>
+
+            <div class="scroll">
+              <div class="page">
+                <div class="day-head">
+                  <h2 id="dayTitle">Wednesday, August 12</h2>
+                  <p class="rel" id="dayRel">3 days ago</p>
+                </div>
+
+                <div class="card status-card">
+                  <span class="badge" id="dayBadge"></span>
+                  <span>
+                    <span class="s-title" id="dayStatus">Completed</span>
+                    <span class="s-sub" id="dayTime">Logged at 7:06 AM</span>
+                  </span>
+                </div>
+
+                <div class="card note-card" style="margin-top:14px">
+                  <span class="eyebrow">Note</span>
+                  <p class="note-body" id="dayNote">—</p>
+                </div>
+
+                <p class="section-label" style="margin-top:22px">Correct this day</p>
+                <div class="card rowgroup">
+                  <button class="secondary-row" id="dayNoteBtn">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.4 3.6a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                    <span id="dayNoteBtnLabel">Edit note</span>
+                  </button>
+                  <button class="secondary-row" id="dayToggleBtn">
+                    <svg id="dayToggleIcon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></svg>
+                    <span id="dayToggleLabel">Undo completion</span>
+                  </button>
+                </div>
+
+                <div class="daystep">
+                  <button id="dayPrev">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    <span class="lbl"><span class="k">Previous</span><span class="v" id="dayPrevLabel"></span></span>
+                  </button>
+                  <button id="dayNext" class="next">
+                    <span class="lbl"><span class="k">Next</span><span class="v" id="dayNextLabel"></span></span>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  </button>
+                </div>
+
+                <p class="footnote">Edits are saved to your history and change the numbers you see on Analytics.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ==================================================
+               SCREEN · ANALYTICS
+               ================================================== -->
+          <section class="screen" id="s-analytics" aria-label="Analytics">
+            <div class="navbar">
+              <div>
+                <button class="back-btn" data-back>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                  Detail
+                </button>
+              </div>
+              <span class="nav-title">Analytics</span>
+              <div class="nav-right"></div>
+            </div>
+
+            <div class="scroll">
+              <div class="page">
+                <div class="segmented" role="tablist" aria-label="Time range">
+                  <button role="tab" id="tabWeekly" aria-selected="true" data-range="weekly">Weekly</button>
+                  <button role="tab" id="tabMonthly" aria-selected="false" data-range="monthly">Monthly</button>
+                </div>
+
+                <div class="card chart-card">
+                  <div class="chart-head">
+                    <div class="h" id="chartTitle">Days logged each week</div>
+                    <div class="sub" id="chartSub">Last 8 weeks · 39 check-ins</div>
+                  </div>
+                  <div id="chartHost"></div>
+                  <p class="chart-foot" id="chartFoot">Based on days you logged. A week with no check-ins shows as zero — nothing is estimated or filled in for you.</p>
+                </div>
+
+                <p class="section-label" style="margin-top:22px">What the log shows</p>
+                <div class="card rowgroup" id="insightList"></div>
+
+                <p class="footnote">Every number here comes from check-ins you recorded. Nothing is predicted.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ==================================================
+               SCREEN · INSIGHT DETAIL
+               ================================================== -->
+          <section class="screen" id="s-insight" aria-label="Insight detail">
+            <div class="navbar">
+              <div>
+                <button class="back-btn" data-back>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                  Analytics
+                </button>
+              </div>
+              <span class="nav-title">Insight</span>
+              <div class="nav-right"></div>
+            </div>
+
+            <div class="scroll">
+              <div class="page">
+                <div class="insight-head">
+                  <span class="eyebrow" id="insightKicker">From your log</span>
+                  <h2 id="insightTitle"></h2>
+                </div>
+
+                <div class="card">
+                  <p class="prose" id="insightBody"></p>
+                </div>
+
+                <p class="section-label" style="margin-top:22px">The evidence</p>
+                <div class="card chart-card">
+                  <div class="chart-head">
+                    <div class="h" id="evidenceTitle"></div>
+                    <div class="sub" id="evidenceSub"></div>
+                  </div>
+                  <div id="evidenceHost"></div>
+                </div>
+
+                <div class="card statstrip" style="margin-top:14px">
+                  <span class="stat"><span class="v" id="statAV"></span><span class="k" id="statAK"></span></span>
+                  <span class="divider"></span>
+                  <span class="stat"><span class="v" id="statBV"></span><span class="k" id="statBK"></span></span>
+                </div>
+
+                <div class="nextstep" style="margin-top:18px">
+                  <span class="tile">
+                    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3"/><path d="M12 18v3"/><path d="M3 12h3"/><path d="M18 12h3"/><circle cx="12" cy="12" r="4.2"/></svg>
+                  </span>
+                  <div class="why-body">
+                    <span class="eyebrow">If you want</span>
+                    <p id="insightStep"></p>
+                  </div>
+                </div>
+
+                <p class="footnote" id="insightCaveat">This is a pattern in what you logged. It doesn’t explain why, and it isn’t a prediction.</p>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- note sheet -->
+        <div class="sheet-scrim" id="sheetScrim"></div>
+        <div class="sheet" id="noteSheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+          <div class="grabber"></div>
+          <h3 id="sheetTitle">Add a note</h3>
+          <p class="hint" id="sheetHint">Optional. Only you will see this.</p>
+          <textarea id="sheetText" placeholder="What was today like?"></textarea>
+          <div class="sheet-actions">
+            <button class="cancel" id="sheetCancel">Cancel</button>
+            <button class="save" id="sheetSave">Save note</button>
+          </div>
+        </div>
+
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+
+    <div class="screen-readout">
+      <span class="dot"></span>
+      Showing <b id="readout">Habit Detail · ready</b>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       DOCS PANEL
+       ========================================================== -->
+  <div class="docs">
+
+    <div class="panel">
+      <h2>Flow map</h2>
+      <svg class="flow" viewBox="0 0 470 360" role="img" aria-label="Navigation flow between the seven screens">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="8.4" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 1.6 L8.6 5 L0 8.4 z" fill="#5E6A5F"/>
+          </marker>
+          <marker id="ahb" viewBox="0 0 10 10" refX="8.4" refY="5" markerWidth="5.4" markerHeight="5.4" orient="auto-start-reverse">
+            <path d="M0 1.8 L8.4 5 L0 8.2 z" fill="#4C554C"/>
+          </marker>
+        </defs>
+
+        <!-- forward edges -->
+        <path class="edge" d="M134,152 C158,152 152,30 176,30" marker-end="url(#ah)"/>
+        <path class="edge" d="M134,174 L176,174" marker-end="url(#ah)"/>
+        <path class="edge" d="M134,192 C156,192 154,248 176,248" marker-end="url(#ah)"/>
+        <path class="edge" d="M71,204 C71,322 118,322 176,322" marker-end="url(#ah)"/>
+        <path class="edge" d="M302,30 L344,30" marker-end="url(#ah)"/>
+        <path class="edge" d="M302,164 L344,164" marker-end="url(#ah)"/>
+
+        <!-- back edges -->
+        <path class="edge back" d="M176,48 C152,48 158,166 134,166" marker-end="url(#ahb)"/>
+        <path class="edge back" d="M176,186 L134,186" marker-end="url(#ahb)"/>
+        <path class="edge back" d="M176,262 C152,262 158,203 134,203" marker-end="url(#ahb)"/>
+        <path class="edge back" d="M344,48 L302,48" marker-end="url(#ahb)"/>
+        <path class="edge back" d="M344,182 L302,182" marker-end="url(#ahb)"/>
+
+        <!-- nodes -->
+        <g class="node" data-node="ready" tabindex="0" role="button" aria-label="Go to Habit Detail ready state">
+          <rect x="8" y="140" width="126" height="64" rx="11"/>
+          <text x="71" y="167" text-anchor="middle">Habit Detail</text>
+          <text x="71" y="183" text-anchor="middle" class="sub">READY</text>
+        </g>
+        <g class="node" data-node="history" tabindex="0" role="button" aria-label="Go to History">
+          <rect x="176" y="8" width="126" height="44" rx="11"/>
+          <text x="239" y="35" text-anchor="middle">History</text>
+        </g>
+        <g class="node" data-node="day" tabindex="0" role="button" aria-label="Go to Day Detail">
+          <rect x="344" y="8" width="126" height="44" rx="11"/>
+          <text x="407" y="35" text-anchor="middle">Day Detail</text>
+        </g>
+        <g class="node" data-node="analytics" tabindex="0" role="button" aria-label="Go to Analytics">
+          <rect x="176" y="142" width="126" height="44" rx="11"/>
+          <text x="239" y="169" text-anchor="middle">Analytics</text>
+        </g>
+        <g class="node" data-node="insight" tabindex="0" role="button" aria-label="Go to Insight Detail">
+          <rect x="344" y="142" width="126" height="44" rx="11"/>
+          <text x="407" y="169" text-anchor="middle">Insight Detail</text>
+        </g>
+        <g class="node" data-node="completed" tabindex="0" role="button" aria-label="Go to completed state">
+          <rect x="176" y="226" width="126" height="44" rx="11"/>
+          <text x="239" y="253" text-anchor="middle">Completed today</text>
+        </g>
+        <g class="node" data-node="recovery" tabindex="0" role="button" aria-label="Go to recovery state">
+          <rect x="176" y="300" width="126" height="44" rx="11"/>
+          <text x="239" y="327" text-anchor="middle">Recovery</text>
+        </g>
+      </svg>
+      <div class="flow-legend">
+        <span class="k"><span class="line"></span> Forward route</span>
+        <span class="k"><span class="line dash"></span> Back path</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Routes</h2>
+      <table class="routes">
+        <thead>
+          <tr><th>From</th><th>Action</th><th>To</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="from">Habit Detail</td><td class="label">View history</td><td class="to">History</td></tr>
+          <tr><td class="from">History</td><td class="label">Tap a logged date</td><td class="to">Day Detail</td></tr>
+          <tr><td class="from">Day Detail</td><td class="label">Back</td><td class="to">History</td></tr>
+          <tr><td class="from">History</td><td class="label">Back</td><td class="to">Habit Detail</td></tr>
+          <tr><td class="from">Habit Detail</td><td class="label">View analytics</td><td class="to">Analytics</td></tr>
+          <tr><td class="from">Analytics</td><td class="label">Tap an evidence insight</td><td class="to">Insight Detail</td></tr>
+          <tr><td class="from">Insight Detail</td><td class="label">Back</td><td class="to">Analytics</td></tr>
+          <tr><td class="from">Analytics</td><td class="label">Back</td><td class="to">Habit Detail</td></tr>
+          <tr><td class="from">Habit Detail</td><td class="label">Complete today</td><td class="to">Completed state</td></tr>
+          <tr><td class="from">Completed state</td><td class="label">Undo / Add a note</td><td class="to">Habit Detail</td></tr>
+          <tr><td class="from">Habit Detail</td><td class="label">After a miss</td><td class="to">Recovery state</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h2>Who owns what</h2>
+      <div class="own">
+        <div class="o">
+          <h3>Home / Today</h3>
+          <p>Owns <span class="owns">fast check-off</span>. A person who just wants to tick the box never has to open Detail.</p>
+        </div>
+        <div class="o is-detail">
+          <h3>Habit Detail</h3>
+          <p>Owns <span class="owns">the current action, one small trustworthy snapshot, and calm recovery</span>. It is a recommitment surface: name, why, strength dial, one primary action, this week, and two doors out. Past-date editing deliberately does not live here.</p>
+        </div>
+        <div class="o">
+          <h3>History</h3>
+          <p>Owns <span class="owns">the record</span> — every date, note, and correction. This is the only place a past day can be edited, which keeps Detail focused on today.</p>
+        </div>
+        <div class="o">
+          <h3>Analytics</h3>
+          <p>Owns <span class="owns">patterns and their evidence</span>. Each insight is tappable so the claim can be audited against the logged dates behind it.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Design notes</h2>
+      <ul class="notes-list">
+        <li><strong>Amber is reserved.</strong> The warm amber panel appears only in the recovery state, so its presence itself carries meaning.</li>
+        <li><strong>The rows never move.</strong> The action area is a fixed-height slot in all three Detail states, so History and Analytics stay in exactly the same place whether or not today is complete.</li>
+        <li><strong>The dial is a snapshot, not a rank.</strong> It reads <em>42 · Building</em> with no percentage sign, no leaderboard, and no comparison to other people.</li>
+        <li><strong>Calendar states are legible without colour.</strong> Filled disc, dashed ring, solid ring, and flat fill distinguish completed, no entry, today, and upcoming — with a legend below.</li>
+        <li><strong>No rest days, no streak shaming.</strong> A miss is described factually and answered with a smaller version of the habit.</li>
+        <li><strong>Insights are auditable.</strong> Every insight row opens a screen showing the counts and dates behind it, plus an explicit note that a pattern is not a cause.</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* =========================================================
+     Data — one coherent record so every screen agrees
+     Today is Saturday, 15 August 2026.
+     ========================================================= */
+
+  var TODAY = { y: 2026, m: 8, d: 15 };
+
+  var MONTHS = {
+    "2026-07": {
+      label: "July 2026",
+      days: 31,
+      firstDow: 2,               // 1 Jul 2026 is a Wednesday (Mon = 0)
+      done:  [1,2,4,5,6,7,8,9,10,13,14,15,16,17,18,20,21,22,23,24,25,27,28,29,30,31],
+      miss:  [3,11,12,19,26],
+      notes: { 20: "Back to the full routine after the trip.", 13: "Two minutes only. Counted it." },
+      times: {}
+    },
+    "2026-08": {
+      label: "August 2026",
+      days: 31,
+      firstDow: 5,               // 1 Aug 2026 is a Saturday
+      done:  [1,2,3,4,6,7,8,10,11,12,13,14],
+      miss:  [5,9],
+      notes: {
+        14: "Short one before an early call.",
+        12: "Ten minutes of stretching before coffee. Easier than yesterday.",
+        10: "Did the two-minute version. Still counts.",
+        9:  "Travel day.",
+        7:  "Cold morning, so I moved it indoors."
+      },
+      times: { 14: "6:58 AM", 13: "7:21 AM", 12: "7:06 AM", 11: "7:12 AM", 10: "7:40 AM",
+               8: "7:03 AM", 7: "7:34 AM", 6: "6:52 AM", 4: "7:15 AM", 3: "7:28 AM",
+               2: "8:10 AM", 1: "8:22 AM" }
+    }
+  };
+
+  var MONTH_ORDER = ["2026-07", "2026-08"];
+  var DOW_FULL = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+  var MON_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+  /* today's own record, mutated by Complete / Undo */
+  var todayRecord = { done: false, time: "7:14 AM", note: "" };
+
+  var DETAIL_STATES = {
+    ready: {
+      dial: 42, band: "Building",
+      week: ["done","done","done","done","done","today","future"],
+      foot: "<strong>5 days</strong> logged",
+      insight: "Across <strong>39 logged check-ins</strong>, the ones before 8:00 AM are the most consistent."
+    },
+    completed: {
+      dial: 42, band: "Building",
+      week: ["done","done","done","done","done","done","future"],
+      foot: "<strong>6 days</strong> logged<br>today at 7:14 AM",
+      insight: "Across <strong>39 logged check-ins</strong>, the ones before 8:00 AM are the most consistent."
+    },
+    recovery: {
+      dial: 39, band: "Building",
+      week: ["done","done","done","done","miss","today","future"],
+      foot: "<strong>4 days</strong> logged",
+      insight: "In your log, <strong>4 missed days</strong> were followed by a check-in the next day."
+    }
+  };
+
+  var WEEK_DATES = [10, 11, 12, 13, 14, 15, 16];
+  var WEEK_LETTERS = ["M", "T", "W", "T", "F", "S", "S"];
+
+  var WEEKLY = {
+    title: "Days logged each week",
+    sub: "Last 8 weeks · 39 check-ins",
+    max: 7,
+    ticks: [0, 2, 4, 6],
+    unit: "",
+    foot: "Based on days you logged. A week with no check-ins shows as zero — nothing is estimated or filled in for you.",
+    bars: [
+      { label: "Jun 22", value: 5 }, { label: "Jun 29", value: 5 },
+      { label: "Jul 6",  value: 4 }, { label: "Jul 13", value: 6 },
+      { label: "Jul 20", value: 4 }, { label: "Jul 27", value: 5 },
+      { label: "Aug 3",  value: 5 }, { label: "Aug 10", value: 5, partial: true }
+    ]
+  };
+
+  var MONTHLY = {
+    title: "Share of days logged each month",
+    sub: "Last 6 months",
+    max: 100,
+    ticks: [0, 25, 50, 75, 100],
+    unit: "%",
+    foot: "Based on days you logged, out of the days the habit was scheduled. August counts only the days that have happened so far.",
+    bars: [
+      { label: "Mar", value: 48 }, { label: "Apr", value: 55 },
+      { label: "May", value: 61 }, { label: "Jun", value: 58 },
+      { label: "Jul", value: 84 }, { label: "Aug", value: 86, partial: true }
+    ]
+  };
+
+  var INSIGHTS = [
+    {
+      id: "weekday",
+      icon: "calendar",
+      title: "Morning check-ins are more consistent on weekdays.",
+      sub: "39 logged check-ins over the last 8 weeks",
+      body: "Over the last 8 weeks you logged <strong>29 of 40 weekdays</strong> and <strong>10 of 16 weekend days</strong>. That is a real gap in the record: about 73% on weekdays against 63% on Saturdays and Sundays. It describes what you logged — it does not explain why the weekend is different for you.",
+      evidenceTitle: "Days logged by weekday",
+      evidenceSub: "Out of 8 opportunities each",
+      chart: {
+        max: 8, ticks: [0, 2, 4, 6, 8], unit: "",
+        bars: [
+          { label: "M", value: 7 }, { label: "T", value: 7 }, { label: "W", value: 6 },
+          { label: "T", value: 5 }, { label: "F", value: 4 },
+          { label: "S", value: 5 }, { label: "S", value: 5 }
+        ]
+      },
+      statA: { v: "29 / 40", k: "Weekdays logged" },
+      statB: { v: "10 / 16", k: "Weekend days logged" },
+      step: "If the weekend is the harder part, you could keep a shorter Saturday and Sunday version. Optional — the record stays yours either way."
+    },
+    {
+      id: "friday",
+      icon: "chart",
+      title: "Friday is the weekday you log least often.",
+      sub: "Logged 4 of the last 8 Fridays",
+      body: "You logged <strong>4 of the last 8 Fridays</strong>, the lowest of any weekday. Mondays and Tuesdays sit at 7 of 8. Two of the four unlogged Fridays were <strong>August 14</strong> and <strong>July 3</strong>. This is a count from your log, not a judgement about your week.",
+      evidenceTitle: "Fridays over the last 8 weeks",
+      evidenceSub: "Each bar is one Friday · 1 = logged",
+      chart: {
+        max: 1, ticks: [0, 1], unit: "",
+        bars: [
+          { label: "Jun 26", value: 1 }, { label: "Jul 3", value: 0 }, { label: "Jul 10", value: 1 },
+          { label: "Jul 17", value: 1 }, { label: "Jul 24", value: 0 }, { label: "Jul 31", value: 0 },
+          { label: "Aug 7", value: 1 }, { label: "Aug 14", value: 0, partial: true }
+        ]
+      },
+      statA: { v: "4 / 8", k: "Fridays logged" },
+      statB: { v: "7 / 8", k: "Mondays logged" },
+      step: "One option is to decide on Thursday what Friday's version looks like. Only if that sounds useful."
+    },
+    {
+      id: "early",
+      icon: "clock",
+      title: "Most of your check-ins happen before 8:00 AM.",
+      sub: "31 of 39 logged check-ins",
+      body: "Of your <strong>39 logged check-ins</strong>, <strong>31 were before 8:00 AM</strong> and 8 were later. The earliest was 6:52 AM on August 6; the latest was 8:22 AM on August 1. Timing is recorded when you tap, so this reflects when you logged, which may not be exactly when you moved.",
+      evidenceTitle: "Check-ins by time of day",
+      evidenceSub: "39 logged check-ins",
+      chart: {
+        max: 16, ticks: [0, 4, 8, 12, 16], unit: "",
+        bars: [
+          { label: "6–7", value: 11 }, { label: "7–8", value: 20 },
+          { label: "8–9", value: 6 }, { label: "9+", value: 2 }
+        ]
+      },
+      statA: { v: "31", k: "Before 8:00 AM" },
+      statB: { v: "8", k: "After 8:00 AM" },
+      step: "Your log leans early. If a morning gets away from you, the two-minute version is still a logged day."
+    }
+  ];
+
+  /* =========================================================
+     Elements
+     ========================================================= */
+
+  var $  = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  var screensEl = $("#screens");
+  var readoutEl = $("#readout");
+  var detailEl  = $("#s-detail");
+
+  var SCREEN_OF = {
+    ready: "s-detail", completed: "s-detail", recovery: "s-detail",
+    history: "s-history", day: "s-day", analytics: "s-analytics", insight: "s-insight"
+  };
+  var READOUT_OF = {
+    ready: "Habit Detail · ready",
+    completed: "Habit Detail · completed today",
+    recovery: "Habit Detail · recovery",
+    history: "History",
+    day: "Day Detail",
+    analytics: "Analytics",
+    insight: "Insight Detail"
+  };
+
+  var route = "ready";
+  var stack = [];
+  var currentMonth = "2026-08";
+  var currentDay = null;        // { key, day }
+  var currentRange = "weekly";
+  var currentInsight = INSIGHTS[0];
+
+  /* =========================================================
+     Navigation
+     ========================================================= */
+
+  function show(next, dir) {
+    screensEl.setAttribute("data-dir", dir || "push");
+    route = next;
+    $$(".screen").forEach(function (s) { s.classList.remove("is-active"); });
+    var el = document.getElementById(SCREEN_OF[next]);
+    el.classList.add("is-active");
+    el.querySelector(".scroll").scrollTop = 0;
+    readoutEl.textContent = READOUT_OF[next];
+    $$(".flow .node").forEach(function (n) {
+      n.classList.toggle("is-current", n.getAttribute("data-node") === next);
+    });
+  }
+
+  function go(next) {
+    if (next === route) return;
+    stack.push(route);
+    show(next, "push");
+  }
+
+  function back() {
+    var prev = stack.pop() || "ready";
+    show(prev, "pop");
+  }
+
+  /* jumping from the flow map should not build a fake history */
+  function jump(next) {
+    stack = (next === "ready" || next === "completed" || next === "recovery") ? []
+          : (next === "day") ? ["ready", "history"]
+          : (next === "insight") ? ["ready", "analytics"]
+          : ["ready"];
+    if (next === "completed") setDetailState("completed", true);
+    else if (next === "recovery") setDetailState("recovery", true);
+    else if (next === "ready") setDetailState("ready", true);
+    if (next === "day") openDay("2026-08", 12, true);
+    if (next === "insight") openInsight(INSIGHTS[0], true);
+    show(next, "push");
+  }
+
+  /* =========================================================
+     Habit Detail
+     ========================================================= */
+
+  var DIAL_C = 60, DIAL_R = 49;
+  var CIRC = 2 * Math.PI * DIAL_R;
+
+  function setDial(value) {
+    var pct = Math.max(0, Math.min(100, value)) / 100;
+    var arc = $("#dialArc");
+    arc.setAttribute("stroke-dasharray", CIRC.toFixed(2));
+    arc.setAttribute("stroke-dashoffset", (CIRC * (1 - pct)).toFixed(2));
+    var angle = (-90 + pct * 360) * Math.PI / 180;
+    var dot = $("#dialDot");
+    dot.setAttribute("cx", (DIAL_C + DIAL_R * Math.cos(angle)).toFixed(2));
+    dot.setAttribute("cy", (DIAL_C + DIAL_R * Math.sin(angle)).toFixed(2));
+  }
+
+  var PIP_GLYPH = {
+    done: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+    miss: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 12h12"/></svg>',
+    today: "",
+    future: ""
+  };
+
+  function renderWeek(states) {
+    var html = states.map(function (st, i) {
+      var isToday = i === 5;
+      return '<div class="week-day' + (isToday ? " is-today" : "") + '">' +
+               '<span class="dow">' + WEEK_LETTERS[i] + '</span>' +
+               '<span class="pip ' + st + '">' + PIP_GLYPH[st] + '</span>' +
+               '<span class="num">' + WEEK_DATES[i] + '</span>' +
+             '</div>';
+    }).join("");
+    $("#weekGrid").innerHTML = html;
+  }
+
+  function setDetailState(name, silent) {
+    var cfg = DETAIL_STATES[name];
+    detailEl.setAttribute("data-detail", name);
+
+    setDial(cfg.dial);
+    $("#dialValue").textContent = cfg.dial;
+    $("#dialBand").textContent = cfg.band;
+    renderWeek(cfg.week);
+    $("#weekFoot").innerHTML = cfg.foot;
+    $("#detailInsight").innerHTML = cfg.insight;
+
+    var isRecovery = name === "recovery";
+    var isCompleted = name === "completed";
+
+    $("#whyCard").hidden = isRecovery;
+    $("#recoveryPanel").hidden = !isRecovery;
+
+    var primary = $("#primaryBtn");
+    if (isCompleted) {
+      primary.className = "btn-done";
+      primary.removeAttribute("data-act");
+      $("#primaryLabel").textContent = "Completed today";
+    } else {
+      primary.className = "btn-primary";
+      primary.setAttribute("data-act", "complete");
+      $("#primaryLabel").textContent = isRecovery ? "Do the two-minute version" : "Complete today";
+    }
+
+    $("#actionNote").hidden = isCompleted;
+    $("#actionPair").hidden = !isCompleted;
+    $("#actionNote").textContent = isRecovery
+      ? "Counts the same as a full session."
+      : "Logs today’s date. You can undo anytime.";
+
+    $("#noteTodayLabel").textContent = todayRecord.note ? "Edit note" : "Add a note";
+
+    if (!silent) {
+      readoutEl.textContent = READOUT_OF[name];
+      route = name;
+      $$(".flow .node").forEach(function (n) {
+        n.classList.toggle("is-current", n.getAttribute("data-node") === name);
+      });
+    }
+  }
+
+  /* =========================================================
+     History
+     ========================================================= */
+
+  function dayState(key, day) {
+    var m = MONTHS[key];
+    var parts = key.split("-");
+    var year = +parts[0], month = +parts[1];
+    if (year === TODAY.y && month === TODAY.m) {
+      if (day === TODAY.d) return todayRecord.done ? "done" : "today";
+      if (day > TODAY.d) return "future";
+    }
+    if (m.done.indexOf(day) !== -1) return "done";
+    return "miss";
+  }
+
+  function noteFor(key, day) {
+    if (key === "2026-08" && day === TODAY.d) return todayRecord.note;
+    return MONTHS[key].notes[day] || "";
+  }
+
+  function timeFor(key, day) {
+    if (key === "2026-08" && day === TODAY.d) return todayRecord.time;
+    return MONTHS[key].times[day] || "7:18 AM";
+  }
+
+  function renderCalendar() {
+    var m = MONTHS[currentMonth];
+    $("#monthLabel").textContent = m.label;
+
+    var cells = [];
+    for (var b = 0; b < m.firstDow; b++) cells.push('<span class="cell empty"></span>');
+    for (var d = 1; d <= m.days; d++) {
+      var st = dayState(currentMonth, d);
+      var disabled = st === "future" ? " disabled" : "";
+      var isToday = currentMonth === "2026-08" && d === TODAY.d;
+      var cls = "cell " + st + (isToday && st === "done" ? " today" : "");
+      cells.push(
+        '<button class="' + cls + '" data-day="' + d + '"' + disabled +
+        ' aria-label="' + d + " " + m.label + ", " +
+        (st === "done" ? "completed" : st === "miss" ? "no entry" : st === "today" ? "today, not logged" : "upcoming") +
+        '">' + d + "</button>"
+      );
+    }
+    $("#calGrid").innerHTML = cells.join("");
+
+    var i = MONTH_ORDER.indexOf(currentMonth);
+    $("#prevMonth").disabled = i <= 0;
+    $("#nextMonth").disabled = i >= MONTH_ORDER.length - 1;
+
+    renderEntries();
+  }
+
+  var MARK = {
+    done: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+    miss: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 12h12"/></svg>'
+  };
+
+  function renderEntries() {
+    var m = MONTHS[currentMonth];
+    var parts = currentMonth.split("-");
+    var last = (+parts[0] === TODAY.y && +parts[1] === TODAY.m) ? TODAY.d : m.days;
+    var rows = [];
+    for (var d = last; d >= 1; d--) {
+      var st = dayState(currentMonth, d);
+      if (st === "today" || st === "future") continue;
+      var note = noteFor(currentMonth, d);
+      var dow = DOW_FULL[(m.firstDow + d - 1) % 7].slice(0, 3);
+      rows.push(
+        '<button class="entry" data-day="' + d + '">' +
+          '<span class="mark ' + st + '">' + MARK[st] + "</span>" +
+          '<span class="body">' +
+            '<span class="d">' + dow + ", " + MON_SHORT[+parts[1] - 1] + " " + d +
+              '<span class="state">' + (st === "done" ? "Completed · " + timeFor(currentMonth, d) : "No entry") + "</span>" +
+            "</span>" +
+            (note ? '<span class="note">“' + note + '”</span>' : "") +
+          "</span>" +
+          '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +
+        "</button>"
+      );
+    }
+    $("#entryList").innerHTML = rows.join("");
+  }
+
+  /* =========================================================
+     Day Detail
+     ========================================================= */
+
+  /* last day of a month that can hold a record — today, for the current month */
+  function lastLoggable(key) {
+    var p = key.split("-");
+    return (+p[0] === TODAY.y && +p[1] === TODAY.m) ? TODAY.d : MONTHS[key].days;
+  }
+
+  function prevOf(key, day) {
+    if (day > 1) return { key: key, day: day - 1 };
+    var i = MONTH_ORDER.indexOf(key) - 1;
+    return i >= 0 ? { key: MONTH_ORDER[i], day: MONTHS[MONTH_ORDER[i]].days } : null;
+  }
+
+  function nextOf(key, day) {
+    if (day < lastLoggable(key)) return { key: key, day: day + 1 };
+    var i = MONTH_ORDER.indexOf(key) + 1;
+    return i < MONTH_ORDER.length ? { key: MONTH_ORDER[i], day: 1 } : null;
+  }
+
+  function shortDate(ref) {
+    var m = MONTHS[ref.key];
+    var mi = +ref.key.split("-")[1] - 1;
+    return DOW_FULL[(m.firstDow + ref.day - 1) % 7].slice(0, 3) + ", " + MON_SHORT[mi] + " " + ref.day;
+  }
+
+  function renderDayStep(key, day) {
+    var prev = prevOf(key, day), next = nextOf(key, day);
+    $("#dayPrev").disabled = !prev;
+    $("#dayNext").disabled = !next;
+    $("#dayPrevLabel").textContent = prev ? shortDate(prev) : "Start of record";
+    $("#dayNextLabel").textContent = next ? shortDate(next) : "Today";
+  }
+
+  function stepDay(dir) {
+    if (!currentDay) return;
+    var ref = dir < 0 ? prevOf(currentDay.key, currentDay.day) : nextOf(currentDay.key, currentDay.day);
+    if (!ref) return;
+    if (ref.key !== currentMonth) { currentMonth = ref.key; renderCalendar(); }
+    openDay(ref.key, ref.day, true);
+    var sc = $("#s-day .scroll");
+    sc.scrollTop = 0;
+  }
+
+  function openDay(key, day, silent) {
+    currentDay = { key: key, day: day };
+    var m = MONTHS[key];
+    var parts = key.split("-");
+    var st = dayState(key, day);
+    var dow = DOW_FULL[(m.firstDow + day - 1) % 7];
+    var monthName = m.label.split(" ")[0];
+
+    $("#dayTitle").textContent = dow + ", " + monthName + " " + day;
+
+    var diff = null;
+    if (+parts[1] === TODAY.m) diff = TODAY.d - day;
+    else if (+parts[1] === TODAY.m - 1) diff = TODAY.d + (m.days - day);
+    $("#dayRel").textContent =
+      diff === 0 ? "Today" : diff === 1 ? "Yesterday" : diff > 1 ? diff + " days ago" : "";
+
+    var isDone = st === "done";
+    var badge = $("#dayBadge");
+    badge.className = "badge " + (isDone ? "done" : "miss");
+    badge.innerHTML = isDone
+      ? '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
+      : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 12h12"/></svg>';
+
+    var isToday = st === "today";
+    $("#dayStatus").textContent = isDone ? "Completed" : isToday ? "Not logged yet" : "No entry";
+    $("#dayTime").textContent = isDone
+      ? "Logged at " + timeFor(key, day)
+      : isToday
+        ? "Today is still open. You can log it here or from the habit."
+        : "Nothing was recorded for this day.";
+
+    var note = noteFor(key, day);
+    var noteEl = $("#dayNote");
+    noteEl.className = note ? "note-body" : "note-empty";
+    noteEl.textContent = note ? "“" + note + "”" : "No note for this day.";
+
+    $("#dayNoteBtnLabel").textContent = note ? "Edit note" : "Add a note";
+    $("#dayToggleLabel").textContent = isDone ? "Undo completion" : "Mark as completed";
+    $("#dayToggleIcon").innerHTML = isDone
+      ? '<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>'
+      : '<path d="M20 6 9 17l-5-5"/>';
+    $("#dayToggleBtn").classList.toggle("destructive", isDone);
+    renderDayStep(key, day);
+
+    if (!silent) go("day");
+  }
+
+  function toggleDay() {
+    if (!currentDay) return;
+    var key = currentDay.key, day = currentDay.day;
+    var m = MONTHS[key];
+    if (key === "2026-08" && day === TODAY.d) {
+      todayRecord.done = !todayRecord.done;
+    } else {
+      var i = m.done.indexOf(day);
+      if (i === -1) { m.done.push(day); m.miss = m.miss.filter(function (x) { return x !== day; }); }
+      else { m.done.splice(i, 1); m.miss.push(day); }
+    }
+    openDay(key, day, true);
+    renderCalendar();
+  }
+
+  /* =========================================================
+     Charts
+     ========================================================= */
+
+  function barChart(cfg) {
+    var hasPartial = cfg.bars.some(function (b) { return b.partial; });
+    /* leave room for the widest y-axis label, e.g. "100%" */
+    var tickW = Math.max.apply(null, cfg.ticks.map(function (t) { return String(t + (cfg.unit || "")).length; }));
+    var W = 337, padR = 4, padT = 16;
+    var padL = Math.max(22, 10 + tickW * 6);
+    var padB = hasPartial ? 44 : 30;          /* room for the "in progress" key */
+    var innerH = 130;
+    var H = padT + innerH + padB;
+    var innerW = W - padL - padR;
+    var n = cfg.bars.length;
+    var slot = innerW / n;
+    var bw = Math.min(30, slot * 0.56);
+
+    var svg = ['<svg viewBox="0 0 ' + W + " " + H + '" width="100%" role="img" aria-label="' +
+               (cfg.aria || "Bar chart of logged check-ins") + '">'];
+
+    svg.push('<defs><linearGradient id="barG" x1="0" y1="0" x2="0" y2="1">' +
+             '<stop offset="0%" stop-color="#149C6F"/><stop offset="100%" stop-color="#0C7C59"/></linearGradient>' +
+             '<pattern id="barP" width="5" height="5" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">' +
+             '<rect width="5" height="5" fill="#CFE3D8"/><line x1="0" y1="0" x2="0" y2="5" stroke="#0C7C59" stroke-opacity=".55" stroke-width="2"/>' +
+             "</pattern></defs>");
+
+    /* gridlines + y labels */
+    cfg.ticks.forEach(function (t) {
+      var y = padT + innerH - (t / cfg.max) * innerH;
+      svg.push('<line x1="' + padL + '" y1="' + y.toFixed(1) + '" x2="' + (W - padR) +
+               '" y2="' + y.toFixed(1) + '" stroke="' + (t === 0 ? "#DFD8CD" : "#F0EBE4") + '" stroke-width="1"/>');
+      svg.push('<text x="' + (padL - 7) + '" y="' + (y + 3.6).toFixed(1) +
+               '" text-anchor="end" font-family="DM Sans, sans-serif" font-size="9.5" fill="#ADAA9F">' +
+               t + (cfg.unit || "") + "</text>");
+    });
+
+    cfg.bars.forEach(function (b, i) {
+      var x = padL + slot * i + (slot - bw) / 2;
+      var h = Math.max(2.5, (b.value / cfg.max) * innerH);
+      var y = padT + innerH - h;
+      svg.push('<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + bw.toFixed(1) +
+               '" height="' + h.toFixed(1) + '" rx="' + Math.min(5, bw / 2).toFixed(1) +
+               '" fill="' + (b.partial ? "url(#barP)" : "url(#barG)") + '"/>');
+      /* value above the bar */
+      svg.push('<text x="' + (x + bw / 2).toFixed(1) + '" y="' + (y - 5).toFixed(1) +
+               '" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" font-weight="600" fill="#4A544C">' +
+               b.value + (cfg.unit || "") + "</text>");
+      /* x label */
+      svg.push('<text x="' + (x + bw / 2).toFixed(1) + '" y="' + (padT + innerH + 15) +
+               '" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9.5" fill="#7D867E">' +
+               b.label + "</text>");
+    });
+
+    if (hasPartial) {
+      var ky = padT + innerH + 36;
+      svg.push('<rect x="' + (W - padR - 118) + '" y="' + (ky - 7) +
+               '" width="9" height="9" rx="2" fill="url(#barP)"/>');
+      svg.push('<text x="' + (W - padR - 105) + '" y="' + ky +
+               '" font-family="DM Sans, sans-serif" font-size="9.5" fill="#ADAA9F">' +
+               "still in progress</text>");
+    }
+
+    svg.push("</svg>");
+    return svg.join("");
+  }
+
+  function renderAnalytics() {
+    var cfg = currentRange === "weekly" ? WEEKLY : MONTHLY;
+    $("#chartTitle").textContent = cfg.title;
+    $("#chartSub").textContent = cfg.sub;
+    $("#chartFoot").textContent = cfg.foot;
+    $("#chartHost").innerHTML = barChart(cfg);
+    $("#tabWeekly").setAttribute("aria-selected", String(currentRange === "weekly"));
+    $("#tabMonthly").setAttribute("aria-selected", String(currentRange === "monthly"));
+  }
+
+  var INSIGHT_ICON = {
+    calendar: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="3"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg>',
+    chart: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16.5A1.5 1.5 0 0 0 4.5 21H21"/><path d="m7 15 4-4 3 3 5-6"/></svg>',
+    clock: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.2 2"/></svg>'
+  };
+
+  function renderInsightList() {
+    $("#insightList").innerHTML = INSIGHTS.map(function (ins) {
+      return '<button class="row" data-insight="' + ins.id + '">' +
+               '<span class="tile">' + INSIGHT_ICON[ins.icon] + "</span>" +
+               '<span class="row-text">' +
+                 '<span class="row-title" style="font-size:14.5px">' + ins.title + "</span>" +
+                 '<span class="row-sub">' + ins.sub + "</span>" +
+               "</span>" +
+               '<svg class="chev" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +
+             "</button>";
+    }).join("");
+  }
+
+  function openInsight(ins, silent) {
+    currentInsight = ins;
+    $("#insightTitle").textContent = ins.title;
+    $("#insightBody").innerHTML = ins.body;
+    $("#evidenceTitle").textContent = ins.evidenceTitle;
+    $("#evidenceSub").textContent = ins.evidenceSub;
+    $("#evidenceHost").innerHTML = barChart(ins.chart);
+    $("#statAV").textContent = ins.statA.v;
+    $("#statAK").textContent = ins.statA.k;
+    $("#statBV").textContent = ins.statB.v;
+    $("#statBK").textContent = ins.statB.k;
+    $("#insightStep").textContent = ins.step;
+    if (!silent) go("insight");
+  }
+
+  /* =========================================================
+     Note sheet
+     ========================================================= */
+
+  var sheetTarget = null;   // "today" | "day"
+
+  function openSheet(target) {
+    sheetTarget = target;
+    var existing = target === "today" ? todayRecord.note : noteFor(currentDay.key, currentDay.day);
+    $("#sheetTitle").textContent = existing ? "Edit note" : "Add a note";
+    $("#sheetHint").textContent = target === "today"
+      ? "Optional. Only you will see this."
+      : "Notes are part of the record for this day.";
+    $("#sheetText").value = existing;
+    $("#noteSheet").classList.add("is-open");
+    $("#sheetScrim").classList.add("is-open");
+    setTimeout(function () { $("#sheetText").focus(); }, 240);
+  }
+
+  function closeSheet() {
+    $("#noteSheet").classList.remove("is-open");
+    $("#sheetScrim").classList.remove("is-open");
+  }
+
+  function saveSheet() {
+    var text = $("#sheetText").value.trim();
+    if (sheetTarget === "today") {
+      todayRecord.note = text;
+      $("#noteTodayLabel").textContent = text ? "Edit note" : "Add a note";
+    } else if (currentDay) {
+      MONTHS[currentDay.key].notes[currentDay.day] = text;
+      if (!text) delete MONTHS[currentDay.key].notes[currentDay.day];
+      openDay(currentDay.key, currentDay.day, true);
+      renderEntries();
+    }
+    closeSheet();
+  }
+
+  /* =========================================================
+     Wiring
+     ========================================================= */
+
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest("button, [data-node]");
+    if (!t) return;
+
+    if (t.hasAttribute("data-back")) { back(); return; }
+    if (t.hasAttribute("data-go"))   { go(t.getAttribute("data-go")); return; }
+
+    var act = t.getAttribute("data-act");
+    if (act === "complete") {
+      todayRecord.done = true;
+      setDetailState("completed");
+      renderCalendar();
+      return;
+    }
+    if (act === "undo") {
+      todayRecord.done = false;
+      todayRecord.note = "";
+      setDetailState("ready");
+      renderCalendar();
+      return;
+    }
+    if (act === "note-today") { openSheet("today"); return; }
+
+    if (t.classList.contains("cell") && !t.disabled) {
+      openDay(currentMonth, +t.getAttribute("data-day"));
+      return;
+    }
+    if (t.classList.contains("entry")) {
+      openDay(currentMonth, +t.getAttribute("data-day"));
+      return;
+    }
+    if (t.hasAttribute("data-insight")) {
+      var id = t.getAttribute("data-insight");
+      openInsight(INSIGHTS.filter(function (x) { return x.id === id; })[0]);
+      return;
+    }
+    if (t.hasAttribute("data-range")) {
+      currentRange = t.getAttribute("data-range");
+      renderAnalytics();
+      return;
+    }
+    if (t.id === "prevMonth" || t.id === "nextMonth") {
+      var i = MONTH_ORDER.indexOf(currentMonth) + (t.id === "prevMonth" ? -1 : 1);
+      if (i >= 0 && i < MONTH_ORDER.length) { currentMonth = MONTH_ORDER[i]; renderCalendar(); }
+      return;
+    }
+    if (t.id === "dayNoteBtn")   { openSheet("day"); return; }
+    if (t.id === "dayToggleBtn") { toggleDay(); return; }
+    if (t.id === "dayPrev")      { stepDay(-1); return; }
+    if (t.id === "dayNext")      { stepDay(1); return; }
+    if (t.id === "sheetCancel")  { closeSheet(); return; }
+    if (t.id === "sheetSave")    { saveSheet(); return; }
+
+    var node = t.closest(".node");
+    if (node) { jump(node.getAttribute("data-node")); return; }
+  });
+
+  $("#sheetScrim").addEventListener("click", closeSheet);
+
+  $$(".flow .node").forEach(function (n) {
+    n.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); jump(n.getAttribute("data-node")); }
+    });
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeSheet();
+  });
+
+  /* boot */
+  setDetailState("ready", true);
+  renderCalendar();
+  renderAnalytics();
+  renderInsightList();
+  openInsight(INSIGHTS[0], true);
+  openDay("2026-08", 12, true);
+  show("ready", "push");
+})();
+</script>
+
+</body>
+</html>
