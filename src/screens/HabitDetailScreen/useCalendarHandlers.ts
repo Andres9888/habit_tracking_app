@@ -15,6 +15,7 @@ import type { Id } from '../../../convex/_generated/dataModel';
 import { triggerHaptic } from '../../utils/haptics';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import type { Habit } from './HabitDetailScreen.types';
+import { parseDateKeyLocal } from '../../utils/getLocalDateString';
 import { ERROR_MESSAGES } from '../../constants/errorMessages';
 import { useSwipeActions } from './useSwipeActions';
 
@@ -53,7 +54,7 @@ export const useCalendarHandlers = ({
     (date: string, wasCompleted: boolean): void => {
       if (togglingRef.current || !habit?._id) return;
 
-      const inputDate = new Date(date);
+      const inputDate = parseDateKeyLocal(date);
       const todayDate = new Date();
       inputDate.setHours(0, 0, 0, 0);
       todayDate.setHours(0, 0, 0, 0);
@@ -63,11 +64,14 @@ export const useCalendarHandlers = ({
       setPendingToggleDate(date);
       void triggerHaptic(wasCompleted ? 'toggle' : 'success');
 
-      const dateFormatted = new Date(date).toLocaleDateString('en-US', {
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric',
-      });
+      const dateFormatted = parseDateKeyLocal(date).toLocaleDateString(
+        'en-US',
+        {
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric',
+        }
+      );
       const newState = wasCompleted ? 'marked incomplete' : 'marked complete';
 
       void toggleHabitMutation({ date, habitId: habit._id })

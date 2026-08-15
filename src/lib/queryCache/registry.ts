@@ -6,7 +6,7 @@ const DEFINITIONS: Record<QueryCacheEntryName, CacheEntryDefinition> = {
     latestFallback: true,
     name: 'analytics.getAnalyticsDashboard',
     storage: 'plain',
-    version: 1,
+    version: 2,
   },
   // Detail data is private and keyed by habit ID. Persist the most recently
   // opened habit for fast reopen/offline access, but never fall back across

@@ -3,10 +3,7 @@
  * Gap-fill growth on completion days, proportional decay on miss days.
  * Calibrated to Lally et al. (2010) asymptotic habit formation curve.
  */
-import type {
-  AlgorithmParams,
-  StrengthAlgorithmMode,
-} from './algorithmConfig';
+import type { AlgorithmParams, StrengthAlgorithmMode } from './algorithmConfig';
 import { getAlgorithmConfig } from './algorithmConfig';
 import { MS_PER_DAY } from './constants';
 import {
@@ -40,11 +37,13 @@ export function calculateNewStrength(
 export function calculateMomentumStrengthSnapshot({
   habitCreatedAt,
   mode,
+  skipDate,
   throughDate,
   tracking,
 }: {
   habitCreatedAt: number;
   mode?: StrengthAlgorithmMode;
+  skipDate?: (dateKey: string) => boolean;
   throughDate?: string;
   tracking: HabitTrackingRecord[];
 }): {
@@ -78,7 +77,7 @@ export function calculateMomentumStrengthSnapshot({
   }
 
   const completionDates = new Set(
-    tracking.flatMap((r) => r.completed ? [r.date] : [])
+    tracking.flatMap((r) => (r.completed ? [r.date] : []))
   );
 
   const daysProcessed =
@@ -94,6 +93,7 @@ export function calculateMomentumStrengthSnapshot({
     cursor = addDays(cursor, 1)
   ) {
     const dateKey = formatDateKey(cursor);
+    if (skipDate?.(dateKey)) continue;
     strength100 = calculateNewStrength(
       strength100,
       completionDates.has(dateKey),
