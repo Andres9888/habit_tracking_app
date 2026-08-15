@@ -17,16 +17,15 @@ function readSource(relativePath: string): string {
 }
 
 describe('colors.light.gradientMid token', () => {
-  it('exists and equals #f5f3f0', () => {
-    expect(colors.light.gradientMid).toBe('#f5f3f0');
+  it('exists and equals #F0EDE8', () => {
+    expect(colors.light.gradientMid).toBe('#F0EDE8');
     expect(colors.light.gradientMid).toBeDefined();
     expect(colors.light.gradientMid).toContain('#');
   });
 
   it('is darker than colors.light.background', () => {
-    // gradientMid (#f5f3f0) should be visually darker than background (#faf9f7)
     expect(colors.light.gradientMid).not.toBe(colors.light.background);
-    expect(colors.light.background).toBeDefined();
+    expect(colors.light.background).toBe('#F5F1ED');
     expect(colors.light.gradientMid).toBeTruthy();
   });
 });
@@ -34,40 +33,37 @@ describe('colors.light.gradientMid token', () => {
 describe('HabitsApp uses theme background', () => {
   const source = readSource('features/habits/HabitsApp.tsx');
 
-  it('imports colors from theme', () => {
-    expect(source).toMatch(/import.*colors.*from.*theme\/colors/);
-    expect(source).toContain('colors');
-    expect(source).toContain('from');
+  it('reads colors from useThemeColors', () => {
+    expect(source).toMatch(/import.*useThemeColors.*from.*ThemeContext/);
   });
 
-  it('uses colors.light.background instead of hardcoded hex', () => {
-    expect(source).toContain('colors.light.background');
+  it('uses the theme background token instead of a hardcoded hex', () => {
+    expect(source).toContain('colors.background');
     expect(source).not.toContain('#FAF8F5');
-    expect(source).toContain('light');
   });
 });
 
 describe('HabitEditScreen uses theme background', () => {
   const source = readSource('screens/HabitEditScreen/HabitEditScreen.tsx');
 
-  it('imports colors from theme', () => {
-    expect(source).toMatch(/import.*colors.*from.*theme\/colors/);
+  it('reads colors from useThemeColors', () => {
+    expect(source).toMatch(/import.*useThemeColors.*from.*ThemeContext/);
   });
 
   it('does not use bg-[#faf9f7] Tailwind class', () => {
     expect(source).not.toContain('bg-[#faf9f7]');
   });
 
-  it('uses colors.light.background style prop', () => {
-    expect(source).toContain('colors.light.background');
+  it('uses a theme surface token', () => {
+    expect(source).toContain('themeColors.surface');
   });
 });
 
 describe('CharacterScreen uses theme background', () => {
   const source = readSource('screens/CharacterScreen/CharacterScreen.tsx');
 
-  it('imports colors from theme', () => {
-    expect(source).toMatch(/import.*colors.*from.*theme\/colors/);
+  it('reads colors from useThemeColors', () => {
+    expect(source).toMatch(/import.*useThemeColors.*from.*ThemeContext/);
   });
 
   it('does not use bg-white class', () => {
@@ -75,31 +71,32 @@ describe('CharacterScreen uses theme background', () => {
     expect(source).not.toContain('bg-white"');
   });
 
-  it('uses colors.light.background style prop', () => {
-    expect(source).toContain('colors.light.background');
+  it('uses the theme background token', () => {
+    expect(source).toContain('colors.background');
   });
 });
 
 // SignUpScreen removed in OAuth-only migration
 
-describe('HabitDetailScreen uses theme gradient tokens', () => {
+describe('HabitDetailScreen uses theme surface tokens', () => {
   const source = readSource('screens/HabitDetailScreen/HabitDetailScreen.tsx');
 
-  it('imports colors from theme', () => {
-    expect(source).toMatch(/import.*colors.*from.*theme\/colors/);
+  it('reads colors from useThemeColors', () => {
+    expect(source).toMatch(/import.*useThemeColors.*from.*theme/);
+    expect(source).toContain('useThemeColors()');
   });
 
-  it('does not hardcode gradient hex values', () => {
+  it('does not hardcode canvas hex values', () => {
     expect(source).not.toMatch(/#faf9f7/i);
     expect(source).not.toMatch(/#f5f3f0/i);
   });
 
-  it('uses colors.light.background in gradient', () => {
-    expect(source).toContain('colors.light.background');
+  it('uses the theme background token for the sheet', () => {
+    expect(source).toContain('colors.background');
   });
 
-  it('uses colors.light.gradientMid in gradient', () => {
-    expect(source).toContain('colors.light.gradientMid');
+  it('uses the overlay scrim behind the sheet', () => {
+    expect(source).toContain('overlays.scrim');
   });
 });
 

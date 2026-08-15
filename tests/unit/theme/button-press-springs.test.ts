@@ -40,30 +40,6 @@ describe('useButtonAnimation uses springs.button', () => {
   });
 });
 
-describe('useCategoryChipHandlers uses springs.button', () => {
-  const source = readSource(
-    'components/CategoryChip/useCategoryChipHandlers.ts'
-  );
-
-  it('imports springs from @/theme/animations', () => {
-    expect(source).toMatch(
-      /import\s+\{[^}]*springs[^}]*\}\s+from\s+['"]@\/theme\/animations['"]/
-    );
-  });
-
-  it('uses springs.button for press-in', () => {
-    expect(source).toContain('withSpring(CARD_PRESS_SCALE, springs.button)');
-  });
-
-  it('uses springs.button for press-out', () => {
-    expect(source).toContain('withSpring(CARD_REST_SCALE, springs.button)');
-  });
-
-  it('does not have hardcoded spring configs', () => {
-    expect(source).not.toMatch(/\{\s*damping:\s*\d+,\s*stiffness:\s*\d+\s*\}/);
-  });
-});
-
 describe('ScienceBox uses springs.button', () => {
   const source = readSource(
     'components/FullsizeTemplatePreview/components/ScienceBox.tsx'

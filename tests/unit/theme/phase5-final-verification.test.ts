@@ -5,7 +5,6 @@
 
 import { colors, milestoneColors } from '@/theme/colors';
 import { REDESIGN_COLORS } from '@/components/HabitCard/HabitCard.colors';
-import { COLORS } from '@/components/StreakIndicator/StreakIndicator.constants';
 
 describe('Phase 5 Final Verification', () => {
   describe('new primary.100 token', () => {
@@ -44,28 +43,6 @@ describe('Phase 5 Final Verification', () => {
 
     it('stone900 is defined', () => {
       expect(milestoneColors.stone900).toBe('#1c1917');
-    });
-  });
-
-  describe('StreakIndicator.constants uses new tokens', () => {
-    it('bestStreakText uses milestoneColors.amber800', () => {
-      expect(COLORS.bestStreakText).toBe(milestoneColors.amber800);
-      expect(COLORS.bestStreakText).toBe('#92400e');
-    });
-
-    it('milestoneBadgeBgUnachieved uses milestoneColors.stone100', () => {
-      expect(COLORS.milestoneBadgeBgUnachieved).toBe(milestoneColors.stone100);
-      expect(COLORS.milestoneBadgeBgUnachieved).toBe('#f5f5f4');
-    });
-
-    it('streakLabel uses milestoneColors.stone600', () => {
-      expect(COLORS.streakLabel).toBe(milestoneColors.stone600);
-      expect(COLORS.streakLabel).toBe('#57534e');
-    });
-
-    it('streakNumber uses milestoneColors.stone900', () => {
-      expect(COLORS.streakNumber).toBe(milestoneColors.stone900);
-      expect(COLORS.streakNumber).toBe('#1c1917');
     });
   });
 

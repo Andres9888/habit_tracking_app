@@ -13,33 +13,32 @@ function readSource(relativePath: string): string {
   return fs.readFileSync(path.join(SRC, relativePath), 'utf-8');
 }
 
-describe('Root-level SentryErrorBoundary (App.tsx)', () => {
+describe('Root-level startup monitoring (App.tsx)', () => {
   const source = readSource('App.tsx');
 
-  it('imports SentryErrorBoundary from sentry lib', () => {
-    expect(source).toMatch(/import.*SentryErrorBoundary.*from.*sentry/);
-  });
-
-  it('wraps Providers function with SentryErrorBoundary', () => {
-    // Production path
-    expect(source).toMatch(
-      /function Providers[\s\S]*?<SentryErrorBoundary>[\s\S]*?<\/SentryErrorBoundary>/
+  it('initializes app monitoring before render', () => {
+    expect(source).toContain('initializeAppMonitoring()');
+    expect(source.indexOf('initializeAppMonitoring()')).toBeLessThan(
+      source.indexOf('export default function App')
     );
   });
 
-  it('wraps DevProviders function with SentryErrorBoundary', () => {
-    // Development path
-    expect(source).toMatch(
-      /function DevProviders[\s\S]*?<SentryErrorBoundary>[\s\S]*?<\/SentryErrorBoundary>/
-    );
+  it('renders the app inside AppProviders', () => {
+    expect(source).toMatch(/<AppProviders>[\s\S]*<AuthGate \/>[\s\S]*<\/AppProviders>/);
+  });
+});
+
+describe('AppProviders wraps the tree in StartupErrorBoundary', () => {
+  const source = readSource('app/AppProviders.tsx');
+
+  it('imports StartupErrorBoundary', () => {
+    expect(source).toMatch(/import.*StartupErrorBoundary/);
   });
 
-  it('initializes Sentry before rendering', () => {
-    expect(source).toContain('initSentry()');
-    // initSentry should appear before the Providers function
-    const initIndex = source.indexOf('initSentry()');
-    const providersIndex = source.indexOf('function Providers');
-    expect(initIndex).toBeLessThan(providersIndex);
+  it('uses StartupErrorBoundary as the outermost wrapper', () => {
+    expect(source).toMatch(
+      /<StartupErrorBoundary>[\s\S]*<ReducedMotionConfig[\s\S]*<\/StartupErrorBoundary>/
+    );
   });
 });
 
@@ -122,21 +121,14 @@ describe('Secondary ErrorBoundary in TemplatesModalSection', () => {
   });
 });
 
-describe('Both provider paths use SentryErrorBoundary as outermost wrapper', () => {
-  const source = readSource('App.tsx');
+describe('initializeAppMonitoring schedules Sentry', () => {
+  const source = readSource('app/initializeAppMonitoring.ts');
 
-  it('SentryErrorBoundary is first JSX element in Providers return', () => {
-    // Extract the Providers function body
-    const providersMatch = source.match(
-      /function Providers[^{]*\{[\s\S]*?return\s*\(\s*(<\w+)/
-    );
-    expect(providersMatch?.[1]).toBe('<SentryErrorBoundary');
+  it('imports initSentry from the sentry lib', () => {
+    expect(source).toMatch(/import.*initSentry.*from.*sentry/);
   });
 
-  it('SentryErrorBoundary is first JSX element in DevProviders return', () => {
-    const devProvidersMatch = source.match(
-      /function DevProviders[^{]*\{[\s\S]*?return\s*\(\s*(<\w+)/
-    );
-    expect(devProvidersMatch?.[1]).toBe('<SentryErrorBoundary');
+  it('schedules initSentry on idle', () => {
+    expect(source).toContain('scheduleWhenIdle(initSentry');
   });
 });

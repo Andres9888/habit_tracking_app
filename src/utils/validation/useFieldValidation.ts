@@ -98,7 +98,7 @@ export function useFieldValidation(
   const [isValid, setIsValid] = useState(true);
   const [hasBeenValidated, setHasBeenValidated] = useState(false);
   const [hasBlurred, setHasBlurred] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Validate a value and update state
   const performValidation = useCallback(

@@ -17,7 +17,7 @@ import {
   getSpacing,
   createSpacing,
   createPadding,
-} from '../spacing';
+} from '@/theme/spacing';
 
 describe('Theme Spacing - Phase 1', () => {
   describe('8pt Grid System', () => {

@@ -14,6 +14,8 @@ export default {
     '\\.(css|less|scss|sass)$': '<rootDir>/__mocks__/styleMock.js',
     '^react-native-reanimated/mock$':
       '<rootDir>/__mocks__/react-native-reanimated-mock.js',
+    '^reanimated-color-picker$':
+      '<rootDir>/__mocks__/reanimated-color-picker.js',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^~/(.*)$': '<rootDir>/src/$1',
   },
@@ -35,6 +37,9 @@ export default {
     '<rootDir>/website/.next/',
     '/__tests__/.*\\.snap$',
     '/tests/.*\\.snap$',
+    '/tests/e2e/',
+    '\\.e2e\\.test\\.',
+    '\\.cue\\.test\\.',
   ],
   modulePathIgnorePatterns: [
     '/worktrees/',

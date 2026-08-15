@@ -437,27 +437,11 @@ jest.mock('react-native-reanimated', () => {
   };
 });
 
-// Mock reanimated-color-picker (may not be installed)
-try {
-  require.resolve('reanimated-color-picker');
-  jest.mock('reanimated-color-picker', () => {
-    const View = require('react-native').View;
-    return {
-      __esModule: true,
-      default: View,
-      Panel1: View,
-      Panel2: View,
-      Panel3: View,
-      HueSlider: View,
-      OpacitySlider: View,
-      Swatches: View,
-      Preview: View,
-      ColorPicker: View,
-    };
-  });
-} catch {
-  // not installed
-}
+jest.mock(
+  'reanimated-color-picker',
+  () => require('./__mocks__/reanimated-color-picker'),
+  { virtual: true }
+);
 
 // Mock @shopify/react-native-skia if needed
 jest.mock(

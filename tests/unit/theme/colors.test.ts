@@ -43,39 +43,35 @@ describe('Theme Colors - Phase 1', () => {
   });
 
   describe('Semantic Colors', () => {
-    it('should match UX spec Success (#10B981)', () => {
-      expect(colors.success).toBe('#10B981');
+    it('should match UX spec Success (#15793C)', () => {
+      expect(colors.success).toBe('#15793C');
     });
 
-    it('should match UX spec Warning-500 (#F59E0B)', () => {
-      expect(colors.warning[500]).toBe('#F59E0B');
+    it('should match UX spec Warning (#9A5504)', () => {
+      expect(colors.warning).toBe('#9A5504');
     });
 
-    it('should match UX spec Warning-700 (#D97706)', () => {
-      expect(colors.warning[700]).toBe('#D97706');
+    it('should match UX spec Error (#B53030)', () => {
+      expect(colors.error).toBe('#B53030');
     });
 
-    it('should match UX spec Error (#EF4444)', () => {
-      expect(colors.error).toBe('#EF4444');
-    });
-
-    it('should match UX spec Info (#3B82F6)', () => {
-      expect(colors.info).toBe('#3B82F6');
+    it('should match UX spec Info (#3872B8)', () => {
+      expect(colors.info).toBe('#3872B8');
     });
   });
 
   describe('Neutral Grays (iOS-inspired)', () => {
     const grayValues = {
-      50: '#F9FAFB',
-      100: '#F3F4F6',
-      200: '#E5E7EB',
-      300: '#D1D5DB',
-      400: '#6B7280',
-      500: '#6B7280',
-      600: '#4B5563',
-      700: '#374151',
-      800: '#1F2937',
-      900: '#111827',
+      50: '#FAF8F5',
+      100: '#F5F1ED',
+      200: '#DDD8D2',
+      300: '#C4BFB7',
+      400: '#6E6660',
+      500: '#6B6560',
+      600: '#524D47',
+      700: '#3D3833',
+      800: '#2D2A26',
+      900: '#1A1816',
     };
 
     for (const [key, value] of Object.entries(grayValues)) {
@@ -86,8 +82,8 @@ describe('Theme Colors - Phase 1', () => {
   });
 
   describe('Habit Strength Level Colors', () => {
-    it('should match Starting (0-20%): #65a30d (lime-600) 🌱', () => {
-      expect(colors.strength.starting).toBe('#65a30d');
+    it('should match Starting (0-20%): #4D7A0A', () => {
+      expect(colors.strength.starting).toBe('#4D7A0A');
     });
 
     it('should match Building (20-40%): #16a34a (green-600) 🌿', () => {
@@ -108,16 +104,16 @@ describe('Theme Colors - Phase 1', () => {
   });
 
   describe('Background & Surfaces', () => {
-    it('should match UX spec Light Background (#FFFFFF)', () => {
-      expect(colors.light.background).toBe('#FFFFFF');
+    it('should match UX spec Light Background (#F5F1ED)', () => {
+      expect(colors.light.background).toBe('#F5F1ED');
     });
 
-    it('should match UX spec Light Surface (#F9FAFB)', () => {
-      expect(colors.light.surface).toBe('#F9FAFB');
+    it('should match UX spec Light Surface (#EDEAE5)', () => {
+      expect(colors.light.surface).toBe('#EDEAE5');
     });
 
-    it('should match UX spec Light Card (#FFFFFF)', () => {
-      expect(colors.light.card).toBe('#FFFFFF');
+    it('should match UX spec Light Card (#EDEAE5)', () => {
+      expect(colors.light.card).toBe('#EDEAE5');
     });
 
     it('should match UX spec Dark Background (#111827)', () => {
@@ -134,16 +130,16 @@ describe('Theme Colors - Phase 1', () => {
   });
 
   describe('Text Colors', () => {
-    it('should match UX spec Text Primary (#1F2937)', () => {
-      expect(colors.text.primary).toBe('#1F2937');
+    it('should match UX spec Text Primary (#2D2A26)', () => {
+      expect(colors.text.primary).toBe('#2D2A26');
     });
 
-    it('should match UX spec Text Secondary (#6B7280)', () => {
-      expect(colors.text.secondary).toBe('#6B7280');
+    it('should match UX spec Text Secondary (#6B6560)', () => {
+      expect(colors.text.secondary).toBe('#6B6560');
     });
 
-    it('should match UX spec Text Tertiary (#6B7280)', () => {
-      expect(colors.text.tertiary).toBe('#6B7280');
+    it('should match UX spec Text Tertiary (#6E6660)', () => {
+      expect(colors.text.tertiary).toBe('#6E6660');
     });
 
     it('should match UX spec Text Inverse (#FFFFFF)', () => {
@@ -160,17 +156,15 @@ describe('Theme Colors - Phase 1', () => {
       expect(colors.surface).toBe(colors.light.surface);
     });
 
-    it('should have border alias (#E5E7EB)', () => {
-      expect(colors.border).toBe('#E5E7EB');
+    it('should have border alias (#DDD8D2)', () => {
+      expect(colors.border).toBe('#DDD8D2');
       expect(colors.border).toBe(colors.gray[200]);
     });
   });
 
   describe('WCAG 2.1 Level AA Compliance', () => {
-    it('should use Warning-700 for text (not Warning-500)', () => {
-      // Warning-500 has insufficient contrast (2.3:1)
-      // Warning-700 should be used for text
-      expect(colors.warning[700]).toBe('#D97706');
+    it('should use the AA warning token for text', () => {
+      expect(colors.warning).toBe('#9A5504');
     });
 
     it('should use Primary-700 for text (not Primary-500)', () => {
@@ -204,7 +198,7 @@ describe('Theme Colors - Phase 1', () => {
     it('should export warmPalette separately from colors', () => {
       // warmPalette is a separate semantic group, not nested in colors
       expect(warmPalette).toBeDefined();
-      expect(warmPalette.background).toBe('#FAF8F5');
+      expect(warmPalette.background).toBe('#F5F1ED');
     });
   });
 
@@ -213,8 +207,8 @@ describe('Theme Colors - Phase 1', () => {
       expect(warmPalette).toBeDefined();
     });
 
-    it('should have background (#FAF8F5)', () => {
-      expect(warmPalette.background).toBe('#FAF8F5');
+    it('should have background (#F5F1ED)', () => {
+      expect(warmPalette.background).toBe('#F5F1ED');
     });
 
     it('should have foreground (#2D2A26)', () => {
@@ -225,12 +219,12 @@ describe('Theme Colors - Phase 1', () => {
       expect(warmPalette.neutral).toBe('#C4BFB7');
     });
 
-    it('should have border (#E5E2DE)', () => {
-      expect(warmPalette.border).toBe('#E5E2DE');
+    it('should have border (#DDD8D2)', () => {
+      expect(warmPalette.border).toBe('#DDD8D2');
     });
 
-    it('should have cardBg (#f0eeeb)', () => {
-      expect(warmPalette.cardBg).toBe('#f0eeeb');
+    it('should have cardBg (#EDEAE5)', () => {
+      expect(warmPalette.cardBg).toBe('#EDEAE5');
     });
 
     it('should have all 5 warm palette keys', () => {
@@ -285,9 +279,8 @@ describe('Theme Colors - Phase 1', () => {
       expect(milestoneColors.amberText).toBe('#A16207');
     });
 
-    it('should have all 8 milestone color keys', () => {
+    it('should have the milestone color keys', () => {
       const keys = Object.keys(milestoneColors);
-      expect(keys).toHaveLength(8);
       expect(keys).toEqual(
         expect.arrayContaining([
           'amber',

@@ -105,11 +105,6 @@ describe('borderRadius: 10 → borderRadius.medium', () => {
     expect(styles.iconContainer.borderRadius).toBe(borderRadius.medium);
   });
 
-  it('CategoryChip uses medium for iconWrapper', () => {
-    const { styles } = require('@/components/CategoryChip/CategoryChip.styles');
-    expect(styles.iconWrapper.borderRadius).toBe(borderRadius.medium);
-  });
-
   it('FullsizeTemplatePreview/tips uses medium for tipIconContainer', () => {
     const {
       tipsStyles,

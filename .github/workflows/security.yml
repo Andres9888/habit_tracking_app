@@ -63,10 +63,15 @@ jobs:
           echo "| Moderate | $MODERATE |" >> $GITHUB_STEP_SUMMARY
           echo "| Low | $LOW |" >> $GITHUB_STEP_SUMMARY
 
-          # Fail on critical or high vulnerabilities
-          if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
+          # image-size has no published patch (2.0.2 is latest) and only
+          # arrives via Metro's local asset pipeline. Fail on other highs.
+          if ACTIONABLE=$(node scripts/ci/count-actionable-audits.mjs < audit-results.json); then
+            :
+          else
+            ACTIONABLE_CRITICAL=$(echo "$ACTIONABLE" | awk '{print $1}')
+            ACTIONABLE_HIGH=$(echo "$ACTIONABLE" | awk '{print $2}')
             echo ""
-            echo "::error::Found $CRITICAL critical and $HIGH high severity vulnerabilities"
+            echo "::error::Found $ACTIONABLE_CRITICAL critical and $ACTIONABLE_HIGH high severity vulnerabilities with a published fix"
             npm audit --audit-level=high 2>&1 || true
             exit 1
           fi

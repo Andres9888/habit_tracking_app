@@ -15,11 +15,9 @@ import { styles as heatmapToggleStyles } from '@/components/BinaryHeatmap/TimeRa
 import { dayCellStyles } from '@/components/ProgressSectionConsolidated/WeeklySummaryStrip/dayCellStyles';
 import { headerStyles } from '@/components/ProgressSectionConsolidated/WeeklySummaryStrip/headerStyles';
 import { progressStyles } from '@/components/ProgressSectionConsolidated/MilestoneProgress/styles/progress.styles';
-import { styles as streakIndicatorStyles } from '@/components/StreakIndicator/StreakIndicator.styles';
 import { styles as habitsAtRiskStyles } from '@/components/HabitsAtRiskWidget/styles';
 import { SIZE_CONFIG } from '@/components/StrengthProgressBar/StrengthProgressBar.constants';
 import { statusStyles } from '@/components/HabitCard/HabitCard.statusStyles';
-import { styles as categoryChipStyles } from '@/components/CategoryChip/CategoryChip.styles';
 
 /** Helper: assert fontSize uses a typography token value (10, 13, 15, 17, 22, 28, or 34) */
 const STANDARD_SIZES = new Set([10, 13, 15, 17, 22, 28, 34]);
@@ -78,12 +76,6 @@ describe('Font Size Standardization — Phase 4 Task 2', () => {
       );
     });
 
-    it('StreakIndicator milestoneBadgeLabel → caption (13)', () => {
-      expect(streakIndicatorStyles.milestoneBadgeLabel.fontSize).toBe(
-        typography.caption.fontSize
-      );
-    });
-
     it('HabitsAtRiskWidget interventionText → caption (13)', () => {
       expect(habitsAtRiskStyles.interventionText.fontSize).toBe(
         typography.caption.fontSize
@@ -102,23 +94,12 @@ describe('Font Size Standardization — Phase 4 Task 2', () => {
       );
     });
 
-    it('CategoryChip countText → caption (13)', () => {
-      expect(categoryChipStyles.countText.fontSize).toBe(
-        typography.caption.fontSize
-      );
-    });
   });
 
   // ── fontSize: 14 → bodySmall (15) ────────────────────────
   describe('fontSize: 14 replacements', () => {
     it('HabitCard.streakStyles.streakFireIcon → bodySmall (15)', () => {
       expect(streakStyles.streakFireIcon.fontSize).toBe(
-        typography.bodySmall.fontSize
-      );
-    });
-
-    it('StreakIndicator bestStreakText → bodySmall (15)', () => {
-      expect(streakIndicatorStyles.bestStreakText.fontSize).toBe(
         typography.bodySmall.fontSize
       );
     });
@@ -131,12 +112,6 @@ describe('Font Size Standardization — Phase 4 Task 2', () => {
 
     it('HabitsAtRiskWidget prediction → bodySmall (15)', () => {
       expect(habitsAtRiskStyles.prediction.fontSize).toBe(
-        typography.bodySmall.fontSize
-      );
-    });
-
-    it('CategoryChip label → bodySmall (15)', () => {
-      expect(categoryChipStyles.label.fontSize).toBe(
         typography.bodySmall.fontSize
       );
     });
@@ -154,12 +129,6 @@ describe('Font Size Standardization — Phase 4 Task 2', () => {
 
   // ── fontSize: 16 → body (17) ─────────────────────────────
   describe('fontSize: 16 replacements', () => {
-    it('StreakIndicator fireEmoji → body (17)', () => {
-      expect(streakIndicatorStyles.fireEmoji.fontSize).toBe(
-        typography.body.fontSize
-      );
-    });
-
     it('HabitsAtRiskWidget habitName → body (17)', () => {
       expect(habitsAtRiskStyles.habitName.fontSize).toBe(
         typography.body.fontSize
@@ -168,10 +137,6 @@ describe('Font Size Standardization — Phase 4 Task 2', () => {
 
     it('WeeklySummaryStrip headerTitle → body (17)', () => {
       expect(headerStyles.headerTitle.fontSize).toBe(typography.body.fontSize);
-    });
-
-    it('CategoryChip icon → body (17)', () => {
-      expect(categoryChipStyles.icon.fontSize).toBe(typography.body.fontSize);
     });
 
     it('Toast dismissIcon → body (17)', () => {
@@ -215,18 +180,6 @@ describe('Font Size Standardization — Phase 4 Task 2', () => {
 
     it('HabitCard.streakStyles has no non-standard sizes', () => {
       for (const size of collectFontSizes(streakStyles)) {
-        expect(NON_STANDARD.has(size)).toBe(false);
-      }
-    });
-
-    it('StreakIndicator.styles has no non-standard sizes', () => {
-      for (const size of collectFontSizes(streakIndicatorStyles)) {
-        expect(NON_STANDARD.has(size)).toBe(false);
-      }
-    });
-
-    it('CategoryChip.styles has no non-standard sizes', () => {
-      for (const size of collectFontSizes(categoryChipStyles)) {
         expect(NON_STANDARD.has(size)).toBe(false);
       }
     });

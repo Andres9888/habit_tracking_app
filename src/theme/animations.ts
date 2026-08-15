@@ -147,10 +147,20 @@ export const springs = {
  * Example:
  *   entering={FadeInDown.duration(durations.enter).easing(enterEasing)}
  */
-export const enterEasing = Easing.out(Easing.cubic);
+type EasingFn = (t: number) => number;
+type EasingWrap = (easing: EasingFn) => EasingFn;
+const identity: EasingFn = (t) => t;
+const passthrough: EasingWrap = (easing) => easing;
+const easingApi = Easing ?? { cubic: identity, in: passthrough, out: passthrough };
+
+export const enterEasing = (easingApi.out ?? passthrough)(
+  easingApi.cubic ?? identity
+);
 
 /** Canonical exit easing — cubic ease-in for collapses and dismissals. */
-export const exitEasing = Easing.in(Easing.cubic);
+export const exitEasing = (easingApi.in ?? passthrough)(
+  easingApi.cubic ?? identity
+);
 
 export type Duration = keyof typeof durations;
 export type Spring = keyof typeof springs;

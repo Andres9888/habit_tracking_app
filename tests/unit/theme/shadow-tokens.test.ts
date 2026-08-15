@@ -8,7 +8,6 @@ import { shadows } from '@/theme/spacing';
 import { styles as archiveToastStyles } from '@/components/ArchiveUndoToast/styles';
 import { styles as deleteToastStyles } from '@/components/DeleteUndoToast/styles';
 import { styles as calendarGridStyles } from '@/components/BinaryHeatmap/MonthlyCalendarGrid/styles';
-import { styles as categoryChipStyles } from '@/components/CategoryChip/CategoryChip.styles';
 import { cardStyles as weeklySummaryCardStyles } from '@/components/ProgressSectionConsolidated/WeeklySummaryStrip/cardStyles';
 import { cardStyles as todaysFocusCardStyles } from '@/components/ProgressSectionConsolidated/TodaysFocusCard/styles/cardStyles';
 import { elementStyles } from '@/components/ProgressSectionConsolidated/TodaysFocusCard/styles/elementStyles';
@@ -98,20 +97,6 @@ describe('Shadow Token Migration - Phase 3 Task 2', () => {
     it('container shadowRadius should match shadows.card', () => {
       expect(calendarGridStyles.container.shadowRadius).toBe(
         shadows.card.shadowRadius
-      );
-    });
-  });
-
-  describe('CategoryChip uses shadows.subtle', () => {
-    it('container elevation should match shadows.subtle', () => {
-      expect(categoryChipStyles.container.elevation).toBe(
-        shadows.subtle.elevation
-      );
-    });
-
-    it('container shadowOffset should match shadows.subtle', () => {
-      expect(categoryChipStyles.container.shadowOffset).toEqual(
-        shadows.subtle.shadowOffset
       );
     });
   });
