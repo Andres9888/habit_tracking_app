@@ -61,22 +61,23 @@ jest.mock('react-native-svg', () => {
   };
 });
 
-// Mock lucide-react-native
 jest.mock('lucide-react-native', () => {
   const React = require('react');
   const { View } = require('react-native');
 
-  const createIconComponent = (name: string) => (props: { size?: number }) =>
-    React.createElement(View, { testID: `lucide-${name}`, ...props });
-
-  return {
-    ChevronRight: createIconComponent('chevron-right'),
-    TrendingUp: createIconComponent('trending-up'),
-    TrendingDown: createIconComponent('trending-down'),
-    Minus: createIconComponent('minus'),
-    BarChart3: createIconComponent('bar-chart-3'),
-    CheckCircle2: createIconComponent('check-circle-2'),
-  };
+  return new Proxy(
+    {},
+    {
+      get: (_target, name) => {
+        if (name === '__esModule') return true;
+        return (props: { size?: number }) =>
+          React.createElement(View, {
+            testID: `lucide-${String(name)}`,
+            ...props,
+          });
+      },
+    }
+  );
 });
 
 

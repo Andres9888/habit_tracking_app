@@ -57,16 +57,20 @@ jest.mock('expo-linear-gradient', () => {
 });
 
 // Mock SkeletonLoader component
-jest.mock('../../SkeletonLoader/SkeletonLoader', () => ({
-  SkeletonLoader: (props: { width?: number | string; height?: number }) => {
-    const React = require('react');
-    const { View } = require('react-native');
-    return React.createElement(View, {
-      testID: 'skeleton-loader',
-      style: { width: props.width, height: props.height },
-    });
-  },
-}));
+jest.mock('../../SkeletonLoader/SkeletonLoader', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  return {
+    SKELETON_COLORS_LIGHT: { base: '#E7E5E4', highlight: '#F5F5F4' },
+    SKELETON_COLORS_DARK: { base: '#374151', highlight: '#4B5563' },
+    SHIMMER_DURATION: 1500,
+    SkeletonLoader: (props: { width?: number | string; height?: number }) =>
+      React.createElement(View, {
+        testID: 'skeleton-loader',
+        style: { width: props.width, height: props.height },
+      }),
+  };
+});
 
 describe('HabitStrengthHistorySkeleton', () => {
   describe('Component Structure', () => {
@@ -109,7 +113,7 @@ describe('HabitStrengthHistorySkeleton', () => {
   describe('Accessibility', () => {
     it('should have correct accessibility label', () => {
       const { getByLabelText } = render(<HabitStrengthHistorySkeleton />);
-      expect(getByLabelText('Loading habit strength history')).toBeTruthy();
+      expect(getByLabelText('Loading your habit strength history...')).toBeTruthy();
     });
 
     it('should be marked as accessible', () => {

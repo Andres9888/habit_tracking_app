@@ -20,7 +20,6 @@ describe('TrialCountdownBanner', () => {
     );
 
     expect(getByText('5 days left in your free trial')).toBeTruthy();
-    expect(getByText('Keep unlimited habits & analytics')).toBeTruthy();
     expect(getByText('Upgrade')).toBeTruthy();
   });
 

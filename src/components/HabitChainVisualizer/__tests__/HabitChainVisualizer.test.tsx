@@ -51,7 +51,7 @@ describe('HabitChainVisualizer', () => {
   });
 
   it('renders square shape by default', () => {
-    const { getByRole } = render(
+    const { getAllByRole } = render(
       <HabitChainVisualizer
         accentColor="#10b981"
         habitId={'habits:test' as Id<'habits'>}
@@ -62,11 +62,11 @@ describe('HabitChainVisualizer', () => {
     );
 
     // Default shape should be square (rendered with borderRadius: 9)
-    expect(getByRole('button')).toBeTruthy();
+    expect(getAllByRole('button').length).toBeGreaterThan(0);
   });
 
   it('renders circle shape when shape prop is circle', () => {
-    const { getByRole } = render(
+    const { getAllByRole } = render(
       <HabitChainVisualizer
         accentColor="#10b981"
         habitId={'habits:test' as Id<'habits'>}
@@ -78,11 +78,11 @@ describe('HabitChainVisualizer', () => {
     );
 
     // Circle shape should be rendered with borderRadius: 20
-    expect(getByRole('button')).toBeTruthy();
+    expect(getAllByRole('button').length).toBeGreaterThan(0);
   });
 
   it('shows chain connectors when showConnectors is true', () => {
-    const { container } = render(
+    const { toJSON } = render(
       <HabitChainVisualizer
         accentColor="#10b981"
         habitId={'habits:test' as Id<'habits'>}
@@ -94,7 +94,7 @@ describe('HabitChainVisualizer', () => {
     );
 
     // Connectors should be visible between completed days
-    expect(container).toBeTruthy();
+    expect(toJSON()).toBeTruthy();
   });
 });
 

@@ -335,7 +335,7 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(getByText('Daily')).toBeTruthy();
+      expect(getByText(/Daily/)).toBeTruthy();
     });
 
     it('displays correct frequency label for weekly', () => {
@@ -351,7 +351,7 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(getByText('Weekly')).toBeTruthy();
+      expect(getByText(/Weekly/)).toBeTruthy();
     });
 
     it('displays correct category label', () => {
@@ -427,7 +427,7 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const importButton = getByLabelText(/Import.*habit/i);
+      const importButton = getByLabelText(/Add .* to my habits/i);
       fireEvent.press(importButton);
 
       expect(Haptics.impactAsync).toHaveBeenCalledWith(
@@ -448,7 +448,7 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const customizeButton = getByLabelText('Customize habit before importing');
+      const customizeButton = getByLabelText('Customize habit before adding');
       fireEvent.press(customizeButton);
 
       expect(Haptics.impactAsync).toHaveBeenCalledWith(
@@ -478,7 +478,10 @@ describe('FullsizeTemplatePreview', () => {
       const closeButton = getByLabelText('Close and go to my habits');
       fireEvent.press(closeButton);
 
-      expect(Haptics.impactAsync).not.toHaveBeenCalled();
+      // ModalCloseButton fires its own tap haptic before onClose
+      expect(Haptics.impactAsync).toHaveBeenCalledWith(
+        Haptics.ImpactFeedbackStyle.Light
+      );
       expect(mockOnClose).toHaveBeenCalled();
 
       // Reset mock
@@ -500,7 +503,7 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(getByText('Importing...')).toBeTruthy();
+      expect(getByText('Adding…')).toBeTruthy();
     });
 
     it('shows success state when isImported is true', () => {
@@ -516,11 +519,11 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(getByText('Added!')).toBeTruthy();
+      expect(getByText('Added')).toBeTruthy();
       // The import button should not be shown (it's replaced with success button)
-      expect(queryByLabelText(/Import.*habit/i)).toBeNull();
-      // Customize link should be hidden in success state
-      expect(queryByLabelText('Customize habit before importing')).toBeNull();
+      expect(queryByLabelText(/Add .* to my habits/i)).toBeNull();
+      // Customize link is replaced with "Find another habit" after add
+      expect(queryByLabelText('Customize habit before adding')).toBeNull();
     });
 
     it('does not call onImport when already importing', () => {
@@ -536,7 +539,7 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const importButton = getByText('Importing...');
+      const importButton = getByText('Adding…');
       fireEvent.press(importButton);
 
       expect(mockOnImport).not.toHaveBeenCalled();
@@ -556,11 +559,11 @@ describe('FullsizeTemplatePreview', () => {
       );
 
       // In imported state, the button shows "Added!" - it's not pressable
-      const successButton = getByText('Added!');
+      const successButton = getByText('Added');
       expect(successButton).toBeTruthy();
 
       // There should be no import button
-      expect(queryByLabelText(/Import.*habit/i)).toBeNull();
+      expect(queryByLabelText(/Add .* to my habits/i)).toBeNull();
 
       // onImport should never have been called
       expect(mockOnImport).not.toHaveBeenCalled();
@@ -585,7 +588,7 @@ describe('FullsizeTemplatePreview', () => {
       const closeButton = getByLabelText('Close and go to my habits');
       expect(closeButton.props.accessibilityRole).toBe('button');
       expect(closeButton.props.accessibilityHint).toBe(
-        'Double tap to close this preview'
+        'Leaves the habit library and returns to your habits'
       );
     });
 
@@ -601,7 +604,7 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const importButton = getByLabelText('Import Daily Reading habit');
+      const importButton = getByLabelText('Add Daily Reading to my habits');
       expect(importButton.props.accessibilityRole).toBe('button');
     });
 
@@ -617,7 +620,7 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const customizeButton = getByLabelText('Customize habit before importing');
+      const customizeButton = getByLabelText('Customize habit before adding');
       expect(customizeButton.props.accessibilityRole).toBe('button');
     });
 

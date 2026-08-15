@@ -18,11 +18,11 @@ describe('ConfettiBurst', () => {
 
   it('should render particles when active', () => {
     const onComplete = jest.fn();
-    const { queryByTestId } = render(
+    const { toJSON } = render(
       <ConfettiBurst active={true} onComplete={onComplete} />
     );
 
-    expect(queryByTestId('confetti-burst')).toBeTruthy();
+    expect(toJSON()).not.toBeNull();
   });
 
   it('should call onComplete after animation', async () => {

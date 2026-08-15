@@ -731,7 +731,7 @@ describe('TodaysFocusCard', () => {
       };
       const { getByText } = render(<TodaysFocusCard {...props} />);
       expect(getByText('⚡')).toBeTruthy();
-      expect(getByText(/You're building momentum!/)).toBeTruthy();
+      expect(getByText(/You're building real momentum!/)).toBeTruthy();
     });
 
     it('shows 30-day milestone celebration', () => {
@@ -745,7 +745,7 @@ describe('TodaysFocusCard', () => {
       };
       const { getByText } = render(<TodaysFocusCard {...props} />);
       expect(getByText('🏆')).toBeTruthy();
-      expect(getByText(/A full month - incredible!/)).toBeTruthy();
+      expect(getByText(/A full month — incredible!/)).toBeTruthy();
     });
 
     it('shows 100-day milestone celebration', () => {

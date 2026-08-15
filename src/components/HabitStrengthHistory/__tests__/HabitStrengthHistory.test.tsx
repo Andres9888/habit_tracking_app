@@ -38,23 +38,29 @@ jest.mock('react-native-reanimated', () => {
 jest.mock('lucide-react-native', () => {
   const React = require('react');
   const { View } = require('react-native');
-
-  return {
-    Info: (props: Record<string, unknown>) =>
-      React.createElement(View, { testID: 'icon-info', ...props }),
-    TrendingUp: (props: Record<string, unknown>) =>
-      React.createElement(View, { testID: 'icon-trending-up', ...props }),
-    TrendingDown: (props: Record<string, unknown>) =>
-      React.createElement(View, { testID: 'icon-trending-down', ...props }),
-    Minus: (props: Record<string, unknown>) =>
-      React.createElement(View, { testID: 'icon-minus', ...props }),
-    Trophy: (props: Record<string, unknown>) =>
-      React.createElement(View, { testID: 'icon-trophy', ...props }),
-    BarChart3: (props: Record<string, unknown>) =>
-      React.createElement(View, { testID: 'icon-chart', ...props }),
-    Zap: (props: Record<string, unknown>) =>
-      React.createElement(View, { testID: 'icon-zap', ...props }),
+  const named: Record<string, string> = {
+    BarChart3: 'icon-chart',
+    Info: 'icon-info',
+    Minus: 'icon-minus',
+    Target: 'icon-target',
+    TrendingDown: 'icon-trending-down',
+    TrendingUp: 'icon-trending-up',
+    Trophy: 'icon-trophy',
+    X: 'icon-x',
+    Zap: 'icon-zap',
   };
+
+  return new Proxy(
+    {},
+    {
+      get: (_target, name) => {
+        if (name === '__esModule') return true;
+        const testID = named[String(name)] ?? `icon-${String(name).toLowerCase()}`;
+        return (props: Record<string, unknown>) =>
+          React.createElement(View, { testID, ...props });
+      },
+    }
+  );
 });
 
 // Mock useHabitStrength hook

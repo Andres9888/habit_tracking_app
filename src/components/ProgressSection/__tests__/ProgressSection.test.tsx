@@ -16,9 +16,17 @@ jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockImplementation(
   () => Promise.resolve(false)
 );
 
-// Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {
   const { View, Text } = require('react-native');
+  const chain = () => {
+    const api = {
+      delay: () => api,
+      duration: () => api,
+      easing: () => api,
+      springify: () => api,
+    };
+    return api;
+  };
 
   const Animated = {
     View,
@@ -46,16 +54,8 @@ jest.mock('react-native-reanimated', () => {
       ease: () => 0,
     },
     runOnJS: (fn: (...args: unknown[]) => unknown) => fn,
-    FadeInDown: {
-      delay: () => ({
-        springify: () => ({}),
-      }),
-    },
-    FadeIn: {
-      delay: () => ({
-        duration: () => ({}),
-      }),
-    },
+    FadeInDown: chain(),
+    FadeIn: chain(),
   };
 });
 
@@ -200,9 +200,8 @@ describe('ProgressSection Integration', () => {
       tracking: trackingWithStreak,
     };
 
-    const { getByText } = render(<ProgressSection {...props} />);
-    expect(getByText('5 days')).toBeTruthy(); // Current streak
-    expect(getByText('NOW 🔥')).toBeTruthy();
+    const { getByLabelText } = render(<ProgressSection {...props} />);
+    expect(getByLabelText(/current streak 5 days/)).toBeTruthy();
   });
 
   it('calculates and passes day stats to ThisMonthCard', () => {
