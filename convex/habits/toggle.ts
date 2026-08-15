@@ -12,6 +12,8 @@ import {
 } from '../habitStrength';
 import { calculateStreakFromHistory } from '../streakUtils';
 import { enforceRateLimit } from '../lib/rateLimit';
+import { skipPausedDays } from './skipPausedDays';
+import { resolveCompletedStatus } from './toggleState';
 import {
   getTodayForTimezone,
   getTrackingCutoffKey,
@@ -22,6 +24,7 @@ import {
 
 export const toggleHabit = mutation({
   args: {
+    completed: v.optional(v.boolean()),
     date: v.string(),
     habitId: v.id('habits'),
     timezone: v.optional(v.string()),
@@ -50,7 +53,11 @@ export const toggleHabit = mutation({
       )
       .unique();
 
-    const newCompletedStatus = existing ? !existing.completed : true;
+    const { next: newCompletedStatus, noop } = resolveCompletedStatus(
+      existing?.completed,
+      args.completed
+    );
+    if (noop) return null;
     await (existing
       ? ctx.db.patch(existing._id, {
           completed: newCompletedStatus,
@@ -147,6 +154,7 @@ export const recalculateStreakAndStrength = internalMutation({
       const snapshot = calculateMomentumStrengthSnapshot({
         habitCreatedAt: habit.createdAt,
         mode,
+        skipDate: skipPausedDays(habit, args.timezone),
         throughDate: evaluationDateKey,
         tracking,
       });
@@ -155,11 +163,15 @@ export const recalculateStreakAndStrength = internalMutation({
         strengthLevel: snapshot.strengthLevel,
         strengthUpdatedAt: Date.now(),
       };
-      const streakData = calculateStreakFromHistory(tracking, evaluationDateKey, {
-        pausedAt: habit.pausedAt,
-        resumedAt: habit.resumedAt,
-        timezone: args.timezone,
-      });
+      const streakData = calculateStreakFromHistory(
+        tracking,
+        evaluationDateKey,
+        {
+          pausedAt: habit.pausedAt,
+          resumedAt: habit.resumedAt,
+          timezone: args.timezone,
+        }
+      );
       streakPatch = {
         // Guarded with the stored value because the tracking read above is
         // windowed: a best streak set outside the lookback window is not

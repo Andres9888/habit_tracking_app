@@ -4,9 +4,11 @@
  * Provides 30-day trend data for line chart visualization.
  */
 
+import { v } from 'convex/values';
 import { query } from './_generated/server';
 import type { Doc, Id } from './_generated/dataModel';
-import { getDateString, getDaysAgo } from './analytics/index';
+import { dateKeysEndingOn } from './analytics/dateKeys';
+import { getTodayForTimezone } from './habits/utils';
 
 /**
  * Pure computation of 30-day trend data from already-fetched habits/tracking.
@@ -14,7 +16,8 @@ import { getDateString, getDaysAgo } from './analytics/index';
  */
 export function computeTrend(
   activeHabits: Array<{ _id: Id<'habits'> }>,
-  trackings: Doc<'tracking'>[]
+  trackings: Doc<'tracking'>[],
+  todayKey = getTodayForTimezone()
 ) {
   const habitIds = new Set(activeHabits.map((h) => h._id));
   const trendData: Array<{ date: string; averageStrength: number }> = [];
@@ -26,10 +29,7 @@ export function computeTrend(
     completionsByDate.set(t.date, (completionsByDate.get(t.date) ?? 0) + 1);
   }
 
-  for (let i = 29; i >= 0; i--) {
-    const date = getDaysAgo(i);
-    const dateStr = getDateString(date);
-
+  for (const dateStr of dateKeysEndingOn(todayKey, 30)) {
     const completedCount = completionsByDate.get(dateStr) ?? 0;
 
     const completionRate =
@@ -53,8 +53,8 @@ export function computeTrend(
  * payload size does not grow with account age.
  */
 export const get30DayTrend = query({
-  args: {},
-  handler: async (ctx) => {
+  args: { timezone: v.optional(v.string()) },
+  handler: async (ctx, args) => {
     // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return [];
@@ -67,8 +67,8 @@ export const get30DayTrend = query({
     const activeHabits = habits.filter((h) => !h.archived && !h.paused);
     const habitIds = new Set(activeHabits.map((h) => h._id));
 
-    // PERF: bound the index range to the 30-day window
-    const thirtyDaysAgoStr = getDateString(getDaysAgo(29));
+    const todayKey = getTodayForTimezone(args.timezone);
+    const thirtyDaysAgoStr = dateKeysEndingOn(todayKey, 30)[0];
     const allTrackings = await ctx.db
       .query('tracking')
       .withIndex('by_user_and_date', (q) =>
@@ -79,6 +79,6 @@ export const get30DayTrend = query({
     // Filter to only active habits
     const trackings = allTrackings.filter((t) => habitIds.has(t.habitId));
 
-    return computeTrend(activeHabits, trackings);
+    return computeTrend(activeHabits, trackings, todayKey);
   },
 });

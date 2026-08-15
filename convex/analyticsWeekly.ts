@@ -13,6 +13,8 @@ import {
   categorizeHabitChanges,
   calculateWeekOverWeekChange,
 } from './analytics/weeklyHelpers';
+import { getRollingWeekBoundaryKeys } from './analytics/dateKeys';
+import { getTodayForTimezone } from './habits/utils';
 
 /**
  * Pure computation of weekly insights from already-fetched habits/tracking.
@@ -21,14 +23,13 @@ import {
  */
 export function computeWeeklyInsights(
   activeHabits: Doc<'habits'>[],
-  trackings: Doc<'tracking'>[]
+  trackings: Doc<'tracking'>[],
+  todayKey = getTodayForTimezone()
 ) {
-  const oneWeekAgo = new Date();
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-  const twoWeeksAgo = new Date();
-  twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-  const oneWeekAgoKey = oneWeekAgo.toISOString().slice(0, 10);
-  const twoWeeksAgoKey = twoWeeksAgo.toISOString().slice(0, 10);
+  const { lastWeekStartKey, thisWeekStartKey } =
+    getRollingWeekBoundaryKeys(todayKey);
+  const oneWeekAgoKey = thisWeekStartKey;
+  const twoWeeksAgoKey = lastWeekStartKey;
 
   // Bucket the tracking rows once, then each habit is an O(1) lookup.
   const completionIndex = buildWeeklyCompletionIndex(
@@ -63,8 +64,8 @@ export function computeWeeklyInsights(
  * habit documents to avoid recomputing streaks from all historical tracking.
  */
 export const getWeeklyInsights = query({
-  args: {},
-  handler: async (ctx) => {
+  args: { timezone: v.optional(v.string()) },
+  handler: async (ctx, args) => {
     // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
@@ -80,9 +81,9 @@ export const getWeeklyInsights = query({
 
     // Bound the query to the comparison window so per-user payload size
     // does not grow unbounded with account age.
-    const twoWeeksAgo = new Date();
-    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-    const twoWeeksAgoKey = twoWeeksAgo.toISOString().slice(0, 10);
+    const todayKey = getTodayForTimezone(args.timezone);
+    const { lastWeekStartKey: twoWeeksAgoKey } =
+      getRollingWeekBoundaryKeys(todayKey);
     const trackings = await ctx.db
       .query('tracking')
       .withIndex('by_user_and_date', (q) =>
@@ -90,7 +91,7 @@ export const getWeeklyInsights = query({
       )
       .collect();
 
-    return computeWeeklyInsights(activeHabits, trackings);
+    return computeWeeklyInsights(activeHabits, trackings, todayKey);
   },
 });
 

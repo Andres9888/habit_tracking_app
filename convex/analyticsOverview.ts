@@ -26,37 +26,34 @@ export function computeOverviewStats(activeHabits: Doc<'habits'>[]) {
   }
 
   const habitsWithStrength = activeHabits.map((habit) => {
-      const currentStreak = habit.currentStreak ?? 0;
-      const longestStreak = habit.bestStreak ?? 0;
-      const strength =
-        typeof habit.strength === 'number'
-          ? habit.strength
-          : calculateHabitStrength(habit, currentStreak / 66);
-      return {
-        ...habit,
-        currentStreak,
-        longestStreak,
-        strength,
-      };
-    });
+    const currentStreak = habit.currentStreak ?? 0;
+    const longestStreak = habit.bestStreak ?? 0;
+    const strength = calculateHabitStrength(habit, currentStreak / 66);
+    return {
+      ...habit,
+      currentStreak,
+      longestStreak,
+      strength,
+    };
+  });
 
-    habitsWithStrength.sort((a, b) => b.strength - a.strength);
+  habitsWithStrength.sort((a, b) => b.strength - a.strength);
 
-    const totalStrength = habitsWithStrength.reduce(
-      (sum, h) => sum + h.strength,
-      0
-    );
-    const averageStrength = totalStrength / habitsWithStrength.length;
+  const totalStrength = habitsWithStrength.reduce(
+    (sum, h) => sum + h.strength,
+    0
+  );
+  const averageStrength = totalStrength / habitsWithStrength.length;
 
-    const rankedHabits = habitsWithStrength.map((habit) => ({
-      currentStreak: habit.currentStreak,
-      emoji: habit.icon || '🎯',
-      id: habit._id,
-      isAtRisk: habit.currentStreak < 3,
-      longestStreak: habit.longestStreak,
-      name: habit.name,
-      strength: habit.strength,
-    }));
+  const rankedHabits = habitsWithStrength.map((habit) => ({
+    currentStreak: habit.currentStreak,
+    emoji: habit.icon || '🎯',
+    id: habit._id,
+    isAtRisk: habit.currentStreak < 3,
+    longestStreak: habit.longestStreak,
+    name: habit.name,
+    strength: habit.strength,
+  }));
 
   const strongest = habitsWithStrength[0];
   const weakest = habitsWithStrength.at(-1);

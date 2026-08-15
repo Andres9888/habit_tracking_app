@@ -7,15 +7,12 @@
 import type { MutationCtx } from '../_generated/server';
 import type { Doc, Id } from '../_generated/dataModel';
 import { calculateStreakFromHistory } from '../streakUtils';
-import {
-  getTodayForTimezone,
-  getTrackingCutoffKey,
-  maxDateKey,
-} from './utils';
+import { getTodayForTimezone, getTrackingCutoffKey, maxDateKey } from './utils';
 import {
   calculateMomentumStrengthSnapshot,
   resolveAlgorithmMode,
 } from '../habitStrength';
+import { skipPausedDays } from './skipPausedDays';
 
 /**
  * Recalculate streak and strength after a pause state change.
@@ -62,6 +59,7 @@ export async function recalculateOnPauseChange(
   const snapshot = calculateMomentumStrengthSnapshot({
     habitCreatedAt: habit.createdAt,
     mode,
+    skipDate: skipPausedDays(habit, timezone),
     throughDate: evaluationDateKey,
     tracking,
   });

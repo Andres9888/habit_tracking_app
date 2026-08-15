@@ -1,6 +1,7 @@
 import * as Network from 'expo-network';
 
 import { api } from '../../../../convex/_generated/api';
+import { getUserTimezone } from '../../../utils/timezone';
 import { convexClient } from '../../appConfig';
 import { getOfflineQueueManager } from '../queueManager';
 import { getOfflineSyncManager } from '../syncManager';
@@ -34,9 +35,17 @@ export async function runBackgroundQueueFlush(): Promise<boolean> {
   const executor = createSyncExecutor({
     archiveHabit: (args) => client.mutation(api.habits.archive, args),
     createHabit: (args) => client.mutation(api.habits.create, args),
-    pauseHabit: (args) => client.mutation(api.habits.pause, args),
+    pauseHabit: (args) =>
+      client.mutation(api.habits.pause, {
+        ...args,
+        timezone: args.timezone ?? getUserTimezone(),
+      }),
     removeHabit: (args) => client.mutation(api.habits.remove, args),
-    toggleHabit: (args) => client.mutation(api.habits.toggleHabit, args),
+    toggleHabit: (args) =>
+      client.mutation(api.habits.toggleHabit, {
+        ...args,
+        timezone: args.timezone ?? getUserTimezone(),
+      }),
     updateHabit: (args) => client.mutation(api.habits.update, args),
   });
 

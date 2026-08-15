@@ -1,10 +1,4 @@
-/**
- * PauseCard — "Going away?" Pauses the habit without breaking the streak.
- *
- * Wired to `habits.pause` / `habits.resume`, which snapshot strength and
- * recalculate the streak so the paused span is excluded rather than counted as
- * a run of misses.
- */
+/** PauseCard — pause a habit without breaking the streak. */
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useMutation } from 'convex/react';
@@ -12,6 +6,7 @@ import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { borderRadius } from '../../../theme/spacing';
 import { fontWeights } from '../../../theme/typography';
+import { getUserTimezone } from '../../../utils/timezone';
 import { useInsightPalette } from '../insightPalette';
 
 interface PauseCardProps {
@@ -29,7 +24,10 @@ export function PauseCard({ habitId, paused = false }: PauseCardProps) {
     if (isBusy) return;
     setIsBusy(true);
     try {
-      await (paused ? resume({ habitId }) : pause({ habitId }));
+      const timezone = getUserTimezone();
+      await (paused
+        ? resume({ habitId, timezone })
+        : pause({ habitId, timezone }));
     } finally {
       setIsBusy(false);
     }

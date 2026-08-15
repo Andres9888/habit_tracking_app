@@ -460,3 +460,27 @@ describe('calculateMomentumStrengthSnapshot - day-by-day simulation', () => {
     });
   });
 });
+
+describe('calculateMomentumStrengthSnapshot pause days', () => {
+  it('does not decay strength on skipped pause days', () => {
+    const habitCreatedAt = new Date(2026, 0, 1).getTime();
+    const tracking = [
+      { completed: true, date: '2026-01-01' },
+      { completed: true, date: '2026-01-02' },
+      { completed: true, date: '2026-01-03' },
+    ];
+    const paused = calculateMomentumStrengthSnapshot({
+      habitCreatedAt,
+      skipDate: (dateKey) => dateKey >= '2026-01-04' && dateKey <= '2026-01-08',
+      throughDate: '2026-01-08',
+      tracking,
+    });
+    const atPauseStart = calculateMomentumStrengthSnapshot({
+      habitCreatedAt,
+      throughDate: '2026-01-03',
+      tracking,
+    });
+
+    expect(paused.strength100).toBeCloseTo(atPauseStart.strength100, 5);
+  });
+});

@@ -24,7 +24,7 @@
  */
 export function getLocalDateString(date: Date = new Date()): string {
   if (Number.isNaN(date.getTime())) {
-    throw new Error('Invalid date passed to getLocalDateString');
+    throw new TypeError('Invalid date passed to getLocalDateString');
   }
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -41,4 +41,27 @@ export function getLocalDateString(date: Date = new Date()): string {
  */
 export function getTodayString(): string {
   return getLocalDateString(new Date());
+}
+
+/**
+ * Parse a YYYY-MM-DD calendar key as a local date.
+ * `new Date('YYYY-MM-DD')` is UTC midnight and shifts the day in US timezones.
+ */
+export function parseDateKeyLocal(dateKey: string): Date {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateKey);
+  if (!match) {
+    const fallback = new Date(dateKey);
+    if (Number.isNaN(fallback.getTime())) {
+      throw new TypeError(`Invalid date key: ${dateKey}`);
+    }
+    return fallback;
+  }
+  return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+}
+
+export function formatDateKeyLabel(
+  dateKey: string,
+  options?: Intl.DateTimeFormatOptions
+): string {
+  return parseDateKeyLocal(dateKey).toLocaleDateString('en-US', options);
 }
