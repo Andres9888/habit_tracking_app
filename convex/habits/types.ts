@@ -58,4 +58,8 @@ export const updateHabitArgs = {
     v.union(v.literal('forgiving'), v.literal('balanced'), v.literal('strict'))
   ),
   why: v.optional(v.string()),
+  woopObstacle: v.optional(v.string()),
+  woopOutcome: v.optional(v.string()),
+  woopPlan: v.optional(v.string()),
+  woopWish: v.optional(v.string()),
 };

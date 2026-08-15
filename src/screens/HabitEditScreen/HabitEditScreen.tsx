@@ -25,6 +25,7 @@ import { HabitFormBody } from '../../components/CreateHabitModal/components/Habi
 import { ModalHeader } from '../../components/CreateHabitModal/components/ModalHeader';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
 import { HabitEditSkeleton } from './HabitEditSkeleton';
+import { MotivationSection } from './motivation';
 import { useHabitEditScreen } from './useHabitEditScreen';
 import type { HabitEditScreenProps } from './types';
 
@@ -164,6 +165,12 @@ function HabitEditScreenContent({
                         state.handleStrengthAlgorithmChange
                       }
                     />
+                    {state.motivationReady ? (
+                      <MotivationSection
+                        values={state.motivation}
+                        onChange={state.setMotivationField}
+                      />
+                    ) : null}
                   </Pressable>
                 </View>
               </ScrollView>

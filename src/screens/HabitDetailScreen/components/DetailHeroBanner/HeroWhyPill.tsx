@@ -1,14 +1,13 @@
 /**
- * HeroWhyPill — the user's own motivation, quoted inside the hero band.
- * Renders nothing when no why / identity / woopWish is set (the design shows no
- * placeholder copy for an empty why).
+ * HeroWhyPill — one resolved why line in the hero band.
+ * Renders nothing when why / identity / wish are all empty.
  */
 import { Text, View } from 'react-native';
 import type { Habit } from '../../../../features/habits/types';
 import { borderRadius, spacing } from '../../../../theme/spacing';
-import { fontWeights } from '../../../../theme/typography';
+import { fontFamilies, fontWeights } from '../../../../theme/typography';
 import type { InsightPalette } from '../../insightPalette';
-import { useResolveWhy } from '../GoalWhyAnchor/GoalWhyAnchor.hooks';
+import { resolveWhy } from '../resolveWhy';
 
 interface HeroWhyPillProps {
   habit: Habit;
@@ -16,7 +15,7 @@ interface HeroWhyPillProps {
 }
 
 export function HeroWhyPill({ habit, palette }: HeroWhyPillProps) {
-  const resolved = useResolveWhy(habit);
+  const resolved = resolveWhy(habit);
   if (resolved === null) return null;
 
   return (
@@ -24,29 +23,35 @@ export function HeroWhyPill({ habit, palette }: HeroWhyPillProps) {
       accessibilityLabel={`${resolved.label}: ${resolved.value}`}
       accessibilityRole='summary'
       style={{
-        alignItems: 'flex-start',
         backgroundColor: palette.bandSoft,
         borderRadius: borderRadius.medium,
-        flexDirection: 'row',
-        gap: 9,
         marginTop: spacing.base,
         paddingHorizontal: 15,
         paddingVertical: 13,
       }}
     >
-      <Text style={{ fontSize: 13, marginTop: 2 }}>{resolved.icon}</Text>
+      <Text
+        style={{
+          color: palette.bandFg,
+          fontSize: 11,
+          fontWeight: fontWeights.bold,
+          letterSpacing: 0.6,
+          textTransform: 'uppercase',
+        }}
+      >
+        {resolved.label}
+      </Text>
       <Text
         style={{
           color: palette.bandMuted,
-          flex: 1,
-          fontSize: 13,
-          lineHeight: 20,
+          fontFamily: fontFamilies.primary.display,
+          fontSize: 15,
+          fontStyle: 'italic',
+          lineHeight: 21,
+          marginTop: 3,
         }}
       >
-        <Text style={{ color: palette.bandFg, fontWeight: fontWeights.bold }}>
-          {resolved.label}:{' '}
-        </Text>
-        {`“${resolved.value}”`}
+        {resolved.value}
       </Text>
     </View>
   );

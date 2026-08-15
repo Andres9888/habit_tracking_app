@@ -135,6 +135,18 @@ describe('HabitDetailContent', () => {
     expect(queryByText(/One miss/)).toBeNull();
   });
 
+  it('falls back to identity on Detail when why is empty', () => {
+    completeYesterday();
+    const { getByText } = renderContent({
+      identity: 'I start moving before the day starts deciding for me.',
+      why: '',
+    });
+    expect(getByText("Who you're becoming")).toBeTruthy();
+    expect(
+      getByText('I start moving before the day starts deciding for me.')
+    ).toBeTruthy();
+  });
+
   it('omits the why pill entirely when no motivation is set', () => {
     completeYesterday();
     const { queryByText } = renderContent({

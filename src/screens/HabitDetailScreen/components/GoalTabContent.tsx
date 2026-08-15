@@ -16,7 +16,6 @@ import { withAlpha } from '../../../theme';
 import { typography, fontWeights } from '../../../theme/typography';
 import { GoalAdjustSheet } from './GoalAdjustSheet';
 import { GoalTabEmptyState } from './GoalTabEmptyState';
-import { GoalWhyAnchor } from './GoalWhyAnchor';
 import { readableHabitAccent } from './goalColorUtils';
 import { SimpleStreakGoalHero } from './SimpleStreakGoalHero';
 
@@ -102,7 +101,6 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
         </View>
 
         <ErrorBoundary>
-          <GoalWhyAnchor habit={habit} />
           <SimpleStreakGoalHero
             bestStreak={habit.bestStreak ?? 0}
             currentStreak={currentStreak}

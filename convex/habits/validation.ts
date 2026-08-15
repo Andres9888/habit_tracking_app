@@ -16,6 +16,7 @@ import {
   MAX_LONG_TEXT_LENGTH,
   MAX_SHORT_TEXT_LENGTH,
 } from '../lib/inputValidation';
+import { validateMotivationFields } from './validateMotivationFields';
 
 /** Habit creation/update arguments */
 interface HabitArgs {
@@ -32,6 +33,10 @@ interface HabitArgs {
   reminderSound?: string;
   identity?: string;
   why?: string;
+  woopObstacle?: string;
+  woopOutcome?: string;
+  woopPlan?: string;
+  woopWish?: string;
   frequency?: string;
   goalUnit?: string;
 }
@@ -51,6 +56,10 @@ interface ValidatedHabitFields {
   reminderSound?: string;
   identity?: string;
   why?: string;
+  woopObstacle?: string;
+  woopOutcome?: string;
+  woopPlan?: string;
+  woopWish?: string;
   frequency?: string;
   goalUnit?: string;
 }
@@ -68,7 +77,11 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
   }
 
   // Optional: notes (long text)
-  const notesResult = validateLongText(args.notes, MAX_LONG_TEXT_LENGTH, 'Notes');
+  const notesResult = validateLongText(
+    args.notes,
+    MAX_LONG_TEXT_LENGTH,
+    'Notes'
+  );
   const notes = requireValid(notesResult, args.notes);
 
   // Optional: cue fields (short text)
@@ -87,7 +100,10 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
     MAX_SHORT_TEXT_LENGTH,
     'Cue behavior'
   );
-  const cueAfterBehavior = requireValid(cueAfterBehaviorResult, args.cueAfterBehavior);
+  const cueAfterBehavior = requireValid(
+    cueAfterBehaviorResult,
+    args.cueAfterBehavior
+  );
 
   // Optional: icon and color
   const iconResult = validateEmoji(args.icon, 'Icon');
@@ -100,23 +116,28 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
   const iconColor = requireValid(iconColorResult, args.iconColor);
 
   // Optional: preferredTime is a phase identifier (e.g. "phase1_push", "morning"), not a time string
-  const preferredTimeResult = validateShortText(args.preferredTime, MAX_SHORT_TEXT_LENGTH, 'Preferred time');
+  const preferredTimeResult = validateShortText(
+    args.preferredTime,
+    MAX_SHORT_TEXT_LENGTH,
+    'Preferred time'
+  );
   const preferredTime = requireValid(preferredTimeResult, args.preferredTime);
 
-  const reminderTimeResult = validateTimeFormat(args.reminderTime, 'Reminder time');
+  const reminderTimeResult = validateTimeFormat(
+    args.reminderTime,
+    'Reminder time'
+  );
   const reminderTime = requireValid(reminderTimeResult, args.reminderTime);
 
   // Optional: reminder sound (identifier)
-  const reminderSoundResult = validateIdentifier(args.reminderSound, 100, 'Reminder sound');
+  const reminderSoundResult = validateIdentifier(
+    args.reminderSound,
+    100,
+    'Reminder sound'
+  );
   const reminderSound = requireValid(reminderSoundResult, args.reminderSound);
 
-  // Optional: identity statement (short text)
-  const identityResult = validateShortText(args.identity, MAX_SHORT_TEXT_LENGTH, 'Identity');
-  const identity = requireValid(identityResult, args.identity);
-
-  // Optional: why statement (long text)
-  const whyResult = validateLongText(args.why, MAX_LONG_TEXT_LENGTH, 'Why');
-  const why = requireValid(whyResult, args.why);
+  const motivation = validateMotivationFields(args);
 
   // Optional: frequency (identifier)
   const frequencyResult = validateIdentifier(args.frequency, 50, 'Frequency');
@@ -138,8 +159,7 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
     preferredTime,
     reminderTime,
     reminderSound,
-    identity,
-    why,
+    ...motivation,
     frequency,
     goalUnit,
   };
@@ -176,7 +196,11 @@ export function validateHabitUpdateFields(
   }
 
   if (args.notes !== undefined) {
-    const notesResult = validateLongText(args.notes, MAX_LONG_TEXT_LENGTH, 'Notes');
+    const notesResult = validateLongText(
+      args.notes,
+      MAX_LONG_TEXT_LENGTH,
+      'Notes'
+    );
     result.notes = requireValid(notesResult, args.notes);
   }
 
@@ -200,7 +224,10 @@ export function validateHabitUpdateFields(
       MAX_SHORT_TEXT_LENGTH,
       'Cue behavior'
     );
-    result.cueAfterBehavior = requireValid(cueAfterBehaviorResult, args.cueAfterBehavior);
+    result.cueAfterBehavior = requireValid(
+      cueAfterBehaviorResult,
+      args.cueAfterBehavior
+    );
   }
 
   if (args.icon !== undefined) {
@@ -219,29 +246,38 @@ export function validateHabitUpdateFields(
   }
 
   if (args.preferredTime !== undefined) {
-    const preferredTimeResult = validateShortText(args.preferredTime, MAX_SHORT_TEXT_LENGTH, 'Preferred time');
-    result.preferredTime = requireValid(preferredTimeResult, args.preferredTime);
+    const preferredTimeResult = validateShortText(
+      args.preferredTime,
+      MAX_SHORT_TEXT_LENGTH,
+      'Preferred time'
+    );
+    result.preferredTime = requireValid(
+      preferredTimeResult,
+      args.preferredTime
+    );
   }
 
   if (args.reminderTime !== undefined) {
-    const reminderTimeResult = validateTimeFormat(args.reminderTime, 'Reminder time');
+    const reminderTimeResult = validateTimeFormat(
+      args.reminderTime,
+      'Reminder time'
+    );
     result.reminderTime = requireValid(reminderTimeResult, args.reminderTime);
   }
 
   if (args.reminderSound !== undefined) {
-    const reminderSoundResult = validateIdentifier(args.reminderSound, 100, 'Reminder sound');
-    result.reminderSound = requireValid(reminderSoundResult, args.reminderSound);
+    const reminderSoundResult = validateIdentifier(
+      args.reminderSound,
+      100,
+      'Reminder sound'
+    );
+    result.reminderSound = requireValid(
+      reminderSoundResult,
+      args.reminderSound
+    );
   }
 
-  if (args.identity !== undefined) {
-    const identityResult = validateShortText(args.identity, MAX_SHORT_TEXT_LENGTH, 'Identity');
-    result.identity = requireValid(identityResult, args.identity);
-  }
-
-  if (args.why !== undefined) {
-    const whyResult = validateLongText(args.why, MAX_LONG_TEXT_LENGTH, 'Why');
-    result.why = requireValid(whyResult, args.why);
-  }
+  Object.assign(result, validateMotivationFields(args));
 
   if (args.frequency !== undefined) {
     const frequencyResult = validateIdentifier(args.frequency, 50, 'Frequency');

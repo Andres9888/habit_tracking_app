@@ -203,7 +203,7 @@ export const colors = {
 
   /**
    * Parchment palette — warm aged-paper tones for motivation surfaces.
-   * Used by GoalWhyAnchor and similar "why are you doing this" callouts.
+   * Used by motivation surfaces (Edit · Why preview, similar callouts).
    * When dark mode is unlocked, define a parchment.dark variant.
    */
   parchment: {

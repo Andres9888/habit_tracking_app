@@ -12,6 +12,7 @@ import {
 } from '../../utils/notifications';
 import { showSaveError } from '../../utils/errorAlerts';
 import type { ProgressEmojiSet } from '../../utils/progressEmojis';
+import type { MotivationDraft } from './motivation/motivationDraft';
 
 interface UseSaveHandlerProps {
   habitId: Id<'habits'> | null;
@@ -23,6 +24,8 @@ interface UseSaveHandlerProps {
   streakGoal: number;
   strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
   progressEmojis: ProgressEmojiSet | undefined;
+  /** Present only after habits.get loads, so a list-shaped initialHabit cannot wipe why. */
+  motivation?: MotivationDraft;
   onSuccess: () => void;
 }
 
@@ -36,6 +39,7 @@ export function useHabitSaveHandler({
   streakGoal,
   strengthAlgorithm,
   progressEmojis,
+  motivation,
   onSuccess,
 }: UseSaveHandlerProps) {
   const updateHabit = useMutation(api.habits.update);
@@ -93,6 +97,7 @@ export function useHabitSaveHandler({
         reminderTime: enableReminders ? reminderTimeString : undefined,
         goalDuration: streakGoal > 0 ? streakGoal : undefined,
         strengthAlgorithm,
+        ...(motivation ?? {}),
       });
 
       onSuccess();
@@ -113,6 +118,7 @@ export function useHabitSaveHandler({
     streakGoal,
     strengthAlgorithm,
     progressEmojis,
+    motivation,
     updateHabit,
     onSuccess,
   ]);

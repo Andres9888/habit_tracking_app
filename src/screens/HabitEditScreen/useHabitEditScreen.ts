@@ -13,6 +13,7 @@ import type { ProgressEmojiSet } from '../../utils/progressEmojis';
 import { useHabitSaveHandler } from './useHabitSaveHandler';
 import { useHabitActions } from './useHabitActions';
 import { parseHabitName } from '../../components/CreateHabitModal/utils';
+import { useMotivationDraft } from './useMotivationDraft';
 
 interface UseHabitEditScreenProps {
   habitId: Id<'habits'> | null;
@@ -100,9 +101,12 @@ export function useHabitEditScreen({
     formInitializedRef.current = true;
   }, [habit, initialHabit]);
 
+  const { motivation, setMotivationField } = useMotivationDraft(habit ?? null);
+
   const { handleSave, isSaving } = useHabitSaveHandler({
     habitId,
     habitName,
+    motivation: habit ? motivation : undefined,
     onSuccess: () => {
       triggerSuccess();
       onClose();
@@ -185,7 +189,10 @@ export function useHabitEditScreen({
     handleSave,
     selectedEmoji,
     isSaving,
+    motivation,
+    motivationReady: habit != null,
     setHabitName,
+    setMotivationField,
     reminderTime,
     selectedColor,
     streakGoal,

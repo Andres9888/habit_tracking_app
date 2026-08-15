@@ -1,20 +1,20 @@
 /**
- * useResolveWhy — Picks the best motivation field to display.
- * Priority: why → identity → woopWish.
+ * Picks the one sentence Habit Detail may show.
+ * Priority matches production + the full-flow mock: why → identity → wish.
  */
-import type { Habit } from '../../../../features/habits/types';
+import type { Habit } from '../../../features/habits/types';
 
 export type WhySource = 'why' | 'identity' | 'woopWish';
 
 export interface ResolvedWhy {
-  source: WhySource;
-  label: string;
   icon: string;
+  label: string;
+  source: WhySource;
   value: string;
 }
 
-const LABELS: Record<WhySource, { label: string; icon: string }> = {
-  identity: { icon: '🌱', label: 'Who you\'re becoming' },
+const LABELS: Record<WhySource, { icon: string; label: string }> = {
+  identity: { icon: '🌱', label: "Who you're becoming" },
   why: { icon: '💭', label: 'Your why' },
   woopWish: { icon: '⭐', label: 'Your wish' },
 };
@@ -25,7 +25,9 @@ function trim(value: string | undefined): string | null {
   return trimmed.length > 0 ? trimmed : null;
 }
 
-export function useResolveWhy(habit: Habit): ResolvedWhy | null {
+export function resolveWhy(
+  habit: Pick<Habit, 'identity' | 'why' | 'woopWish'>
+): ResolvedWhy | null {
   const why = trim(habit.why);
   if (why !== null) return { ...LABELS.why, source: 'why', value: why };
 

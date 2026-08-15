@@ -2,7 +2,7 @@
  * HabitEditScreen
  *
  * Full-screen modal for editing existing habits.
- * Allows modification of name, emoji, color, and reminders.
+ * Allows modification of name, emoji, color, reminders, why, and WOOP.
  */
 
 export { default } from './HabitEditScreen';
