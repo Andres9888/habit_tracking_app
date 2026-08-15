@@ -10,10 +10,10 @@
 
 These items will cause immediate rejection if not addressed:
 
-- [ ] **Create proper splash screen** - Current `assets/splash.png` is a 1×1px placeholder (68 bytes). Needs 2048×2048 or configure EAS to auto-generate from icon
+- [x] **Create proper splash screen** - `assets/splash.png` is 2048×2048 generated from the shipping app icon. Expo `splash` + `expo-splash-screen` point at it (`#059669`, contain, 200pt). Committed iOS `SplashScreenLogo` imageset matches.
 - [ ] **Write and host Privacy Policy** - Required by Apple. Must cover: data collection, Convex backend, Clerk auth, third-party services, data retention
 - [ ] **Capture App Store screenshots** - Need 3-10 screenshots in required sizes (1290×2796 for 6.7", 1242×2688 for 6.5")
-- [ ] **Add notification permission description** - Missing `NSUserNotificationsUsageDescription` in `ios/DailyHabits/Info.plist`
+- [x] **Add notification permission description** - `NSUserNotificationsUsageDescription` in `app.json` `ios.infoPlist` and `ios/ChainDay/Info.plist` (habit reminders and streak alerts)
 
 ---
 
@@ -52,14 +52,14 @@ These items will cause immediate rejection if not addressed:
 ### Icon & Splash
 - [x] App icon 1024×1024 (`assets/icon.png` ✓)
 - [x] Adaptive icon (`assets/adaptive-icon.png` ✓)
-- [ ] Splash screen 2048×2048 or auto-generated
+- [x] Splash screen 2048×2048 generated from the app icon (`assets/splash.png`)
 
 ---
 
 ## ⚙️ iOS Configuration Updates
 
-### Info.plist (`ios/DailyHabits/Info.plist`)
-- [ ] Add `NSUserNotificationsUsageDescription` with user-friendly message
+### Info.plist (`ios/ChainDay/Info.plist`)
+- [x] Add `NSUserNotificationsUsageDescription` with user-friendly message
 - [ ] Remove or disable `NSAllowsLocalNetworking` for production
 - [ ] Verify `MinimumOSVersion` (currently 12.0, recommend 13.0+)
 - [ ] Ensure all permission descriptions are clear and accurate

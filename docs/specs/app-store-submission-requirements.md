@@ -55,10 +55,10 @@ This document outlines all requirements needed to submit the Daily Habits app to
 ### 2.4 Required Permission Descriptions
 Since your app uses notifications, you need to add usage descriptions:
 
-- [ ] **Add NSUserNotificationsUsageDescription** to `ios/DailyHabits/Info.plist`
+- [x] **Add NSUserNotificationsUsageDescription** to `app.json` `ios.infoPlist` and `ios/ChainDay/Info.plist`
   ```xml
   <key>NSUserNotificationsUsageDescription</key>
-  <string>Daily Habits needs notifications to remind you to complete your habits and celebrate your progress.</string>
+  <string>Chain Day sends habit reminders and streak alerts you choose to help you stay consistent.</string>
   ```
 
 - [ ] **Verify no other permissions needed**
@@ -95,9 +95,10 @@ Since your app uses notifications, you need to add usage descriptions:
 
 ### 3.2 Splash Screen / Launch Screen
 - [x] **Splash image exists**: `assets/splash.png`
-  - ⚠️ Current file is only 68 bytes (likely placeholder)
-  - [ ] **Create proper splash screen** (2048x2048px recommended)
-  - [ ] **Match app branding** and background color (#F5F1ED)
+  - 2048×2048 generated from `assets/icon.png` (current Chain Day brand)
+  - Expo `splash` + `expo-splash-screen` use `#059669`, `contain`, `imageWidth` 200
+  - [x] **Create proper splash screen** (2048x2048px)
+  - [x] **Match app branding** and background color (#059669)
   - [ ] **Test on different device sizes**
 
 ### 3.3 App Store Screenshots (REQUIRED)

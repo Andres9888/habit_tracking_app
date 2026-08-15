@@ -8,13 +8,18 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#059669"
+    },
     "assetBundlePatterns": ["assets/*", "assets/sounds/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.chainday.app",
       "buildNumber": "16",
       "infoPlist": {
-        "NSUserNotificationsUsageDescription": "ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent.",
+        "NSUserNotificationsUsageDescription": "Chain Day sends habit reminders and streak alerts you choose to help you stay consistent.",
         "BGTaskSchedulerPermittedIdentifiers": [
           "com.expo.modules.backgroundtask.processing"
         ],
