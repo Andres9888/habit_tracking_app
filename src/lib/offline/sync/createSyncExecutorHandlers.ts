@@ -1,3 +1,4 @@
+import { getUserTimezone } from '../../../utils/timezone';
 import type {
   ArchiveHabitOperation,
   CreateHabitOperation,
@@ -13,8 +14,12 @@ export async function toggleCompletion(
   operation: ToggleCompletionOperation,
   mutations: ConvexMutations
 ) {
-  const { habitId, date } = operation.payload;
-  await mutations.toggleHabit({ habitId, date });
+  const { habitId, date, toCompleted } = operation.payload;
+  await mutations.toggleHabit({
+    completed: toCompleted,
+    date,
+    habitId,
+  });
 }
 
 export async function createHabit(
@@ -69,7 +74,10 @@ export async function pauseHabit(
   operation: PauseHabitOperation,
   mutations: ConvexMutations
 ) {
-  await mutations.pauseHabit({ habitId: operation.payload.habitId });
+  await mutations.pauseHabit({
+    habitId: operation.payload.habitId,
+    timezone: getUserTimezone(),
+  });
 }
 
 export async function removeHabit(

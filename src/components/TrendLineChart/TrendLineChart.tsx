@@ -17,6 +17,7 @@ import { styles, chartWidth, chartHeight } from './styles';
 import { EmptyState } from './EmptyState';
 import { ChartTooltip } from './ChartTooltip';
 import { ChartLegend } from './ChartLegend';
+import { parseDateKeyLocal } from '../../utils/getLocalDateString';
 import type { TrendLineChartProps, TrendData } from './types';
 
 export default function TrendLineChart({ data }: TrendLineChartProps) {
@@ -57,7 +58,7 @@ export default function TrendLineChart({ data }: TrendLineChartProps) {
     const index = Math.round(label);
     const item = chartData[index];
     if (!item) return '';
-    const date = new Date(item.date);
+    const date = parseDateKeyLocal(item.date);
     return `${date.getMonth() + 1}/${date.getDate()}`;
   };
 

@@ -7,6 +7,7 @@
 import { ArrowDown, ArrowUp, Minus } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
 
+import { parseDateKeyLocal } from '../../../utils/getLocalDateString';
 import type {
   WeekDayData,
   DayVisualState,
@@ -20,7 +21,7 @@ export function getDayVisualState(
   day: WeekDayData,
   today: Date
 ): DayVisualState {
-  const dayDate = new Date(day.date);
+  const dayDate = parseDateKeyLocal(day.date);
   dayDate.setHours(0, 0, 0, 0);
   const todayStart = new Date(today);
   todayStart.setHours(0, 0, 0, 0);
@@ -68,7 +69,10 @@ export function getTrendIcon(direction: TrendDirection): LucideIcon {
 /**
  * Get trend color
  */
-export function getTrendColor(direction: TrendDirection, successColor?: string): string {
+export function getTrendColor(
+  direction: TrendDirection,
+  successColor?: string
+): string {
   switch (direction) {
     case 'up': {
       return successColor ?? '#10b981';

@@ -4,6 +4,8 @@ export interface ConvexMutations {
   toggleHabit: (args: {
     habitId: Id<'habits'>;
     date: string;
+    completed?: boolean;
+    timezone?: string;
   }) => Promise<unknown>;
   createHabit: (args: {
     name: string;
@@ -33,6 +35,9 @@ export interface ConvexMutations {
     reminderSound?: string;
   }) => Promise<unknown>;
   archiveHabit: (args: { habitId: Id<'habits'> }) => Promise<unknown>;
-  pauseHabit: (args: { habitId: Id<'habits'> }) => Promise<unknown>;
+  pauseHabit: (args: {
+    habitId: Id<'habits'>;
+    timezone?: string;
+  }) => Promise<unknown>;
   removeHabit: (args: { habitId: Id<'habits'> }) => Promise<unknown>;
 }

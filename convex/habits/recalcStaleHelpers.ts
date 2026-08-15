@@ -5,11 +5,8 @@ import {
   resolveAlgorithmMode,
 } from '../habitStrength';
 import { calculateStreakFromHistory } from '../streakUtils';
-import {
-  getTodayForTimezone,
-  getTrackingCutoffKey,
-  maxDateKey,
-} from './utils';
+import { skipPausedDays } from './skipPausedDays';
+import { getTodayForTimezone, getTrackingCutoffKey, maxDateKey } from './utils';
 
 export async function recalculateHabitStrength(
   ctx: MutationCtx,
@@ -35,6 +32,7 @@ export async function recalculateHabitStrength(
   const snapshot = calculateMomentumStrengthSnapshot({
     habitCreatedAt: habit.createdAt,
     mode,
+    skipDate: skipPausedDays(habit),
     throughDate: evaluationDateKey,
     tracking: trackingForSnapshot,
   });

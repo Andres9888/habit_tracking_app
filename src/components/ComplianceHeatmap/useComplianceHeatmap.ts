@@ -3,6 +3,7 @@
  */
 
 import { useMemo } from 'react';
+import { parseDateKeyLocal } from '../../utils/getLocalDateString';
 import type { HeatmapData, MonthLabel } from './ComplianceHeatmap.types';
 import { MONTH_NAMES } from './ComplianceHeatmap.constants';
 
@@ -21,7 +22,7 @@ export function useComplianceHeatmap(data: HeatmapData[] | null) {
     const weeksData: HeatmapData[][] = [];
     let currentWeek: HeatmapData[] = [];
 
-    const firstDate = new Date(data[0].date);
+    const firstDate = parseDateKeyLocal(data[0].date);
     const firstDayOfWeek = firstDate.getDay();
 
     // Add empty cells for days before the first data point
@@ -58,7 +59,7 @@ export function useComplianceHeatmap(data: HeatmapData[] | null) {
     for (const [weekIndex, week] of weeks.entries()) {
       const validDay = week.find((day) => day.date);
       if (validDay) {
-        const date = new Date(validDay.date);
+        const date = parseDateKeyLocal(validDay.date);
         const month = date.getMonth();
         if (month !== currentMonth) {
           currentMonth = month;
