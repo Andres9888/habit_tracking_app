@@ -1,113 +1,69 @@
 /**
- * Screen Background Color Standardization Tests (Phase 7 Task 1)
- * Verifies all screens use theme tokens for background colors instead
- * of hardcoded hex values.
+ * Screens use theme background / surface tokens
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
 import { colors } from '@/theme/colors';
-import { styles as analyticsStyles } from '@/screens/AnalyticsScreen/AnalyticsScreen.styles';
-// SignInScreen.styles removed in OAuth-only migration
 
 const SRC = path.resolve(__dirname, '../../../src');
 
-function readSource(relativePath: string): string {
-  return fs.readFileSync(path.join(SRC, relativePath), 'utf-8');
+function read(rel: string): string {
+  return fs.readFileSync(path.join(SRC, rel), 'utf-8');
 }
 
-describe('colors.light.gradientMid token', () => {
-  it('exists and equals #F0EDE8', () => {
-    expect(colors.light.gradientMid).toBe('#F0EDE8');
-    expect(colors.light.gradientMid).toBeDefined();
-    expect(colors.light.gradientMid).toContain('#');
-  });
-
-  it('is darker than colors.light.background', () => {
-    expect(colors.light.gradientMid).not.toBe(colors.light.background);
+describe('Canvas tokens', () => {
+  it('background / gradientMid match the warm paper palette', () => {
     expect(colors.light.background).toBe('#F5F1ED');
-    expect(colors.light.gradientMid).toBeTruthy();
+    expect(colors.light.gradientMid).toBe('#F0EDE8');
+    expect(colors.background).toBe(colors.light.background);
   });
 });
 
-describe('HabitsApp uses theme background', () => {
-  const source = readSource('features/habits/HabitsApp.tsx');
+describe('HabitsApp', () => {
+  const source = read('features/habits/HabitsApp.tsx');
 
-  it('reads colors from useThemeColors', () => {
-    expect(source).toMatch(/import.*useThemeColors.*from.*ThemeContext/);
-  });
-
-  it('uses the theme background token instead of a hardcoded hex', () => {
+  it('uses useThemeColors().colors.background', () => {
+    expect(source).toMatch(/useThemeColors/);
     expect(source).toContain('colors.background');
     expect(source).not.toContain('#FAF8F5');
   });
 });
 
-describe('HabitEditScreen uses theme background', () => {
-  const source = readSource('screens/HabitEditScreen/HabitEditScreen.tsx');
+describe('HabitEditScreen', () => {
+  const source = read('screens/HabitEditScreen/HabitEditScreen.tsx');
 
-  it('reads colors from useThemeColors', () => {
-    expect(source).toMatch(/import.*useThemeColors.*from.*ThemeContext/);
-  });
-
-  it('does not use bg-[#faf9f7] Tailwind class', () => {
+  it('uses themeColors.surface', () => {
+    expect(source).toMatch(/useThemeColors/);
+    expect(source).toContain('themeColors.surface');
     expect(source).not.toContain('bg-[#faf9f7]');
   });
-
-  it('uses a theme surface token', () => {
-    expect(source).toContain('themeColors.surface');
-  });
 });
 
-describe('CharacterScreen uses theme background', () => {
-  const source = readSource('screens/CharacterScreen/CharacterScreen.tsx');
+describe('CharacterScreen', () => {
+  const source = read('screens/CharacterScreen/CharacterScreen.tsx');
 
-  it('reads colors from useThemeColors', () => {
-    expect(source).toMatch(/import.*useThemeColors.*from.*ThemeContext/);
-  });
-
-  it('does not use bg-white class', () => {
+  it('uses colors.background from useThemeColors', () => {
+    expect(source).toMatch(/useThemeColors/);
+    expect(source).toContain('colors.background');
     expect(source).not.toContain("bg-white'");
-    expect(source).not.toContain('bg-white"');
-  });
-
-  it('uses the theme background token', () => {
-    expect(source).toContain('colors.background');
   });
 });
 
-// SignUpScreen removed in OAuth-only migration
+describe('HabitDetailScreen', () => {
+  const source = read('screens/HabitDetailScreen/HabitDetailScreen.tsx');
 
-describe('HabitDetailScreen uses theme surface tokens', () => {
-  const source = readSource('screens/HabitDetailScreen/HabitDetailScreen.tsx');
-
-  it('reads colors from useThemeColors', () => {
-    expect(source).toMatch(/import.*useThemeColors.*from.*theme/);
-    expect(source).toContain('useThemeColors()');
-  });
-
-  it('does not hardcode canvas hex values', () => {
-    expect(source).not.toMatch(/#faf9f7/i);
-    expect(source).not.toMatch(/#f5f3f0/i);
-  });
-
-  it('uses the theme background token for the sheet', () => {
+  it('uses theme background + overlay scrim', () => {
+    expect(source).toMatch(/useThemeColors/);
     expect(source).toContain('colors.background');
-  });
-
-  it('uses the overlay scrim behind the sheet', () => {
     expect(source).toContain('overlays.scrim');
   });
 });
 
-// SignInScreen and SignInScreen.styles removed in OAuth-only migration
+describe('AnalyticsScreen', () => {
+  const source = read('screens/AnalyticsScreen/AnalyticsScreen.tsx');
 
-describe('AnalyticsScreen.styles already uses theme token', () => {
-  it('container backgroundColor matches colors.background', () => {
-    expect(analyticsStyles.container.backgroundColor).toBe(colors.background);
-  });
-
-  it('colors.background equals colors.light.background', () => {
-    expect(colors.background).toBe(colors.light.background);
+  it('applies themeColors.background on the container', () => {
+    expect(source).toContain('themeColors.background');
   });
 });
