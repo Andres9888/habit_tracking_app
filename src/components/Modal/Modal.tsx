@@ -3,22 +3,22 @@
  * Variants: Bottom Sheet, Full Screen, Center Alert
  */
 
-import React, { useEffect, useState } from 'react';
-import { Modal as RNModal, StyleSheet, View } from 'react-native';
+import React from 'react';
 import type { ModalProps } from './Modal.types';
-import { styles } from './Modal.styles';
-import { EXIT_DURATIONS } from './Modal.constants';
 import { useReduceMotion } from './useReduceMotion';
 import { useModalAnimations } from './useModalAnimations';
 import { useModalStyles } from './useModalStyles';
 import { useModalGestures } from './useModalGestures';
+import { useModalRenderState } from './useModalRenderState';
 import { ModalBackdrop } from './ModalBackdrop';
 import { ModalContent } from './ModalContent';
+import { ModalFrame } from './ModalFrame';
 import { ModalWarmMountHost } from './ModalWarmMountHost';
 
 export function Modal({
   visible,
   onClose,
+  onHidden,
   variant = 'bottomSheet',
   children,
   disableBackdropClose = false,
@@ -33,23 +33,12 @@ export function Modal({
 }: ModalProps) {
   const reduceMotionPref = useReduceMotion(respectReduceMotion);
   const reduceMotion = skipAnimation || reduceMotionPref;
-  const [shouldRender, setShouldRender] = useState(visible);
-
-  useEffect(() => {
-    if (visible) {
-      setShouldRender(true);
-      return;
-    }
-    if (reduceMotion) {
-      setShouldRender(false);
-      return;
-    }
-    const timeout = setTimeout(
-      () => setShouldRender(false),
-      EXIT_DURATIONS[variant]
-    );
-    return () => clearTimeout(timeout);
-  }, [visible, reduceMotion, variant]);
+  const shouldRender = useModalRenderState({
+    onHidden,
+    reduceMotion,
+    variant,
+    visible,
+  });
   const animationValues = useModalAnimations({
     backdropOpacity,
     reduceMotion,
@@ -66,24 +55,32 @@ export function Modal({
     translateY: animationValues.translateY,
     variant,
   });
-  const inlineAnimatedStyles = inline
+  const resolvedAnimatedStyles = inline
     ? {
         backdropStyle: { opacity: backdropOpacity },
         bottomSheetStyle: { transform: [{ translateY: 0 }] },
-        centerAlertStyle: {
-          opacity: 1,
-          transform: [{ scale: 1 }],
-        },
+        centerAlertStyle: { opacity: 1, transform: [{ scale: 1 }] },
         fullScreenStyle: {
           opacity: 1,
           transform: [{ translateY: 0 }, { scale: 1 }],
         },
       }
     : animatedStyles;
-  const resolvedAnimatedStyles = inline ? inlineAnimatedStyles : animatedStyles;
 
-  const modalBody = (
-    <>
+  if (!shouldRender) {
+    return warmMount ? (
+      <ModalWarmMountHost>{children}</ModalWarmMountHost>
+    ) : null;
+  }
+
+  return (
+    <ModalFrame
+      accessibilityViewIsModal={accessibilityViewIsModal}
+      inline={inline}
+      variant={variant}
+      visible={visible}
+      onClose={onClose}
+    >
       <ModalBackdrop
         backdropStyle={resolvedAnimatedStyles.backdropStyle}
         disableBackdropClose={disableBackdropClose || inline}
@@ -98,53 +95,7 @@ export function Modal({
       >
         {children}
       </ModalContent>
-    </>
-  );
-
-  if (!shouldRender) {
-    return warmMount ? (
-      <ModalWarmMountHost>{children}</ModalWarmMountHost>
-    ) : null;
-  }
-
-  if (inline) {
-    return (
-      <View
-        pointerEvents='box-none'
-        style={[StyleSheet.absoluteFill, { elevation: 9999, zIndex: 9999 }]}
-      >
-        <View
-          style={[
-            styles.container,
-            variant === 'fullScreen' && styles.containerFullScreen,
-            variant === 'centerAlert' && styles.containerCenterAlert,
-          ]}
-        >
-          {modalBody}
-        </View>
-      </View>
-    );
-  }
-
-  return (
-    <RNModal
-      accessibilityViewIsModal={accessibilityViewIsModal}
-      statusBarTranslucent
-      transparent
-      animationType='none'
-      visible={shouldRender}
-      onRequestClose={onClose}
-    >
-      <View
-        style={[
-          styles.container,
-          variant === 'fullScreen' && styles.containerFullScreen,
-          variant === 'centerAlert' && styles.containerCenterAlert,
-        ]}
-      >
-        {modalBody}
-      </View>
-    </RNModal>
+    </ModalFrame>
   );
 }
 

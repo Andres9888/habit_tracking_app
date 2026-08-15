@@ -4,6 +4,62 @@ import { render } from '@testing-library/react-native';
 
 import { Modal } from './Modal';
 
+describe('Modal native presentation', () => {
+  it('pairs transparent RNModal with overFullScreen so iOS can restore Home touches', () => {
+    const screen = render(
+      <Modal
+        visible
+        respectReduceMotion={false}
+        skipAnimation
+        variant='fullScreen'
+        onClose={() => {}}
+      >
+        <Text>Library</Text>
+      </Modal>
+    );
+
+    expect(screen.UNSAFE_getByType(RNModal).props).toMatchObject({
+      presentationStyle: 'overFullScreen',
+      transparent: true,
+    });
+  });
+
+  it('fires onHidden only after the native modal unmounts', () => {
+    const onHidden = jest.fn();
+    const screen = render(
+      <Modal
+        visible
+        respectReduceMotion={false}
+        skipAnimation
+        variant='fullScreen'
+        onClose={() => {}}
+        onHidden={onHidden}
+      >
+        <Text>Library</Text>
+      </Modal>
+    );
+
+    expect(screen.UNSAFE_getByType(RNModal)).toBeTruthy();
+    expect(onHidden).not.toHaveBeenCalled();
+
+    screen.rerender(
+      <Modal
+        visible={false}
+        respectReduceMotion={false}
+        skipAnimation
+        variant='fullScreen'
+        onClose={() => {}}
+        onHidden={onHidden}
+      >
+        <Text>Library</Text>
+      </Modal>
+    );
+
+    expect(screen.UNSAFE_queryByType(RNModal)).toBeNull();
+    expect(onHidden).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('Modal warm mount', () => {
   it('renders hidden inert children before the native modal opens', () => {
     const screen = render(

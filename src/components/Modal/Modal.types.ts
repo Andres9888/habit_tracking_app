@@ -15,6 +15,12 @@ export interface ModalProps {
   /** On close callback */
   onClose: () => void;
 
+  /**
+   * Fires after the close transition finishes and React unmounts the modal.
+   * Use this to present another native modal so only one transition runs.
+   */
+  onHidden?: () => void;
+
   /** Render without a nested native modal container (useful inside another modal) */
   inline?: boolean;
 
