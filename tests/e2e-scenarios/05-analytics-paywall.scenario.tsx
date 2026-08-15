@@ -19,8 +19,8 @@ describe('S13 Premium paywall (free user → Analytics)', () => {
 
   it('shows the premium upsell with a trial CTA', async () => {
     renderScreen(<AnalyticsScreen />);
-    expect(await screen.findByText('Unlock Premium Analytics')).toBeTruthy();
-    expect(screen.getByText('Habit Strength Insights')).toBeTruthy();
+    expect(await screen.findByText('Unlock Your Full Potential')).toBeTruthy();
+    expect(screen.getByText('Premium Analytics')).toBeTruthy();
     expect(screen.getByTestId('paywall-start-trial-button')).toBeTruthy();
   });
 

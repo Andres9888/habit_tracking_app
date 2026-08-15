@@ -22,3 +22,4 @@ export {
   seedTemplates,
   seedUniqueTemplates,
 } from './templates/seedMutations';
+export { syncFromClient as syncPremiumFlags } from './templates/syncPremiumFlags';

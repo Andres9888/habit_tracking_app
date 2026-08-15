@@ -3,6 +3,7 @@
  */
 export { default } from './AnalyticsScreen';
 export type {
+  AnalyticsScreenProps,
   StatCardProps,
   AnalyticsOverviewStats,
   RankedHabit,

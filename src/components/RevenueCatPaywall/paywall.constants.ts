@@ -37,6 +37,12 @@ export const PAYWALL_FEATURES: readonly PaywallFeature[] = [
     title: 'Premium Analytics',
   },
   {
+    description: 'Huberman and science-backed habit bundles',
+    emoji: '\uD83D\uDCE6',
+    id: 'packs',
+    title: 'Premium Habit Packs',
+  },
+  {
     description: 'Full Huberman-protocol visualization',
     emoji: '\uD83E\uDDE0',
     id: 'viz',

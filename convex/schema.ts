@@ -309,6 +309,9 @@ const applicationTables = {
 
     name: v.string(),
 
+    // Premium catalog flag. Omitted/false = free starter or general library.
+    isPremium: v.optional(v.boolean()),
+
     // Optional link to research
     popularityScore: v.optional(v.number()),
 

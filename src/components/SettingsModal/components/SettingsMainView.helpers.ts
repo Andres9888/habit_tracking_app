@@ -28,6 +28,7 @@ export function buildSettingsContentProps(
     onChangeStreakReminderTime: p.onChangeStreakReminderTime ?? (() => {}),
     onExportHabitsData: p.onExportHabitsData,
     onOpenAccount: () => p.setView('account'),
+    onOpenAnalytics: () => p.setView('analytics'),
     onOpenArchivedHabits: () => p.setView('archived'),
     onOpenCalendarLook: () => p.setView('calendar'),
     onPremiumUpsell: p.onPremiumUpsell,

@@ -15,7 +15,7 @@ export const SETTINGS_SEARCH_SECTIONS: Record<SettingsSectionKey, string[]> = {
   appearance: ['Theme', 'Calendar look', 'Compact habit cards'],
   // Completion sound lives under Reminders; Habits owns sorting + archive +
   // export (mock 3B folded the one-row Privacy & Security card in here).
-  behavior: ['Sort order', 'Archived habits', 'Export my data'],
+  behavior: ['Sort order', 'Analytics', 'Archived habits', 'Export my data'],
   reminders: ['Streak reminders', 'Completion sound'],
   support: [
     'Rate Chain Day',

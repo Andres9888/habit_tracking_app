@@ -10,12 +10,13 @@ import { durations, enterEasing } from '../../theme/animations';
 import { colors } from '../../theme/colors';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { typography } from '../../theme/typography';
-import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { ScreenHeader } from '../../components/ScreenHeader';
 import { useAnalyticsScreen } from './AnalyticsScreen.hooks';
+import { AnalyticsPaywall } from './AnalyticsPaywall';
 import { styles } from './AnalyticsScreen.styles';
+import type { AnalyticsScreenProps } from './AnalyticsScreen.types';
 import {
   EmptyState,
   OverviewStats,
@@ -25,11 +26,10 @@ import {
   ExportMenu,
 } from './components';
 
-function AnalyticsScreenContent() {
+function AnalyticsScreenContent({ onBack }: AnalyticsScreenProps) {
   const { colors: themeColors } = useThemeColors();
   const {
     refreshing,
-    showPaywall,
     showExportMenu,
     isPremiumUser,
     isLoading,
@@ -43,8 +43,6 @@ function AnalyticsScreenContent() {
     handleHabitPress,
     handleExportPress,
     handleExport,
-    handleStartTrial,
-    setShowPaywall,
     setShowExportMenu,
   } = useAnalyticsScreen();
 
@@ -66,16 +64,8 @@ function AnalyticsScreenContent() {
     return `Updated ${hours}h ago`;
   }, [cacheSavedAt]);
 
-  // Show paywall modal if not premium user
-  if (!isPremiumUser && showPaywall) {
-    return (
-      <PremiumPaywall
-        visible
-        variant='analytics'
-        onClose={() => setShowPaywall(false)}
-        onStartTrial={handleStartTrial}
-      />
-    );
+  if (!isPremiumUser) {
+    return <AnalyticsPaywall onBack={onBack} />;
   }
 
   if (isLoading) {
@@ -101,9 +91,10 @@ function AnalyticsScreenContent() {
           .easing(enterEasing)}
       >
         <ScreenHeader
-          leftAction={null}
+          leftAction={onBack ? 'back' : null}
           subtitle='Track your habit journey'
           title='Analytics'
+          onBack={onBack}
         />
         {cacheCaption ? (
           <Text
@@ -185,10 +176,10 @@ function AnalyticsScreenContent() {
   );
 }
 
-export default function AnalyticsScreen() {
+export default function AnalyticsScreen(props: AnalyticsScreenProps = {}) {
   return (
     <ScreenErrorBoundary screenName='Analytics'>
-      <AnalyticsScreenContent />
+      <AnalyticsScreenContent {...props} />
     </ScreenErrorBoundary>
   );
 }

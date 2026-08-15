@@ -23,6 +23,7 @@ interface BehaviorSectionProps {
   onChangeHabitSortMode: (mode: HabitSortMode) => void;
   archivedHabitsCount?: number;
   onOpenArchivedHabits: () => void;
+  onOpenAnalytics: () => void;
   onExportHabitsData?: () => void | Promise<void>;
 }
 
@@ -64,6 +65,7 @@ export function BehaviorSection(p: BehaviorSectionProps) {
       <HabitDataRows
         archivedHabitsCount={p.archivedHabitsCount}
         onExportHabitsData={p.onExportHabitsData}
+        onOpenAnalytics={p.onOpenAnalytics}
         onOpenArchivedHabits={p.onOpenArchivedHabits}
       />
     </SettingsSection>

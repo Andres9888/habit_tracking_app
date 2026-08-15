@@ -4,7 +4,7 @@
 
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import { PackConfirmSheet } from '../../../components/PackConfirmSheet';
-import { PaywallSheet } from '../../../components/PaywallSheet';
+import { RevenueCatPaywall } from '../../../components/RevenueCatPaywall';
 import type { PremiumPack } from '../data/premiumPacks';
 import type {
   TemplateCustomizations,
@@ -55,7 +55,12 @@ export function TemplatesScreenModals(p: TemplatesScreenModalsProps) {
         onDirectImport={p.onDirectImport}
         onImport={p.onImport}
       />
-      <PaywallSheet visible={p.showPaywall} onClose={p.onClosePaywall} />
+      <RevenueCatPaywall
+        visible={p.showPaywall}
+        onClose={p.onClosePaywall}
+        onPurchaseSuccess={p.onClosePaywall}
+        onRestoreSuccess={p.onClosePaywall}
+      />
       <PackConfirmSheet
         pack={p.packConfirmPack}
         visible={p.packConfirmVisible}

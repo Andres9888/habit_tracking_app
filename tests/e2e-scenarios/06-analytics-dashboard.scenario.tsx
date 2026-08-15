@@ -32,7 +32,7 @@ describe('S12 Analytics dashboard (premium user)', () => {
     renderScreen(<AnalyticsScreen />);
     // The strength distribution donut proves the dashboard (not the paywall) rendered.
     expect(await screen.findByTestId('pie-chart')).toBeTruthy();
-    expect(screen.queryByText('Unlock Premium Analytics')).toBeNull();
+    expect(screen.queryByText('Unlock Your Full Potential')).toBeNull();
     expect(screen.queryByTestId('paywall-start-trial-button')).toBeNull();
     expect(screen.queryByText('Something went wrong')).toBeNull();
   });

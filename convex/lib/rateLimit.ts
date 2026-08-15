@@ -31,6 +31,7 @@ export const RATE_LIMITS = {
   'storage.generateUploadUrl': { limit: 10, windowMs: 60 * 60_000 },
   'storage.validateImageUpload': { limit: 20, windowMs: 60 * 60_000 },
   'templates.seed': { limit: 5, windowMs: 60_000 },
+  'templates.syncPremiumFlags': { limit: 5, windowMs: 60_000 },
   'user.getOrCreate': { limit: 10, windowMs: 60_000 },
   'user.updateProfileImage': { limit: 10, windowMs: 60_000 },
 } as const satisfies Record<string, RateLimitConfig>;

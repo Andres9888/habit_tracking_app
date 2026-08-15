@@ -29,6 +29,7 @@ import { useBottomBarProps } from './useBottomBarProps';
 import { schedulePostLaunchAppPreload } from './postLaunchPreload';
 import { useWarmTemplatesCache } from '../../screens/TemplatesScreen/useWarmTemplatesCache';
 import { enterEasing } from '../../theme/animations';
+import { hasReachedFreeHabitLimit } from '../../constants/habitLimit';
 
 const ENTERING = FadeInDown.duration(280).easing(enterEasing);
 const styles = StyleSheet.create({ flex1: { flex: 1 } });
@@ -65,6 +66,11 @@ function HabitsAppContent() {
   });
 
   const handlers = useHabitsAppHandlers({
+    hasReachedHabitLimit: hasReachedFreeHabitLimit(
+      list.habits,
+      list.isPremiumUser
+    ),
+    isPremiumUser: list.isPremiumUser,
     openCreateHabitScreen: modals.openCreateHabitScreen,
     triggerSelection,
   });

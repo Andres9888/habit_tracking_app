@@ -1,7 +1,5 @@
-/** HabitDataRows — archive + export entry points.
- *  Both live in Habits now (mock decision 3B: 7 cards → 6 — a lone navigational
- *  row didn't earn its own Privacy & Security card). */
-import { BookOpen, Download } from 'lucide-react-native';
+/** HabitDataRows — analytics, archive, and export entry points. */
+import { BarChart3, BookOpen, Download } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { SettingsRow } from '../SettingsRow';
 import { useSettingsToast } from '../SettingsToast';
@@ -9,12 +7,14 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface HabitDataRowsProps {
   archivedHabitsCount?: number;
+  onOpenAnalytics: () => void;
   onOpenArchivedHabits: () => void;
   onExportHabitsData?: () => void | Promise<void>;
 }
 
 export function HabitDataRows({
   archivedHabitsCount,
+  onOpenAnalytics,
   onOpenArchivedHabits,
   onExportHabitsData,
 }: HabitDataRowsProps) {
@@ -30,6 +30,14 @@ export function HabitDataRows({
 
   return (
     <>
+      <SettingsRow
+        icon={<BarChart3 color={settings.export.icon} size={iconSizes.small} />}
+        iconBackgroundColor={settings.export.bg}
+        label='Analytics'
+        subtitle='Strength, trends, and weekly insights'
+        type='navigation'
+        onPress={onOpenAnalytics}
+      />
       <SettingsRow
         badge={archivedHabitsCount}
         icon={<BookOpen color={settings.archive.icon} size={iconSizes.small} />}

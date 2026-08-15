@@ -4,11 +4,14 @@
 
 import { useCallback, useRef } from 'react';
 import { colors } from '@/theme/colors';
+import { useImportGuard } from './useImportGuard';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandlers.types';
 
 type FeedbackOptions = Pick<
   UseTemplateImportHandlersOptions,
+  | 'isPremiumUser'
+  | 'onShowPaywall'
   | 'previewTemplate'
   | 'setFeedbackHabitId'
   | 'setFeedbackVariant'
@@ -105,7 +108,11 @@ export function useImportFeedback(o: FeedbackOptions) {
     ]
   );
 
-  const guardImport = useCallback(() => false, []);
+  const guardImport = useImportGuard(
+    o.isPremiumUser,
+    o.userHabitCount,
+    o.onShowPaywall
+  );
 
   return { guardImport, showAlreadyImported, showError, showSuccess };
 }

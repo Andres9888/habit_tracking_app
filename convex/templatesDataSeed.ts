@@ -8,6 +8,7 @@ import { internalMutation, internalQuery, query } from './_generated/server';
 import type { MutationCtx } from './_generated/server';
 import type { Id } from './_generated/dataModel';
 import { PRUNED_TEMPLATE_NAMES } from './templates/curatedRemovals';
+import { withPremiumFlag } from './templates/premiumFlags';
 import { SCIENCE_ENRICHMENT } from './templates/scienceEnrichment.data';
 
 // Frequency constants
@@ -40,6 +41,7 @@ type TemplateInsert = {
   icon: string;
   iconColor: string;
   name: string;
+  isPremium?: boolean;
   popularityScore?: number;
   scientificLink?: string;
   scientificReference: string;
@@ -83,13 +85,22 @@ const _insertTemplateIfMissing = async (
     .filter((q) => q.eq(q.field('name'), template.name))
     .first();
 
-  if (existing) return;
+  const flagged = withPremiumFlag(template);
+  if (existing) {
+    if (existing.isPremium !== flagged.isPremium) {
+      await ctx.db.patch(existing._id, { isPremium: flagged.isPremium });
+    }
+    return;
+  }
 
   // Fresh installs pick up authored science drill-down content here; existing
   // installs get it via templates/patchScienceEnrichment. Inline fields on the
   // template win, so a hand-tuned seed entry is never overwritten.
   const authored = SCIENCE_ENRICHMENT[template.name];
-  await ctx.db.insert('templates', authored ? { ...authored, ...template } : template);
+  await ctx.db.insert(
+    'templates',
+    authored ? { ...authored, ...flagged } : flagged
+  );
 };
 
 const normalizeTemplateName = (name: string) => name.trim().toLowerCase();
@@ -218,7 +229,7 @@ export const seedTemplates = internalMutation({
         return false;
       }
 
-      await ctx.db.insert('templates', template);
+      await ctx.db.insert('templates', withPremiumFlag(template));
       _insertedCount++;
       return true;
     };
@@ -2207,7 +2218,7 @@ export const seedAdditionalTemplates = internalMutation({
         return false;
       }
 
-      await ctx.db.insert('templates', template);
+      await ctx.db.insert('templates', withPremiumFlag(template));
       _insertedCount++;
       return true;
     };
@@ -3108,7 +3119,7 @@ export const seedNewScienceTemplates = internalMutation({
         return false;
       }
 
-      await ctx.db.insert('templates', template);
+      await ctx.db.insert('templates', withPremiumFlag(template));
       _insertedCount++;
       insertedNames.push(template.name);
       existingTemplateNameKeys.add(templateNameKey);
@@ -5003,7 +5014,7 @@ export const seedUniqueTemplates = internalMutation({
         return false;
       }
 
-      await ctx.db.insert('templates', template);
+      await ctx.db.insert('templates', withPremiumFlag(template));
       _insertedCount++;
       insertedNames.push(template.name);
       return true;
@@ -6050,7 +6061,7 @@ export const seedResearchBackedTemplates = internalMutation({
         return false;
       }
 
-      await ctx.db.insert('templates', template);
+      await ctx.db.insert('templates', withPremiumFlag(template));
       _insertedCount++;
       insertedNames.push(template.name);
       existingTemplateNameKeys.add(templateNameKey);

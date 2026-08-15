@@ -27,6 +27,7 @@ export function PaywallCTA({
         accessibilityLabel={label}
         accessibilityRole="button"
         disabled={isDisabled || isProcessing}
+        testID="paywall-start-trial-button"
         onPress={onPress}
         onPressIn={onPressIn}
         onPressOut={onPressOut}

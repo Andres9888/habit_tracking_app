@@ -82,6 +82,7 @@ export type TemplateInsert = {
   icon: string;
   iconColor: string;
   name: string;
+  isPremium?: boolean;
   popularityScore?: number;
   scientificLink?: string;
   scientificReference: string;

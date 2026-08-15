@@ -12,12 +12,20 @@ import { buildSettingsContentProps } from './SettingsMainView.helpers';
 import type { SettingsMainViewProps } from './SettingsMainView.types';
 
 const ArchivedHabitsModal = lazy(() => import('../../ArchivedHabitsModal'));
+const AnalyticsScreen = lazy(() => import('../../../screens/AnalyticsScreen'));
 
 export function renderSettingsMainViewContent(
   props: SettingsMainViewProps,
   handleSortSelect: (mode: HabitSortMode) => void
 ): ReactNode {
   switch (props.view) {
+    case 'analytics': {
+      return (
+        <Suspense fallback={<SettingsModalSkeleton />}>
+          <AnalyticsScreen onBack={() => props.setView('settings')} />
+        </Suspense>
+      );
+    }
     case 'archived': {
       return (
         <Suspense fallback={<SettingsModalSkeleton />}>

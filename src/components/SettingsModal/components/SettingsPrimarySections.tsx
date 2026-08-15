@@ -68,6 +68,7 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
             sectionIconColor={p.sectionIconColor}
             onChangeHabitSortMode={p.onChangeHabitSortMode}
             onExportHabitsData={p.onExportHabitsData}
+            onOpenAnalytics={p.onOpenAnalytics}
             onOpenArchivedHabits={p.onOpenArchivedHabits}
           />
         </Animated.View>

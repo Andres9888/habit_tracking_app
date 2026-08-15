@@ -1,6 +1,7 @@
 import { internal } from '../_generated/api';
 import { internalMutation, mutation } from '../_generated/server';
 import { enforceRateLimit } from '../lib/rateLimit';
+import { applyPremiumFlags } from './syncPremiumFlags';
 
 export const seedTemplates = mutation({
   args: {},
@@ -17,7 +18,10 @@ export const seedTemplates = mutation({
     await enforceRateLimit(ctx, identity.subject, 'templates.seed');
 
     const existingTemplate = await ctx.db.query('templates').first();
-    if (existingTemplate) return { queued: false };
+    if (existingTemplate) {
+      await applyPremiumFlags(ctx);
+      return { queued: false };
+    }
 
     const seedJobs = [
       internal.templatesDataSeed.seedTemplates,

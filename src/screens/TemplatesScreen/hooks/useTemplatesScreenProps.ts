@@ -48,8 +48,10 @@ export function useTemplatesScreenProps() {
   const packConfirm = usePackConfirm({
     allTemplates: data.allTemplates,
     importTemplate: data.importTemplate,
+    isPremiumUser: data.isPremiumUser,
     onComplete: (count) =>
       state.setSessionImportCount((current) => current + count),
+    onShowPaywall: () => state.setShowPaywall(true),
     setImportedIds: state.setImportedTemplateIds,
   });
 

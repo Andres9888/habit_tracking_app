@@ -23,6 +23,7 @@ export interface SettingsContentProps {
   onOpenAccount: () => void;
   onOpenArchivedHabits: () => void;
   onOpenCalendarLook: () => void;
+  onOpenAnalytics: () => void;
   onChangeHabitSortMode: (
     mode: import('../../features/habits/types').HabitSortMode
   ) => void;

@@ -4,6 +4,7 @@
 import type { MutationCtx } from '../_generated/server';
 import type { TemplateInsert } from './types';
 import { PRUNED_TEMPLATE_NAMES } from './curatedRemovals';
+import { withPremiumFlag } from './premiumFlags';
 
 /**
  * Insert a template if it doesn't already exist
@@ -22,9 +23,15 @@ export const insertTemplateIfMissing = async (
     .withIndex('by_name', (q) => q.eq('name', template.name))
     .first();
 
-  if (existing) return;
+  const flagged = withPremiumFlag(template);
+  if (existing) {
+    if (existing.isPremium !== flagged.isPremium) {
+      await ctx.db.patch(existing._id, { isPremium: flagged.isPremium });
+    }
+    return;
+  }
 
-  await ctx.db.insert('templates', template);
+  await ctx.db.insert('templates', flagged);
 };
 
 /**

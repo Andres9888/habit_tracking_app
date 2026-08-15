@@ -42,6 +42,13 @@ export {
   INPUT_ERROR_LENGTH,
 } from './app';
 
+export {
+  FREE_HABIT_LIMIT,
+  countHabitsTowardFreeLimit,
+  hasReachedFreeHabitLimit,
+  shouldGuardFreeHabitAction,
+} from './habitLimit';
+
 // Auth constants
 export {
   AUTH_COLORS,

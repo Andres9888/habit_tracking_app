@@ -3,6 +3,7 @@ import { internalMutation } from '../_generated/server';
 import { normalizeTemplateName } from './helpers';
 import { PRUNED_TEMPLATE_NAMES } from './curatedRemovals';
 import { CURATION_SEED_TEMPLATES } from './curatedSeedTemplates';
+import { withPremiumFlag } from './premiumFlags';
 
 export const seedCurationTemplates = internalMutation({
   args: {},
@@ -22,7 +23,10 @@ export const seedCurationTemplates = internalMutation({
         continue;
       }
 
-      await ctx.db.insert('templates', { ...template, createdAt: now });
+      await ctx.db.insert(
+        'templates',
+        withPremiumFlag({ ...template, createdAt: now })
+      );
       insertedNames.push(template.name);
       existingNames.add(key);
     }

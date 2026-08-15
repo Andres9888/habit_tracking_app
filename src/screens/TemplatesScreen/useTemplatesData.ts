@@ -8,7 +8,9 @@ import { api } from '../../../convex/_generated/api';
 import { useCachedQuery } from '../../lib/queryCache';
 import type { CategoryFilter } from '../templates/templates.types';
 import type { Doc } from '../../../convex/_generated/dataModel';
+import { countHabitsTowardFreeLimit } from '@/constants/habitLimit';
 import { CATEGORY_META } from './data/categoryMeta';
+import { useSyncPremiumFlags } from './hooks/useSyncPremiumFlags';
 
 const FALLBACK_CATEGORIES: CategoryFilter[] = [
   { icon: '✨', id: 'all', label: 'All' },
@@ -72,7 +74,7 @@ export function useTemplatesData() {
     { entryName: 'templates.getImportedTemplateIds' }
   );
   const isLoading = allTemplates === undefined;
-  const userHabitCount = userHabits?.length ?? 0;
+  const userHabitCount = countHabitsTowardFreeLimit(userHabits ?? []);
   const isPremiumUser = settings?.hasPremium ?? false;
   const categories = useMemo(
     () => getCategoriesFromTemplates(allTemplates),
@@ -87,6 +89,8 @@ export function useTemplatesData() {
 
   const importTemplate = useMutation(api.templates.importTemplate);
   const seedTemplates = useMutation(api.templates.seedTemplates);
+  const syncPremiumFlags = useMutation(api.templates.syncPremiumFlags);
+  useSyncPremiumFlags(allTemplates, () => syncPremiumFlags({}));
 
   return {
     allTemplates,

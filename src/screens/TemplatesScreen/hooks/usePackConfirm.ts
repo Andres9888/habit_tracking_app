@@ -11,7 +11,9 @@ import type { PremiumPack } from '../data/premiumPacks';
 interface PackConfirmOptions {
   allTemplates: { _id: Id<'templates'>; name: string }[] | undefined;
   importTemplate: (args: { templateId: Id<'templates'> }) => Promise<{ success: boolean }>;
+  isPremiumUser: boolean;
   onComplete: (count: number) => void;
+  onShowPaywall?: () => void;
   setImportedIds: Dispatch<SetStateAction<Set<string>>>;
 }
 
@@ -19,14 +21,25 @@ export function usePackConfirm(o: PackConfirmOptions) {
   const [selectedPack, setSelectedPack] = useState<PremiumPack | null>(null);
 
   const handlePackPress = useCallback(
-    (pack: PremiumPack) => setSelectedPack(pack),
-    []
+    (pack: PremiumPack) => {
+      if (!o.isPremiumUser) {
+        o.onShowPaywall?.();
+        return;
+      }
+      setSelectedPack(pack);
+    },
+    [o.isPremiumUser, o.onShowPaywall]
   );
 
   const handleCancel = useCallback(() => setSelectedPack(null), []);
 
   const handleConfirm = useCallback(async () => {
     if (!selectedPack || !o.allTemplates) return;
+    if (!o.isPremiumUser) {
+      setSelectedPack(null);
+      o.onShowPaywall?.();
+      return;
+    }
     const normalize = (s: string) => s.trim().toLowerCase();
     const names = new Set(selectedPack.habits.map((h) => normalize(h.name)));
     const matches = o.allTemplates.filter((t) => names.has(normalize(t.name)));
@@ -42,7 +55,15 @@ export function usePackConfirm(o: PackConfirmOptions) {
     }
     setSelectedPack(null);
     if (count > 0) o.onComplete(count);
-  }, [selectedPack, o.allTemplates, o.importTemplate, o.setImportedIds, o.onComplete]);
+  }, [
+    o.allTemplates,
+    o.importTemplate,
+    o.isPremiumUser,
+    o.onComplete,
+    o.onShowPaywall,
+    o.setImportedIds,
+    selectedPack,
+  ]);
 
   return { handleCancel, handleConfirm, handlePackPress, selectedPack };
 }

@@ -53,6 +53,10 @@ export interface RankedHabit {
 
 export type ExportFormat = 'csv' | 'json';
 
+export interface AnalyticsScreenProps {
+  onBack?: () => void;
+}
+
 export interface UseAnalyticsScreenReturn {
   // State
   refreshing: boolean;
