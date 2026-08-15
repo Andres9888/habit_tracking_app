@@ -573,13 +573,14 @@ body {
   margin: 0;
 }
 .why p .lead {
+  display: block;
   font-family: var(--sans);
   font-size: 12.5px;
   font-weight: 700;
   letter-spacing: .04em;
   text-transform: uppercase;
   color: var(--green);
-  margin-right: 5px;
+  margin: 0 0 3px;
 }
 .why p em { font-style: italic; }
 
@@ -1236,6 +1237,94 @@ body {
 .sheet .sheet-actions .save:hover { background: var(--green-deep); }
 
 /* ------------------------------------------------------------
+   Screen · Edit (why + WOOP authoring)
+   ------------------------------------------------------------ */
+
+.edit-id { padding: 16px 16px 14px; }
+.edit-id .name {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+.edit-id .meta { font-size: 12.5px; color: var(--ink-3); }
+
+.woop-intro {
+  background: var(--sage-tint);
+  border: 1px solid #D8E5DC;
+  border-radius: 16px;
+  padding: 13px 14px;
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+}
+.woop-intro .tile { background: #DCEAE1; }
+.woop-intro p {
+  margin: 4px 0 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #33463C;
+}
+
+.field { padding: 13px 15px 14px; }
+.field + .field { border-top: 1px solid var(--hairline-2); }
+.field .eyebrow { display: block; }
+.field .hint {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-3);
+  margin: 4px 0 9px;
+}
+.field textarea {
+  width: 100%;
+  min-height: 70px;
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--ink);
+  background: #FCFAF7;
+  resize: none;
+  outline: none;
+  overflow: hidden;
+}
+.field textarea.short { min-height: 56px; }
+.field textarea:focus { border-color: rgba(12,124,89,.5); background: #fff; }
+
+.why-preview {
+  margin-top: 10px;
+  padding: 12px 14px 13px;
+  border-radius: 16px;
+  background: var(--sage-tint);
+  border: 1px solid #D8E5DC;
+}
+.why-preview .eyebrow { color: var(--green-deep); }
+.why-preview p {
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.42;
+  color: var(--ink-2);
+  margin: 5px 0 0;
+}
+.why-preview p .lead {
+  display: block;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin: 0 0 3px;
+}
+.why-preview p em { font-style: italic; }
+.why-preview.is-empty .lead { display: none; }
+.why-preview.is-empty p { font-family: var(--sans); font-size: 13px; color: var(--ink-3); font-style: italic; }
+
+/* ------------------------------------------------------------
    Docs panel (desktop only, beside the phone)
    ------------------------------------------------------------ */
 
@@ -1422,7 +1511,7 @@ button:focus-visible, .node:focus-visible {
               </div>
               <span></span>
               <div class="nav-right">
-                <button class="text-btn" data-noop>Edit</button>
+                <button class="text-btn" data-go="edit">Edit</button>
               </div>
             </div>
 
@@ -1460,7 +1549,7 @@ button:focus-visible, .node:focus-visible {
                     <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6"/><path d="m4.9 8.9 1.4 1.4"/><path d="M2 17h2"/><path d="M20 17h2"/><path d="m17.7 10.3 1.4-1.4"/><path d="M17 17a5 5 0 0 0-10 0"/><path d="M2 21h20"/></svg>
                   </span>
                   <div class="why-body">
-                    <p><span class="lead">Your why</span><em>start the day with energy, not pressure.</em></p>
+                    <p><span class="lead" id="whyLead">Your why</span><em id="whyLine">Start the day with energy, not pressure.</em></p>
                   </div>
                 </div>
 
@@ -1541,6 +1630,87 @@ button:focus-visible, .node:focus-visible {
                   </span>
                   <p id="detailInsight"></p>
                 </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ==================================================
+               SCREEN · EDIT (why + WOOP)
+               ================================================== -->
+          <section class="screen" id="s-edit" aria-label="Edit habit">
+            <div class="navbar">
+              <div>
+                <button class="back-btn" data-back>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                  Detail
+                </button>
+              </div>
+              <span class="nav-title">Edit</span>
+              <div class="nav-right">
+                <button class="text-btn" data-back>Done</button>
+              </div>
+            </div>
+
+            <div class="scroll">
+              <div class="page">
+                <div class="card edit-id">
+                  <p class="name">Wake-Up Movement</p>
+                  <p class="meta">Morning routine · Daily · name and schedule stay in Edit later</p>
+                </div>
+
+                <p class="section-label" style="margin-top:20px">Shown on Habit Detail</p>
+                <div class="card">
+                  <label class="field">
+                    <span class="eyebrow">Your why</span>
+                    <p class="hint">One line. This is the sentence above Complete today.</p>
+                    <textarea class="short" id="fldWhy" data-field="why" maxlength="140"></textarea>
+                  </label>
+                  <label class="field">
+                    <span class="eyebrow">Who you’re becoming</span>
+                    <p class="hint">Optional. Used on Detail only if the why is empty.</p>
+                    <textarea class="short" id="fldIdentity" data-field="identity" maxlength="160"></textarea>
+                  </label>
+                </div>
+                <div class="why-preview" id="editPreview">
+                  <span class="eyebrow">Preview on Detail</span>
+                  <p><span class="lead" id="editPreviewLead">Your why</span><em id="editPreviewLine"></em></p>
+                </div>
+
+                <p class="section-label" style="margin-top:20px">Written here, not on Detail</p>
+                <div class="woop-intro" style="margin-bottom:12px">
+                  <span class="tile">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3"/><path d="M12 18v3"/><path d="M3 12h3"/><path d="M18 12h3"/><circle cx="12" cy="12" r="4.2"/></svg>
+                  </span>
+                  <div>
+                    <span class="eyebrow" style="color:var(--green-deep)">WOOP</span>
+                    <p>Wish, Outcome, Obstacle, Plan. Naming the obstacle is the useful part — wishing alone often feels finished.</p>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <label class="field">
+                    <span class="eyebrow">Wish</span>
+                    <p class="hint">The habit you want, in plain language.</p>
+                    <textarea class="short" id="fldWish" data-field="wish"></textarea>
+                  </label>
+                  <label class="field">
+                    <span class="eyebrow">Outcome</span>
+                    <p class="hint">The best realistic result if it sticks.</p>
+                    <textarea class="short" id="fldOutcome" data-field="outcome"></textarea>
+                  </label>
+                  <label class="field">
+                    <span class="eyebrow">Obstacle</span>
+                    <p class="hint">The thing in you that usually stops it — not traffic, not “life.”</p>
+                    <textarea id="fldObstacle" data-field="obstacle"></textarea>
+                  </label>
+                  <label class="field">
+                    <span class="eyebrow">Plan</span>
+                    <p class="hint">One if-then tied to that obstacle.</p>
+                    <textarea id="fldPlan" data-field="plan"></textarea>
+                  </label>
+                </div>
+
+                <p class="footnote">Habit Detail only shows the why line. A hard morning uses the plan; it does not need this whole page in the way.</p>
               </div>
             </div>
           </section>
@@ -1792,7 +1962,7 @@ button:focus-visible, .node:focus-visible {
 
     <div class="panel">
       <h2>Flow map</h2>
-      <svg class="flow" viewBox="0 0 470 360" role="img" aria-label="Navigation flow between the seven screens">
+      <svg class="flow" viewBox="0 0 470 360" role="img" aria-label="Navigation flow between the habit detail screens">
         <defs>
           <marker id="ah" viewBox="0 0 10 10" refX="8.4" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
             <path d="M0 1.6 L8.6 5 L0 8.4 z" fill="#5E6A5F"/>
@@ -1809,6 +1979,7 @@ button:focus-visible, .node:focus-visible {
         <path class="edge" d="M71,204 C71,322 118,322 176,322" marker-end="url(#ah)"/>
         <path class="edge" d="M302,30 L344,30" marker-end="url(#ah)"/>
         <path class="edge" d="M302,164 L344,164" marker-end="url(#ah)"/>
+        <path class="edge" d="M71,140 L71,52" marker-end="url(#ah)"/>
 
         <!-- back edges -->
         <path class="edge back" d="M176,48 C152,48 158,166 134,166" marker-end="url(#ahb)"/>
@@ -1816,8 +1987,13 @@ button:focus-visible, .node:focus-visible {
         <path class="edge back" d="M176,262 C152,262 158,203 134,203" marker-end="url(#ahb)"/>
         <path class="edge back" d="M344,48 L302,48" marker-end="url(#ahb)"/>
         <path class="edge back" d="M344,182 L302,182" marker-end="url(#ahb)"/>
+        <path class="edge back" d="M85,52 L85,140" marker-end="url(#ahb)"/>
 
         <!-- nodes -->
+        <g class="node" data-node="edit" tabindex="0" role="button" aria-label="Go to Edit">
+          <rect x="8" y="8" width="126" height="44" rx="11"/>
+          <text x="71" y="35" text-anchor="middle">Edit · Why</text>
+        </g>
         <g class="node" data-node="ready" tabindex="0" role="button" aria-label="Go to Habit Detail ready state">
           <rect x="8" y="140" width="126" height="64" rx="11"/>
           <text x="71" y="167" text-anchor="middle">Habit Detail</text>
@@ -1861,6 +2037,8 @@ button:focus-visible, .node:focus-visible {
           <tr><th>From</th><th>Action</th><th>To</th></tr>
         </thead>
         <tbody>
+          <tr><td class="from">Habit Detail</td><td class="label">Edit</td><td class="to">Edit · Why</td></tr>
+          <tr><td class="from">Edit · Why</td><td class="label">Back / Done</td><td class="to">Habit Detail</td></tr>
           <tr><td class="from">Habit Detail</td><td class="label">View history</td><td class="to">History</td></tr>
           <tr><td class="from">History</td><td class="label">Tap a logged date</td><td class="to">Day Detail</td></tr>
           <tr><td class="from">Day Detail</td><td class="label">Back</td><td class="to">History</td></tr>
@@ -1886,7 +2064,11 @@ button:focus-visible, .node:focus-visible {
         </div>
         <div class="o is-detail">
           <h3>Habit Detail</h3>
-          <p>Owns <span class="owns">the current action, one small trustworthy snapshot, and calm recovery</span>. It is a recommitment surface: name, why, strength dial, one primary action, this week, and two doors out. Past-date editing deliberately does not live here.</p>
+          <p>Owns <span class="owns">the current action, one small trustworthy snapshot, and calm recovery</span>. It is a recommitment surface: name, one why line, strength dial, one primary action, this week, and two doors out. Past-date editing and WOOP authoring deliberately do not live here.</p>
+        </div>
+        <div class="o">
+          <h3>Edit</h3>
+          <p>Owns <span class="owns">authoring</span> — the why line Detail will show, identity, and the full WOOP (wish, outcome, obstacle, plan). A hard morning uses the plan; it does not need this page in the way.</p>
         </div>
         <div class="o">
           <h3>History</h3>
@@ -1909,6 +2091,7 @@ button:focus-visible, .node:focus-visible {
         <li><strong>No rest days, no streak shaming.</strong> A miss is described factually and answered with a smaller version of the habit.</li>
         <li><strong>Insights are auditable.</strong> Every insight row opens a screen showing the counts and dates behind it, plus an explicit note that a pattern is not a cause.</li>
         <li><strong>The year heat map lives on Analytics.</strong> It is binary — logged or not — and sits above the weekly/monthly control, not inside it. A Friday-highlighted copy of the same grid is the evidence for that insight. Tapping a square opens that month in History; the cells are too small to edit.</li>
+        <li><strong>Why is a line on Detail and a section on Edit.</strong> Detail shows one sentence above the button. Edit holds WOOP. Empty why falls back to identity, then wish — never a placeholder essay on the recommitment surface.</li>
       </ul>
     </div>
 
@@ -1998,6 +2181,16 @@ button:focus-visible, .node:focus-visible {
 
   /* today's own record, mutated by Complete / Undo */
   var todayRecord = { done: false, time: "7:14 AM", note: "" };
+
+  /* why / WOOP — authored on Edit, one line shown on Detail */
+  var motivation = {
+    why: "Start the day with energy, not pressure.",
+    identity: "I am someone who starts moving before the day starts deciding for me.",
+    wish: "Start the day by moving, not by opening my phone.",
+    outcome: "I have energy for the kids before the day takes over.",
+    obstacle: "I hit snooze and tell myself I’ll do it after coffee.",
+    plan: "If I want to snooze, then I put both feet on the floor and do the two-minute version."
+  };
 
   var DETAIL_STATES = {
     ready: {
@@ -2128,12 +2321,14 @@ button:focus-visible, .node:focus-visible {
 
   var SCREEN_OF = {
     ready: "s-detail", completed: "s-detail", recovery: "s-detail",
+    edit: "s-edit",
     history: "s-history", day: "s-day", analytics: "s-analytics", insight: "s-insight"
   };
   var READOUT_OF = {
     ready: "Habit Detail · ready",
     completed: "Habit Detail · completed today",
     recovery: "Habit Detail · recovery",
+    edit: "Edit · Why",
     history: "History",
     day: "Day Detail",
     analytics: "Analytics",
@@ -2167,6 +2362,7 @@ button:focus-visible, .node:focus-visible {
     if (backLbl) {
       backLbl.textContent = (prev === "analytics" || prev === "insight") ? "Analytics" : "Detail";
     }
+    if (next === "edit") fillEditFields();
   }
 
   function go(next) {
@@ -2185,6 +2381,7 @@ button:focus-visible, .node:focus-visible {
     stack = (next === "ready" || next === "completed" || next === "recovery") ? []
           : (next === "day") ? ["ready", "history"]
           : (next === "insight") ? ["ready", "analytics"]
+          : (next === "edit") ? ["ready"]
           : ["ready"];
     if (next === "completed") setDetailState("completed", true);
     else if (next === "recovery") setDetailState("recovery", true);
@@ -2266,6 +2463,7 @@ button:focus-visible, .node:focus-visible {
       : "Logs today’s date. You can undo anytime.";
 
     $("#noteTodayLabel").textContent = todayRecord.note ? "Edit note" : "Add a note";
+    syncWhyLine();
 
     if (!silent) {
       readoutEl.textContent = READOUT_OF[name];
@@ -2274,6 +2472,54 @@ button:focus-visible, .node:focus-visible {
         n.classList.toggle("is-current", n.getAttribute("data-node") === name);
       });
     }
+  }
+
+  function resolveWhy() {
+    var why = (motivation.why || "").trim();
+    if (why) return { lead: "Your why", text: why };
+    var identity = (motivation.identity || "").trim();
+    if (identity) return { lead: "Who you’re becoming", text: identity };
+    var wish = (motivation.wish || "").trim();
+    if (wish) return { lead: "Your wish", text: wish };
+    return null;
+  }
+
+  function syncWhyLine() {
+    var resolved = resolveWhy();
+    var recovering = detailEl.getAttribute("data-detail") === "recovery";
+    var preview = $("#editPreview");
+    if (!resolved) {
+      $("#whyLead").textContent = "Your why";
+      $("#whyLine").textContent = "";
+      $("#whyCard").hidden = true;
+      $("#editPreviewLead").textContent = "";
+      $("#editPreviewLine").textContent = "Nothing shown on Detail until you write a why, identity, or wish.";
+      preview.classList.add("is-empty");
+      return;
+    }
+    $("#whyLead").textContent = resolved.lead;
+    $("#whyLine").textContent = resolved.text;
+    $("#whyCard").hidden = recovering;
+    $("#editPreviewLead").textContent = resolved.lead;
+    $("#editPreviewLine").textContent = resolved.text;
+    preview.classList.remove("is-empty");
+  }
+
+  function sizeField(el) {
+    var min = el.classList.contains("short") ? 56 : 70;
+    el.style.height = "auto";
+    el.style.height = Math.max(el.scrollHeight, min) + "px";
+  }
+
+  function fillEditFields() {
+    $("#fldWhy").value = motivation.why;
+    $("#fldIdentity").value = motivation.identity;
+    $("#fldWish").value = motivation.wish;
+    $("#fldOutcome").value = motivation.outcome;
+    $("#fldObstacle").value = motivation.obstacle;
+    $("#fldPlan").value = motivation.plan;
+    $$("[data-field]").forEach(sizeField);
+    syncWhyLine();
   }
 
   /* =========================================================
@@ -2818,6 +3064,16 @@ button:focus-visible, .node:focus-visible {
     if (node) { jump(node.getAttribute("data-node")); return; }
   });
 
+  document.addEventListener("input", function (e) {
+    var field = e.target.closest("[data-field]");
+    if (!field) return;
+    var key = field.getAttribute("data-field");
+    if (!(key in motivation)) return;
+    motivation[key] = field.value;
+    sizeField(field);
+    syncWhyLine();
+  });
+
   $("#sheetScrim").addEventListener("click", closeSheet);
 
   $$(".flow .node").forEach(function (n) {
@@ -2831,6 +3087,7 @@ button:focus-visible, .node:focus-visible {
   });
 
   /* boot */
+  fillEditFields();
   setDetailState("ready", true);
   renderCalendar();
   renderAnalytics();
