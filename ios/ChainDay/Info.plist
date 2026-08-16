@@ -64,7 +64,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to access your photos to create your Vision Board.</string>
 	<key>NSUserNotificationsUsageDescription</key>
-	<string>ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent.</string>
+	<string>Chain Day sends habit reminders and streak alerts you choose to help you stay consistent.</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>UIAppFonts</key>

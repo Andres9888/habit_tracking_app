@@ -17,10 +17,9 @@ The `icon.svg` file needs to be exported to the following PNG files:
    - Used for Android adaptive icon
    - System applies background color: #FFFFFF
 
-3. **splash.png** (1284×2778px recommended)
-   - App logo centered on transparent background
-   - System applies background color: #059669 (emerald green)
-   - Should be recognizable but not full-bleed
+3. **splash.png** (2048×2048px)
+   - Generated from the shipping `assets/icon.png` (do not invent a new logo)
+   - Expo splash config uses this image at 200pt, `contain`, on `#059669`
 
 4. **favicon.png** (32×32px)
    - Web favicon
