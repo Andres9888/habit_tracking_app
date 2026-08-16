@@ -1,7 +1,7 @@
-/** Derives the Monday-first week strip and milestone bar for ThisWeekCard. */
+/** Derives the Monday-first week strip for ThisWeekCard. */
 
 import { useMemo } from 'react';
-import { addDays, startOfWeek } from 'date-fns';
+import { addDays, format, startOfWeek } from 'date-fns';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import {
   isScheduledWeekday,
@@ -13,6 +13,7 @@ export type WeekDayState = 'done' | 'today' | 'missed' | 'upcoming' | 'off';
 
 export interface WeekDay {
   date: string;
+  dayNum: number;
   short: string;
   state: WeekDayState;
 }
@@ -52,6 +53,7 @@ export function useThisWeek({
       const weekday = cursor.getDay();
       return {
         date,
+        dayNum: cursor.getDate(),
         short: WEEKDAY_SHORT[weekday] ?? '',
         state: stateFor(
           date,
@@ -62,9 +64,16 @@ export function useThisWeek({
       };
     });
 
+    const sunday = addDays(monday, 6);
+    const endStamp =
+      sunday.getMonth() === monday.getMonth()
+        ? format(sunday, 'd')
+        : format(sunday, 'MMM d');
+
     return {
       days,
       doneCount: days.filter((day) => day.state === 'done').length,
+      rangeLabel: `${format(monday, 'MMM d')} – ${endStamp}`,
       scheduledCount: days.filter((day) => day.state !== 'off').length,
     };
   }, [completedDates, daysOfWeek, today]);

@@ -1,5 +1,5 @@
 /**
- * HeroStrengthDial — 84px strength ring on the hero wash.
+ * HeroStrengthDial — 120px strength ring on the hero wash.
  *
  * WHY THIS ISN'T `components/StrengthRing`: the shared ring renders its centre
  * through `RingCenter`, which is built around emoji / percentage / trend-arrow.
@@ -22,9 +22,9 @@ import { HeroDialCenter } from './HeroDialCenter';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-const SIZE = 84;
-const RADIUS = 36;
-const STROKE = 7;
+const SIZE = 120;
+const RADIUS = 49;
+const STROKE = 8.5;
 const CENTER = SIZE / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 

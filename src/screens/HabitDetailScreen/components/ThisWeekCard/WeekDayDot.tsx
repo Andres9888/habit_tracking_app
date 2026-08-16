@@ -81,6 +81,17 @@ export function WeekDayDot({ day, onPress, palette }: WeekDayDotProps) {
           <Check color={palette.onGreen} size={15} strokeWidth={3} />
         ) : null}
       </View>
+      <Text
+        style={{
+          color:
+            day.state === 'today' ? palette.textSecondary : palette.textTertiary,
+          fontSize: 11,
+          fontVariant: ['tabular-nums'],
+          fontWeight: day.state === 'today' ? fontWeights.semibold : undefined,
+        }}
+      >
+        {day.dayNum}
+      </Text>
     </Pressable>
   );
 }

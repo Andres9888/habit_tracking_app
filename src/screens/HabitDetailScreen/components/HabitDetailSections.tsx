@@ -1,6 +1,6 @@
 /**
  * HabitDetailSections — recommitment stack below the hero:
- * Progress → History/Analytics doors → one insight line → pause.
+ * This week → History/Analytics doors → one insight line → pause.
  */
 import { View } from 'react-native';
 import type { Habit } from '../../../features/habits/types';
@@ -39,11 +39,8 @@ export function HabitDetailSections({
   return (
     <View style={{ gap: spacing.md, padding: 20, paddingBottom: 40 }}>
       <ThisWeekCard
-        bestStreak={habit.bestStreak ?? 0}
         completedDates={completedDates}
-        currentStreak={habit.currentStreak ?? 0}
         daysOfWeek={habit.daysOfWeek}
-        yearCompletions={insights.yearCompletions}
         onDayPress={(date, done) => {
           if (date > today) return;
           if (date === today) onDayPress(date, done);

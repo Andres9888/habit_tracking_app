@@ -1,11 +1,9 @@
 /**
- * HeroTitleRow — schedule eyebrow + serif habit name on the left, strength dial
- * on the right. The dial's arc turns from amber to green once today is logged,
- * which is the only colour cue the design gives the row.
+ * HeroTitleRow — centered habit name, schedule, strength dial, and caption.
+ * Matches the full-flow mock: title first, then the 120px ring.
  */
 import { Text, View } from 'react-native';
 import type { Habit } from '../../../../features/habits/types';
-import { spacing } from '../../../../theme/spacing';
 import { fontFamilies, fontWeights } from '../../../../theme/typography';
 import type { InsightPalette } from '../../insightPalette';
 import { getHabitDisplayName } from '../DetailHero.utils';
@@ -18,61 +16,57 @@ import { HeroStrengthDial } from './HeroStrengthDial';
 
 interface HeroTitleRowProps {
   habit: Habit;
-  isCompletedToday: boolean;
   palette: InsightPalette;
 }
 
-export function HeroTitleRow({
-  habit,
-  isCompletedToday,
-  palette,
-}: HeroTitleRowProps) {
+export function HeroTitleRow({ habit, palette }: HeroTitleRowProps) {
   const percent = strengthPercent(habit);
 
   return (
-    <View
-      style={{
-        alignItems: 'center',
-        flexDirection: 'row',
-        gap: 18,
-        paddingHorizontal: 20,
-        paddingTop: 18,
-      }}
-    >
-      <View style={{ flex: 1, minWidth: 0 }}>
-        <Text
-          style={{
-            color: palette.ctaGreen,
-            fontSize: 11,
-            fontWeight: fontWeights.bold,
-            letterSpacing: 1.7,
-            textTransform: 'uppercase',
-          }}
-        >
-          {scheduleLabel(habit)}
-        </Text>
-        <Text
-          accessibilityRole='header'
-          style={{
-            color: palette.bandFg,
-            fontFamily: fontFamilies.primary.display,
-            fontSize: 30,
-            fontWeight: fontWeights.semibold,
-            lineHeight: 34,
-            marginTop: spacing.sm,
-          }}
-        >
-          {getHabitDisplayName(habit)}
-        </Text>
-      </View>
+    <View style={{ alignItems: 'center', paddingHorizontal: 20 }}>
+      <Text
+        accessibilityRole='header'
+        style={{
+          color: palette.bandFg,
+          fontFamily: fontFamilies.primary.display,
+          fontSize: 26,
+          fontWeight: fontWeights.medium,
+          letterSpacing: -0.3,
+          lineHeight: 30,
+          textAlign: 'center',
+        }}
+      >
+        {getHabitDisplayName(habit)}
+      </Text>
+      <Text
+        style={{
+          color: palette.bandMuted,
+          fontSize: 13,
+          fontWeight: fontWeights.medium,
+          marginBottom: 10,
+          marginTop: 6,
+        }}
+      >
+        {scheduleLabel(habit)}
+      </Text>
       <HeroStrengthDial
-        arcColor={isCompletedToday ? palette.green : palette.dialArc}
+        arcColor={palette.green}
         levelLabel={strengthLabel(percent)}
-        mutedColor={palette.bandMuted}
+        mutedColor={palette.green}
         strengthPercent={percent}
         textColor={palette.bandFg}
         trackColor={palette.dialTrack}
       />
+      <Text
+        style={{
+          color: palette.bandMuted,
+          fontSize: 11,
+          letterSpacing: 0.1,
+          marginTop: 6,
+        }}
+      >
+        Habit strength · a snapshot, not a score
+      </Text>
     </View>
   );
 }

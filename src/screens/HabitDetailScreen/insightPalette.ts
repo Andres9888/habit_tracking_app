@@ -72,6 +72,9 @@ export interface InsightPalette extends BandTokens {
   amberBg: string;
   amberBorder: string;
 
+  /** Sage icon-tile fill on History / Analytics / why cards. */
+  tileBg: string;
+
   /** Heatmap + week-dot neutrals. */
   cellEmpty: string;
   cellFuture: string;
@@ -112,6 +115,7 @@ export function buildInsightPalette(
     textPrimary: colors.text.primary,
     textSecondary: colors.text.secondary,
     textTertiary: colors.text.tertiary,
+    tileBg: isDark ? withAlpha(green, 0.16) : '#EAF1EC',
   };
 }
 

@@ -7,6 +7,7 @@ import { useInsightPalette } from '../insightPalette';
 
 interface FlowRowProps {
   accessibilityHint?: string;
+  icon?: ReactNode;
   onPress: () => void;
   subtitle: string;
   title: string;
@@ -14,6 +15,7 @@ interface FlowRowProps {
 
 export function FlowRow({
   accessibilityHint,
+  icon,
   onPress,
   subtitle,
   title,
@@ -28,12 +30,27 @@ export function FlowRow({
       style={{
         alignItems: 'center',
         flexDirection: 'row',
-        minHeight: 56,
-        paddingHorizontal: 16,
-        paddingVertical: 12,
+        gap: 13,
+        minHeight: 60,
+        paddingHorizontal: 15,
+        paddingVertical: 10,
       }}
       onPress={onPress}
     >
+      {icon ? (
+        <View
+          style={{
+            alignItems: 'center',
+            backgroundColor: palette.tileBg,
+            borderRadius: 12,
+            height: 40,
+            justifyContent: 'center',
+            width: 40,
+          }}
+        >
+          {icon}
+        </View>
+      ) : null}
       <View style={{ flex: 1 }}>
         <Text
           style={{
@@ -77,8 +94,6 @@ export function FlowRowGroup({ children }: { children: ReactNode }) {
 export function FlowDivider() {
   const palette = useInsightPalette();
   return (
-    <View
-      style={{ backgroundColor: palette.divider, height: 1, marginLeft: 16 }}
-    />
+    <View style={{ backgroundColor: palette.divider, height: 1 }} />
   );
 }

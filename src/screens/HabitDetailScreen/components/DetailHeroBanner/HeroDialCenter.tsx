@@ -39,9 +39,10 @@ export function HeroDialCenter({
         style={{
           color: textColor,
           fontFamily: fontFamilies.primary.display,
-          fontSize: 22,
-          fontWeight: fontWeights.bold,
-          lineHeight: 24,
+          fontSize: 35,
+          fontWeight: fontWeights.medium,
+          letterSpacing: -0.6,
+          lineHeight: 38,
         }}
       >
         {score}
@@ -50,9 +51,10 @@ export function HeroDialCenter({
         numberOfLines={1}
         style={{
           color: mutedColor,
-          fontSize: 9,
-          letterSpacing: 0.9,
-          marginTop: 3,
+          fontSize: 11,
+          fontWeight: fontWeights.bold,
+          letterSpacing: 1.4,
+          marginTop: 5,
           textTransform: 'uppercase',
         }}
       >

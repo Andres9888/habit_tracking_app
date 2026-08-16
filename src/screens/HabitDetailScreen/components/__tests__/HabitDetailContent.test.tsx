@@ -1,5 +1,5 @@
 /**
- * Smoke coverage for the recommitment stack: hero, Progress, record doors,
+ * Smoke coverage for the recommitment stack: hero, This week, record doors,
  * and pause. History and Analytics are their own screens.
  */
 import { fireEvent, render } from '@testing-library/react-native';
@@ -67,11 +67,11 @@ function renderContent(
 }
 
 describe('HabitDetailContent', () => {
-  it('renders the hero, Progress card, record doors and pause card', () => {
+  it('renders the hero, This week card, record doors and pause card', () => {
     const { getByText } = renderContent();
     expect(getByText('Wake-Up Movement')).toBeTruthy();
     expect(getByText('Daily habit')).toBeTruthy();
-    expect(getByText('Progress')).toBeTruthy();
+    expect(getByText('This week')).toBeTruthy();
     expect(getByText('The record')).toBeTruthy();
     expect(getByText('History')).toBeTruthy();
     expect(getByText('Analytics')).toBeTruthy();
@@ -91,14 +91,14 @@ describe('HabitDetailContent', () => {
     expect(onOpenAnalytics).toHaveBeenCalledTimes(1);
   });
 
-  it('shows the streak numbers in the Progress rail', () => {
-    const { getByLabelText } = renderContent();
-    expect(getByLabelText('Current streak: 9')).toBeTruthy();
-    expect(getByLabelText('Longest: 12')).toBeTruthy();
+  it('keeps streak numbers off the week strip', () => {
+    const { queryByLabelText } = renderContent();
+    expect(queryByLabelText('Current streak: 9')).toBeNull();
+    expect(queryByLabelText('Longest: 12')).toBeNull();
   });
 
-  it('swaps the complete bar for the check-in card once today is logged', () => {
-    const { getByLabelText, queryByText } = render(
+  it('keeps Complete today after check-in and adds Undo', () => {
+    const { getByLabelText, getByText } = render(
       <HabitDetailContent
         isCompletedToday
         completedDates={new Set<string>()}
@@ -106,30 +106,29 @@ describe('HabitDetailContent', () => {
         onDayPress={jest.fn()}
       />
     );
-    expect(queryByText('Complete today')).toBeNull();
-    expect(getByLabelText(/Day 9 — done.*Tap to undo/s)).toBeTruthy();
+    expect(getByText('Done today')).toBeTruthy();
+    expect(getByLabelText('Undo today’s check-in')).toBeTruthy();
   });
 
-  it('shows the strength dial rather than a streak counter in the hero', () => {
+  it('shows the centered strength dial rather than a streak counter', () => {
     const { getByLabelText, getByText, queryByText } = renderContent();
     expect(getByLabelText(/Habit strength 68 percent/)).toBeTruthy();
     expect(queryByText('9 day streak')).toBeNull();
-    expect(getByText('3 days from your best streak ever')).toBeTruthy();
+    expect(getByText('Habit strength · a snapshot, not a score')).toBeTruthy();
   });
 
-  it('quotes the user’s why in the hero band when yesterday was kept', () => {
+  it('quotes the user’s why when yesterday was kept', () => {
     completeYesterday();
     const { getByText } = renderContent();
     expect(getByText(/Have energy for the kids/)).toBeTruthy();
   });
 
-  it('swaps the why pill for the recovery state when yesterday was missed', () => {
+  it('swaps the why card for recovery when yesterday was missed', () => {
     const { getByText, queryByText } = renderContent();
-    expect(
-      getByText(/One miss doesn’t erase 12 days|One miss doesn't erase 12 days/)
-    ).toBeTruthy();
+    expect(getByText('Pick it back up')).toBeTruthy();
+    expect(getByText(/Yesterday wasn’t logged/)).toBeTruthy();
     expect(queryByText(/Have energy for the kids/)).toBeNull();
-    expect(getByText('Best streak')).toBeTruthy();
+    expect(queryByText('Best streak')).toBeNull();
   });
 
   it('keeps the recovery state away once today is logged', () => {
@@ -142,7 +141,7 @@ describe('HabitDetailContent', () => {
         onDayPress={jest.fn()}
       />
     );
-    expect(queryByText(/One miss/)).toBeNull();
+    expect(queryByText('Pick it back up')).toBeNull();
   });
 
   it('falls back to identity on Detail when why is empty', () => {
@@ -157,7 +156,7 @@ describe('HabitDetailContent', () => {
     ).toBeTruthy();
   });
 
-  it('omits the why pill entirely when no motivation is set', () => {
+  it('omits the why card entirely when no motivation is set', () => {
     completeYesterday();
     const { queryByText } = renderContent({
       identity: undefined,

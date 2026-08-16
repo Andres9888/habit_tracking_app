@@ -1,10 +1,11 @@
 /**
- * HeroWhyPill — one resolved why line in the hero band.
+ * HeroWhyPill — white card with a sage tile, matching the full-flow mock.
  * Renders nothing when why / identity / wish are all empty.
  */
 import { Text, View } from 'react-native';
+import { Sunrise } from 'lucide-react-native';
 import type { Habit } from '../../../../features/habits/types';
-import { borderRadius, spacing } from '../../../../theme/spacing';
+import { borderRadius, shadows } from '../../../../theme/spacing';
 import { fontFamilies, fontWeights } from '../../../../theme/typography';
 import type { InsightPalette } from '../../insightPalette';
 import { resolveWhy } from '../resolveWhy';
@@ -23,36 +24,55 @@ export function HeroWhyPill({ habit, palette }: HeroWhyPillProps) {
       accessibilityLabel={`${resolved.label}: ${resolved.value}`}
       accessibilityRole='summary'
       style={{
-        backgroundColor: palette.bandSoft,
-        borderRadius: borderRadius.medium,
-        marginTop: spacing.base,
+        alignItems: 'center',
+        backgroundColor: palette.card,
+        borderColor: palette.cardBorder,
+        borderRadius: borderRadius.large,
+        borderWidth: 1,
+        flexDirection: 'row',
+        gap: 12,
         paddingHorizontal: 15,
         paddingVertical: 13,
+        ...shadows.subtle,
       }}
     >
-      <Text
+      <View
         style={{
-          color: palette.bandFg,
-          fontSize: 11,
-          fontWeight: fontWeights.bold,
-          letterSpacing: 0.6,
-          textTransform: 'uppercase',
+          alignItems: 'center',
+          backgroundColor: palette.tileBg,
+          borderRadius: 12,
+          height: 40,
+          justifyContent: 'center',
+          width: 40,
         }}
       >
-        {resolved.label}
-      </Text>
-      <Text
-        style={{
-          color: palette.bandMuted,
-          fontFamily: fontFamilies.primary.display,
-          fontSize: 15,
-          fontStyle: 'italic',
-          lineHeight: 21,
-          marginTop: 3,
-        }}
-      >
-        {resolved.value}
-      </Text>
+        <Sunrise color={palette.green} size={21} strokeWidth={1.8} />
+      </View>
+      <View style={{ flex: 1 }}>
+        <Text
+          style={{
+            color: palette.green,
+            fontSize: 13,
+            fontWeight: fontWeights.bold,
+            letterSpacing: 0.5,
+            textTransform: 'uppercase',
+          }}
+        >
+          {resolved.label}
+        </Text>
+        <Text
+          style={{
+            color: palette.textSecondary,
+            fontFamily: fontFamilies.primary.display,
+            fontSize: 15,
+            fontStyle: 'italic',
+            lineHeight: 21,
+            marginTop: 3,
+          }}
+        >
+          {resolved.value}
+        </Text>
+      </View>
     </View>
   );
 }

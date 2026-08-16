@@ -1,106 +1,67 @@
 /**
- * HeroRecoveryCard — the missed-yesterday state the design lists under MVP
- * "Ship": when yesterday was scheduled and skipped, this replaces the why pill
- * so the first thing you read is that the run ending didn't undo the work.
- *
- * Deliberately NOT alarming: amber, not red, and no count of what was missed.
- * The two-minute CTA sits right under it because the point of the state is to
- * lower today's bar, not to report yesterday.
+ * HeroRecoveryCard — amber only lives here. Copy matches the full-flow mock.
  */
 import { Text, View } from 'react-native';
-import { borderRadius, spacing } from '../../../../theme/spacing';
+import { RotateCcw } from 'lucide-react-native';
+import { borderRadius } from '../../../../theme/spacing';
 import { fontFamilies, fontWeights } from '../../../../theme/typography';
 import type { InsightPalette } from '../../insightPalette';
 
 interface HeroRecoveryCardProps {
-  /** "One miss doesn't erase 12 days." */
-  headline: string;
-  /** Numbers that survived the reset. */
-  bestStreak: number;
-  daysDone: number;
   palette: InsightPalette;
 }
 
-function Stat({
-  label,
-  palette,
-  value,
-}: {
-  label: string;
-  palette: InsightPalette;
-  value: number;
-}) {
-  return (
-    <View style={{ flex: 1 }}>
-      <Text
-        style={{
-          color: palette.bandFg,
-          fontFamily: fontFamilies.primary.display,
-          fontSize: 20,
-          fontWeight: fontWeights.bold,
-          lineHeight: 22,
-        }}
-      >
-        {value}
-      </Text>
-      <Text
-        numberOfLines={1}
-        style={{
-          color: palette.bandMuted,
-          fontSize: 10,
-          letterSpacing: 0.8,
-          marginTop: 4,
-          textTransform: 'uppercase',
-        }}
-      >
-        {label}
-      </Text>
-    </View>
-  );
-}
-
-export function HeroRecoveryCard({
-  bestStreak,
-  daysDone,
-  headline,
-  palette,
-}: HeroRecoveryCardProps) {
+export function HeroRecoveryCard({ palette }: HeroRecoveryCardProps) {
   return (
     <View
       accessibilityRole='summary'
       style={{
+        alignItems: 'flex-start',
         backgroundColor: palette.amberBg,
         borderColor: palette.amberBorder,
-        borderRadius: borderRadius.medium,
+        borderRadius: borderRadius.large,
         borderWidth: 1,
-        marginTop: spacing.base,
-        paddingHorizontal: 15,
-        paddingVertical: 14,
+        flexDirection: 'row',
+        gap: 12,
+        paddingHorizontal: 16,
+        paddingVertical: 15,
       }}
     >
-      <Text
-        style={{
-          color: palette.bandFg,
-          fontFamily: fontFamilies.primary.display,
-          fontSize: 18,
-          fontWeight: fontWeights.semibold,
-          lineHeight: 24,
-        }}
-      >
-        {headline}
-      </Text>
       <View
         style={{
-          borderTopColor: palette.amberBorder,
-          borderTopWidth: 1,
-          flexDirection: 'row',
-          gap: 12,
-          marginTop: 13,
-          paddingTop: 12,
+          alignItems: 'center',
+          backgroundColor: palette.amberBorder,
+          borderRadius: 12,
+          height: 40,
+          justifyContent: 'center',
+          width: 40,
         }}
       >
-        <Stat label='Best streak' palette={palette} value={bestStreak} />
-        <Stat label='Days done' palette={palette} value={daysDone} />
+        <RotateCcw color={palette.amber} size={21} strokeWidth={1.8} />
+      </View>
+      <View style={{ flex: 1 }}>
+        <Text
+          style={{
+            color: palette.amber,
+            fontSize: 11,
+            fontWeight: fontWeights.bold,
+            letterSpacing: 1.4,
+            textTransform: 'uppercase',
+          }}
+        >
+          Pick it back up
+        </Text>
+        <Text
+          style={{
+            color: palette.textPrimary,
+            fontFamily: fontFamilies.primary.display,
+            fontSize: 16,
+            lineHeight: 22,
+            marginTop: 5,
+          }}
+        >
+          Yesterday wasn’t logged. Start again with today’s two-minute version.
+        </Text>
       </View>
     </View>
   );

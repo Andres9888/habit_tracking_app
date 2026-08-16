@@ -1,82 +1,71 @@
 /**
- * HeroTodayActions — the part of the hero that changes when today is logged.
- *
- * Open (frame 1): filled "Complete today" block + the two-minute escape hatch.
- * Logged (frame 2): the check-in confirmation + the note prompt, which the
- * design moves up into the band at exactly this moment. HabitDetailContent drops
- * the foot-of-stack note card while this one is showing so there is never one
- * note bound to two inputs.
+ * HeroTodayActions — Complete today on the paper page, then a fixed-height
+ * note or Undo row so History / Analytics never jump between states.
  */
-import { View } from 'react-native';
-import type { Habit } from '../../../../features/habits/types';
-import { spacing } from '../../../../theme/spacing';
-import type { InsightPalette } from '../../insightPalette';
+import { Pressable, Text, View } from 'react-native';
+import { Undo2 } from 'lucide-react-native';
+import { useInsightPalette } from '../../insightPalette';
 import { DetailCompleteButton } from '../DetailCompleteButton';
-import { HabitNoteCard } from '../HabitNoteCard';
-import { milestoneCaption, milestoneTarget } from '../ThisWeekCard';
-import { twoMinuteHint } from './DetailHeroBanner.utils';
-import { HeroCheckInCard } from './HeroCheckInCard';
-import { HeroTwoMinute } from './HeroTwoMinute';
 
 interface HeroTodayActionsProps {
-  completedAtLabel?: string;
-  habit: Habit;
   isCompletedToday: boolean;
-  /** Yesterday was missed — open the two-minute hatch by default. */
-  isRecovering?: boolean;
   isToggling: boolean;
-  palette: InsightPalette;
   onToggleToday: () => void;
 }
 
 export function HeroTodayActions({
-  completedAtLabel,
-  habit,
   isCompletedToday,
-  isRecovering = false,
   isToggling,
   onToggleToday,
-  palette,
 }: HeroTodayActionsProps) {
-  const currentStreak = habit.currentStreak ?? 0;
-  const { isBest, target } = milestoneTarget(
-    currentStreak,
-    habit.bestStreak ?? 0
-  );
-
-  if (isCompletedToday) {
-    return (
-      <View style={{ gap: spacing.base, paddingHorizontal: 20 }}>
-        <HeroCheckInCard
-          caption={milestoneCaption(currentStreak, target, isBest)}
-          completedAtLabel={completedAtLabel}
-          disabled={isToggling}
-          palette={palette}
-          streakDay={Math.max(1, currentStreak)}
-          onUndo={onToggleToday}
-        />
-        <HabitNoteCard
-          habitId={habit._id}
-          notes={habit.notes}
-          variant='onBand'
-        />
-      </View>
-    );
-  }
+  const palette = useInsightPalette();
 
   return (
-    <View style={{ paddingHorizontal: 20, paddingTop: 18 }}>
+    <View style={{ gap: 8, paddingBottom: 4, paddingTop: 11 }}>
       <DetailCompleteButton
         disabled={isToggling}
-        isCompletedToday={false}
+        isCompletedToday={isCompletedToday}
         tone='onBand'
         onPress={onToggleToday}
       />
-      <HeroTwoMinute
-        defaultExpanded={isRecovering}
-        hint={twoMinuteHint(habit)}
-        palette={palette}
-      />
+      {isCompletedToday ? (
+        <Pressable
+          accessibilityLabel='Undo today’s check-in'
+          accessibilityRole='button'
+          disabled={isToggling}
+          style={{
+            alignItems: 'center',
+            flexDirection: 'row',
+            gap: 7,
+            height: 48,
+            justifyContent: 'center',
+          }}
+          onPress={onToggleToday}
+        >
+          <Undo2 color={palette.textTertiary} size={17} strokeWidth={2} />
+          <Text
+            style={{
+              color: palette.textSecondary,
+              fontSize: 15,
+              fontWeight: '500',
+            }}
+          >
+            Undo
+          </Text>
+        </Pressable>
+      ) : (
+        <Text
+          style={{
+            color: palette.textTertiary,
+            fontSize: 13,
+            height: 48,
+            lineHeight: 48,
+            textAlign: 'center',
+          }}
+        >
+          Logs today’s date. You can undo anytime.
+        </Text>
+      )}
     </View>
   );
 }

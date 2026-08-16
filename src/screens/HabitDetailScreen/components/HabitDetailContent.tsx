@@ -1,6 +1,6 @@
 /**
  * HabitDetailContent — recommitment surface:
- *   hero wash → Progress → History/Analytics doors → one insight line → pause
+ *   hero wash → This week → History/Analytics doors → one insight line → pause
  */
 import { useCallback } from 'react';
 import {
@@ -9,7 +9,6 @@ import {
   type NativeSyntheticEvent,
   type NativeScrollEvent,
 } from 'react-native';
-import { format } from 'date-fns';
 import type { Habit } from '../../../features/habits/types';
 import { getLocalDateString } from '../../../utils/getLocalDateString';
 import { isMissedYesterday, useHabitInsights } from '../insights';
@@ -83,12 +82,6 @@ export function HabitDetailContent({
       onScroll={handleScroll}
     >
       <DetailHeroBanner
-        completedAtLabel={
-          insights.todayCompletedAt
-            ? format(new Date(insights.todayCompletedAt), 'h:mm a')
-            : undefined
-        }
-        daysDone={insights.yearCompletions}
         habit={habit}
         isCompletedToday={isCompletedToday}
         isMissedYesterday={isMissedYesterday({
