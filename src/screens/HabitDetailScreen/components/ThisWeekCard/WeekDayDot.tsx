@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * WeekDayDot — one circle in the week strip. Tapping toggles that day, so the
  * pressable is padded out to a 44pt target even though the circle is 34pt.
@@ -27,7 +28,11 @@ interface WeekDayDotProps {
 function dotStyle(state: WeekDay['state'], palette: InsightPalette) {
   if (state === 'done') return { backgroundColor: palette.green };
   if (state === 'today') {
-    return { borderColor: palette.ctaGreen, borderWidth: 2 };
+    return {
+      backgroundColor: palette.card,
+      borderColor: palette.ctaGreen,
+      borderWidth: 2,
+    };
   }
   if (state === 'missed') {
     return {
@@ -80,11 +85,23 @@ export function WeekDayDot({ day, onPress, palette }: WeekDayDotProps) {
         {day.state === 'done' ? (
           <Check color={palette.onGreen} size={15} strokeWidth={3} />
         ) : null}
+        {day.state === 'today' ? (
+          <View
+            style={{
+              backgroundColor: palette.ctaGreen,
+              borderRadius: 3,
+              height: 6,
+              width: 6,
+            }}
+          />
+        ) : null}
       </View>
       <Text
         style={{
           color:
-            day.state === 'today' ? palette.textSecondary : palette.textTertiary,
+            day.state === 'today'
+              ? palette.textSecondary
+              : palette.textTertiary,
           fontSize: 11,
           fontVariant: ['tabular-nums'],
           fontWeight: day.state === 'today' ? fontWeights.semibold : undefined,

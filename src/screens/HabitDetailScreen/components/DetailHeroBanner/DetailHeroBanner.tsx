@@ -17,7 +17,9 @@ interface DetailHeroBannerProps {
   isCompletedToday: boolean;
   isMissedYesterday: boolean;
   isToggling: boolean;
+  todayNote?: string;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
+  onOpenNote: () => void;
 }
 
 export function DetailHeroBanner({
@@ -25,7 +27,9 @@ export function DetailHeroBanner({
   isCompletedToday,
   isMissedYesterday,
   isToggling,
+  todayNote,
   onDayPress,
+  onOpenNote,
 }: DetailHeroBannerProps) {
   const palette = useInsightPalette();
   const wash = isCompletedToday
@@ -50,6 +54,8 @@ export function DetailHeroBanner({
         <HeroTodayActions
           isCompletedToday={isCompletedToday}
           isToggling={isToggling}
+          todayNote={todayNote}
+          onOpenNote={onOpenNote}
           onToggleToday={() =>
             onDayPress(getLocalDateString(), isCompletedToday)
           }

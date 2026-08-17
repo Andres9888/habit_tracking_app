@@ -58,6 +58,10 @@ export interface InsightPalette extends BandTokens {
   /** Half-strength green — paused/skipped days and weaker bars. */
   greenSoft: string;
   greenTint: string;
+  /** Soft wash behind the completed "Done today" confirmation. */
+  greenWash: string;
+  /** Recovery body ink — warm brown on the amber card only. */
+  recoveryInk: string;
   /** Cream ink on a green fill — checkmarks, CTA labels. */
   onGreen: string;
   /** Cream sub-copy inside the green check-in confirmation. */
@@ -109,8 +113,10 @@ export function buildInsightPalette(
     green,
     greenSoft: isDark ? withAlpha(green, 0.45) : '#8FC3AB',
     greenTint: isDark ? withAlpha(green, 0.16) : '#CFE3D8',
-    missedRing: isDark ? withAlpha(amberBar, 0.4) : '#D9B8A6',
+    greenWash: isDark ? withAlpha(green, 0.16) : '#E8F2EC',
+    missedRing: isDark ? withAlpha(colors.text.primary, 0.28) : '#D6CFC3',
     onGreen: BAND_FG,
+    recoveryInk: isDark ? colors.text.primary : '#4C3D28',
     onGreenMuted: isDark ? withAlpha(BAND_FG, 0.78) : '#BFE3D2',
     textPrimary: colors.text.primary,
     textSecondary: colors.text.secondary,

@@ -18,10 +18,20 @@ export const deleteTrackingChunk = internalMutation({
       .query('tracking')
       .withIndex('by_habit_and_date', (q) => q.eq('habitId', habitId))
       .take(TRACKING_DELETE_CHUNK);
+    const dayNotes = await ctx.db
+      .query('habitDayNotes')
+      .withIndex('by_habitId_and_date', (q) => q.eq('habitId', habitId))
+      .take(TRACKING_DELETE_CHUNK);
     for (const record of records) {
       await ctx.db.delete(record._id);
     }
-    if (records.length === TRACKING_DELETE_CHUNK) {
+    for (const dayNote of dayNotes) {
+      await ctx.db.delete(dayNote._id);
+    }
+    if (
+      records.length === TRACKING_DELETE_CHUNK ||
+      dayNotes.length === TRACKING_DELETE_CHUNK
+    ) {
       await ctx.scheduler.runAfter(
         0,
         internal.habits.deleteTrackingChunk.deleteTrackingChunk,

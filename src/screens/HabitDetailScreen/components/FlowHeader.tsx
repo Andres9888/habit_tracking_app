@@ -20,8 +20,14 @@ function FlowBack({ label, onPress }: { label: string; onPress: () => void }) {
       style={{ alignItems: 'center', flexDirection: 'row', gap: 2 }}
       onPress={onPress}
     >
-      <ChevronLeft color={palette.textPrimary} size={22} strokeWidth={2.3} />
-      <Text style={{ color: palette.textSecondary, fontSize: 15 }}>
+      <ChevronLeft color={palette.green} size={20} strokeWidth={2.3} />
+      <Text
+        style={{
+          color: palette.green,
+          fontSize: 16,
+          fontWeight: '500',
+        }}
+      >
         {label}
       </Text>
     </Pressable>
@@ -32,12 +38,12 @@ export function FlowHeader({ backLabel, onBack, title }: FlowHeaderProps) {
   const palette = useInsightPalette();
 
   return (
-    <View style={{ backgroundColor: palette.card }}>
+    <View style={{ backgroundColor: palette.bandGradient[2] }}>
       <ScreenHeader
         leftAction={<FlowBack label={backLabel} onPress={onBack} />}
         title={title}
         titleStyle={{ color: palette.textPrimary }}
-        variant='default'
+        variant='transparent'
         onBack={onBack}
       />
     </View>

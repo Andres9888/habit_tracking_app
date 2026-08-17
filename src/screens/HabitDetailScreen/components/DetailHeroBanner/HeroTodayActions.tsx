@@ -1,58 +1,69 @@
 /**
- * HeroTodayActions — Complete today on the paper page, then a fixed-height
- * note or Undo row so History / Analytics never jump between states.
+ * HeroTodayActions — Complete today, then a fixed-height caption or
+ * Undo / Add a note pair so History / Analytics never jump.
  */
-import { Pressable, Text, View } from 'react-native';
-import { Undo2 } from 'lucide-react-native';
-import { useInsightPalette } from '../../insightPalette';
-import { DetailCompleteButton } from '../DetailCompleteButton';
+import { Text, View } from 'react-native';
+import { Check } from 'lucide-react-native';
+import { BAND_GREEN, useInsightPalette } from '../../insightPalette';
+import { HeroActionPair } from './HeroActionPair';
+import { HeroCompleteBar } from './HeroCompleteBar';
 
 interface HeroTodayActionsProps {
   isCompletedToday: boolean;
   isToggling: boolean;
+  todayNote?: string;
+  onOpenNote: () => void;
   onToggleToday: () => void;
 }
 
 export function HeroTodayActions({
   isCompletedToday,
   isToggling,
+  todayNote,
+  onOpenNote,
   onToggleToday,
 }: HeroTodayActionsProps) {
   const palette = useInsightPalette();
 
   return (
     <View style={{ gap: 8, paddingBottom: 4, paddingTop: 11 }}>
-      <DetailCompleteButton
-        disabled={isToggling}
-        isCompletedToday={isCompletedToday}
-        tone='onBand'
-        onPress={onToggleToday}
-      />
       {isCompletedToday ? (
-        <Pressable
-          accessibilityLabel='Undo today’s check-in'
-          accessibilityRole='button'
-          disabled={isToggling}
+        <View
+          accessibilityLabel='Done today'
+          accessibilityRole='text'
           style={{
             alignItems: 'center',
+            backgroundColor: palette.greenWash,
+            borderColor: 'rgba(12,124,89,0.32)',
+            borderRadius: 17,
+            borderWidth: 1.5,
             flexDirection: 'row',
-            gap: 7,
-            height: 48,
+            gap: 9,
+            height: 56,
             justifyContent: 'center',
           }}
-          onPress={onToggleToday}
         >
-          <Undo2 color={palette.textTertiary} size={17} strokeWidth={2} />
+          <Check color={BAND_GREEN} size={20} strokeWidth={2.2} />
           <Text
             style={{
-              color: palette.textSecondary,
-              fontSize: 15,
-              fontWeight: '500',
+              color: BAND_GREEN,
+              fontSize: 17,
+              fontWeight: '600',
             }}
           >
-            Undo
+            Done today
           </Text>
-        </Pressable>
+        </View>
+      ) : (
+        <HeroCompleteBar disabled={isToggling} onPress={onToggleToday} />
+      )}
+      {isCompletedToday ? (
+        <HeroActionPair
+          disabled={isToggling}
+          noteLabel={todayNote ? 'Edit note' : 'Add a note'}
+          onAddNote={onOpenNote}
+          onUndo={onToggleToday}
+        />
       ) : (
         <Text
           style={{

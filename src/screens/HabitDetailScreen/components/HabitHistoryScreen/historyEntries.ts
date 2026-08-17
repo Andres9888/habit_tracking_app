@@ -7,18 +7,20 @@ export interface HistoryEntry {
   day: number;
   done: boolean;
   label: string;
+  note?: string;
 }
 
 /** Chronological entries for one month, newest first, stopping at today. */
 export function buildHistoryEntries(
   month: Date,
   doneDates: Set<string>,
-  today = getLocalDateString()
+  today = getLocalDateString(),
+  notes: Record<string, string> = {}
 ): HistoryEntry[] {
   const start = startOfMonth(month);
   const monthEnd = endOfMonth(start);
   const cursor = parseLocalDate(today);
-  const end = monthEnd > cursor ? cursor : monthEnd;
+  const end = Math.min(monthEnd, cursor);
   if (end < start) return [];
 
   return eachDayOfInterval({ end, start })
@@ -29,6 +31,7 @@ export function buildHistoryEntries(
         day: date.getDate(),
         done: doneDates.has(key),
         label: format(date, 'EEE d'),
+        note: notes[key] || undefined,
       };
     })
     .reverse();

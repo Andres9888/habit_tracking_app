@@ -1,7 +1,7 @@
 /**
- * CalendarTabContent — one unified card: interactive monthly grid on top,
- * "Year at a glance" below a divider (tap a year cell to jump the month).
+ * CalendarTabContent — monthly grid in a card, with optional legend/year strip.
  */
+import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { durations, enterEasing } from '../../../theme/animations';
@@ -16,23 +16,24 @@ import { useCalendarMonth } from './useCalendarMonth';
 
 interface CalendarTabContentProps {
   completedDates: Set<string>;
+  footer?: ReactNode;
   habit: Habit;
   habitColor: string;
   pendingToggleDate?: string | null;
   /** Hidden when the standalone "Year at a glance" card is already showing. */
   showYearSection?: boolean;
-  /** Trend line under the year strip, e.g. "May was your turning point." */
   yearCaption?: string | null;
-  /** "Jan – Jul", derived from the elapsed months. */
   yearRangeLabel?: string;
-  /** Controlled month. When omitted the grid starts on the current month. */
   month?: Date;
   onMonthChange?: (month: Date) => void;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
+  /** Hide the grid's month bar so History can sit it above this card. */
+  hideGridNavigation?: boolean;
 }
 
 export function CalendarTabContent({
   completedDates,
+  footer,
   habit,
   habitColor,
   pendingToggleDate = null,
@@ -42,6 +43,7 @@ export function CalendarTabContent({
   yearRangeLabel,
   month,
   onMonthChange,
+  hideGridNavigation = false,
 }: CalendarTabContentProps) {
   const { colors, isDark } = useThemeColors();
   const { currentMonth, navigateToMonth, setCurrentMonth } = useCalendarMonth(
@@ -68,6 +70,7 @@ export function CalendarTabContent({
           habitColor={habitColor}
           habitCreatedAt={habit.createdAt}
           habitId={habit._id}
+          hideNavigation={hideGridNavigation}
           pendingToggleDate={pendingToggleDate}
           showStreakInInsights={false}
           useSolidCompletedFill
@@ -75,6 +78,7 @@ export function CalendarTabContent({
           onDayPress={onDayPress}
         />
       </ErrorBoundary>
+      {footer}
       {showYearSection ? (
         <View
           className='mt-3 pt-3'

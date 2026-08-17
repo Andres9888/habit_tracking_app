@@ -1,23 +1,26 @@
 import type { ReactNode } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
-import { borderRadius, shadows } from '../../../theme/spacing';
-import { fontWeights } from '../../../theme/typography';
+import { fontFamilies, fontWeights } from '../../../theme/typography';
 import { useInsightPalette } from '../insightPalette';
 
 interface FlowRowProps {
   accessibilityHint?: string;
   icon?: ReactNode;
+  /** Unwrapped leading mark (History entries). Prefer `icon` for sage tiles. */
+  leading?: ReactNode;
   onPress: () => void;
   subtitle: string;
+  subtitleItalic?: boolean;
   title: string;
 }
-
 export function FlowRow({
   accessibilityHint,
   icon,
+  leading,
   onPress,
   subtitle,
+  subtitleItalic = false,
   title,
 }: FlowRowProps) {
   const palette = useInsightPalette();
@@ -37,7 +40,8 @@ export function FlowRow({
       }}
       onPress={onPress}
     >
-      {icon ? (
+      {leading}
+      {icon && !leading ? (
         <View
           style={{
             alignItems: 'center',
@@ -62,7 +66,15 @@ export function FlowRow({
           {title}
         </Text>
         <Text
-          style={{ color: palette.textSecondary, fontSize: 13, marginTop: 2 }}
+          style={{
+            color: palette.textTertiary,
+            fontFamily: subtitleItalic
+              ? fontFamilies.primary.display
+              : undefined,
+            fontSize: 13,
+            fontStyle: subtitleItalic ? 'italic' : undefined,
+            marginTop: 2,
+          }}
         >
           {subtitle}
         </Text>
@@ -72,28 +84,4 @@ export function FlowRow({
   );
 }
 
-export function FlowRowGroup({ children }: { children: ReactNode }) {
-  const palette = useInsightPalette();
-
-  return (
-    <View
-      style={{
-        backgroundColor: palette.card,
-        borderColor: palette.cardBorder,
-        borderRadius: borderRadius.large,
-        borderWidth: 1,
-        overflow: 'hidden',
-        ...shadows.subtle,
-      }}
-    >
-      {children}
-    </View>
-  );
-}
-
-export function FlowDivider() {
-  const palette = useInsightPalette();
-  return (
-    <View style={{ backgroundColor: palette.divider, height: 1 }} />
-  );
-}
+export { FlowDivider, FlowRowGroup } from './FlowRowGroup';

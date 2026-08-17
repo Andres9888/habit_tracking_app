@@ -231,6 +231,14 @@ const applicationTables = {
     // Pause queries previously used `.filter()` on `paused`, which scans.
     .index('by_userId_and_paused', ['userId', 'paused']),
 
+  habitDayNotes: defineTable({
+    date: v.string(),
+    habitId: v.id('habits'),
+    note: v.string(),
+    updatedAt: v.number(),
+    userId: v.string(),
+  }).index('by_habitId_and_date', ['habitId', 'date']),
+
   deletedHabits: defineTable({
     createdAt: v.number(),
     expiresAt: v.number(),

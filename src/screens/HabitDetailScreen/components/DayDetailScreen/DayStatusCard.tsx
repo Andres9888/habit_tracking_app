@@ -33,9 +33,9 @@ export function DayStatusCard({ done, subtitle, title }: DayStatusCardProps) {
           alignItems: 'center',
           backgroundColor: done ? palette.green : palette.cellEmpty,
           borderRadius: borderRadius.full,
-          height: 40,
+          height: 44,
           justifyContent: 'center',
-          width: 40,
+          width: 44,
         }}
       >
         <Icon

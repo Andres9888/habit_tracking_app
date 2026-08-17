@@ -1,16 +1,10 @@
 /**
- * CalendarYearSection — the "Year at a glance" half of the calendar card:
- * eyebrow + elapsed-month range, the chromeless year strip, and the trend
- * caption when the months support one.
- *
- * Lives inside CalendarTabContent rather than in its own card so there is
- * exactly one year grid on the History surface, and tapping a cell still jumps
- * the calendar above it.
+ * CalendarYearSection — "Year at a glance" title, year strip, and caption.
  */
 import { Text, View } from 'react-native';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { useInsightPalette } from '../insightPalette';
-import { CardEyebrow } from './CardEyebrow';
+import { ChartHead } from './ChartHead';
 import { YearStrip } from './YearStrip';
 
 interface CalendarYearSectionProps {
@@ -18,7 +12,6 @@ interface CalendarYearSectionProps {
   completedDates: Set<string>;
   habitColor: string;
   habitCreatedAt?: number;
-  /** "Jan – Jul", derived from the elapsed months. */
   rangeLabel?: string;
   onNavigateToMonth: (dateString: string) => void;
 }
@@ -35,13 +28,11 @@ export function CalendarYearSection({
 
   return (
     <View>
-      <View style={{ marginBottom: 10 }}>
-        <CardEyebrow
-          label='Year at a glance'
-          note={rangeLabel}
-          palette={palette}
-        />
-      </View>
+      <ChartHead
+        palette={palette}
+        subtitle={rangeLabel}
+        title='Year at a glance'
+      />
       <ErrorBoundary>
         <YearStrip
           completedDates={completedDates}

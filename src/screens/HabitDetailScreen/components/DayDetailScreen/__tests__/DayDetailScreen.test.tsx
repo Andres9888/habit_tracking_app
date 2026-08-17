@@ -38,11 +38,14 @@ describe('DayDetailScreen', () => {
         focusDate='2026-08-12'
         habit={habit}
         onOpenDay={jest.fn()}
+        onOpenNote={jest.fn()}
         onToggleDay={onToggleDay}
       />
     );
     expect(getByText('Wednesday, August 12')).toBeTruthy();
     expect(getByText('Completed')).toBeTruthy();
+    expect(getByText('No note for this day.')).toBeTruthy();
+    expect(getByLabelText('Add a note')).toBeTruthy();
     fireEvent.press(getByLabelText('Undo completion'));
     expect(onToggleDay).toHaveBeenCalledWith('2026-08-12', true);
   });

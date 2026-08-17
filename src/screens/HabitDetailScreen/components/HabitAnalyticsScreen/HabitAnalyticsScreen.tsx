@@ -1,9 +1,5 @@
 import { useMemo, useState } from 'react';
-import ErrorBoundary from '../../../../components/ErrorBoundary';
-import { HabitStrengthSection } from '../../../../components/HabitStrengthSection';
 import type { Habit } from '../../../../features/habits/types';
-import { useProgressEmojis } from '../../../../hooks/useProgressEmojis';
-import { useThemeColors } from '../../../../theme';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import { useHabitInsights } from '../../insights';
 import { useInsightPalette } from '../../insightPalette';
@@ -31,9 +27,7 @@ export function HabitAnalyticsScreen({
   onOpenHistory,
   onOpenInsight,
 }: HabitAnalyticsScreenProps) {
-  const { colors } = useThemeColors();
   const palette = useInsightPalette();
-  const progressEmojis = useProgressEmojis(habit);
   const [range, setRange] = useState<ChartRange>('weekly');
   const insights = useHabitInsights({
     daysOfWeek: habit.daysOfWeek,
@@ -53,17 +47,19 @@ export function HabitAnalyticsScreen({
         : buildMonthlyBars(insights.doneDates, today),
     [insights.doneDates, range, today]
   );
-  const habitColor = habit.color ?? habit.iconColor ?? colors.primary[700];
+  const yearSub = months.rangeLabel
+    ? `${months.rangeLabel} · days you logged`
+    : 'Days you logged';
 
   return (
     <FlowPage footnote='Every number here comes from check-ins you recorded. Nothing is predicted.'>
       <YearGlanceCard
-        caption={months.caption ?? YEAR_TAP_CAPTION}
+        caption={YEAR_TAP_CAPTION}
         completedDates={insights.doneDates}
-        habitColor={habitColor}
+        habitColor={palette.green}
         habitCreatedAt={habit.createdAt}
         palette={palette}
-        rangeLabel={months.rangeLabel}
+        rangeLabel={yearSub}
         onNavigateToMonth={onOpenHistory}
       />
       <RangeTabs range={range} onChange={setRange} />
@@ -77,18 +73,6 @@ export function HabitAnalyticsScreen({
         rows={analyticsInsightRows(insights)}
         onOpenInsight={onOpenInsight}
       />
-      {habit.createdAt ? (
-        <ErrorBoundary>
-          <HabitStrengthSection
-            completedDates={insights.doneDates}
-            habitColor={habitColor}
-            habitCreatedAt={habit.createdAt}
-            habitId={habit._id}
-            habitStrength={habit.strength}
-            progressEmojis={progressEmojis}
-          />
-        </ErrorBoundary>
-      ) : null}
     </FlowPage>
   );
 }

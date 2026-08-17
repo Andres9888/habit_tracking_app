@@ -62,6 +62,7 @@ export function ThisWeekCard({
               color: palette.textPrimary,
               fontSize: 14,
               fontWeight: fontWeights.semibold,
+              lineHeight: 17,
             }}
           >
             This week

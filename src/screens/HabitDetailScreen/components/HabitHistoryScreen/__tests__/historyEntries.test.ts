@@ -18,6 +18,18 @@ describe('buildHistoryEntries', () => {
     expect(entries.some((entry) => entry.date === '2026-08-16')).toBe(false);
   });
 
+  it('attaches a per-day note when one exists', () => {
+    const entries = buildHistoryEntries(
+      new Date(2026, 7, 1),
+      new Set(['2026-08-12']),
+      '2026-08-15',
+      { '2026-08-12': 'Two minutes only.' }
+    );
+    expect(entries.find((entry) => entry.date === '2026-08-12')?.note).toBe(
+      'Two minutes only.'
+    );
+  });
+
   it('returns nothing for a future month', () => {
     expect(
       buildHistoryEntries(new Date(2026, 8, 1), new Set(), '2026-08-15')

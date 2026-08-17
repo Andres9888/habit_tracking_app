@@ -57,6 +57,10 @@ interface RemovedHabitPayload {
     completed: boolean;
     date: string;
   }>;
+  dayNotes: Array<{
+    date: string;
+    note: string;
+  }>;
 }
 
 export const remove = mutation({
@@ -89,6 +93,10 @@ export const remove = mutation({
       .query('templateUsage')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
       .collect();
+    const dayNotes = await ctx.db
+      .query('habitDayNotes')
+      .withIndex('by_habitId_and_date', (q) => q.eq('habitId', args.habitId))
+      .collect();
 
     // Delete the habit permanently
     await ctx.db.delete(args.habitId);
@@ -99,6 +107,9 @@ export const remove = mutation({
     }
     for (const usageEntry of templateUsageEntries) {
       await ctx.db.delete(usageEntry._id);
+    }
+    for (const dayNote of dayNotes) {
+      await ctx.db.delete(dayNote._id);
     }
 
     const deletedHabitPayload: RemovedHabitPayload = {
@@ -149,6 +160,7 @@ export const remove = mutation({
         completed: entry.completed,
         date: entry.date,
       })),
+      dayNotes: dayNotes.map(({ date, note }) => ({ date, note })),
     };
 
     const deletedHabitId = await ctx.db.insert('deletedHabits', {
@@ -206,6 +218,16 @@ export const restore = mutation({
         completed: trackingEntry.completed,
         date: trackingEntry.date,
         habitId,
+        userId: identity.subject,
+      });
+    }
+
+    for (const dayNote of payload.dayNotes ?? []) {
+      await ctx.db.insert('habitDayNotes', {
+        date: dayNote.date,
+        habitId,
+        note: dayNote.note,
+        updatedAt: Date.now(),
         userId: identity.subject,
       });
     }

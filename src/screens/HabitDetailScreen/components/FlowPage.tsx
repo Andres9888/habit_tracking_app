@@ -23,9 +23,11 @@ export function FlowPage({ children, footnote }: FlowPageProps) {
           <Text
             style={{
               color: palette.textTertiary,
-              fontSize: 13,
-              lineHeight: 19,
-              paddingHorizontal: 4,
+              fontSize: 12,
+              lineHeight: 18,
+              paddingHorizontal: 6,
+              paddingTop: 14,
+              textAlign: 'center',
             }}
           >
             {footnote}

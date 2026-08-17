@@ -1,5 +1,5 @@
-import { Pressable, Text, View } from 'react-native';
-import { fontFamilies } from '../../../theme/typography';
+import { Pressable, Text } from 'react-native';
+import { TrendingUp } from 'lucide-react-native';
 import type { HabitInsights } from '../insights';
 import { insightLineCopy } from '../insightLineCopy';
 import { useInsightPalette } from '../insightPalette';
@@ -19,25 +19,27 @@ export function InsightLine({ insights, onPress }: InsightLineProps) {
       accessibilityHint='Opens the evidence for this pattern'
       accessibilityLabel={line.text}
       accessibilityRole='button'
-      style={{ flexDirection: 'row', gap: 10, paddingHorizontal: 4 }}
+      style={{
+        alignItems: 'flex-start',
+        flexDirection: 'row',
+        gap: 10,
+        paddingHorizontal: 6,
+        paddingTop: 4,
+      }}
       onPress={() => onPress(line.id)}
     >
-      <View
-        style={{
-          backgroundColor: palette.greenTint,
-          borderRadius: 8,
-          height: 22,
-          marginTop: 1,
-          width: 22,
-        }}
+      <TrendingUp
+        color={palette.green}
+        size={15}
+        strokeWidth={2}
+        style={{ marginTop: 2 }}
       />
       <Text
         style={{
-          color: palette.textSecondary,
+          color: palette.textTertiary,
           flex: 1,
-          fontFamily: fontFamilies.primary.display,
-          fontSize: 14,
-          lineHeight: 21,
+          fontSize: 13,
+          lineHeight: 20,
         }}
       >
         {line.text}

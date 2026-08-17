@@ -21,6 +21,8 @@ interface CalendarDayBodyProps {
   staticTextColor: string;
   textStyle: AnimatedStyle<TextStyle>;
   useSolidCompletedFill: boolean;
+  isFuture?: boolean;
+  isMissed?: boolean;
 }
 
 export const CalendarDayBody = memo(function CalendarDayBody({
@@ -37,12 +39,20 @@ export const CalendarDayBody = memo(function CalendarDayBody({
   staticTextColor,
   textStyle,
   useSolidCompletedFill,
+  isFuture = false,
+  isMissed = false,
 }: CalendarDayBodyProps) {
+  const circle = useSolidCompletedFill;
   return (
     <Animated.View
       style={[
         styles.dayCell,
+        circle ? styles.dayCellCircle : null,
         cellPopStyle,
+        circle && isFuture && !showCompleted ? styles.futureFill : null,
+        circle && isMissed && !showCompleted && !isToday
+          ? styles.missedRing
+          : null,
         // Today ring only while incomplete: its border would inset the fill.
         isToday &&
           !showCompleted && { borderColor: habitColor, borderWidth: 2 },
@@ -52,7 +62,7 @@ export const CalendarDayBody = memo(function CalendarDayBody({
         <Animated.View
           style={[
             StyleSheet.absoluteFill,
-            { borderRadius: borderRadius.small },
+            { borderRadius: circle ? 19 : borderRadius.small },
             fillStyle,
           ]}
         />

@@ -53,7 +53,7 @@ export function HeroRecoveryCard({ palette }: HeroRecoveryCardProps) {
         </Text>
         <Text
           style={{
-            color: palette.textPrimary,
+            color: palette.recoveryInk,
             fontFamily: fontFamilies.primary.display,
             fontSize: 16,
             lineHeight: 22,

@@ -71,6 +71,7 @@ import type * as habits_toggle from "../habits/toggle.js";
 import type * as habits_toggleState from "../habits/toggleState.js";
 import type * as habits_types from "../habits/types.js";
 import type * as habits_update from "../habits/update.js";
+import type * as habits_updateDayNote from "../habits/updateDayNote.js";
 import type * as habits_utils from "../habits/utils.js";
 import type * as habits_validateMotivationFields from "../habits/validateMotivationFields.js";
 import type * as habits_validation from "../habits/validation.js";
@@ -198,6 +199,7 @@ declare const fullApi: ApiFromModules<{
   "habits/toggleState": typeof habits_toggleState;
   "habits/types": typeof habits_types;
   "habits/update": typeof habits_update;
+  "habits/updateDayNote": typeof habits_updateDayNote;
   "habits/utils": typeof habits_utils;
   "habits/validateMotivationFields": typeof habits_validateMotivationFields;
   "habits/validation": typeof habits_validation;

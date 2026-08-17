@@ -1,4 +1,5 @@
 import { Text } from 'react-native';
+import { CalendarDays, Clock } from 'lucide-react-native';
 import { useInsightPalette } from '../../insightPalette';
 import type { InsightId } from '../../useDetailFlow';
 import { FlowDivider, FlowRow, FlowRowGroup } from '../FlowRow';
@@ -50,11 +51,15 @@ function InsightRow({
   row: AnalyticsInsightRow;
   showDivider: boolean;
 }) {
+  const palette = useInsightPalette();
+  const Icon = row.id === 'working' ? Clock : CalendarDays;
+
   return (
     <>
       {showDivider ? <FlowDivider /> : null}
       <FlowRow
         accessibilityHint='Opens the evidence for this pattern'
+        icon={<Icon color={palette.green} size={20} strokeWidth={1.8} />}
         subtitle={row.subtitle}
         title={row.title}
         onPress={() => onOpenInsight(row.id)}

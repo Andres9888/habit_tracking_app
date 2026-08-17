@@ -26,19 +26,22 @@ interface MonthNavigationProps {
   currentMonth: Date;
   onPreviousMonth: () => void;
   onNextMonth: () => void;
+  /** Sit above a card, matching the History mock month bar. */
+  standalone?: boolean;
 }
 
 export const MonthNavigation = memo(function MonthNavigation({
   currentMonth,
   onPreviousMonth,
   onNextMonth,
+  standalone = false,
 }: MonthNavigationProps) {
   const { colors, isDark } = useThemeColors();
-  const iconColor = colors.text.secondary;
-  const buttonBg = isDark ? colors.surface : colors.gray[100];
+  const iconColor = colors.text.primary;
+  const buttonBg = isDark ? colors.surface : colors.card;
 
   return (
-    <View style={navStyles.row}>
+    <View style={[navStyles.row, standalone ? navStyles.rowStandalone : null]}>
       <Text
         accessibilityLabel={`Current month: ${safeFormat(currentMonth, 'MMMM yyyy', 'Month')}`}
         accessibilityRole='header'
@@ -51,7 +54,10 @@ export const MonthNavigation = memo(function MonthNavigation({
         <Pressable
           accessibilityLabel='Previous month'
           accessibilityRole='button'
-          style={[navStyles.navButton, { backgroundColor: buttonBg }]}
+          style={[
+            navStyles.navButton,
+            { backgroundColor: buttonBg, borderColor: colors.border },
+          ]}
           hitSlop={TAP_SLOP}
           onPress={onPreviousMonth}
         >
@@ -60,7 +66,10 @@ export const MonthNavigation = memo(function MonthNavigation({
         <Pressable
           accessibilityLabel='Next month'
           accessibilityRole='button'
-          style={[navStyles.navButton, { backgroundColor: buttonBg }]}
+          style={[
+            navStyles.navButton,
+            { backgroundColor: buttonBg, borderColor: colors.border },
+          ]}
           hitSlop={TAP_SLOP}
           onPress={onNextMonth}
         >

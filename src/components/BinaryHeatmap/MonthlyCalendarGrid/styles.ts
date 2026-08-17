@@ -9,7 +9,7 @@ import { StyleSheet } from 'react-native';
 import { shadows, borderRadius } from '../../../theme/spacing';
 import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
-const WEEK_ROW_HEIGHT = 41;
+const WEEK_ROW_HEIGHT = 44;
 const MONTH_GRID_HEIGHT = 6 * WEEK_ROW_HEIGHT;
 
 export const styles = StyleSheet.create({
@@ -31,6 +31,22 @@ export const styles = StyleSheet.create({
     height: 36,
     justifyContent: 'center',
     width: 36,
+  },
+  dayCellCircle: {
+    borderRadius: 19,
+    height: 38,
+    width: 38,
+  },
+  dayWrapperCircle: {
+    height: 44,
+  },
+  futureFill: {
+    backgroundColor: '#F6F3EE',
+  },
+  missedRing: {
+    borderColor: '#D6CFC3',
+    borderStyle: 'dashed',
+    borderWidth: 1.5,
   },
   dayText: {
     fontFamily: fontFamilies.primary.text,

@@ -31,7 +31,9 @@ interface HabitDetailContentProps {
   onOpenDay?: (date: string) => void;
   onOpenHistory?: () => void;
   onOpenInsight?: (id: InsightId) => void;
+  onOpenNote?: () => void;
   onPinnedChange?: (pinned: boolean) => void;
+  todayNote?: string;
 }
 
 export function HabitDetailContent({
@@ -45,7 +47,9 @@ export function HabitDetailContent({
   onOpenDay,
   onOpenHistory,
   onOpenInsight,
+  onOpenNote,
   onPinnedChange,
+  todayNote,
 }: HabitDetailContentProps) {
   const palette = useInsightPalette();
   const wash = isCompletedToday
@@ -90,7 +94,9 @@ export function HabitDetailContent({
           isCompletedToday,
         })}
         isToggling={pendingToggleDate === getLocalDateString()}
+        todayNote={todayNote}
         onDayPress={onDayPress}
+        onOpenNote={onOpenNote ?? (() => {})}
       />
       <View style={{ backgroundColor: palette.bandGradient[2] }}>
         <HabitDetailSections

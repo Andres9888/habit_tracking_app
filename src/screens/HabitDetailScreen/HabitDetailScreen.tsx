@@ -18,11 +18,14 @@ import { DetailFlowSwitch } from './components/DetailFlowSwitch';
 import { FlowHeader } from './components/FlowHeader';
 import { buildModalsProps } from './HabitDetailScreen.constants';
 import type { HabitDetailScreenProps } from './HabitDetailScreen.types';
+import { NoteSheet } from './components/NoteSheet';
 import { useCalendarHandlers } from './useCalendarHandlers';
+import { useDayNotes } from './useDayNotes';
 import { useDetailFlow } from './useDetailFlow';
 import { useDetailFlowActions } from './useDetailFlowActions';
 import { useHabitDetailScreenState } from './useHabitDetailScreenState';
 import { useResetDetailFlow } from './useResetDetailFlow';
+import { getLocalDateString } from '../../utils/getLocalDateString';
 
 // Module-scoped so the default prop is referentially stable. As an inline `[]`
 // literal it was a new array on every render, which meant the tracking-keyed
@@ -90,6 +93,9 @@ function HabitDetailScreenContent({
   }, []);
   const flow = useDetailFlow();
   const actions = useDetailFlowActions(flow.go);
+  const dayNotes = useDayNotes(displayHabit);
+  const [noteDate, setNoteDate] = useState<string | null>(null);
+  const today = getLocalDateString();
   useResetDetailFlow(flow.reset, visible, displayHabit?._id);
   const handleRequestClose = () => {
     if (flow.route === 'detail') onClose();
@@ -139,9 +145,11 @@ function HabitDetailScreenContent({
                   completedDates={screenState.completedDates}
                   habit={habitWithStreaks}
                   isCompletedToday={screenState.isCompletedToday}
+                  notes={dayNotes.notes}
                   params={flow.params}
                   pendingToggleDate={screenState.pendingToggleDate}
                   route={flow.route}
+                  todayNote={dayNotes.noteFor(today)}
                   visible={visible}
                   onDayPress={calendarHandlers.handleCalendarDayPress}
                   onEdit={handleEdit}
@@ -149,11 +157,25 @@ function HabitDetailScreenContent({
                   onOpenDay={actions.openDay}
                   onOpenHistory={actions.openHistory}
                   onOpenInsight={actions.openInsight}
+                  onOpenNote={setNoteDate}
                   onPinnedChange={handlePinnedChange}
                 />
               </View>
             </View>
           </KeyboardAvoidingView>
+          <NoteSheet
+            date={noteDate}
+            existing={noteDate ? dayNotes.noteFor(noteDate) : ''}
+            hint={
+              noteDate === today
+                ? 'Optional. Only you will see this.'
+                : 'Notes are part of the record for this day.'
+            }
+            onClose={() => setNoteDate(null)}
+            onSave={(note) => {
+              if (noteDate) void dayNotes.saveNote(noteDate, note);
+            }}
+          />
           <HabitDetailModals
             habitId={displayHabit._id}
             habitName={displayHabit.name}

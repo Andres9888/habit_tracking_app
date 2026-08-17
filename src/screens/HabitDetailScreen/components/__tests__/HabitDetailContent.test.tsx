@@ -108,6 +108,7 @@ describe('HabitDetailContent', () => {
     );
     expect(getByText('Done today')).toBeTruthy();
     expect(getByLabelText('Undo today’s check-in')).toBeTruthy();
+    expect(getByLabelText('Add a note')).toBeTruthy();
   });
 
   it('shows the centered strength dial rather than a streak counter', () => {

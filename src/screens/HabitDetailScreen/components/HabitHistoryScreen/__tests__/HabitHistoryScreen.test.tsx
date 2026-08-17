@@ -6,10 +6,6 @@ jest.mock('../../CalendarTabContent', () => ({
   CalendarTabContent: () => null,
 }));
 
-jest.mock('../../HabitNoteCard', () => ({
-  HabitNoteCard: () => null,
-}));
-
 jest.mock('../../../../../utils/getLocalDateString', () => ({
   getLocalDateString: (date?: Date) => {
     if (!date) return '2026-08-15';
@@ -39,7 +35,7 @@ const habit = {
 } as unknown as Habit;
 
 describe('HabitHistoryScreen', () => {
-  it('shows stats, entries, and opens a day from the list', () => {
+  it('shows logged entries and opens a day from the list', () => {
     const onOpenDay = jest.fn();
     const { getByLabelText, getByText } = render(
       <HabitHistoryScreen
@@ -48,8 +44,8 @@ describe('HabitHistoryScreen', () => {
         onOpenDay={onOpenDay}
       />
     );
-    expect(getByText('Days done')).toBeTruthy();
     expect(getByText('Logged entries')).toBeTruthy();
+    expect(getByText('Completed')).toBeTruthy();
     fireEvent.press(getByLabelText('Wed 12'));
     expect(onOpenDay).toHaveBeenCalledWith('2026-08-12');
   });

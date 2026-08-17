@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { useThemeColors } from '@/theme';
 import { format } from 'date-fns';
 import { memo, useCallback, useMemo } from 'react';
@@ -25,6 +26,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   pendingToggleDate = null,
   onDayPress,
   bare = false,
+  hideNavigation = false,
 }: MonthlyCalendarGridProps) {
   const { colors, isDark } = useThemeColors();
   const {
@@ -80,23 +82,28 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
         bare ? null : { backgroundColor: cardBg, borderColor: colors.border },
       ]}
     >
-      <MonthNavigation
-        currentMonth={currentMonth}
-        onNextMonth={goToNextMonth}
-        onPreviousMonth={goToPreviousMonth}
-      />
+      {hideNavigation ? null : (
+        <MonthNavigation
+          currentMonth={currentMonth}
+          onNextMonth={goToNextMonth}
+          onPreviousMonth={goToPreviousMonth}
+        />
+      )}
       <GestureDetector gesture={monthSwipeGesture}>
         <View collapsable={false}>
-          <WeekdayHeaderRow labelColor={colors.text.tertiary} />
+          <WeekdayHeaderRow
+            compact={useSolidCompletedFill}
+            labelColor={colors.text.tertiary}
+          />
           <AnimatedWeeksGrid
             completedBg={completedBg}
             surfaceBg={cardBg}
-            connectorStyle={connectorStyle}
+            connectorStyle={useSolidCompletedFill ? 'none' : connectorStyle}
             direction={slideDirection}
             habitColor={habitColor}
             monthKey={monthKey}
             pendingToggleDate={pendingToggleDate}
-            shape={dayShape}
+            shape={useSolidCompletedFill ? 'square' : dayShape}
             textColors={textColors}
             useSolidCompletedFill={useSolidCompletedFill}
             weeks={weeks}
@@ -104,11 +111,9 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
           />
         </View>
       </GestureDetector>
-      <MonthInsightStrip
-        {...insights}
-        monthKey={monthKey}
-        showStreak={showStreakInInsights}
-      />
+      {showStreakInInsights ? (
+        <MonthInsightStrip {...insights} monthKey={monthKey} showStreak />
+      ) : null}
     </View>
   );
 });

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * CalendarDay — individual day cell for the monthly calendar grid.
  * Completed days use either a soft tint (default) or solid habit-color fill
@@ -69,7 +70,12 @@ export const CalendarDay = memo(function CalendarDay({
         selected: cell.showCompleted,
       }}
       disabled={cell.isDisabled}
-      style={[styles.dayWrapper, pressStyle, cell.animation.pendingStyle]}
+      style={[
+        styles.dayWrapper,
+        useSolidCompletedFill ? styles.dayWrapperCircle : null,
+        pressStyle,
+        cell.animation.pendingStyle,
+      ]}
       onPress={() => onPress(day?.dateString ?? '', Boolean(day?.isCompleted))}
       onPressIn={pressHandlers.onPressIn}
       onPressOut={pressHandlers.onPressOut}
@@ -89,6 +95,10 @@ export const CalendarDay = memo(function CalendarDay({
           fillMounted={cell.animation.fillMounted}
           fillStyle={cell.animation.fillStyle}
           habitColor={habitColor}
+          isFuture={Boolean(day?.isFuture)}
+          isMissed={Boolean(
+            day?.isMissed && day?.isCurrentMonth && !day?.isFuture
+          )}
           isToday={cell.isToday}
           joinRight={joinRight}
           showCompleted={cell.showCompleted}

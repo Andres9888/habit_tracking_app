@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 import { useInsightPalette } from '../../insightPalette';
-import { CardEyebrow } from '../CardEyebrow';
+import { ChartHead } from '../ChartHead';
 import { InsightCard } from '../InsightCard';
 import type { WeekBar } from './weeklyBars';
 
@@ -16,7 +16,7 @@ export function RangeChart({ bars, subtitle, title }: RangeChartProps) {
 
   return (
     <InsightCard palette={palette}>
-      <CardEyebrow label={title} note={subtitle} palette={palette} />
+      <ChartHead palette={palette} subtitle={subtitle} title={title} />
       <View
         style={{
           alignItems: 'flex-end',

@@ -1,4 +1,5 @@
 import type { Habit } from '../../../features/habits/types';
+import { getLocalDateString } from '../../../utils/getLocalDateString';
 import type { DetailRoute, FlowParams, InsightId } from '../useDetailFlow';
 import { DayDetailScreen } from './DayDetailScreen';
 import { HabitAnalyticsScreen } from './HabitAnalyticsScreen';
@@ -10,9 +11,11 @@ export interface DetailFlowSwitchProps {
   completedDates: Set<string>;
   habit: Habit;
   isCompletedToday: boolean;
+  notes: Record<string, string>;
   params: FlowParams;
   pendingToggleDate?: string | null;
   route: DetailRoute;
+  todayNote?: string;
   visible: boolean;
   onDayPress: (date: string, isCompleted: boolean) => void;
   onEdit: () => void;
@@ -20,30 +23,26 @@ export interface DetailFlowSwitchProps {
   onOpenDay: (date: string) => void;
   onOpenHistory: (date?: string) => void;
   onOpenInsight: (id: InsightId) => void;
+  onOpenNote: (date: string) => void;
   onPinnedChange: (pinned: boolean) => void;
 }
 
-export function DetailFlowSwitch({
-  completedDates,
-  habit,
-  isCompletedToday,
-  params,
-  pendingToggleDate = null,
-  route,
-  visible,
-  onDayPress,
-  onEdit,
-  onOpenAnalytics,
-  onOpenDay,
-  onOpenHistory,
-  onOpenInsight,
-  onPinnedChange,
-}: DetailFlowSwitchProps) {
+export function DetailFlowSwitch(props: DetailFlowSwitchProps) {
+  const {
+    habit,
+    notes,
+    params,
+    pendingToggleDate,
+    route,
+    onOpenDay,
+    onOpenNote,
+  } = props;
   if (route === 'history') {
     return (
       <HabitHistoryScreen
         focusDate={params.focusDate}
         habit={habit}
+        notes={notes}
         pendingToggleDate={pendingToggleDate}
         onOpenDay={onOpenDay}
       />
@@ -53,19 +52,22 @@ export function DetailFlowSwitch({
     return (
       <HabitAnalyticsScreen
         habit={habit}
-        onOpenHistory={onOpenHistory}
-        onOpenInsight={onOpenInsight}
+        onOpenHistory={props.onOpenHistory}
+        onOpenInsight={props.onOpenInsight}
       />
     );
   }
   if (route === 'day') {
+    const date = params.focusDate ?? getLocalDateString();
     return (
       <DayDetailScreen
         focusDate={params.focusDate}
         habit={habit}
+        note={notes[date] ?? ''}
         pendingToggleDate={pendingToggleDate}
         onOpenDay={onOpenDay}
-        onToggleDay={onDayPress}
+        onOpenNote={() => onOpenNote(date)}
+        onToggleDay={props.onDayPress}
       />
     );
   }
@@ -74,24 +76,25 @@ export function DetailFlowSwitch({
       <InsightDetailScreen
         habit={habit}
         insightId={params.insightId}
-        onEdit={onEdit}
+        onEdit={props.onEdit}
       />
     );
   }
-
   return (
     <HabitDetailContent
-      completedDates={completedDates}
+      completedDates={props.completedDates}
       habit={habit}
-      isCompletedToday={isCompletedToday}
+      isCompletedToday={props.isCompletedToday}
       pendingToggleDate={pendingToggleDate}
-      visible={visible}
-      onDayPress={onDayPress}
-      onOpenAnalytics={onOpenAnalytics}
+      todayNote={props.todayNote}
+      visible={props.visible}
+      onDayPress={props.onDayPress}
+      onOpenAnalytics={props.onOpenAnalytics}
       onOpenDay={onOpenDay}
-      onOpenHistory={() => onOpenHistory()}
-      onOpenInsight={onOpenInsight}
-      onPinnedChange={onPinnedChange}
+      onOpenHistory={() => props.onOpenHistory()}
+      onOpenInsight={props.onOpenInsight}
+      onOpenNote={() => onOpenNote(getLocalDateString())}
+      onPinnedChange={props.onPinnedChange}
     />
   );
 }

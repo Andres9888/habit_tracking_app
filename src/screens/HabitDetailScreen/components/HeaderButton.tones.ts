@@ -19,7 +19,7 @@ export function toneColors(
   if (tone === 'onBand') {
     // Sits on the pale-green hero wash: an unfilled outline, muted band ink.
     const band = buildInsightPalette(colors, isDark);
-    return { bg: 'transparent', border: band.bandHairline, fg: band.bandMuted };
+    return { bg: 'transparent', border: 'transparent', fg: band.ctaGreen };
   }
   if (tone === 'accent') {
     return {

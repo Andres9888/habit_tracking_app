@@ -6,10 +6,6 @@ jest.mock('../../HabitDetailHistory', () => ({
   YearGlanceCard: () => null,
 }));
 
-jest.mock('../../../../../components/HabitStrengthSection', () => ({
-  HabitStrengthSection: () => null,
-}));
-
 jest.mock('../../../../../utils/getLocalDateString', () => ({
   getLocalDateString: (date?: Date) => {
     if (!date) return '2026-08-15';
@@ -17,16 +13,6 @@ jest.mock('../../../../../utils/getLocalDateString', () => ({
     const day = String(date.getDate()).padStart(2, '0');
     return `${date.getFullYear()}-${month}-${day}`;
   },
-}));
-
-jest.mock('../../../../../hooks/useProgressEmojis', () => ({
-  useProgressEmojis: () => ({
-    established: '🌳',
-    growing: '🌿',
-    mastered: '🏆',
-    starting: '🌱',
-    strong: '🌲',
-  }),
 }));
 
 jest.mock('../../../insights', () => ({

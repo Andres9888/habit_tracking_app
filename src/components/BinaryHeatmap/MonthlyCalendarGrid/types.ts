@@ -27,11 +27,13 @@ export interface MonthlyCalendarGridProps {
   onCurrentMonthChange?: (month: Date) => void;
   /** Solid habit-color fills for completed days (detail screen). */
   useSolidCompletedFill?: boolean;
-  /** Hide streak stat in insight strip (hero already shows streak). */
+  /** When false, hide the month insight strip (History has its own legend). */
   showStreakInInsights?: boolean;
   pendingToggleDate?: string | null;
   onDayPress?: (date: string, completed: boolean) => void;
   /** Suppress the own card background/border/shadow/padding when embedded
    *  inside a parent card (e.g. the unified Habit Detail calendar card). */
   bare?: boolean;
+  /** Hide the built-in month bar so a parent can render it above the card. */
+  hideNavigation?: boolean;
 }

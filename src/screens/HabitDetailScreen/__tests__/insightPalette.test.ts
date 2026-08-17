@@ -120,7 +120,8 @@ describe('buildInsightPalette — remaining mock neutrals', () => {
   it('restores the heatmap and week-dot values', () => {
     expect(light.cellEmpty).toBe('#F0EDE4');
     expect(light.cellFuture).toBe('#F7F5EF');
-    expect(light.missedRing).toBe('#D9B8A6');
+    expect(light.missedRing).toBe('#D6CFC3');
+    expect(light.greenWash).toBe('#E8F2EC');
     expect(light.greenSoft).toBe('#8FC3AB');
     expect(light.greenTint).toBe('#CFE3D8');
     expect(light.onGreenMuted).toBe('#BFE3D2');

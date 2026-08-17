@@ -11,12 +11,25 @@ const WEEKDAY_LABELS = [
   'Sun',
 ] as const;
 
-export function WeekdayHeaderRow({ labelColor }: { labelColor: string }) {
+export function WeekdayHeaderRow({
+  compact = false,
+  labelColor,
+}: {
+  compact?: boolean;
+  labelColor: string;
+}) {
   return (
     <View style={styles.row}>
       {WEEKDAY_LABELS.map((day) => (
         <View key={day} style={styles.headerCell}>
-          <Text style={[styles.headerText, { color: labelColor }]}>{day}</Text>
+          <Text
+            style={[
+              styles.headerText,
+              { color: labelColor, letterSpacing: compact ? 1 : 0.3 },
+            ]}
+          >
+            {compact ? day[0] : day}
+          </Text>
         </View>
       ))}
     </View>

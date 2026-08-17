@@ -1,21 +1,22 @@
 import { useEffect, useMemo, useState } from 'react';
-import { startOfMonth } from 'date-fns';
+import { addMonths, startOfMonth } from 'date-fns';
+import { MonthNavigation } from '../../../../components/BinaryHeatmap/MonthlyCalendarGrid';
 import type { Habit } from '../../../../features/habits/types';
-import { useThemeColors } from '../../../../theme';
+import { triggerHaptic } from '../../../../utils/haptics';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import { parseLocalDate, useHabitInsights } from '../../insights';
 import { useInsightPalette } from '../../insightPalette';
 import { CalendarTabContent } from '../CalendarTabContent';
 import { FlowPage } from '../FlowPage';
 import { FlowSectionLabel } from '../FlowSectionLabel';
-import { HistoryStatsCard } from '../HabitDetailHistory';
-import { HabitNoteCard } from '../HabitNoteCard';
 import { buildHistoryEntries } from './historyEntries';
 import { HistoryEntryList } from './HistoryEntryList';
+import { HistoryLegend } from './HistoryLegend';
 
 interface HabitHistoryScreenProps {
   focusDate?: string;
   habit: Habit;
+  notes?: Record<string, string>;
   pendingToggleDate?: string | null;
   onOpenDay: (date: string) => void;
 }
@@ -23,10 +24,10 @@ interface HabitHistoryScreenProps {
 export function HabitHistoryScreen({
   focusDate,
   habit,
+  notes = {},
   pendingToggleDate = null,
   onOpenDay,
 }: HabitHistoryScreenProps) {
-  const { colors } = useThemeColors();
   const palette = useInsightPalette();
   const insights = useHabitInsights({
     daysOfWeek: habit.daysOfWeek,
@@ -44,24 +45,30 @@ export function HabitHistoryScreen({
 
   const today = getLocalDateString();
   const entries = useMemo(
-    () => buildHistoryEntries(month, insights.doneDates, today),
-    [month, insights.doneDates, today]
+    () => buildHistoryEntries(month, insights.doneDates, today, notes),
+    [month, insights.doneDates, notes, today]
   );
-  const habitColor = habit.color ?? habit.iconColor ?? colors.primary[700];
+
+  const shiftMonth = (delta: number) => {
+    void triggerHaptic('selection');
+    setMonth((current) => startOfMonth(addMonths(current, delta)));
+  };
 
   return (
     <FlowPage footnote='Tap any past date to see or correct that day.'>
-      <HistoryStatsCard
-        bestStreak={habit.bestStreak ?? 0}
-        palette={palette}
-        yearCompletions={insights.yearCompletions}
-        yearRatePct={insights.yearRatePct}
+      <MonthNavigation
+        standalone
+        currentMonth={month}
+        onNextMonth={() => shiftMonth(1)}
+        onPreviousMonth={() => shiftMonth(-1)}
       />
       <CalendarTabContent
+        hideGridNavigation
         showYearSection={false}
         completedDates={insights.doneDates}
+        footer={<HistoryLegend />}
         habit={habit}
-        habitColor={habitColor}
+        habitColor={palette.green}
         month={month}
         pendingToggleDate={pendingToggleDate}
         onDayPress={(date) => {
@@ -71,7 +78,6 @@ export function HabitHistoryScreen({
       />
       <FlowSectionLabel>Logged entries</FlowSectionLabel>
       <HistoryEntryList entries={entries} onOpenDay={onOpenDay} />
-      <HabitNoteCard habitId={habit._id} notes={habit.notes} />
     </FlowPage>
   );
 }

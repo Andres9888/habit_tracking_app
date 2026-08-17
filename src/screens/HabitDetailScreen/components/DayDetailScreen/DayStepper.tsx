@@ -30,24 +30,39 @@ function StepButton({
       disabled={!date}
       style={{
         alignItems: 'center',
+        backgroundColor: palette.card,
+        borderColor: palette.cardBorder,
+        borderRadius: 16,
+        borderWidth: 1,
         flex: 1,
         flexDirection: kind === 'next' ? 'row-reverse' : 'row',
-        gap: 6,
-        minHeight: 48,
+        gap: 7,
+        minHeight: 62,
         opacity: date ? 1 : 0.4,
+        paddingHorizontal: 12,
+        paddingVertical: 11,
       }}
       onPress={() => date && onStep(date)}
     >
       <Icon color={palette.textSecondary} size={17} strokeWidth={2.1} />
       <View>
-        <Text style={{ color: palette.textTertiary, fontSize: 11 }}>
+        <Text
+          style={{
+            color: palette.textTertiary,
+            fontSize: 10,
+            fontWeight: fontWeights.bold,
+            letterSpacing: 1,
+            textTransform: 'uppercase',
+          }}
+        >
           {label}
         </Text>
         <Text
           style={{
             color: palette.textPrimary,
-            fontSize: 13,
+            fontSize: 14,
             fontWeight: fontWeights.semibold,
+            marginTop: 2,
           }}
         >
           {date

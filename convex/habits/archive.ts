@@ -115,10 +115,15 @@ export const deleteAllArchived = mutation({
         .query('templateUsage')
         .withIndex('by_habit', (q) => q.eq('habitId', habit._id))
         .collect();
+      const dayNotes = await ctx.db
+        .query('habitDayNotes')
+        .withIndex('by_habitId_and_date', (q) => q.eq('habitId', habit._id))
+        .collect();
 
       for (const record of records) await ctx.db.delete(record._id);
       for (const usageEntry of templateUsageEntries)
         await ctx.db.delete(usageEntry._id);
+      for (const dayNote of dayNotes) await ctx.db.delete(dayNote._id);
 
       await ctx.db.delete(habit._id);
       deletedCount++;
