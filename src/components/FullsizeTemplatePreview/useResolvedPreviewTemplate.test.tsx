@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-native';
 import { useQuery } from 'convex/react';
 import type { Doc } from '../../../../convex/_generated/dataModel';
-import { useResolvedPreviewTemplate } from '../useResolvedPreviewTemplate';
+import { useResolvedPreviewTemplate } from './useResolvedPreviewTemplate';
 
 jest.mock('convex/react', () => ({
   useQuery: jest.fn(),

@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-native';
 import { useCachedQuery } from '../../../lib/queryCache';
-import { useHabitNamePlaceholder } from '../useHabitNamePlaceholder';
+import { useHabitNamePlaceholder } from './useHabitNamePlaceholder';
 
 jest.mock('../../../lib/queryCache', () => ({
   useCachedQuery: jest.fn(),
