@@ -10,6 +10,7 @@ import { YearStrip } from './YearStrip';
 interface CalendarYearSectionProps {
   caption?: string | null;
   completedDates: Set<string>;
+  dayShape?: 'circle' | 'square';
   habitColor: string;
   habitCreatedAt?: number;
   rangeLabel?: string;
@@ -19,6 +20,7 @@ interface CalendarYearSectionProps {
 export function CalendarYearSection({
   caption,
   completedDates,
+  dayShape,
   habitColor,
   habitCreatedAt,
   onNavigateToMonth,
@@ -36,6 +38,7 @@ export function CalendarYearSection({
       <ErrorBoundary>
         <YearStrip
           completedDates={completedDates}
+          dayShape={dayShape}
           habitColor={habitColor}
           habitCreatedAt={habitCreatedAt}
           onNavigateToMonth={onNavigateToMonth}

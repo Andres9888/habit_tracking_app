@@ -7,12 +7,17 @@
 import { useMemo } from 'react';
 import { colors as palette } from '@/theme/colors';
 import { api } from '../../../../convex/_generated/api';
-import { DEFAULT_SETTINGS } from '../../../../convex/settings/types';
+import {
+  DEFAULT_SETTINGS,
+  type ConnectorStyle,
+} from '../../../../convex/settings/types';
 import { useCachedQuery } from '../../../lib/queryCache';
 import { completedTint } from './chainColors';
 
 interface UseMonthlyCalendarGridDisplayArgs {
   cardColor: string;
+  connectorStyle?: ConnectorStyle;
+  dayShape?: 'circle' | 'square';
   habitColor: string;
   isDark: boolean;
   useSolidCompletedFill: boolean;
@@ -20,18 +25,24 @@ interface UseMonthlyCalendarGridDisplayArgs {
 
 export function useMonthlyCalendarGridDisplay({
   cardColor,
+  connectorStyle: connectorStyleProp,
+  dayShape: dayShapeProp,
   habitColor,
   isDark,
   useSolidCompletedFill,
 }: UseMonthlyCalendarGridDisplayArgs) {
+  const skipSettings = Boolean(dayShapeProp && connectorStyleProp);
   const settings = useCachedQuery(
     api.settings.get,
-    {},
+    skipSettings ? 'skip' : {},
     { entryName: 'settings.get' }
   );
-  const dayShape = settings?.dayShape ?? DEFAULT_SETTINGS.dayShape;
+  const dayShape =
+    dayShapeProp ?? settings?.dayShape ?? DEFAULT_SETTINGS.dayShape;
   const connectorStyle =
-    settings?.connectorStyle ?? DEFAULT_SETTINGS.connectorStyle;
+    connectorStyleProp ??
+    settings?.connectorStyle ??
+    DEFAULT_SETTINGS.connectorStyle;
   const cardBg = isDark ? cardColor : palette.light.surfaceMuted;
   const completedBg = useMemo(
     () =>

@@ -14,6 +14,7 @@ import { View } from 'react-native';
 import type { InsightPalette } from '../../insightPalette';
 import { CalendarYearSection } from '../CalendarYearSection';
 import { InsightCard } from '../InsightCard';
+import { useCalendarAppearance } from '../useCalendarAppearance';
 
 const NOOP_MONTH = (_dateString: string) => {};
 
@@ -37,12 +38,15 @@ export function YearGlanceCard({
   rangeLabel,
   onNavigateToMonth,
 }: YearGlanceCardProps) {
+  const { dayShape } = useCalendarAppearance();
+
   return (
     <InsightCard palette={palette}>
       <View>
         <CalendarYearSection
           caption={caption}
           completedDates={completedDates}
+          dayShape={dayShape}
           habitColor={habitColor}
           habitCreatedAt={habitCreatedAt}
           rangeLabel={rangeLabel}

@@ -1,10 +1,10 @@
-import { useQuery } from 'convex/react';
 import * as Notifications from 'expo-notifications';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { api } from '../../../../convex/_generated/api';
+import { useCachedQuery } from '../../../lib/queryCache';
 import { HeroHeader } from '../components/HeroHeader';
 import { PrimaryCTA } from '../components/PrimaryCTA';
 import { StepComponentProps } from '../types';
@@ -19,7 +19,9 @@ function joinNames(names: string[]): string {
 export function NotificationPrimingStep({ answers, onNext }: StepComponentProps) {
   const { colors } = useThemeColors();
   const [busy, setBusy] = useState(false);
-  const all = useQuery(api.templates.list, {});
+  const all = useCachedQuery(api.templates.list, {}, {
+    entryName: 'templates.list',
+  });
   const names = all
     ? answers.pickedTemplateIds
         .map((id) => all.find((t) => t._id === id)?.name)

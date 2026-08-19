@@ -1,8 +1,8 @@
-import { useQuery } from 'convex/react';
 import { ScrollView, Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { api } from '../../../../convex/_generated/api';
+import { useCachedQuery } from '../../../lib/queryCache';
 import { HeroHeader } from '../components/HeroHeader';
 import { PlanHabitCard } from '../components/PlanHabitCard';
 import { PrimaryCTA } from '../components/PrimaryCTA';
@@ -13,7 +13,9 @@ const TIMINGS = ['Mornings', 'Evenings', 'Evenings'];
 
 export function PlanPreviewStep({ answers, onNext }: StepComponentProps) {
   const { colors } = useThemeColors();
-  const all = useQuery(api.templates.list, {});
+  const all = useCachedQuery(api.templates.list, {}, {
+    entryName: 'templates.list',
+  });
   const picked = all
     ? answers.pickedTemplateIds
         .map((id) => all.find((t) => t._id === id))

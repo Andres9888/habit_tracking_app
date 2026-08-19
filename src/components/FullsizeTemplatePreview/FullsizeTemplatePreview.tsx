@@ -3,11 +3,12 @@
  * A fullsize preview modal for template cards
  */
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Modal from '../Modal';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { PreviewContent } from './components';
+import { useResolvedPreviewTemplate } from './useResolvedPreviewTemplate';
 import {
   useEntranceAnimations,
   useExitAnimations,
@@ -33,16 +34,13 @@ function FullsizeTemplatePreviewComponent({
 }: FullsizeTemplatePreviewProps) {
   const insets = useSafeAreaInsets();
   const reducedMotion = useReduceMotion();
+  const effectiveTemplate = useResolvedPreviewTemplate(template, visible);
 
   const shouldRender = useDeferredUnmount({
     duration: 280,
     reducedMotion,
     visible,
   });
-  const lastTemplateRef = useRef(template);
-  if (template) lastTemplateRef.current = template;
-  const effectiveTemplate = visible ? template : lastTemplateRef.current;
-
   const entranceAnimations = useEntranceAnimations({
     reducedMotion,
     template: effectiveTemplate,

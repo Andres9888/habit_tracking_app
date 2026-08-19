@@ -3,6 +3,7 @@
  */
 
 import type { Id } from '../../../../convex/_generated/dataModel';
+import type { ConnectorStyle } from '../../../../convex/settings/types';
 
 export interface DayData {
   date: Date;
@@ -24,6 +25,9 @@ export interface MonthlyCalendarGridProps {
   habitCreatedAt?: number;
   /** Controlled month — when set, grid follows this date. */
   currentMonth?: Date;
+  /** Skip the settings subscription when the parent already loaded these. */
+  connectorStyle?: ConnectorStyle;
+  dayShape?: 'circle' | 'square';
   onCurrentMonthChange?: (month: Date) => void;
   /** Solid habit-color fills for completed days (detail screen). */
   useSolidCompletedFill?: boolean;

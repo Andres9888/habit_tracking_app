@@ -3,7 +3,7 @@ import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { useConvex } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
-import type { Doc } from '../../../../../convex/_generated/dataModel';
+import type { Id } from '../../../../../convex/_generated/dataModel';
 import { DEFAULT_SETTINGS } from '../../../../../convex/settings/types';
 import { useStreakReminderSettings } from '../../../../hooks/useStreakReminders';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
@@ -11,17 +11,23 @@ import { exportData, prepareExportData } from '../../../../utils/exportData';
 import type { SettingsModalSettingsDocument } from '../../../../components/SettingsModal/types';
 import type { SettingsModalSectionProps } from './HabitsModals.types';
 
-type HabitDoc = Doc<'habits'>;
+type ExportableHabit = {
+  _id: Id<'habits'>;
+  createdAt: number;
+  icon?: string;
+  name: string;
+  strength?: number;
+};
 
 const SettingsModal = lazy(
   () => import('../../../../components/SettingsModal')
 );
 
 function mergeUniqueHabits(
-  activeHabits: HabitDoc[],
-  archivedHabits: HabitDoc[]
-): HabitDoc[] {
-  const map = new Map<string, HabitDoc>();
+  activeHabits: ExportableHabit[],
+  archivedHabits: ExportableHabit[]
+): ExportableHabit[] {
+  const map = new Map<string, ExportableHabit>();
   for (const habit of activeHabits) {
     map.set(habit._id, habit);
   }
@@ -31,7 +37,7 @@ function mergeUniqueHabits(
   return [...map.values()];
 }
 
-function buildExportOverviewStats(habits: HabitDoc[]) {
+function buildExportOverviewStats(habits: ExportableHabit[]) {
   if (habits.length === 0) {
     return { averageStrength: 0, totalHabits: 0 };
   }
@@ -47,7 +53,7 @@ function buildExportOverviewStats(habits: HabitDoc[]) {
   };
 }
 
-function getTrackingStartDate(habits: HabitDoc[]): string {
+function getTrackingStartDate(habits: ExportableHabit[]): string {
   if (habits.length === 0) return getLocalDateString();
 
   let earliestCreatedAt = Number.POSITIVE_INFINITY;

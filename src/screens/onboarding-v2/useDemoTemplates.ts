@@ -1,7 +1,7 @@
-import { useQuery } from 'convex/react';
 import { useMemo } from 'react';
 
 import { api } from '../../../convex/_generated/api';
+import { useCachedQuery } from '../../lib/queryCache';
 import { resolveBackendCategories } from './data/categoryMap';
 
 export interface DemoTemplate {
@@ -17,7 +17,9 @@ export interface DemoTemplate {
 const DEMO_POOL_SIZE = 8;
 
 export function useDemoTemplates(onboardingCategoryIds: string[]) {
-  const raw = useQuery(api.templates.list, {});
+  const raw = useCachedQuery(api.templates.list, {}, {
+    entryName: 'templates.list',
+  });
 
   return useMemo(() => {
     if (!raw) return null;

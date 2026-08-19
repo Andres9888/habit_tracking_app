@@ -17,6 +17,7 @@ import { useCachedQuery } from '../../../lib/queryCache';
 
 interface YearStripProps {
   completedDates: Set<string>;
+  dayShape?: 'circle' | 'square';
   habitColor: string;
   habitCreatedAt?: number;
   onNavigateToMonth: (dateString: string) => void;
@@ -24,6 +25,7 @@ interface YearStripProps {
 
 export function YearStrip({
   completedDates,
+  dayShape: dayShapeProp,
   habitColor,
   habitCreatedAt,
   onNavigateToMonth,
@@ -31,10 +33,11 @@ export function YearStrip({
   const { colors } = useThemeColors();
   const settings = useCachedQuery(
     api.settings.get,
-    {},
+    dayShapeProp ? 'skip' : {},
     { entryName: 'settings.get' }
   );
-  const dayShape = settings?.dayShape ?? DEFAULT_SETTINGS.dayShape;
+  const dayShape =
+    dayShapeProp ?? settings?.dayShape ?? DEFAULT_SETTINGS.dayShape;
   const gridData = useMemo(
     () => generateBinaryGrid('1y', completedDates, habitCreatedAt),
     [completedDates, habitCreatedAt]
@@ -43,11 +46,6 @@ export function YearStrip({
   // Year cells INSPECT + navigate only — never toggle. A ~6px cell is too
   // small to safely write a completion; all toggling happens on the month
   // grid above.
-  //
-  // useCallback matters here: InlineHeatmapGrid and HeatmapCell are both
-  // memo()'d, and a year strip is ~371 cells in a plain (non-virtualized)
-  // ScrollView. A fresh arrow re-rendered every one of them on each parent
-  // render. `onNavigateToMonth` is already stable at the call site.
   const handleCellPress = useCallback(
     (date: string) => onNavigateToMonth(date),
     [onNavigateToMonth]

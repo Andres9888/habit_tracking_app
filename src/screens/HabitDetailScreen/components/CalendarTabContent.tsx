@@ -12,6 +12,7 @@ import { colors as palette } from '../../../theme/colors';
 import { shadows } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { CalendarYearSection } from './CalendarYearSection';
+import { useCalendarAppearance } from './useCalendarAppearance';
 import { useCalendarMonth } from './useCalendarMonth';
 
 interface CalendarTabContentProps {
@@ -46,6 +47,7 @@ export function CalendarTabContent({
   hideGridNavigation = false,
 }: CalendarTabContentProps) {
   const { colors, isDark } = useThemeColors();
+  const { connectorStyle, dayShape } = useCalendarAppearance();
   const { currentMonth, navigateToMonth, setCurrentMonth } = useCalendarMonth(
     month,
     onMonthChange
@@ -66,7 +68,9 @@ export function CalendarTabContent({
         <MonthlyCalendarGrid
           bare
           completedDates={completedDates}
+          connectorStyle={connectorStyle}
           currentMonth={currentMonth}
+          dayShape={dayShape}
           habitColor={habitColor}
           habitCreatedAt={habit.createdAt}
           habitId={habit._id}
@@ -87,6 +91,7 @@ export function CalendarTabContent({
           <CalendarYearSection
             caption={yearCaption}
             completedDates={completedDates}
+            dayShape={dayShape}
             habitColor={habitColor}
             habitCreatedAt={habit.createdAt}
             rangeLabel={yearRangeLabel}

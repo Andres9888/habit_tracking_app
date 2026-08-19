@@ -21,7 +21,7 @@ const DEFINITIONS: Record<QueryCacheEntryName, CacheEntryDefinition> = {
   'habits.getHabitTracking': {
     name: 'habits.getHabitTracking',
     storage: 'secure',
-    version: 1,
+    version: 2,
   },
   'habits.getTracking': {
     latestFallback: true,
@@ -34,7 +34,7 @@ const DEFINITIONS: Record<QueryCacheEntryName, CacheEntryDefinition> = {
   'habits.listArchived': {
     name: 'habits.listArchived',
     storage: 'secure',
-    version: 1,
+    version: 2,
   },
   // v2 rejects rows that may contain defaults returned before Convex auth was
   // server-confirmed. Those rows can otherwise reopen the first-paint flash.
@@ -47,13 +47,12 @@ const DEFINITIONS: Record<QueryCacheEntryName, CacheEntryDefinition> = {
     storage: 'plain',
     version: 1,
   },
-  // 'plain': public catalog (~215KB) — Keychain-backed 'secure' storage
-  // would be a perf hazard for data that needs no protection.
+  // 'plain': public catalog cards (science drill-down loaded via getById)
   'templates.list': {
     latestFallback: true,
     name: 'templates.list',
     storage: 'plain',
-    version: 1,
+    version: 2,
   },
 };
 

@@ -1,5 +1,7 @@
+/**
+ * Next top-ranked library placeholder; advances each time add-habit opens.
+ */
 import { useEffect, useRef, useState } from 'react';
-import { useQuery } from 'convex/react';
 import { pickNextHabitNamePlaceholderOnOpen } from '@/constants/habitNamePlaceholderPick';
 import {
   getHabitNamePlaceholderCursor,
@@ -13,19 +15,24 @@ export type HabitNamePlaceholderState = {
   placeholder: string;
 };
 
-/** Next top-ranked library placeholder; advances each time add-habit opens. */
 export function useHabitNamePlaceholder(
   active: boolean
 ): HabitNamePlaceholderState {
-  const templates = useQuery(api.templates.list, {});
+  const templates = useCachedQuery(
+    api.templates.list,
+    active ? {} : 'skip',
+    { entryName: 'templates.list' }
+  );
   const habits = useCachedQuery(
     api.habits.list,
-    {},
-    {
-      entryName: 'habits.list',
-    }
+    active ? {} : 'skip',
+    { entryName: 'habits.list' }
   );
-  const importedIds = useQuery(api.templates.getImportedTemplateIds, {});
+  const importedIds = useCachedQuery(
+    api.templates.getImportedTemplateIds,
+    active ? {} : 'skip',
+    { entryName: 'templates.getImportedTemplateIds' }
+  );
   const [state, setState] = useState<HabitNamePlaceholderState>({
     isReady: false,
     placeholder: '',

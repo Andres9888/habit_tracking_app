@@ -6,6 +6,8 @@
  */
 import { v } from 'convex/values';
 import { internalQuery, query } from '../_generated/server';
+import { catalogTemplateValidator, projectCatalogTemplate } from './catalog';
+import { templateDocValidator } from './templateDocValidator';
 import { categoryValidator } from './types';
 
 /**
@@ -18,22 +20,22 @@ export const list = query({
     category: v.optional(categoryValidator),
   },
   handler: async (ctx, args) => {
-    if (args.category) {
-      const category = args.category;
-      return await ctx.db
-        .query('templates')
-        .withIndex('by_category', (q) => q.eq('category', category))
-        .order('desc')
-        .collect();
-    }
+    const category = args.category;
+    const templates = category
+      ? await ctx.db
+          .query('templates')
+          .withIndex('by_category', (q) => q.eq('category', category))
+          .order('desc')
+          .collect()
+      : await ctx.db
+          .query('templates')
+          .withIndex('by_createdAt')
+          .order('desc')
+          .collect();
 
-    // PERF: Use by_createdAt index for ordered scan instead of full table scan
-    return await ctx.db
-      .query('templates')
-      .withIndex('by_createdAt')
-      .order('desc')
-      .collect();
+    return templates.map((template) => projectCatalogTemplate(template));
   },
+  returns: v.array(catalogTemplateValidator),
 });
 
 /**
@@ -44,6 +46,7 @@ export const getById = query({
   handler: async (ctx, args) => {
     return await ctx.db.get(args.id);
   },
+  returns: v.union(templateDocValidator, v.null()),
 });
 
 /**

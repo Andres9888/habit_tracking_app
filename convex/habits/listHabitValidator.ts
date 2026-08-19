@@ -7,6 +7,7 @@ export const listHabitValidator = v.object({
   _creationTime: v.number(),
   _id: v.id('habits'),
   archived: v.optional(v.boolean()),
+  archivedAt: v.optional(v.number()),
   bestStreak: v.optional(v.number()),
   color: v.optional(v.string()),
   createdAt: v.number(),

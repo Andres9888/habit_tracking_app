@@ -3,7 +3,8 @@
 import { v } from 'convex/values';
 import { mutation, query } from '../_generated/server';
 import { hasPremiumAccess } from '../subscriptions/premiumCheck';
-import { fullHabitValidator } from './types';
+import { listHabitValidator } from './types';
+import { projectHabitForList } from './projectListHabit';
 import { findMaxOrder } from './utils';
 
 const FREE_HABIT_LIMIT = 3;
@@ -40,11 +41,11 @@ export const unarchive = mutation({
     if (!habit) throw new Error('Habit not found');
     if (habit.userId !== identity!.subject)
       throw new Error('Not authorized to unarchive this habit');
-    const activeHabits = await ctx.db
+    const userHabits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity!.subject))
-      .filter((q) => q.neq(q.field('archived'), true))
       .collect();
+    const activeHabits = userHabits.filter((habit) => habit.archived !== true);
     // SEC-005: Free tier limit check on unarchive
     const nonPausedActive = activeHabits.filter((h) => !h.paused);
     const isPremiumUser = await hasPremiumAccess(ctx, identity!.subject);
@@ -68,14 +69,15 @@ export const listArchived = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return [];
-    return await ctx.db
+    const archivedHabits = await ctx.db
       .query('habits')
       .withIndex('by_userId_and_archived', (q) =>
         q.eq('userId', identity.subject).eq('archived', true)
       )
       .collect();
+    return archivedHabits.map((habit) => projectHabitForList(habit));
   },
-  returns: v.array(fullHabitValidator),
+  returns: v.array(listHabitValidator),
 });
 
 export const listArchivedCount = query({

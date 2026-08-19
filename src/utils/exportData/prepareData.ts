@@ -2,7 +2,7 @@
  * Prepare export data from Convex queries
  */
 
-import type { Doc, Id } from '../../../convex/_generated/dataModel';
+import type { Id } from '../../../convex/_generated/dataModel';
 import type { HabitData, ExportData } from './types';
 
 interface TrackingDoc {
@@ -15,6 +15,14 @@ interface TrackingDoc {
 interface OverviewStats {
   averageStrength?: number;
   totalHabits?: number;
+}
+
+interface ExportableHabit {
+  _id: Id<'habits'>;
+  createdAt: number;
+  icon?: string;
+  name: string;
+  strength?: number;
 }
 
 /**
@@ -72,7 +80,7 @@ function calculateStreaks(
  * @returns Formatted export data ready for CSV or JSON conversion
  */
 export async function prepareExportData(
-  habits: Doc<'habits'>[],
+  habits: ExportableHabit[],
   trackings: TrackingDoc[],
   overviewStats: OverviewStats | null | undefined
 ): Promise<ExportData> {
