@@ -1,10 +1,10 @@
 /**
- * useHabitInsights — fetches this habit's year-to-date history and derives the
- * "What we're noticing" cards from it.
+ * useHabitInsights — fetches this habit's history since it was created and
+ * derives the "What we're noticing" cards from it.
  *
  * Deliberately a separate query from the app-level `habits.getTracking` window:
- * that one is a short rolling buffer shared by every habit, while the insight
- * cards need a long, single-habit history.
+ * that one is a short rolling buffer shared by every habit, while History and
+ * insight cards need a long, single-habit history.
  */
 
 import { useMemo } from 'react';
@@ -13,11 +13,13 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 import { useCachedQuery } from '../../../lib/queryCache';
 import { getLocalDateString } from '../../../utils/getLocalDateString';
 import { buildInsights } from './buildInsights';
+import { insightQueryStart } from './insightQueryStart';
 import type { HabitInsights, InsightEntry } from './types';
 
 const EMPTY: HabitInsights = {
   daysOfData: 0,
   doneDates: new Set<string>(),
+  isReady: false,
   oneFix: null,
   working: null,
   yearCompletions: 0,
@@ -46,9 +48,9 @@ export function useHabitInsights({
     return {
       endDate: today,
       habitId,
-      startDate: `${today.slice(0, 4)}-01-01`,
+      startDate: insightQueryStart(today, habitCreatedAt),
     };
-  }, [enabled, habitId, today]);
+  }, [enabled, habitCreatedAt, habitId, today]);
 
   const rows = useCachedQuery(api.habits.getHabitTracking, args, {
     entryName: 'habits.getHabitTracking',
@@ -62,12 +64,15 @@ export function useHabitInsights({
       createdAt: row._creationTime,
       date: row.date,
     }));
-    return buildInsights({
-      daysOfWeek,
-      entries,
-      habitCreatedAt,
-      reminderTime,
-      today,
-    });
+    return {
+      ...buildInsights({
+        daysOfWeek,
+        entries,
+        habitCreatedAt,
+        reminderTime,
+        today,
+      }),
+      isReady: true,
+    };
   }, [daysOfWeek, habitCreatedAt, reminderTime, rows, today]);
 }

@@ -40,6 +40,7 @@ export function DetailFlowSwitch(props: DetailFlowSwitchProps) {
   if (route === 'history') {
     return (
       <HabitHistoryScreen
+        completedDates={props.completedDates}
         focusDate={params.focusDate}
         habit={habit}
         notes={notes}
@@ -61,6 +62,7 @@ export function DetailFlowSwitch(props: DetailFlowSwitchProps) {
     const date = params.focusDate ?? getLocalDateString();
     return (
       <DayDetailScreen
+        completedDates={props.completedDates}
         focusDate={params.focusDate}
         habit={habit}
         note={notes[date] ?? ''}

@@ -14,12 +14,18 @@ import { Alert, AccessibilityInfo } from 'react-native';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { triggerHaptic } from '../../utils/haptics';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
+import { useOptimisticToggleMutation } from '../../lib/optimistic';
+import { useIsOnline } from '../../contexts/NetworkStatusContext';
 import type { Habit } from './HabitDetailScreen.types';
-import { parseDateKeyLocal } from '../../utils/getLocalDateString';
+import {
+  parseDateKeyLocal,
+  getLocalDateString,
+} from '../../utils/getLocalDateString';
 import { ERROR_MESSAGES } from '../../constants/errorMessages';
 import { useSwipeActions } from './useSwipeActions';
 
 interface UseCalendarHandlersProps {
+  completedDates: Set<string>;
   habit: Habit | null;
   onArchive?: (habitId: Id<'habits'>) => void;
   onClose: () => void;
@@ -30,6 +36,7 @@ interface UseCalendarHandlersProps {
 }
 
 export const useCalendarHandlers = ({
+  completedDates,
   habit,
   onArchive,
   onClose,
@@ -39,6 +46,12 @@ export const useCalendarHandlers = ({
   setPendingToggleDate,
 }: UseCalendarHandlersProps) => {
   const toggleHabitMutation = useToggleHabitWithTimezone();
+  const isOnline = useIsOnline();
+  const optimisticToggle = useOptimisticToggleMutation(
+    toggleHabitMutation,
+    (_habitId, date) => completedDates.has(date),
+    { isOnline }
+  );
   const togglingRef = useRef(false);
 
   const swipeActions = useSwipeActions({
@@ -53,12 +66,7 @@ export const useCalendarHandlers = ({
   const handleCalendarDayPress = useCallback(
     (date: string, wasCompleted: boolean): void => {
       if (togglingRef.current || !habit?._id) return;
-
-      const inputDate = parseDateKeyLocal(date);
-      const todayDate = new Date();
-      inputDate.setHours(0, 0, 0, 0);
-      todayDate.setHours(0, 0, 0, 0);
-      if (inputDate > todayDate) return;
+      if (date > getLocalDateString()) return;
 
       togglingRef.current = true;
       setPendingToggleDate(date);
@@ -74,7 +82,11 @@ export const useCalendarHandlers = ({
       );
       const newState = wasCompleted ? 'marked incomplete' : 'marked complete';
 
-      void toggleHabitMutation({ date, habitId: habit._id })
+      void optimisticToggle({
+        completed: !wasCompleted,
+        date,
+        habitId: habit._id,
+      })
         .then(() => {
           const announcement = `${habit.name} on ${dateFormatted} ${newState}.`;
           if (__DEV__) console.log('A11y announcement:', announcement);
@@ -91,7 +103,13 @@ export const useCalendarHandlers = ({
           setPendingToggleDate(null);
         });
     },
-    [habit?._id, habit?.name, toggleHabitMutation, setPendingToggleDate]
+    [
+      completedDates,
+      habit?._id,
+      habit?.name,
+      optimisticToggle,
+      setPendingToggleDate,
+    ]
   );
 
   return {

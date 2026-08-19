@@ -25,6 +25,7 @@ export {
   WEEKDAY_PLURAL,
   WEEKDAY_SHORT,
 } from './schedule';
+export { insightQueryStart } from './insightQueryStart';
 export { useHabitInsights } from './useHabitInsights';
 export { buildWeekdayStats, findOneFix } from './weekdayStats';
 export type {

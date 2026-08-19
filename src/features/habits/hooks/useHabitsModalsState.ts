@@ -72,7 +72,11 @@ export function useHabitsModalsState({
 
   // Wrap toggle mutation as plain async function
   const wrappedToggleHabit = useCallback(
-    async (args: { habitId: Id<'habits'>; date: string }) => {
+    async (args: {
+      completed?: boolean;
+      habitId: Id<'habits'>;
+      date: string;
+    }) => {
       await toggleHabit(args);
     },
     [toggleHabit]

@@ -191,8 +191,35 @@ describe('Optimistic Hooks', () => {
         await result.current({ habitId, date });
       });
 
-      expect(serverMutation).toHaveBeenCalledWith({ habitId, date });
+      expect(serverMutation).toHaveBeenCalledWith({
+        completed: true,
+        date,
+        habitId,
+      });
       expect(getCurrentStatus).toHaveBeenCalledWith(habitId, date);
+    });
+
+    it('should send an explicit completed flag instead of flipping stale status', async () => {
+      const serverMutation = jest.fn().mockResolvedValue(undefined);
+      const getCurrentStatus = jest.fn().mockReturnValue(false);
+
+      const { result } = renderHook(() =>
+        useOptimisticToggleMutation(serverMutation, getCurrentStatus)
+      );
+
+      const habitId = mockHabitId('explicit_completed_test');
+      const date = '2026-01-22';
+
+      await act(async () => {
+        await result.current({ completed: false, date, habitId });
+      });
+
+      expect(serverMutation).toHaveBeenCalledWith({
+        completed: false,
+        date,
+        habitId,
+      });
+      expect(getCurrentStatus).not.toHaveBeenCalled();
     });
 
     it('should apply optimistic update before server response', async () => {
@@ -396,7 +423,11 @@ describe('Optimistic Hooks', () => {
         });
 
         // Should call server mutation
-        expect(serverMutation).toHaveBeenCalledWith({ habitId, date });
+        expect(serverMutation).toHaveBeenCalledWith({
+          completed: true,
+          date,
+          habitId,
+        });
 
         // Should NOT queue (successful online operation)
         expect(mutationResult).toEqual({

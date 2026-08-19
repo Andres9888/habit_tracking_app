@@ -5,6 +5,7 @@ import type { Habit } from '../../../../features/habits/types';
 import { triggerHaptic } from '../../../../utils/haptics';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import { parseLocalDate, useHabitInsights } from '../../insights';
+import { unionDateSets } from '../../mergeCompletedDates';
 import { useInsightPalette } from '../../insightPalette';
 import { CalendarTabContent } from '../CalendarTabContent';
 import { FlowPage } from '../FlowPage';
@@ -13,7 +14,10 @@ import { buildHistoryEntries } from './historyEntries';
 import { HistoryEntryList } from './HistoryEntryList';
 import { HistoryLegend } from './HistoryLegend';
 
+const EMPTY_DATES = new Set<string>();
+
 interface HabitHistoryScreenProps {
+  completedDates?: Set<string>;
   focusDate?: string;
   habit: Habit;
   notes?: Record<string, string>;
@@ -22,6 +26,7 @@ interface HabitHistoryScreenProps {
 }
 
 export function HabitHistoryScreen({
+  completedDates,
   focusDate,
   habit,
   notes = {},
@@ -43,10 +48,14 @@ export function HabitHistoryScreen({
     if (focusDate) setMonth(startOfMonth(parseLocalDate(focusDate)));
   }, [focusDate]);
 
+  const doneDates = useMemo(
+    () => unionDateSets(insights.doneDates, completedDates ?? EMPTY_DATES),
+    [completedDates, insights.doneDates]
+  );
   const today = getLocalDateString();
   const entries = useMemo(
-    () => buildHistoryEntries(month, insights.doneDates, today, notes),
-    [month, insights.doneDates, notes, today]
+    () => buildHistoryEntries(month, doneDates, today, notes),
+    [month, doneDates, notes, today]
   );
 
   const shiftMonth = (delta: number) => {
@@ -65,7 +74,7 @@ export function HabitHistoryScreen({
       <CalendarTabContent
         hideGridNavigation
         showYearSection={false}
-        completedDates={insights.doneDates}
+        completedDates={doneDates}
         footer={<HistoryLegend />}
         habit={habit}
         habitColor={palette.green}

@@ -19,6 +19,7 @@ import { DayStatusCard } from './DayStatusCard';
 import { DayStepper } from './DayStepper';
 
 interface DayDetailScreenProps {
+  completedDates?: Set<string>;
   focusDate?: string;
   habit: Habit;
   note?: string;
@@ -29,6 +30,7 @@ interface DayDetailScreenProps {
 }
 
 export function DayDetailScreen({
+  completedDates,
   focusDate,
   habit,
   note = '',
@@ -45,7 +47,9 @@ export function DayDetailScreen({
     habitCreatedAt: habit.createdAt,
     habitId: habit._id,
   });
-  const done = insights.doneDates.has(date);
+  const done =
+    insights.doneDates.has(date) || Boolean(completedDates?.has(date));
+  const toggleLocked = insights.isReady === false && !completedDates?.has(date);
   const isToday = date === today;
   const timeLabel =
     isToday && insights.todayCompletedAt
@@ -87,11 +91,12 @@ export function DayDetailScreen({
       <DayNoteCard note={note} />
       <FlowSectionLabel>Correct this day</FlowSectionLabel>
       <DayCorrectRows
+        disabled={toggleLocked}
         done={done}
         hasNote={Boolean(note)}
         onOpenNote={onOpenNote}
         onToggle={() => {
-          if (pendingToggleDate === date) return;
+          if (toggleLocked || pendingToggleDate === date) return;
           onToggleDay(date, done);
         }}
       />

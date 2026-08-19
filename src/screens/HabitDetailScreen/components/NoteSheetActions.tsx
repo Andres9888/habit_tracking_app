@@ -5,15 +5,21 @@ import { useInsightPalette } from '../insightPalette';
 interface NoteSheetActionsProps {
   onCancel: () => void;
   onSave: () => void;
+  saving?: boolean;
 }
 
-export function NoteSheetActions({ onCancel, onSave }: NoteSheetActionsProps) {
+export function NoteSheetActions({
+  onCancel,
+  onSave,
+  saving = false,
+}: NoteSheetActionsProps) {
   const palette = useInsightPalette();
 
   return (
     <View style={{ flexDirection: 'row', gap: 10, marginTop: 14 }}>
       <Pressable
         accessibilityRole='button'
+        disabled={saving}
         style={{
           alignItems: 'center',
           borderColor: palette.cardBorder,
@@ -22,6 +28,7 @@ export function NoteSheetActions({ onCancel, onSave }: NoteSheetActionsProps) {
           flex: 1,
           height: 50,
           justifyContent: 'center',
+          opacity: saving ? 0.5 : 1,
         }}
         onPress={onCancel}
       >
@@ -31,6 +38,8 @@ export function NoteSheetActions({ onCancel, onSave }: NoteSheetActionsProps) {
       </Pressable>
       <Pressable
         accessibilityRole='button'
+        accessibilityState={{ busy: saving }}
+        disabled={saving}
         style={{
           alignItems: 'center',
           backgroundColor: palette.green,
@@ -38,6 +47,7 @@ export function NoteSheetActions({ onCancel, onSave }: NoteSheetActionsProps) {
           flex: 1,
           height: 50,
           justifyContent: 'center',
+          opacity: saving ? 0.5 : 1,
         }}
         onPress={onSave}
       >
@@ -48,7 +58,7 @@ export function NoteSheetActions({ onCancel, onSave }: NoteSheetActionsProps) {
             fontWeight: fontWeights.semibold,
           }}
         >
-          Save note
+          {saving ? 'Saving…' : 'Save note'}
         </Text>
       </Pressable>
     </View>

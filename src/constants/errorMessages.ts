@@ -91,6 +91,7 @@ export const ERROR_MESSAGES = {
     DELETE_HABIT_FAILED: "Couldn't delete that habit. Try again in a moment.",
     ARCHIVE_HABIT_FAILED: "Couldn't archive that habit. Try again in a moment.",
     TOGGLE_HABIT_FAILED: "Couldn't update that habit. Try again in a moment.",
+    PAUSE_HABIT_FAILED: "Couldn't update pause. Try again in a moment.",
     REORDER_HABITS_FAILED:
       "Couldn't reorder your habits. Try again in a moment.",
 

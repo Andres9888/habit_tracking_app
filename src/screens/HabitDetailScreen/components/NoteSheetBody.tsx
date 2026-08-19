@@ -7,6 +7,7 @@ interface NoteSheetBodyProps {
   draft: string;
   existing: string;
   hint: string;
+  saving?: boolean;
   onCancel: () => void;
   onChange: (text: string) => void;
   onSave: () => void;
@@ -16,6 +17,7 @@ export function NoteSheetBody({
   draft,
   existing,
   hint,
+  saving = false,
   onCancel,
   onChange,
   onSave,
@@ -84,7 +86,7 @@ export function NoteSheetBody({
         value={draft}
         onChangeText={onChange}
       />
-      <NoteSheetActions onCancel={onCancel} onSave={onSave} />
+      <NoteSheetActions saving={saving} onCancel={onCancel} onSave={onSave} />
     </View>
   );
 }

@@ -2,25 +2,9 @@ import { v } from 'convex/values';
 import { mutation, query } from '../_generated/server';
 import { enforceRateLimit } from '../lib/rateLimit';
 import { validateLongText } from '../lib/inputValidation';
+import { assertNoteDateAllowed } from './dayNoteDate';
 
-const DATE_KEY = /^(\d{4})-(\d{2})-(\d{2})$/;
-
-export function isValidDateKey(value: string): boolean {
-  const match = DATE_KEY.exec(value);
-  if (!match) return false;
-
-  const year = Number(match[1]);
-  const month = Number(match[2]);
-  const day = Number(match[3]);
-  const parsed = new Date(Date.UTC(year, month - 1, day));
-
-  return (
-    year >= 1900 &&
-    parsed.getUTCFullYear() === year &&
-    parsed.getUTCMonth() === month - 1 &&
-    parsed.getUTCDate() === day
-  );
-}
+export { isValidDateKey } from './dayNoteDate';
 
 export const listDayNotes = query({
   args: { habitId: v.id('habits') },
@@ -46,15 +30,14 @@ export const updateDayNote = mutation({
     date: v.string(),
     habitId: v.id('habits'),
     note: v.string(),
+    timezone: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error('Unauthenticated: Must be logged in to update day notes');
     }
-    if (!isValidDateKey(args.date)) {
-      throw new Error('Invalid date');
-    }
+    assertNoteDateAllowed(args.date, args.timezone);
 
     const habit = await ctx.db.get(args.habitId);
     if (!habit) throw new Error('Habit not found');
@@ -80,8 +63,6 @@ export const updateDayNote = mutation({
       return null;
     }
 
-    // Separate branches keep insert and patch payloads type-safe.
-    // eslint-disable-next-line unicorn/prefer-ternary
     if (existing) {
       await ctx.db.patch(existing._id, { note: text, updatedAt: Date.now() });
     } else {

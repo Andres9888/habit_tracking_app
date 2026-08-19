@@ -1,8 +1,8 @@
 /**
  * Get Tracking Data For One Habit
  *
- * The detail screen needs a long, habit-scoped history (year-to-date) to build
- * its insight cards. `getTracking` is user-scoped and would pull every habit's
+ * The detail screen needs a long, habit-scoped history (since created) to build
+ * its insight cards and History calendar. `getTracking` is user-scoped and would pull every habit's
  * rows across the same range, so this query narrows to a single habit using the
  * `by_habit_and_date` index.
  *
@@ -35,7 +35,10 @@ export const getHabitTracking = query({
     return await ctx.db
       .query('tracking')
       .withIndex('by_habit_and_date', (q) =>
-        q.eq('habitId', args.habitId).gte('date', startDate).lte('date', endDate)
+        q
+          .eq('habitId', args.habitId)
+          .gte('date', startDate)
+          .lte('date', endDate)
       )
       .collect();
   },

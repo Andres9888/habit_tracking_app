@@ -1,13 +1,14 @@
 /** PauseCard — pause a habit without breaking the streak. */
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Alert, Pressable, Text, View } from 'react-native';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { ERROR_MESSAGES } from '../../../constants/errorMessages';
 import { borderRadius } from '../../../theme/spacing';
 import { fontWeights } from '../../../theme/typography';
-import { getUserTimezone } from '../../../utils/timezone';
 import { useInsightPalette } from '../insightPalette';
+import { runPauseToggle } from './pauseCardToggle';
 
 interface PauseCardProps {
   habitId: Id<'habits'>;
@@ -24,10 +25,9 @@ export function PauseCard({ habitId, paused = false }: PauseCardProps) {
     if (isBusy) return;
     setIsBusy(true);
     try {
-      const timezone = getUserTimezone();
-      await (paused
-        ? resume({ habitId, timezone })
-        : pause({ habitId, timezone }));
+      await runPauseToggle({ habitId, pause, paused, resume });
+    } catch {
+      Alert.alert('Error', ERROR_MESSAGES.DATA_OPS.PAUSE_HABIT_FAILED);
     } finally {
       setIsBusy(false);
     }

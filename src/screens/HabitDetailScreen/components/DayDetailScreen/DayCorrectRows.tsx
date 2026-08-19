@@ -5,13 +5,22 @@ import { useInsightPalette } from '../../insightPalette';
 import { FlowDivider } from '../FlowRow';
 
 interface DayCorrectRowsProps {
+  disabled?: boolean;
   done: boolean;
   hasNote: boolean;
   onOpenNote: () => void;
   onToggle: () => void;
 }
 
-function Row({ label, onPress }: { label: string; onPress: () => void }) {
+function Row({
+  disabled,
+  label,
+  onPress,
+}: {
+  disabled?: boolean;
+  label: string;
+  onPress: () => void;
+}) {
   const palette = useInsightPalette();
   const Icon =
     label.startsWith('Undo') || label.startsWith('Mark') ? RotateCcw : Pencil;
@@ -20,11 +29,14 @@ function Row({ label, onPress }: { label: string; onPress: () => void }) {
     <Pressable
       accessibilityLabel={label}
       accessibilityRole='button'
+      accessibilityState={{ disabled }}
+      disabled={disabled}
       style={{
         alignItems: 'center',
         flexDirection: 'row',
         gap: 11,
         minHeight: 52,
+        opacity: disabled ? 0.5 : 1,
         paddingHorizontal: 16,
         paddingVertical: 13,
       }}
@@ -39,6 +51,7 @@ function Row({ label, onPress }: { label: string; onPress: () => void }) {
 }
 
 export function DayCorrectRows({
+  disabled,
   done,
   hasNote,
   onOpenNote,
@@ -60,6 +73,7 @@ export function DayCorrectRows({
       <Row label={hasNote ? 'Edit note' : 'Add a note'} onPress={onOpenNote} />
       <FlowDivider />
       <Row
+        disabled={disabled}
         label={done ? 'Undo completion' : 'Mark as completed'}
         onPress={onToggle}
       />

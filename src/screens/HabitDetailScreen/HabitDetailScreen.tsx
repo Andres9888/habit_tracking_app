@@ -63,6 +63,7 @@ function HabitDetailScreenContent({
     visible,
   });
   const calendarHandlers = useCalendarHandlers({
+    completedDates: screenState.completedDates,
     habit: displayHabit,
     onArchive,
     onClose,
@@ -113,7 +114,7 @@ function HabitDetailScreenContent({
       onRequestClose={handleRequestClose}
     >
       {displayHabit && habitWithStreaks ? (
-        <>
+        <View className='flex-1'>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             className='flex-1'
@@ -172,8 +173,9 @@ function HabitDetailScreenContent({
                 : 'Notes are part of the record for this day.'
             }
             onClose={() => setNoteDate(null)}
-            onSave={(note) => {
-              if (noteDate) void dayNotes.saveNote(noteDate, note);
+            onSave={async (note) => {
+              if (!noteDate) return false;
+              return dayNotes.saveNote(noteDate, note);
             }}
           />
           <HabitDetailModals
@@ -181,7 +183,7 @@ function HabitDetailScreenContent({
             habitName={displayHabit.name}
             {...buildModalsProps(screenState, calendarHandlers)}
           />
-        </>
+        </View>
       ) : (
         <DetailLoadingState />
       )}

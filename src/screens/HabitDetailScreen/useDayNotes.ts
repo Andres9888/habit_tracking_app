@@ -3,6 +3,7 @@ import { Alert } from 'react-native';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Habit } from '../../features/habits/types';
+import { getUserTimezone } from '../../utils/timezone';
 
 export function useDayNotes(habit: Habit | null | undefined) {
   const updateDayNote = useMutation(api.habits.updateDayNote);
@@ -41,10 +42,16 @@ export function useDayNotes(habit: Habit | null | undefined) {
 
   const saveNote = useCallback(
     async (date: string, note: string) => {
-      if (!habit?._id) return;
+      if (!habit?._id) return false;
       setLocal((prev) => ({ ...prev, [date]: note }));
       try {
-        await updateDayNote({ date, habitId: habit._id, note });
+        await updateDayNote({
+          date,
+          habitId: habit._id,
+          note,
+          timezone: getUserTimezone(),
+        });
+        return true;
       } catch {
         setLocal((pending) => {
           if (pending[date] !== note) return pending;
@@ -56,6 +63,7 @@ export function useDayNotes(habit: Habit | null | undefined) {
           'Could not save note',
           'Your note was not saved. Please try again.'
         );
+        return false;
       }
     },
     [habit?._id, updateDayNote]

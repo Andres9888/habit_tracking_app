@@ -14,6 +14,7 @@ import { getLocalDateString } from '../../../utils/getLocalDateString';
 import { isMissedYesterday, useHabitInsights } from '../insights';
 import { useInsightPalette } from '../insightPalette';
 import type { InsightId } from '../useDetailFlow';
+import { unionDateSets } from '../mergeCompletedDates';
 import { DetailHeroBanner } from './DetailHeroBanner';
 import { HabitDetailSections } from './HabitDetailSections';
 
@@ -89,7 +90,7 @@ export function HabitDetailContent({
         habit={habit}
         isCompletedToday={isCompletedToday}
         isMissedYesterday={isMissedYesterday({
-          completedDates: insights.doneDates,
+          completedDates: unionDateSets(insights.doneDates, completedDates),
           daysOfWeek: habit.daysOfWeek,
           isCompletedToday,
         })}

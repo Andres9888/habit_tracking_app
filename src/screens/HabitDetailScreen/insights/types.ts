@@ -65,12 +65,17 @@ export interface WorkingInsight {
 export interface HabitInsights {
   /** Days between the first known day and today, inclusive. */
   daysOfData: number;
+  /**
+   * False while `getHabitTracking` is still loading. Empty `doneDates` during
+   * that window is unknown, not "zero completions".
+   */
+  isReady?: boolean;
   oneFix: OneFixInsight | null;
   working: WorkingInsight | null;
   /** Completions in the current calendar year. */
   yearCompletions: number;
   /**
-   * Every date with a logged completion in the fetched window (year-to-date).
+   * Every date with a logged completion in the fetched window (habit lifetime).
    * The monthly-trend analysis reads this instead of the app-level tracking
    * buffer, which only reaches ~90 days back.
    */
