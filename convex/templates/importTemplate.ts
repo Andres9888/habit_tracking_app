@@ -11,6 +11,7 @@ import {
   MAX_HABIT_NAME_LENGTH,
 } from '../lib/inputValidation';
 import { progressEmojisValidator } from '../lib/progressEmojisValidator';
+import { enforceRateLimit } from '../lib/rateLimit';
 import { validateDaysOfWeek } from '../habits/validation';
 
 /**
@@ -46,6 +47,8 @@ export const importTemplate = mutation({
       throw new Error('Unauthenticated: Must be logged in to import templates');
     }
     const userId = identity.subject;
+    // Same bucket as habits.create — import is another habit-insert path.
+    await enforceRateLimit(ctx, userId, 'habit.create');
 
     const template = await ctx.db.get(args.templateId);
     if (!template) {

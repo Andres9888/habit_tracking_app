@@ -130,6 +130,10 @@ export const deleteCurrentUserData = mutation({
       .query('rateLimits')
       .withIndex('by_user_and_action', (q) => q.eq('userId', userId))
       .collect();
+    const dayNotes = await ctx.db
+      .query('habitDayNotes')
+      .withIndex('by_userId', (q) => q.eq('userId', userId))
+      .collect();
 
     const deletedTemplateUsage = await deleteDocuments(
       ctx,
@@ -138,6 +142,10 @@ export const deleteCurrentUserData = mutation({
     const deletedRateLimits = await deleteDocuments(
       ctx,
       rateLimits.map((entry) => entry._id)
+    );
+    const deletedDayNotes = await deleteDocuments(
+      ctx,
+      dayNotes.map((entry) => entry._id)
     );
     const deletedTracking = await deleteDocuments(
       ctx,
@@ -186,6 +194,7 @@ export const deleteCurrentUserData = mutation({
     }
 
     return {
+      deletedDayNotes,
       deletedHabits: deletedHabitsCount,
       deletedRateLimits,
       deletedSettings,
@@ -197,6 +206,7 @@ export const deleteCurrentUserData = mutation({
     };
   },
   returns: v.object({
+    deletedDayNotes: v.number(),
     deletedHabits: v.number(),
     deletedRateLimits: v.number(),
     deletedSettings: v.number(),

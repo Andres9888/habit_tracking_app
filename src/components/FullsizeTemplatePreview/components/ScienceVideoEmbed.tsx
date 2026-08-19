@@ -24,30 +24,32 @@ function extractYouTubeId(url: string): string | null {
   return match ? match[1] : null;
 }
 
+function youtubeWatchUrl(videoId: string): string {
+  return `https://www.youtube.com/watch?v=${videoId}`;
+}
+
 export function ScienceVideoEmbed({ template }: ScienceVideoEmbedProps) {
   if (!template?.youtubeLink) return null;
 
   const videoId = extractYouTubeId(template.youtubeLink);
-  const thumbnailUri = videoId
-    ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
-    : null;
+  if (!videoId) return null;
+
+  const thumbnailUri = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 
   return (
     <Pressable
       accessibilityLabel="Watch the science explained on YouTube"
       accessibilityRole="link"
       style={s.videoCard}
-      onPress={() => void Linking.openURL(template.youtubeLink!)}
+      onPress={() => void Linking.openURL(youtubeWatchUrl(videoId))}
     >
       <View style={s.videoThumbnail}>
-        {thumbnailUri ? (
-          <Image
-            accessibilityIgnoresInvertColors
-            resizeMode="cover"
-            source={{ uri: thumbnailUri }}
-            style={s.videoThumbnailImage}
-          />
-        ) : null}
+        <Image
+          accessibilityIgnoresInvertColors
+          resizeMode="cover"
+          source={{ uri: thumbnailUri }}
+          style={s.videoThumbnailImage}
+        />
         <LinearGradient
           colors={['rgba(0,0,0,0.05)', 'rgba(0,0,0,0.45)']}
           start={{ x: 0, y: 0 }}

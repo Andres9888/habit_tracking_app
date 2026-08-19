@@ -237,7 +237,9 @@ const applicationTables = {
     note: v.string(),
     updatedAt: v.number(),
     userId: v.string(),
-  }).index('by_habitId_and_date', ['habitId', 'date']),
+  })
+    .index('by_habitId_and_date', ['habitId', 'date'])
+    .index('by_userId', ['userId']),
 
   deletedHabits: defineTable({
     createdAt: v.number(),
