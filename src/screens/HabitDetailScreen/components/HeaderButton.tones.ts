@@ -1,9 +1,8 @@
 /** Tint sets for HeaderButton, split out to keep the component under 100 lines. */
 import { withAlpha } from '@/theme';
 import type { useThemeColors } from '../../../theme/ThemeContext';
-import { buildInsightPalette } from '../insightPalette';
 
-export type HeaderButtonTone = 'subtle' | 'accent' | 'onBand';
+export type HeaderButtonTone = 'subtle' | 'accent';
 
 export interface HeaderButtonTint {
   bg: string;
@@ -16,11 +15,6 @@ export function toneColors(
   isDark: boolean,
   colors: ReturnType<typeof useThemeColors>['colors']
 ): HeaderButtonTint {
-  if (tone === 'onBand') {
-    // Sits on the pale-green hero wash: an unfilled outline, muted band ink.
-    const band = buildInsightPalette(colors, isDark);
-    return { bg: 'transparent', border: 'transparent', fg: band.ctaGreen };
-  }
   if (tone === 'accent') {
     return {
       bg: withAlpha(colors.primary[600], isDark ? 0.14 : 0.1),

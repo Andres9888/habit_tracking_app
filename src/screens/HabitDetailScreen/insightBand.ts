@@ -77,7 +77,7 @@ export function buildBandTokens(
         mixHex(accent, colors.background, 0.09),
         colors.background,
       ],
-      bandHairline: withAlpha(colors.text.primary, 0.2),
+      bandHairline: mixHex(colors.text.primary, colors.background, 0.2),
       bandMuted: colors.text.secondary,
       bandSoft: withAlpha(accent, 0.14),
       dialTrack: withAlpha(colors.text.primary, 0.14),
