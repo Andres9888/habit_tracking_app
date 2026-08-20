@@ -1,5 +1,5 @@
 /**
- * DetailBandHeader — circled close chevron + Edit on the hero wash.
+ * DetailBandHeader — bare close chevron + Edit on the hero wash.
  *
  * The header is fixed while the hero scrolls, so it can't share a single
  * gradient node; it takes the wash's first stop instead, which is where the
@@ -7,6 +7,11 @@
  *
  * The chevron preserves the original visual language while its accessibility
  * label and behavior correctly identify the modal-root action as Close.
+ *
+ * Both controls run the `onBand` tone — no circle, CTA green — so the left
+ * chevron and the right Edit read as one pair. A circled variant
+ * (`onBandCircle`) shipped briefly and was rejected on look; the tone is kept
+ * for the pinned-title Edit button, which still needs a visible target.
  */
 import { ChevronLeft, Edit3 } from 'lucide-react-native';
 import { View } from 'react-native';
@@ -42,9 +47,9 @@ export function DetailBandHeader({
         leftAction={
           <HeaderButton
             compact
-            icon={<ChevronLeft size={iconSizes.medium} strokeWidth={2.3} />}
+            icon={<ChevronLeft size={iconSizes.large} strokeWidth={2} />}
             label='Close'
-            tone='onBandCircle'
+            tone='onBand'
             onPress={onClose}
           />
         }

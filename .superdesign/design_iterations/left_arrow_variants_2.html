@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Habit Detail — left arrow variants</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      :root {
+        --wash-top: #e3ede6;
+        --wash-mid: #edf0e9;
+        --canvas: #faf8f5;
+        --ink: #23211c;
+        --muted: #5a6b5d;
+        --hairline: #c9d6cb;
+        --green: #0c7c59;
+        --deep: #0b5d42;
+        --cream: #f5f1ed;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #1c1b19;
+        font-family: 'Inter', sans-serif;
+        color: #e8e6e1;
+        padding: 32px 20px 64px;
+      }
+      h1 {
+        font-family: 'Literata', serif;
+        font-size: 22px;
+        font-weight: 600;
+        margin: 0 0 6px;
+      }
+      p.sub {
+        margin: 0 0 28px;
+        color: #9a978f;
+        font-size: 13px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 24px;
+        max-width: 1240px;
+      }
+      .cell {
+        background: #26241f;
+        border: 1px solid #3a372f;
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .cap {
+        padding: 10px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: #cfcbc2;
+        border-bottom: 1px solid #3a372f;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .cap span.tag {
+        font-weight: 500;
+        color: #8d8a82;
+        font-size: 11px;
+      }
+      .phone {
+        background: linear-gradient(
+          180deg,
+          var(--wash-top) 0%,
+          var(--wash-mid) 70%,
+          var(--canvas) 100%
+        );
+        padding: 0 0 22px;
+      }
+      .hdr {
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 12px;
+      }
+      .slot {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .slot.wide {
+        width: auto;
+        padding: 0 4px;
+      }
+      .circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .c-current {
+        background: #e5eee7;
+        border: 1px solid var(--hairline);
+      }
+      .c-filled {
+        background: var(--green);
+        border: 1px solid var(--green);
+      }
+      .c-tint {
+        background: rgba(12, 124, 89, 0.1);
+        border: 1px solid rgba(12, 124, 89, 0.18);
+      }
+      .bare {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .lbl {
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--green);
+        margin-left: 2px;
+      }
+      .edit {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--green);
+        font-size: 15px;
+        font-weight: 500;
+        padding-right: 4px;
+      }
+      .hero {
+        padding: 14px 20px 0;
+        text-align: center;
+      }
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .title {
+        font-family: 'Literata', serif;
+        font-size: 26px;
+        color: var(--ink);
+        margin: 8px 0 2px;
+        font-weight: 600;
+      }
+      .dial {
+        width: 96px;
+        height: 96px;
+        border-radius: 999px;
+        border: 8px solid #d3dfd5;
+        border-top-color: var(--green);
+        border-right-color: var(--green);
+        margin: 16px auto 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--ink);
+      }
+      .lvl {
+        font-size: 12px;
+        color: var(--muted);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      svg {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Left arrow — B, E, and the blend</h1>
+    <p class="sub">
+      You liked B (bare) and E (green tint circle). G is the blend: bare chevron
+      in green, no circle.
+    </p>
+    <div class="grid" id="grid"></div>
+    <script>
+      const variants = [
+        {
+          k: 'B',
+          name: 'Bare chevron, no circle',
+          tag: 'ink, quietest',
+          html: `<div class="slot"><div class="bare"><i data-lucide="chevron-left" style="width:26px;height:26px;stroke-width:2" color="#23211C"></i></div></div>`,
+        },
+        {
+          k: 'E',
+          name: 'Green tint circle, green chevron',
+          tag: 'ties to Edit',
+          html: `<div class="slot"><div class="circle c-tint"><i data-lucide="chevron-left" style="width:20px;height:20px;stroke-width:2.3" color="#0C7C59"></i></div></div>`,
+        },
+        {
+          k: 'G',
+          name: 'Blend — bare chevron, green ink',
+          tag: 'B shape + E color',
+          html: `<div class="slot"><div class="bare"><i data-lucide="chevron-left" style="width:26px;height:26px;stroke-width:2" color="#0C7C59"></i></div></div>`,
+        },
+      ];
+      document.getElementById('grid').innerHTML = variants
+        .map(
+          (v) => `
+  <div class="cell">
+    <div class="cap"><span>${v.k} · ${v.name}</span><span class="tag">${v.tag}</span></div>
+    <div class="phone">
+      <div class="hdr">
+        ${v.html}
+        <div class="edit"><i data-lucide="edit-3" style="width:16px;height:16px;stroke-width:2.5"></i>Edit</div>
+      </div>
+      <div class="hero">
+        <div class="eyebrow">Day 34 · streak alive</div>
+        <div class="title">Morning Meditation</div>
+        <div class="dial">78</div>
+        <div class="lvl">Strong</div>
+      </div>
+    </div>
+  </div>`
+        )
+        .join('');
+      lucide.createIcons();
+    </script>
+  </body>
+</html>
