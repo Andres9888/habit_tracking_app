@@ -125,6 +125,7 @@ function HabitDetailScreenContent({
             <View
               className='flex-1'
               style={{ backgroundColor: overlays.scrim }}
+              onAccessibilityEscape={handleRequestClose}
             >
               <View
                 className='flex-1 overflow-hidden rounded-t-3xl'

@@ -1,13 +1,14 @@
 /**
- * DetailBandHeader — circled back + Edit on the hero wash.
+ * DetailBandHeader — the close/Edit row on the hero wash.
  *
- * Close is a chevron in a disc (mock `.icon-btn`), not a “Home”/“Today” label.
- * This is a modal over the habits list, which can be any selected day — a
- * named destination would lie. VoiceOver still says “Back to Home.”
- * The habit name lives in the hero; the header pins it after that title
- * scrolls away.
+ * The header is fixed while the hero scrolls, so it can't share a single
+ * gradient node; it takes the wash's first stop instead, which is where the
+ * gradient is effectively flat anyway.
+ *
+ * Navigation chrome is delegated to ScreenHeader so touch sizing, theme,
+ * animation, haptics, RTL and accessibility stay consistent app-wide.
  */
-import { ChevronLeft, Edit3 } from 'lucide-react-native';
+import { Edit3 } from 'lucide-react-native';
 import { View } from 'react-native';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { iconSizes } from '../../../theme/iconSizes';
@@ -38,22 +39,14 @@ export function DetailBandHeader({
   return (
     <View style={{ backgroundColor: wash[0] }}>
       <ScreenHeader
-        leftAction={
-          <HeaderButton
-            compact
-            icon={<ChevronLeft size={iconSizes.medium} strokeWidth={2.3} />}
-            label='Back to Home'
-            tone='onBandCircle'
-            onPress={onClose}
-          />
-        }
+        leftAction='close'
         rightAction={
           <HeaderButton
             compact={isTitlePinned}
             icon={<Edit3 size={iconSizes.small} strokeWidth={2.5} />}
             label='Edit habit'
             text='Edit'
-            tone={isTitlePinned ? 'onBandCircle' : 'onBand'}
+            tone='subtle'
             onPress={onEdit}
           />
         }
@@ -67,6 +60,7 @@ export function DetailBandHeader({
         }}
         titleVisible={isTitlePinned}
         variant='transparent'
+        onBack={onClose}
       />
     </View>
   );

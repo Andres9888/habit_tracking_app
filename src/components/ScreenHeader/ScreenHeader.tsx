@@ -1,5 +1,5 @@
 import React, { isValidElement, useEffect } from 'react';
-import { Pressable, View } from 'react-native';
+import { I18nManager, Pressable, View } from 'react-native';
 import Animated, {
   FadeInDown,
   useAnimatedStyle,
@@ -9,13 +9,18 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft, X } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { mixHex } from '../../theme/colors';
 import { usePressAnimation } from '../../hooks/usePressAnimation';
 import { durations, enterEasing } from '../../theme/animations';
 import type { ScreenHeaderProps } from './ScreenHeader.types';
 import { styles } from './ScreenHeader.styles';
 
-const ENTERING = FadeInDown.delay(0).duration(durations.enter).easing(enterEasing);
-const SUBTITLE_ENTERING = FadeInDown.delay(50).duration(durations.enter).easing(enterEasing);
+const ENTERING = FadeInDown.delay(0)
+  .duration(durations.enter)
+  .easing(enterEasing);
+const SUBTITLE_ENTERING = FadeInDown.delay(50)
+  .duration(durations.enter)
+  .easing(enterEasing);
 const ICON_SIZE = 24;
 
 export function ScreenHeader({
@@ -27,6 +32,7 @@ export function ScreenHeader({
   titleVisible = true,
   titleStyle,
   titleNumberOfLines = 1,
+  leftActionAccessibilityLabel,
   onBack,
 }: ScreenHeaderProps) {
   const insets = useSafeAreaInsets();
@@ -39,28 +45,48 @@ export function ScreenHeader({
   useEffect(() => {
     titleOpacity.value = withTiming(titleVisible ? 1 : 0, { duration: 220 });
   }, [titleVisible, titleOpacity]);
-  const titleAnimatedStyle = useAnimatedStyle(() => ({ opacity: titleOpacity.value }));
+  const titleAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: titleOpacity.value,
+  }));
 
   const hasNavigation = Boolean(leftAction) || Boolean(rightAction);
   const iconColor = colors.text.primary;
+  const controlFill = mixHex(colors.gray[900], colors.background, 0.06);
 
   const renderLeftAction = () => {
     if (!leftAction) return null;
     if (isValidElement(leftAction)) return leftAction;
 
     const Icon = leftAction === 'close' ? X : ChevronLeft;
-    const label = leftAction === 'close' ? 'Close' : 'Go back';
+    const label =
+      leftActionAccessibilityLabel ??
+      (leftAction === 'close' ? 'Close' : 'Go back');
 
     return (
       <Pressable
         accessibilityLabel={label}
-        accessibilityRole="button"
-        hitSlop={8}
+        accessibilityRole='button'
+        style={styles.actionSlot}
         onPress={onBack}
         {...pressHandlers}
       >
-        <Animated.View style={[styles.iconButton, animatedStyle]}>
-          <Icon color={iconColor} size={ICON_SIZE} strokeWidth={2.5} />
+        <Animated.View
+          style={[
+            styles.iconButton,
+            { backgroundColor: controlFill },
+            animatedStyle,
+          ]}
+        >
+          <Icon
+            color={iconColor}
+            size={ICON_SIZE}
+            strokeWidth={2.5}
+            style={
+              leftAction === 'back' && I18nManager.isRTL
+                ? styles.rtlIcon
+                : undefined
+            }
+          />
         </Animated.View>
       </Pressable>
     );
@@ -68,8 +94,6 @@ export function ScreenHeader({
 
   return (
     <Animated.View
-      accessible
-      accessibilityRole="header"
       entering={ENTERING}
       style={[
         styles.container,
@@ -82,6 +106,7 @@ export function ScreenHeader({
           <View style={styles.left}>{renderLeftAction()}</View>
           {title && titleVisible ? (
             <Animated.Text
+              accessibilityRole='header'
               numberOfLines={titleNumberOfLines}
               style={[
                 styles.titleCenter,
@@ -98,6 +123,7 @@ export function ScreenHeader({
       ) : (
         title && (
           <Animated.Text
+            accessibilityRole='header'
             numberOfLines={titleNumberOfLines}
             style={[styles.titleLeft, { color: colors.text.primary }]}
           >
@@ -105,12 +131,14 @@ export function ScreenHeader({
           </Animated.Text>
         )
       )}
-      {subtitle ? <Animated.Text
+      {subtitle ? (
+        <Animated.Text
           entering={SUBTITLE_ENTERING}
           style={[styles.subtitle, { color: colors.text.secondary }]}
         >
           {subtitle}
-        </Animated.Text> : null}
+        </Animated.Text>
+      ) : null}
     </Animated.View>
   );
 }

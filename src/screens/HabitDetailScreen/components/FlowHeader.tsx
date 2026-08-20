@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useInsightPalette } from '../insightPalette';
-import { FlowBack } from './FlowBack';
 
 interface FlowHeaderProps {
   backLabel: string;
@@ -15,7 +14,8 @@ export function FlowHeader({ backLabel, onBack, title }: FlowHeaderProps) {
   return (
     <View style={{ backgroundColor: palette.bandGradient[2] }}>
       <ScreenHeader
-        leftAction={<FlowBack label={backLabel} onPress={onBack} />}
+        leftAction='back'
+        leftActionAccessibilityLabel={`Back to ${backLabel}`}
         title={title}
         titleStyle={{ color: palette.textPrimary }}
         variant='transparent'

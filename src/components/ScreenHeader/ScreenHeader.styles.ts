@@ -10,12 +10,19 @@ export const styles = StyleSheet.create({
   },
   iconButton: {
     alignItems: 'center',
+    borderRadius: 20,
     height: 40,
     justifyContent: 'center',
     width: 40,
   },
-  left: { minWidth: 40 },
-  right: { alignItems: 'flex-end', minWidth: 40 },
+  actionSlot: {
+    alignItems: 'center',
+    height: 44,
+    justifyContent: 'center',
+    width: 44,
+  },
+  left: { minWidth: 44 },
+  right: { alignItems: 'flex-end', minWidth: 44 },
   row: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -36,5 +43,6 @@ export const styles = StyleSheet.create({
     fontSize: airy.titleSize,
     paddingRight: 52,
   },
+  rtlIcon: { transform: [{ scaleX: -1 }] },
   transparent: { backgroundColor: 'transparent' },
 });

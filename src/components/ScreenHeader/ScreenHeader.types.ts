@@ -14,5 +14,7 @@ export interface ScreenHeaderProps {
   titleVisible?: boolean;
   titleStyle?: StyleProp<TextStyle>;
   titleNumberOfLines?: number;
+  /** Spoken label for the built-in back/close control. */
+  leftActionAccessibilityLabel?: string;
   onBack?: () => void;
 }
