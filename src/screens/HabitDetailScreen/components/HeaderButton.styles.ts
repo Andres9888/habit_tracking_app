@@ -10,11 +10,17 @@ import { fontWeights, typography } from '../../../theme/typography';
 export const s = StyleSheet.create({
   compactButton: {
     alignItems: 'center',
-    borderRadius: borderRadius.full,
-    borderWidth: 1,
     height: 44,
     justifyContent: 'center',
     width: 44,
+  },
+  compactCircle: {
+    alignItems: 'center',
+    borderRadius: borderRadius.full,
+    borderWidth: 1,
+    height: 40,
+    justifyContent: 'center',
+    width: 40,
   },
   textButton: {
     alignItems: 'center',

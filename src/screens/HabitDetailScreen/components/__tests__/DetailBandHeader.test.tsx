@@ -1,4 +1,5 @@
 import { fireEvent, render } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { DetailBandHeader } from '../DetailBandHeader';
 
 jest.mock('react-native-safe-area-context', () => ({
@@ -41,7 +42,12 @@ describe('DetailBandHeader', () => {
   it('keeps the habit name out of the chrome at rest', () => {
     const { getByLabelText, getByText, queryByText } = renderHeader();
     expect(getByLabelText('Close')).toBeTruthy();
-    expect(getByText('Edit')).toBeTruthy();
+    expect(StyleSheet.flatten(getByLabelText('Close').props.style)).toEqual(
+      expect.objectContaining({ height: 44, width: 44 })
+    );
+    expect(StyleSheet.flatten(getByText('Edit').props.style)).toEqual(
+      expect.objectContaining({ color: '#0C7C59' })
+    );
     expect(queryByText('Home')).toBeNull();
     expect(queryByText('Today')).toBeNull();
     expect(queryByText('Opposite Action')).toBeNull();

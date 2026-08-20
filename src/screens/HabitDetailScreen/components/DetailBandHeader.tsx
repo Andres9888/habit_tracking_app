@@ -1,14 +1,14 @@
 /**
- * DetailBandHeader — the close/Edit row on the hero wash.
+ * DetailBandHeader — circled close chevron + Edit on the hero wash.
  *
  * The header is fixed while the hero scrolls, so it can't share a single
  * gradient node; it takes the wash's first stop instead, which is where the
  * gradient is effectively flat anyway.
  *
- * Navigation chrome is delegated to ScreenHeader so touch sizing, theme,
- * animation, haptics, RTL and accessibility stay consistent app-wide.
+ * The chevron preserves the original visual language while its accessibility
+ * label and behavior correctly identify the modal-root action as Close.
  */
-import { Edit3 } from 'lucide-react-native';
+import { ChevronLeft, Edit3 } from 'lucide-react-native';
 import { View } from 'react-native';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { iconSizes } from '../../../theme/iconSizes';
@@ -39,14 +39,22 @@ export function DetailBandHeader({
   return (
     <View style={{ backgroundColor: wash[0] }}>
       <ScreenHeader
-        leftAction='close'
+        leftAction={
+          <HeaderButton
+            compact
+            icon={<ChevronLeft size={iconSizes.medium} strokeWidth={2.3} />}
+            label='Close'
+            tone='onBandCircle'
+            onPress={onClose}
+          />
+        }
         rightAction={
           <HeaderButton
             compact={isTitlePinned}
             icon={<Edit3 size={iconSizes.small} strokeWidth={2.5} />}
             label='Edit habit'
             text='Edit'
-            tone='subtle'
+            tone={isTitlePinned ? 'onBandCircle' : 'onBand'}
             onPress={onEdit}
           />
         }
@@ -60,7 +68,6 @@ export function DetailBandHeader({
         }}
         titleVisible={isTitlePinned}
         variant='transparent'
-        onBack={onClose}
       />
     </View>
   );

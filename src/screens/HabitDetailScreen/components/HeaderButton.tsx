@@ -49,11 +49,29 @@ export function HeaderButton({
       animationConfig={{ pressScale: 0.92 }}
       style={[
         showText ? s.textButton : s.compactButton,
-        { backgroundColor: bg, borderColor: border },
+        showText ? { backgroundColor: bg, borderColor: border } : undefined,
       ]}
       onPress={handlePress}
     >
-      {icon ? (
+      {compact ? (
+        <View
+          style={[
+            s.compactCircle,
+            { backgroundColor: bg, borderColor: border },
+          ]}
+        >
+          {icon ? (
+            <View style={{ opacity: tone === 'subtle' ? OPACITY.high : 1 }}>
+              {React.cloneElement(
+                icon as React.ReactElement<{ color: string }>,
+                {
+                  color: fg,
+                }
+              )}
+            </View>
+          ) : null}
+        </View>
+      ) : icon ? (
         <View style={{ opacity: tone === 'subtle' ? OPACITY.high : 1 }}>
           {React.cloneElement(icon as React.ReactElement<{ color: string }>, {
             color: fg,

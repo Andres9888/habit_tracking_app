@@ -2,8 +2,10 @@
  * FlowBack — labeled chevron used by Detail and nested flow headers.
  * Names the place you land (Home, History), not the calendar day.
  */
-import { Pressable, Text } from 'react-native';
+import { I18nManager, StyleSheet, Text } from 'react-native';
 import { ChevronLeft } from 'lucide-react-native';
+import { triggerHaptic } from '@/utils/haptics';
+import { AnimatedPressable } from '../../../components/ui';
 import { useInsightPalette } from '../insightPalette';
 
 interface FlowBackProps {
@@ -13,16 +15,25 @@ interface FlowBackProps {
 
 export function FlowBack({ label, onPress }: FlowBackProps) {
   const palette = useInsightPalette();
+  const handlePress = () => {
+    void triggerHaptic('tap');
+    onPress();
+  };
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityLabel={`Back to ${label}`}
       accessibilityRole='button'
-      hitSlop={8}
-      style={{ alignItems: 'center', flexDirection: 'row', gap: 2 }}
-      onPress={onPress}
+      animationConfig={{ pressScale: 0.94 }}
+      style={styles.control}
+      onPress={handlePress}
     >
-      <ChevronLeft color={palette.green} size={20} strokeWidth={2.3} />
+      <ChevronLeft
+        color={palette.green}
+        size={20}
+        strokeWidth={2.3}
+        style={I18nManager.isRTL ? styles.rtlIcon : undefined}
+      />
       <Text
         style={{
           color: palette.green,
@@ -32,6 +43,16 @@ export function FlowBack({ label, onPress }: FlowBackProps) {
       >
         {label}
       </Text>
-    </Pressable>
+    </AnimatedPressable>
   );
 }
+
+const styles = StyleSheet.create({
+  control: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 2,
+    minHeight: 44,
+  },
+  rtlIcon: { transform: [{ scaleX: -1 }] },
+});
