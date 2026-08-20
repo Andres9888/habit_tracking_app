@@ -1,11 +1,17 @@
-import { hydrateQueryCache } from '../hydrate';
+import { applyQueryCacheScope, hydrateQueryCache } from '../hydrate';
 import { readEntry } from '../persistence/readEntry';
 import {
   buildLatestArgsMemoryKey,
   buildLatestMemoryKey,
   buildMemoryKey,
+  setQueryCacheScope,
 } from '../persistence/keys';
 import { queryCacheStore } from '../store/state';
+import {
+  isQueryCacheHydrated,
+  markQueryCacheHydrated,
+  resetQueryCacheHydrated,
+} from '../store/hydration';
 
 jest.mock('../persistence/readEntry', () => ({
   readEntry: jest.fn(),
@@ -19,6 +25,8 @@ const TRACKING_ROWS = [
 describe('hydrateQueryCache', () => {
   beforeEach(() => {
     queryCacheStore.reset();
+    resetQueryCacheHydrated();
+    setQueryCacheScope(null);
     jest.clearAllMocks();
     (readEntry as jest.Mock).mockResolvedValue(null);
   });
@@ -84,5 +92,35 @@ describe('hydrateQueryCache', () => {
     expect(
       queryCacheStore.get(buildLatestMemoryKey('habits.getTracking'))
     ).toBeUndefined();
+  });
+
+  it('keeps memory cache when the signed-in scope is unchanged', () => {
+    setQueryCacheScope('user_1');
+    queryCacheStore.set(buildLatestMemoryKey('settings.get'), {
+      hasPremium: true,
+    });
+    markQueryCacheHydrated();
+
+    applyQueryCacheScope('user_1');
+
+    expect(queryCacheStore.get(buildLatestMemoryKey('settings.get'))).toEqual({
+      hasPremium: true,
+    });
+    expect(isQueryCacheHydrated()).toBe(true);
+  });
+
+  it('resets memory cache when the signed-in user changes', () => {
+    setQueryCacheScope('user_1');
+    queryCacheStore.set(buildLatestMemoryKey('settings.get'), {
+      hasPremium: true,
+    });
+    markQueryCacheHydrated();
+
+    applyQueryCacheScope('user_2');
+
+    expect(
+      queryCacheStore.get(buildLatestMemoryKey('settings.get'))
+    ).toBeUndefined();
+    expect(isQueryCacheHydrated()).toBe(false);
   });
 });

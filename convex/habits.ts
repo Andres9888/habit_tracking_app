@@ -25,7 +25,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 export { create } from './habits/create';
 export { update, updateNotes } from './habits/update';
-export { listDayNotes, updateDayNote } from './habits/updateDayNote';
+export { listDayNotes } from './habits/listDayNotes';
+export { updateDayNote } from './habits/updateDayNote';
 export { archive, deleteAllArchived, unarchive } from './habits/archive';
 export { batchArchive, batchUnarchive } from './habits/batchArchive';
 export { batchRemove } from './habits/batchRemove';

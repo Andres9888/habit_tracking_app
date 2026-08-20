@@ -60,4 +60,23 @@ describe('useCachedQuery serveCachedWhileSkipped', () => {
 
     expect(result.current).toBeUndefined();
   });
+
+  it('does not persist a skipped live value into the latest slot', () => {
+    queryCacheStore.set(buildLatestMemoryKey('settings.get'), {
+      hasPremium: false,
+    });
+    (useQuery as jest.Mock).mockReturnValue({ hasPremium: true });
+
+    const { result } = renderHook(() =>
+      useCachedQuery(query, 'skip', {
+        entryName: 'settings.get',
+        serveCachedWhileSkipped: true,
+      })
+    );
+
+    expect(result.current).toEqual({ hasPremium: false });
+    expect(queryCacheStore.get(buildLatestMemoryKey('settings.get'))).toEqual({
+      hasPremium: false,
+    });
+  });
 });

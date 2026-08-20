@@ -9,7 +9,12 @@ import { FlowSectionLabel } from '../FlowSectionLabel';
 import { YearGlanceCard } from '../HabitDetailHistory';
 import { useHistoryMonths } from '../HabitDetailHistory/useHistoryMonths';
 import { analyticsInsightRows } from './analyticsInsightRows';
-import { chartSubtitle, chartTitle, YEAR_TAP_CAPTION } from './chartCopy';
+import {
+  chartFootnote,
+  chartSubtitle,
+  chartTitle,
+  YEAR_TAP_CAPTION,
+} from './chartCopy';
 import { InsightRows } from './InsightRows';
 import { buildMonthlyBars } from './monthlyBars';
 import { RangeChart } from './RangeChart';
@@ -44,8 +49,8 @@ export function HabitAnalyticsScreen({
     () =>
       range === 'weekly'
         ? buildWeeklyBars(insights.doneDates, today)
-        : buildMonthlyBars(insights.doneDates, today),
-    [insights.doneDates, range, today]
+        : buildMonthlyBars(insights.doneDates, today, habit.daysOfWeek),
+    [habit.daysOfWeek, insights.doneDates, range, today]
   );
   const yearSub = months.rangeLabel
     ? `${months.rangeLabel} · days you logged`
@@ -65,6 +70,8 @@ export function HabitAnalyticsScreen({
       <RangeTabs range={range} onChange={setRange} />
       <RangeChart
         bars={bars}
+        footnote={chartFootnote(range, bars)}
+        scaleMax={range === 'monthly' ? 100 : undefined}
         subtitle={chartSubtitle(range, bars)}
         title={chartTitle(range)}
       />

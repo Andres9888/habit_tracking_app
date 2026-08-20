@@ -6,6 +6,7 @@ import type { HabitsModalsState } from '../../hooks/useHabitsApp';
 /** Props for the main HabitsModals orchestrator component */
 export interface HabitsModalsProps {
   state: HabitsModalsState;
+  onPremiumUpsell?: () => void;
 }
 
 /** Props for the SettingsModalSection component */
@@ -19,6 +20,7 @@ export interface SettingsModalSectionProps {
   openHapticTest: () => void;
   setShowHabitStrengthPercentage: (value: boolean) => void;
   onSettingsChange: HabitsModalsState['onSettingsChange'];
+  onPremiumUpsell?: () => void;
 }
 
 /** Props for the CreateHabitModalSection component */
@@ -49,7 +51,6 @@ export interface CalendarAndDetailModalsProps {
   closeEditScreen: () => void;
   openHabitDetail: HabitsModalsState['openHabitDetail'];
   openEditHabit: HabitsModalsState['openEditHabit'];
-  openPauseModal: HabitsModalsState['openPauseModal'];
   openHabitCalendar: HabitsModalsState['openHabitCalendar'];
   handleArchive: (habitId: Id<'habits'>) => void | Promise<void>;
   onDeleteHabit: (habitId: Id<'habits'>) => void | Promise<void>;

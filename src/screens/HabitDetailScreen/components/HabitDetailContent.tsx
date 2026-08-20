@@ -1,8 +1,8 @@
 /**
  * HabitDetailContent — recommitment surface:
- *   hero wash → This week → History/Analytics doors → one insight line → pause
+ *   current state/action → strength snapshot → week → record doors → insight
  */
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import {
   ScrollView,
   View,
@@ -11,14 +11,21 @@ import {
 } from 'react-native';
 import type { Habit } from '../../../features/habits/types';
 import { getLocalDateString } from '../../../utils/getLocalDateString';
-import { isMissedYesterday, useHabitInsights } from '../insights';
+import {
+  isScheduledWeekday,
+  missedLastScheduledDate,
+  parseLocalDate,
+  recoveryMissedDayLabel,
+  scheduledWeekdays,
+  useHabitInsights,
+} from '../insights';
 import { useInsightPalette } from '../insightPalette';
 import type { InsightId } from '../useDetailFlow';
 import { DetailHeroBanner } from './DetailHeroBanner';
 import { HabitDetailSections } from './HabitDetailSections';
 
-/** Scroll depth at which the header swaps to the pinned habit title. */
-const PIN_OFFSET = 96;
+/** Pin only after the hero name has left — avoids two titles on screen. */
+const PIN_OFFSET = 160;
 
 interface HabitDetailContentProps {
   completedDates: Set<string>;
@@ -62,6 +69,23 @@ export function HabitDetailContent({
     habitId: habit._id,
     reminderTime: habit.reminderTime,
   });
+  const today = getLocalDateString();
+  const effectiveCompletedDates = useMemo(() => {
+    const merged = new Set([...completedDates, ...insights.doneDates]);
+    if (isCompletedToday) merged.add(today);
+    else merged.delete(today);
+    return merged;
+  }, [completedDates, insights.doneDates, isCompletedToday, today]);
+  const isScheduledToday = isScheduledWeekday(
+    scheduledWeekdays({ daysOfWeek: habit.daysOfWeek }),
+    parseLocalDate(today).getDay()
+  );
+  const missedScheduledDate = missedLastScheduledDate({
+    completedDates: effectiveCompletedDates,
+    daysOfWeek: habit.daysOfWeek,
+    isCompletedToday,
+    today,
+  });
 
   const handleScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -88,19 +112,20 @@ export function HabitDetailContent({
       <DetailHeroBanner
         habit={habit}
         isCompletedToday={isCompletedToday}
-        isMissedYesterday={isMissedYesterday({
-          completedDates: insights.doneDates,
-          daysOfWeek: habit.daysOfWeek,
-          isCompletedToday,
-        })}
-        isToggling={pendingToggleDate === getLocalDateString()}
+        isScheduledToday={isScheduledToday}
+        isToggling={pendingToggleDate === today}
+        recoveryDayLabel={
+          missedScheduledDate
+            ? recoveryMissedDayLabel(missedScheduledDate, today)
+            : undefined
+        }
         todayNote={todayNote}
         onDayPress={onDayPress}
         onOpenNote={onOpenNote ?? (() => {})}
       />
       <View style={{ backgroundColor: palette.bandGradient[2] }}>
         <HabitDetailSections
-          completedDates={completedDates}
+          completedDates={effectiveCompletedDates}
           habit={habit}
           insights={insights}
           onDayPress={onDayPress}

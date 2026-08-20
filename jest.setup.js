@@ -118,6 +118,12 @@ jest.mock('@clerk/clerk-expo', () => ({
   ClerkLoaded: ({ children }) => children,
   SignedIn: ({ children }) => children,
   SignedOut: () => null,
+  useAuth: () => ({
+    getToken: jest.fn(),
+    isLoaded: true,
+    isSignedIn: true,
+    userId: 'test-user',
+  }),
   useUser: () => ({ user: { id: 'test-user' } }),
 }));
 

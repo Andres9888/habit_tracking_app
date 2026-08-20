@@ -6,9 +6,8 @@
  */
 import { useMemo } from 'react';
 import { colors as palette } from '@/theme/colors';
-import { api } from '../../../../convex/_generated/api';
 import { DEFAULT_SETTINGS } from '../../../../convex/settings/types';
-import { useCachedQuery } from '../../../lib/queryCache';
+import { useSettingsQuery } from '../../../lib/settings/useSettingsQuery';
 import { completedTint } from './chainColors';
 
 interface UseMonthlyCalendarGridDisplayArgs {
@@ -24,11 +23,7 @@ export function useMonthlyCalendarGridDisplay({
   isDark,
   useSolidCompletedFill,
 }: UseMonthlyCalendarGridDisplayArgs) {
-  const settings = useCachedQuery(
-    api.settings.get,
-    {},
-    { entryName: 'settings.get' }
-  );
+  const settings = useSettingsQuery();
   const dayShape = settings?.dayShape ?? DEFAULT_SETTINGS.dayShape;
   const connectorStyle =
     settings?.connectorStyle ?? DEFAULT_SETTINGS.connectorStyle;

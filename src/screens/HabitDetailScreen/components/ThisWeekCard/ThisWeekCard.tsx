@@ -25,10 +25,11 @@ export function ThisWeekCard({
 }: ThisWeekCardProps) {
   const palette = useInsightPalette();
   const reduceMotion = useReduceMotion();
-  const { days, doneCount, rangeLabel, scheduledCount } = useThisWeek({
+  const { days, doneCount, rangeLabel } = useThisWeek({
     completedDates,
     daysOfWeek,
   });
+  const loggedLabel = `${doneCount} ${doneCount === 1 ? 'day' : 'days'} logged`;
 
   return (
     <Animated.View
@@ -80,7 +81,7 @@ export function ThisWeekCard({
         <Text
           style={{ color: palette.textTertiary, fontSize: 12, paddingTop: 1 }}
         >
-          {doneCount} of {scheduledCount}
+          {loggedLabel}
         </Text>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

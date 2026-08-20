@@ -3,7 +3,11 @@ import { withAlpha } from '@/theme';
 import type { useThemeColors } from '../../../theme/ThemeContext';
 import { buildInsightPalette } from '../insightPalette';
 
-export type HeaderButtonTone = 'subtle' | 'accent' | 'onBand';
+export type HeaderButtonTone =
+  | 'subtle'
+  | 'accent'
+  | 'onBand'
+  | 'onBandCircle';
 
 export interface HeaderButtonTint {
   bg: string;
@@ -16,9 +20,17 @@ export function toneColors(
   isDark: boolean,
   colors: ReturnType<typeof useThemeColors>['colors']
 ): HeaderButtonTint {
+  const band = buildInsightPalette(colors, isDark);
+
+  if (tone === 'onBandCircle') {
+    // Mock `.icon-btn`: frosted disc, hairline, dark ink chevron.
+    return {
+      bg: isDark ? withAlpha(colors.card, 0.86) : 'rgba(255,255,255,0.86)',
+      border: band.bandHairline,
+      fg: band.bandFg,
+    };
+  }
   if (tone === 'onBand') {
-    // Sits on the pale-green hero wash: an unfilled outline, muted band ink.
-    const band = buildInsightPalette(colors, isDark);
     return { bg: 'transparent', border: 'transparent', fg: band.ctaGreen };
   }
   if (tone === 'accent') {

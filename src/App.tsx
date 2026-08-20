@@ -1,13 +1,9 @@
 import '../global.css';
 
-// Deep import, not the package barrel: `@expo-google-fonts/literata` re-exports
-// all 16 weights via top-level `require()`, and Metro does not tree-shake, so
-// the barrel ships ~3.9MB of unused TTFs. This subpath pulls only the one face.
-import { Literata_700Bold } from '@expo-google-fonts/literata/700Bold';
-import { useFonts } from 'expo-font';
 import { Text as RNText, TextInput as RNTextInput } from 'react-native';
 import { AppProviders } from './app/AppProviders';
 import { initializeAppMonitoring } from './app/initializeAppMonitoring';
+import { useStartupReady } from './app/useStartupReady';
 import { AuthGate } from './components/auth/AuthGate';
 import { MAX_FONT_SIZE_MULTIPLIER_BODY } from './utils/accessibility/textScaling';
 
@@ -30,11 +26,8 @@ inputDefaults.defaultProps = {
 };
 
 export default function App() {
-  // The theme's serif display face (typography.fontFamilies.primary.display).
-  // All Literata text styles render bold, so one face covers them; without
-  // this load the serif silently falls back to the system sans.
-  const [fontsLoaded, fontError] = useFonts({ Literata: Literata_700Bold });
-  if (!fontsLoaded && !fontError) return null;
+  const ready = useStartupReady();
+  if (!ready) return null;
 
   return (
     <AppProviders>

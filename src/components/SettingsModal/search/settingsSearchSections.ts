@@ -17,12 +17,7 @@ export const SETTINGS_SEARCH_SECTIONS: Record<SettingsSectionKey, string[]> = {
   // export (mock 3B folded the one-row Privacy & Security card in here).
   behavior: ['Sort order', 'Archived habits', 'Export my data'],
   reminders: ['Streak reminders', 'Completion sound'],
-  support: [
-    'Rate Chain Day',
-    'Share with a friend',
-    "What's new",
-    'Send feedback',
-  ],
+  support: ['Love Chain Day?', 'Send feedback'],
 };
 
 /** True when not searching, or at least one row label in the section matches. */

@@ -32,11 +32,8 @@ export function AuthGate() {
   const isCacheHydrated = useQueryCacheHydrated();
   const { complete: onboardingComplete, markComplete } =
     useOnboardingV2Complete(isSignedIn ?? false);
-  const { isReady: isSettingsReady, settings } = useStartupSettings(
-    isSignedIn,
-    isConvexReady,
-    isCacheHydrated
-  );
+  const { isReady: isSettingsReady, settings } =
+    useStartupSettings(isSignedIn);
   const [paywallDismissed, setPaywallDismissed] = useState(false);
 
   useAuthGateUserSync(isSignedIn, isConvexReady);

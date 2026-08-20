@@ -6,13 +6,25 @@ import type { WeekBar } from './weeklyBars';
 
 interface RangeChartProps {
   bars: WeekBar[];
+  footnote: string;
+  /** Percent charts scale to 100 so a 31-day month doesn't dwarf a 28-day one. */
+  scaleMax?: number;
   subtitle: string;
   title: string;
 }
 
-export function RangeChart({ bars, subtitle, title }: RangeChartProps) {
+export function RangeChart({
+  bars,
+  footnote,
+  scaleMax,
+  subtitle,
+  title,
+}: RangeChartProps) {
   const palette = useInsightPalette();
-  const max = Math.max(1, ...bars.map((bar) => bar.value));
+  const max = Math.max(
+    1,
+    scaleMax ?? Math.max(0, ...bars.map((bar) => bar.value))
+  );
 
   return (
     <InsightCard palette={palette}>
@@ -28,6 +40,17 @@ export function RangeChart({ bars, subtitle, title }: RangeChartProps) {
       >
         {bars.map((bar) => (
           <View key={bar.label} style={{ alignItems: 'center', flex: 1 }}>
+            {bar.valueCaption ? (
+              <Text
+                style={{
+                  color: palette.textTertiary,
+                  fontSize: 10,
+                  marginBottom: 4,
+                }}
+              >
+                {bar.valueCaption}
+              </Text>
+            ) : null}
             <View
               style={{
                 backgroundColor: palette.green,
@@ -57,8 +80,7 @@ export function RangeChart({ bars, subtitle, title }: RangeChartProps) {
           marginTop: 12,
         }}
       >
-        Based on days you logged. A week with no check-ins shows as zero —
-        nothing is estimated or filled in for you.
+        {footnote}
       </Text>
     </InsightCard>
   );

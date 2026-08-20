@@ -22,6 +22,7 @@ import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import { DEFAULT_SETTINGS } from '../../../../convex/settings/types';
 import { useCachedQuery } from '../../../lib/queryCache';
+import { useSettingsQuery } from '../../../lib/settings/useSettingsQuery';
 import type { PartialProgressEmojiSet } from '../../../utils/progressEmojis';
 import type {
   Habit,
@@ -147,13 +148,7 @@ export function useHabitsListState(): HabitsListState {
     console.warn('[useHabitsListState]', habitsValidation.warning);
   }
 
-  const settingsQuery = useCachedQuery(
-    api.settings.get,
-    {},
-    {
-      entryName: 'settings.get',
-    }
-  );
+  const settingsQuery = useSettingsQuery();
   const settings = (settingsQuery ?? undefined) as
     | HabitsListSettings
     | undefined;

@@ -1,7 +1,6 @@
 /**
- * WeekdayBars — completion rate per weekday, amber on the weakest day.
- * Bars are proportional to rate, with a visible floor so a 0% day still reads
- * as a bar rather than as missing data.
+ * WeekdayBars — completion rate per weekday. The weakest day is muted green,
+ * not amber — amber is recovery-only on Detail.
  */
 import { Text, View } from 'react-native';
 import { borderRadius } from '../../../../theme/spacing';
@@ -40,7 +39,7 @@ export function WeekdayBars({
         const isWeak = bar.weekday === weakestWeekday;
         const height = Math.max(MIN_HEIGHT, Math.round(bar.rate * MAX_HEIGHT));
         const fill = isWeak
-          ? palette.amberBar
+          ? palette.greenSoft
           : bar.rate >= 0.75
             ? palette.green
             : palette.greenSoft;
@@ -59,7 +58,7 @@ export function WeekdayBars({
             />
             <Text
               style={{
-                color: isWeak ? palette.amber : palette.textTertiary,
+                color: isWeak ? palette.textSecondary : palette.textTertiary,
                 fontSize: 11,
                 fontWeight: isWeak ? fontWeights.bold : fontWeights.regular,
               }}

@@ -1,6 +1,5 @@
 /** WorkingStatTile — one of the paired percentage tiles in WhatsWorkingCard. */
 import { Text, View } from 'react-native';
-import { withAlpha } from '../../../../theme/colors';
 import { borderRadius } from '../../../../theme/spacing';
 import { fontFamilies, fontWeights } from '../../../../theme/typography';
 import type { InsightPalette } from '../../insightPalette';
@@ -24,7 +23,7 @@ export function WorkingStatTile({
   return (
     <View
       style={{
-        backgroundColor: muted ? withAlpha(palette.card, 0.55) : palette.card,
+        backgroundColor: muted ? palette.cellEmpty : palette.tileBg,
         borderRadius: borderRadius.medium,
         flex: 1,
         paddingHorizontal: 14,

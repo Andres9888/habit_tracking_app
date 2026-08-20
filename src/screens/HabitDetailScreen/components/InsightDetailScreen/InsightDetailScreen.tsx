@@ -1,11 +1,11 @@
-import { Text } from 'react-native';
 import type { Habit } from '../../../../features/habits/types';
 import { useHabitInsights } from '../../insights';
-import { useInsightPalette } from '../../insightPalette';
 import type { InsightId } from '../../useDetailFlow';
 import { FlowPage } from '../FlowPage';
-import { OneFixCard } from '../NoticingSection/OneFixCard';
-import { WhatsWorkingCard } from '../NoticingSection/WhatsWorkingCard';
+import { InsightEmptyCard } from './InsightEmptyCard';
+import { INSIGHT_FOOTNOTE } from './insightEvidence';
+import { OneFixEvidence } from './OneFixEvidence';
+import { WorkingEvidence } from './WorkingEvidence';
 
 interface InsightDetailScreenProps {
   habit: Habit;
@@ -18,7 +18,6 @@ export function InsightDetailScreen({
   insightId,
   onEdit,
 }: InsightDetailScreenProps) {
-  const palette = useInsightPalette();
   const insights = useHabitInsights({
     daysOfWeek: habit.daysOfWeek,
     habitCreatedAt: habit.createdAt,
@@ -29,33 +28,12 @@ export function InsightDetailScreen({
   const oneFix = insightId === 'oneFix' ? insights.oneFix : null;
 
   return (
-    <FlowPage footnote='Every number here comes from check-ins you recorded. Nothing is predicted.'>
-      {working ? (
-        <WhatsWorkingCard
-          insight={working}
-          palette={palette}
-          onAdjustReminder={onEdit}
-        />
-      ) : null}
+    <FlowPage footnote={INSIGHT_FOOTNOTE}>
+      {working ? <WorkingEvidence insight={working} onEdit={onEdit} /> : null}
       {oneFix ? (
-        <OneFixCard
-          cue={habit.cueAfterBehavior}
-          habitId={habit._id}
-          insight={oneFix}
-          palette={palette}
-        />
+        <OneFixEvidence cue={habit.cueAfterBehavior} insight={oneFix} />
       ) : null}
-      {working || oneFix ? null : (
-        <Text
-          style={{
-            color: palette.textSecondary,
-            fontSize: 15,
-            lineHeight: 22,
-          }}
-        >
-          This pattern needs more check-ins before it can be shown.
-        </Text>
-      )}
+      {working || oneFix ? null : <InsightEmptyCard />}
     </FlowPage>
   );
 }

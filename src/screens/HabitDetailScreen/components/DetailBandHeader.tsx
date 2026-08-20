@@ -1,21 +1,18 @@
 /**
- * DetailBandHeader — the close/Edit row, painted in the top stop of the hero's
- * pale-green wash so the top of the screen reads as one surface.
+ * DetailBandHeader — circled back + Edit on the hero wash.
  *
- * The header is fixed while the hero scrolls, so it can't share a single
- * gradient node; it takes the wash's first stop instead, which is where the
- * gradient is effectively flat anyway.
- *
- * ScreenHeader tints its own affordances from `colors.text.primary`, so the
- * close control is supplied as a custom element to pick up the band hairline.
+ * Close is a chevron in a disc (mock `.icon-btn`), not a “Home”/“Today” label.
+ * This is a modal over the habits list, which can be any selected day — a
+ * named destination would lie. VoiceOver still says “Back to Home.”
+ * The habit name lives in the hero; the header pins it after that title
+ * scrolls away.
  */
-import { Edit3, X } from 'lucide-react-native';
-import { Pressable, View } from 'react-native';
+import { ChevronLeft, Edit3 } from 'lucide-react-native';
+import { View } from 'react-native';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { iconSizes } from '../../../theme/iconSizes';
-import { borderRadius } from '../../../theme/spacing';
 import { fontWeights, typography } from '../../../theme/typography';
-import { useInsightPalette, type InsightPalette } from '../insightPalette';
+import { useInsightPalette } from '../insightPalette';
 import { HeaderButton } from './HeaderButton';
 
 interface DetailBandHeaderProps {
@@ -24,34 +21,6 @@ interface DetailBandHeaderProps {
   title: string;
   onClose: () => void;
   onEdit: () => void;
-}
-
-function BandCloseButton({
-  palette,
-  onPress,
-}: {
-  palette: InsightPalette;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable
-      accessibilityLabel='Close'
-      accessibilityRole='button'
-      hitSlop={8}
-      style={{
-        alignItems: 'center',
-        borderColor: palette.bandHairline,
-        borderRadius: borderRadius.full,
-        borderWidth: 1,
-        height: 40,
-        justifyContent: 'center',
-        width: 40,
-      }}
-      onPress={onPress}
-    >
-      <X color={palette.bandMuted} size={iconSizes.medium} strokeWidth={2.5} />
-    </Pressable>
-  );
 }
 
 export function DetailBandHeader({
@@ -69,32 +38,35 @@ export function DetailBandHeader({
   return (
     <View style={{ backgroundColor: wash[0] }}>
       <ScreenHeader
-        leftAction={<BandCloseButton palette={palette} onPress={onClose} />}
+        leftAction={
+          <HeaderButton
+            compact
+            icon={<ChevronLeft size={iconSizes.medium} strokeWidth={2.3} />}
+            label='Back to Home'
+            tone='onBandCircle'
+            onPress={onClose}
+          />
+        }
         rightAction={
           <HeaderButton
             compact={isTitlePinned}
             icon={<Edit3 size={iconSizes.small} strokeWidth={2.5} />}
             label='Edit habit'
             text='Edit'
-            tone='onBand'
+            tone={isTitlePinned ? 'onBandCircle' : 'onBand'}
             onPress={onEdit}
           />
         }
-        title={title}
+        title={isTitlePinned ? title : undefined}
         titleStyle={{
-          // Serif, like every other ScreenHeader in the app (typography.heading1
-          // sets fontFamilies.primary.display). Sized down from heading1's 22 so
-          // the pinned title doesn't out-shout the hero headline it replaces.
-          ...typography.heading1,
+          ...typography.bodyBold,
           color: palette.bandFg,
           fontSize: typography.body.fontSize,
           fontWeight: fontWeights.semibold,
           letterSpacing: -0.2,
-          lineHeight: undefined,
         }}
         titleVisible={isTitlePinned}
         variant='transparent'
-        onBack={onClose}
       />
     </View>
   );

@@ -70,7 +70,7 @@ export interface InsightPalette extends BandTokens {
   /** Strength dial arc while today is still open. */
   dialArc: string;
 
-  /** Amber accent — "what's working" card and the streak stat. */
+  /** Amber accent — recovery card only. */
   amber: string;
   amberBar: string;
   amberBg: string;

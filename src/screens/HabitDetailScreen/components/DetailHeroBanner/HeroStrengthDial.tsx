@@ -27,6 +27,8 @@ const RADIUS = 49;
 const STROKE = 8.5;
 const CENTER = SIZE / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+/** Inner hole minus a little padding so “Unbreakable” cannot hit the stroke. */
+const INNER = 2 * (RADIUS - STROKE / 2) - 16;
 
 interface HeroStrengthDialProps {
   /** 0-100. */
@@ -61,7 +63,13 @@ export function HeroStrengthDial({
       accessibilityLabel={`Habit strength ${clamped} percent, ${levelLabel}`}
       accessibilityRole='progressbar'
       accessibilityValue={{ max: 100, min: 0, now: clamped }}
-      style={{ flex: 0, height: SIZE, position: 'relative', width: SIZE }}
+      style={{
+        flex: 0,
+        height: SIZE,
+        overflow: 'hidden',
+        position: 'relative',
+        width: SIZE,
+      }}
     >
       <Svg height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} width={SIZE}>
         <Circle
@@ -89,6 +97,7 @@ export function HeroStrengthDial({
       </Svg>
       <HeroDialCenter
         levelLabel={levelLabel}
+        maxWidth={INNER}
         mutedColor={mutedColor}
         score={clamped}
         textColor={textColor}

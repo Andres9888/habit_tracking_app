@@ -17,10 +17,12 @@ import { settingsReturnValidator, updateArgsValidator } from './validators';
 export const get = query({
   args: {},
   handler: async (ctx) => {
-    // SEC-001: Get user identity for user-scoped settings
+    // Unauthenticated is expected during the Clerk→Convex token race.
+    // Throwing here makes useQuery throw in ThemeColorProvider (an app-wide
+    // ancestor), which the startup error boundary surfaces as a frozen load.
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-      throw new Error('Unauthenticated: Must be logged in to read settings');
+      return null;
     }
 
     const settings = await ctx.db
@@ -30,7 +32,7 @@ export const get = query({
 
     return toSettingsResponse(settings);
   },
-  returns: settingsReturnValidator,
+  returns: v.union(settingsReturnValidator, v.null()),
 });
 
 export const update = mutation({

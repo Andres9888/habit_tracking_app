@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
-import { useCachedQuery } from '../../../lib/queryCache';
+import { useSettingsQuery } from '../../../lib/settings/useSettingsQuery';
 import type { CompletionSoundType } from '../../../../convex/settings/types';
 import { DEFAULT_SETTINGS } from '../../../../convex/settings/types';
 import type { HabitSettings } from '../types';
@@ -26,13 +26,7 @@ export interface HabitsSettingsResult {
 export function useHabitsSettings(
   shouldLoadArchivedCount = false
 ): HabitsSettingsResult {
-  const settingsQuery = useCachedQuery(
-    api.settings.get,
-    {},
-    {
-      entryName: 'settings.get',
-    }
-  );
+  const settingsQuery = useSettingsQuery();
   const archivedHabitsCountQuery = useQuery(
     api.habits.listArchivedCount,
     shouldLoadArchivedCount ? {} : 'skip'

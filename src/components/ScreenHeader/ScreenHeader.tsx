@@ -80,12 +80,19 @@ export function ScreenHeader({
       {hasNavigation ? (
         <View style={styles.row}>
           <View style={styles.left}>{renderLeftAction()}</View>
-          {title ? <Animated.Text
+          {title && titleVisible ? (
+            <Animated.Text
               numberOfLines={titleNumberOfLines}
-              style={[styles.titleCenter, { color: colors.text.primary }, titleStyle, titleAnimatedStyle]}
+              style={[
+                styles.titleCenter,
+                { color: colors.text.primary },
+                titleStyle,
+                titleAnimatedStyle,
+              ]}
             >
               {title}
-            </Animated.Text> : null}
+            </Animated.Text>
+          ) : null}
           <View style={styles.right}>{rightAction}</View>
         </View>
       ) : (

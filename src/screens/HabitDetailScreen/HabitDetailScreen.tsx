@@ -92,11 +92,15 @@ function HabitDetailScreenContent({
     setIsTitlePinned(pinned);
   }, []);
   const flow = useDetailFlow();
+  const resetFlowAndPin = useCallback(() => {
+    flow.reset();
+    setIsTitlePinned(false);
+  }, [flow.reset]);
   const actions = useDetailFlowActions(flow.go);
   const dayNotes = useDayNotes(displayHabit);
   const [noteDate, setNoteDate] = useState<string | null>(null);
   const today = getLocalDateString();
-  useResetDetailFlow(flow.reset, visible, displayHabit?._id);
+  useResetDetailFlow(resetFlowAndPin, visible, displayHabit?._id);
   const handleRequestClose = () => {
     if (flow.route === 'detail') onClose();
     else flow.back();

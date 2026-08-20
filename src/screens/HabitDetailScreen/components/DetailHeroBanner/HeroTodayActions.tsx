@@ -10,6 +10,7 @@ import { HeroCompleteBar } from './HeroCompleteBar';
 
 interface HeroTodayActionsProps {
   isCompletedToday: boolean;
+  isScheduledToday: boolean;
   isToggling: boolean;
   todayNote?: string;
   onOpenNote: () => void;
@@ -18,6 +19,7 @@ interface HeroTodayActionsProps {
 
 export function HeroTodayActions({
   isCompletedToday,
+  isScheduledToday,
   isToggling,
   todayNote,
   onOpenNote,
@@ -27,14 +29,38 @@ export function HeroTodayActions({
 
   return (
     <View style={{ gap: 8, paddingBottom: 4, paddingTop: 11 }}>
-      {isCompletedToday ? (
+      {!isScheduledToday && !isCompletedToday ? (
+        <View
+          accessibilityLabel='Not scheduled today'
+          accessibilityRole='text'
+          style={{
+            alignItems: 'center',
+            backgroundColor: palette.cellFuture,
+            borderColor: palette.cardBorder,
+            borderRadius: 17,
+            borderWidth: 1,
+            height: 56,
+            justifyContent: 'center',
+          }}
+        >
+          <Text
+            style={{
+              color: palette.textSecondary,
+              fontSize: 15,
+              fontWeight: '600',
+            }}
+          >
+            Not scheduled today
+          </Text>
+        </View>
+      ) : isCompletedToday ? (
         <View
           accessibilityLabel='Done today'
           accessibilityRole='text'
           style={{
             alignItems: 'center',
             backgroundColor: palette.greenWash,
-            borderColor: 'rgba(12,124,89,0.32)',
+            borderColor: palette.bandHairline,
             borderRadius: 17,
             borderWidth: 1.5,
             flexDirection: 'row',
@@ -57,7 +83,19 @@ export function HeroTodayActions({
       ) : (
         <HeroCompleteBar disabled={isToggling} onPress={onToggleToday} />
       )}
-      {isCompletedToday ? (
+      {!isScheduledToday && !isCompletedToday ? (
+        <Text
+          style={{
+            color: palette.textTertiary,
+            fontSize: 12,
+            height: 48,
+            lineHeight: 48,
+            textAlign: 'center',
+          }}
+        >
+          No completion is required. History remains available below.
+        </Text>
+      ) : isCompletedToday ? (
         <HeroActionPair
           disabled={isToggling}
           noteLabel={todayNote ? 'Edit note' : 'Add a note'}

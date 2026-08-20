@@ -89,6 +89,7 @@ body {
 @media (max-width: 1080px) {
   .stage { grid-template-columns: 1fr; justify-items: center; gap: 40px; }
   .docs { max-width: 640px; }
+  .phone-col { position: static; }
 }
 
 .stage-head {
@@ -123,7 +124,15 @@ body {
    iPhone 15 frame
    ------------------------------------------------------------ */
 
-.phone-col { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.phone-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 24px;
+  align-self: start;
+}
 
 .phone {
   position: relative;
@@ -1429,6 +1438,135 @@ table.routes td.label { color: #8FAE9C; }
 }
 .notes-list li strong { color: #D6D2C7; font-weight: 600; }
 
+/* ------------------------------------------------------------
+   Why · pain · revenue
+   ------------------------------------------------------------ */
+
+.why-lede {
+  margin: 0 0 16px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #C5C1B6;
+}
+.why-lede strong { color: #EDE9DE; font-weight: 600; }
+.why-lede em { font-style: italic; color: #B7B3A8; }
+
+.why-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 18px;
+}
+.why-toc button {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  color: #C9C5BA;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 999px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.why-toc button:hover { background: rgba(255,255,255,.1); color: #F4F0E7; }
+.why-toc button.is-active {
+  background: rgba(12,124,89,.9);
+  border-color: #35A97E;
+  color: #fff;
+}
+.why-toc button.is-cut {
+  color: #6E746C;
+  text-decoration: line-through;
+}
+.why-card.is-cut {
+  opacity: .72;
+  border-style: dashed;
+}
+.why-card.is-cut h3 {
+  text-decoration: line-through;
+}
+
+.why-group {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #6E746C;
+  margin: 20px 0 10px;
+}
+.why-group:first-of-type { margin-top: 4px; }
+
+.why-stack { display: grid; gap: 10px; }
+
+.why-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: var(--sans);
+  color: inherit;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px;
+  padding: 15px 16px 14px;
+  cursor: pointer;
+  transition: border-color .16s ease, background .16s ease;
+}
+.why-card:hover { background: rgba(255,255,255,.055); border-color: rgba(255,255,255,.16); }
+.why-card.is-on-screen { border-color: rgba(255,255,255,.18); }
+.why-card.is-active {
+  background: rgba(12,124,89,.14);
+  border-color: rgba(53,169,126,.55);
+}
+.why-card .meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #8FAE9C;
+}
+.why-card .meta .hint { color: #6E746C; letter-spacing: .08em; font-weight: 600; }
+.why-card h3 {
+  font-family: var(--serif);
+  font-size: 17.5px;
+  font-weight: 500;
+  letter-spacing: -.012em;
+  color: #F4F0E7;
+  margin: 5px 0 12px;
+}
+.why-dl {
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  gap: 7px 12px;
+  margin: 0;
+}
+.why-dl dt {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #7C8177;
+  padding-top: 1px;
+}
+.why-dl dd {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #B7B3A8;
+}
+.why-dl dt.rev, .why-dl dd.rev { color: #8FAE9C; }
+.why-dl dd.rev { color: #A8C4B4; }
+
+.phone .is-spotlight {
+  box-shadow: 0 0 0 2px #0C7C59, 0 0 0 6px rgba(12,124,89,.28);
+  border-radius: 16px;
+  position: relative;
+  z-index: 2;
+}
+
 .screen-readout {
   display: flex;
   align-items: center;
@@ -1440,7 +1578,7 @@ table.routes td.label { color: #8FAE9C; }
 .screen-readout b { color: #D6D2C7; font-weight: 600; }
 
 /* focus visibility across the prototype (textarea has its own focus style) */
-button:focus-visible, .node:focus-visible {
+button:focus-visible, .node:focus-visible, .why-card:focus-visible {
   outline: 2px solid #35A97E;
   outline-offset: 2px;
   border-radius: 10px;
@@ -1452,7 +1590,7 @@ button:focus-visible, .node:focus-visible {
 <header class="stage-head">
   <p class="kicker">ChainDay · Prototype</p>
   <h1>Habit Detail — full flow</h1>
-  <p>A recommitment surface, not a stats dashboard. Habit Detail answers “what do I do now,” keeps a small trustworthy snapshot, and hands the record to History and the interpretation to Analytics. Seven screen states, every route clickable.</p>
+  <p>A recommitment surface, not a stats dashboard. Habit Detail answers “what do I do now,” keeps a small trustworthy snapshot, and hands the record to History and the interpretation to Analytics. Seven screen states, every route clickable. Cards on the right map each section to the pain it relieves and how that protects retention — and, indirectly, the subscription.</p>
 </header>
 
 <div class="stage">
@@ -1503,7 +1641,7 @@ button:focus-visible, .node:focus-visible {
                SCREEN · HABIT DETAIL (ready / completed / recovery)
                ================================================== -->
           <section class="screen" id="s-detail" data-detail="ready" aria-label="Habit detail">
-            <div class="navbar on-hero">
+            <div class="navbar on-hero" id="spot-header">
               <div>
                 <button class="icon-btn" data-nav="home" aria-label="Back to Today">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -1517,10 +1655,12 @@ button:focus-visible, .node:focus-visible {
 
             <div class="scroll">
               <div class="hero">
+                <div id="spot-name">
                 <h1>Wake-Up Movement</h1>
                 <p class="schedule">Morning routine · Daily</p>
+                </div>
 
-                <div class="dial">
+                <div class="dial" id="spot-dial">
                   <svg width="120" height="120" viewBox="0 0 120 120" aria-hidden="true">
                     <defs>
                       <linearGradient id="dialGrad" x1="0" y1="0" x2="1" y2="1">
@@ -1544,7 +1684,7 @@ button:focus-visible, .node:focus-visible {
 
               <div class="page">
                 <!-- why card (ready + completed) -->
-                <div class="card why" id="whyCard">
+                <div class="card why" id="whyCard" data-spot="why">
                   <span class="tile">
                     <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6"/><path d="m4.9 8.9 1.4 1.4"/><path d="M2 17h2"/><path d="M20 17h2"/><path d="m17.7 10.3 1.4-1.4"/><path d="M17 17a5 5 0 0 0-10 0"/><path d="M2 21h20"/></svg>
                   </span>
@@ -1554,7 +1694,7 @@ button:focus-visible, .node:focus-visible {
                 </div>
 
                 <!-- recovery panel (recovery only) -->
-                <div class="recovery" id="recoveryPanel" hidden>
+                <div class="recovery" id="recoveryPanel" data-spot="recovery" hidden>
                   <span class="tile">
                     <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
                   </span>
@@ -1565,7 +1705,7 @@ button:focus-visible, .node:focus-visible {
                 </div>
 
                 <!-- action slot: fixed shape so the rows below never shift -->
-                <div class="action-slot">
+                <div class="action-slot" id="spot-action">
                   <button class="btn-primary" id="primaryBtn" data-act="complete">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                     <span id="primaryLabel">Complete today</span>
@@ -1587,7 +1727,7 @@ button:focus-visible, .node:focus-visible {
                 </div>
 
                 <!-- week strip -->
-                <div class="card week" style="margin-top:10px">
+                <div class="card week" id="spot-week" style="margin-top:10px">
                   <div class="week-head">
                     <span>
                       <span class="t">This week</span>
@@ -1600,7 +1740,7 @@ button:focus-visible, .node:focus-visible {
 
                 <!-- grouped navigation: fixed position in every state -->
                 <p class="section-label" style="margin-top:14px">The record</p>
-                <div class="card rowgroup">
+                <div class="card rowgroup" id="spot-doors">
                   <button class="row" data-go="history">
                     <span class="tile">
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="3"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/><path d="M7.5 14h2M11 14h2M14.5 14h2M7.5 17.5h2M11 17.5h2"/></svg>
@@ -1624,7 +1764,7 @@ button:focus-visible, .node:focus-visible {
                 </div>
 
                 <!-- grounded insight line -->
-                <div class="insight-line" style="margin-top:16px">
+                <div class="insight-line" id="spot-insight" style="margin-top:16px">
                   <span class="spark">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 8-8"/><path d="M15 7h5v5"/></svg>
                   </span>
@@ -1959,6 +2099,286 @@ button:focus-visible, .node:focus-visible {
        DOCS PANEL
        ========================================================== -->
   <div class="docs">
+
+    <div class="panel" id="whyPanel">
+      <h2>Why · pain · revenue</h2>
+      <p class="why-lede">This is a <strong>single-tier</strong> app — there is no feature gate to convert against. Retention is the business: a frictionless daily tap, a wall of progress people can trust, and a calm way back after a miss. Conversion is indirect: <em>the more of that wall they can see and believe, the more a subscription feels like protecting what they built.</em> Trust leaks (silent past-day toggles, idle-inflated “day 38,” a dashboard of the same number restated) make people quit or distrust the wall they paid to keep.</p>
+      <p class="why-lede" style="margin-top:-8px">Click a card. The phone jumps to that screen and highlights the section.</p>
+
+      <nav class="why-toc" aria-label="Jump to a section reason">
+        <button type="button" data-why="header" data-node="ready">Header</button>
+        <button type="button" data-why="name" data-node="ready">Name</button>
+        <button type="button" data-why="dial" data-node="ready">Dial</button>
+        <button type="button" data-why="why" data-node="ready">Why</button>
+        <button type="button" data-why="recovery" data-node="recovery">Recovery</button>
+        <button type="button" data-why="action" data-node="completed">Complete</button>
+        <button type="button" data-why="week" data-node="ready">This week</button>
+        <button type="button" data-why="doors" data-node="ready">Doors</button>
+        <button type="button" data-why="insight" data-node="ready">Insight line</button>
+        <button type="button" class="is-cut" data-why="pause" data-node="ready">Pause (cut)</button>
+        <button type="button" data-why="history" data-node="history">History</button>
+        <button type="button" data-why="day" data-node="day">Day</button>
+        <button type="button" data-why="analytics" data-node="analytics">Analytics</button>
+        <button type="button" data-why="insightdetail" data-node="insight">Insight</button>
+        <button type="button" data-why="edit" data-node="edit">Edit</button>
+        <button type="button" data-why="notes" data-node="completed">Notes</button>
+      </nav>
+
+      <p class="why-group">On Habit Detail</p>
+      <div class="why-stack">
+
+        <article class="why-card" tabindex="0" role="button" data-why="header" data-node="ready">
+          <span class="meta">Habit Detail · 01</span>
+          <h3>Header / Edit door</h3>
+          <dl class="why-dl">
+            <dt>What</dt>
+            <dd>Back to Today. The habit name pins after a short scroll. Edit sits on the right — a door, not this page.</dd>
+            <dt>Pain</dt>
+            <dd>After the hero scrolls away, people lose which habit they are in. Putting authoring on this page turns a recommitment visit into a settings dump.</dd>
+            <dt>Solves</dt>
+            <dd>The pin keeps identity in view. Edit is one tap away, off the scroll, so the daily job stays “what do I do now.”</dd>
+            <dt class="rev">Revenue</dt>
+            <dd class="rev">People who only need to recommit don’t bounce. Short Detail visits become the habit of opening the app — the retention loop a subscription rides on.</dd>
+          </dl>
+        </article>
+
+        <article class="why-card" tabindex="0" role="button" data-why="name" data-node="ready">
+          <span class="meta">Habit Detail · 02</span>
+          <h3>Name + schedule</h3>
+          <dl class="why-dl">
+            <dt>What</dt>
+            <dd>Centered display name, then a quiet schedule line (“Morning routine · Daily”). Context, not a chart.</dd>
+            <dt>Pain</dt>
+            <dd>Opening a habit and seeing a number first feels like being graded. The person came to show up, not to sit an exam.</dd>
+            <dt>Solves</dt>
+            <dd>You recognize the habit before any metric. Schedule answers “when,” without competing with Complete today.</dd>
+            <dt class="rev">Revenue</dt>
+            <dd class="rev">The habit feels like theirs, not a scoreboard. People keep opening a place that treats them as someone becoming, which is what they are paying to protect.</dd>
+          </dl>
+        </article>
+
+        <article class="why-card" tabindex="0" role="button" data-why="dial" data-node="ready">
+          <span class="meta">Habit Detail · 03</span>
+          <h3>Strength dial</h3>
+          <dl class="why-dl">
+            <dt>What</dt>
+            <dd>One 120px ring. Number + band (“42 · Building”). Caption: a snapshot, not a score. No %, no ladder, no comparison.</dd>
+            <dt>Pain</dt>
+            <dd>Ring + bar + the same number restated reads as a dashboard glitch. Idle-inflated counters (“day 38” above a streak of 0) teach that numbers are theater.</dd>
+            <dt>Solves</dt>
+            <dd>One honest snapshot of how established it feels. Strength is not a grade and not a streak. The rest of the stats live on Analytics, where they can be audited.</dd>
+            <dt class="rev">Revenue</dt>
+            <dd class="rev">The one number they remember stays believable. A subscription only feels like protecting progress if that progress still looks real.</dd>
+          </dl>
+        </article>
+
+        <article class="why-card" tabindex="0" role="button" data-why="why" data-node="ready">
+          <span class="meta">Habit Detail · 04</span>
+          <h3>Why card</h3>
+          <dl class="why-dl">
+            <dt>What</dt>
+            <dd>One sentence above the button. Priority: why → identity → wish. Hidden if all three are empty. Never a placeholder essay. Never WOOP.</dd>
+            <dt>Pain</dt>
+            <dd>A hard morning that meets a lecture (Wish / Outcome / Obstacle / Plan) skips the tap. Empty copy that fakes a reason teaches the same distrust as a fake number.</dd>
+            <dt>Solves</dt>
+            <dd>Recommitment needs a reason, not a form. The plan lives on Edit; a tired person uses it without seeing it. Identity is the fallback, not a second speech.</dd>
+            <dt class="rev">Revenue</dt>
+            <dd class="rev">The tap still happens on the worst mornings — that is retention past week one. Identity copy is the engine; WOOP on this page would stall it.</dd>
+          </dl>
+        </article>
+
+        <article class="why-card" tabindex="0" role="button" data-why="recovery" data-node="recovery">
+          <span class="meta">Habit Detail · 05 · amber only here</span>
+          <h3>Recovery card</h3>
+          <dl class="why-dl">
+            <dt>What</dt>
+            <dd>“Pick it back up.” Factual: yesterday wasn’t logged. Offer today’s two-minute version. Replaces the why card; does not stack under it.</dd>
+            <dt>Pain</dt>
+            <dd>A miss that reads as “you broke a streak of N” — or a rest-day cop-out — makes the at-risk person close the app rather than face it. That is the churn moment.</dd>
+            <dt>Solves</dt>
+            <dd>Amber exists only here, so the color itself means start again, not you failed. No ranks, no rest-day UX, no accusation. Same Complete today underneath.</dd>
+            <dt class="rev">Revenue</dt>
+            <dd class="rev">Keeps the cohort most likely to leave. Saving a miss is worth more than celebrating a streak — those people already stayed.</dd>
+          </dl>
+        </article>
+
+        <article class="why-card" tabindex="0" role="button" data-why="action" data-node="completed">
+          <span class="meta">Habit Detail · 06 · fixed slot</span>
+          <h3>Complete today / Done today</h3>
+          <dl class="why-dl">
+            <dt>What</dt>
+            <dd>One primary action. Ready logs today. Completed confirms with Done today; Undo and Add/Edit note sit in the pair below. Caption: you can undo anytime. Today only.</dd>
+            <dt>Pain</dt>
+            <dd>A buried tap, a second complete after success, or a button that silently flips a past date. Any of those breaks the daily ritual or corrupts the wall.</dd>
+            <dt>Solves</dt>
+            <dd>The tap is one tap and never buried. After success the screen feels finished. The slot is fixed-height so History and Analytics never jump. Past corrections go through History → Day.</dd>
+            <dt class="rev">Revenue</dt>
+            <dd class="rev">Frictionless daily tap = habit of opening the app = retention. Conversion here is showing up, not a paywall. Undo keeps the log honest, so the wall stays worth protecting.</dd>
+          </dl>
+        </article>
+
+        <article class="why-card" tabindex="0" role="button" data-why="week" data-node="ready">
+          <span class="meta">Habit Detail · 07</span>
+          <h3>This week strip</h3>
+          <dl class="why-dl">
+            <dt>What</dt>
+            <dd>Seven pips, date range, N of scheduled. Today is distinct. Future days are inert. Today’s pip completes/undoes; a past pip opens Day.</dd>
+            <dt>Pain</dt>
+            <dd>A year heatmap or a streak total on this page turns Detail back into a dashboard. People who just needed to tick bounce — or they tap a tiny cell and rewrite yesterday by accident.</dd>
+            <dt>Solves</dt>
+            <dd>A small, trustworthy snapshot of this week. Enough to feel the week without opening History. Streak totals and year grids do not belong here.</dd>
+            <dt class="rev">Revenue</dt>
+            <dd class="rev">Progress is felt without dashboard bloat. Detail stays a 20-second visit, which is the cadence that retains — and that makes the longer History session feel like visiting a wall they own.</dd>
+          </dl>
+        </article>
+
+        <article class="why-card" tabindex="0" role="button" data-why="doors" data-node="ready">
+          <span class="meta">Habit Detail · 08 · never move</span>
+          <h3>History + Analytics doors</h3>
+          <dl class="why-dl">
+            <dt>What</dt>
+            <dd>Two rows that stay put: History — “Dates, notes, and edits.” Analytics — “Patterns from real check-ins.” Doors, not previews.</dd>
+            <dt>Pain</dt>
+            <dd>Embedding a year grid or a chart here duplicates Analytics and makes the recommitment surface long. Duplicate numbers elsewhere already taught people to skim past stats.</dd>
+            <dt>Solves</dt>
+            <dd>Detail is not the archive and not the lab. Anyone who wants the record or the pattern takes a door. The rows do not move when today completes, so muscle memory holds.</dd>
+            <dt class="rev">Revenue</dt>
+            <dd class="rev">Short Detail = more daily visits. Optional History/Analytics sessions are where sunk cost shows — the wall they would be paying to keep.</dd>
+          </dl>
+        </article>
+
+        <article class="why-card" tabindex="0" role="button" data-why="insight" data-node="ready">
+          <span class="meta">Habit Detail · 09</span>
+          <h3>One insight line</h3>
+          <dl class="why-dl">
+            <dt>What</dt>
+            <dd>One grounded sentence with a spark, or nothing. Tap opens Insight. Example: check-ins cluster in a daypart; a weekday is where it slips.</dd>
+            <dt>Pain</dt>
+            <dd>A list of claims, a prediction, or a line you cannot audit feels like the app inventing a story. That discredits the honest counts on the same product.</dd>
+            <dt>Solves</dt>
+            <dd>A hint is useful; a list is Analytics. The line must be auditable — tap through to the counts — so Detail never narrates fiction.</dd>
+            <dt class="rev">Revenue</dt>
+            <dd class="rev">Believable interpretation is why people trust the wall. If the app starts guessing, the subscription starts feeling like a lie about progress they thought they had.</dd>
+          </dl>
+        </article>
+
+        <article class="why-card is-cut" tabindex="0" role="button" data-why="pause" data-node="ready">
+          <span class="meta">Cut · not planned</span>
+          <h3>Pause card</h3>
+          <dl class="why-dl">
+            <dt>What</dt>
+            <dd>Was “Going away?” / “Pause without losing your streak.” We are not shipping Pause on Habit Detail going forward.</dd>
+            <dt>Pain</dt>
+            <dd>Detail is a recommitment surface. A hold-your-streak card on the same screen as recovery is an exit from showing up, and it undercuts recovery plus the no-rest-day / no-streak-shaming rules.</dd>
+            <dt>Solves</dt>
+            <dd>Removed from this flow. Pause/resume may stay in Settings or Edit later if travel/hold becomes a real support problem. Do not invent rest-day UX. Do not put Pause back on Detail.</dd>
+            <dt class="rev">Revenue</dt>
+            <dd class="rev">Trust comes from an honest log and a calm way back after a miss — not from parking the streak on the recommitment screen.</dd>
+          </dl>
+        </article>
+
+      </div>
+
+      <p class="why-group">The record, the lab, the day</p>
+      <div class="why-stack">
+
+        <article class="why-card" tabindex="0" role="button" data-why="history" data-node="history">
+          <span class="meta">History</span>
+          <h3>Month bar, grid, legend, entries</h3>
+          <dl class="why-dl">
+            <dt>What</dt>
+            <dd>Month navigation sits above the calendar card. The grid is large enough to open a day. Legend: completed / no entry / today / upcoming — filled disc, dashed ring, solid ring, flat fill. Logged entries scan; a note mark means writing, not a score. Footnote: past dates are for seeing or correcting, not silent toggles.</dd>
+            <dt>Pain</dt>
+            <dd>A ~6px year cell that toggles on tap silently rewrites yesterday. That corrupts the streak/heatmap wall — the exact asset that makes people stay and pay. Habit-level stat cards here would duplicate Detail and Analytics.</dd>
+            <dt>Solves</dt>
+            <dd>History owns the record. Cells open Day instead of flipping completion in place. Year cells (on Analytics) only inspect and jump to the month. Color is not the only signal.</dd>
+            <dt class="rev">Revenue</dt>
+            <dd class="rev">Sunk cost only works if the wall is true. Protecting the record is how a single-tier subscription feels like protecting what they built — not a feature they might unlock later.</dd>
+          </dl>
+        </article>
+
+        <article class="why-card" tabindex="0" role="button" data-why="day" data-node="day">
+          <span class="meta">Day / Entry</span>
+          <h3>One day’s truth</h3>
+          <dl class="why-dl">
+            <dt>What</dt>
+            <dd>Date title, status (completed vs no entry), note independent of completion, explicit Correct this day (undo/complete + add/edit note), previous/next, footnote that edits change History and Analytics.</dd>
+            <dt>Pain</dt>
+            <dd>Inline past-day editing on Detail — or a mis-tap on a tiny cell — silently rewrites the wall. A miss with no place to write (“travel day”) makes the record feel incomplete or accusatory.</dd>
+            <dt>Solves</dt>
+            <dd>One day’s truth, with no hidden side effects. Notes can exist on a miss. You walk adjacent days without returning to the grid. This is the only edit surface for the past.</dd>
+            <dt class="rev">Revenue</dt>
+            <dd class="rev">Corrections stay explicit, so the progress wall remains the thing they would hate to lose. That is the conversion story when you cannot gate features.</dd>
+          </dl>
+        </article>
+
+        <article class="why-card" tabindex="0" role="button" data-why="analytics" data-node="analytics">
+          <span class="meta">Analytics</span>
+          <h3>Year glance, range chart, insight rows</h3>
+          <dl class="why-dl">
+            <dt>What</dt>
+            <dd>Year at a glance: 365 binary days (logged or not), never a score, never on Detail. Tap a square → that month in History; cells are too small to edit. Weekly/monthly tabs on the same log. Range chart of how it actually moved. Tappable insight rows. Footnote: every number comes from check-ins you recorded.</dd>
+            <dt>Pain</dt>
+            <dd>Predictions, a falling % in the crown slot, or empty weeks filled in — all punish lapses and teach that the lab is fiction. Editing a day from here would mix “understand” with “rewrite.”</dd>
+            <dt>Solves</dt>
+            <dd>Patterns from real check-ins. Nothing is predicted. Empty weeks show as zero. A pattern is not a cause — Insight says so. The year grid is the establishing shot of the wall, owned here.</dd>
+            <dt class="rev">Revenue</dt>
+            <dd class="rev">Auditable patterns keep numbers believable. The year glance is the sunk-cost portrait — accumulated wins, not a ruined ratio — which is what makes “keep my account” feel rational.</dd>
+          </dl>
+        </article>
+
+        <article class="why-card" tabindex="0" role="button" data-why="insightdetail" data-node="insight">
+          <span class="meta">Insight</span>
+          <h3>The counts behind one claim</h3>
+          <dl class="why-dl">
+            <dt>What</dt>
+            <dd>The sample behind one Analytics (or Detail-line) claim: counts, dates, evidence chart. What’s working can send you to Edit. One fix can suggest a cue. Neither completes the habit. Explicit: a pattern is not a cause and not a prediction.</dd>
+            <dt>Pain</dt>
+            <dd>“Mornings work” with no sample feels like AI fluff. Acting on a claim by auto-completing the habit would steal the daily tap and break trust twice.</dd>
+            <dt>Solves</dt>
+            <dd>If Detail says mornings work, you can see the n. Advice is optional and routes to authoring, not to a silent check-in.</dd>
+            <dt class="rev">Revenue</dt>
+            <dd class="rev">Trust in the interpretation layer is why Analytics remains a reason to stay rather than a reason to scoff. People renew what they still believe.</dd>
+          </dl>
+        </article>
+
+      </div>
+
+      <p class="why-group">Authoring and notes</p>
+      <div class="why-stack">
+
+        <article class="why-card" tabindex="0" role="button" data-why="edit" data-node="edit">
+          <span class="meta">Edit · Why + WOOP</span>
+          <h3>Split on purpose</h3>
+          <dl class="why-dl">
+            <dt>What</dt>
+            <dd>Block 1, shown on Detail: why (the sentence above Complete today) and optional identity (used only if why is empty). Block 2, written here: WOOP — Wish, Outcome, Obstacle, Plan. Naming the obstacle is the useful part.</dd>
+            <dt>Pain</dt>
+            <dd>WOOP on Detail blocks the button on a hard morning. Wish-only copy often feels finished, so the habit never gets a plan. Mixing authoring with completing trains people to postpone the tap.</dd>
+            <dt>Solves</dt>
+            <dd>A hard morning uses the plan without seeing this page. Detail stays one line. Edit is where investment deepens — identity and if-then — when they have the attention for it.</dd>
+            <dt class="rev">Revenue</dt>
+            <dd class="rev">Authoring deepens “this is mine” without slowing the daily habit that retains. The why they wrote is another brick in the wall a subscription protects.</dd>
+          </dl>
+        </article>
+
+        <article class="why-card" tabindex="0" role="button" data-why="notes" data-node="completed">
+          <span class="meta">Notes · per day</span>
+          <h3>Private writing on the record</h3>
+          <dl class="why-dl">
+            <dt>What</dt>
+            <dd>Per-day notes on the habit, independent of completion. Entry points: Completed Detail → Add/Edit note; Day → note card; History list → a mark when writing exists. Sheet: optional, only you will see this (today); on past days, part of that day’s record.</dd>
+            <dt>Pain</dt>
+            <dd>A wall of only checkmarks is a thin sunk cost — easy to abandon. Forcing a complete before a note erases the truth of a miss (“travel day”). Public or scored notes would turn a journal into performance.</dd>
+            <dt>Solves</dt>
+            <dd>Writing is optional and private. A miss can still have a note. History lets you find the writing later. Completing today is the natural moment, not a requirement.</dd>
+            <dt class="rev">Revenue</dt>
+            <dd class="rev">The archive gets thicker than ticks. A journal they wrote is harder to walk away from than a streak they could restart in another app — that is “protect what I built,” in a single tier.</dd>
+          </dl>
+        </article>
+
+      </div>
+    </div>
 
     <div class="panel">
       <h2>Flow map</h2>
@@ -2341,6 +2761,74 @@ button:focus-visible, .node:focus-visible {
   var currentDay = null;        // { key, day }
   var currentRange = "weekly";
   var currentInsight = INSIGHTS[0];
+  var pendingWhy = null;
+
+  var SPOT_OF = {
+    header: "#spot-header",
+    name: "#spot-name",
+    dial: "#spot-dial",
+    why: "#whyCard",
+    recovery: "#recoveryPanel",
+    action: "#spot-action",
+    week: "#spot-week",
+    doors: "#spot-doors",
+    insight: "#spot-insight",
+    pause: null,
+    history: "#s-history .page",
+    day: "#s-day .page",
+    analytics: "#s-analytics .page",
+    insightdetail: "#s-insight .page",
+    edit: "#s-edit .page",
+    notes: "#noteSheet"
+  };
+
+  function clearSpotlight() {
+    $$(".phone .is-spotlight").forEach(function (n) { n.classList.remove("is-spotlight"); });
+  }
+
+  function markWhyOnScreen(next) {
+    var family = (next === "ready" || next === "completed" || next === "recovery")
+      ? ["ready", "completed", "recovery"]
+      : [next];
+    $$(".why-card").forEach(function (c) {
+      var nodes = (c.getAttribute("data-node") || "").split(/\s+/);
+      var on = false;
+      for (var i = 0; i < nodes.length; i++) {
+        if (family.indexOf(nodes[i]) !== -1) { on = true; break; }
+      }
+      c.classList.toggle("is-on-screen", on);
+    });
+  }
+
+  function applyWhy(whyId) {
+    $$(".why-card").forEach(function (c) {
+      c.classList.toggle("is-active", c.getAttribute("data-why") === whyId);
+    });
+    $$(".why-toc button").forEach(function (b) {
+      b.classList.toggle("is-active", b.getAttribute("data-why") === whyId);
+    });
+    var card = document.querySelector('.why-card[data-why="' + whyId + '"]');
+    if (card) card.scrollIntoView({ block: "nearest", behavior: "smooth" });
+
+    clearSpotlight();
+    var sel = SPOT_OF[whyId];
+    if (!sel) return;
+    var el = document.querySelector(sel);
+    if (!el) return;
+    el.classList.add("is-spotlight");
+    if (el.id === "noteSheet") return;
+    var scroll = el.closest(".scroll");
+    if (!scroll) return;
+    var top = el.getBoundingClientRect().top - scroll.getBoundingClientRect().top + scroll.scrollTop - 20;
+    scroll.scrollTop = Math.max(0, top);
+  }
+
+  function jumpFromWhy(node, why) {
+    pendingWhy = why;
+    jump(node);
+    if (why === "notes") openSheet("today");
+    else closeSheet();
+  }
 
   /* =========================================================
      Navigation
@@ -2363,6 +2851,15 @@ button:focus-visible, .node:focus-visible {
       backLbl.textContent = (prev === "analytics" || prev === "insight") ? "Analytics" : "Detail";
     }
     if (next === "edit") fillEditFields();
+    markWhyOnScreen(next);
+    if (pendingWhy) {
+      var w = pendingWhy;
+      pendingWhy = null;
+      applyWhy(w);
+    } else {
+      clearSpotlight();
+      $$(".why-card, .why-toc button").forEach(function (c) { c.classList.remove("is-active"); });
+    }
   }
 
   function go(next) {
@@ -2471,6 +2968,7 @@ button:focus-visible, .node:focus-visible {
       $$(".flow .node").forEach(function (n) {
         n.classList.toggle("is-current", n.getAttribute("data-node") === name);
       });
+      markWhyOnScreen(name);
     }
   }
 
@@ -3005,6 +3503,11 @@ button:focus-visible, .node:focus-visible {
     var t = e.target.closest("button, [data-node]");
     if (!t) return;
 
+    if (t.hasAttribute("data-why") && t.hasAttribute("data-node") && !t.closest(".flow")) {
+      jumpFromWhy(t.getAttribute("data-node"), t.getAttribute("data-why"));
+      return;
+    }
+
     if (t.hasAttribute("data-back")) { back(); return; }
     if (t.hasAttribute("data-go"))   { go(t.getAttribute("data-go")); return; }
 
@@ -3079,6 +3582,15 @@ button:focus-visible, .node:focus-visible {
   $$(".flow .node").forEach(function (n) {
     n.addEventListener("keydown", function (e) {
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); jump(n.getAttribute("data-node")); }
+    });
+  });
+
+  $$(".why-card").forEach(function (n) {
+    n.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        jumpFromWhy(n.getAttribute("data-node"), n.getAttribute("data-why"));
+      }
     });
   });
 

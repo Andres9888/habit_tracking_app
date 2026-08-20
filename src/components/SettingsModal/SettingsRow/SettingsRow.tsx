@@ -65,9 +65,10 @@ export function SettingsRow({
     />
   );
 
-  if (type === 'toggle' || (type === 'info' && !onPress)) return content;
+  if ((type === 'toggle' || type === 'info') && !onPress) return content;
   return (
     <AnimatedPressable
+      accessibilityHint={type === 'toggle' ? 'Shows more options' : undefined}
       accessibilityLabel={label}
       accessibilityRole='button'
       style={focusStyle}

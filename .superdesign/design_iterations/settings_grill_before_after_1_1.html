@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chain Day Settings — UI/UX before / after</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:opsz,wght@7..72,400;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0 !important;background:#23221E !important;color:#F2EFE8 !important;font-family:'DM Sans',-apple-system,system-ui,sans-serif !important}
+  h1{font-family:Literata,Georgia,serif !important;font-size:32px !important;font-weight:700 !important;margin:10px 0 8px !important;color:#F2EFE8 !important}
+  .wrap{padding:40px 44px 80px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:3px;color:#7FC49A}
+  .lede{font-size:13.5px;line-height:1.65;color:#9B978A;max-width:740px;margin:0}
+
+  .recs{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:12px;margin-top:22px;max-width:1180px}
+  .rec{background:#2C2B26;border-radius:14px;padding:14px 16px;border:1px solid #3A3933}
+  .rec .n{width:22px;height:22px;border-radius:50%;background:#7FC49A;color:#0C2B21;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-right:8px}
+  .rec h2{font-size:14px;margin:0 0 10px;font-weight:700;color:#F2EFE8;display:flex;align-items:center}
+  .pair{display:grid;grid-template-columns:1fr 16px 1fr;gap:8px;align-items:stretch;font-size:12px;line-height:1.45}
+  .before-chip,.after-chip{border-radius:10px;padding:9px 10px}
+  .before-chip{background:#3A2A27;color:#F0B9AA}
+  .after-chip{background:#1B4436;color:#BDECCF}
+  .arrow{color:#7FC49A;align-self:center;text-align:center;font-weight:700}
+
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;font-size:12px;color:#C9C5B8}
+  .key{display:flex;align-items:center;gap:7px}
+  .dot{width:11px;height:11px;border-radius:3px;flex:none}
+  .stage{display:flex;gap:34px;align-items:flex-start;margin-top:34px;flex-wrap:wrap}
+  .col{flex:none;width:392px}
+  .colhead{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+  .colhead b{font-size:15px}
+  .tag{font-size:10.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;padding:4px 9px;border-radius:20px}
+  .tag.before{background:#4A2F2A;color:#F0B9AA}
+  .tag.after{background:#1B4436;color:#9BD9B4}
+  .metric{font-size:12px;color:#9B978A;margin-left:auto}
+
+  .phone{background:#F5F1ED;border-radius:22px;overflow:hidden;box-shadow:0 14px 50px rgba(0,0,0,.5);padding-bottom:18px;color:#2D2A26}
+  .status{display:flex;justify-content:space-between;align-items:center;padding:13px 22px 2px;font-size:13px;font-weight:600;color:#2D2A26}
+  .hdr{display:flex;justify-content:space-between;align-items:flex-start;padding:14px 20px 12px}
+  .kick{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#047857}
+  .title{font-family:Literata,Georgia,serif;font-size:33px;font-weight:700;color:#2D2A26;margin-top:6px;line-height:1.15}
+  .x{width:38px;height:38px;border-radius:50%;background:#EDEAE5;display:flex;align-items:center;justify-content:center;color:#524D47}
+  .seclabel{font-family:Literata,Georgia,serif;font-size:15.5px;font-weight:600;color:#2D2A26;margin:16px 22px 8px}
+  .card{margin:0 16px;background:#FAF8F5;border:1px solid #DDD8D2;border-radius:20px;overflow:hidden}
+  .row{display:flex;align-items:center;gap:13px;padding:13px 15px;position:relative}
+  .row+.row{border-top:1px solid rgba(45,42,38,.08)}
+  .chip{width:38px;height:38px;border-radius:12px;background:#E2F1EA;display:flex;align-items:center;justify-content:center;flex:none;color:#047857}
+  .chip.mute{background:#E9E4DD;color:#6B6560}
+  .chip svg{width:16px;height:16px}
+  .rl{flex:1;min-width:0}
+  .rt{font-size:15.5px;font-weight:600;color:#2D2A26}
+  .rs{font-size:12.5px;color:#6B6560;margin-top:2px;line-height:1.35}
+  .val{font-size:14px;color:#6B6560;flex:none}
+  .chev{color:#A39F92;font-size:17px;flex:none;line-height:1}
+  .tog{width:50px;height:30px;border-radius:15px;background:#CFC9C1;position:relative;flex:none}
+  .tog.on{background:#047857}
+  .tog i{position:absolute;top:2px;left:2px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .tog.on i{left:auto;right:2px}
+  .seg{display:flex;background:rgba(0,0,0,.05);border-radius:12px;padding:3px;gap:2px;flex:none}
+  .seg span{width:34px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#7C7869}
+  .seg span svg{width:15px;height:15px}
+  .seg span.sel{background:rgba(5,150,105,.12);color:#047857}
+  .count{font-size:11px;font-weight:700;background:#E2F1EA;color:#047857;border-radius:999px;padding:2px 7px;flex:none}
+  .avatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#059669,#047857);color:#fff;font-family:Literata,serif;font-size:18px;font-weight:600;display:flex;align-items:center;justify-content:center;flex:none}
+  .pro{display:inline-block;margin-left:6px;font-size:9.5px;font-weight:700;letter-spacing:1px;background:#D7F7DF;color:#10251D;padding:2px 6px;border-radius:6px;vertical-align:middle}
+
+  .tray{background:rgba(0,0,0,.02);border-top:1px solid rgba(45,42,38,.08);padding:10px 15px}
+  .inset{margin:0 10px 10px;background:#FAF8F5;border:1px solid #DDD8D2;border-radius:16px;overflow:hidden}
+  .inset .row{padding:11px 13px}
+  .learn{font-size:12.5px;font-weight:500;color:#047857;padding:10px 13px;border-top:1px solid rgba(45,42,38,.08)}
+  .pills{display:flex;gap:7px;flex-wrap:wrap}
+  .pill{font-size:12px;padding:7px 12px;border-radius:9px;background:rgba(0,0,0,.05);color:#6B6560}
+  .pill.sel{background:rgba(5,150,105,.12);color:#047857;font-weight:600}
+
+  .prem{margin:16px 16px 0;background:linear-gradient(135deg,#0D2119,#173A2A);border:1px solid rgba(189,236,207,.24);border-radius:20px;display:flex;align-items:center;gap:13px;padding:13px 15px}
+  .prem .chip{background:rgba(250,248,245,.12);color:#BDECCF}
+  .prem .rt{color:#FFF8E9;font-size:16px}
+  .prem .rs{color:rgba(240,249,243,.76)}
+  .up{background:#D7F7DF;color:#10251D;font-size:14px;font-weight:600;padding:9px 17px;border-radius:20px;flex:none}
+  .foot{text-align:center;font-size:12px;color:#6E6660;margin-top:16px}
+
+  .cut{position:relative}
+  .cut::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(197,74,53,.13) 0 8px,rgba(197,74,53,.04) 8px 16px);pointer-events:none}
+  .cut::before{content:attr(data-cut);position:absolute;top:50%;right:10px;transform:translateY(-50%);font-size:9.5px;font-weight:700;letter-spacing:1.3px;color:#fff;background:#B5432E;padding:3px 7px;border-radius:5px;z-index:3}
+  .keepnew{box-shadow:inset 3px 0 0 #178457}
+  .mark{position:absolute;top:50%;right:10px;transform:translateY(-50%);font-size:9.5px;font-weight:700;letter-spacing:1.2px;color:#0C2B21;background:#9BD9B4;padding:3px 7px;border-radius:5px;z-index:3}
+  .foot-moved{margin:16px 16px 0;padding:8px 10px;border-radius:10px;box-shadow:inset 3px 0 0 #E0A03C;background:rgba(224,160,60,.12)}
+
+  .why{flex:1;min-width:320px;max-width:440px;display:flex;flex-direction:column;gap:12px;position:sticky;top:28px}
+  .wcard{background:#2C2B26;border-radius:13px;padding:14px 16px;border-left:3px solid #7FC49A}
+  .wcard.soft{border-left-color:#6E7C74}
+  .wh{font-size:13.5px;font-weight:700;color:#F2EFE8;display:flex;align-items:center;gap:8px}
+  .num{width:19px;height:19px;border-radius:50%;background:#7FC49A;color:#0C2B21;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+  .wcard.soft .num{background:#6E7C74;color:#F2EFE8}
+  .wb{font-size:12.5px;line-height:1.62;color:#C9C5B8;margin-top:7px}
+  .wb em{color:#F2EFE8;font-style:normal;font-weight:600}
+  .totals{background:#1B4436;border-radius:13px;padding:14px 16px;font-size:12.5px;line-height:1.6;color:#CFE9D8}
+  .totals b{color:#fff}
+
+  @media (max-width: 1080px){
+    .recs{grid-template-columns:1fr}
+    .wrap{padding:24px 18px 64px}
+    .why{position:static;max-width:392px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">CHAIN DAY · SETTINGS · UI/UX</div>
+  <h1>Before / after — three changes</h1>
+  <p class="lede">Left is Settings as it ships today. Right is the UI/UX pass only: truthful reminder copy, a collapsed sound picker, and a quieter Support block. Look &amp; Feel, hero, Habits, and the premium banner stay as they are.</p>
+
+  <div class="recs">
+    <div class="rec">
+      <h2><span class="n">1</span> Reminder row</h2>
+      <div class="pair">
+        <div class="before-chip">Streak reminders<br><span style="opacity:.85">Nudge before an active streak slips</span></div>
+        <div class="arrow">→</div>
+        <div class="after-chip">Streak reminders<br><span style="opacity:.95">On · 8:00 PM</span></div>
+      </div>
+    </div>
+    <div class="rec">
+      <h2><span class="n">2</span> Completion sound</h2>
+      <div class="pair">
+        <div class="before-chip">Toggle + always-open pills<br>Chime · Pop · Rise</div>
+        <div class="arrow">→</div>
+        <div class="after-chip">Toggle + subtitle Chime<br>pills expand on tap</div>
+      </div>
+    </div>
+    <div class="rec">
+      <h2><span class="n">3</span> Support</h2>
+      <div class="pair">
+        <div class="before-chip">Rate · Share · What’s new · Feedback</div>
+        <div class="arrow">→</div>
+        <div class="after-chip">Love Chain Day? · Feedback<br>What’s new on the footer</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="key"><span class="dot" style="background:#B5432E"></span> removed / collapsed</div>
+    <div class="key"><span class="dot" style="background:#9BD9B4"></span> changed / merged</div>
+    <div class="key"><span class="dot" style="background:#E0A03C"></span> moved</div>
+    <div class="key"><span class="dot" style="background:#DDD8D2"></span> untouched</div>
+  </div>
+
+  <div class="stage">
+
+    <div class="col">
+      <div class="colhead"><b>Before</b><span class="tag before">ships today</span><span class="metric">Support is 4 rows</span></div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>▮▮▮ ⏻</span></div>
+        <div class="hdr">
+          <div><div class="kick">Chain Day</div><div class="title">Settings</div></div>
+          <div class="x"><i data-lucide="x" style="width:16px;height:16px"></i></div>
+        </div>
+
+        <div class="card" style="margin-top:2px">
+          <div class="row">
+            <div class="avatar">AG</div>
+            <div class="rl"><div class="rt">Andres Gutierrez <span class="pro">PRO</span></div><div class="rs">Edit name, photo &amp; account</div></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+
+        <div class="seclabel">Look &amp; Feel</div>
+        <div class="card">
+          <div class="row">
+            <div class="chip"><i data-lucide="calendar-days"></i></div>
+            <div class="rl"><div class="rt">Calendar look</div><div class="rs">Day shape, fill, chain style &amp; preview</div></div>
+            <div class="chev">›</div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="moon"></i></div>
+            <div class="rl"><div class="rt">Theme</div></div>
+            <div class="seg">
+              <span><i data-lucide="sun"></i></span>
+              <span><i data-lucide="moon"></i></span>
+              <span class="sel"><i data-lucide="smartphone"></i></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="rows-3"></i></div>
+            <div class="rl"><div class="rt">Compact habit cards</div><div class="rs">Fit more on screen</div></div>
+            <div class="tog"><i></i></div>
+          </div>
+        </div>
+
+        <div class="seclabel">Reminders</div>
+        <div class="card">
+          <div class="row">
+            <div class="chip"><i data-lucide="bell"></i></div>
+            <div class="rl"><div class="rt">Streak reminders</div><div class="rs">Nudge before an active streak slips</div></div>
+            <div class="tog on"><i></i></div>
+          </div>
+          <div class="tray" style="padding-bottom:8px">
+            <div class="inset">
+              <div class="row" style="border-top:none">
+                <div class="rl"><div class="rt" style="font-size:14.5px">Remind me at</div></div>
+                <div class="val">8:00 PM</div>
+                <div class="chev">›</div>
+              </div>
+              <div class="learn">Want a different time per habit? Learn more →</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="volume-2"></i></div>
+            <div class="rl"><div class="rt">Completion sound</div></div>
+            <div class="tog on"><i></i></div>
+          </div>
+          <div class="tray cut" data-cut="COLLAPSE">
+            <div class="pills">
+              <span class="pill sel">Chime</span>
+              <span class="pill">Pop</span>
+              <span class="pill">Rise</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="seclabel">Habits</div>
+        <div class="card">
+          <div class="row">
+            <div class="chip"><i data-lucide="arrow-up-down"></i></div>
+            <div class="rl"><div class="rt">Sort order</div><div class="rs">How habits are ordered</div></div>
+            <div class="val">Manual</div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="book-open"></i></div>
+            <div class="rl"><div class="rt">Archived habits</div><div class="rs">View and restore hidden habits</div></div>
+            <span class="count">3</span>
+            <div class="chev">›</div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="download"></i></div>
+            <div class="rl"><div class="rt">Export my data</div><div class="rs">Download habits as CSV or JSON</div></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+
+        <div class="prem">
+          <div class="chip"><i data-lucide="crown"></i></div>
+          <div class="rl"><div class="rt">Chain Day Premium</div><div class="rs">7-day trial, then $4.99/mo</div></div>
+          <div class="up">Upgrade</div>
+        </div>
+
+        <div class="seclabel">Support</div>
+        <div class="card">
+          <div class="row cut" data-cut="MERGE">
+            <div class="chip mute"><i data-lucide="star"></i></div>
+            <div class="rl"><div class="rt">Rate Chain Day</div></div>
+            <div class="chev" style="margin-right:58px">›</div>
+          </div>
+          <div class="row cut" data-cut="MERGE">
+            <div class="chip mute"><i data-lucide="share-2"></i></div>
+            <div class="rl"><div class="rt">Share with a friend</div></div>
+            <div class="chev" style="margin-right:58px">›</div>
+          </div>
+          <div class="row cut" data-cut="MOVE">
+            <div class="chip mute"><i data-lucide="sparkles"></i></div>
+            <div class="rl"><div class="rt">What's new</div></div>
+            <div class="chev" style="margin-right:58px">›</div>
+          </div>
+          <div class="row">
+            <div class="chip mute"><i data-lucide="message-square"></i></div>
+            <div class="rl"><div class="rt">Send feedback</div></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+
+        <div class="foot">Privacy · Terms · v2.4.1 (45)</div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="colhead"><b>After</b><span class="tag after">recommended</span><span class="metric">Support is 2 rows</span></div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>▮▮▮ ⏻</span></div>
+        <div class="hdr">
+          <div><div class="kick">Chain Day</div><div class="title">Settings</div></div>
+          <div class="x"><i data-lucide="x" style="width:16px;height:16px"></i></div>
+        </div>
+
+        <div class="card" style="margin-top:2px">
+          <div class="row">
+            <div class="avatar">AG</div>
+            <div class="rl"><div class="rt">Andres Gutierrez <span class="pro">PRO</span></div><div class="rs">Edit name, photo &amp; account</div></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+
+        <div class="seclabel">Look &amp; Feel</div>
+        <div class="card">
+          <div class="row">
+            <div class="chip"><i data-lucide="calendar-days"></i></div>
+            <div class="rl"><div class="rt">Calendar look</div><div class="rs">Day shape, fill, chain style &amp; preview</div></div>
+            <div class="chev">›</div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="moon"></i></div>
+            <div class="rl"><div class="rt">Theme</div></div>
+            <div class="seg">
+              <span><i data-lucide="sun"></i></span>
+              <span><i data-lucide="moon"></i></span>
+              <span class="sel"><i data-lucide="smartphone"></i></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="rows-3"></i></div>
+            <div class="rl"><div class="rt">Compact habit cards</div><div class="rs">Fit more on screen</div></div>
+            <div class="tog"><i></i></div>
+          </div>
+        </div>
+
+        <div class="seclabel">Reminders</div>
+        <div class="card">
+          <div class="row keepnew">
+            <div class="chip"><i data-lucide="bell"></i></div>
+            <div class="rl">
+              <div class="rt">Streak reminders</div>
+              <div class="rs">On · 8:00 PM</div>
+            </div>
+            <div class="tog on" style="margin-right:70px"><i></i></div>
+            <span class="mark">1 · LIVE VALUE</span>
+          </div>
+          <div class="tray" style="padding-bottom:8px">
+            <div class="inset">
+              <div class="row" style="border-top:none">
+                <div class="rl"><div class="rt" style="font-size:14.5px">Remind me at</div></div>
+                <div class="val">8:00 PM</div>
+                <div class="chev">›</div>
+              </div>
+              <div class="learn">Want a different time per habit? Learn more →</div>
+            </div>
+          </div>
+          <div class="row keepnew">
+            <div class="chip"><i data-lucide="volume-2"></i></div>
+            <div class="rl"><div class="rt">Completion sound</div><div class="rs">Chime</div></div>
+            <div class="tog on" style="margin-right:70px"><i></i></div>
+            <span class="mark">2 · COLLAPSED</span>
+          </div>
+        </div>
+
+        <div class="seclabel">Habits</div>
+        <div class="card">
+          <div class="row">
+            <div class="chip"><i data-lucide="arrow-up-down"></i></div>
+            <div class="rl"><div class="rt">Sort order</div><div class="rs">How habits are ordered</div></div>
+            <div class="val">Manual</div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="book-open"></i></div>
+            <div class="rl"><div class="rt">Archived habits</div><div class="rs">View and restore hidden habits</div></div>
+            <span class="count">3</span>
+            <div class="chev">›</div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="download"></i></div>
+            <div class="rl"><div class="rt">Export my data</div><div class="rs">Download habits as CSV or JSON</div></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+
+        <div class="prem">
+          <div class="chip"><i data-lucide="crown"></i></div>
+          <div class="rl"><div class="rt">Chain Day Premium</div><div class="rs">7-day trial, then $4.99/mo</div></div>
+          <div class="up">Upgrade</div>
+        </div>
+
+        <div class="seclabel">Support</div>
+        <div class="card">
+          <div class="row keepnew">
+            <div class="chip mute"><i data-lucide="heart"></i></div>
+            <div class="rl">
+              <div class="rt">Love Chain Day?</div>
+              <div class="rs">Rate it or share with a friend</div>
+            </div>
+            <div class="chev" style="margin-right:62px">›</div>
+            <span class="mark">3 · MERGED</span>
+          </div>
+          <div class="row">
+            <div class="chip mute"><i data-lucide="message-square"></i></div>
+            <div class="rl"><div class="rt">Send feedback</div></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+
+        <div class="foot foot-moved">Privacy · Terms · <b style="color:#2D2A26">What's new</b> · v2.4.1 (45)</div>
+      </div>
+    </div>
+
+    <div class="why">
+      <div class="wcard">
+        <div class="wh"><span class="num">1</span> Copy, not a rename</div>
+        <div class="wb">Keep <em>Streak reminders</em>. Replace the marketing subtitle with the live value <em>On · 8:00 PM</em> / <em>Off</em>. Time still edits in the inset.</div>
+      </div>
+      <div class="wcard">
+        <div class="wh"><span class="num">2</span> Same pattern as Sort</div>
+        <div class="wb">Toggle stays. Current tone sits on the subtitle. Chime / Pop / Rise expand on tap. Resting page loses the always-open pills.</div>
+      </div>
+      <div class="wcard">
+        <div class="wh"><span class="num">3</span> Support is not a store page</div>
+        <div class="wb">Rate + Share become <em>Love Chain Day?</em> (action sheet). <em>What’s new</em> moves to the footer. Feedback stays.</div>
+      </div>
+      <div class="wcard soft">
+        <div class="wh"><span class="num">–</span> Not in this mock</div>
+        <div class="wb">No hero restyle. No new settings. Export stays in Habits. Wiring Upgrade is engineering, not a visual change.</div>
+      </div>
+      <div class="totals">
+        <b>Net visual pass:</b> one truthful subtitle, one collapsed picker, two fewer Support rows.<br>
+        Rate, share, changelog, tones, and reminder time all stay reachable.
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>

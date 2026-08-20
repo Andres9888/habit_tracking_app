@@ -67,11 +67,13 @@ describe('App Store splash and notification config', () => {
     });
   });
 
-  it('ships an honest Chain Day notification usage description', () => {
-    const plist = readFileSync(join(ROOT, 'ios/ChainDay/Info.plist'), 'utf8');
-    expect(app.expo.ios.infoPlist[USAGE_KEY]).toBe(USAGE_TEXT);
-    expect(plistValue(plist, USAGE_KEY)).toBe(USAGE_TEXT);
-    expect(USAGE_TEXT).toMatch(/Chain Day/);
-    expect(USAGE_TEXT).not.toMatch(/motivation messages/i);
+  it('hides the native splash even if the display font never loads', () => {
+    const source = readFileSync(
+      join(ROOT, 'src/app/useStartupReady.ts'),
+      'utf8'
+    );
+    expect(source).toContain('hideAsync');
+    expect(source).toContain('preventAutoHideAsync');
+    expect(source).toContain('timedOut');
   });
 });

@@ -1,5 +1,4 @@
-import { api } from '../../../convex/_generated/api';
-import { useCachedQuery } from '../../lib/queryCache';
+import { useSettingsQuery } from '../../lib/settings/useSettingsQuery';
 
 interface SettingsReadyInput {
   isCacheHydrated: boolean;
@@ -25,35 +24,15 @@ export function isStartupSettingsReady({
   settings: unknown;
 }): boolean {
   if (!isSignedIn) return true;
-  return settings !== undefined;
+  return settings != null;
 }
 
-export function useSettingsReady(
-  isSignedIn: boolean | undefined,
-  isConvexAuthenticated: boolean,
-  isCacheHydrated: boolean
-): boolean {
-  return useStartupSettings(isSignedIn, isConvexAuthenticated, isCacheHydrated)
-    .isReady;
+export function useSettingsReady(isSignedIn: boolean | undefined): boolean {
+  return useStartupSettings(isSignedIn).isReady;
 }
 
-export function useStartupSettings(
-  isSignedIn: boolean | undefined,
-  isConvexAuthenticated: boolean,
-  isCacheHydrated: boolean
-) {
-  const input = {
-    isCacheHydrated,
-    isConvexAuthenticated,
-    isSignedIn: isSignedIn === true,
-  };
-  const canQuery = canQuerySettings(input);
-  const settings = useCachedQuery(api.settings.get, canQuery ? {} : 'skip', {
-    entryName: 'settings.get',
-    // settings.get has one args shape ({}), so the args-independent latest
-    // slot is always this user's row — safe to serve before Convex connects.
-    serveCachedWhileSkipped: true,
-  });
+export function useStartupSettings(isSignedIn: boolean | undefined) {
+  const settings = useSettingsQuery();
 
   return {
     isReady: isStartupSettingsReady({

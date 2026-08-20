@@ -33,7 +33,6 @@ function renderDetail(extra: Record<string, unknown> = {}) {
       onEdit={onEdit}
       onArchive={() => {}}
       onDelete={() => {}}
-      onPause={() => {}}
       onOpenCalendar={() => {}}
       tracking={[]}
       {...extra}

@@ -16,9 +16,11 @@ jest.mock('../../../theme/ThemeContext', () => ({
 }));
 
 describe('ScreenHeader', () => {
-  it('renders with a title', () => {
-    const { getByText } = render(<ScreenHeader title="Settings" />);
-    expect(getByText('Settings')).toBeTruthy();
+  it('hides the title when titleVisible is false', () => {
+    const { queryByText } = render(
+      <ScreenHeader title='Wake-Up Movement' titleVisible={false} />
+    );
+    expect(queryByText('Wake-Up Movement')).toBeNull();
   });
 
   it('renders back icon by default', () => {

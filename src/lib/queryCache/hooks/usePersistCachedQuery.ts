@@ -45,7 +45,7 @@ export function usePersistCachedQuery<Query extends FunctionReference<'query'>>(
   writeLatest,
 }: PersistCachedQueryArgs<Query>): void {
   useEffect(() => {
-    if (live === undefined) return;
+    if (live == null || stableArgs.current === 'skip') return;
     previousLive.current = live;
     const scope = getQueryCacheScope();
     const savedAt = Date.now();

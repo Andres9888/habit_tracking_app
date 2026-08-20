@@ -1,6 +1,4 @@
-/** AboutFooter — quiet centred "Privacy · Terms · v1.2.3 (45)" line.
- *  What's New moved up into Support (it's a tappable action, not a legal link).
- *  Build number stays for support triage even though the mock shows version only. */
+/** AboutFooter — Privacy · Terms · What's new · version. */
 import { Pressable, Text, View } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography } from '../../../theme/typography';
@@ -10,6 +8,7 @@ interface Props {
   buildNumber: string;
   onPrivacy: () => void;
   onTerms: () => void;
+  onWhatsNew: () => void;
 }
 
 export function AboutFooter({
@@ -17,6 +16,7 @@ export function AboutFooter({
   buildNumber,
   onPrivacy,
   onTerms,
+  onWhatsNew,
 }: Props) {
   const { colors: themeColors } = useThemeColors();
   const footerStyle = {
@@ -27,6 +27,7 @@ export function AboutFooter({
   const links = [
     { key: 'privacy', label: 'Privacy', onPress: onPrivacy },
     { key: 'terms', label: 'Terms', onPress: onTerms },
+    { key: 'whatsNew', label: "What's new", onPress: onWhatsNew },
   ];
 
   return (

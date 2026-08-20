@@ -8,10 +8,14 @@ import { fontFamilies, fontWeights } from '../../../../theme/typography';
 import type { InsightPalette } from '../../insightPalette';
 
 interface HeroRecoveryCardProps {
+  missedDayLabel: string;
   palette: InsightPalette;
 }
 
-export function HeroRecoveryCard({ palette }: HeroRecoveryCardProps) {
+export function HeroRecoveryCard({
+  missedDayLabel,
+  palette,
+}: HeroRecoveryCardProps) {
   return (
     <View
       accessibilityRole='summary'
@@ -60,7 +64,8 @@ export function HeroRecoveryCard({ palette }: HeroRecoveryCardProps) {
             marginTop: 5,
           }}
         >
-          Yesterday wasn’t logged. Start again with today’s two-minute version.
+          {missedDayLabel} wasn’t logged. Start again with today’s two-minute
+          version.
         </Text>
       </View>
     </View>

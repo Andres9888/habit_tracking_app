@@ -1,13 +1,5 @@
-/** AboutSupportSection — Support: one action per row (mock: 44px targets).
- *  Rate and Share are separate rows again, and What's New sits here rather than
- *  hiding in the footer link line. */
-import {
-  Heart,
-  MessageSquare,
-  Share2,
-  Sparkles,
-  Star,
-} from 'lucide-react-native';
+/** AboutSupportSection — advocacy + feedback. Changelog lives in the footer. */
+import { Heart, MessageSquare } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { SettingsSection } from '../SettingsSection';
 import { SettingsRow } from '../SettingsRow';
@@ -15,17 +7,13 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface Props {
   sectionIconColor: string;
-  onRate: () => void;
-  onShare: () => void;
-  onWhatsNew: () => void;
+  onLoveChainDay: () => void;
   onFeedback: () => void;
 }
 
 export function AboutSupportSection({
   sectionIconColor,
-  onRate,
-  onShare,
-  onWhatsNew,
+  onLoveChainDay,
   onFeedback,
 }: Props) {
   const { settings } = useThemeColors();
@@ -37,25 +25,12 @@ export function AboutSupportSection({
       title='Support'
     >
       <SettingsRow
-        icon={<Star color={settings.star.icon} size={iconSize} />}
+        icon={<Heart color={settings.star.icon} size={iconSize} />}
         iconBackgroundColor={settings.star.bg}
-        label='Rate Chain Day'
+        label='Love Chain Day?'
+        subtitle='Rate it or share with a friend'
         type='navigation'
-        onPress={onRate}
-      />
-      <SettingsRow
-        icon={<Share2 color={settings.share.icon} size={iconSize} />}
-        iconBackgroundColor={settings.share.bg}
-        label='Share with a friend'
-        type='navigation'
-        onPress={onShare}
-      />
-      <SettingsRow
-        icon={<Sparkles color={settings.whatsNew.icon} size={iconSize} />}
-        iconBackgroundColor={settings.whatsNew.bg}
-        label="What's new"
-        type='navigation'
-        onPress={onWhatsNew}
+        onPress={onLoveChainDay}
       />
       <SettingsRow
         icon={<MessageSquare color={settings.feedback.icon} size={iconSize} />}

@@ -12,7 +12,6 @@ export { HabitNoteCard } from './HabitNoteCard';
 export { HeaderButton } from './HeaderButton';
 export { MonthHeatmapCard } from './MonthHeatmapCard';
 export { NoticingSection } from './NoticingSection';
-export { PauseCard } from './PauseCard';
 export { ThisWeekCard } from './ThisWeekCard';
 export { UndoToasts } from './UndoToasts';
 export { HabitDetailContent } from './HabitDetailContent';

@@ -1,7 +1,8 @@
 import { v } from 'convex/values';
-import { mutation, query } from '../_generated/server';
+import { mutation } from '../_generated/server';
 import { enforceRateLimit } from '../lib/rateLimit';
 import { validateLongText } from '../lib/inputValidation';
+import { clearLegacyTrackingNote } from './clearLegacyTrackingNote';
 
 const DATE_KEY = /^(\d{4})-(\d{2})-(\d{2})$/;
 
@@ -21,25 +22,6 @@ export function isValidDateKey(value: string): boolean {
     parsed.getUTCDate() === day
   );
 }
-
-export const listDayNotes = query({
-  args: { habitId: v.id('habits') },
-  returns: v.array(v.object({ date: v.string(), note: v.string() })),
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) return [];
-
-    const habit = await ctx.db.get(args.habitId);
-    if (!habit || habit.userId !== identity.subject) return [];
-
-    const notes = await ctx.db
-      .query('habitDayNotes')
-      .withIndex('by_habitId_and_date', (q) => q.eq('habitId', args.habitId))
-      .take(2000);
-
-    return notes.map(({ date, note }) => ({ date, note }));
-  },
-});
 
 export const updateDayNote = mutation({
   args: {
@@ -77,6 +59,7 @@ export const updateDayNote = mutation({
 
     if (!text) {
       if (existing) await ctx.db.delete(existing._id);
+      await clearLegacyTrackingNote(ctx, args.habitId, args.date);
       return null;
     }
 
@@ -93,6 +76,7 @@ export const updateDayNote = mutation({
         userId: identity.subject,
       });
     }
+    await clearLegacyTrackingNote(ctx, args.habitId, args.date);
     return null;
   },
   returns: v.null(),

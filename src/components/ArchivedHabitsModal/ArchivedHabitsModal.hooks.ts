@@ -4,6 +4,7 @@ import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { triggerHaptic } from '@/utils/haptics';
 import { useCachedQuery } from '@/lib/queryCache';
+import { useSettingsQuery } from '@/lib/settings/useSettingsQuery';
 import { useBatchArchiveActions } from './useBatchArchiveActions';
 import { useArchiveDeleteActions } from './useArchiveDeleteActions';
 
@@ -15,13 +16,7 @@ export const useArchivedHabitsModalLogic = () => {
       entryName: 'habits.listArchived',
     }
   );
-  const settingsData = useCachedQuery(
-    api.settings.get,
-    {},
-    {
-      entryName: 'settings.get',
-    }
-  );
+  const settingsData = useSettingsQuery();
   const isLoading = archivedHabitsData === undefined;
   const archivedHabits = [...(archivedHabitsData ?? [])].sort(
     (a, b) => (b.archivedAt ?? 0) - (a.archivedAt ?? 0)

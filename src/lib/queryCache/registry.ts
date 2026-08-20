@@ -38,7 +38,15 @@ const DEFINITIONS: Record<QueryCacheEntryName, CacheEntryDefinition> = {
   },
   // v2 rejects rows that may contain defaults returned before Convex auth was
   // server-confirmed. Those rows can otherwise reopen the first-paint flash.
-  'settings.get': { name: 'settings.get', storage: 'secure', version: 2 },
+  // latestFallback is safe: settings.get has one args shape ({}), so the
+  // :latest slot is this user's row. Without it, skip→live drops the cache
+  // and AuthGate parks on the loading screen until Convex answers.
+  'settings.get': {
+    latestFallback: true,
+    name: 'settings.get',
+    storage: 'secure',
+    version: 2,
+  },
   // 'plain': only opaque template IDs (no habit content); keys are
   // user-scoped and cleared on logout via clearQueryCacheForScope.
   'templates.getImportedTemplateIds': {

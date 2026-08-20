@@ -17,7 +17,6 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
     openEditHabit,
     openHabitCalendar,
     openHabitDetail,
-    openPauseModal,
     selectedHabit,
     showEditScreen,
     showHabitCalendar,
@@ -86,7 +85,6 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
             openEditHabit(habit);
           }}
           onOpenCalendar={openHabitCalendar}
-          onPause={openPauseModal}
         />
       </ErrorBoundary>
     </>

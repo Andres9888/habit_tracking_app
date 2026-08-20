@@ -1,26 +1,20 @@
 import { useAuth } from '@clerk/clerk-expo';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 import {
+  applyQueryCacheScope,
   hydrateQueryCache,
   markQueryCacheHydrated,
-  resetQueryCache,
-  setQueryCacheScope,
 } from '../../lib/queryCache';
 import type { QueryCacheProviderProps } from './types';
 
 export function QueryCacheProvider({ children }: QueryCacheProviderProps) {
   const { isLoaded, isSignedIn, userId } = useAuth();
-  const previousScope = useRef<string | null>(null);
 
   useEffect(() => {
     if (!isLoaded) return;
     const scope = isSignedIn && userId ? userId : null;
-    setQueryCacheScope(scope);
-    if (previousScope.current !== scope) {
-      resetQueryCache();
-      previousScope.current = scope;
-    }
+    applyQueryCacheScope(scope);
 
     let isCurrentHydration = true;
     void hydrateQueryCache(scope).finally(() => {

@@ -6,6 +6,8 @@ export interface WeekBar {
   label: string;
   partial: boolean;
   value: number;
+  /** Shown above the bar (monthly percents). Weekly stays unlabeled. */
+  valueCaption?: string;
 }
 
 export const MONTH_SHORT = [

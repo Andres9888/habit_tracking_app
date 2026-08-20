@@ -60,4 +60,17 @@ describe('HabitAnalyticsScreen', () => {
     fireEvent.press(getByLabelText('Wins land early morning'));
     expect(onOpenInsight).toHaveBeenCalledWith('working');
   });
+
+  it('shows monthly share of scheduled days, not raw counts', () => {
+    const { getByText } = render(
+      <HabitAnalyticsScreen
+        habit={habit}
+        onOpenHistory={jest.fn()}
+        onOpenInsight={jest.fn()}
+      />
+    );
+    fireEvent.press(getByText('Monthly'));
+    expect(getByText('Share of days logged each month')).toBeTruthy();
+    expect(getByText(/of scheduled days/)).toBeTruthy();
+  });
 });

@@ -15,13 +15,13 @@ import {
   getShareAndPauseProps,
 } from './HabitsModals.helpers';
 
-export function HabitsModals({ state }: HabitsModalsProps) {
+export function HabitsModals({ state, onPremiumUpsell }: HabitsModalsProps) {
   const shouldRenderVisualization = state.showVisualizationExercise;
 
   return (
     <>
       <ErrorBoundary fallback={null}>
-        <SettingsModalSection {...getSettingsProps(state)} />
+        <SettingsModalSection {...getSettingsProps(state, onPremiumUpsell)} />
       </ErrorBoundary>
       <ErrorBoundary fallback={null}>
         <CreateHabitModalSection

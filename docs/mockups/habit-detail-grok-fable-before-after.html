@@ -1,0 +1,2005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ChainDay · Grok vs Fable — Habit Detail before / after</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@500;600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400;1,7..72,500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --paper: #F5F1ED;
+  --card: #FFFFFF;
+  --sage-1: #E3EDE6;
+  --sage-2: #EDF0E9;
+  --sage-tint: #EAF1EC;
+  --green: #0C7C59;
+  --green-deep: #0B5D42;
+  --green-wash: #E8F2EC;
+  --green-track: #DCE7DF;
+  --amber: #FBF0E3;
+  --amber-border: #F0DFC8;
+  --amber-ink: #8A5A26;
+  --ink: #1E241F;
+  --ink-2: #4A544C;
+  --ink-3: #7D867E;
+  --ink-4: #ADAA9F;
+  --hairline: #E7E0D7;
+  --hairline-2: #F0EBE4;
+  --danger: #963F30;
+  --shadow-card: 0 1px 2px rgba(58, 48, 36, .04), 0 8px 20px -14px rgba(58, 48, 36, .22);
+  --shadow-phone: 0 2px 6px rgba(0,0,0,.28), 0 40px 80px -28px rgba(0,0,0,.55);
+  --sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --serif: "Literata", "Iowan Old Style", Georgia, serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 700px at 18% -10%, #2C332C 0%, transparent 62%),
+    linear-gradient(170deg, #23281F 0%, #1A1E19 55%, #151814 100%);
+  font-family: var(--sans);
+  color: #E9E4DA;
+  -webkit-font-smoothing: antialiased;
+  padding: 40px 28px 80px;
+}
+
+.wrap { max-width: 1180px; margin: 0 auto; }
+
+.kicker {
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #8FAE9C;
+  font-weight: 600;
+  margin: 0 0 10px;
+}
+h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 30px;
+  letter-spacing: -.01em;
+  margin: 0 0 10px;
+  color: #F4F0E7;
+}
+.lede {
+  margin: 0 0 18px;
+  max-width: 760px;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: #A6A99D;
+}
+.lede strong { color: #E9E4DA; font-weight: 600; }
+.lede code {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: #C5D9C8;
+  background: #1E231E;
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+.plan-chip {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #1A1E19;
+  background: #C5D9C8;
+  padding: 4px 9px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin: 18px 0 16px;
+  font-size: 12.5px;
+  color: #C4C1B6;
+}
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.sw { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+.sw.before { background: #C45A3A; }
+.sw.after { background: #0C7C59; }
+.sw.keep { background: #8A8478; }
+.sw.done { background: #8FAE9C; }
+
+.who {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.who.both { background: #1B4436; color: #9BD9B4; }
+.who.grok { background: #3A3428; color: #E8D5A8; }
+.who.fable { background: #2E3A32; color: #C5D9C8; }
+.who.shipped { background: #2A332C; color: #8FAE9C; }
+.who.split { background: #4A2F2A; color: #F0B9AA; }
+.who.keep { background: #3A3A32; color: #C9C5B8; }
+
+.who-key {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 28px;
+}
+@media (max-width: 900px) { .who-key { grid-template-columns: 1fr 1fr; } }
+.who-key article {
+  background: #1E231E;
+  border: 1px solid #33382F;
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+.who-key h3 {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #F4F0E7;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.who-key p { margin: 0; font-size: 12px; line-height: 1.45; color: #A6A99D; }
+
+.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 42px;
+}
+.toc a {
+  color: #C5D9C8;
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 7px 12px;
+  border: 1px solid #3A423A;
+  border-radius: 999px;
+  background: #1E231E;
+}
+.toc a:hover { border-color: #0C7C59; color: #F4F0E7; }
+.toc a.keep { color: #B8B3A6; }
+.toc a.done { color: #8FAE9C; }
+.toc a.split { color: #F0B9AA; border-color: #5A4036; }
+
+.band {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #8FAE9C;
+  margin: 8px 0 28px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #33382F;
+}
+
+.section {
+  margin: 0 0 64px;
+  scroll-margin-top: 24px;
+}
+.sec-meta {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.sec-num {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: #8FAE9C;
+  letter-spacing: .04em;
+}
+.sec-meta h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 22px;
+  margin: 0;
+  color: #F4F0E7;
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: start;
+  margin-top: 18px;
+}
+.pair-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+  margin-top: 18px;
+}
+@media (max-width: 820px) {
+  .pair { grid-template-columns: 1fr; justify-items: center; }
+}
+@media (max-width: 1100px) {
+  .pair-3 { grid-template-columns: 1fr; justify-items: center; }
+}
+
+.colhead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.colhead b { font-size: 14px; color: #F4F0E7; }
+.tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 20px;
+}
+.tag.before { background: #4A2F2A; color: #F0B9AA; }
+.tag.after { background: #1B4436; color: #9BD9B4; }
+.tag.keep { background: #3A3A32; color: #D4CFC2; }
+.tag.done { background: #2A332C; color: #8FAE9C; }
+.tag.split { background: #4A2F2A; color: #F0B9AA; }
+
+.phone {
+  width: 340px;
+  border-radius: 42px;
+  padding: 10px;
+  background: linear-gradient(150deg, #6E6B66 0%, #38352F 16%, #2A2823 42%, #35322C 62%, #6B6862 84%, #33302B 100%);
+  box-shadow: var(--shadow-phone);
+}
+.phone.sm { width: 300px; }
+.viewport {
+  position: relative;
+  border-radius: 34px;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--ink);
+}
+.sb {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 22px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  height: 36px;
+}
+.island {
+  position: absolute;
+  top: 8px; left: 50%;
+  transform: translateX(-50%);
+  width: 92px; height: 24px;
+  border-radius: 14px;
+  background: #08090A;
+  z-index: 2;
+  pointer-events: none;
+}
+.home {
+  width: 108px; height: 4px;
+  border-radius: 3px;
+  background: rgba(30, 36, 31, .34);
+  margin: 8px auto 10px;
+}
+
+.hero {
+  background: linear-gradient(180deg, var(--sage-1) 0%, var(--sage-2) 55%, var(--paper) 100%);
+  padding: 0 16px 14px;
+}
+.nav {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 6px 4px 8px;
+}
+.nav-right { display: flex; justify-content: flex-end; }
+.nav-mid {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: center;
+  max-width: 148px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.x-btn, .icon-btn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline);
+  background: rgba(255,255,255,.86);
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.edit-btn {
+  height: 40px;
+  padding: 0 8px;
+  border: 0;
+  background: none;
+  color: var(--green);
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+}
+.back-today {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  height: 40px;
+  padding: 0 10px 0 4px;
+  margin-left: -4px;
+  border: 0;
+  background: none;
+  color: var(--green);
+  font-family: var(--sans);
+  font-size: 15.5px;
+  font-weight: 500;
+  border-radius: 12px;
+}
+.hero h3 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.16;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  margin: 4px 0 6px;
+  text-align: center;
+}
+.schedule {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #5F6C62;
+  text-align: center;
+  margin: 0 0 8px;
+}
+.pin-note {
+  font-size: 11px;
+  color: var(--ink-3);
+  text-align: center;
+  margin: 0 8px 8px;
+  line-height: 1.4;
+}
+
+.mark {
+  border-radius: 14px;
+  box-shadow: 0 0 0 2px #C45A3A, 0 0 0 6px rgba(196,90,58,.18);
+}
+.mark.good {
+  box-shadow: 0 0 0 2px var(--green), 0 0 0 6px rgba(12,124,89,.16);
+}
+.mark.keep {
+  box-shadow: 0 0 0 2px #8A8478, 0 0 0 6px rgba(138,132,120,.16);
+}
+.mark.amber {
+  box-shadow: 0 0 0 2px #C48A3A, 0 0 0 6px rgba(196,138,58,.18);
+}
+
+.page { padding: 0 16px 8px; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+}
+.week { padding: 12px 12px 13px; }
+.week-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 2px 10px;
+}
+.week-head .t { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+.week-head .range { font-size: 11px; color: var(--ink-4); margin-top: 2px; display: block; }
+.week-head .r { font-size: 12px; color: var(--ink-3); text-align: right; font-variant-numeric: tabular-nums; }
+.week-head .r strong { color: var(--ink); font-weight: 600; }
+.week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.wd { text-align: center; }
+.wd .dow { display: block; font-size: 10px; font-weight: 600; color: var(--ink-3); margin-bottom: 6px; }
+.pip {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--green);
+  color: #fff;
+}
+.pip.miss { background: transparent; border: 1.5px dashed #C9C3B8; }
+.pip.today { background: var(--green); box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--green); }
+.pip.future { background: #EFEAE3; }
+.wd .num { display: block; font-size: 10px; color: var(--ink-4); margin-top: 5px; font-variant-numeric: tabular-nums; }
+
+.dial-wrap { display: flex; justify-content: center; margin: 6px 0 4px; }
+.dial {
+  width: 120px;
+  height: 120px;
+  position: relative;
+}
+.dial svg { display: block; }
+.dial-center {
+  position: absolute;
+  inset: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.dial-score {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 30px;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+.dial-word {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-top: 1px;
+  white-space: nowrap;
+}
+.dial-word.spill {
+  font-size: 11px;
+  letter-spacing: .16em;
+  width: 148px;
+  margin-left: -24px;
+}
+.dial-word.fit {
+  max-width: 72px;
+  font-size: 8.5px;
+  letter-spacing: .04em;
+  overflow: hidden;
+}
+.cap-tiny {
+  font-size: 11px;
+  color: #5F6C62;
+  text-align: center;
+  margin: 4px 0 0;
+}
+
+.recovery {
+  background: var(--amber);
+  border: 1px solid var(--amber-border);
+  border-radius: 18px;
+  padding: 13px 14px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.recovery .tile {
+  flex: none;
+  width: 36px; height: 36px;
+  border-radius: 11px;
+  background: #F4E3CC;
+  color: var(--amber-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.recovery .eyebrow {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--amber-ink);
+}
+.recovery p {
+  font-family: var(--serif);
+  font-size: 14.5px;
+  line-height: 1.4;
+  color: #4C3D28;
+  margin: 4px 0 0;
+}
+.btn-primary {
+  width: 100%;
+  height: 52px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--green);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 10px 22px -12px rgba(12, 124, 89, .62);
+  margin-top: 10px;
+}
+.caption {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--ink-3);
+  text-align: center;
+}
+.ghost-cta {
+  width: 100%;
+  height: 52px;
+  border: 1.5px dashed #C45A3A;
+  border-radius: 16px;
+  background: #F8EDE8;
+  color: var(--danger);
+  font-family: var(--sans);
+  font-size: 14.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: line-through;
+  opacity: .72;
+  margin-top: 8px;
+}
+
+.navbar-plain {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 8px 12px 10px;
+  background: var(--paper);
+}
+.back-plain {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  color: var(--green);
+  font-size: 14.5px;
+  font-weight: 500;
+}
+.nav-title { font-size: 15px; font-weight: 600; color: var(--ink); text-align: center; }
+.seg {
+  display: flex;
+  background: #EFEAE3;
+  border-radius: 12px;
+  padding: 3px;
+  margin: 0 16px 12px;
+}
+.seg span {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-3);
+  padding: 7px 0;
+  border-radius: 9px;
+}
+.seg span.on { background: #fff; color: var(--green-deep); font-weight: 600; box-shadow: 0 1px 2px rgba(58,48,36,.08); }
+.chart { padding: 14px 14px 12px; margin: 0 16px 12px; }
+.chart .h { font-size: 15px; font-weight: 600; color: var(--ink); }
+.chart .sub { font-size: 12px; color: var(--ink-3); margin-top: 3px; }
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 7px;
+  height: 108px;
+  margin-top: 14px;
+}
+.barcol { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+.bar {
+  width: 70%;
+  background: var(--green);
+  border-radius: 4px 4px 2px 2px;
+}
+.bar.partial { opacity: .45; }
+.barcol .lbl { font-size: 10px; color: var(--ink-3); margin-top: 6px; }
+.barcol .val {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--ink-2);
+  margin-bottom: 4px;
+}
+.chart-foot {
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+  margin: 12px 0 0;
+}
+
+.working {
+  background: var(--amber);
+  border-radius: 18px;
+  padding: 16px;
+  margin: 0 16px 10px;
+}
+.working .eye {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--amber-ink);
+  margin-bottom: 6px;
+}
+.working h4 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 18px;
+  margin: 0 0 12px;
+  color: var(--ink);
+}
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.tile-stat {
+  background: rgba(255,255,255,.55);
+  border-radius: 12px;
+  padding: 10px;
+}
+.tile-stat .v {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.tile-stat .k { font-size: 11px; color: var(--ink-2); margin-top: 2px; line-height: 1.3; }
+.working-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--amber-border);
+  font-size: 12px;
+  color: var(--ink-2);
+  line-height: 1.4;
+}
+.pill {
+  flex: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--amber-ink);
+  border: 1px solid var(--amber-border);
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: rgba(255,255,255,.4);
+}
+
+.onefix { padding: 16px; margin: 0 16px 10px; }
+.onefix .eye {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 6px;
+}
+.onefix h4 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 17px;
+  margin: 0 0 10px;
+}
+.wd-bars { display: flex; align-items: flex-end; gap: 5px; height: 46px; }
+.wd-bars i {
+  flex: 1;
+  background: var(--green);
+  border-radius: 3px;
+  display: block;
+}
+.wd-bars i.weak { background: #E5893B; }
+.onefix p { font-size: 12.5px; color: var(--ink-2); line-height: 1.45; margin: 10px 0 0; }
+
+.insight-head { padding: 4px 16px 10px; }
+.insight-head .eye {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--green-deep);
+}
+.insight-head h4 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 1.25;
+  margin: 6px 0 0;
+  color: var(--ink);
+}
+.prose {
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0;
+  padding: 14px;
+}
+.prose strong { color: var(--ink); font-weight: 600; }
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 14px 16px 6px;
+}
+.statstrip {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  margin: 10px 16px 0;
+  padding: 12px 8px;
+}
+.statstrip .stat { text-align: center; }
+.statstrip .v {
+  display: block;
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.statstrip .k { font-size: 11px; color: var(--ink-3); margin-top: 3px; display: block; }
+.statstrip .divider { background: var(--hairline); }
+.nextstep {
+  display: flex;
+  gap: 10px;
+  margin: 12px 16px 0;
+  padding: 12px;
+  background: var(--sage-tint);
+  border-radius: 16px;
+}
+.nextstep .eye {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--green-deep);
+}
+.nextstep p { font-size: 13px; line-height: 1.4; color: var(--ink-2); margin: 4px 0 0; }
+.footnote {
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--ink-3);
+  margin: 12px 16px 4px;
+}
+
+.amber-row { display: flex; flex-direction: column; gap: 10px; padding: 8px 16px 14px; }
+.amber-note {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.amber-note.bad { color: var(--danger); }
+.amber-note.ok { color: var(--green-deep); }
+.paper-card {
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+.paper-card .eye { font-size: 10.5px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: var(--green-deep); }
+.paper-card p { font-family: var(--serif); font-size: 14px; margin: 4px 0 0; color: var(--ink); }
+
+.pause-ghost {
+  margin: 8px 16px 12px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1.5px dashed #C45A3A;
+  background: repeating-linear-gradient(45deg, rgba(197,74,53,.10) 0 8px, rgba(197,74,53,.03) 8px 16px);
+  position: relative;
+}
+.pause-ghost .kill {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: #fff;
+  background: #B5432E;
+  padding: 3px 7px;
+  border-radius: 5px;
+}
+.pause-ghost h4 { margin: 0 0 4px; font-size: 15px; color: var(--ink); }
+.pause-ghost p { margin: 0; font-size: 12.5px; color: var(--ink-2); line-height: 1.4; }
+
+.why {
+  margin-top: 18px;
+  background: #242820;
+  border: 1px solid #33382F;
+  border-radius: 16px;
+  padding: 16px 18px;
+}
+.why .k {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #8FAE9C;
+  margin: 0 0 8px;
+}
+.dims { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.dims.two { grid-template-columns: 1fr 1fr; }
+@media (max-width: 720px) { .dims, .dims.two { grid-template-columns: 1fr; } }
+.dims dt {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #8FAE9C;
+  margin-bottom: 4px;
+}
+.dims dd {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #C4C1B6;
+}
+.attr { color: #E8D5A8; font-weight: 600; }
+.attr.fable { color: #C5D9C8; }
+.attr.both { color: #9BD9B4; }
+
+.done-banner {
+  background: #1E2A22;
+  border: 1px solid #2F4638;
+  border-radius: 16px;
+  padding: 16px 18px;
+  color: #C5D9C8;
+  font-size: 14px;
+  line-height: 1.55;
+  margin-bottom: 14px;
+}
+.split-banner {
+  background: #2A201C;
+  border: 1px solid #5A4036;
+  border-radius: 16px;
+  padding: 16px 18px;
+  color: #D7C4B8;
+  font-size: 14px;
+  line-height: 1.55;
+  margin-bottom: 14px;
+}
+
+.year-mini {
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  gap: 2.5px;
+  margin-top: 8px;
+}
+.ycell {
+  aspect-ratio: 1;
+  border-radius: 1.5px;
+  background: #E8E2D8;
+}
+.ycell.on { background: var(--green); }
+.ycell.gap { background: #F0EBE4; }
+.not-this {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px dashed #5A4036;
+  border-radius: 12px;
+  background: #2A201C;
+  color: #D7C4B8;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.not-this strong { color: #F0DFC8; }
+
+.fable-note {
+  margin-top: 14px;
+  background: #1E231E;
+  border: 1px solid #2F4638;
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+.fable-note .k { margin: 0 0 6px; }
+.fable-note p { margin: 0; font-size: 13.5px; line-height: 1.5; color: #C4C1B6; }
+
+.callouts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 14px;
+}
+@media (max-width: 820px) { .callouts { grid-template-columns: 1fr; } }
+.callout {
+  background: #242820;
+  border: 1px solid #33382F;
+  border-radius: 16px;
+  padding: 16px 18px;
+}
+.callout .row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  margin: 12px 0;
+}
+.chip-btn {
+  flex: 1;
+  border-radius: 14px;
+  padding: 12px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+.chip-btn .lbl { display: block; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
+.chip-btn.bad {
+  background: #F5F1ED;
+  color: #0C7C59;
+  box-shadow: inset 0 0 0 2px #059669;
+}
+.chip-btn.ok {
+  background: #E8F2EC;
+  color: #0B5D42;
+  box-shadow: inset 0 0 0 1.5px #C9D6CB;
+}
+.dup-stack {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: #1A1E19;
+  border-radius: 12px;
+  margin: 10px 0;
+}
+.dup-x {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid #5A5248;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #E9E4DA;
+}
+.dup-x.ghost { opacity: .38; border-style: dashed; }
+
+.dont {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+@media (max-width: 720px) { .dont { grid-template-columns: 1fr; } }
+.dont article {
+  background: #242820;
+  border: 1px dashed #5A4036;
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+.dont h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: #F0DFC8;
+  text-decoration: line-through;
+  text-decoration-color: #963F30;
+}
+.dont p { margin: 0; font-size: 13px; line-height: 1.45; color: #C4C1B6; }
+
+.links {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #A6A99D;
+}
+.links a { color: #9BD9B4; }
+
+.empty-card {
+  margin: 10px 16px 12px;
+  padding: 16px 14px;
+  background: #fff;
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+}
+.empty-card .eye {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--green-deep);
+  margin-bottom: 8px;
+}
+.empty-card p {
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--ink);
+  margin: 0;
+}
+.empty-card .lie {
+  color: var(--danger);
+  text-decoration: line-through;
+  font-size: 13px;
+  margin: 8px 0 0;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="plan-chip">Plan mock only · production unchanged unless marked shipped</p>
+  <p class="kicker">Grok plan · Fable CLI review · habit-detail-flow.md</p>
+  <h1>Habit Detail — Grok and Fable, before and after</h1>
+  <p class="lede">
+    This page compares <strong>Grok’s plan</strong> and <strong>Fable’s CLI review</strong>
+    (<code>claude -p --model fable --effort low</code>).
+    Left is the <strong>live app</strong>. Right is planned — or already in the working tree when the badge says shipped.
+    Each block has <strong>pain → outcome (show-up / trust the record) → not this</strong>, and says who said it.
+  </p>
+
+  <div class="legend">
+    <span><i class="sw before"></i> Live app (before)</span>
+    <span><i class="sw after"></i> Planned (after)</span>
+    <span><i class="sw keep"></i> Intentionally not changing</span>
+    <span><i class="sw done"></i> Already shipped</span>
+  </div>
+
+  <div class="who-key">
+    <article>
+      <h3><span class="who both">Both</span></h3>
+      <p>Grok and Fable agreed. Safe to treat as one decision.</p>
+    </article>
+    <article>
+      <h3><span class="who grok">Grok</span></h3>
+      <p>Only Grok pushed this (align mock, screenshot, or hard rule).</p>
+    </article>
+    <article>
+      <h3><span class="who fable">Fable</span></h3>
+      <p>From the Claude Code CLI Fable review at effort low.</p>
+    </article>
+    <article>
+      <h3><span class="who shipped">Already shipped</span></h3>
+      <p>In the working tree now. Production still not “the plan” unless this badge is on.</p>
+    </article>
+    <article>
+      <h3><span class="who split">Disagreement</span></h3>
+      <p>They split. Do not ship as if they agreed.</p>
+    </article>
+  </div>
+
+  <nav class="toc" aria-label="Jump to a change">
+    <a href="#title" class="done">1 Duplicate title</a>
+    <a href="#dial" class="done">2 Strength dial</a>
+    <a href="#pause" class="done">3 Pause cut</a>
+    <a href="#header">4 Header back</a>
+    <a href="#schedule">5 Schedule</a>
+    <a href="#week">6 This week</a>
+    <a href="#recovery" class="keep">7 Recovery CTA</a>
+    <a href="#amber">8 Amber</a>
+    <a href="#insight">9 Insight</a>
+    <a href="#monthly">10 Monthly %</a>
+    <a href="#done-border">11 Done border</a>
+    <a href="#onback">12 onBack</a>
+    <a href="#year" class="split">13 Year glance</a>
+    <a href="#dont" class="keep">Don’t</a>
+  </nav>
+
+  <p class="band">Already shipped — show before → after</p>
+
+  <!-- 1 Duplicate title -->
+  <section class="section" id="title">
+    <div class="sec-meta">
+      <span class="sec-num">01</span>
+      <h2>Duplicate title</h2>
+      <span class="who grok">Grok</span>
+      <span class="who shipped">Already shipped</span>
+    </div>
+    <div class="pair">
+      <div>
+        <div class="colhead"><span class="tag before">Before · live (old)</span><b>Header + hero both say the name</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="hero">
+            <div class="nav">
+              <div><span class="x-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span></div>
+              <span class="nav-mid mark">Wake-Up Movement</span>
+              <div class="nav-right"><span class="edit-btn">Edit</span></div>
+            </div>
+            <h3 class="mark">Wake-Up Movement</h3>
+            <p class="schedule">Daily habit</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="colhead"><span class="tag done">After · shipped</span><b>Hero title only until pin</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="hero">
+            <div class="nav">
+              <div><span class="x-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span></div>
+              <span></span>
+              <div class="nav-right"><span class="edit-btn">Edit</span></div>
+            </div>
+            <h3 class="mark good">Wake-Up Movement</h3>
+            <p class="schedule">Daily habit</p>
+          </div>
+          <p class="pin-note">Header title stays hidden until the hero scrolls away and the pin kicks in.</p>
+          <div class="home"></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="why">
+      <p class="k">Why this change</p>
+      <dl class="dims">
+        <div><dt>Pain</dt><dd><span class="attr">Grok (user screenshot):</span> The same name sat in the chrome and in the hero. It looked like a bug, not a pin.</dd></div>
+        <div><dt>Outcome</dt><dd>One title while you are on the habit. The header earns the name only after scroll — wayfinding without shouting twice.</dd></div>
+        <div><dt>Not this</dt><dd><span class="attr fable">Fable:</span> Did not raise this. It was already shipping when the CLI review ran. Do not “fix” it again.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 2 Strength dial -->
+  <section class="section" id="dial">
+    <div class="sec-meta">
+      <span class="sec-num">02</span>
+      <h2>Strength dial overflow</h2>
+      <span class="who grok">Grok</span>
+      <span class="who shipped">Already shipped</span>
+    </div>
+    <div class="pair">
+      <div>
+        <div class="colhead"><span class="tag before">Before · live (old)</span><b>Unbreakable clips the ring</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="hero" style="padding-bottom:18px">
+            <h3>Wake-Up Movement</h3>
+            <p class="schedule">Daily habit</p>
+            <div class="dial-wrap">
+              <div class="dial mark">
+                <svg width="120" height="120" viewBox="0 0 120 120" aria-hidden="true">
+                  <circle cx="60" cy="60" r="49" fill="none" stroke="#DCE7DF" stroke-width="8.5"/>
+                  <circle cx="60" cy="60" r="49" fill="none" stroke="#0C7C59" stroke-width="8.5" stroke-dasharray="308" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+                </svg>
+                <div class="dial-center">
+                  <span class="dial-score">92</span>
+                  <span class="dial-word spill">Unbreakable</span>
+                </div>
+              </div>
+            </div>
+            <p class="cap-tiny">Habit strength · a snapshot, not a score</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="colhead"><span class="tag done">After · shipped</span><b>Numeral + label inside the hole</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="hero" style="padding-bottom:18px">
+            <h3>Wake-Up Movement</h3>
+            <p class="schedule">Daily habit</p>
+            <div class="dial-wrap">
+              <div class="dial mark good">
+                <svg width="120" height="120" viewBox="0 0 120 120" aria-hidden="true">
+                  <circle cx="60" cy="60" r="49" fill="none" stroke="#DCE7DF" stroke-width="8.5"/>
+                  <circle cx="60" cy="60" r="49" fill="none" stroke="#0C7C59" stroke-width="8.5" stroke-dasharray="308" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+                </svg>
+                <div class="dial-center">
+                  <span class="dial-score">92</span>
+                  <span class="dial-word fit">Unbreakable</span>
+                </div>
+              </div>
+            </div>
+            <p class="cap-tiny">Habit strength · a snapshot, not a score</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="why">
+      <p class="k">Why this change</p>
+      <dl class="dims">
+        <div><dt>Pain</dt><dd><span class="attr">Grok:</span> “Unbreakable” ran through the stroke. A snapshot that looks broken is not a snapshot people trust.</dd></div>
+        <div><dt>Outcome</dt><dd>The number and the level word stay in the inner hole. Strength still is not a grade — it just has to fit.</dd></div>
+        <div><dt>Not this</dt><dd>Do not shorten the word to “Max” or drop the label. Fit the type; keep the meaning.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 3 Pause -->
+  <section class="section" id="pause">
+    <div class="sec-meta">
+      <span class="sec-num">03</span>
+      <h2>Pause cut</h2>
+      <span class="who both">Both</span>
+      <span class="who shipped">Already shipped</span>
+    </div>
+    <div class="done-banner">Already cut from live Detail. <span class="attr">Grok</span> (user marked it) and <span class="attr fable">Fable: don’t resurrect</span>. Keep gone.</div>
+    <div class="pair">
+      <div>
+        <div class="colhead"><span class="tag before">Before · old live</span><b>Pause on Detail</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="page" style="padding-top:14px">
+            <div class="pause-ghost mark">
+              <span class="kill">Cut</span>
+              <h4>Pause without losing your streak</h4>
+              <p>Hold the habit. This card used to sit on Detail next to recovery.</p>
+            </div>
+            <p class="footnote">Pause/resume can stay in the backend for Settings. Not on this recommitment surface.</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="colhead"><span class="tag done">After · shipped</span><b>Still gone</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="page" style="padding-top:14px">
+            <div class="card week">
+              <div class="week-head">
+                <span><span class="t">This week</span><span class="range">Aug 10 – 16</span></span>
+                <span class="r">5 of 7</span>
+              </div>
+            </div>
+            <p class="section-label" style="margin-top:14px">The record</p>
+            <div class="card mark good" style="padding:12px 14px">
+              <div style="font-size:15px;font-weight:600">History</div>
+              <div style="font-size:12px;color:var(--ink-3);margin-top:2px">Dates, notes, and edits</div>
+              <div style="height:1px;background:var(--hairline-2);margin:10px 0"></div>
+              <div style="font-size:15px;font-weight:600">Analytics</div>
+              <div style="font-size:12px;color:var(--ink-3);margin-top:2px">Patterns from real check-ins</div>
+            </div>
+            <p class="footnote">No Pause row. Detail stays a recommitment surface.</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="why">
+      <p class="k">Why this stays gone</p>
+      <dl class="dims">
+        <div><dt>Pain</dt><dd><span class="attr">Grok:</span> A “hold your streak” card next to a miss invents rest-day UX on the recommitment screen.</dd></div>
+        <div><dt>Outcome</dt><dd>Show-up stays the job. People who need a hold can find it in Edit or Settings later — not here.</dd></div>
+        <div><dt>Not this</dt><dd><span class="attr fable">Fable:</span> Don’t resurrect. <span class="attr both">Both:</span> keep gone.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <p class="band">Ship now — Both, Grok, or Fable</p>
+
+  <!-- 4 Header -->
+  <section class="section" id="header">
+    <div class="sec-meta">
+      <span class="sec-num">04</span>
+      <h2>Header X → back + Today</h2>
+      <span class="who both">Both</span>
+    </div>
+    <div class="pair">
+      <div>
+        <div class="colhead"><span class="tag before">Before · live</span><b>X close</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="hero">
+            <div class="nav">
+              <div><span class="x-btn mark" aria-label="Close" title="Close">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </span></div>
+              <span></span>
+              <div class="nav-right"><span class="edit-btn">Edit</span></div>
+            </div>
+            <h3>Wake-Up Movement</h3>
+            <p class="schedule">Daily habit</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="colhead"><span class="tag after">After · planned</span><b>Back to Today</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="hero">
+            <div class="nav">
+              <div><span class="back-today mark good">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                Today
+              </span></div>
+              <span></span>
+              <div class="nav-right"><span class="edit-btn">Edit</span></div>
+            </div>
+            <h3>Wake-Up Movement</h3>
+            <p class="schedule">Morning routine · Daily</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="why">
+      <p class="k">Why this change</p>
+      <dl class="dims">
+        <div><dt>Pain</dt><dd>The X reads as “dismiss this modal,” not “return to the day.” People lose the thread of Today.</dd></div>
+        <div><dt>Outcome</dt><dd>Leaving Detail feels like going home. Short visits stay easy to reopen — that is show-up, not a closed tab.</dd></div>
+        <div><dt>Not this</dt><dd><span class="attr">Grok</span> planned this in the align mock. <span class="attr fable">Fable P1 SHIP NOW.</span> <span class="attr both">Both.</span> Still closes the modal — only the chrome changes.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 5 Schedule -->
+  <section class="section" id="schedule">
+    <div class="sec-meta">
+      <span class="sec-num">05</span>
+      <h2>Schedule line</h2>
+      <span class="who grok">Grok</span>
+    </div>
+    <div class="pair">
+      <div>
+        <div class="colhead"><span class="tag before">Before · live</span><b>Daily habit</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="hero" style="padding-bottom:22px">
+            <div class="nav">
+              <div><span class="x-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span></div>
+              <span></span>
+              <div class="nav-right"><span class="edit-btn">Edit</span></div>
+            </div>
+            <h3>Wake-Up Movement</h3>
+            <p class="schedule mark">Daily habit</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="colhead"><span class="tag after">After · planned</span><b>Morning routine · Daily</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="hero" style="padding-bottom:22px">
+            <div class="nav">
+              <div><span class="back-today"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>Today</span></div>
+              <span></span>
+              <div class="nav-right"><span class="edit-btn">Edit</span></div>
+            </div>
+            <h3>Wake-Up Movement</h3>
+            <p class="schedule mark good">Morning routine · Daily</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="why">
+      <p class="k">Why this change</p>
+      <dl class="dims">
+        <div><dt>Pain</dt><dd>“Daily habit” is a type label. It doesn’t say which part of the day this belongs to.</dd></div>
+        <div><dt>Outcome</dt><dd>You recognize the habit before any number. Schedule is context, not a grade — people keep a place that treats them as someone becoming.</dd></div>
+        <div><dt>Not this</dt><dd><span class="attr">Grok</span> align mock. <span class="attr fable">Fable</span> did not list it. Ship as Grok-only, not as a Fable finding.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 6 This week -->
+  <section class="section" id="week">
+    <div class="sec-meta">
+      <span class="sec-num">06</span>
+      <h2>This week footer</h2>
+      <span class="who grok">Grok</span>
+    </div>
+    <div class="pair">
+      <div>
+        <div class="colhead"><span class="tag before">Before · live</span><b>N of M</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="page" style="padding-top:14px">
+            <div class="card week">
+              <div class="week-head">
+                <span><span class="t">This week</span><span class="range">Aug 10 – 16</span></span>
+                <span class="r mark">5 of 7</span>
+              </div>
+              <div class="week-grid">
+                <div class="wd"><span class="dow">M</span><span class="pip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span class="num">10</span></div>
+                <div class="wd"><span class="dow">T</span><span class="pip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span class="num">11</span></div>
+                <div class="wd"><span class="dow">W</span><span class="pip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span class="num">12</span></div>
+                <div class="wd"><span class="dow">T</span><span class="pip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span class="num">13</span></div>
+                <div class="wd"><span class="dow">F</span><span class="pip miss"></span><span class="num">14</span></div>
+                <div class="wd"><span class="dow">S</span><span class="pip today"></span><span class="num">15</span></div>
+                <div class="wd"><span class="dow">S</span><span class="pip future"></span><span class="num">16</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="colhead"><span class="tag after">After · planned</span><b>N days logged</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="page" style="padding-top:14px">
+            <div class="card week">
+              <div class="week-head">
+                <span><span class="t">This week</span><span class="range">Aug 10 – 16</span></span>
+                <span class="r mark good"><strong>5 days</strong> logged</span>
+              </div>
+              <div class="week-grid">
+                <div class="wd"><span class="dow">M</span><span class="pip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span class="num">10</span></div>
+                <div class="wd"><span class="dow">T</span><span class="pip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span class="num">11</span></div>
+                <div class="wd"><span class="dow">W</span><span class="pip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span class="num">12</span></div>
+                <div class="wd"><span class="dow">T</span><span class="pip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span class="num">13</span></div>
+                <div class="wd"><span class="dow">F</span><span class="pip miss"></span><span class="num">14</span></div>
+                <div class="wd"><span class="dow">S</span><span class="pip today"></span><span class="num">15</span></div>
+                <div class="wd"><span class="dow">S</span><span class="pip future"></span><span class="num">16</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="why">
+      <p class="k">Why this change</p>
+      <dl class="dims">
+        <div><dt>Pain</dt><dd>“5 of 7” reads as a quota. A miss looks like failing the week.</dd></div>
+        <div><dt>Outcome</dt><dd>“5 days logged” is a count from the record — the same language as Analytics. People trust a wall that does not grade them.</dd></div>
+        <div><dt>Not this</dt><dd><span class="attr">Grok.</span> <span class="attr fable">Fable</span> did not list it. We are not shipping “N of scheduled” on This week.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 7 Recovery CTA -->
+  <section class="section" id="recovery">
+    <div class="sec-meta">
+      <span class="sec-num">07</span>
+      <h2>Recovery CTA stays Complete today</h2>
+      <span class="who both">Both</span>
+      <span class="who keep">Keep</span>
+    </div>
+    <div class="pair">
+      <div>
+        <div class="colhead"><span class="tag keep">Live · keep</span><b>Complete today</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="page" style="padding-top:14px">
+            <div class="recovery">
+              <span class="tile"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span>
+              <div>
+                <span class="eyebrow">Pick it back up</span>
+                <p>Yesterday wasn’t logged. Start again with today’s two-minute version.</p>
+              </div>
+            </div>
+            <button class="btn-primary mark keep" type="button">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>
+              Complete today
+            </button>
+            <div class="caption">Logs today’s date. You can undo anytime.</div>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="colhead"><span class="tag keep">Planned · same</span><b>Still Complete today</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="page" style="padding-top:14px">
+            <div class="recovery">
+              <span class="tile"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span>
+              <div>
+                <span class="eyebrow">Pick it back up</span>
+                <p>Yesterday wasn’t logged. Start again with today’s two-minute version.</p>
+              </div>
+            </div>
+            <button class="btn-primary mark keep" type="button">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>
+              Complete today
+            </button>
+            <div class="caption">Logs today’s date. You can undo anytime.</div>
+            <div class="ghost-cta">Do the two-minute version</div>
+            <p class="caption" style="height:auto;padding-bottom:8px;color:var(--danger)">Mock JS only — not the spec. We are not switching to this.</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="why">
+      <p class="k">Why we are not changing this</p>
+      <dl class="dims">
+        <div><dt>Pain</dt><dd>A second button label makes recovery feel like a different product. The miss already has its own card.</dd></div>
+        <div><dt>Outcome</dt><dd>One daily tap, even after a miss. Trust: same Complete today as Ready. Completed stays “Done today.”</dd></div>
+        <div><dt>Not this</dt><dd><span class="attr">Grok:</span> not the mock JS “two-minute version.” <span class="attr fable">Fable:</span> keep Complete today. <span class="attr both">Both keep.</span></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 8 Amber -->
+  <section class="section" id="amber">
+    <div class="sec-meta">
+      <span class="sec-num">08</span>
+      <h2>Amber only on recovery</h2>
+      <span class="who grok">Grok</span>
+      <span class="who keep">Hard rule</span>
+    </div>
+    <div class="pair">
+      <div>
+        <div class="colhead"><span class="tag before">Before · live</span><b>Amber in two places</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="amber-row">
+            <p class="amber-note bad">Recovery — correct</p>
+            <div class="recovery mark amber">
+              <span class="tile"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span>
+              <div>
+                <span class="eyebrow">Pick it back up</span>
+                <p>Yesterday wasn’t logged.</p>
+              </div>
+            </div>
+            <p class="amber-note bad">Insight — extra amber</p>
+            <div class="working mark amber" style="margin:0">
+              <div class="eye">★ What’s working</div>
+              <h4>Your wins land in the morning.</h4>
+            </div>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="colhead"><span class="tag after">After · planned</span><b>Amber only on recovery</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="amber-row">
+            <p class="amber-note ok">Recovery — the only amber</p>
+            <div class="recovery mark amber">
+              <span class="tile"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span>
+              <div>
+                <span class="eyebrow">Pick it back up</span>
+                <p>Yesterday wasn’t logged.</p>
+              </div>
+            </div>
+            <p class="amber-note ok">Insight — paper, no amber</p>
+            <div class="paper-card mark good">
+              <div class="eye">From your log</div>
+              <p>Morning check-ins are more consistent on weekdays.</p>
+            </div>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="why">
+      <p class="k">Why this change</p>
+      <dl class="dims">
+        <div><dt>Pain</dt><dd>Amber on a pep-talk card dilutes recovery. The color no longer means “start again.”</dd></div>
+        <div><dt>Outcome</dt><dd>After a miss, the path back is unmistakable. People tap instead of bracing.</dd></div>
+        <div><dt>Not this</dt><dd><span class="attr">Grok</span> / hard rule. <span class="attr fable">Fable</span> didn’t restate it — already in the spec. Not a new Fable invent.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 9 Insight -->
+  <section class="section" id="insight">
+    <div class="sec-meta">
+      <span class="sec-num">09</span>
+      <h2>Insight Detail</h2>
+      <span class="who both">Both</span>
+      <span class="who fable">Fable · copy</span>
+    </div>
+    <div class="pair">
+      <div>
+        <div class="colhead"><span class="tag before">Before · live</span><b>What’s working + One fix</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="navbar-plain">
+            <span class="back-plain"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="m15 18-6-6 6-6"/></svg>Analytics</span>
+            <span class="nav-title">Insight</span>
+            <span></span>
+          </div>
+          <div class="working mark amber">
+            <div class="eye">★ What’s working</div>
+            <h4>Your wins land in the morning.</h4>
+            <div class="tiles">
+              <div class="tile-stat"><div class="v">72%</div><div class="k">of 39 wins in the morning</div></div>
+              <div class="tile-stat"><div class="v">28%</div><div class="k">the rest of the day</div></div>
+            </div>
+            <div class="working-foot">
+              <span>Reminder at 6:45 — just inside your best window.</span>
+              <span class="pill">Adjust ›</span>
+            </div>
+          </div>
+          <div class="card onefix">
+            <div class="eye">↗ One fix to try</div>
+            <h4>Fridays are where it slips.</h4>
+            <div class="wd-bars">
+              <i style="height:40px"></i><i style="height:40px"></i><i style="height:34px"></i>
+              <i style="height:28px"></i><i class="weak" style="height:22px"></i>
+              <i style="height:28px"></i><i style="height:28px"></i>
+            </div>
+            <p>Try stacking it after something you already do on Friday morning.</p>
+          </div>
+          <p class="footnote">Every number here comes from check-ins you recorded. Nothing is predicted.</p>
+          <div class="home"></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="colhead"><span class="tag after">After · planned</span><b>Evidence + honest empty</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="navbar-plain">
+            <span class="back-plain"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="m15 18-6-6 6-6"/></svg>Analytics</span>
+            <span class="nav-title">Insight</span>
+            <span></span>
+          </div>
+          <div class="mark good" style="margin:0 8px 8px;padding-bottom:8px;border-radius:18px">
+            <div class="insight-head">
+              <div class="eye">From your log</div>
+              <h4>Morning check-ins are more consistent on weekdays.</h4>
+            </div>
+            <div class="card" style="margin:0 8px">
+              <p class="prose">Over the last 8 weeks you logged <strong>29 of 40 weekdays</strong> and <strong>10 of 16 weekend days</strong>. That is a real gap in the record. It describes what you logged — it does not explain why.</p>
+            </div>
+            <p class="section-label">The evidence</p>
+            <div class="card chart" style="margin:0 8px">
+              <div class="h">Days logged by weekday</div>
+              <div class="sub">Out of 8 opportunities each</div>
+              <div class="bars" style="height:72px">
+                <div class="barcol"><span class="bar" style="height:63px"></span><span class="lbl">M</span></div>
+                <div class="barcol"><span class="bar" style="height:63px"></span><span class="lbl">T</span></div>
+                <div class="barcol"><span class="bar" style="height:54px"></span><span class="lbl">W</span></div>
+                <div class="barcol"><span class="bar" style="height:45px"></span><span class="lbl">T</span></div>
+                <div class="barcol"><span class="bar" style="height:36px"></span><span class="lbl">F</span></div>
+                <div class="barcol"><span class="bar" style="height:45px"></span><span class="lbl">S</span></div>
+                <div class="barcol"><span class="bar" style="height:45px"></span><span class="lbl">S</span></div>
+              </div>
+            </div>
+            <div class="card statstrip">
+              <span class="stat"><span class="v">29 / 40</span><span class="k">Weekdays logged</span></span>
+              <span class="divider"></span>
+              <span class="stat"><span class="v">10 / 16</span><span class="k">Weekend days logged</span></span>
+            </div>
+            <div class="nextstep">
+              <div>
+                <span class="eye">If you want</span>
+                <p>If the weekend is the harder part, you could keep a shorter Saturday and Sunday version. Optional.</p>
+              </div>
+            </div>
+            <p class="footnote">This is a pattern in what you logged. It doesn’t explain why, and it isn’t a prediction.</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="fable-note">
+      <p class="k"><span class="who fable">Fable P2</span> Fallback copy when <code style="font-family:var(--mono);font-size:12px;color:#C5D9C8">insightId</code> is missing</p>
+      <p>
+        Live empty state says <em>“This pattern needs more check-ins before it can be shown.”</em>
+        That can be a lie — the id may simply be absent. After: paper empty, honest.
+        <strong style="color:#E9E4DA">“Nothing to show for this insight yet.”</strong>
+        Not a sample-size claim.
+      </p>
+    </div>
+    <div class="pair" style="margin-top:16px">
+      <div>
+        <div class="colhead"><span class="tag before">Before · empty</span><b>Needs more check-ins</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="navbar-plain">
+            <span class="back-plain"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="m15 18-6-6 6-6"/></svg>Analytics</span>
+            <span class="nav-title">Insight</span>
+            <span></span>
+          </div>
+          <div class="empty-card mark">
+            <p>This pattern needs more check-ins before it can be shown.</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="colhead"><span class="tag after">After · empty</span><b>Honest, no sample lie</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="navbar-plain">
+            <span class="back-plain"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="m15 18-6-6 6-6"/></svg>Analytics</span>
+            <span class="nav-title">Insight</span>
+            <span></span>
+          </div>
+          <div class="empty-card mark good">
+            <div class="eye">From your log</div>
+            <p>Nothing to show for this insight yet.</p>
+            <p class="lie">This pattern needs more check-ins before it can be shown.</p>
+          </div>
+          <p class="footnote">Missing id ≠ “you haven’t logged enough.”</p>
+          <div class="home"></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="why">
+      <p class="k">Why this change</p>
+      <dl class="dims">
+        <div><dt>Pain</dt><dd>Amber coaching plus a fallback that invents a sample-size story. You can’t audit the dates, so it reads as invented.</dd></div>
+        <div><dt>Outcome</dt><dd><span class="attr both">Both on Insight:</span> evidence screen so the wall can be checked. Trust the record → keep paying for it.</dd></div>
+        <div><dt>Not this</dt><dd><span class="attr">Grok:</span> cards → evidence. <span class="attr fable">Fable:</span> don’t lie “needs more check-ins” when the id is missing. Next step never completes the habit.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 10 Monthly -->
+  <section class="section" id="monthly">
+    <div class="sec-meta">
+      <span class="sec-num">10</span>
+      <h2>Analytics monthly</h2>
+      <span class="who both">Both</span>
+    </div>
+    <div class="pair">
+      <div>
+        <div class="colhead"><span class="tag before">Before · live</span><b>Raw day counts</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="navbar-plain">
+            <span class="back-plain"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="m15 18-6-6 6-6"/></svg>Detail</span>
+            <span class="nav-title">Analytics</span>
+            <span></span>
+          </div>
+          <div class="seg"><span>Weekly</span><span class="on">Monthly</span></div>
+          <div class="card chart mark">
+            <div class="h">Days logged each month</div>
+            <div class="sub">This year · 39 check-ins</div>
+            <div class="bars">
+              <div class="barcol"><span class="val">15</span><span class="bar" style="height:52px"></span><span class="lbl">Mar</span></div>
+              <div class="barcol"><span class="val">16</span><span class="bar" style="height:56px"></span><span class="lbl">Apr</span></div>
+              <div class="barcol"><span class="val">19</span><span class="bar" style="height:66px"></span><span class="lbl">May</span></div>
+              <div class="barcol"><span class="val">17</span><span class="bar" style="height:59px"></span><span class="lbl">Jun</span></div>
+              <div class="barcol"><span class="val">26</span><span class="bar" style="height:90px"></span><span class="lbl">Jul</span></div>
+              <div class="barcol"><span class="val">13</span><span class="bar partial" style="height:45px"></span><span class="lbl">Aug</span></div>
+            </div>
+            <p class="chart-foot">Based on days you logged. A week with no check-ins shows as zero — nothing is estimated or filled in for you.</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="colhead"><span class="tag after">After · planned</span><b>% of scheduled days</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="navbar-plain">
+            <span class="back-plain"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="m15 18-6-6 6-6"/></svg>Detail</span>
+            <span class="nav-title">Analytics</span>
+            <span></span>
+          </div>
+          <div class="seg"><span>Weekly</span><span class="on">Monthly</span></div>
+          <div class="card chart mark good">
+            <div class="h">Share of days logged each month</div>
+            <div class="sub">Last 6 months · % of scheduled days</div>
+            <div class="bars">
+              <div class="barcol"><span class="val">48%</span><span class="bar" style="height:48px"></span><span class="lbl">Mar</span></div>
+              <div class="barcol"><span class="val">55%</span><span class="bar" style="height:55px"></span><span class="lbl">Apr</span></div>
+              <div class="barcol"><span class="val">61%</span><span class="bar" style="height:61px"></span><span class="lbl">May</span></div>
+              <div class="barcol"><span class="val">58%</span><span class="bar" style="height:58px"></span><span class="lbl">Jun</span></div>
+              <div class="barcol"><span class="val">84%</span><span class="bar" style="height:84px"></span><span class="lbl">Jul</span></div>
+              <div class="barcol"><span class="val">86%</span><span class="bar partial" style="height:86px"></span><span class="lbl">Aug</span></div>
+            </div>
+            <p class="chart-foot">Based on days you logged, out of the days the habit was scheduled. August counts only the days that have happened so far.</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="why">
+      <p class="k">Why this change</p>
+      <dl class="dims">
+        <div><dt>Pain</dt><dd>Raw counts make a 31-day month look “better” than a 28-day one at the same rate. The weekly footnote on a monthly chart is leftover copy.</dd></div>
+        <div><dt>Outcome</dt><dd>Percent of scheduled days is a record you can believe. Charts that don’t inflate are charts people will pay to keep.</dd></div>
+        <div><dt>Not this</dt><dd><span class="attr">Grok</span> align mock + <span class="attr fable">Fable P1 SHIP NOW.</span> <span class="attr both">Both.</span> <span class="attr fable">Fable:</span> weekly stays counts — do not percent the week.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 11 + 12 callouts -->
+  <section class="section" id="done-border">
+    <div class="sec-meta">
+      <span class="sec-num">11 · 12</span>
+      <h2>Fable-only polish</h2>
+      <span class="who fable">Fable</span>
+    </div>
+    <div class="callouts">
+      <div class="callout" id="done-border-card">
+        <div class="sec-meta" style="margin:0 0 4px">
+          <span class="sec-num">11</span>
+          <h2 style="font-size:18px">Done-today border into palette</h2>
+          <span class="who fable">Fable P2</span>
+        </div>
+        <div class="row">
+          <div class="chip-btn bad"><span class="lbl">Before</span>Done today · off-palette ring (#059669)</div>
+          <div class="chip-btn ok"><span class="lbl">After</span>Done today · band hairline (#C9D6CB)</div>
+        </div>
+        <dl class="dims" style="grid-template-columns:1fr">
+          <div>
+            <dt>Why</dt>
+            <dd><span class="attr fable">Fable:</span> The done confirmation’s border still uses theme primary, not the Detail palette. Pain: “done” looks like a different product. Outcome: one signed-off green family, so the record’s confirmation matches Complete today. Not this: a new button design — only the token.</dd>
+          </div>
+        </dl>
+      </div>
+      <div class="callout" id="onback">
+        <div class="sec-meta" style="margin:0 0 4px">
+          <span class="sec-num">12</span>
+          <h2 style="font-size:18px">DetailBandHeader onBack dedupe</h2>
+          <span class="who fable">Fable P1</span>
+        </div>
+        <div class="dup-stack">
+          <span class="dup-x" title="Custom X leftAction"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg></span>
+          <span style="font-size:12px;color:#A6A99D">+</span>
+          <span class="dup-x ghost" title="unused onBack"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg></span>
+          <span style="font-size:11px;color:#8FAE9C;margin-left:8px">dead onBack</span>
+        </div>
+        <p style="margin:0;font-size:13.5px;line-height:1.5;color:#C4C1B6">
+          <span class="attr fable">Fable:</span> <code style="font-family:var(--mono);font-size:12px;color:#C5D9C8">leftAction</code> already closes; <code style="font-family:var(--mono);font-size:12px;color:#C5D9C8">onBack={onClose}</code> is a second path.
+          Tiny note, not a full phone. Pass one close. Outcome: one back story when we swap X → Today. Not this: two close controls if ScreenHeader starts wiring both.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <p class="band">Disagreement — do not pretend they agreed</p>
+
+  <!-- 13 Year glance -->
+  <section class="section" id="year">
+    <div class="sec-meta">
+      <span class="sec-num">13</span>
+      <h2>Year glance on Detail</h2>
+      <span class="who split">Disagreement</span>
+    </div>
+    <div class="split-banner">
+      Spec hard rule: year heatmap never on Detail. Grok still wants a read-only glance below This week. Fable P0: skip the glance until the doc is amended, or drop it. Two afters — pick later, do not ship a fake consensus.
+    </div>
+    <div class="pair-3">
+      <div>
+        <div class="colhead"><span class="tag before">Before · live</span><b>Year only on Analytics</b></div>
+        <div class="phone sm"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="page" style="padding-top:14px">
+            <div class="card week">
+              <div class="week-head">
+                <span><span class="t">This week</span><span class="range">Aug 10 – 16</span></span>
+                <span class="r">5 of 7</span>
+              </div>
+            </div>
+            <p class="section-label" style="margin-top:14px">The record</p>
+            <div class="card" style="padding:12px 14px">
+              <div style="font-size:15px;font-weight:600">History</div>
+              <div style="font-size:12px;color:var(--ink-3);margin-top:2px">Dates, notes, and edits</div>
+              <div style="height:1px;background:var(--hairline-2);margin:10px 0"></div>
+              <div class="mark" style="font-size:15px;font-weight:600">Analytics</div>
+              <div style="font-size:12px;color:var(--ink-3);margin-top:2px">Year + charts live one door down</div>
+            </div>
+            <p class="footnote">To feel the year you leave Complete today.</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="colhead"><span class="tag after">Grok after</span><b>Glance, no charts</b></div>
+        <div class="phone sm"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="page" style="padding-top:12px">
+            <div class="card week">
+              <div class="week-head">
+                <span><span class="t">This week</span><span class="range">Aug 10 – 16</span></span>
+                <span class="r"><strong>5 days</strong> logged</span>
+              </div>
+            </div>
+            <div class="card mark good" style="margin-top:10px;padding:12px 14px">
+              <div style="font-size:14px;font-weight:600">Year at a glance</div>
+              <div style="font-size:11px;color:var(--ink-3);margin-top:2px">Tap → History for that month. Read-only.</div>
+              <div class="year-mini" aria-hidden="true">
+                <span class="ycell on"></span><span class="ycell on"></span><span class="ycell"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell"></span><span class="ycell on"></span><span class="ycell on"></span>
+                <span class="ycell on"></span><span class="ycell"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell gap"></span><span class="ycell on"></span><span class="ycell"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell"></span><span class="ycell on"></span><span class="ycell on"></span>
+                <span class="ycell on"></span><span class="ycell on"></span><span class="ycell"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell on"></span><span class="ycell"></span><span class="ycell on"></span><span class="ycell"></span><span class="ycell on"></span>
+              </div>
+            </div>
+            <p class="footnote">Pride + repair. Charts stay on Analytics.</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="colhead"><span class="tag split">Fable after</span><b>No glance until the spec moves</b></div>
+        <div class="phone sm"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="page" style="padding-top:14px">
+            <div class="card week">
+              <div class="week-head">
+                <span><span class="t">This week</span><span class="range">Aug 10 – 16</span></span>
+                <span class="r"><strong>5 days</strong> logged</span>
+              </div>
+            </div>
+            <p class="section-label" style="margin-top:14px">The record</p>
+            <div class="card mark" style="padding:12px 14px">
+              <div style="font-size:15px;font-weight:600">History</div>
+              <div style="font-size:12px;color:var(--ink-3);margin-top:2px">Dates, notes, and edits</div>
+              <div style="height:1px;background:var(--hairline-2);margin:10px 0"></div>
+              <div style="font-size:15px;font-weight:600">Analytics</div>
+              <div style="font-size:12px;color:var(--ink-3);margin-top:2px">Year heatmap lives here — not on Detail</div>
+            </div>
+            <p class="footnote">P0: skip glance, or amend habit-detail-flow.md first.</p>
+          </div>
+          <div class="home"></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="not-this"><strong>Not a compromise mock:</strong> do not ship a tiny year that also edits cells, and do not dump weekly/monthly charts onto first paint next to Complete today.</div>
+    <div class="why">
+      <p class="k">Why they split</p>
+      <dl class="dims two">
+        <div>
+          <dt>Grok</dt>
+          <dd>
+            <strong>Pain:</strong> The year is the identity object. Buried two taps down, most people never feel “this is who I’ve been.”<br />
+            <strong>Outcome:</strong> Pride (see the year) + repair (tap a hole → that month in History). Next action is still Complete today, one scroll up. No charts on first paint.<br />
+            <strong>Not this:</strong> Full Analytics on Detail. Cells stay read-only.
+          </dd>
+        </div>
+        <div>
+          <dt>Fable</dt>
+          <dd>
+            <strong>Pain:</strong> Spec already says “year heatmap never on Detail.” A glance is the heatmap with a nickname.<br />
+            <strong>Outcome:</strong> Trust the written hard rule, or change the doc on purpose. Shipping the glance now is a spec lie.<br />
+            <strong>Not this:</strong> Quietly adding the card “just to see.” P0: skip until amended, or drop the glance.
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- DON'T -->
+  <section class="section" id="dont">
+    <div class="sec-meta">
+      <span class="sec-num">—</span>
+      <h2>Don’t</h2>
+      <span class="who both">Both</span>
+    </div>
+    <div class="dont">
+      <article>
+        <h3>Pause on Detail</h3>
+        <p>Already cut. Do not resurrect a hold-your-streak card on the recommitment surface.</p>
+      </article>
+      <article>
+        <h3>Year cells that edit</h3>
+        <p>Squares are too small to flip completion. Tap opens History / Day. Never silent edits.</p>
+      </article>
+      <article>
+        <h3>Streak / rank copy</h3>
+        <p>No “you’re winning” rank, no streak-shame. The record is a log, not a leaderboard.</p>
+      </article>
+    </div>
+  </section>
+
+  <p class="links">
+    Align mock: <a href="habit-detail-align-before-after.html">habit-detail-align-before-after.html</a>
+    · Spec: <a href="../habit-detail-flow.md">habit-detail-flow.md</a>
+    · Clickable prototype: <a href="habit-detail-full-flow.html">habit-detail-full-flow.html</a>
+    · Docs index: <a href="../index.html">docs/index.html</a>
+  </p>
+</div>
+</body>
+</html>

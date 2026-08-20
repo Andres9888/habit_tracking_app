@@ -22,6 +22,7 @@ interface HabitsAppOverlaysProps {
   paywallVisible: boolean;
   onPaywallClose: () => void;
   onPaywallSuccess: () => void;
+  onPremiumUpsell?: () => void;
   /** Batch archive undo */
   batchArchiveUndoVisible: boolean;
   batchArchiveUndoCount: number;
@@ -39,6 +40,7 @@ export function HabitsAppOverlays({
   paywallVisible,
   onPaywallClose,
   onPaywallSuccess,
+  onPremiumUpsell,
   batchArchiveUndoVisible,
   batchArchiveUndoCount,
   onBatchArchiveUndo,
@@ -51,7 +53,7 @@ export function HabitsAppOverlays({
   return (
     <>
       <WebToaster />
-      <HabitsModals state={modals} />
+      <HabitsModals onPremiumUpsell={onPremiumUpsell} state={modals} />
 
       <ArchiveUndoToast
         duration={TOAST_DURATION_MS}

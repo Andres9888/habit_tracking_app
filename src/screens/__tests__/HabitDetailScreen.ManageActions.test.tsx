@@ -4,11 +4,12 @@
  * Story 1.9.4: Habit Detail Manage Actions + Safety
  *
  * Tests that:
- * - Manage section contains all required actions (View Full Calendar, Pause, Archive, Delete)
+ * - Manage section contains required actions (View Full Calendar, Archive, Delete)
  * - Destructive actions require confirmation dialogs
  * - Copy is clear about consequences
  * - Actions close the modal after success
  * - Accessibility labels/roles are properly set
+ * - Pause is not a Habit Detail section
  */
 
 import React from 'react';
@@ -60,6 +61,7 @@ jest.mock('lucide-react-native', () => {
     Archive: MockIcon,
     Trash2: MockIcon,
     Calendar: MockIcon,
+    ChevronLeft: MockIcon,
     ChevronRight: MockIcon,
     Eye: MockIcon,
     Brain: MockIcon,
@@ -108,7 +110,6 @@ describe('HabitDetailScreen - Manage Actions (Story 1.9.4)', () => {
     onDelete: jest.fn(),
     onEdit: jest.fn(),
     onOpenCalendar: jest.fn(),
-    onPause: jest.fn(),
     tracking: [],
     visible: true,
   };
@@ -124,8 +125,8 @@ describe('HabitDetailScreen - Manage Actions (Story 1.9.4)', () => {
       expect(true).toBe(true); // Hint - actual rendering requires full mock setup
     });
 
-    it('should render Pause Habit action', async () => {
-      expect(true).toBe(true);
+    it('does not treat Pause as a Detail manage action', () => {
+      expect(mockProps).not.toHaveProperty('onPause');
     });
 
     it('should render Archive action', async () => {
@@ -256,22 +257,6 @@ describe('HabitDetailScreen - Manage Actions (Story 1.9.4)', () => {
   });
 
   describe('AC4: Actions close modal after success', () => {
-    it('Pause action calls onClose after onPause', () => {
-      const onPause = jest.fn();
-      const onClose = jest.fn();
-
-      // Simulate the confirmation handler
-      const confirmPause = () => {
-        onPause('habit-id');
-        onClose();
-      };
-
-      confirmPause();
-
-      expect(onPause).toHaveBeenCalled();
-      expect(onClose).toHaveBeenCalled();
-    });
-
     it('Archive action calls onClose after onArchive', () => {
       const onArchive = jest.fn();
       const onClose = jest.fn();

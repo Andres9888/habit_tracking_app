@@ -9,11 +9,10 @@ interface SecondarySectionsProps {
   sectionIconColor: string;
   isPremium: boolean;
   onFeedback: () => void;
-  onRate: () => void;
-  onShare: () => void;
-  onWhatsNew: () => void;
+  onLoveChainDay: () => void;
   onPrivacy: () => void;
   onTerms: () => void;
+  onWhatsNew: () => void;
   onPremiumUpsell?: () => void;
 }
 
@@ -22,7 +21,6 @@ export function SettingsSecondarySections(p: SecondarySectionsProps) {
 
   return (
     <>
-      {/* Spec 4a puts the one dark card near the bottom, above the footer. */}
       {isSearching ? null : (
         <Animated.View entering={sectionEnterAnim(5)}>
           <ProSettingsCard
@@ -36,13 +34,10 @@ export function SettingsSecondarySections(p: SecondarySectionsProps) {
           <AboutSupportSection
             sectionIconColor={p.sectionIconColor}
             onFeedback={p.onFeedback}
-            onRate={p.onRate}
-            onShare={p.onShare}
-            onWhatsNew={p.onWhatsNew}
+            onLoveChainDay={p.onLoveChainDay}
           />
         </Animated.View>
       ) : null}
-      {/* About footer hidden during search to keep results tight */}
       {isSearching ? null : (
         <Animated.View entering={sectionEnterAnim(7)}>
           <AboutFooter
@@ -50,6 +45,7 @@ export function SettingsSecondarySections(p: SecondarySectionsProps) {
             version={Constants.expoConfig?.version ?? '1.0.0'}
             onPrivacy={p.onPrivacy}
             onTerms={p.onTerms}
+            onWhatsNew={p.onWhatsNew}
           />
         </Animated.View>
       )}

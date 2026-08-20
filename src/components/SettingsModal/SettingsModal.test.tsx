@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react-native';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
 jest.mock('react-native-reanimated', () => {
   const Reanimated = jest.requireActual('react-native-reanimated/mock');
@@ -73,20 +73,40 @@ describe('SettingsModal', () => {
     expect(getByText('Export my data')).toBeTruthy();
   });
 
-  it('gives Support one action per row and keeps the footer to legal links', async () => {
+  it('shows the live reminder value instead of marketing copy', async () => {
+    const { getByText, queryByText } = render(
+      <SettingsModal onClose={() => {}} visible />
+    );
+
+    await waitFor(() => expect(getByText('Streak reminders')).toBeTruthy());
+    expect(getByText('Off')).toBeTruthy();
+    expect(queryByText('Nudge before an active streak slips')).toBeNull();
+  });
+
+  it('keeps the sound picker collapsed until the row is tapped', async () => {
+    const { getByText, queryByLabelText } = render(
+      <SettingsModal completionSoundEnabled onClose={() => {}} visible />
+    );
+
+    await waitFor(() => expect(getByText('Completion sound')).toBeTruthy());
+    expect(getByText('Chime')).toBeTruthy();
+    expect(queryByLabelText('Pop sound')).toBeNull();
+
+    fireEvent.press(getByText('Completion sound'));
+    expect(queryByLabelText('Pop sound')).toBeTruthy();
+  });
+
+  it('merges Support advocacy and moves What’s new to the footer', async () => {
     const { getByText, queryByText } = render(
       <SettingsModal onClose={() => {}} visible />
     );
 
     await waitFor(() => expect(getByText('Support')).toBeTruthy());
-    expect(getByText('Rate Chain Day')).toBeTruthy();
-    expect(getByText('Share with a friend')).toBeTruthy();
-    expect(getByText("What's new")).toBeTruthy();
+    expect(getByText('Love Chain Day?')).toBeTruthy();
     expect(getByText('Send feedback')).toBeTruthy();
-    // The merged advocacy row is gone.
-    expect(queryByText('Love Chain Day?')).toBeNull();
-    // What's New no longer duplicated in the footer link line.
-    expect(queryByText("What's New")).toBeNull();
+    expect(queryByText('Rate Chain Day')).toBeNull();
+    expect(queryByText('Share with a friend')).toBeNull();
+    expect(getByText("What's new")).toBeTruthy();
   });
 
   it('omits surfaces removed by the redesign and the prune pass', async () => {

@@ -56,6 +56,8 @@ AuthGate logic:
 
 Inside `HabitsApp`, all screens are modals managed by hook state in `useHabitsApp()` and `useHabitsAppHandlers()`. Opening a "screen" just sets a state variable that renders a modal overlay.
 
+Per-habit Detail (recommitment surface, History, Day, Analytics) is documented in [habit-detail-flow.md](./habit-detail-flow.md).
+
 ### State Management
 
 No Redux or Zustand. Three patterns:

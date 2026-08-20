@@ -68,9 +68,8 @@ export function SettingsContent(p: SettingsContentProps) {
                 isDeletingAccount={actions.isDeletingAccount}
                 onDeleteAccount={actions.handleDeleteAccount}
                 onFeedback={actions.handleFeedback}
+                onLoveChainDay={actions.handleLoveChainDay}
                 onPrivacy={actions.openPrivacy}
-                onRate={actions.handleRateApp}
-                onShare={actions.handleShare}
                 onTerms={actions.openTerms}
                 onWhatsNew={actions.handleWhatsNew}
               />

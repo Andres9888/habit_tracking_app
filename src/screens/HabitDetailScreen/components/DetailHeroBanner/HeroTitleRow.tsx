@@ -1,18 +1,12 @@
 /**
- * HeroTitleRow — centered habit name, schedule, strength dial, and caption.
- * Matches the full-flow mock: title first, then the 120px ring.
+ * HeroTitleRow — centered habit name and its real schedule context.
  */
 import { Text, View } from 'react-native';
 import type { Habit } from '../../../../features/habits/types';
 import { fontFamilies, fontWeights } from '../../../../theme/typography';
 import type { InsightPalette } from '../../insightPalette';
 import { getHabitDisplayName } from '../DetailHero.utils';
-import {
-  scheduleLabel,
-  strengthLabel,
-  strengthPercent,
-} from './DetailHeroBanner.utils';
-import { HeroStrengthDial } from './HeroStrengthDial';
+import { scheduleLabel } from './DetailHeroBanner.utils';
 
 interface HeroTitleRowProps {
   habit: Habit;
@@ -20,8 +14,6 @@ interface HeroTitleRowProps {
 }
 
 export function HeroTitleRow({ habit, palette }: HeroTitleRowProps) {
-  const percent = strengthPercent(habit);
-
   return (
     <View style={{ alignItems: 'center', paddingHorizontal: 20 }}>
       <Text
@@ -43,29 +35,11 @@ export function HeroTitleRow({ habit, palette }: HeroTitleRowProps) {
           color: palette.bandMuted,
           fontSize: 13,
           fontWeight: fontWeights.medium,
-          marginBottom: 10,
+          marginBottom: 2,
           marginTop: 6,
         }}
       >
         {scheduleLabel(habit)}
-      </Text>
-      <HeroStrengthDial
-        arcColor={palette.green}
-        levelLabel={strengthLabel(percent)}
-        mutedColor={palette.green}
-        strengthPercent={percent}
-        textColor={palette.bandFg}
-        trackColor={palette.dialTrack}
-      />
-      <Text
-        style={{
-          color: palette.bandMuted,
-          fontSize: 11,
-          letterSpacing: 0.1,
-          marginTop: 6,
-        }}
-      >
-        Habit strength · a snapshot, not a score
       </Text>
     </View>
   );

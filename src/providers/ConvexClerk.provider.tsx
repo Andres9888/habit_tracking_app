@@ -51,7 +51,6 @@ export function ConvexClerkProvider({ children }: PropsWithChildren) {
     };
 
     let isCurrent = true;
-    setIsConvexReady(false);
     convexClientInstance.setAuth(fetchConvexToken, (isAuthenticated) => {
       if (isCurrent) setIsConvexReady(isAuthenticated);
     });

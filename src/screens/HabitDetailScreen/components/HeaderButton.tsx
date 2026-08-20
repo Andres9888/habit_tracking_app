@@ -17,7 +17,7 @@ import { toneColors, type HeaderButtonTone } from './HeaderButton.tones';
 
 interface HeaderButtonProps {
   onPress: () => void;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   label: string;
   text?: string;
   tone?: HeaderButtonTone;
@@ -53,11 +53,13 @@ export function HeaderButton({
       ]}
       onPress={handlePress}
     >
-      <View style={{ opacity: tone === 'subtle' ? OPACITY.high : 1 }}>
-        {React.cloneElement(icon as React.ReactElement<{ color: string }>, {
-          color: fg,
-        })}
-      </View>
+      {icon ? (
+        <View style={{ opacity: tone === 'subtle' ? OPACITY.high : 1 }}>
+          {React.cloneElement(icon as React.ReactElement<{ color: string }>, {
+            color: fg,
+          })}
+        </View>
+      ) : null}
       {showText ? (
         <Text
           style={[

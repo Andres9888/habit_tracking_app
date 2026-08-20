@@ -73,6 +73,7 @@ export function SettingsModalSection({
   openHapticTest,
   setShowHabitStrengthPercentage,
   onSettingsChange,
+  onPremiumUpsell,
 }: SettingsModalSectionProps) {
   const streakReminders = useStreakReminderSettings();
   const convex = useConvex();
@@ -203,6 +204,7 @@ export function SettingsModalSection({
         onClose={closeSettings}
         onExportHabitsData={handleExportHabitsData}
         onOpenHapticTest={openHapticTest}
+        onPremiumUpsell={onPremiumUpsell}
         onToggleStreakReminders={streakReminders.setEnabled}
       />
     </Suspense>

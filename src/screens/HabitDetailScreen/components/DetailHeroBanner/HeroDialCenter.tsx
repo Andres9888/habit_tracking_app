@@ -15,10 +15,13 @@ interface HeroDialCenterProps {
   levelLabel: string;
   textColor: string;
   mutedColor: string;
+  /** Inner hole of the ring; label and numeral must stay inside. */
+  maxWidth: number;
 }
 
 export function HeroDialCenter({
   levelLabel,
+  maxWidth,
   mutedColor,
   score,
   textColor,
@@ -30,6 +33,7 @@ export function HeroDialCenter({
         bottom: 0,
         justifyContent: 'center',
         left: 0,
+        paddingHorizontal: 6,
         position: 'absolute',
         right: 0,
         top: 0,
@@ -39,22 +43,26 @@ export function HeroDialCenter({
         style={{
           color: textColor,
           fontFamily: fontFamilies.primary.display,
-          fontSize: 35,
+          fontSize: 28,
           fontWeight: fontWeights.medium,
-          letterSpacing: -0.6,
-          lineHeight: 38,
+          letterSpacing: -0.5,
+          lineHeight: 30,
         }}
       >
         {score}
       </Text>
       <Text
+        adjustsFontSizeToFit
+        minimumFontScale={0.65}
         numberOfLines={1}
         style={{
           color: mutedColor,
-          fontSize: 11,
+          fontSize: 10,
           fontWeight: fontWeights.bold,
-          letterSpacing: 1.4,
-          marginTop: 5,
+          letterSpacing: levelLabel.length > 8 ? 0.4 : 1.2,
+          marginTop: 3,
+          maxWidth,
+          textAlign: 'center',
           textTransform: 'uppercase',
         }}
       >

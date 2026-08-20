@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ChainDay · Where streaks live — before / after</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@500;600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --paper: #F5F1ED;
+  --card: #FFFFFF;
+  --sage-1: #E3EDE6;
+  --sage-2: #EDF0E9;
+  --green: #0C7C59;
+  --green-deep: #0B5D42;
+  --green-wash: #E8F2EC;
+  --amber: #FBF0E3;
+  --amber-border: #F0DFC8;
+  --amber-ink: #8A5A26;
+  --ink: #1E241F;
+  --ink-2: #4A544C;
+  --ink-3: #7D867E;
+  --hairline: #E7E0D7;
+  --sans: "DM Sans", system-ui, sans-serif;
+  --serif: "Literata", Georgia, serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+  --shadow-phone: 0 2px 6px rgba(0,0,0,.28), 0 40px 80px -28px rgba(0,0,0,.55);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 700px at 18% -10%, #2C332C 0%, transparent 62%),
+    linear-gradient(170deg, #23281F 0%, #1A1E19 55%, #151814 100%);
+  font-family: var(--sans);
+  color: #E9E4DA;
+  -webkit-font-smoothing: antialiased;
+  padding: 40px 28px 80px;
+}
+.wrap { max-width: 1180px; margin: 0 auto; }
+.kicker {
+  font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+  color: #8FAE9C; font-weight: 600; margin: 0 0 10px;
+}
+h1 {
+  font-family: var(--serif); font-weight: 500; font-size: 30px;
+  letter-spacing: -.01em; margin: 0 0 10px; color: #F4F0E7;
+}
+.lede {
+  margin: 0 0 18px; max-width: 760px; font-size: 14.5px;
+  line-height: 1.65; color: #A6A99D;
+}
+.lede strong { color: #E9E4DA; font-weight: 600; }
+.plan-chip {
+  display: inline-block; font-size: 11px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; color: #1A1E19;
+  background: #C5D9C8; padding: 4px 9px; border-radius: 999px; margin-bottom: 14px;
+}
+.toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 42px; }
+.toc a {
+  color: #C5D9C8; text-decoration: none; font-size: 12.5px; font-weight: 500;
+  padding: 7px 12px; border: 1px solid #3A423A; border-radius: 999px; background: #1E231E;
+}
+.toc a:hover { border-color: #0C7C59; color: #F4F0E7; }
+.band {
+  font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+  color: #8FAE9C; margin: 8px 0 28px; padding-bottom: 10px; border-bottom: 1px solid #33382F;
+}
+.section { margin: 0 0 64px; scroll-margin-top: 24px; }
+.sec-meta { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+.sec-num { font-family: var(--mono); font-size: 12px; font-weight: 600; color: #8FAE9C; letter-spacing: .04em; }
+.sec-meta h2 {
+  font-family: var(--serif); font-weight: 500; font-size: 22px; margin: 0; color: #F4F0E7;
+}
+.pair {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+  align-items: start; margin-top: 18px;
+}
+@media (max-width: 820px) { .pair { grid-template-columns: 1fr; justify-items: center; } }
+.colhead { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.colhead b { font-size: 14px; color: #F4F0E7; }
+.tag {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;
+  padding: 4px 9px; border-radius: 20px;
+}
+.tag.before { background: #4A2F2A; color: #F0B9AA; }
+.tag.after { background: #1B4436; color: #9BD9B4; }
+.tag.keep { background: #3A3A32; color: #D4CFC2; }
+.tag.no { background: #4A2F2A; color: #F0B9AA; }
+.phone {
+  width: 340px; border-radius: 42px; padding: 10px;
+  background: linear-gradient(150deg, #6E6B66 0%, #38352F 16%, #2A2823 42%, #35322C 62%, #6B6862 84%, #33302B 100%);
+  box-shadow: var(--shadow-phone);
+}
+.viewport { position: relative; border-radius: 34px; overflow: hidden; background: var(--paper); color: var(--ink); }
+.sb {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 22px 0; font-size: 13px; font-weight: 600; height: 36px;
+}
+.island {
+  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+  width: 92px; height: 24px; border-radius: 14px; background: #08090A; z-index: 2;
+}
+.homebar { width: 108px; height: 4px; border-radius: 3px; background: rgba(30,36,31,.34); margin: 8px auto 10px; }
+.mark { outline: 2px solid #C45A3A; outline-offset: 2px; border-radius: 10px; }
+.mark.good { outline-color: #0C7C59; }
+
+.list-head { padding: 8px 20px 12px; }
+.list-head h3 { font-family: var(--serif); font-size: 26px; font-weight: 500; margin: 0; }
+.list-head p { margin: 4px 0 0; font-size: 13px; color: var(--ink-3); }
+.row {
+  margin: 0 16px 10px; background: var(--card); border: 1px solid var(--hairline);
+  border-radius: 16px; padding: 14px 14px 14px 12px;
+  display: grid; grid-template-columns: 28px 1fr auto; gap: 12px; align-items: center;
+  box-shadow: 0 1px 2px rgba(58,48,36,.04);
+}
+.check {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--green);
+  color: #F5F1ED; display: grid; place-items: center; font-size: 14px;
+}
+.check.open { background: transparent; border: 2px solid #C9D6CB; }
+.row h4 { margin: 0; font-size: 16px; font-weight: 600; }
+.row .meta { margin: 2px 0 0; font-size: 12.5px; color: var(--ink-3); }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; grid-column: 2 / -1; }
+.fire, .medal {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 999px;
+}
+.fire { background: #FDE8D0; color: #9A4A12; }
+.medal { background: #FBF0E3; color: #8A5A26; border: 1px solid var(--amber-border); }
+.quiet {
+  font-family: var(--mono); font-size: 15px; font-weight: 600;
+  color: var(--green-deep); letter-spacing: -.02em;
+}
+.quiet span { display: block; font-family: var(--sans); font-size: 10px; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); text-align: right; }
+
+.hero { background: linear-gradient(180deg, var(--sage-1) 0%, var(--sage-2) 55%, var(--paper) 100%); padding: 0 16px 16px; }
+.nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 6px 4px 8px; }
+.icon-btn {
+  width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--hairline);
+  background: rgba(255,255,255,.86); display: inline-flex; align-items: center; justify-content: center;
+}
+.edit { height: 40px; padding: 0 8px; border: 0; background: none; color: var(--green);
+  font-family: var(--sans); font-size: 15px; font-weight: 500; }
+.hero h3 {
+  font-family: var(--serif); font-weight: 500; font-size: 24px; line-height: 1.16;
+  letter-spacing: -.014em; margin: 4px 0 6px; text-align: center;
+}
+.schedule { font-size: 12.5px; font-weight: 500; color: #5F6C62; text-align: center; margin: 0 0 10px; }
+.dial {
+  width: 108px; height: 108px; margin: 0 auto 8px; border-radius: 50%;
+  background: conic-gradient(#0C7C59 0 112deg, #D3DFD5 112deg 360deg);
+  display: grid; place-items: center;
+}
+.dial i {
+  width: 84px; height: 84px; border-radius: 50%; background: var(--sage-2);
+  display: grid; place-items: center; font-style: normal; text-align: center;
+}
+.dial b { display: block; font-family: var(--serif); font-size: 26px; font-weight: 500; line-height: 1; }
+.dial em { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--green); font-style: normal; font-weight: 700; }
+.cap { text-align: center; font-size: 11px; color: var(--ink-3); margin: 0 0 10px; }
+.cta {
+  height: 48px; border-radius: 14px; background: var(--green-wash); color: var(--green-deep);
+  display: grid; place-items: center; font-weight: 600; font-size: 15px; margin-bottom: 8px;
+}
+.streak-under { text-align: center; font-size: 13px; font-weight: 600; color: #9A4A12; margin: 0 0 8px; }
+.recov {
+  background: var(--amber); border: 1px solid var(--amber-border); border-radius: 14px;
+  padding: 12px 14px; margin: 0 16px 12px;
+}
+.recov h5 { margin: 0 0 4px; font-size: 14px; color: var(--amber-ink); }
+.recov p { margin: 0; font-size: 12.5px; line-height: 1.45; color: #4C3D28; }
+
+.an-head { padding: 6px 16px 10px; display: flex; align-items: center; gap: 6px; color: var(--green); font-weight: 500; }
+.an-title { font-family: var(--serif); font-size: 22px; font-weight: 500; margin: 0 16px 12px; }
+.year {
+  margin: 0 16px 12px; background: var(--card); border: 1px solid var(--hairline);
+  border-radius: 16px; padding: 12px;
+}
+.year .lbl { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.cells { display: grid; grid-template-columns: repeat(18, 1fr); gap: 3px; margin-top: 8px; }
+.cells i { display: block; aspect-ratio: 1; border-radius: 2px; background: #E8F2EC; }
+.cells i.on { background: var(--green); }
+.run {
+  margin: 0 16px 12px; background: var(--card); border: 1px solid var(--hairline);
+  border-radius: 16px; padding: 14px 16px;
+}
+.run .lbl { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
+.run-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.run-grid div { }
+.run-grid b { display: block; font-family: var(--serif); font-size: 28px; font-weight: 500; letter-spacing: -.02em; }
+.run-grid span { font-size: 12px; color: var(--ink-3); }
+.run .note { margin: 10px 0 0; font-size: 12px; color: var(--ink-2); line-height: 1.4; }
+.insight {
+  margin: 0 16px 8px; padding: 12px 0; border-top: 1px solid var(--hairline);
+  font-size: 14px; font-weight: 600;
+}
+.insight small { display: block; font-weight: 500; color: var(--ink-3); margin-top: 2px; }
+
+.why {
+  margin-top: 18px; background: #242820; border: 1px solid #33382F;
+  border-radius: 16px; padding: 16px 18px;
+}
+.why .k {
+  font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: #8FAE9C; margin: 0 0 8px;
+}
+.dims { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 720px) { .dims { grid-template-columns: 1fr; } }
+.dims dt {
+  font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: #8FAE9C; margin-bottom: 4px;
+}
+.dims dd { margin: 0; font-size: 13.5px; line-height: 1.5; color: #C4C1B6; }
+
+.strip { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 8px; }
+@media (max-width: 820px) { .strip { grid-template-columns: 1fr; } }
+.strip article {
+  background: #1E231E; border: 1px solid #33382F; border-radius: 14px; padding: 14px 16px;
+}
+.strip h3 { margin: 0 0 6px; font-size: 13px; color: #F0B9AA; }
+.strip p { margin: 0; font-size: 13px; line-height: 1.5; color: #A6A99D; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">ChainDay · placement</p>
+  <span class="plan-chip">Plan mock · not shipped</span>
+  <h1>Where streaks live</h1>
+  <p class="lede">
+    A streak is a <strong>run of days in the log</strong>, not a grade.
+    Habit Detail is a recommitment surface — it must not show a streak, and recovery must not say “you broke N.”
+    Home keeps a quiet current number after a tick. Analytics holds current + longest, as facts you can audit on History.
+  </p>
+  <nav class="toc">
+    <a href="#home">1 Home</a>
+    <a href="#detail">2 Detail</a>
+    <a href="#analytics">3 Analytics</a>
+    <a href="#dont">Don’t</a>
+  </nav>
+
+  <p class="band">01 · The glance after a tick</p>
+  <section class="section" id="home">
+    <div class="sec-meta">
+      <span class="sec-num">01</span>
+      <h2>Home list</h2>
+    </div>
+    <div class="pair">
+      <div>
+        <div class="colhead"><span class="tag before">Before · live</span><b>Fire + “New Record!”</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="list-head">
+            <h3>Wednesday</h3>
+            <p>19 August · 2 of 3 logged</p>
+          </div>
+          <div class="row">
+            <span class="check">✓</span>
+            <div>
+              <h4>Opposite Action</h4>
+              <p class="meta">Daily</p>
+            </div>
+            <span></span>
+            <div class="badges mark">
+              <span class="fire">🔥 12 Days Streak</span>
+              <span class="medal">🏅 New Record!</span>
+            </div>
+          </div>
+          <div class="row">
+            <span class="check">✓</span>
+            <div>
+              <h4>Wake-Up Movement</h4>
+              <p class="meta">Daily</p>
+            </div>
+            <span></span>
+            <div class="badges">
+              <span class="fire">🔥 4 Days Streak</span>
+            </div>
+          </div>
+          <div class="homebar"></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="colhead"><span class="tag after">After · planned</span><b>Quiet current run</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="list-head">
+            <h3>Wednesday</h3>
+            <p>19 August · 2 of 3 logged</p>
+          </div>
+          <div class="row">
+            <span class="check">✓</span>
+            <div>
+              <h4>Opposite Action</h4>
+              <p class="meta">Morning · Daily</p>
+            </div>
+            <div class="quiet mark good">12<span>run</span></div>
+          </div>
+          <div class="row">
+            <span class="check">✓</span>
+            <div>
+              <h4>Wake-Up Movement</h4>
+              <p class="meta">Morning · Daily</p>
+            </div>
+            <div class="quiet">4<span>run</span></div>
+          </div>
+          <div class="row">
+            <span class="check open"></span>
+            <div>
+              <h4>Read 10 pages</h4>
+              <p class="meta">Evening · Daily</p>
+            </div>
+            <div></div>
+          </div>
+          <div class="homebar"></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="why">
+      <p class="k">Why this change</p>
+      <dl class="dims">
+        <div><dt>Pain</dt><dd>🔥 + “12 Days Streak” + a medal turns the check-off row into a scoreboard. Best-streak chrome belongs in a look session, not next to the tick.</dd></div>
+        <div><dt>Outcome</dt><dd>After you log, a small current number is enough pride. Zero run shows nothing — no shame badge.</dd></div>
+        <div><dt>Not this</dt><dd>No fire emoji, no “New Record!”, no best on the card. Longest lives on Analytics.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <p class="band">02 · Recommitment — streaks stay off</p>
+  <section class="section" id="detail">
+    <div class="sec-meta">
+      <span class="sec-num">02</span>
+      <h2>Habit Detail</h2>
+    </div>
+    <div class="pair">
+      <div>
+        <div class="colhead"><span class="tag before">Before · do not ship</span><b>Streak under the dial</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="hero">
+            <div class="nav">
+              <div><span class="icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></span></div>
+              <span></span>
+              <div style="text-align:right"><span class="edit">Edit</span></div>
+            </div>
+            <h3>Opposite Action</h3>
+            <p class="schedule">Daily habit</p>
+            <div class="dial"><i><b>31</b><em>Building</em></i></div>
+            <p class="streak-under mark">🔥 12-day streak · best 18</p>
+            <p class="cap">Habit strength · a snapshot, not a score</p>
+            <div class="cta">Done today</div>
+          </div>
+          <div class="homebar"></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="colhead"><span class="tag keep">After · keep</span><b>Strength only</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="hero">
+            <div class="nav">
+              <div><span class="icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></span></div>
+              <span></span>
+              <div style="text-align:right"><span class="edit">Edit</span></div>
+            </div>
+            <h3>Opposite Action</h3>
+            <p class="schedule">Morning routine · Daily</p>
+            <div class="dial"><i><b>31</b><em>Building</em></i></div>
+            <p class="cap mark good">Habit strength · a snapshot, not a score</p>
+            <div class="cta">Done today</div>
+          </div>
+          <div class="homebar"></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="why">
+      <p class="k">Why this change</p>
+      <dl class="dims">
+        <div><dt>Pain</dt><dd>A streak under the dial is a second score. On a miss it becomes “you broke 12.” People close the app instead of logging today.</dd></div>
+        <div><dt>Outcome</dt><dd>Detail answers “what do I do now.” The dial is how established it feels. The run is a look, not a recommitment prop.</dd></div>
+        <div><dt>Not this</dt><dd>Do not add current/longest here to “match Analytics.” Same number twice is a dashboard glitch.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <p class="band">03 · The look session</p>
+  <section class="section" id="analytics">
+    <div class="sec-meta">
+      <span class="sec-num">03</span>
+      <h2>Analytics</h2>
+    </div>
+    <div class="pair">
+      <div>
+        <div class="colhead"><span class="tag before">Before · live</span><b>No run at all</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="an-head">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="m15 18-6-6 6-6"/></svg>
+            Detail
+          </div>
+          <h3 class="an-title">Analytics</h3>
+          <div class="year">
+            <div class="lbl">Year · days you logged</div>
+            <div class="cells" id="y1"></div>
+          </div>
+          <div class="insight">Wins land early morning<small>62% of 48 check-ins</small></div>
+          <div class="insight">Fridays are where it slips<small>4 of the last 6 misses</small></div>
+          <div class="homebar"></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="colhead"><span class="tag after">After · planned</span><b>Current + longest</b></div>
+        <div class="phone"><div class="viewport">
+          <div class="island"></div>
+          <div class="sb"><span>9:41</span><span></span></div>
+          <div class="an-head">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="m15 18-6-6 6-6"/></svg>
+            Detail
+          </div>
+          <h3 class="an-title">Analytics</h3>
+          <div class="year">
+            <div class="lbl">Year · days you logged</div>
+            <div class="cells" id="y2"></div>
+          </div>
+          <div class="run mark good">
+            <p class="lbl">The run</p>
+            <div class="run-grid">
+              <div><b>12</b><span>Current</span></div>
+              <div><b>18</b><span>Longest</span></div>
+            </div>
+            <p class="note">Consecutive days in the log. Tap to see those dates in History.</p>
+          </div>
+          <div class="insight">Wins land early morning<small>62% of 48 check-ins</small></div>
+          <div class="homebar"></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="why">
+      <p class="k">Why this change</p>
+      <dl class="dims">
+        <div><dt>Pain</dt><dd>You come here to look. The year grid already is the wall — but the consecutive run is a fact people hunt for, and today it only shouts on the Home card.</dd></div>
+        <div><dt>Outcome</dt><dd>Current and longest sit with the other evidence. Copy is a count, not a rank. Tap hands the dates to History.</dd></div>
+        <div><dt>Not this</dt><dd>No “don’t break it.” No amber. No percent of a goal bar. Weekly charts stay counts; this block is days in a row, not a third chart.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <p class="band">04 · Do not put streaks here</p>
+  <section class="section" id="dont">
+    <div class="sec-meta">
+      <span class="sec-num">04</span>
+      <h2>Wrong rooms</h2>
+    </div>
+    <div class="strip">
+      <article>
+        <h3>Detail recovery</h3>
+        <p>“Yesterday broke a 12-day streak.” Amber already means start again. Accusing with N makes the at-risk person leave.</p>
+      </article>
+      <article>
+        <h3>History header</h3>
+        <p>A giant “12-day streak” on the calendar. History owns dates. The run is visible as consecutive filled days — don’t title the month with a score.</p>
+      </article>
+      <article>
+        <h3>Settings</h3>
+        <p>Streak reminders can stay as a nudge toggle. Settings is not a scoreboard.</p>
+      </article>
+    </div>
+  </section>
+</div>
+<script>
+(function () {
+  function fill(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var html = "";
+    for (var i = 0; i < 90; i++) {
+      html += '<i class="' + (Math.random() > 0.38 ? "on" : "") + '"></i>';
+    }
+    el.innerHTML = html;
+  }
+  fill("y1");
+  fill("y2");
+})();
+</script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 import { api } from '../../../../convex/_generated/api';
 import { useCachedQuery } from '../../../lib/queryCache';
+import { useSettingsQuery } from '../../../lib/settings/useSettingsQuery';
 
 type TrackingQueryArgs = { endDate: string; startDate: string } | 'skip';
 
@@ -43,13 +44,7 @@ export function useHabitData(extendedDateStrings: string[]) {
   const habits = Array.isArray(habitsQuery) ? habitsQuery : EMPTY;
   const isHabitsLoading = habitsQuery === undefined;
 
-  const settings = useCachedQuery(
-    api.settings.get,
-    {},
-    {
-      entryName: 'settings.get',
-    }
-  );
+  const settings = useSettingsQuery();
 
   // Use startDate/endDate range to reduce query arg payload (~4KB → ~50 bytes).
   // Callers pass date lists in either direction (CharacterScreen's is

@@ -1,5 +1,5 @@
 /**
- * WhatsWorkingCard — the amber "what's working" insight.
+ * WhatsWorkingCard — paper "what's working" insight (no amber).
  *
  * States the daypart this habit reliably lands in and how the current reminder
  * relates to it. Only rendered when `useHabitInsights` found a real pattern —
@@ -37,13 +37,15 @@ export function WhatsWorkingCard({
   return (
     <View
       style={{
-        backgroundColor: palette.amberBg,
+        backgroundColor: palette.card,
+        borderColor: palette.cardBorder,
         borderRadius: borderRadius.large,
+        borderWidth: 1,
         padding: 18,
       }}
     >
       <InsightCardHeader
-        accent={palette.amber}
+        accent={palette.ctaGreen}
         eyebrow="What's working"
         glyph='★'
         headline={`Your wins land ${insight.daypart.phrase}.`}
@@ -65,7 +67,7 @@ export function WhatsWorkingCard({
       <View
         style={{
           alignItems: 'center',
-          borderTopColor: palette.amberBorder,
+          borderTopColor: palette.cardBorder,
           borderTopWidth: 1,
           flexDirection: 'row',
           justifyContent: 'space-between',
@@ -86,9 +88,9 @@ export function WhatsWorkingCard({
         </Text>
         <InsightPill
           accessibilityHint='Opens habit settings to change the reminder time'
-          borderColor={palette.amberBorder}
+          borderColor={palette.cardBorder}
           label='Adjust ›'
-          tint={palette.amber}
+          tint={palette.ctaGreen}
           onPress={onAdjustReminder}
         />
       </View>

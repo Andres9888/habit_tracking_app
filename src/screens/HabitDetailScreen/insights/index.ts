@@ -7,7 +7,12 @@ export {
   findWorkingWindow,
   reminderHour,
 } from './dayparts';
-export { isMissedYesterday, recoveryHeadline } from './missedYesterday';
+export {
+  isMissedYesterday,
+  missedLastScheduledDate,
+  recoveryHeadline,
+  recoveryMissedDayLabel,
+} from './missedYesterday';
 export {
   bestMonth,
   buildMonthlyRates,

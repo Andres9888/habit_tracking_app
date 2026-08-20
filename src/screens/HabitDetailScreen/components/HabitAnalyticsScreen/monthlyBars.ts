@@ -1,28 +1,26 @@
-import { eachDayOfInterval, endOfMonth } from 'date-fns';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
-import { parseLocalDate } from '../../insights';
+import { buildMonthlyRates } from '../../insights';
 import { MONTH_SHORT, type WeekBar } from './weeklyBars';
 
-/** Elapsed months this year, oldest first. Counts logged days only. */
+const LAST_MONTHS = 6;
+
+/** Elapsed months this year as % of scheduled days (last six, oldest first). */
 export function buildMonthlyBars(
   doneDates: Set<string>,
-  today = getLocalDateString()
+  today = getLocalDateString(),
+  daysOfWeek?: number[]
 ): WeekBar[] {
-  const cursor = parseLocalDate(today);
-  const year = cursor.getFullYear();
-
-  return Array.from({ length: cursor.getMonth() + 1 }, (_, month) => {
-    const start = new Date(year, month, 1);
-    const monthEnd = endOfMonth(start);
-    const end = monthEnd > cursor ? cursor : monthEnd;
-    let value = 0;
-    for (const day of eachDayOfInterval({ end, start })) {
-      if (doneDates.has(getLocalDateString(day))) value += 1;
-    }
-    return {
-      label: MONTH_SHORT[month] ?? '',
-      partial: month === cursor.getMonth(),
-      value,
-    };
+  const rates = buildMonthlyRates({
+    completedDates: doneDates,
+    daysOfWeek,
+    today,
   });
+  const currentMonth = Number(today.slice(5, 7)) - 1;
+
+  return rates.slice(-LAST_MONTHS).map((month) => ({
+    label: MONTH_SHORT[month.month] ?? '',
+    partial: month.month === currentMonth,
+    value: month.ratePct,
+    valueCaption: `${month.ratePct}%`,
+  }));
 }

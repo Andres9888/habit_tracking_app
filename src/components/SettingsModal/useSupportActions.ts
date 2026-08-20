@@ -1,6 +1,6 @@
 /** useSupportActions — rate, share, feedback, changelog, and legal links */
 import { useState, useCallback } from 'react';
-import { Linking, Platform, Share } from 'react-native';
+import { Alert, Linking, Platform, Share } from 'react-native';
 import { EXTERNAL_URLS } from '../../constants';
 
 const SHARE_MESSAGE = `I'm building better habits with Chain Day — a simple app that turns daily consistency into visible streaks. Try it free!\n\n${EXTERNAL_URLS.APP_STORE}`;
@@ -37,6 +37,14 @@ export function useSupportActions() {
     });
   }, []);
 
+  const handleLoveChainDay = useCallback(() => {
+    Alert.alert('Love Chain Day?', 'Rate the app or share it with a friend.', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Share', onPress: handleShare },
+      { text: 'Rate', onPress: handleRateApp },
+    ]);
+  }, [handleRateApp, handleShare]);
+
   const handleFeedback = useCallback(() => setShowFeedbackModal(true), []);
   const closeFeedback = useCallback(() => setShowFeedbackModal(false), []);
 
@@ -54,6 +62,7 @@ export function useSupportActions() {
     showFeedbackModal,
     closeFeedback,
     handleFeedback,
+    handleLoveChainDay,
     handleRateApp,
     handleShare,
     handleWhatsNew,

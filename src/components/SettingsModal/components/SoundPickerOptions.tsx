@@ -5,16 +5,20 @@ import { typography, fontWeights } from '@/theme/typography';
 import { getSegmentedControlColors } from '../SegmentedControl.colors';
 import type { CompletionSoundType } from '../../../../convex/settings/types';
 
+export const COMPLETION_SOUND_LABELS: Record<CompletionSoundType, string> = {
+  chime: 'Chime',
+  pop: 'Pop',
+  success: 'Rise',
+};
+
 const OPTIONS: {
   key: CompletionSoundType;
   label: string;
   Icon: typeof Volume1;
 }[] = [
-  // These segments are now the only place a tone is named — the Completion
-  // sound row above carries on/off and nothing else.
-  { key: 'chime', label: 'Chime', Icon: Volume1 },
-  { key: 'pop', label: 'Pop', Icon: Droplet },
-  { key: 'success', label: 'Rise', Icon: TrendingUp },
+  { key: 'chime', label: COMPLETION_SOUND_LABELS.chime, Icon: Volume1 },
+  { key: 'pop', label: COMPLETION_SOUND_LABELS.pop, Icon: Droplet },
+  { key: 'success', label: COMPLETION_SOUND_LABELS.success, Icon: TrendingUp },
 ];
 
 interface SoundPickerOptionsProps {

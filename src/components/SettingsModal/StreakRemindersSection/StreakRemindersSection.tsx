@@ -16,6 +16,7 @@ import {
   useTimePickerState,
 } from './StreakRemindersSection.hooks';
 import { useNotificationPermissionStatus } from './useNotificationPermissionStatus';
+import { formatStreakReminderSubtitle } from '../timeHelpers';
 import type { StreakRemindersSectionProps } from './StreakRemindersSection.types';
 
 export function StreakRemindersSection(props: StreakRemindersSectionProps) {
@@ -52,7 +53,10 @@ export function StreakRemindersSection(props: StreakRemindersSectionProps) {
         icon={<Bell color={settings.bell.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.bell.bg}
         label='Streak reminders'
-        subtitle='Nudge before an active streak slips'
+        subtitle={formatStreakReminderSubtitle(
+          props.enabled,
+          props.reminderTime
+        )}
         type='toggle'
         value={props.enabled}
         onToggle={(v) => void props.onToggle(v)}

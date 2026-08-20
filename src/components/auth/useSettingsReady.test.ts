@@ -11,6 +11,9 @@ describe('isStartupSettingsReady', () => {
     expect(isStartupSettingsReady({ isSignedIn: true, settings: undefined })).toBe(
       false
     );
+    expect(isStartupSettingsReady({ isSignedIn: true, settings: null })).toBe(
+      false
+    );
   });
 
   it('never blocks a signed-out user', () => {

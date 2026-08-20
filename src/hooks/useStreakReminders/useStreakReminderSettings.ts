@@ -11,7 +11,7 @@ import { ensureNotificationPermissions } from '../../utils/notifications/permiss
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DEFAULT_SETTINGS } from '../../../convex/settings/types';
 import { updateSettingsWithFallback } from '../../lib/settings/updateSettingsWithFallback';
-import { useCachedQuery } from '../../lib/queryCache';
+import { useSettingsQuery } from '../../lib/settings/useSettingsQuery';
 
 const FIRST_HABIT_CREATED_KEY = '@chain_day:first_habit_created_at';
 const PERMISSION_REQUESTED_KEY = '@chain_day:notif_permission_requested';
@@ -50,13 +50,7 @@ export async function markFirstHabitCreated(): Promise<void> {
 }
 
 export function useStreakReminderSettings() {
-  const settings = useCachedQuery(
-    api.settings.get,
-    {},
-    {
-      entryName: 'settings.get',
-    }
-  );
+  const settings = useSettingsQuery();
   const updateSettings = useMutation(api.settings.update);
 
   const [enabled, setEnabledLocal] = useState(false);

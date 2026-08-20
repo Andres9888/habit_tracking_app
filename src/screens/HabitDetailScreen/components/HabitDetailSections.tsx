@@ -1,6 +1,6 @@
 /**
  * HabitDetailSections — recommitment stack below the hero:
- * This week → History/Analytics doors → one insight line → pause.
+ * strength snapshot → This week → History/Analytics doors → one insight line.
  */
 import { View } from 'react-native';
 import type { Habit } from '../../../features/habits/types';
@@ -9,8 +9,8 @@ import { getLocalDateString } from '../../../utils/getLocalDateString';
 import type { HabitInsights } from '../insights';
 import type { InsightId } from '../useDetailFlow';
 import { InsightLine } from './InsightLine';
-import { PauseCard } from './PauseCard';
 import { RecordDoors } from './RecordDoors';
+import { StrengthSnapshot } from './StrengthSnapshot';
 import { ThisWeekCard } from './ThisWeekCard';
 
 interface HabitDetailSectionsProps {
@@ -38,6 +38,7 @@ export function HabitDetailSections({
 
   return (
     <View style={{ gap: spacing.md, padding: 20, paddingBottom: 40 }}>
+      <StrengthSnapshot habit={habit} />
       <ThisWeekCard
         completedDates={completedDates}
         daysOfWeek={habit.daysOfWeek}
@@ -52,7 +53,6 @@ export function HabitDetailSections({
         onOpenHistory={onOpenHistory}
       />
       <InsightLine insights={insights} onPress={onOpenInsight} />
-      <PauseCard habitId={habit._id} paused={habit.paused} />
     </View>
   );
 }

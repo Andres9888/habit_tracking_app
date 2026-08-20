@@ -1,4 +1,9 @@
-import { isMissedYesterday, recoveryHeadline } from '../missedYesterday';
+import {
+  isMissedYesterday,
+  missedLastScheduledDate,
+  recoveryHeadline,
+  recoveryMissedDayLabel,
+} from '../missedYesterday';
 
 const TODAY = '2026-07-25'; // a Saturday — yesterday is Friday the 24th
 const YESTERDAY = '2026-07-24';
@@ -56,6 +61,31 @@ describe('isMissedYesterday', () => {
         today: TODAY,
       })
     ).toBe(true);
+  });
+});
+
+describe('missedLastScheduledDate', () => {
+  it('finds the prior scheduled day across off days', () => {
+    expect(
+      missedLastScheduledDate({
+        completedDates: new Set(),
+        daysOfWeek: [1, 6], // Saturday today; Monday was the prior scheduled day
+        isCompletedToday: false,
+        today: TODAY,
+      })
+    ).toBe('2026-07-20');
+    expect(recoveryMissedDayLabel('2026-07-20', TODAY)).toBe('Monday');
+  });
+
+  it('returns no recovery when the last scheduled day was logged', () => {
+    expect(
+      missedLastScheduledDate({
+        completedDates: new Set(['2026-07-20']),
+        daysOfWeek: [1, 6],
+        isCompletedToday: false,
+        today: TODAY,
+      })
+    ).toBeNull();
   });
 });
 

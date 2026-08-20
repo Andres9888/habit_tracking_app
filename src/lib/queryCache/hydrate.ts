@@ -5,6 +5,8 @@ import {
   buildLatestMemoryKey,
   buildLatestStorageKey,
   buildMemoryKey,
+  getQueryCacheScope,
+  setQueryCacheScope,
 } from './persistence/keys';
 import { readEntry } from './persistence/readEntry';
 import { cancelPendingWrites } from './persistence/writeEntry';
@@ -44,6 +46,16 @@ export function resetQueryCache(): void {
   cancelPendingWrites();
   queryCacheStore.reset();
   resetQueryCacheHydrated();
+}
+
+// Module-level scope (not a component ref) so Fast Refresh / Strict Mode
+// remounts do not wipe a still-valid in-memory cache and re-latch AuthGate
+// onto the loading screen.
+export function applyQueryCacheScope(scope: string | null): void {
+  if (getQueryCacheScope() !== scope) {
+    resetQueryCache();
+  }
+  setQueryCacheScope(scope);
 }
 
 export { getCacheEntry } from './registry';

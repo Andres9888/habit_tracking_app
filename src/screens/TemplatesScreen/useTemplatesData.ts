@@ -6,6 +6,7 @@ import { useMutation } from 'convex/react';
 import { useMemo } from 'react';
 import { api } from '../../../convex/_generated/api';
 import { useCachedQuery } from '../../lib/queryCache';
+import { useSettingsQuery } from '../../lib/settings/useSettingsQuery';
 import type { CategoryFilter } from '../templates/templates.types';
 import type { Doc } from '../../../convex/_generated/dataModel';
 import { CATEGORY_META } from './data/categoryMeta';
@@ -59,13 +60,7 @@ export function useTemplatesData() {
       entryName: 'habits.list',
     }
   );
-  const settings = useCachedQuery(
-    api.settings.get,
-    {},
-    {
-      entryName: 'settings.get',
-    }
-  );
+  const settings = useSettingsQuery();
   const importedIds = useCachedQuery(
     api.templates.getImportedTemplateIds,
     {},

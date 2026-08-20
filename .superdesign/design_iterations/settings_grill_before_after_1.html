@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chain Day Settings — Honesty pass: Before / After</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:opsz,wght@7..72,400;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0 !important;background:#23221E !important;color:#F2EFE8 !important;font-family:'DM Sans',-apple-system,system-ui,sans-serif !important}
+  h1{font-family:Literata,Georgia,serif !important;font-size:32px !important;font-weight:700 !important;margin:10px 0 8px !important;color:#F2EFE8 !important}
+  .wrap{padding:40px 44px 80px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:3px;color:#7FC49A}
+  .lede{font-size:13.5px;line-height:1.65;color:#9B978A;max-width:720px;margin:0}
+  .picks{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+  .pick{font-size:11.5px;font-weight:600;letter-spacing:.3px;padding:6px 10px;border-radius:999px;background:#2C2B26;border:1px solid #3A3933;color:#C9C5B8}
+  .pick b{color:#9BD9B4;font-weight:700}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;font-size:12px;color:#C9C5B8}
+  .key{display:flex;align-center;align-items:center;gap:7px}
+  .dot{width:11px;height:11px;border-radius:3px;flex:none}
+  .stage{display:flex;gap:34px;align-items:flex-start;margin-top:34px;flex-wrap:wrap}
+  .col{flex:none;width:392px}
+  .colhead{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+  .colhead b{font-size:15px}
+  .tag{font-size:10.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;padding:4px 9px;border-radius:20px}
+  .tag.before{background:#4A2F2A;color:#F0B9AA}
+  .tag.after{background:#1B4436;color:#9BD9B4}
+  .metric{font-size:12px;color:#9B978A;margin-left:auto}
+
+  .phone{background:#F5F1ED;border-radius:22px;overflow:hidden;box-shadow:0 14px 50px rgba(0,0,0,.5);padding-bottom:18px;color:#2D2A26}
+  .status{display:flex;justify-content:space-between;align-items:center;padding:13px 22px 2px;font-size:13px;font-weight:600;color:#2D2A26}
+  .hdr{display:flex;justify-content:space-between;align-items:flex-start;padding:14px 20px 12px}
+  .kick{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#047857}
+  .title{font-family:Literata,Georgia,serif;font-size:33px;font-weight:700;color:#2D2A26;margin-top:6px;line-height:1.15}
+  .x{width:38px;height:38px;border-radius:50%;background:#EDEAE5;display:flex;align-items:center;justify-content:center;color:#524D47}
+  .seclabel{font-family:Literata,Georgia,serif;font-size:15.5px;font-weight:600;color:#2D2A26;margin:16px 22px 8px}
+  .card{margin:0 16px;background:#FAF8F5;border:1px solid #DDD8D2;border-radius:20px;overflow:hidden}
+  .row{display:flex;align-items:center;gap:13px;padding:13px 15px;position:relative}
+  .row+.row{border-top:1px solid rgba(45,42,38,.08)}
+  .chip{width:38px;height:38px;border-radius:12px;background:#E2F1EA;display:flex;align-items:center;justify-content:center;flex:none;color:#047857}
+  .chip.mute{background:#E9E4DD;color:#6B6560}
+  .chip svg{width:16px;height:16px}
+  .rl{flex:1;min-width:0}
+  .rt{font-size:15.5px;font-weight:600;color:#2D2A26}
+  .rs{font-size:12.5px;color:#6B6560;margin-top:2px;line-height:1.35}
+  .val{font-size:14px;color:#6B6560;flex:none}
+  .chev{color:#A39F92;font-size:17px;flex:none;line-height:1}
+  .tog{width:50px;height:30px;border-radius:15px;background:#CFC9C1;position:relative;flex:none}
+  .tog.on{background:#047857}
+  .tog i{position:absolute;top:2px;left:2px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .tog.on i{left:auto;right:2px}
+  .seg{display:flex;background:rgba(0,0,0,.05);border-radius:12px;padding:3px;gap:2px;flex:none}
+  .seg span{width:34px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#7C7869}
+  .seg span svg{width:15px;height:15px}
+  .seg span.sel{background:rgba(5,150,105,.12);color:#047857}
+  .badge{font-size:11px;font-weight:700;background:#E2F1EA;color:#047857;border-radius:999px;padding:2px 7px;flex:none}
+  .avatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#059669,#047857);color:#fff;font-family:Literata,serif;font-size:18px;font-weight:600;display:flex;align-items:center;justify-content:center;flex:none}
+  .pro{display:inline-block;margin-left:6px;font-size:9.5px;font-weight:700;letter-spacing:1px;background:#D7F7DF;color:#10251D;padding:2px 6px;border-radius:6px;vertical-align:middle}
+
+  .tray{background:rgba(0,0,0,.02);border-top:1px solid rgba(45,42,38,.08);padding:10px 15px}
+  .inset{margin:0 10px 10px;background:#FAF8F5;border:1px solid #DDD8D2;border-radius:16px;overflow:hidden}
+  .inset .row{padding:11px 13px}
+  .learn{font-size:12.5px;font-weight:500;color:#047857;padding:10px 13px;border-top:1px solid rgba(45,42,38,.08)}
+  .pills{display:flex;gap:7px;flex-wrap:wrap}
+  .pill{font-size:12px;padding:7px 12px;border-radius:9px;background:rgba(0,0,0,.05);color:#6B6560}
+  .pill.sel{background:rgba(5,150,105,.12);color:#047857;font-weight:600}
+
+  .prem{margin:16px 16px 0;background:linear-gradient(135deg,#0D2119,#173A2A);border:1px solid rgba(189,236,207,.24);border-radius:20px;display:flex;align-items:center;gap:13px;padding:13px 15px}
+  .prem .chip{background:rgba(250,248,245,.12);color:#BDECCF}
+  .prem .rt{color:#FFF8E9;font-size:16px}
+  .prem .rs{color:rgba(240,249,243,.76)}
+  .up{background:#D7F7DF;color:#10251D;font-size:14px;font-weight:600;padding:9px 17px;border-radius:20px;flex:none}
+  .foot{text-align:center;font-size:12px;color:#6E6660;margin-top:16px}
+
+  .cut{position:relative}
+  .cut::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(197,74,53,.13) 0 8px,rgba(197,74,53,.04) 8px 16px);pointer-events:none}
+  .cut::before{content:'CUT';position:absolute;top:50%;right:12px;transform:translateY(-50%);font-size:9.5px;font-weight:700;letter-spacing:1.3px;color:#fff;background:#B5432E;padding:3px 7px;border-radius:5px;z-index:3}
+  .keepnew{box-shadow:inset 3px 0 0 #178457}
+  .mark{position:absolute;top:50%;right:12px;transform:translateY(-50%);font-size:9.5px;font-weight:700;letter-spacing:1.3px;color:#0C2B21;background:#9BD9B4;padding:3px 7px;border-radius:5px;z-index:3}
+  .moved{box-shadow:inset 3px 0 0 #E0A03C}
+
+  .why{flex:1;min-width:330px;max-width:460px;display:flex;flex-direction:column;gap:12px;position:sticky;top:28px}
+  .wcard{background:#2C2B26;border-radius:13px;padding:14px 16px;border-left:3px solid #7FC49A}
+  .wcard.warn{border-left-color:#E0A03C}
+  .wcard.soft{border-left-color:#6E7C74}
+  .wh{font-size:13.5px;font-weight:700;color:#F2EFE8;display:flex;align-items:center;gap:8px}
+  .num{width:19px;height:19px;border-radius:50%;background:#7FC49A;color:#0C2B21;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+  .wcard.warn .num{background:#E0A03C}
+  .wcard.soft .num{background:#6E7C74;color:#F2EFE8}
+  .wb{font-size:12.5px;line-height:1.62;color:#C9C5B8;margin-top:7px}
+  .wb em{color:#F2EFE8;font-style:normal;font-weight:600}
+  .totals{background:#1B4436;border-radius:13px;padding:14px 16px;font-size:12.5px;line-height:1.6;color:#CFE9D8}
+  .totals b{color:#fff}
+
+  @media (max-width: 920px){
+    .wrap{padding:24px 18px 64px}
+    .why{position:static;max-width:392px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">CHAIN DAY · SETTINGS</div>
+  <h1>Honesty pass — before / after</h1>
+  <p class="lede">Left is what ships today (growth icons, app lock, and always-open sort already gone). Right is the remaining pass: tell the truth on the reminder row, collapse the sound picker the same way we collapsed sort, merge Support, move What’s new to the footer. No new settings. No hero redesign. Export stays in Habits.</p>
+  <div class="picks">
+    <span class="pick">Q1 <b>B</b> keep “Streak reminders” + live value</span>
+    <span class="pick">Q2 <b>A</b> Love Chain Day? + Feedback</span>
+    <span class="pick">Q3 <b>A</b> export stays in Habits</span>
+    <span class="pick">Q4 <b>B</b> wire premium · no schema leftovers</span>
+  </div>
+  <div class="legend">
+    <div class="key"><span class="dot" style="background:#B5432E"></span> removed / collapsed away</div>
+    <div class="key"><span class="dot" style="background:#9BD9B4"></span> changed / merged</div>
+    <div class="key"><span class="dot" style="background:#E0A03C"></span> moved</div>
+    <div class="key"><span class="dot" style="background:#DDD8D2"></span> untouched</div>
+  </div>
+
+  <div class="stage">
+
+    <!-- ══════════ BEFORE ══════════ -->
+    <div class="col">
+      <div class="colhead"><b>Before</b><span class="tag before">ships today</span><span class="metric">~16 rows · Support is 4</span></div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>▮▮▮ ⏻</span></div>
+        <div class="hdr">
+          <div><div class="kick">Chain Day</div><div class="title">Settings</div></div>
+          <div class="x"><i data-lucide="x" style="width:16px;height:16px"></i></div>
+        </div>
+
+        <div class="card" style="margin-top:2px">
+          <div class="row">
+            <div class="avatar">AG</div>
+            <div class="rl"><div class="rt">Andres Gutierrez <span class="pro">PRO</span></div><div class="rs">Edit name, photo &amp; account</div></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+
+        <div class="seclabel">Look &amp; Feel</div>
+        <div class="card">
+          <div class="row">
+            <div class="chip"><i data-lucide="calendar-days"></i></div>
+            <div class="rl"><div class="rt">Calendar look</div><div class="rs">Day shape, fill, chain style &amp; preview</div></div>
+            <div class="chev">›</div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="moon"></i></div>
+            <div class="rl"><div class="rt">Theme</div></div>
+            <div class="seg">
+              <span><i data-lucide="sun"></i></span>
+              <span><i data-lucide="moon"></i></span>
+              <span class="sel"><i data-lucide="smartphone"></i></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="rows-3"></i></div>
+            <div class="rl"><div class="rt">Compact habit cards</div><div class="rs">Fit more on screen</div></div>
+            <div class="tog"><i></i></div>
+          </div>
+        </div>
+
+        <div class="seclabel">Reminders</div>
+        <div class="card">
+          <div class="row">
+            <div class="chip"><i data-lucide="bell"></i></div>
+            <div class="rl"><div class="rt">Streak reminders</div><div class="rs">Nudge before an active streak slips</div></div>
+            <div class="tog on"><i></i></div>
+          </div>
+          <div class="tray" style="padding-bottom:8px">
+            <div class="inset">
+              <div class="row" style="border-top:none">
+                <div class="rl"><div class="rt" style="font-size:14.5px">Remind me at</div></div>
+                <div class="val">8:00 PM</div>
+                <div class="chev">›</div>
+              </div>
+              <div class="learn">Want a different time per habit? Learn more →</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="volume-2"></i></div>
+            <div class="rl"><div class="rt">Completion sound</div></div>
+            <div class="tog on"><i></i></div>
+          </div>
+          <div class="tray cut">
+            <div class="pills">
+              <span class="pill sel">Chime</span>
+              <span class="pill">Pop</span>
+              <span class="pill">Success</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="seclabel">Habits</div>
+        <div class="card">
+          <div class="row">
+            <div class="chip"><i data-lucide="arrow-up-down"></i></div>
+            <div class="rl"><div class="rt">Sort order</div><div class="rs">How habits are ordered</div></div>
+            <div class="val">Manual</div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="book-open"></i></div>
+            <div class="rl"><div class="rt">Archived habits</div><div class="rs">View and restore hidden habits</div></div>
+            <span class="badge">3</span>
+            <div class="chev">›</div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="download"></i></div>
+            <div class="rl"><div class="rt">Export my data</div><div class="rs">Download habits as CSV or JSON</div></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+
+        <div class="prem">
+          <div class="chip"><i data-lucide="crown"></i></div>
+          <div class="rl"><div class="rt">Chain Day Premium</div><div class="rs">7-day trial, then $4.99/mo</div></div>
+          <div class="up">Upgrade</div>
+        </div>
+
+        <div class="seclabel">Support</div>
+        <div class="card">
+          <div class="row cut">
+            <div class="chip mute"><i data-lucide="star"></i></div>
+            <div class="rl"><div class="rt">Rate Chain Day</div></div>
+            <div class="chev" style="margin-right:52px">›</div>
+          </div>
+          <div class="row cut">
+            <div class="chip mute"><i data-lucide="share-2"></i></div>
+            <div class="rl"><div class="rt">Share with a friend</div></div>
+            <div class="chev" style="margin-right:52px">›</div>
+          </div>
+          <div class="row cut">
+            <div class="chip mute"><i data-lucide="sparkles"></i></div>
+            <div class="rl"><div class="rt">What's new</div></div>
+            <div class="chev" style="margin-right:52px">›</div>
+          </div>
+          <div class="row">
+            <div class="chip mute"><i data-lucide="message-square"></i></div>
+            <div class="rl"><div class="rt">Send feedback</div></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+
+        <div class="foot">Privacy · Terms · v2.4.1 (45)</div>
+      </div>
+    </div>
+
+    <!-- ══════════ AFTER ══════════ -->
+    <div class="col">
+      <div class="colhead"><b>After</b><span class="tag after">recommended</span><span class="metric">~13 rows · Support is 2</span></div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>▮▮▮ ⏻</span></div>
+        <div class="hdr">
+          <div><div class="kick">Chain Day</div><div class="title">Settings</div></div>
+          <div class="x"><i data-lucide="x" style="width:16px;height:16px"></i></div>
+        </div>
+
+        <div class="card" style="margin-top:2px">
+          <div class="row">
+            <div class="avatar">AG</div>
+            <div class="rl"><div class="rt">Andres Gutierrez <span class="pro">PRO</span></div><div class="rs">Edit name, photo &amp; account</div></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+
+        <div class="seclabel">Look &amp; Feel</div>
+        <div class="card">
+          <div class="row">
+            <div class="chip"><i data-lucide="calendar-days"></i></div>
+            <div class="rl"><div class="rt">Calendar look</div><div class="rs">Day shape, fill, chain style &amp; preview</div></div>
+            <div class="chev">›</div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="moon"></i></div>
+            <div class="rl"><div class="rt">Theme</div></div>
+            <div class="seg">
+              <span><i data-lucide="sun"></i></span>
+              <span><i data-lucide="moon"></i></span>
+              <span class="sel"><i data-lucide="smartphone"></i></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="rows-3"></i></div>
+            <div class="rl"><div class="rt">Compact habit cards</div><div class="rs">Fit more on screen</div></div>
+            <div class="tog"><i></i></div>
+          </div>
+        </div>
+
+        <div class="seclabel">Reminders</div>
+        <div class="card">
+          <div class="row keepnew">
+            <div class="chip"><i data-lucide="bell"></i></div>
+            <div class="rl">
+              <div class="rt">Streak reminders</div>
+              <div class="rs">On · 8:00 PM</div>
+            </div>
+            <div class="tog on" style="margin-right:58px"><i></i></div>
+            <span class="mark">LIVE VALUE</span>
+          </div>
+          <div class="tray" style="padding-bottom:8px">
+            <div class="inset">
+              <div class="row" style="border-top:none">
+                <div class="rl"><div class="rt" style="font-size:14.5px">Remind me at</div></div>
+                <div class="val">8:00 PM</div>
+                <div class="chev">›</div>
+              </div>
+              <div class="learn">Want a different time per habit? Learn more →</div>
+            </div>
+          </div>
+          <div class="row keepnew">
+            <div class="chip"><i data-lucide="volume-2"></i></div>
+            <div class="rl"><div class="rt">Completion sound</div><div class="rs">Chime</div></div>
+            <div class="tog on" style="margin-right:58px"><i></i></div>
+            <span class="mark">COLLAPSED</span>
+          </div>
+        </div>
+
+        <div class="seclabel">Habits</div>
+        <div class="card">
+          <div class="row">
+            <div class="chip"><i data-lucide="arrow-up-down"></i></div>
+            <div class="rl"><div class="rt">Sort order</div><div class="rs">How habits are ordered</div></div>
+            <div class="val">Manual</div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="book-open"></i></div>
+            <div class="rl"><div class="rt">Archived habits</div><div class="rs">View and restore hidden habits</div></div>
+            <span class="badge">3</span>
+            <div class="chev">›</div>
+          </div>
+          <div class="row">
+            <div class="chip"><i data-lucide="download"></i></div>
+            <div class="rl"><div class="rt">Export my data</div><div class="rs">Download habits as CSV or JSON</div></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+
+        <div class="prem">
+          <div class="chip"><i data-lucide="crown"></i></div>
+          <div class="rl"><div class="rt">Chain Day Premium</div><div class="rs">7-day trial, then $4.99/mo</div></div>
+          <div class="up">Upgrade</div>
+        </div>
+
+        <div class="seclabel">Support</div>
+        <div class="card">
+          <div class="row keepnew">
+            <div class="chip mute"><i data-lucide="heart"></i></div>
+            <div class="rl">
+              <div class="rt">Love Chain Day?</div>
+              <div class="rs">Rate it or share with a friend</div>
+            </div>
+            <div class="chev" style="margin-right:58px">›</div>
+            <span class="mark">MERGED</span>
+          </div>
+          <div class="row">
+            <div class="chip mute"><i data-lucide="message-square"></i></div>
+            <div class="rl"><div class="rt">Send feedback</div></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+
+        <div class="foot moved" style="padding:8px 0;margin:16px 16px 0;border-radius:10px">Privacy · Terms · <b style="color:#2D2A26">What's new</b> · v2.4.1 (45)</div>
+      </div>
+    </div>
+
+    <!-- ══════════ WHY ══════════ -->
+    <div class="why">
+      <div class="wcard">
+        <div class="wh"><span class="num">1</span> Keep the name. Show the value.</div>
+        <div class="wb">“Daily reminder” would scan faster and <em>lie</em>. This is still a streak-slip nudge. The row keeps <em>Streak reminders</em>; the subtitle stops selling (“Nudge before…”) and reports state: <em>On · 8:00 PM</em> / <em>Off</em>. Time still edits in the inset — same as today.</div>
+      </div>
+      <div class="wcard">
+        <div class="wh"><span class="num">2</span> Collapse completion sound</div>
+        <div class="wb">Sort already hides behind a tap. Sound is the last always-open picker on the page — three pills for a preference you set once. After: value on the row (<em>Chime</em>), picker expands on tap. Same tones. No rename to “Sounds &amp; haptics” — haptics aren’t a setting here.</div>
+      </div>
+      <div class="wcard">
+        <div class="wh"><span class="num">3</span> Support: 4 rows → 2</div>
+        <div class="wb">Rate and Share are one intent (both open a system sheet). Merge into <em>Love Chain Day?</em> → action sheet (Rate / Share). <em>What’s new</em> is a changelog, not a setting — it moves to the footer with Version. Feedback stays; it’s the only Support job that belongs here.</div>
+      </div>
+      <div class="wcard warn">
+        <div class="wh"><span class="num">4</span> Premium stays. It has to work.</div>
+        <div class="wb">The dark banner is the conversion surface. The reminders-inset crown is already gone (quiet text link ships today). The actual bug: <em>onPremiumUpsell is often unwired</em>, so Upgrade can no-op. This pass wires it. No new gating, no new rows from schema leftovers.</div>
+      </div>
+      <div class="wcard soft">
+        <div class="wh"><span class="num">5</span> Explicitly not this pass</div>
+        <div class="wb">Look &amp; Feel, hero, Calendar look, Account, export placement, app lock, reduce motion, text size, search, accordions-as-IA. Dead search/accordion <em>code</em> can be deleted as hygiene without a visual change.</div>
+      </div>
+      <div class="totals">
+        <b>Net:</b> Support 4 → 2. Sound picker off the resting scroll. Reminder row tells the truth.<br>
+        Look &amp; Feel and Habits are already the right size — leave them.<br>
+        <b>Zero features lost.</b> Rate, share, changelog, tones, reminder time all stay reachable.
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>

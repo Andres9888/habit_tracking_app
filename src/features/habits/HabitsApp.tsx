@@ -154,6 +154,7 @@ function HabitsAppContent() {
             onConfirmDeleteConfirm={handleConfirmBatchDelete}
             onPaywallClose={handlers.handlePaywallClose}
             onPaywallSuccess={handlers.handlePaywallSuccess}
+            onPremiumUpsell={handlers.handleUpgradeIntent}
           />
         ) : null}
       </View>

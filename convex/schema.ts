@@ -422,8 +422,13 @@ const applicationTables = {
     completed: v.boolean(),
     date: v.string(),
     habitId: v.id('habits'),
+    // Legacy completion intensity from the removed minimal-check-in experiment.
+    kind: v.optional(v.union(v.literal('full'), v.literal('minimal'))),
     // Legacy minutes completion value from removed minutes-goal feature.
     minutes: v.optional(v.number()),
+    // Day notes now live in habitDayNotes; leftover tracking.note must stay
+    // optional so existing rows still pass schema validation.
+    note: v.optional(v.string()),
     userId: v.optional(v.string()),
   })
     .index('by_habit_and_date', ['habitId', 'date'])

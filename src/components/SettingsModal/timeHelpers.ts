@@ -29,3 +29,10 @@ export function formatDisplayTime(time: string): string {
   const hour12 = hours % 12 || 12;
   return `${hour12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
 }
+
+export function formatStreakReminderSubtitle(
+  enabled: boolean,
+  time: string
+): string {
+  return enabled ? `On · ${formatDisplayTime(time)}` : 'Off';
+}
