@@ -82,6 +82,7 @@ export function HistoryCalendarSection({
 
   const { isBest, rate } = useSettledMonthRate({
     completedDates: doneDates,
+    createdAt: habit.createdAt,
     daysOfWeek: habit.daysOfWeek,
     month,
     today,
@@ -110,9 +111,7 @@ export function HistoryCalendarSection({
         palette={palette}
         rate={rate}
         schedule={schedule}
-        onOpenDay={(date) => {
-          if (date <= today) onOpenDay(date);
-        }}
+        onOpenDay={(date) => (date <= today ? onOpenDay(date) : undefined)}
       />
       <FlowSectionLabel>Daily record</FlowSectionLabel>
       <HistoryEntryList entries={entries} onOpenDay={onOpenDay} />
