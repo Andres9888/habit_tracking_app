@@ -7,7 +7,6 @@ export { DetailBandHeader } from './DetailBandHeader';
 export { getHabitDisplayName } from './DetailHero.utils';
 export { DetailHeroBanner } from './DetailHeroBanner';
 export { DetailLoadingState } from './DetailLoadingState';
-export { HabitDetailHistory } from './HabitDetailHistory';
 export { HabitNoteCard } from './HabitNoteCard';
 export { HeaderButton } from './HeaderButton';
 export { MonthHeatmapCard } from './MonthHeatmapCard';

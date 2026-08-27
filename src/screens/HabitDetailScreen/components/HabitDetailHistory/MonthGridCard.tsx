@@ -1,99 +1,97 @@
 /**
- * MonthGridCard — one completed month at a glance: serif month name, its
- * completion rate, and a Monday-first grid of plain cells.
+ * MonthGridCard — one month of squares: serif month name, an optional
+ * completion rate, and a Monday-first grid you can navigate and correct.
  *
- * The design pairs this with the current month; here it shows the last COMPLETE
- * month only, because the interactive calendar below already renders the current
- * one and two grids of the same month on one screen reads as a bug.
+ * This is the only calendar on History. Cells carry their day number, because a
+ * coloured square says a day was missed and a numbered one says WHICH day —
+ * which is what you need in order to open it and put it right.
  */
-import { Text, View } from 'react-native';
-import { borderRadius } from '../../../../theme/spacing';
-import { fontFamilies, fontWeights } from '../../../../theme/typography';
+import type { ReactNode } from 'react';
+import { format } from 'date-fns';
+import { View } from 'react-native';
+import type { HabitDayContext } from '../../../../features/habits/habitDayState';
+import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import type { MonthRate } from '../../insights';
 import type { InsightPalette } from '../../insightPalette';
-import { buildMonthCells, monthCellColor } from './monthCells';
 import { InsightCard } from '../InsightCard';
+import { buildMonthCells } from './monthCells';
+import { MonthGridCardHeader } from './MonthGridCardHeader';
+import { MonthGridCell } from './MonthGridCell';
+import { MonthGridHeader } from './MonthGridHeader';
 
 interface MonthGridCardProps {
   completedDates: Set<string>;
-  daysOfWeek?: number[];
-  isBest: boolean;
+  /** Rendered inside the card under the grid — History passes the legend. */
+  footer?: ReactNode;
+  isBest?: boolean;
+  /** Any day inside the month to render. */
+  month: Date;
+  notes?: Record<string, string>;
   palette: InsightPalette;
-  rate: MonthRate;
-  year: number;
+  /** Omitted for months with no settled rate — no rate is fabricated. */
+  rate?: MonthRate;
+  schedule: HabitDayContext;
+  onOpenDay?: (date: string) => void;
 }
 
 export function MonthGridCard({
   completedDates,
-  daysOfWeek,
-  isBest,
+  footer,
+  isBest = false,
+  month,
+  notes,
   palette,
   rate,
-  year,
+  schedule,
+  onOpenDay,
 }: MonthGridCardProps) {
+  const today = getLocalDateString();
+  const label = format(month, 'MMMM');
   const cells = buildMonthCells({
     completedDates,
-    daysOfWeek,
-    month: rate.month,
-    year,
+    month: month.getMonth(),
+    notes,
+    schedule,
+    today,
+    year: month.getFullYear(),
   });
 
   return (
     <InsightCard palette={palette}>
+      <MonthGridCardHeader
+        isBest={isBest}
+        label={label}
+        palette={palette}
+        rate={rate}
+      />
+      <MonthGridHeader palette={palette} />
       <View
-        style={{
-          alignItems: 'baseline',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Text
-          style={{
-            color: palette.textPrimary,
-            fontFamily: fontFamilies.primary.display,
-            fontSize: 18,
-            fontWeight: fontWeights.semibold,
-          }}
-        >
-          {rate.label}
-        </Text>
-        <Text
-          style={{
-            color: palette.ctaGreen,
-            fontSize: 12,
-            fontWeight: fontWeights.semibold,
-          }}
-        >
-          {rate.ratePct}%{isBest ? ' · best month ★' : ''}
-        </Text>
-      </View>
-      <View
-        accessibilityLabel={`${rate.label}: ${rate.done} of ${rate.scheduled} days`}
+        accessibilityLabel={
+          rate
+            ? `${label}: ${rate.done} of ${rate.scheduled} days`
+            : `${label} calendar`
+        }
         style={{
           flexDirection: 'row',
           flexWrap: 'wrap',
           marginHorizontal: -3,
-          marginTop: 9,
+          marginTop: 6,
         }}
       >
         {cells.map((cell, index) => (
-          <View
+          <MonthGridCell
             key={cell?.date ?? `blank-${index}`}
-            // Exactly seven per row: 1/7 of the width, with padding as the gap.
-            style={{ flexBasis: '14.2857%', padding: 3 }}
-          >
-            <View
-              style={{
-                aspectRatio: 1,
-                backgroundColor: cell
-                  ? monthCellColor(cell.state, palette)
-                  : 'transparent',
-                borderRadius: borderRadius.small,
-              }}
-            />
-          </View>
+            cell={cell}
+            palette={palette}
+            onPress={
+              cell && cell.date <= today && cell.state !== 'before-creation'
+                ? onOpenDay
+                : undefined
+            }
+          />
         ))}
       </View>
+      {footer}
     </InsightCard>
   );
 }

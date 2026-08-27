@@ -1,17 +1,18 @@
-import { useEffect, useMemo, useState } from 'react';
-import { addMonths, startOfMonth } from 'date-fns';
-import { MonthNavigation } from '../../../../components/BinaryHeatmap/MonthlyCalendarGrid';
+/**
+ * HabitHistoryScreen — the Habit Detail Prototype's History frame, then the
+ * interactive calendar underneath it.
+ *
+ * The frame — stats rail → runs → year grid — answers "what happened?". The
+ * month below it is the only place in the app a past day can be corrected, so
+ * it stays, labelled, rather than being pushed behind a disclosure — and there
+ * is exactly one of it, in squares, matching the footnote.
+ */
 import type { Habit } from '../../../../features/habits/types';
-import { triggerHaptic } from '../../../../utils/haptics';
-import { getLocalDateString } from '../../../../utils/getLocalDateString';
-import { parseLocalDate, useHabitInsights } from '../../insights';
+import { useHabitInsights } from '../../insights';
 import { useInsightPalette } from '../../insightPalette';
-import { CalendarTabContent } from '../CalendarTabContent';
 import { FlowPage } from '../FlowPage';
-import { FlowSectionLabel } from '../FlowSectionLabel';
-import { buildHistoryEntries } from './historyEntries';
-import { HistoryEntryList } from './HistoryEntryList';
-import { HistoryLegend } from './HistoryLegend';
+import { HistoryFrame } from '../HabitDetailHistory/HistoryFrame';
+import { HistoryCalendarSection } from './HistoryCalendarSection';
 
 interface HabitHistoryScreenProps {
   focusDate?: string;
@@ -35,49 +36,24 @@ export function HabitHistoryScreen({
     habitId: habit._id,
     reminderTime: habit.reminderTime,
   });
-  const [month, setMonth] = useState(() =>
-    startOfMonth(focusDate ? parseLocalDate(focusDate) : new Date())
-  );
-
-  useEffect(() => {
-    if (focusDate) setMonth(startOfMonth(parseLocalDate(focusDate)));
-  }, [focusDate]);
-
-  const today = getLocalDateString();
-  const entries = useMemo(
-    () => buildHistoryEntries(month, insights.doneDates, today, notes),
-    [month, insights.doneDates, notes, today]
-  );
-
-  const shiftMonth = (delta: number) => {
-    void triggerHaptic('selection');
-    setMonth((current) => startOfMonth(addMonths(current, delta)));
-  };
 
   return (
-    <FlowPage footnote='Tap any past date to see or correct that day.'>
-      <MonthNavigation
-        standalone
-        currentMonth={month}
-        onNextMonth={() => shiftMonth(1)}
-        onPreviousMonth={() => shiftMonth(-1)}
-      />
-      <CalendarTabContent
-        hideGridNavigation
-        showYearSection={false}
-        completedDates={insights.doneDates}
-        footer={<HistoryLegend />}
+    <FlowPage footnote='Every square is a day you logged or didn’t. Nothing is estimated — tap any past date to see or correct it.'>
+      <HistoryFrame
+        doneDates={insights.doneDates}
         habit={habit}
         habitColor={palette.green}
-        month={month}
-        pendingToggleDate={pendingToggleDate}
-        onDayPress={(date) => {
-          if (date <= today) onOpenDay(date);
-        }}
-        onMonthChange={setMonth}
+        palette={palette}
+        yearCompletions={insights.yearCompletions}
+        yearRatePct={insights.yearRatePct}
       />
-      <FlowSectionLabel>Logged entries</FlowSectionLabel>
-      <HistoryEntryList entries={entries} onOpenDay={onOpenDay} />
+      <HistoryCalendarSection
+        focusDate={focusDate}
+        habit={habit}
+        notes={notes}
+        pendingToggleDate={pendingToggleDate}
+        onOpenDay={onOpenDay}
+      />
     </FlowPage>
   );
 }
