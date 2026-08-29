@@ -69,26 +69,21 @@ export function useHabitDayToggleHandlers({
   onPress,
   reduceMotion,
 }: Params) {
-  const pressIdRef = useRef(0);
-  const committedPressRef = useRef<number | null>(null);
+  const pressInCountRef = useRef(0);
+  const pressOutCountRef = useRef(0);
+  const committedPressesRef = useRef(new Set<number>());
   const handlePressIn = useCallback(() => {
-    pressIdRef.current += 1;
-    committedPressRef.current = null;
+    pressInCountRef.current += 1;
     runPressIn(buttonScale, reduceMotion);
   }, [buttonScale, reduceMotion]);
   const handlePressOut = useCallback(() => {
-    const pressId = pressIdRef.current;
-    queueMicrotask(() => {
-      if (
-        pressIdRef.current === pressId &&
-        committedPressRef.current !== pressId
-      ) {
-        runPressCancel(buttonScale, reduceMotion);
-      }
-    });
+    const pressId = ++pressOutCountRef.current;
+    if (committedPressesRef.current.delete(pressId)) return;
+    if (pressInCountRef.current > pressId) return;
+    runPressCancel(buttonScale, reduceMotion);
   }, [buttonScale, reduceMotion]);
   const handlePress = useCallback(() => {
-    committedPressRef.current = pressIdRef.current;
+    committedPressesRef.current.add(pressInCountRef.current);
     runPressPop(buttonScale, reduceMotion);
     onPress();
   }, [buttonScale, onPress, reduceMotion]);

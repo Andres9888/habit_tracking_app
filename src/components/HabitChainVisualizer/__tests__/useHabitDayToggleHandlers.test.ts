@@ -9,12 +9,11 @@ import {
 } from '../useHabitDayToggleHandlers';
 
 const makeScale = () => ({ value: 1 }) as SharedValue<number>;
-const flushMicrotask = () => act(async () => Promise.resolve());
 
 describe('useHabitDayToggleHandlers', () => {
   afterEach(() => jest.restoreAllMocks());
 
-  it('gives a committed press one spring choreography', async () => {
+  it('gives a committed press one spring choreography', () => {
     const spring = jest.spyOn(Reanimated, 'withSpring');
     const sequence = jest.spyOn(Reanimated, 'withSequence');
     const timing = jest.spyOn(Reanimated, 'withTiming');
@@ -25,10 +24,9 @@ describe('useHabitDayToggleHandlers', () => {
     );
     act(() => {
       result.current.handlePressIn();
-      result.current.handlePressOut();
       result.current.handlePress();
+      result.current.handlePressOut();
     });
-    await flushMicrotask();
 
     expect(sequence).toHaveBeenCalledTimes(1);
     expect(timing).toHaveBeenCalledWith(
@@ -41,7 +39,7 @@ describe('useHabitDayToggleHandlers', () => {
     expect(scale.value).toBe(DAY_TOGGLE_SCALE.rest);
   });
 
-  it('springs a cancelled press back without a pop', async () => {
+  it('springs a cancelled press back without a pop', () => {
     const spring = jest.spyOn(Reanimated, 'withSpring');
     const sequence = jest.spyOn(Reanimated, 'withSequence');
     const scale = makeScale();
@@ -52,7 +50,6 @@ describe('useHabitDayToggleHandlers', () => {
       result.current.handlePressIn();
       result.current.handlePressOut();
     });
-    await flushMicrotask();
 
     expect(sequence).not.toHaveBeenCalled();
     expect(spring).toHaveBeenCalledWith(DAY_TOGGLE_SCALE.rest, springs.responsive);

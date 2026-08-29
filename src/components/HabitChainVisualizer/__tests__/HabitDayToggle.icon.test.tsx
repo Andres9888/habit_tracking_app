@@ -1,6 +1,7 @@
 import React from 'react';
 import { act, render } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
+import * as Reanimated from 'react-native-reanimated';
 
 import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { HabitDayToggle } from '../HabitDayToggle';
@@ -11,6 +12,7 @@ const mockReduceMotion = jest.mocked(useReduceMotion);
 
 describe('HabitDayToggle completion icon', () => {
   beforeEach(() => mockReduceMotion.mockReturnValue(false));
+  afterEach(() => jest.restoreAllMocks());
 
   it.each([
     ['chain', 'lucide-icon-Link2'],
@@ -37,10 +39,22 @@ describe('HabitDayToggle completion icon', () => {
     expect(style?.transform).toBeUndefined();
   });
 
-  it('keeps the icon through exit and unmounts after the timing callback', () => {
+  it('keeps the icon through exit and unmounts after the timing callback', async () => {
+    let exitFinished: ((finished?: boolean) => void) | undefined;
+    jest.spyOn(Reanimated, 'withTiming').mockImplementation(
+      (value, _config, callback) => {
+        exitFinished = callback;
+        return value;
+      }
+    );
     const view = render(<HabitDayToggle {...baseProps} completed />);
     expect(view.getAllByTestId('lucide-icon-Link2')).toHaveLength(1);
     act(() => view.rerender(<HabitDayToggle {...baseProps} completed={false} />));
+    expect(view.getAllByTestId('lucide-icon-Link2')).toHaveLength(1);
+    await act(async () => {
+      await Promise.resolve();
+      exitFinished?.(true);
+    });
     expect(view.queryAllByTestId('lucide-icon-Link2')).toHaveLength(0);
   });
 });

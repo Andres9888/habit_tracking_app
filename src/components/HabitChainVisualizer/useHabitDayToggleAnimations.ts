@@ -24,11 +24,15 @@ export function useHabitDayToggleAnimations({
   const breathingScale = useSharedValue(1);
   const prevCompletedRef = useRef<boolean | null>(null);
   const prevDateRef = useRef<string | null>(null);
+  const completedRef = useRef(completed);
   const [completionIconMounted, setCompletionIconMounted] = useState(completed);
-  const hideCompletionIcon = useCallback(
-    () => setCompletionIconMounted(false),
-    []
-  );
+  const hideCompletionIcon = useCallback(() => {
+    if (!completedRef.current) setCompletionIconMounted(false);
+  }, []);
+
+  useLayoutEffect(() => {
+    completedRef.current = completed;
+  }, [completed]);
 
   useLayoutEffect(() => {
     if (prevDateRef.current === dateString) return;
@@ -73,7 +77,10 @@ export function useHabitDayToggleAnimations({
     if (!reduceMotion) return;
     cancelAnimation(buttonScale);
     buttonScale.value = 1;
-  }, [buttonScale, reduceMotion]);
+    cancelAnimation(completion);
+    completion.value = completedRef.current ? 1 : 0;
+    if (!completedRef.current) setCompletionIconMounted(false);
+  }, [buttonScale, completion, reduceMotion]);
 
   const cellScaleStyle = useAnimatedStyle(() => ({
     transform: [{ scale: reduceMotion ? 1 : buttonScale.value }],
