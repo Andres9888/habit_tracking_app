@@ -1,110 +1,103 @@
 import React, { memo } from 'react';
-import { Animated, Pressable } from 'react-native';
-import Reanimated from 'react-native-reanimated';
-import clsx from 'clsx';
-import { useAnimatedTier } from '@/hooks/useAnimatedTier';
+import { Pressable, StyleSheet, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 
+import { useAnimatedTier } from '@/hooks/useAnimatedTier';
+import { HabitDayToggleContent } from './HabitDayToggleContent';
+import {
+  getCellContainerStyle,
+  getFrameStyle,
+  getPressableStyle,
+  getStaticFrameColors,
+  getTodayGlowStyle,
+} from './habitDayToggleStyles';
+import { getMaterialTier } from './materialTier';
 import type { HabitDayToggleProps } from './types';
 import { useHabitDayToggleAnimations } from './useHabitDayToggleAnimations';
 import { useHabitDayToggleHandlers } from './useHabitDayToggleHandlers';
 import { useHabitDayToggleTierStyles } from './useHabitDayToggleTierStyles';
-import {
-  getTodayGlowStyle,
-  getBackgroundColor,
-  getBorderColor,
-  getOuterFrame,
-  getPressableStyle,
-  MISSED_BG,
-  MISSED_BORDER,
-} from './habitDayToggleStyles';
-import { HabitDayToggleContent } from './HabitDayToggleContent';
-import { getMaterialTier } from './materialTier';
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const HabitDayToggleComponent: React.FC<HabitDayToggleProps> = ({
   accentColor,
   accessibilityHint,
   accessibilityLabel,
-  completionIcon,
   completed,
-  strengthPercent,
+  completionIcon,
   dateString,
   disabled,
   isToday,
   missed = false,
   onPress,
   shape,
+  strengthPercent,
 }) => {
-  const { buttonScale, combinedScale, completion, flashActive, forgeFlash } =
-    useHabitDayToggleAnimations({ completed, isToday, dateString });
-  const { handlePressIn, handlePressOut, handlePress } =
-    useHabitDayToggleHandlers({ buttonScale, completed, onPress });
-
-  const strength = strengthPercent ?? 0;
-  const tier = getMaterialTier(strength);
-  const tierAnim = useAnimatedTier(strength);
-  const borderRadius = shape === 'circle' ? 22 : 10;
-  const tierBackground = getBackgroundColor(completed, accentColor, tier);
-  const tierBorder = getBorderColor(completed, isToday, accentColor, tier);
-  const staticBackground = missed ? MISSED_BG : tierBackground;
-  const staticBorder = missed ? MISSED_BORDER : tierBorder;
-
-  const { cellStyle, shadowStyle } = useHabitDayToggleTierStyles({
-    tierAnim,
-    accentColor,
-    completed,
-    missed,
-    isToday,
-    showCompletedShadow: completed && !missed,
-    staticBackground,
-    staticBorder,
+  const animation = useHabitDayToggleAnimations({ completed, dateString, isToday });
+  const handlers = useHabitDayToggleHandlers({
+    buttonScale: animation.buttonScale,
+    onPress,
+    reduceMotion: animation.reduceMotion,
   });
-
-  const outerFrame = getOuterFrame({
-    borderRadius,
-    completed,
+  const tier = getMaterialTier(strengthPercent ?? 0);
+  const tierAnim = useAnimatedTier(strengthPercent ?? 0);
+  const borderRadius = shape === 'circle' ? 22 : 10;
+  const frameColors = getStaticFrameColors(isToday, missed);
+  const { cellStyle, shadowStyle } = useHabitDayToggleTierStyles({
+    accentColor,
+    completion: animation.completion,
+    isToday,
     missed,
-    staticBackground,
-    staticBorder,
-    tierName: tier.name,
+    showCompletedShadow: completed && !missed,
+    staticBackground: frameColors.background,
+    staticBorder: frameColors.border,
+    tierAnim,
   });
 
   return (
-    <Animated.View
-      style={isToday ? getTodayGlowStyle(borderRadius) : undefined}
-    >
-      {/* cellStyle stays attached in every state: detaching an animated style
-          leaves its natively-set props stale, so the worklet owns the reset. */}
-      <Reanimated.View style={[outerFrame, cellStyle, shadowStyle]}>
-        <AnimatedPressable
+    <View style={isToday ? getTodayGlowStyle(borderRadius) : undefined}>
+      <Animated.View
+        style={[
+          getCellContainerStyle(borderRadius),
+          animation.cellScaleStyle,
+          shadowStyle,
+        ]}
+      >
+        <Animated.View
+          pointerEvents='none'
+          style={[
+            StyleSheet.absoluteFill,
+            getFrameStyle({
+              backgroundColor: frameColors.background,
+              borderColor: frameColors.border,
+              borderRadius,
+              missed,
+            }),
+            cellStyle,
+            animation.breathingStyle,
+          ]}
+        />
+        <Pressable
           accessibilityHint={accessibilityHint}
           accessibilityLabel={accessibilityLabel}
           accessibilityRole='button'
           accessibilityState={{ disabled }}
-          className={clsx('items-center justify-center')}
+          className='items-center justify-center'
           disabled={disabled}
-          style={getPressableStyle(borderRadius, disabled, combinedScale)}
-          onPress={handlePress}
-          onPressIn={handlePressIn}
-          onPressOut={handlePressOut}
+          style={getPressableStyle(borderRadius, disabled)}
+          onPress={handlers.handlePress}
+          onPressIn={handlers.handlePressIn}
+          onPressOut={handlers.handlePressOut}
         >
           <HabitDayToggleContent
-            completed={completed}
-            missed={missed}
-            flashActive={flashActive}
-            forgeFlash={forgeFlash}
-            completion={completion}
+            completion={animation.completion}
             completionIcon={completionIcon}
+            completionIconMounted={animation.completionIconMounted}
             iconColor={tier.iconColor}
+            missed={missed}
           />
-        </AnimatedPressable>
-      </Reanimated.View>
-    </Animated.View>
+        </Pressable>
+      </Animated.View>
+    </View>
   );
 };
 
-// Each cell runs a Reanimated tier interpolation plus two animated styles, so
-// re-rendering all seven on an unrelated toggle is the single most expensive
-// avoidable cost in the chain.
 export const HabitDayToggle = memo(HabitDayToggleComponent);

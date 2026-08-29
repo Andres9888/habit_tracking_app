@@ -322,7 +322,10 @@ jest.mock('react-native-reanimated', () => {
       const style = cb();
       return style || {};
     },
-    withTiming: (value) => value,
+    withTiming: (value, _config, callback) => {
+      callback?.(true);
+      return value;
+    },
     withSpring: (value) => value,
     withDelay: (delay, value) => value,
     withRepeat: (value) => value,
@@ -479,6 +482,12 @@ jest.mock('react-native-reanimated', () => {
     },
   };
 });
+
+// Reanimated 4 schedules UI-thread completion callbacks through Worklets.
+// Execute those callbacks synchronously in Jest, matching the animation mock.
+jest.mock('react-native-worklets', () => ({
+  scheduleOnRN: (fn, ...args) => fn(...args),
+}));
 
 jest.mock(
   'reanimated-color-picker',

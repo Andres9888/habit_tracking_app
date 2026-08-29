@@ -1,105 +1,104 @@
 import {
   interpolate,
   interpolateColor,
+  type SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
-import {
-  type AnimatedTier,
-  resolveTierColor,
-  resolveTierShadowColor,
-} from '@/hooks/useAnimatedTier';
+import { type AnimatedTier, resolveTierColor, resolveTierShadowColor } from '@/hooks/useAnimatedTier';
 import { LEGENDARY_CELL_BACKGROUND } from './materialTier';
 
 const TODAY_GLOW_COLOR = '#FBBF24';
+const RGB_OPTIONS = { gamma: 1 } as const;
 
 interface Params {
-  tierAnim: AnimatedTier;
   accentColor: string;
-  completed: boolean;
-  missed: boolean;
+  completion: SharedValue<number>;
   isToday: boolean;
+  missed: boolean;
   showCompletedShadow: boolean;
   staticBackground: string;
   staticBorder: string;
+  tierAnim: AnimatedTier;
 }
 
+const tierBackground = (tier: AnimatedTier['from'], accentColor: string) => {
+  'worklet';
+  return tier.name === 'legendary'
+    ? LEGENDARY_CELL_BACKGROUND
+    : resolveTierColor(tier, accentColor);
+};
+
 export function useHabitDayToggleTierStyles({
-  tierAnim,
   accentColor,
-  completed,
-  missed,
+  completion,
   isToday,
+  missed,
   showCompletedShadow,
   staticBackground,
   staticBorder,
+  tierAnim,
 }: Params) {
   const cellStyle = useAnimatedStyle(() => {
-    if (missed || !completed) {
-      return {
-        backgroundColor: staticBackground,
-        borderColor: staticBorder,
-      };
+    if (missed) {
+      return { backgroundColor: staticBackground, borderColor: staticBorder };
     }
-    const fromBg =
-      tierAnim.from.name === 'legendary'
-        ? LEGENDARY_CELL_BACKGROUND
-        : resolveTierColor(tierAnim.from, accentColor);
-    const toBg =
-      tierAnim.to.name === 'legendary'
-        ? LEGENDARY_CELL_BACKGROUND
-        : resolveTierColor(tierAnim.to, accentColor);
-    const fromBorder = isToday
-      ? staticBorder
-      : resolveTierColor(tierAnim.from, accentColor);
-    const toBorder = isToday
-      ? staticBorder
-      : resolveTierColor(tierAnim.to, accentColor);
+    const completedBackground = interpolateColor(
+      tierAnim.progress.value,
+      [0, 1],
+      [
+        tierBackground(tierAnim.from, accentColor),
+        tierBackground(tierAnim.to, accentColor),
+      ],
+      'RGB',
+      RGB_OPTIONS
+    );
+    const completedBorder = interpolateColor(
+      tierAnim.progress.value,
+      [0, 1],
+      [
+        resolveTierColor(tierAnim.from, accentColor),
+        resolveTierColor(tierAnim.to, accentColor),
+      ],
+      'RGB',
+      RGB_OPTIONS
+    );
     return {
       backgroundColor: interpolateColor(
-        tierAnim.progress.value,
+        completion.value,
         [0, 1],
-        [fromBg, toBg]
+        [staticBackground, completedBackground],
+        'RGB',
+        RGB_OPTIONS
       ),
       borderColor: interpolateColor(
-        tierAnim.progress.value,
+        completion.value,
         [0, 1],
-        [fromBorder, toBorder]
+        [staticBorder, completedBorder],
+        'RGB',
+        RGB_OPTIONS
       ),
     };
   });
 
   const shadowStyle = useAnimatedStyle(() => {
-    const fromShadow = isToday
+    const from = isToday
       ? TODAY_GLOW_COLOR
       : resolveTierShadowColor(tierAnim.from, accentColor);
-    const toShadow = isToday
+    const to = isToday
       ? TODAY_GLOW_COLOR
       : resolveTierShadowColor(tierAnim.to, accentColor);
     return {
       elevation: showCompletedShadow ? 2 : 0,
-      shadowColor: interpolateColor(
-        tierAnim.progress.value,
-        [0, 1],
-        [fromShadow, toShadow]
-      ),
+      shadowColor: interpolateColor(tierAnim.progress.value, [0, 1], [from, to]),
       shadowOffset: { width: 0, height: 0 },
       shadowOpacity: showCompletedShadow
-        ? interpolate(
-            tierAnim.progress.value,
-            [0, 1],
-            [tierAnim.from.cellShadowOpacity, tierAnim.to.cellShadowOpacity]
-          )
+        ? interpolate(tierAnim.progress.value, [0, 1], [tierAnim.from.cellShadowOpacity, tierAnim.to.cellShadowOpacity])
         : 0,
       shadowRadius: showCompletedShadow
-        ? interpolate(
-            tierAnim.progress.value,
-            [0, 1],
-            [tierAnim.from.cellShadowRadius, tierAnim.to.cellShadowRadius]
-          )
+        ? interpolate(tierAnim.progress.value, [0, 1], [tierAnim.from.cellShadowRadius, tierAnim.to.cellShadowRadius])
         : 0,
     };
   });
-
   return { cellStyle, shadowStyle };
 }

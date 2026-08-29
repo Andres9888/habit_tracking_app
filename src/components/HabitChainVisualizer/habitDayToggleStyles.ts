@@ -1,8 +1,6 @@
-import type { Animated } from 'react-native';
-import type { MaterialTier } from './materialTier';
-import { LEGENDARY_CELL_BACKGROUND } from './materialTier';
-
-export const GOLDEN_GLOW_COLOR = '#FBBF24'; // amber-400
+export const GOLDEN_GLOW_COLOR = '#FBBF24';
+export const INCOMPLETE_BACKGROUND = '#f5f5f5';
+export const INCOMPLETE_BORDER = '#78716c';
 export const MISSED_BG = '#FEF2F2';
 export const MISSED_BORDER = '#DC2626';
 
@@ -15,68 +13,45 @@ export const getTodayGlowStyle = (borderRadius: number) => ({
   shadowRadius: 8,
 });
 
-export const getBackgroundColor = (
-  completed: boolean,
-  accentColor: string,
-  tier: MaterialTier
-) => {
-  if (completed) {
-    if (tier.name === 'legendary') return LEGENDARY_CELL_BACKGROUND;
-    return tier.useAccent ? accentColor : tier.tierColor;
-  }
-  return '#f5f5f5';
-};
+export const getStaticFrameColors = (isToday: boolean, missed: boolean) => ({
+  background: missed ? MISSED_BG : INCOMPLETE_BACKGROUND,
+  border: missed
+    ? MISSED_BORDER
+    : isToday
+      ? GOLDEN_GLOW_COLOR
+      : INCOMPLETE_BORDER,
+});
 
-export const getBorderColor = (
-  completed: boolean,
-  isToday: boolean,
-  accentColor: string,
-  tier: MaterialTier
-) => {
-  if (completed) {
-    if (tier.name === 'legendary') return tier.tierColor;
-    return tier.useAccent ? accentColor : tier.tierColor;
-  }
-  if (isToday) return GOLDEN_GLOW_COLOR;
-  return '#78716c';
-};
-
-export function getOuterFrame({
+export const getCellContainerStyle = (borderRadius: number) => ({
   borderRadius,
-  completed,
-  missed,
-  staticBackground,
-  staticBorder,
-  tierName,
-}: {
-  borderRadius: number;
-  completed: boolean;
-  missed: boolean;
-  staticBackground: string;
-  staticBorder: string;
-  tierName: string;
-}) {
-  return {
-    backgroundColor: staticBackground,
-    borderRadius,
-    borderColor: staticBorder,
-    borderStyle: missed ? ('dashed' as const) : ('solid' as const),
-    borderWidth: missed || !completed || tierName === 'legendary' ? 2 : 0,
-    height: 44,
-    width: 44,
-  };
-}
+  height: 44,
+  width: 44,
+});
 
-export function getPressableStyle(
+export const getFrameStyle = ({
+  backgroundColor,
+  borderColor,
+  borderRadius,
+  missed,
+}: {
+  backgroundColor: string;
+  borderColor: string;
+  borderRadius: number;
+  missed: boolean;
+}) => ({
+  backgroundColor,
+  borderColor,
+  borderRadius,
+  borderStyle: missed ? ('dashed' as const) : ('solid' as const),
+  borderWidth: 2,
+});
+
+export const getPressableStyle = (
   borderRadius: number,
-  disabled: boolean,
-  scale: Animated.AnimatedInterpolation<number> | Animated.Value
-) {
-  return {
-    borderRadius,
-    flex: 1,
-    opacity: disabled ? 0.5 : 1,
-    overflow: 'hidden' as const,
-    transform: [{ scale }],
-  };
-}
+  disabled: boolean
+) => ({
+  borderRadius,
+  flex: 1,
+  opacity: disabled ? 0.5 : 1,
+  overflow: 'hidden' as const,
+});

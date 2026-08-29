@@ -1,57 +1,96 @@
-import { useCallback } from 'react';
-import { Animated } from 'react-native';
+import { useCallback, useRef } from 'react';
+import {
+  cancelAnimation,
+  Easing,
+  type SharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 
-interface UseHabitDayToggleHandlersParams {
-  buttonScale: Animated.Value;
-  completed: boolean;
+import { durations, springs } from '@/theme/animations';
+
+export const DAY_TOGGLE_SCALE = {
+  pressed: 0.94,
+  releasePeak: 1.06,
+  rest: 1,
+} as const;
+
+interface Params {
+  buttonScale: SharedValue<number>;
   onPress: () => void;
+  reduceMotion: boolean;
 }
 
-export const useHabitDayToggleHandlers = ({
+const pressEasing = Easing.out(Easing.cubic);
+
+function stopAt(buttonScale: SharedValue<number>, target: number) {
+  cancelAnimation(buttonScale);
+  buttonScale.value = target;
+}
+
+export function runPressIn(scale: SharedValue<number>, reduceMotion: boolean) {
+  cancelAnimation(scale);
+  scale.value = reduceMotion
+    ? DAY_TOGGLE_SCALE.rest
+    : withTiming(DAY_TOGGLE_SCALE.pressed, {
+        duration: durations.stagger,
+        easing: pressEasing,
+      });
+}
+
+export function runPressCancel(
+  scale: SharedValue<number>,
+  reduceMotion: boolean
+) {
+  cancelAnimation(scale);
+  scale.value = reduceMotion
+    ? DAY_TOGGLE_SCALE.rest
+    : withSpring(DAY_TOGGLE_SCALE.rest, springs.responsive);
+}
+
+export function runPressPop(scale: SharedValue<number>, reduceMotion: boolean) {
+  if (reduceMotion) {
+    stopAt(scale, DAY_TOGGLE_SCALE.rest);
+    return;
+  }
+  cancelAnimation(scale);
+  scale.value = withSequence(
+    withTiming(DAY_TOGGLE_SCALE.releasePeak, {
+      duration: durations.stagger,
+      easing: pressEasing,
+    }),
+    withSpring(DAY_TOGGLE_SCALE.rest, springs.responsive)
+  );
+}
+
+export function useHabitDayToggleHandlers({
   buttonScale,
-  completed,
   onPress,
-}: UseHabitDayToggleHandlersParams) => {
+  reduceMotion,
+}: Params) {
+  const pressIdRef = useRef(0);
+  const committedPressRef = useRef<number | null>(null);
   const handlePressIn = useCallback(() => {
-    Animated.spring(buttonScale, {
-      friction: 20,
-      tension: 300,
-      toValue: 0.95,
-      useNativeDriver: true,
-    }).start();
-  }, [buttonScale]);
-
+    pressIdRef.current += 1;
+    committedPressRef.current = null;
+    runPressIn(buttonScale, reduceMotion);
+  }, [buttonScale, reduceMotion]);
   const handlePressOut = useCallback(() => {
-    if (!completed) {
-      Animated.spring(buttonScale, {
-        friction: 20,
-        tension: 300,
-        toValue: 1,
-        useNativeDriver: true,
-      }).start();
-    }
-  }, [buttonScale, completed]);
-
+    const pressId = pressIdRef.current;
+    queueMicrotask(() => {
+      if (
+        pressIdRef.current === pressId &&
+        committedPressRef.current !== pressId
+      ) {
+        runPressCancel(buttonScale, reduceMotion);
+      }
+    });
+  }, [buttonScale, reduceMotion]);
   const handlePress = useCallback(() => {
-    // Haptics are fired by useToggleDayHandler, which knows whether the tap is
-    // a completion, an uncompletion, or a disabled-day rejection. Firing a
-    // second one here doubled the JSI calls on every press.
-    Animated.sequence([
-      Animated.spring(buttonScale, {
-        friction: 6,
-        tension: 300,
-        toValue: 1.08,
-        useNativeDriver: true,
-      }),
-      Animated.spring(buttonScale, {
-        friction: 8,
-        tension: 300,
-        toValue: 1,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    committedPressRef.current = pressIdRef.current;
+    runPressPop(buttonScale, reduceMotion);
     onPress();
-  }, [buttonScale, onPress]);
-
+  }, [buttonScale, onPress, reduceMotion]);
   return { handlePress, handlePressIn, handlePressOut };
-};
+}
