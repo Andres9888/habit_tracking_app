@@ -44,10 +44,8 @@ import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTim
 import { useCompletionSound } from '../../../hooks/useCompletionSound';
 import { validateHabitsArray } from '../../../utils/validation';
 import type { HabitsListState } from './types';
-import {
-  optimisticHabitCreationStore,
-  usePendingCreatedHabits,
-} from './optimisticHabitCreationStore';
+import { usePendingCreatedHabits } from './optimisticHabitCreationStore';
+import { useHabitsWithOptimisticLifecycle } from './useHabitsWithOptimisticLifecycle';
 
 type HabitStrengthPrediction = {
   baselineStrength: number;
@@ -207,28 +205,10 @@ export function useHabitsListState(): HabitsListState {
     [habitsFromQuery]
   );
 
-  useEffect(() => {
-    optimisticHabitCreationStore.reconcile(habitsFromQuery);
-  }, [habitsFromQuery]);
-
-  const habitsWithOptimisticCreates = useMemo(() => {
-    if (pendingCreatedHabits.length === 0) {
-      return habitsFromQuery;
-    }
-
-    let maxOrder = 0;
-    for (const habit of habitsFromQuery) {
-      maxOrder = Math.max(maxOrder, habit.order ?? maxOrder);
-    }
-
-    return [
-      ...habitsFromQuery,
-      ...pendingCreatedHabits.map((habit, index) => ({
-        ...habit,
-        order: habit.order ?? maxOrder + index + 1,
-      })),
-    ];
-  }, [habitsFromQuery, pendingCreatedHabits]);
+  const habitsWithOptimisticCreates = useHabitsWithOptimisticLifecycle(
+    habitsFromQuery,
+    pendingCreatedHabits
+  );
 
   useEffect(() => {
     const timers = cleanupTimersRef.current;

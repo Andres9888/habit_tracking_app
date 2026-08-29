@@ -24,12 +24,23 @@ import type {
   TrackingRecord,
 } from '../../src/lib/offline';
 
-// Mock AsyncStorage
-jest.mock('@react-native-async-storage/async-storage', () => ({
-  getItem: jest.fn(),
-  removeItem: jest.fn(),
-  setItem: jest.fn(),
+jest.mock('../../src/lib/offline/persistence/offlineStorage', () => ({
+  offlineStorage: {
+    getItem: jest.fn(),
+    multiRemove: jest.fn(),
+    removeItem: jest.fn(),
+    setItem: jest.fn(),
+  },
 }));
+
+const mockOfflineStorage = jest.requireMock(
+  '../../src/lib/offline/persistence/offlineStorage'
+).offlineStorage as {
+  getItem: jest.Mock;
+  multiRemove: jest.Mock;
+  removeItem: jest.Mock;
+  setItem: jest.Mock;
+};
 
 const mockHabitId = (id: string) => id as Id<'habits'>;
 
@@ -38,6 +49,10 @@ describe('Offline Completion E2E', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockOfflineStorage.getItem.mockReset().mockResolvedValue(null);
+    mockOfflineStorage.multiRemove.mockReset().mockResolvedValue(undefined);
+    mockOfflineStorage.removeItem.mockReset().mockResolvedValue(undefined);
+    mockOfflineStorage.setItem.mockReset().mockResolvedValue(undefined);
     resetOfflineQueueManager();
     queueManager = createOfflineQueueManager({ autoPersist: false });
 
@@ -216,9 +231,7 @@ describe('Offline Completion E2E', () => {
     });
 
     describe('Acceptance Criteria 3: Persistence across app restarts', () => {
-      it('should persist queue state to AsyncStorage', async () => {
-        const AsyncStorage =
-          require('@react-native-async-storage/async-storage') as typeof import('@react-native-async-storage/async-storage').default;
+      it('should persist queue state to durable storage', async () => {
         const habitId = mockHabitId('persist_test_1');
 
         queueManager.enqueue('toggleCompletion', {
@@ -229,8 +242,12 @@ describe('Offline Completion E2E', () => {
 
         await queueManager.persist();
 
-        expect(AsyncStorage.setItem).toHaveBeenCalled();
-        const savedData = (AsyncStorage.setItem as jest.Mock).mock.calls[0][1];
+        expect(mockOfflineStorage.setItem).toHaveBeenCalled();
+        const mainWrite = mockOfflineStorage.setItem.mock.calls.find(
+          ([key]) => !String(key).endsWith('_pending')
+        );
+        expect(mainWrite).toBeDefined();
+        const savedData = mainWrite?.[1];
         const parsed = JSON.parse(savedData);
 
         expect(parsed.operations).toHaveLength(1);
@@ -238,9 +255,6 @@ describe('Offline Completion E2E', () => {
       });
 
       it('should restore queue state from AsyncStorage', async () => {
-        const AsyncStorage =
-          require('@react-native-async-storage/async-storage') as typeof import('@react-native-async-storage/async-storage').default;
-
         const savedState = {
           createdAt: Date.now(),
           operations: [
@@ -261,8 +275,8 @@ describe('Offline Completion E2E', () => {
           version: 1,
         };
 
-        (AsyncStorage.getItem as jest.Mock).mockResolvedValueOnce(
-          JSON.stringify(savedState)
+        mockOfflineStorage.getItem.mockImplementation(async (key: string) =>
+          key.endsWith('_pending') ? null : JSON.stringify(savedState)
         );
 
         await queueManager.restore();
@@ -273,11 +287,8 @@ describe('Offline Completion E2E', () => {
       });
 
       it('should handle corrupted storage gracefully', async () => {
-        const AsyncStorage =
-          require('@react-native-async-storage/async-storage') as typeof import('@react-native-async-storage/async-storage').default;
-
-        (AsyncStorage.getItem as jest.Mock).mockResolvedValueOnce(
-          'not valid json {'
+        mockOfflineStorage.getItem.mockImplementation(async (key: string) =>
+          key.endsWith('_pending') ? null : 'not valid json {'
         );
 
         // Should not throw
@@ -427,9 +438,6 @@ describe('Offline Completion E2E', () => {
     });
 
     it('should emit queue:restored on restore', async () => {
-      const AsyncStorage =
-        require('@react-native-async-storage/async-storage') as typeof import('@react-native-async-storage/async-storage').default;
-
       const savedState = {
         createdAt: Date.now(),
         operations: [],
@@ -437,8 +445,8 @@ describe('Offline Completion E2E', () => {
         version: 1,
       };
 
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(savedState)
+      mockOfflineStorage.getItem.mockImplementation(async (key: string) =>
+        key.endsWith('_pending') ? null : JSON.stringify(savedState)
       );
 
       const events: string[] = [];

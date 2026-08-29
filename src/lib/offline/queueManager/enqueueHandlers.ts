@@ -50,9 +50,10 @@ export function handleNewOperation<T extends OfflineOperationType>(
   setState: StateSetter,
   notify: NotifyFn,
   emit: EmitFn,
-  getState: StateGetter
+  getState: StateGetter,
+  operationId?: string
 ): QueueOperationResult {
-  const id = generateOperationId();
+  const id = operationId ?? generateOperationId();
   const operation: OfflineOperation = {
     createdAt: Date.now(),
     id,

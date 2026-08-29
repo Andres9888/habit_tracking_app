@@ -20,8 +20,8 @@ export function buildHistoryEntries(
   const start = startOfMonth(month);
   const monthEnd = endOfMonth(start);
   const cursor = parseLocalDate(today);
-  const end = Math.min(monthEnd, cursor);
-  if (end < start) return [];
+  const end = new Date(Math.min(monthEnd.getTime(), cursor.getTime()));
+  if (end.getTime() < start.getTime()) return [];
 
   return eachDayOfInterval({ end, start })
     .map((date) => {

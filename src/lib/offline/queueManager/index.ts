@@ -10,6 +10,7 @@
 
 export { createOfflineQueueManager } from './createManager';
 export { getOfflineQueueManager, resetOfflineQueueManager } from './singleton';
+export { generateOperationId } from './helpers';
 export {
   buildOperationIndex,
   findOperationIndexOptimized,

@@ -46,13 +46,17 @@ function buildMatchKeyFromHabit(habit: Habit) {
   });
 }
 
+export function createOptimisticHabitId(now = Date.now()) {
+  return `${OPTIMISTIC_HABIT_ID_PREFIX}${now}_${Math.random()
+    .toString(36)
+    .slice(2, 10)}`;
+}
+
 export function createOptimisticHabit(
   input: OptimisticHabitCreateInput,
   submittedAt: number
 ) {
-  const fallbackId = `${OPTIMISTIC_HABIT_ID_PREFIX}${submittedAt}_${Math.random()
-    .toString(36)
-    .slice(2, 10)}`;
+  const fallbackId = createOptimisticHabitId(submittedAt);
   return {
     _creationTime: submittedAt,
     _id: (input.tempId ?? fallbackId) as Id<'habits'>,
@@ -76,15 +80,28 @@ export function createOptimisticHabit(
   } as Habit;
 }
 
-export function hasServerMatch(
+export function findServerMatch(
   record: PendingCreatedHabitRecord,
   serverHabits: Habit[]
-) {
-  return serverHabits.some((habit) => {
+): Habit | undefined {
+  const clientRequestId = String(record.tempHabit._id);
+  const exactMatch = serverHabits.find(
+    (habit) => habit.clientRequestId === clientRequestId
+  );
+  if (exactMatch) return exactMatch;
+
+  return serverHabits.find((habit) => {
     const createdAt = habit.createdAt ?? habit._creationTime;
     return (
       createdAt >= record.submittedAt - MATCH_LOOKBACK_MS &&
       buildMatchKeyFromHabit(habit) === record.matchKey
     );
   });
+}
+
+export function hasServerMatch(
+  record: PendingCreatedHabitRecord,
+  serverHabits: Habit[]
+) {
+  return findServerMatch(record, serverHabits) !== undefined;
 }

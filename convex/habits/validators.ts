@@ -23,6 +23,7 @@ export const fullHabitValidator = v.object({
   // the list query — clean up via a one-off mutation when convenient.
   benefits: v.optional(v.any()),
   bestStreak: v.optional(v.number()),
+  clientRequestId: v.optional(v.string()),
   consecutiveDays: v.optional(v.number()),
   createdAt: v.number(),
   cueAfterBehavior: v.optional(v.string()),

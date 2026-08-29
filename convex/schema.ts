@@ -60,6 +60,9 @@ const applicationTables = {
     // ISO date string (YYYY-MM-DD)
     consecutiveDays: v.optional(v.number()),
 
+    // Stable client-generated key used to make retried creates idempotent.
+    clientRequestId: v.optional(v.string()),
+
     createdAt: v.number(),
 
     // Cue - Implementation Intention (Gollwitzer, 1999: 2-3x follow-through)
@@ -225,6 +228,7 @@ const applicationTables = {
     .index('by_strengthUpdatedAt', ['strengthUpdatedAt'])
     .index('by_userId', ['userId'])
     .index('by_userId_and_archived', ['userId', 'archived'])
+    .index('by_userId_and_clientRequestId', ['userId', 'clientRequestId'])
     // Lets `findMaxOrder` read a single row via `.order('desc').first()`
     // instead of collecting every habit document for the user.
     .index('by_userId_and_order', ['userId', 'order'])

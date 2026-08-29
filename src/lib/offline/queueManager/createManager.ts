@@ -1,48 +1,35 @@
-/**
- * Create Offline Queue Manager
- *
- * Factory function for creating queue manager instances.
- *
- * @see docs/offline-habit-sync.md
- */
-
 import type {
   OfflineQueueManagerAPI,
   OfflineQueueManagerConfig,
   QueueEventCallback,
   QueueStateListener,
 } from './types';
-import { DEFAULT_QUEUE_STATE, OFFLINE_QUEUE_VERSION } from '../queue';
 import type { OfflineQueueState, QueueEvent } from '../queue';
-import { loadQueueState, saveQueueState } from '../persistence';
+import { saveQueueState } from '../persistence';
 import { calculateStats } from './helpers';
 import { createOperations } from './operations';
 import { createBatchOperations } from './optimized';
 import { createStatusUpdaters } from './status';
+import { createPersistScheduler } from './persistScheduler';
+import { createManagerPersistence } from './persistence';
+import { createInitialQueueState } from './initialState';
 
 export function createOfflineQueueManager(
   config: OfflineQueueManagerConfig = {}
 ): OfflineQueueManagerAPI {
   const { autoPersist = true } = config;
 
-  let state: OfflineQueueState = {
-    ...DEFAULT_QUEUE_STATE,
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-    version: OFFLINE_QUEUE_VERSION,
-  };
+  let state: OfflineQueueState = createInitialQueueState();
 
   const listeners = new Set<QueueStateListener>();
   const eventListeners = new Set<QueueEventCallback>();
+  const persistScheduler = createPersistScheduler(saveQueueState);
 
   const notifyStateChange = (options?: { persist?: boolean }) => {
     state = { ...state, updatedAt: Date.now() };
     for (const listener of listeners) listener();
     if (autoPersist && options?.persist !== false) {
-      saveQueueState(state).catch((error) => {
-        if (__DEV__)
-          console.error('[OfflineQueueManager] Persist failed:', error);
-      });
+      persistScheduler.schedule(state);
     }
   };
 
@@ -80,6 +67,15 @@ export function createOfflineQueueManager(
     notifyStateChange,
     emit
   );
+  const persistence = createManagerPersistence({
+    emit,
+    getState: () => state,
+    notify: notifyStateChange,
+    scheduler: persistScheduler,
+    setState: (nextState) => {
+      state = nextState;
+    },
+  });
 
   return {
     getState: () => state,
@@ -87,17 +83,7 @@ export function createOfflineQueueManager(
     ...ops,
     ...statusUpdaters,
     ...batchOps,
-    persist: async () => saveQueueState(state),
-    async restore() {
-      const restored = await loadQueueState();
-      state = restored;
-      notifyStateChange();
-      emit({
-        stats: calculateStats(state),
-        timestamp: Date.now(),
-        type: 'queue:restored',
-      });
-    },
+    ...persistence,
     subscribe: (cb: QueueEventCallback) => {
       eventListeners.add(cb);
       return () => eventListeners.delete(cb);

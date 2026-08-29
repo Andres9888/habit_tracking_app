@@ -3,12 +3,13 @@ import {
   type OptimisticHabitCreateInput,
   type PendingCreatedHabitRecord,
   type PendingCreatedHabitSnapshot,
+  type ReconciledHabitCreation,
   type StoreListener,
 } from './optimisticHabitCreationStore.types';
 import {
   buildMatchKey,
   createOptimisticHabit,
-  hasServerMatch,
+  findServerMatch,
 } from './optimisticHabitCreationStoreHelpers';
 import type { Habit } from '../types';
 
@@ -65,15 +66,21 @@ export const optimisticHabitCreationStore = {
   reconcile(serverHabits: Habit[]) {
     const now = Date.now();
     let hasChanges = false;
+    const reconciled: ReconciledHabitCreation[] = [];
     for (const [operationId, record] of state) {
+      const serverHabit = findServerMatch(record, serverHabits);
       const isStaleConfirmed =
         record.confirmedAt !== null &&
         now - record.confirmedAt >= CONFIRMED_PENDING_TTL_MS;
-      if (!hasServerMatch(record, serverHabits) && !isStaleConfirmed) continue;
+      if (!serverHabit && !isStaleConfirmed) continue;
+      if (serverHabit) {
+        reconciled.push({ serverHabit, tempHabit: record.tempHabit });
+      }
       state.delete(operationId);
       hasChanges = true;
     }
     if (hasChanges) notify();
+    return reconciled;
   },
   reset() {
     if (state.size === 0) return;

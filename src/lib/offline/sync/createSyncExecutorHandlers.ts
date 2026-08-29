@@ -28,6 +28,7 @@ export async function createHabit(
 ) {
   const payload = operation.payload;
   await mutations.createHabit({
+    clientRequestId: payload.tempId,
     name: payload.name,
     icon: payload.icon,
     color: payload.color,
@@ -37,6 +38,7 @@ export async function createHabit(
     goalDuration: payload.goalDuration,
     notes: payload.notes,
     preferredTime: payload.preferredTime,
+    progressEmojis: payload.progressEmojis,
     remindersEnabled: payload.remindersEnabled,
     reminderTime: normalizeReminderTime(payload.reminderTime),
     reminderSound: payload.reminderSound,

@@ -74,6 +74,18 @@ function rehydrateOperation(operation: OfflineOperation): void {
       });
       break;
     }
+    case 'removeHabit': {
+      const payload = operation.payload as {
+        habitId: Id<'habits'>;
+        habitName?: string;
+      };
+      optimisticStore.addArchiveWithId(operation.id, {
+        habitId: payload.habitId,
+        habitName: payload.habitName ?? 'Habit',
+        toArchived: true,
+      });
+      break;
+    }
   }
 }
 
@@ -90,11 +102,19 @@ export function syncOptimisticFromQueueEvent(
   if (event.operation && event.type === 'operation:updated') {
     rehydrateOperation(event.operation);
   } else if (event.operationId && event.type === 'operation:synced') {
-    optimisticStore.confirm(event.operationId);
+    if (event.operation?.type === 'createHabit') {
+      optimisticHabitCreationStore.confirm(event.operationId);
+    } else {
+      optimisticStore.confirm(event.operationId);
+    }
   } else if (event.operationId && event.type === 'operation:failed-final') {
-    optimisticStore.fail(
-      event.operationId,
-      new Error(event.error ?? 'Sync failed')
-    );
+    if (event.operation?.type === 'createHabit') {
+      optimisticHabitCreationStore.fail(event.operationId);
+    } else {
+      optimisticStore.fail(
+        event.operationId,
+        new Error(event.error ?? 'Sync failed')
+      );
+    }
   }
 }

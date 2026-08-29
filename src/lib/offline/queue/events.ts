@@ -53,6 +53,9 @@ export interface QueueOperationOptions {
   /** Skip duplicate detection (default: false) */
   allowDuplicate?: boolean;
 
+  /** Reuse an optimistic operation ID when a live request falls offline. */
+  operationId?: string;
+
   /** Priority level (higher = process first, default: 0) */
   priority?: number;
 }

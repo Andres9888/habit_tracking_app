@@ -27,3 +27,13 @@ export {
   useOptimisticReorderMutation,
   useOptimisticPauseMutation,
 } from './useOptimisticReorderMutation';
+
+export { useOfflineMutation } from './useOfflineMutation';
+export { useOfflineArchiveHabit } from './useOfflineArchiveHabit';
+export { useOfflinePauseHabit } from './useOfflinePauseHabit';
+export { useOfflineRemoveHabit } from './useOfflineRemoveHabit';
+export type {
+  OfflineMutationOptions,
+  OfflineMutationPayload,
+  OfflineMutationResult,
+} from './useOfflineMutation';

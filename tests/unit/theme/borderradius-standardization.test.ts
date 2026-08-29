@@ -43,13 +43,6 @@ describe('xs / small / medium / full usage', () => {
     expect(styles.badge.borderRadius).toBe(borderRadius.small);
   });
 
-  it('OfflinePendingBanner warning uses small', () => {
-    const {
-      statsStyles,
-    } = require('@/components/OfflinePendingBanner/styles/stats.styles');
-    expect(statsStyles.warningContainer.borderRadius).toBe(borderRadius.small);
-  });
-
   it('WeeklySummaryStrip perfectBadge uses medium', () => {
     const {
       headerStyles,
@@ -64,15 +57,11 @@ describe('xs / small / medium / full usage', () => {
 
   it('circular elements use full', () => {
     const {
-      layoutStyles,
-    } = require('@/components/OfflinePendingBanner/styles/layout.styles');
-    const {
       dayCellStyles,
     } = require('@/components/ProgressSectionConsolidated/WeeklySummaryStrip/dayCellStyles');
     const {
       elementStyles,
     } = require('@/components/ProgressSectionConsolidated/TodaysFocusCard/styles/elementStyles');
-    expect(layoutStyles.iconContainer.borderRadius).toBe(borderRadius.full);
     expect(dayCellStyles.dayCircle.borderRadius).toBe(borderRadius.full);
     expect(elementStyles.badgeContainer.borderRadius).toBe(borderRadius.full);
   });

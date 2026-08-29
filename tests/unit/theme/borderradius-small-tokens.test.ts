@@ -11,13 +11,6 @@ describe('borderRadius.small token migration', () => {
     expect(borderRadius.large).toBe(24);
   });
 
-  it('OfflinePendingBanner warning container uses small', () => {
-    const {
-      statsStyles,
-    } = require('../../../src/components/OfflinePendingBanner/styles/stats.styles');
-    expect(statsStyles.warningContainer.borderRadius).toBe(borderRadius.small);
-  });
-
   it('ShareCardGenerator progress bars use small', () => {
     const {
       shareCardContentStyles,

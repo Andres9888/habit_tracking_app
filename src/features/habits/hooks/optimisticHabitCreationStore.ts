@@ -7,6 +7,7 @@ import { optimisticHabitCreationStore as pendingCreatedHabitsStore } from './opt
 
 export { optimisticHabitCreationStore } from './optimisticHabitCreationStoreCore';
 export { OPTIMISTIC_HABIT_ID_PREFIX } from './optimisticHabitCreationStore.types';
+export { createOptimisticHabitId } from './optimisticHabitCreationStoreHelpers';
 
 export function isOptimisticHabitId(habitId: string) {
   return habitId.startsWith(OPTIMISTIC_HABIT_ID_PREFIX);

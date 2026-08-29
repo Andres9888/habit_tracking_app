@@ -35,6 +35,14 @@ export type {
   OfflineOperationType,
   OfflineQueueState,
   OfflineQueueStats,
+  ArchiveHabitOperation,
+  ArchiveHabitPayload,
+  CreateHabitOperation,
+  CreateHabitPayload,
+  PauseHabitOperation,
+  PauseHabitPayload,
+  RemoveHabitOperation,
+  RemoveHabitPayload,
   QueueEvent,
   QueueEventCallback,
   QueueEventType,
@@ -42,6 +50,8 @@ export type {
   QueueOperationResult,
   ToggleCompletionOperation,
   ToggleCompletionPayload,
+  UpdateHabitOperation,
+  UpdateHabitPayload,
 } from './queue';
 
 export {
@@ -113,6 +123,7 @@ export {
   buildOperationIndex,
   createOfflineQueueManager,
   findOperationIndexOptimized,
+  generateOperationId,
   getOfflineQueueManager,
   hasDuplicateOptimized,
   resetOfflineQueueManager,
