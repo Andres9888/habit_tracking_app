@@ -4,6 +4,9 @@ const crypto = require('crypto');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const {
+  createMetroBlockList,
+} = require('./scripts/config/project-directory-patterns.cjs');
 
 // Base Expo config
 const baseConfig = getDefaultConfig(__dirname);
@@ -104,19 +107,7 @@ config.resolver = {
   ...config.resolver,
   resolverMainFields: ['react-native', 'browser', 'main'],
   // Exclude test and dev directories from bundling
-  blockList: [
-    /\/__tests__\/.*/,
-    /\/coverage\/.*/,
-    /\/\.git\/.*/,
-    /\/\.taskmaster\/.*/,
-    /\/\.claude\/.*/,
-    /\/design-mockups\/.*/,
-    /\/HabitHome-FigmaCode\/.*/,
-    /\/worktrees\/.*/,
-    /\/\.worktrees\/.*/,
-    /\/superdesign\/.*/,
-    /\/\.superdesign\/.*/,
-  ],
+  blockList: createMetroBlockList(__dirname),
 };
 
 const defaultResolveRequest = config.resolver.resolveRequest;

@@ -1,3 +1,8 @@
+import projectDirectoryPatterns from './scripts/config/project-directory-patterns.cjs';
+
+const { createJestRootPatterns } = projectDirectoryPatterns;
+const projectArtifactIgnorePatterns = createJestRootPatterns();
+
 export default {
   preset: 'jest-expo',
   transformIgnorePatterns: [
@@ -27,14 +32,7 @@ export default {
   ],
   testPathIgnorePatterns: [
     '/node_modules/',
-    '/worktrees/',
-    '/\\.worktrees/',
-    '/\\.clonk-worktrees/',
-    '/\\.next/',
-    '<rootDir>/worktrees/',
-    '<rootDir>/.worktrees/',
-    '<rootDir>/.clonk-worktrees/',
-    '<rootDir>/website/.next/',
+    ...projectArtifactIgnorePatterns,
     '/__tests__/.*\\.snap$',
     '/tests/.*\\.snap$',
     '/tests/e2e/',
@@ -44,24 +42,6 @@ export default {
     '/tests/integration/features/home-page-redesign\\.test\\.',
     '/tests/integration/features/swipe-archive-integration\\.test\\.',
   ],
-  modulePathIgnorePatterns: [
-    '/worktrees/',
-    '/\\.worktrees/',
-    '/\\.clonk-worktrees/',
-    '/\\.next/',
-    '<rootDir>/worktrees/',
-    '<rootDir>/.worktrees/',
-    '<rootDir>/.clonk-worktrees/',
-    '<rootDir>/website/.next/',
-  ],
-  watchPathIgnorePatterns: [
-    '/worktrees/',
-    '/\\.worktrees/',
-    '/\\.clonk-worktrees/',
-    '/\\.next/',
-    '<rootDir>/worktrees/',
-    '<rootDir>/.worktrees/',
-    '<rootDir>/.clonk-worktrees/',
-    '<rootDir>/website/.next/',
-  ],
+  modulePathIgnorePatterns: projectArtifactIgnorePatterns,
+  watchPathIgnorePatterns: projectArtifactIgnorePatterns,
 };
