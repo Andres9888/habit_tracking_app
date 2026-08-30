@@ -5,8 +5,10 @@
 
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import { MakeItStickSheet } from '../../../components/MakeItStickSheet';
-import { TemplateAddedToast } from '../../../components/TemplateAddedToast';
-import type { TemplateToastData } from '../../../components/TemplateAddedToast';
+import {
+  TemplateAddedToast,
+  type TemplateToastData,
+} from '../../../components/TemplateAddedToast';
 import Toast from '../../../components/Toast';
 
 interface FeedbackOverlaysProps {
@@ -36,17 +38,17 @@ export function FeedbackOverlays(p: FeedbackOverlaysProps) {
         onDone={p.onDismissCelebration}
         onSaveError={p.onSaveError}
       />
-      {p.toastTemplateData ? (
-        <TemplateAddedToast
-          sessionImportCount={p.sessionImportCount}
-          templateData={p.toastTemplateData}
-          variant={p.feedbackVariant ?? 'success'}
-          visible={p.showToast}
-          onAddAnother={p.onAddAnother}
-          onDismiss={p.onDismissToast}
-          onViewHabit={p.onViewHabit}
-        />
-      ) : (
+      <TemplateAddedToast
+        actionReady={p.feedbackHabitId != null}
+        sessionImportCount={p.sessionImportCount}
+        templateData={p.toastTemplateData}
+        variant={p.feedbackVariant ?? 'success'}
+        visible={p.toastTemplateData ? p.showToast : false}
+        onAddAnother={p.onAddAnother}
+        onDismiss={p.onDismissToast}
+        onViewHabit={p.onViewHabit}
+      />
+      {p.toastTemplateData ? null : (
         <Toast
           actionLabel='Retry'
           duration={5000}

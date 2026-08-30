@@ -22,7 +22,7 @@
  */
 
 import React, { memo, useCallback, useMemo } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import ReAnimated, { useAnimatedStyle } from 'react-native-reanimated';
 import { SwipeActions } from './SwipeActions';
@@ -40,6 +40,7 @@ export type { DraggableHabitCardProps } from './DraggableHabitCard.types';
 function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
   const effectiveAccentColor = getEffectiveAccentColor(props.accentColor);
   const borderAccentColor = getBorderAccentColor(props.accentColor);
+  const highlightAccentColor = props.accentColor ?? colors.premium[400];
   const staticCardStyle = buildStaticCardStyle({
     colors: props.colors,
     isWeekComplete: props.isWeekComplete,
@@ -133,30 +134,44 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
             className='flex-1'
             style={props.entranceContentStyle}
           >
-            {props.showGradientFill ? (
+            {!props.deferHeavyContent && props.showGradientFill ? (
               <StrengthFillBackground
                 isDark={props.isDark}
                 strengthColor={effectiveAccentColor}
                 strengthFillStyle={props.strengthFillStyle}
               />
             ) : null}
-            <ReAnimated.View
-              pointerEvents='none'
-              style={[
-                {
-                  borderColor: props.accentColor ?? colors.premium[400],
-                  borderRadius: borderRadius.xl,
-                  borderWidth: 2,
-                  ...StyleSheet.absoluteFill,
-                },
-                glowStyle,
-              ]}
-            />
             <CardContent
               {...props}
               effectiveAccentColor={effectiveAccentColor}
             />
           </ReAnimated.View>
+          <ReAnimated.View
+            pointerEvents='none'
+            style={[
+              {
+                borderColor: highlightAccentColor,
+                borderRadius: borderRadius.xl,
+                borderWidth: 2,
+                // Thin accent ring so the just-created / focused card reads
+                // at a glance. No halo shadow (the app has no other
+                // glow-shadow affordance; shadow layers are costly in a
+                // scrolling list) and no surface tint (a tinted card reads as
+                // state — week-complete already uses a green wash).
+                //
+                // Lives on the card shell (last child, over strip + content)
+                // so the ring wraps the whole card; inside the content column
+                // its rounded left corners leave gaps beside the accent strip.
+                // -1 offsets sit it on the shell's 1px border, not inside it.
+                bottom: -1,
+                left: -1,
+                position: 'absolute',
+                right: -1,
+                top: -1,
+              },
+              glowStyle,
+            ]}
+          />
         </ReAnimated.View>
       </Pressable>
     </ReAnimated.View>

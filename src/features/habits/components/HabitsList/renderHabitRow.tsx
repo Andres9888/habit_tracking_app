@@ -14,7 +14,7 @@
  */
 
 import React, { type MutableRefObject } from 'react';
-import { Animated } from 'react-native';
+import { Animated, type LayoutChangeEvent } from 'react-native';
 import Reanimated, { FadeInDown, FadeOutRight } from 'react-native-reanimated';
 import type { RenderItemParams } from 'react-native-draggable-flatlist';
 import type { Habit } from '../../types';
@@ -23,6 +23,7 @@ import { durations, enterEasing } from '@/theme/animations';
 interface RenderHabitRowOptions {
   item: Habit;
   justCreatedHabitId: string | null;
+  onHabitRowLayout?: (habitId: string, height: number) => void;
   initialEntranceDoneRef: MutableRefObject<boolean>;
   habitRowOpacity: Animated.Value;
   habitRowTranslateY: Animated.Value;
@@ -36,6 +37,7 @@ export function renderHabitRow(opts: RenderHabitRowOptions) {
   const {
     item,
     justCreatedHabitId,
+    onHabitRowLayout,
     initialEntranceDoneRef,
     habitRowOpacity,
     habitRowTranslateY,
@@ -50,9 +52,16 @@ export function renderHabitRow(opts: RenderHabitRowOptions) {
     : FadeInDown.duration(durations.enter)
         .easing(enterEasing)
         .delay(Math.min(index, 4) * durations.stagger);
+  const handleLayout = (event: LayoutChangeEvent) => {
+    onHabitRowLayout?.(item._id, event.nativeEvent.layout.height);
+  };
 
   return (
-    <Reanimated.View entering={enterAnimation} exiting={EXIT_ANIMATION}>
+    <Reanimated.View
+      entering={enterAnimation}
+      exiting={EXIT_ANIMATION}
+      onLayout={handleLayout}
+    >
       <Animated.View
         style={
           isNewlyCreated

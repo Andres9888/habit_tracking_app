@@ -1,6 +1,10 @@
 import { useState } from 'react';
+import {
+  usePendingFocusHabit,
+  type PendingFocusHabitState,
+} from './usePendingFocusHabit';
 
-export interface ModalVisibilityState {
+export interface ModalVisibilityState extends PendingFocusHabitState {
   isSettingsOpen: boolean;
   setIsSettingsOpen: (v: boolean) => void;
   isCreateHabitOpen: boolean;
@@ -42,8 +46,14 @@ export function useModalVisibilityState(): ModalVisibilityState {
   const [showQuickActions, setShowQuickActions] = useState(false);
   const [showVisualizationExercise, setShowVisualizationExercise] =
     useState(false);
+  // The focus flow closes the library itself once the list has converged; if
+  // it never does, the expiry must still get the user out of the library.
+  const pendingFocus = usePendingFocusHabit(() =>
+    setShowTemplatesScreen(false)
+  );
 
   return {
+    ...pendingFocus,
     isCreateHabitOpen,
     isHabitCalendarOpen,
     isHabitDetailOpen,

@@ -10,18 +10,25 @@
  */
 
 import type { SharedValue } from 'react-native-reanimated';
-import { Easing, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
+import {
+  Easing,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
 
 /**
- * Plays a glow border pulse on a newly-created habit card:
- * opacity ramps to 1, dips to 0.5, pulses to 1 again, then fades to 0.
+ * Plays a highlight pulse (thin accent ring) on a newly-created habit
+ * card: on instantly, hold (1400ms), then fade to 0 (500ms).
+ * The focus flow pre-paints this glow while the library still covers the
+ * list, so the first revealed frame is already highlighted.
  */
 export function runHighlightGlow(highlightGlow: SharedValue<number>) {
+  // Instant on: the ring must be there the frame the card is revealed.
+  highlightGlow.value = 1;
   highlightGlow.value = withSequence(
-    withTiming(1, { duration: 300, easing: Easing.out(Easing.ease) }),
-    withTiming(0.5, { duration: 400, easing: Easing.inOut(Easing.ease) }),
-    withTiming(1, { duration: 300, easing: Easing.out(Easing.ease) }),
-    withTiming(0, { duration: 500, easing: Easing.in(Easing.ease) }),
+    withTiming(1, { duration: 1400 }),
+    withTiming(0, { duration: 500, easing: Easing.in(Easing.ease) })
   );
 }
 
@@ -30,8 +37,8 @@ export function runIconPulseLoop(iconPulse: SharedValue<number>) {
   iconPulse.value = withRepeat(
     withSequence(
       withTiming(1.05, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
-      withTiming(1, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
+      withTiming(1, { duration: 1000, easing: Easing.inOut(Easing.ease) })
     ),
-    -1,
+    -1
   );
 }

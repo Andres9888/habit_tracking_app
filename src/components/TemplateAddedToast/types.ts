@@ -11,6 +11,8 @@ export interface TemplateToastData {
 }
 
 export interface TemplateAddedToastProps {
+  /** False while import is pending and no real habit id exists yet. */
+  actionReady?: boolean;
   visible: boolean;
   templateData: TemplateToastData | null;
   duration?: number;

@@ -40,6 +40,22 @@ export interface HabitsModalsState {
   milestone: unknown;
   tracking: HabitTrackingEntry[];
   showHabitStrengthPercentage: boolean;
+  /**
+   * Habit the Habit Library asked home to scroll to and highlight, if any.
+   * Consumed by HabitsList; expires on its own after FOCUS_GIVE_UP_MS.
+   */
+  pendingFocusHabitId: Id<'habits'> | null;
+  /** True once hidden scroll probes and native neighborhood layout converge. */
+  focusReady: boolean;
+  /** True after the user commits to leaving the library for Home. */
+  focusRequestAutoClose: boolean;
+  /** Pre-positions Home while the post-import toast remains visible. */
+  prepareFocusHabitOnHome: (habitId: Id<'habits'>) => void;
+  /** Reveals a prepared target, or runs the cold converge-then-close path. */
+  commitFocusHabitOnHome: (habitId: Id<'habits'>) => void;
+  /** Marks the current id ready; mismatched stale ids are ignored. */
+  markFocusHabitReady: (habitId: Id<'habits'>) => void;
+  clearPendingFocusHabit: () => void;
   closeSettings: () => void;
   openSettings: () => void;
   openCreateHabitScreen: () => void;

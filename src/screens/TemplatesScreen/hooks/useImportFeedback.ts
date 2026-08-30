@@ -27,11 +27,35 @@ export function useImportFeedback(o: FeedbackOptions) {
   const habitCountRef = useRef(o.userHabitCount);
   habitCountRef.current = o.userHabitCount;
 
+  const showPendingImport = useCallback(
+    (template: NonNullable<FeedbackOptions['previewTemplate']>) => {
+      o.setFeedbackHabitId(null);
+      o.setFeedbackVariant('success');
+      o.setToastOnAction(null);
+      o.setToastTemplateData({
+        color: template.iconColor ?? colors.primary[500],
+        icon: template.icon ?? '✓',
+        name: template.name,
+      });
+      o.setShowCelebration(false);
+      o.setShowToast(true);
+    },
+    [
+      o.setFeedbackHabitId,
+      o.setFeedbackVariant,
+      o.setShowCelebration,
+      o.setShowToast,
+      o.setToastOnAction,
+      o.setToastTemplateData,
+    ]
+  );
+
   const showImportFeedback = useCallback(
     (
       habitId: Id<'habits'>,
       variant: 'success' | 'already_exists',
-      templateOverride?: FeedbackOptions['previewTemplate']
+      templateOverride?: FeedbackOptions['previewTemplate'],
+      forceToast = false
     ) => {
       const t = templateOverride ?? previewRef.current;
       const data = t
@@ -46,7 +70,7 @@ export function useImportFeedback(o: FeedbackOptions) {
         o.setSessionImportCount((count) => count + 1);
       }
 
-      if (variant === 'success' && habitCountRef.current === 0) {
+      if (!forceToast && variant === 'success' && habitCountRef.current === 0) {
         o.setShowCelebration(true);
       } else {
         o.setShowToast(true);
@@ -77,7 +101,8 @@ export function useImportFeedback(o: FeedbackOptions) {
   );
 
   const showSuccess = useCallback(
-    (habitId: Id<'habits'>) => showImportFeedback(habitId, 'success'),
+    (habitId: Id<'habits'>, forceToast = false) =>
+      showImportFeedback(habitId, 'success', undefined, forceToast),
     [showImportFeedback]
   );
 
@@ -107,5 +132,11 @@ export function useImportFeedback(o: FeedbackOptions) {
 
   const guardImport = useCallback(() => false, []);
 
-  return { guardImport, showAlreadyImported, showError, showSuccess };
+  return {
+    guardImport,
+    showAlreadyImported,
+    showError,
+    showPendingImport,
+    showSuccess,
+  };
 }

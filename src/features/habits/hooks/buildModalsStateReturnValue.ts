@@ -1,3 +1,4 @@
+import type { Id } from '../../../../convex/_generated/dataModel';
 import type { HabitsModalsState } from './types';
 import type { ModalVisibilityState } from './useModalVisibilityState';
 import type { HabitSelectionState } from './useHabitSelectionState';
@@ -94,6 +95,29 @@ export function buildModalsStateReturnValue(
 
     closeTemplatesScreen: () => visibility.setShowTemplatesScreen(false),
 
+    // Focus request raised by the Habit Library's post-add primary action.
+    // NOTE: this builder ends in `as unknown as HabitsModalsState`, so tsc
+    // will NOT flag a field declared in the type but missing here.
+    pendingFocusHabitId: visibility.pendingFocusHabitId,
+    focusReady: visibility.focusReady,
+    focusRequestAutoClose: visibility.focusRequestAutoClose,
+
+    // Prepare remounts and converges Home while the toast still covers it.
+    prepareFocusHabitOnHome: (habitId: Id<'habits'>) => {
+      visibility.preparePendingFocusHabit(habitId);
+    },
+
+    // Commit asks the list to reveal. A ready request skips probe polling;
+    // a cold request keeps the baseline converge-then-close behavior.
+    commitFocusHabitOnHome: (habitId: Id<'habits'>) => {
+      visibility.commitPendingFocusHabit(habitId);
+    },
+
+    markFocusHabitReady: (habitId: Id<'habits'>) =>
+      visibility.markPendingFocusReady(habitId),
+
+    clearPendingFocusHabit: visibility.clearPendingFocusHabit,
+
     showHabitDetail: visibility.isHabitDetailOpen,
 
     onShareMilestone: handlers.onShareMilestone,
@@ -132,7 +156,11 @@ export function buildModalsStateReturnValue(
     // Inline open handlers
     openSettings: () => visibility.setIsSettingsOpen(true),
 
-    openTemplatesScreen: () => visibility.setShowTemplatesScreen(true),
+    // Reopening the library cancels any stale focus request.
+    openTemplatesScreen: () => {
+      visibility.clearPendingFocusHabit();
+      visibility.setShowTemplatesScreen(true);
+    },
 
     openVisualizationExercise: handlers.openVisualizationExercise,
 

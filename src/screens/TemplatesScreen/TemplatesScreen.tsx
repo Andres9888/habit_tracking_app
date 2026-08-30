@@ -16,12 +16,18 @@ import {
 import { MainBrowseView } from './views/MainBrowseView';
 
 interface TemplatesScreenContentProps {
+  onCancelPreparedGoToHabit?: () => void;
   onCloseLibrary?: () => void;
+  onGoToHabit?: (habitId: Id<'habits'>) => void;
+  onPrepareGoToHabit?: (habitId: Id<'habits'>) => void;
   onViewHabit?: (habitId: Id<'habits'>) => void;
 }
 
 function TemplatesScreenContent({
+  onCancelPreparedGoToHabit,
   onCloseLibrary,
+  onGoToHabit,
+  onPrepareGoToHabit,
   onViewHabit,
 }: TemplatesScreenContentProps) {
   const { data, handlers, packConfirm, state } = useTemplatesScreenProps();
@@ -30,7 +36,10 @@ function TemplatesScreenContent({
     handlers,
     packConfirm,
     state,
+    onCancelPreparedGoToHabit,
     onViewHabit,
+    onGoToHabit,
+    onPrepareGoToHabit,
   });
 
   // Do not paint the catalog until both inputs that determine card placement
@@ -69,6 +78,7 @@ function TemplatesScreenContent({
           packConfirm={packConfirm}
           state={state}
           onCloseLibrary={onCloseLibrary}
+          onGoToHabit={onGoToHabit}
         />
       }
       onClose={() => onCloseLibrary?.()}
@@ -79,18 +89,27 @@ function TemplatesScreenContent({
 }
 
 interface TemplatesScreenProps {
+  onCancelPreparedGoToHabit?: () => void;
   onCloseLibrary?: () => void;
+  onGoToHabit?: (habitId: Id<'habits'>) => void;
+  onPrepareGoToHabit?: (habitId: Id<'habits'>) => void;
   onViewHabit?: (habitId: Id<'habits'>) => void;
 }
 
 export default function TemplatesScreen({
+  onCancelPreparedGoToHabit,
   onCloseLibrary,
+  onGoToHabit,
+  onPrepareGoToHabit,
   onViewHabit,
 }: TemplatesScreenProps = {}) {
   return (
     <ScreenErrorBoundary screenName='Templates'>
       <TemplatesScreenContent
+        onCancelPreparedGoToHabit={onCancelPreparedGoToHabit}
         onCloseLibrary={onCloseLibrary}
+        onGoToHabit={onGoToHabit}
+        onPrepareGoToHabit={onPrepareGoToHabit}
         onViewHabit={onViewHabit}
       />
     </ScreenErrorBoundary>

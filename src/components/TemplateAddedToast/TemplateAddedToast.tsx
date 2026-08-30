@@ -1,21 +1,17 @@
-/**
- * TemplateAddedToast Component
- * Action card shown after importing a habit template.
- */
-
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { Animated, View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { useAppTheme } from '../../theme';
+import { HabitAddedPanel, useHabitAddedPalette } from '../HabitAddedPanel';
 import type { TemplateAddedToastProps } from './types';
-import { DEFAULT_DURATION, FALLBACK_COLOR } from './constants';
+import { DEFAULT_DURATION } from './constants';
 import { styles } from './styles';
+import { buildToastCopy } from './copy';
 import { useTemplateAddedToastAnimations } from './useTemplateAddedToastAnimations';
+import { useToastKeyboardPosition } from './useToastKeyboardPosition';
 
 export function TemplateAddedToast({
+  actionReady = true,
   visible,
   templateData,
   duration = DEFAULT_DURATION,
@@ -28,102 +24,83 @@ export function TemplateAddedToast({
   style,
 }: TemplateAddedToastProps) {
   const theme = useAppTheme();
-  const insets = useSafeAreaInsets();
-  const color = templateData?.color ?? FALLBACK_COLOR;
+  const palette = useHabitAddedPalette();
+  const keyboardPosition = useToastKeyboardPosition();
   const viewHabit = onViewHabit ?? onViewHabits;
-
   const { toastStyle, iconStyle, handleDismiss, panGesture } =
-    useTemplateAddedToastAnimations({ duration, onDismiss, variant, visible });
+    useTemplateAddedToastAnimations({
+      duration,
+      onDismiss,
+      variant,
+      visible,
+    });
 
   if (!visible || !templateData) return null;
-
-  const title =
-    variant === 'already_exists'
-      ? `'${templateData.name}' is already in your habits`
-      : `Added '${templateData.name}' to your habits`;
-  const encouragement =
-    variant === 'success' && sessionImportCount > 1
-      ? `Nice — you've added ${sessionImportCount} today`
-      : variant === 'success'
-        ? 'Nice start — keep the momentum going'
-        : 'You can open it to review or track progress';
-  const primaryLabel =
-    variant === 'already_exists' ? 'Open existing habit' : 'View my habit';
+  const copy = buildToastCopy({
+    name: templateData.name,
+    pending: !actionReady,
+    sessionImportCount,
+    variant,
+  });
 
   return (
-    <View
-      pointerEvents='box-none'
-      style={[styles.container, { bottom: insets.bottom + 16 }]}
+    <Animated.View
+      pointerEvents='auto'
+      testID='templates-toast-container'
+      style={[
+        styles.container,
+        {
+          bottom: keyboardPosition.bottom,
+          transform: [{ translateY: keyboardPosition.translateY }],
+        },
+      ]}
     >
       <GestureDetector gesture={panGesture}>
-        <View collapsable={false}>
-          <Animated.View
-            accessible
+        <View collapsable={false} style={styles.gestureArea}>
+          <HabitAddedPanel
+            checkStyle={iconStyle}
+            headline={copy.headline}
+            headlineTestID='templates-toast-name'
+            message={copy.message}
+            palette={palette}
+            style={[styles.toast, theme.custom.shadows.card, toastStyle, style]}
             testID='templates-toast'
-            accessibilityLabel={title}
-            accessibilityLiveRegion='polite'
-            accessibilityRole='alert'
-            style={[
-              styles.toast,
-              {
-                borderLeftColor: color,
-                borderLeftWidth: 4,
-                ...theme.custom.shadows.card,
-              },
-              toastStyle,
-              style,
-            ]}
-          >
-            <View style={styles.content}>
-              <Animated.View
-                style={[
-                  styles.iconBadge,
-                  { backgroundColor: `${color}25` },
-                  iconStyle,
-                ]}
-              >
-                <Text style={styles.iconText}>{templateData.icon}</Text>
-              </Animated.View>
-              <View style={styles.copy}>
-                <Text testID='templates-toast-name' numberOfLines={2} style={styles.nameText}>
-                  {title}
-                </Text>
-                <Text numberOfLines={2} style={styles.subText}>
-                  {encouragement}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.actionColumn}>
-              {viewHabit ? (
-                <Pressable
-                  accessibilityLabel={primaryLabel}
-                  accessibilityRole='button'
-                  style={[styles.actionPill, { backgroundColor: color }]}
-                  onPress={() => {
-                    handleDismiss();
-                    viewHabit();
-                  }}
-                >
-                  <Text style={styles.actionText}>{primaryLabel}</Text>
-                </Pressable>
-              ) : null}
-              {onAddAnother ? (
-                <Pressable
-                  accessibilityLabel='Add another habit'
-                  accessibilityRole='button'
-                  onPress={() => {
-                    handleDismiss();
-                    onAddAnother();
-                  }}
-                >
-                  <Text style={styles.addAnotherText}>Add another</Text>
-                </Pressable>
-              ) : null}
-            </View>
-          </Animated.View>
+            primary={
+              viewHabit
+                  ? {
+                    disabled: !actionReady,
+                    hint: 'Closes the habit library and scrolls to this habit on Today',
+                    label: copy.primaryLabel,
+                    onPress: () => {
+                      // The toast fade runs in parallel with the focus
+                    // request; the library stays open for at least one
+                    // settle poll (see useFocusHabitRequest) so press
+                    // feedback still registers.
+                      viewHabit();
+                      handleDismiss();
+                    },
+                  }
+                : {
+                    label: 'Keep exploring habits',
+                    onPress: () => handleDismiss(),
+                  }
+            }
+            secondary={
+              onAddAnother && viewHabit
+                ? {
+                    hint: 'Returns to the habit library, which stays open',
+                    label: 'Keep exploring habits',
+                    onPress: () => {
+                      handleDismiss();
+                      onAddAnother();
+                    },
+                  }
+                : undefined
+            }
+          />
         </View>
       </GestureDetector>
-    </View>
+    </Animated.View>
   );
 }
 

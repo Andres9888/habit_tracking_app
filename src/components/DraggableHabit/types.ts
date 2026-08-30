@@ -64,6 +64,8 @@ export interface DraggableHabitProps {
   celebrationsEnabled: boolean;
   completionIcon?: 'chain' | 'checkbox';
   dayShape?: 'circle' | 'square';
+  /** Defers progress/fill/week controls for one hidden focus-mount frame. */
+  deferHeavyContent?: boolean;
   /** Stagger delay (ms) for entrance animation in a list. */
   entranceDelay?: number;
   entranceVariant?: HabitCardEntranceVariant;
@@ -73,6 +75,8 @@ export interface DraggableHabitProps {
   isConnectedToPreviousWeek?: boolean;
   /** True on the render immediately after the user creates this habit. */
   isJustCreated?: boolean;
+  /** Keeps the focus ring fully visible while Home is covered. */
+  holdHighlight?: boolean;
   isPaused?: boolean;
   onArchive?: (habitId: Id<'habits'>) => void;
   onDelete?: (habitId: Id<'habits'>) => void;

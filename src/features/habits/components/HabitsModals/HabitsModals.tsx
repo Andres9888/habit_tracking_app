@@ -44,9 +44,12 @@ export function HabitsModals({ state, onPremiumUpsell }: HabitsModalsProps) {
       <ShareAndPauseModals {...getShareAndPauseProps(state)} />
       <ErrorBoundary fallback={null}>
         <TemplatesModalSection
+          clearPendingFocusHabit={state.clearPendingFocusHabit}
           closeTemplatesScreen={state.closeTemplatesScreen}
+          commitFocusHabitOnHome={state.commitFocusHabitOnHome}
           habits={state.habits}
           openHabitDetail={state.openHabitDetail}
+          prepareFocusHabitOnHome={state.prepareFocusHabitOnHome}
           reduceMotionPreference={state.reduceMotionPreference}
           showTemplatesScreen={state.showTemplatesScreen}
         />

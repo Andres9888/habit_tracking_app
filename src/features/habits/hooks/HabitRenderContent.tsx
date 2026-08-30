@@ -20,6 +20,8 @@ type HabitRenderContentProps = {
   streak: number;
   isConnectedToNextWeek: boolean;
   isConnectedToPreviousWeek: boolean;
+  isHighlighted: boolean;
+  holdHighlight: boolean;
   drag?: () => void;
   showHabitStrengthPercentage: boolean;
   handlePause?: (habitId: Id<'habits'>) => void;
@@ -30,11 +32,11 @@ type HabitRenderContentProps = {
   | 'compactView'
   | 'completionIcon'
   | 'dayShape'
+  | 'deferHeavyContent'
   | 'entranceVariant'
   | 'handleArchive'
   | 'handleDelete'
   | 'handleHabitPress'
-  | 'highlightHabitId'
   | 'isReorderingEnabled'
   | 'notifyWeekCompletion'
   | 'onHabitEntranceComplete'
@@ -63,13 +65,15 @@ function HabitRenderContentComponent({
   compactView,
   completionIcon,
   dayShape,
+  deferHeavyContent,
   entranceVariant,
   handleArchive,
   handleDelete,
   handleHabitPress,
   handlePause,
   handleResume,
-  highlightHabitId,
+  isHighlighted,
+  holdHighlight,
   isReorderingEnabled,
   isSelectionMode,
   selectedIds,
@@ -117,9 +121,13 @@ function HabitRenderContentComponent({
     [isOptimisticHabit, toggleHabit]
   );
 
-  // Animated style for the active drag state — no scale to avoid GPU blur
+  // Animated style for the active drag state — no scale to avoid GPU blur.
+  // At rest the opacity is a plain 1, not `withTiming(1)`: a card mounted
+  // during a heavy commit (the focus remount) can have its first animated
+  // prop update dropped and stay at the pre-animation value — i.e. invisible.
+  // Only the drag-dim transition is animated.
   const activeStyle = useAnimatedStyle(() => ({
-    opacity: withTiming(isActive ? 0.92 : 1, { duration: 150 }),
+    opacity: isActive ? withTiming(0.92, { duration: 150 }) : 1,
     ...(isActive
       ? {
           shadowColor: '#000',
@@ -150,12 +158,14 @@ function HabitRenderContentComponent({
           completionIcon={completionIcon}
           isCompactMode={compactView}
           dayShape={dayShape}
+          deferHeavyContent={deferHeavyContent}
           entranceDelay={entranceDelay}
           entranceVariant={entranceVariant}
           habit={item}
           isConnectedToNextWeek={isConnectedToNextWeek}
           isConnectedToPreviousWeek={isConnectedToPreviousWeek}
-          isJustCreated={highlightHabitId === item._id}
+          isJustCreated={isHighlighted}
+          holdHighlight={holdHighlight}
           isPaused={item.paused ?? false}
           reduceMotionPreference={reduceMotionPreference}
           showConnectors={showConnectors}

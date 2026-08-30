@@ -32,6 +32,34 @@ function CardContentComponent(props: CardContentProps) {
   const { colors: themeColors } = useThemeColors();
   const compact = props.isCompactMode;
   const { handleWeekComplete, progressEmojis } = useCardContent(props);
+
+  // The focus list is hidden by the library during its remount. Keep the
+  // recognizable shell and header in that first frame, but reserve the full
+  // card height without constructing the animated strength/week subtree.
+  // The parent enables the real content on the next animation frame.
+  if (props.deferHeavyContent) {
+    return (
+      <>
+        <View className={`px-3 ${compact ? 'pt-3' : 'pt-4'}`}>
+          <CardHeader
+            accentColor={props.accentColor}
+            bestStreak={props.bestStreak}
+            colors={props.colors}
+            emoji={props.emoji}
+            habit={props.habit}
+            iconPulse={props.iconPulse}
+            isCompactMode={compact}
+            isPaused={props.isPaused}
+            name={props.name}
+            showHabitStrengthPercentage={props.showHabitStrengthPercentage}
+            streak={props.streak}
+          />
+        </View>
+        <View style={{ height: compact ? 68 : 100 }} />
+      </>
+    );
+  }
+
   return (
     <>
       <View className={`px-3 ${compact ? 'pt-3' : 'pt-4'}`}>

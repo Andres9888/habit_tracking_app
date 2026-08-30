@@ -23,6 +23,10 @@ export interface UseTemplateImportHandlersOptions {
   previewTemplate: Doc<'templates'> | null;
   isPremiumUser: boolean;
   onShowPaywall?: () => void;
+  recordImportedHabitId: (
+    templateId: Id<'templates'>,
+    habitId: Id<'habits'>
+  ) => void;
   setFeedbackHabitId: React.Dispatch<React.SetStateAction<Id<'habits'> | null>>;
   setFeedbackVariant: React.Dispatch<
     React.SetStateAction<'success' | 'already_exists' | null>

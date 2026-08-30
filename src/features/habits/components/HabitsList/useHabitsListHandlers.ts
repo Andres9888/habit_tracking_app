@@ -26,6 +26,7 @@ export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
 
   useHabitsListEffects({
     habitsLength: habits.length,
+    holdJustCreatedHighlight: state.holdJustCreatedHighlight,
     initialEntranceDoneRef: state.initialEntranceDoneRef,
     justCreatedHabitId: state.justCreatedHabitId,
     setJustCreatedHabitId: state.setJustCreatedHabitId,

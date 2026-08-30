@@ -18,7 +18,10 @@ import { useIconPulse } from './useIconPulse';
 import { useNewRecordAnimation } from './useNewRecordAnimation';
 
 interface AnimationParams {
+  holdHighlight?: boolean;
   isJustCreated: boolean;
+  /** No entrance will play: mount at full opacity, no animated update. */
+  mountVisible?: boolean;
   reduceMotionPreference: boolean;
   isWeekComplete: boolean;
   isNewPersonalRecord: boolean;
@@ -26,14 +29,17 @@ interface AnimationParams {
 }
 
 export function useDraggableHabitAnimations({
+  holdHighlight = false,
   isJustCreated,
+  mountVisible = false,
   reduceMotionPreference,
   isWeekComplete,
   isNewPersonalRecord,
   triggerSuccess,
 }: AnimationParams) {
-  const fade = useSharedValue(0);
-  const translateY = useSharedValue(12);
+  const startVisible = mountVisible || reduceMotionPreference;
+  const fade = useSharedValue(startVisible ? 1 : 0);
+  const translateY = useSharedValue(startVisible ? 0 : 12);
   const cardScale = useSharedValue(1);
   const newRecordScale = useSharedValue(0);
   const newRecordOpacity = useSharedValue(0);
@@ -41,9 +47,10 @@ export function useDraggableHabitAnimations({
   const highlightGlow = useSharedValue(0);
   const [showNewRecord, setShowNewRecord] = useState(false);
 
-  useEntranceAnimation(fade, translateY, reduceMotionPreference);
+  useEntranceAnimation(fade, translateY, reduceMotionPreference, mountVisible);
   useHighlightAnimation(
     isJustCreated,
+    holdHighlight,
     reduceMotionPreference,
     cardScale,
     highlightGlow

@@ -1,28 +1,17 @@
 /**
  * Animation hook for TemplateAddedToast
- * Bounce entrance with icon pop, swipe-to-dismiss
+ * Settle-in entrance with staggered check badge, swipe-to-dismiss
  */
 
-import { useEffect, useCallback, useRef } from 'react';
-import { Gesture } from 'react-native-gesture-handler';
-import {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-  withSequence,
-  withDelay,
-  runOnJS,
-} from 'react-native-reanimated';
+import { useEffect, useCallback, useMemo, useRef } from 'react';
+import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
-import {
-  DISMISS_THRESHOLD,
-  SPRING_BOUNCY,
-  SPRING_EXIT,
-  SPRING_ICON,
-  VELOCITY_THRESHOLD,
-} from './constants';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { ENTER_OFFSET_Y, ENTER_SCALE, EXIT_CALLBACK_DELAY } from './constants';
+import { runToastExit } from './toastMotion';
+import { useToastPanGesture } from './useToastPanGesture';
+import { useToastVisibilityAnimation } from './useToastVisibilityAnimation';
 
 interface Params {
   visible: boolean;
@@ -37,11 +26,17 @@ export function useTemplateAddedToastAnimations({
   onDismiss,
   variant = 'success',
 }: Params) {
-  const translateY = useSharedValue(120);
+  const translateY = useSharedValue(ENTER_OFFSET_Y);
   const opacity = useSharedValue(0);
-  const scale = useSharedValue(0.85);
-  const iconScale = useSharedValue(0);
+  const scale = useSharedValue(ENTER_SCALE);
+  const iconScale = useSharedValue(1);
+  const iconOpacity = useSharedValue(0);
+  const values = useMemo(
+    () => ({ iconOpacity, iconScale, opacity, scale, translateY }),
+    [iconOpacity, iconScale, opacity, scale, translateY]
+  );
   const haptic = useHapticFeedback();
+  const reduceMotion = useReduceMotion();
   const onDismissRef = useRef(onDismiss);
   onDismissRef.current = onDismiss;
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -56,80 +51,42 @@ export function useTemplateAddedToastAnimations({
   const handleDismiss = useCallback(
     (fromSwipe = false) => {
       if (fromSwipe) haptic.triggerLightImpact();
-      translateY.value = withSpring(120, SPRING_EXIT);
-      opacity.value = withTiming(0, { duration: 280 });
-      scale.value = withTiming(0.9, { duration: 280 });
-      iconScale.value = withTiming(0, { duration: 200 });
+      runToastExit(values, reduceMotion);
       if (onDismissRef.current) {
         if (timerRef.current) clearTimeout(timerRef.current);
-        timerRef.current = setTimeout(() => onDismissRef.current?.(), 300);
+        timerRef.current = setTimeout(
+          () => onDismissRef.current?.(),
+          EXIT_CALLBACK_DELAY
+        );
       }
     },
-    [translateY, opacity, scale, iconScale, haptic]
+    [values, haptic, reduceMotion]
   );
 
-  useEffect(() => {
-    if (visible) {
-      if (variant === 'already_exists') {
-        haptic.triggerLightImpact();
-      }
-      translateY.value = withSpring(0, SPRING_BOUNCY);
-      opacity.value = withTiming(1, { duration: 250 });
-      scale.value = withSequence(
-        withSpring(1.02, SPRING_BOUNCY),
-        withSpring(1, SPRING_EXIT)
-      );
-      iconScale.value = withDelay(
-        200,
-        withSequence(withSpring(1.15, SPRING_ICON), withSpring(1, SPRING_EXIT))
-      );
-      if (duration > 0 && onDismissRef.current) {
-        const t = setTimeout(() => handleDismiss(), duration);
-        return () => clearTimeout(t);
-      }
-    } else {
-      translateY.value = withSpring(120, SPRING_EXIT);
-      opacity.value = withTiming(0, { duration: 280 });
-      scale.value = withTiming(0.85, { duration: 280 });
-      iconScale.value = withTiming(0, { duration: 200 });
-    }
-  }, [
-    visible,
+  useToastVisibilityAnimation({
+    ...values,
+    autoDismissEnabled: Boolean(onDismissRef.current),
     duration,
-    translateY,
-    opacity,
-    scale,
-    iconScale,
     handleDismiss,
-    haptic,
+    reduceMotion,
+    triggerAlreadyExistsHaptic: haptic.triggerLightImpact,
     variant,
-  ]);
+    visible,
+  });
 
   const swipeDismiss = useCallback(() => handleDismiss(true), [handleDismiss]);
-  const panGesture = Gesture.Pan()
-    .onUpdate((e) => {
-      if (e.translationY > 0) {
-        translateY.value = e.translationY;
-        opacity.value = 1 - e.translationY / 100;
-      }
-    })
-    .onEnd((e) => {
-      if (
-        e.translationY > DISMISS_THRESHOLD ||
-        e.velocityY > VELOCITY_THRESHOLD
-      ) {
-        runOnJS(swipeDismiss)();
-      } else {
-        translateY.value = withSpring(0, SPRING_BOUNCY);
-        opacity.value = withTiming(1, { duration: 150 });
-      }
-    });
+  const panGesture = useToastPanGesture({
+    onSwipeDismiss: swipeDismiss,
+    opacity,
+    translateY,
+  });
 
   const toastStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
     transform: [{ translateY: translateY.value }, { scale: scale.value }],
   }));
   const iconStyle = useAnimatedStyle(() => ({
+    opacity: iconOpacity.value,
     transform: [{ scale: iconScale.value }],
   }));
 

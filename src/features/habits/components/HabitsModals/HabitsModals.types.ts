@@ -12,13 +12,9 @@ export interface HabitsModalsProps {
 /** Props for the SettingsModalSection component */
 export interface SettingsModalSectionProps {
   archivedHabitsCount: number;
-  celebrationsEnabled: boolean;
   settings: HabitsModalsState['settings'];
   showSettings: boolean;
-  showHabitStrengthPercentage: boolean;
   closeSettings: () => void;
-  openHapticTest: () => void;
-  setShowHabitStrengthPercentage: (value: boolean) => void;
   onSettingsChange: HabitsModalsState['onSettingsChange'];
   onPremiumUpsell?: () => void;
 }
@@ -72,6 +68,9 @@ export interface TemplatesModalSectionProps {
   habits: HabitsModalsState['habits'];
   showTemplatesScreen: boolean;
   closeTemplatesScreen: () => void;
+  clearPendingFocusHabit: HabitsModalsState['clearPendingFocusHabit'];
+  commitFocusHabitOnHome: HabitsModalsState['commitFocusHabitOnHome'];
+  prepareFocusHabitOnHome: HabitsModalsState['prepareFocusHabitOnHome'];
   openHabitDetail: HabitsModalsState['openHabitDetail'];
   reduceMotionPreference: boolean;
 }

@@ -52,9 +52,11 @@ function DraggableHabit(props: DraggableHabitProps) {
     celebrationsEnabled,
     completionIcon = DEFAULT_SETTINGS.habitCompletionIcon,
     dayShape = DEFAULT_SETTINGS.dayShape,
+    deferHeavyContent = false,
     entranceDelay = 0,
     entranceVariant = 'none',
     habit,
+    holdHighlight = false,
     isCompactMode = false,
     isConnectedToNextWeek = false,
     isConnectedToPreviousWeek = false,
@@ -109,7 +111,9 @@ function DraggableHabit(props: DraggableHabitProps) {
 
   // 4. Card animations (fade, scale, glow, new-record badge)
   const animations = useDraggableHabitAnimations({
+    holdHighlight,
     isJustCreated,
+    mountVisible: !triggerEntrance,
     isNewPersonalRecord: state.isNewPersonalRecord,
     isWeekComplete: state.isWeekComplete,
     reduceMotionPreference,
@@ -143,6 +147,7 @@ function DraggableHabit(props: DraggableHabitProps) {
       celebrationsEnabled={celebrationsEnabled}
       completionIcon={completionIcon}
       dayShape={dayShape}
+      deferHeavyContent={deferHeavyContent}
       entranceAccentStyle={entrance.accentStyle}
       entranceCardStyle={entrance.cardStyle}
       entranceContentStyle={entrance.contentStyle}

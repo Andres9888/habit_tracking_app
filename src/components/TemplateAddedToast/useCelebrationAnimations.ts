@@ -16,7 +16,7 @@ import {
 import ConfettiCannon from 'react-native-confetti-cannon';
 
 import { springs } from '@/theme/animations';
-import { SPRING_BOUNCY, SPRING_EXIT, SPRING_ICON } from './constants';
+import { SPRING_BOUNCY, SPRING_CELEBRATION_SETTLE, SPRING_ICON } from './constants';
 import { triggerHaptic } from '@/utils/haptics';
 
 interface Params {
@@ -70,7 +70,7 @@ export function useCelebrationAnimations({ visible, reducedMotion }: Params) {
     });
     emojiScale.value = withDelay(
       300,
-      withSequence(withSpring(1.1, SPRING_ICON), withSpring(1, SPRING_EXIT))
+      withSequence(withSpring(1.1, SPRING_ICON), withSpring(1, SPRING_CELEBRATION_SETTLE))
     );
     badgeScale.value = withDelay(
       700,

@@ -22,7 +22,7 @@ describe('highlightAnimations (reanimated)', () => {
       expect(highlightGlow.value).toBeDefined();
     });
 
-    it('calls withSequence with four withTiming steps', () => {
+    it('calls withSequence with the glow steps, ending on fade-out', () => {
       const highlightGlow = { value: 0 };
       runHighlightGlow(highlightGlow as never);
 
@@ -54,7 +54,7 @@ describe('highlightAnimations (reanimated)', () => {
   });
 
   describe('design system compliance', () => {
-    it('glow sequence uses correct durations (300, 400, 300, 500)', () => {
+    it('glow sequence uses correct durations (instant on, hold 1400, fade 500)', () => {
       // Verify the function exists and runs without error
       const glow = { value: 0 };
       expect(() => runHighlightGlow(glow as never)).not.toThrow();

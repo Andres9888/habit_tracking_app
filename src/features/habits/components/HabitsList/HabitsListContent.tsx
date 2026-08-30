@@ -12,17 +12,38 @@
  * {@link HabitsListContentProps}.
  */
 
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo, useRef } from 'react';
 import { View, type StyleProp, type ViewStyle } from 'react-native';
 import DraggableFlatList, {
   type RenderItemParams,
 } from 'react-native-draggable-flatlist';
 import { renderHabitsListHeader, renderHabitRow } from './HabitsListRenders';
+import { createScrollToIndexFallback } from './scrollToIndexFallback';
 import { HabitsListModals } from './HabitsListModals';
 import { StickyHeaderContext } from '../../../../components/CalendarTimeline/StickyHeaderContext';
 import { useStickyHeader } from './useStickyHeader';
 import type { Habit } from '../../types';
 import type { HabitsListContentProps } from './HabitsList.types';
+
+/**
+ * While a focus request is pending the list is remounted with the target as
+ * `initialScrollIndex` (see `useFocusAnchor`). Mounting cards is the expensive
+ * part, so keep the window small — it is measured in viewports — and mount the
+ * target region in one batch.
+ */
+const FOCUS_LIST_PERF = {
+  initialNumToRender: 4,
+  maxToRenderPerBatch: 16,
+  updateCellsBatchingPeriod: 8,
+  windowSize: 3,
+} as const;
+
+/** Where the list should mount for the current focus request, if any. */
+interface FocusAnchor {
+  estimatedRowLength: number;
+  key: string;
+  index: number;
+}
 
 const HeaderWrapper = memo(function HeaderWrapper({
   children,
@@ -34,11 +55,23 @@ const HeaderWrapper = memo(function HeaderWrapper({
   return <View style={style}>{children}</View>;
 });
 
+/*
+ * No `maintainVisibleContentPosition`: on Fabric it re-anchors the content
+ * natively without a JS scroll event, which left VirtualizedList's render
+ * window stranded around the focus remount's initial region (an unmounted
+ * hole under the target, sim-verified).
+ */
+
 export function HabitsListContent({
+  focusEstimatedRowLength,
   props,
   state,
   handlers,
+  listRef,
+  onHabitRowLayout,
+  onScrollToIndexFallback,
   renderItem,
+  scrollY,
 }: HabitsListContentProps) {
   const {
     list,
@@ -49,7 +82,20 @@ export function HabitsListContent({
   } = props;
 
   const stickyEnabled = props.modals.settings?.stickyCalendarHeader ?? false;
-  const { scrollHandler, contextValue } = useStickyHeader(stickyEnabled);
+  const focusAnchor = useFocusAnchor(
+    props.modals.pendingFocusHabitId,
+    list.habits,
+    focusEstimatedRowLength
+  );
+  // The anchor intentionally outlives the request. Keep its mount geometry
+  // stable after reveal; dropping getItemLayout during the modal exit makes
+  // a far list re-anchor toward row zero before the ring is visible.
+  const focusRequestPending = focusAnchor != null;
+  const focusPerf = focusRequestPending ? FOCUS_LIST_PERF : undefined;
+  const { scrollHandler, contextValue } = useStickyHeader(
+    stickyEnabled,
+    scrollY
+  );
   const contentContainerStyle = useMemo(
     () => ({
       paddingBottom: list.contentPadding.paddingBottom,
@@ -66,6 +112,18 @@ export function HabitsListContent({
     [list.contentPadding.paddingHorizontal]
   );
 
+  const handleScrollToIndexFailed = useMemo(
+    () => createScrollToIndexFallback(listRef, onScrollToIndexFallback),
+    [listRef, onScrollToIndexFallback]
+  );
+  const getFocusedItemLayout = useCallback(
+    (_data: ArrayLike<Habit> | null | undefined, index: number) => {
+      const length = focusAnchor?.estimatedRowLength ?? 0;
+      return { index, length, offset: length * index };
+    },
+    [focusAnchor]
+  );
+
   const listHeaderComponent = useMemo(
     () => renderHabitsListHeader({ handlers, props, state }),
     [handlers, props, state]
@@ -79,6 +137,7 @@ export function HabitsListContent({
         initialEntranceDoneRef: state.initialEntranceDoneRef,
         item: p.item,
         justCreatedHabitId: state.justCreatedHabitId,
+        onHabitRowLayout,
         renderItem,
         renderParams: p,
       }),
@@ -87,6 +146,7 @@ export function HabitsListContent({
       state.habitRowTranslateY,
       state.initialEntranceDoneRef,
       state.justCreatedHabitId,
+      onHabitRowLayout,
       renderItem,
     ]
   );
@@ -97,6 +157,15 @@ export function HabitsListContent({
         {stickyEnabled ? listHeaderComponent : null}
         <View style={{ flex: 1, overflow: 'hidden' }}>
           <DraggableFlatList<Habit>
+            // Normal scrolling remains variable-height. For a focus request,
+            // the measured row-length estimate lets initialScrollIndex mount
+            // a contiguous target region directly behind the library modal;
+            // native row layouts still gate when that region may be revealed.
+            // (No maintainVisibleContentPosition here: it bumps RN's
+            // pendingScrollUpdateCount on every data update and freezes the
+            // render window until scroll events drain it — a hole.)
+            key={focusAnchor?.key ?? 'habits'}
+            ref={listRef}
             ListHeaderComponent={
               stickyEnabled ? undefined : (
                 <HeaderWrapper style={headerWrapperStyle}>
@@ -113,20 +182,31 @@ export function HabitsListContent({
             }
             contentContainerStyle={contentContainerStyle}
             data={list.habits}
-            initialNumToRender={6}
+            // DraggableFlatList memoises mounted rows and only re-renders them
+            // when extraData changes; the focus/just-created highlight is
+            // per-row state that must reach an already-mounted card.
+            extraData={state.justCreatedHabitId}
+            getItemLayout={
+              focusRequestPending ? getFocusedItemLayout : undefined
+            }
+            initialScrollIndex={focusAnchor?.index}
+            // Window is measured in viewports. Keep several viewports ready on
+            // either side and schedule the next batch within one 60 Hz frame.
+            initialNumToRender={8}
             keyExtractor={handlers.keyExtractor}
-            maxToRenderPerBatch={6}
-            removeClippedSubviews
+            maxToRenderPerBatch={10}
             renderItem={renderHabitItem}
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={false}
-            updateCellsBatchingPeriod={32}
-            windowSize={5}
+            updateCellsBatchingPeriod={16}
+            windowSize={11}
+            {...focusPerf}
             onDragBegin={handlers.handleDragBegin}
             onDragEnd={(params) => {
               void list.handleDragEnd(params);
             }}
             onScroll={scrollHandler}
+            onScrollToIndexFailed={handleScrollToIndexFailed}
           />
         </View>
         <HabitsListModals
@@ -144,4 +224,29 @@ export function HabitsListContent({
     </StickyHeaderContext.Provider>
   );
 }
+
+/**
+ * One anchor per focus request, fixed the moment the target row exists in
+ * `habits`. It never changes afterwards (so later reorders or the request
+ * clearing do not remount the list again) until the next request arrives.
+ */
+function useFocusAnchor(
+  pendingFocusHabitId: string | null,
+  habits: Habit[],
+  focusEstimatedRowLength: number
+): FocusAnchor | null {
+  const anchorRef = useRef<FocusAnchor | null>(null);
+  if (pendingFocusHabitId && anchorRef.current?.key !== pendingFocusHabitId) {
+    const index = habits.findIndex((h) => h._id === pendingFocusHabitId);
+    if (index >= 0) {
+      anchorRef.current = {
+        estimatedRowLength: focusEstimatedRowLength,
+        index,
+        key: pendingFocusHabitId,
+      };
+    }
+  }
+  return anchorRef.current;
+}
+
 export { type HabitsListContentProps } from './HabitsList.types';

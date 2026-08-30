@@ -13,6 +13,7 @@ import {
  * Inputs required to manage HabitsList lifecycle side effects.
  */
 interface UseHabitsListEffectsOptions {
+  holdJustCreatedHighlight: boolean;
   justCreatedHabitId: Id<'habits'> | null;
   setJustCreatedHabitId: (id: Id<'habits'> | null) => void;
   shouldTriggerHabitEntrance: boolean;
@@ -28,6 +29,7 @@ interface UseHabitsListEffectsOptions {
  */
 export function useHabitsListEffects(options: UseHabitsListEffectsOptions) {
   const {
+    holdJustCreatedHighlight,
     justCreatedHabitId,
     setJustCreatedHabitId,
     shouldTriggerHabitEntrance,
@@ -38,10 +40,10 @@ export function useHabitsListEffects(options: UseHabitsListEffectsOptions) {
 
   // Clear "just created" highlight after a delay
   useEffect(() => {
-    if (!justCreatedHabitId) return;
+    if (!justCreatedHabitId || holdJustCreatedHighlight) return;
     const timer = setTimeout(() => setJustCreatedHabitId(null), NEW_HABIT_HIGHLIGHT_MS);
     return () => clearTimeout(timer);
-  }, [justCreatedHabitId, setJustCreatedHabitId]);
+  }, [holdJustCreatedHighlight, justCreatedHabitId, setJustCreatedHabitId]);
 
   // Trigger entrance animation after layout settles
   useEffect(() => {

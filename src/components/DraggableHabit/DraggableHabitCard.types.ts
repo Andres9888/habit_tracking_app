@@ -43,6 +43,7 @@ export interface DraggableHabitCardProps {
   colors: CardColors;
   completionIcon: 'chain' | 'checkbox';
   dayShape: 'circle' | 'square';
+  deferHeavyContent: boolean;
   emoji: string;
   entranceAccentStyle: object;
   entranceCardStyle: object;

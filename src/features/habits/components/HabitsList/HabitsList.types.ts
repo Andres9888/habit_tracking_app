@@ -7,8 +7,11 @@
  * automatically.
  */
 
+import type { SharedValue } from 'react-native-reanimated';
 import type { MutableRefObject } from 'react';
+import type { FlatList } from 'react-native-gesture-handler';
 import type { Id } from '../../../../../convex/_generated/dataModel';
+import type { Habit } from '../../types';
 import type { HabitsListState } from '../../hooks/useHabitsApp';
 import type { HabitsModalsState } from '../../hooks/types';
 
@@ -37,6 +40,16 @@ export interface HabitsListProps {
 
 export interface HabitsListContentProps {
   props: HabitsListProps;
+  /** Measured average used only to seed a far focus target's initial region. */
+  focusEstimatedRowLength: number;
+  /** Attached to the DraggableFlatList so focus requests can scroll it. */
+  listRef: React.RefObject<FlatList<Habit> | null>;
+  /** Records native layout for the focused row and its surrounding cards. */
+  onHabitRowLayout?: (habitId: string, height: number) => void;
+  /** Fired when scrollToIndex fell back to the estimate→retry path. */
+  onScrollToIndexFallback?: () => void;
+  /** Shared list scroll offset; the focus flow reads it after aligning. */
+  scrollY?: SharedValue<number>;
   state: ReturnType<typeof import('./useHabitsListState').useHabitsListState>;
   handlers: ReturnType<
     typeof import('./useHabitsListHandlers').useHabitsListHandlers
@@ -51,6 +64,7 @@ export interface UseHabitsListHandlersOptions {
   onSettingsChange: HabitsListProps['modals']['onSettingsChange'];
   onCreateHabitRequest: HabitsListProps['onCreateHabitRequest'];
   state: {
+    holdJustCreatedHighlight: boolean;
     justCreatedHabitId: Id<'habits'> | null;
     setJustCreatedHabitId: (id: Id<'habits'> | null) => void;
     shouldTriggerHabitEntrance: boolean;

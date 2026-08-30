@@ -4,6 +4,9 @@ import { getNextWeekConnection } from './getNextWeekConnection';
 import { getPreviousWeekConnection } from './getPreviousWeekConnection';
 import type { UseHabitRenderItemArgs } from './useHabitRenderItem.types';
 
+/** Rows beyond this get the same (max) stagger delay. */
+const MAX_STAGGER_ROWS = 8;
+
 export function getHabitRenderData(
   item: Habit,
   index: number,
@@ -18,7 +21,11 @@ export function getHabitRenderData(
     weekDateStrings,
   } = args;
 
-  const entranceDelay = index * (entranceStaggerDelay ?? 0);
+  // Stagger is a first-paint flourish. Clamp it so a row that mounts deep in
+  // the list (scroll, or the focus remount) is never left invisible for
+  // index × stagger — row 100 used to wait 5s at opacity 0.
+  const entranceDelay =
+    Math.min(index, MAX_STAGGER_ROWS) * (entranceStaggerDelay ?? 0);
   const hasBeenSeen = seenHabitIds?.has(item._id) ?? false;
   const triggerEntrance = Boolean(shouldTriggerEntrance) && !hasBeenSeen;
   const weekStatus = getWeekStatusForHabit(
@@ -54,6 +61,7 @@ export function getRenderItemDependencies(args: UseHabitRenderItemArgs) {
     args.compactView,
     args.completionIcon,
     args.dayShape,
+    args.deferHeavyContent,
     args.entranceStaggerDelay,
     args.entranceVariant,
     args.getHabitStatus,
@@ -62,6 +70,7 @@ export function getRenderItemDependencies(args: UseHabitRenderItemArgs) {
     args.handleDelete,
     args.handleHabitPress,
     args.highlightHabitId,
+    args.holdHighlight,
     args.isReorderingEnabled,
     args.notifyWeekCompletion,
     args.onHabitEntranceComplete,

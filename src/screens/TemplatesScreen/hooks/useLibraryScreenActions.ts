@@ -8,6 +8,7 @@
  */
 
 import { useCallback, useMemo } from 'react';
+import { Keyboard } from 'react-native';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import {
   trackLibraryEvent,
@@ -22,6 +23,10 @@ interface UseLibraryScreenActionsOptions {
   packConfirm: ScreenProps['packConfirm'];
   state: ScreenProps['state'];
   onViewHabit?: (habitId: Id<'habits'>) => void;
+  /** Home + scroll-to + highlight; the success toast's "Go to <name>". */
+  onGoToHabit?: (habitId: Id<'habits'>) => void;
+  onPrepareGoToHabit?: (habitId: Id<'habits'>) => void;
+  onCancelPreparedGoToHabit?: () => void;
 }
 
 export function useLibraryScreenActions({
@@ -29,18 +34,41 @@ export function useLibraryScreenActions({
   packConfirm,
   state,
   onViewHabit,
+  onGoToHabit,
+  onPrepareGoToHabit,
+  onCancelPreparedGoToHabit,
 }: UseLibraryScreenActionsOptions) {
-  const { dismissFeedback, feedbackHabitId, showFeedbackError } = state;
+  const {
+    dismissFeedback,
+    feedbackHabitId,
+    feedbackVariant,
+    showFeedbackError,
+  } = state;
 
   const handleSaveError = useCallback(
     () => showFeedbackError("Couldn't save your cue. Try again."),
     [showFeedbackError]
   );
 
+  // A freshly added habit lands on Today, scrolled to and highlighted — same
+  // exit as the drill-down's primary action. "Already added" keeps opening
+  // the detail screen: its copy promises progress + plan, not the list.
   const handleViewHabit = useCallback(() => {
-    if (feedbackHabitId) onViewHabit?.(feedbackHabitId);
+    if (feedbackHabitId) {
+      if (feedbackVariant === 'success' && onGoToHabit) {
+        onGoToHabit(feedbackHabitId);
+      } else {
+        onViewHabit?.(feedbackHabitId);
+      }
+    }
     dismissFeedback();
-  }, [dismissFeedback, feedbackHabitId, onViewHabit]);
+  }, [
+    dismissFeedback,
+    feedbackHabitId,
+    feedbackVariant,
+    onGoToHabit,
+    onViewHabit,
+  ]);
 
   const makeImportHandler = useCallback(
     (source: TemplateImportSource) => (template: Doc<'templates'>) => {
@@ -50,9 +78,21 @@ export function useLibraryScreenActions({
         source,
       });
       state.setPreviewTemplate(template);
-      void handlers.handleDirectImport(template._id);
+      // List Add stays on the catalog. Its success surface is the temporary,
+      // list-owned TemplateAddedToast; only the drill-down uses inline mode.
+      // The bottom-anchored toast sits under the iOS keyboard, and its
+      // "Go to habit" CTA makes the keyboard dead weight after Add.
+      Keyboard.dismiss();
+      onCancelPreparedGoToHabit?.();
+      void handlers
+        .handleDirectImport(template._id, 'list', template)
+        .then((result) => {
+          if (result?.success && !result.alreadyExists && result.habitId) {
+            onPrepareGoToHabit?.(result.habitId);
+          }
+        });
     },
-    [handlers, state]
+    [handlers, onCancelPreparedGoToHabit, onPrepareGoToHabit, state]
   );
 
   const handlePopularImport = useMemo(
@@ -67,7 +107,10 @@ export function useLibraryScreenActions({
         templateId: id,
         source: 'details',
       });
-      await handlers.handleDirectImport(id);
+      // The drill-down owns its persistent post-add confirmation. Success is
+      // inline here so no overlay competes with it; failures still use the
+      // shared error toast.
+      await handlers.handleDirectImport(id, 'inline');
     },
     [handlers]
   );
@@ -80,8 +123,13 @@ export function useLibraryScreenActions({
     void packConfirm.handleConfirm();
   }, [packConfirm]);
 
+  const handleAddAnother = useCallback(() => {
+    onCancelPreparedGoToHabit?.();
+    dismissFeedback();
+  }, [dismissFeedback, onCancelPreparedGoToHabit]);
+
   return {
-    handleAddAnother: dismissFeedback,
+    handleAddAnother,
     handleDetailsDirectImport,
     handleDismissFeedback: dismissFeedback,
     handlePackConfirm,

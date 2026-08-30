@@ -29,6 +29,26 @@ const weekStatus: Array<'done' | 'missed' | 'planned'> = [
 ];
 
 describe('DraggableHabit color accent border', () => {
+  it('keeps the card shell painted while deferring heavy focus content', () => {
+    const { getByTestId, getByText, queryByText } = render(
+      <DraggableHabit
+        celebrationsEnabled={false}
+        deferHeavyContent
+        habit={buildHabit({ strength: 0.75 })}
+        reduceMotionPreference={true}
+        showHabitStrengthPercentage
+        streak={0}
+        toggleHabit={jest.fn()}
+        weekDateStrings={weekDateStrings}
+        weekStatus={weekStatus}
+      />
+    );
+
+    expect(getByTestId('habit-card')).toBeTruthy();
+    expect(getByText('Daily Reflection')).toBeTruthy();
+    expect(queryByText('75%')).toBeNull();
+  });
+
   it('renders with flex-row layout for color accent border', () => {
     const { toJSON } = render(
       <DraggableHabit

@@ -12,6 +12,8 @@ export interface UseHabitRenderItemArgs {
   celebrationsEnabled: boolean;
   compactView?: boolean;
   completionIcon: 'chain' | 'checkbox';
+  /** Keep the card shell/header light for the focus remount's first frame. */
+  deferHeavyContent?: boolean;
   dayShape?: 'circle' | 'square';
   getHabitStatus: (habitId: string, dateString: string) => HabitStatus;
   getStreak: (habitId: string) => number;
@@ -19,6 +21,8 @@ export interface UseHabitRenderItemArgs {
   handleDelete: (habitId: Id<'habits'>) => void;
   handleHabitPress: (habit: Habit) => void;
   highlightHabitId?: Id<'habits'> | null;
+  /** Holds a prepared focus ring until the user commits the toast action. */
+  holdHighlight?: boolean;
   isReorderingEnabled: boolean;
   notifyWeekCompletion: (args: { habit: Habit; completedDate: string }) => void;
   reduceMotionPreference: boolean;

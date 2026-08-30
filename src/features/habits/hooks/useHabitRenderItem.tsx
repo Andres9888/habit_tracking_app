@@ -15,11 +15,13 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
     compactView,
     completionIcon,
     dayShape = DEFAULT_SETTINGS.dayShape,
+    deferHeavyContent = false,
     entranceVariant = 'none',
     handleArchive,
     handleDelete,
     handleHabitPress,
     highlightHabitId,
+    holdHighlight = false,
     isReorderingEnabled,
     notifyWeekCompletion,
     onHabitEntranceComplete,
@@ -46,13 +48,15 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
           compactView={compactView}
           completionIcon={completionIcon}
           dayShape={dayShape}
+          deferHeavyContent={deferHeavyContent}
           drag={drag}
           entranceDelay={renderData.entranceDelay}
           entranceVariant={entranceVariant}
           handleArchive={handleArchive}
           handleDelete={handleDelete}
           handleHabitPress={handleHabitPress}
-          highlightHabitId={highlightHabitId}
+          isHighlighted={highlightHabitId === item._id}
+          holdHighlight={holdHighlight && highlightHabitId === item._id}
           isActive={Boolean(isActive)}
           isConnectedToNextWeek={renderData.isConnectedToNextWeek}
           isConnectedToPreviousWeek={renderData.isConnectedToPreviousWeek}

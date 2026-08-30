@@ -22,17 +22,115 @@
  * ```
  */
 
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSharedValue } from 'react-native-reanimated';
+import type { FlatList } from 'react-native-gesture-handler';
 import { useHabitRenderItem } from '../../hooks/useHabitRenderItem';
 import { useHabitsListState } from './useHabitsListState';
 import { useHabitsListHandlers } from './useHabitsListHandlers';
 import { HabitsListContent } from './HabitsListContent';
+import { useFocusHabitRequest } from './useFocusHabitRequest';
+import { isFocusNeighborhoodLaidOut } from './focusNeighborhood';
 import { ENTRANCE_STAGGER_DELAY } from './constants';
+import type { Habit } from '../../types';
 import type { HabitsListProps } from './HabitsList.types';
+
+const DEFAULT_COMPACT_ROW_LENGTH = 132;
+const DEFAULT_REGULAR_ROW_LENGTH = 184;
 
 export function HabitsList(props: HabitsListProps) {
   const { list, modals, onCreateHabitRequest } = props;
 
   const state = useHabitsListState();
+  const listRef = useRef<FlatList<Habit>>(null);
+  const fallbackAtRef = useRef(0);
+  const handleScrollFallback = useCallback(() => {
+    fallbackAtRef.current = Date.now();
+  }, []);
+  // Current contentOffset.y, written by the list's animated scroll handler;
+  // the focus flow reads it to undo a negative resting offset.
+  const scrollY = useSharedValue(0);
+  const getScrollOffset = useCallback(() => scrollY.value, [scrollY]);
+
+  // The focus flow remounts the list; rows that never finished an entrance
+  // would replay it, staggered by index, and sit at opacity 0 meanwhile —
+  // that is the "blank card next to the target" symptom. Mark everything
+  // currently in the list as seen before the remount happens.
+  const { seenHabitIdsRef } = state;
+  const { pendingFocusHabitId } = modals;
+  const [focusContentReadyId, setFocusContentReadyId] = useState<string | null>(
+    null
+  );
+  useEffect(() => {
+    if (!pendingFocusHabitId) return;
+    const frame = requestAnimationFrame(() =>
+      setFocusContentReadyId(pendingFocusHabitId)
+    );
+    return () => cancelAnimationFrame(frame);
+  }, [pendingFocusHabitId]);
+  const deferHeavyFocusContent = Boolean(
+    pendingFocusHabitId && focusContentReadyId !== pendingFocusHabitId
+  );
+  const focusLayoutRef = useRef<{
+    focusId: string | null;
+    laidOutIds: Set<string>;
+  }>({ focusId: null, laidOutIds: new Set() });
+  const measuredRowHeightsRef = useRef(new Map<string, number>());
+  // Reset synchronously with the focus-keyed list remount. Old row layouts
+  // must never make a newly mounted target region look ready.
+  if (focusLayoutRef.current.focusId !== pendingFocusHabitId) {
+    focusLayoutRef.current = {
+      focusId: pendingFocusHabitId,
+      laidOutIds: new Set(),
+    };
+  }
+  const measuredHeights = [...measuredRowHeightsRef.current.values()];
+  const focusEstimatedRowLength =
+    measuredHeights.length > 0
+      ? measuredHeights.reduce((sum, height) => sum + height, 0) /
+        measuredHeights.length
+      : list.compactView
+        ? DEFAULT_COMPACT_ROW_LENGTH
+        : DEFAULT_REGULAR_ROW_LENGTH;
+  const handleHabitRowLayout = useCallback(
+    (habitId: string, height: number) => {
+      if (height > 0) measuredRowHeightsRef.current.set(habitId, height);
+      if (focusLayoutRef.current.focusId) {
+        focusLayoutRef.current.laidOutIds.add(habitId);
+      }
+    },
+    []
+  );
+  const isFocusNeighborhoodReady = useCallback(
+    (targetIndex: number) => {
+      return isFocusNeighborhoodLaidOut(
+        list.habits,
+        targetIndex,
+        focusLayoutRef.current.laidOutIds
+      );
+    },
+    [list.habits]
+  );
+  if (pendingFocusHabitId) {
+    for (const habit of list.habits) seenHabitIdsRef.current.add(habit._id);
+  }
+
+  useFocusHabitRequest({
+    autoClose: modals.focusRequestAutoClose,
+    clearPendingFocusHabit: modals.clearPendingFocusHabit,
+    closeLibrary: modals.closeTemplatesScreen,
+    fallbackAtRef,
+    getScrollOffset,
+    habits: list.habits,
+    focusReady: modals.focusReady,
+    isFocusNeighborhoodReady,
+    isLibraryOpen: modals.showTemplatesScreen,
+    listRef,
+    pendingFocusHabitId: modals.pendingFocusHabitId,
+    onFocusReady: modals.markFocusHabitReady,
+    reduceMotion: list.reduceMotionPreference,
+    setJustCreatedHabitId: state.setJustCreatedHabitId,
+  });
 
   const handlers = useHabitsListHandlers({
     list,
@@ -40,6 +138,9 @@ export function HabitsList(props: HabitsListProps) {
     onSettingsChange: modals.onSettingsChange,
     state: {
       initialEntranceDoneRef: state.initialEntranceDoneRef,
+      holdJustCreatedHighlight: Boolean(
+        modals.pendingFocusHabitId && !modals.focusRequestAutoClose
+      ),
       justCreatedHabitId: state.justCreatedHabitId,
       setJustCreatedHabitId: state.setJustCreatedHabitId,
       setShouldTriggerHabitEntrance: state.setShouldTriggerHabitEntrance,
@@ -52,6 +153,7 @@ export function HabitsList(props: HabitsListProps) {
     compactView: list.compactView,
     completionIcon: list.habitCompletionIcon,
     dayShape: list.dayShape,
+    deferHeavyContent: deferHeavyFocusContent,
     entranceStaggerDelay: ENTRANCE_STAGGER_DELAY,
     getHabitStatus: list.getHabitStatus,
     getStreak: list.getStreak,
@@ -62,6 +164,9 @@ export function HabitsList(props: HabitsListProps) {
     selectedIds: props.selectedIds,
     onToggleSelection: props.onToggleSelection,
     highlightHabitId: state.justCreatedHabitId,
+    holdHighlight: Boolean(
+      modals.pendingFocusHabitId && !modals.focusRequestAutoClose
+    ),
     isReorderingEnabled: handlers.isReorderingEnabled,
     notifyWeekCompletion: list.notifyWeekCompletion,
     onHabitEntranceComplete: state.handleHabitEntranceComplete,
@@ -77,7 +182,12 @@ export function HabitsList(props: HabitsListProps) {
 
   return (
     <HabitsListContent
+      focusEstimatedRowLength={focusEstimatedRowLength}
       handlers={handlers}
+      listRef={listRef}
+      onHabitRowLayout={handleHabitRowLayout}
+      onScrollToIndexFallback={handleScrollFallback}
+      scrollY={scrollY}
       props={props}
       renderItem={renderItem}
       state={state}
