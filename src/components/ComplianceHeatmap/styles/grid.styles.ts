@@ -20,7 +20,7 @@ export const gridStyles = StyleSheet.create({
   cellText: {
     color: colors.surface,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 8,
+    fontSize: 11,
     fontWeight: fontWeights.semibold,
   },
   scrollView: {

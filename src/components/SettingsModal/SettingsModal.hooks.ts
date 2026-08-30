@@ -2,8 +2,6 @@ import { useMutation } from 'convex/react';
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 import type { SettingsModalSettingsDocument } from './types';
-import { DEFAULT_SETTINGS } from '../../../convex/settings/types';
-import { sanitizeSettingsPayload } from '../../lib/settings/sanitizeSettingsPayload';
 import { updateSettingsWithFallback } from '../../lib/settings/updateSettingsWithFallback';
 import { createSettingsUpdaters } from './SettingsModal.settingsUpdaters';
 import { useSettingsLocalPrefs } from './useSettingsLocalPrefs';
@@ -25,6 +23,7 @@ export const useSettingsModalLogic = ({
   const [viewDirection, setViewDirection] = useState<
     'forward' | 'back' | 'none'
   >('none');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const settings = settingsDocument;
   const updateSettings = useMutation(api.settings.update);
   const localPrefs = useSettingsLocalPrefs(settings);
@@ -33,6 +32,7 @@ export const useSettingsModalLogic = ({
     if (visible) {
       setViewState('settings');
       setViewDirection('none');
+      setErrorMessage(null);
     }
   }, [visible]);
 
@@ -48,35 +48,45 @@ export const useSettingsModalLogic = ({
     onClose();
   }, [onClose]);
 
+  const clearError = useCallback(() => setErrorMessage(null), []);
+
+  // Single-key patch, not the whole settings document: `settings.update` is a
+  // Convex `db.patch`, so sending every field made concurrent writes from the
+  // two callers race and silently revert each other's changes.
   const update = useCallback(
     async (patch: Record<string, unknown>) => {
-      const baseSettings =
-        settings == null
-          ? (DEFAULT_SETTINGS as Record<string, unknown>)
-          : (settings as Record<string, unknown>);
-
-      await updateSettingsWithFallback(
-        updateSettings,
-        sanitizeSettingsPayload({ ...baseSettings, ...patch })
-      );
+      await updateSettingsWithFallback(updateSettings, patch);
     },
-    [settings, updateSettings]
+    [updateSettings]
   );
 
-  const updaters = createSettingsUpdaters(update, {
-    setCompactViewState: localPrefs.setCompactViewState,
-    setConnectorStyleState: localPrefs.setConnectorStyleState,
-    setDarkModeState: localPrefs.setDarkModeState,
-    setReduceMotionState: localPrefs.setReduceMotionState,
-    setShowGradientFillState: localPrefs.setShowGradientFillState,
-  });
+  const updaters = createSettingsUpdaters(
+    update,
+    {
+      setCompactViewState: localPrefs.setCompactViewState,
+      setConnectorStyleState: localPrefs.setConnectorStyleState,
+      setDarkModeState: localPrefs.setDarkModeState,
+      setReduceMotionState: localPrefs.setReduceMotionState,
+      setShowGradientFillState: localPrefs.setShowGradientFillState,
+    },
+    {
+      compactView: localPrefs.compactView,
+      connectorStyle: localPrefs.connectorStyle,
+      darkModePreference: localPrefs.darkModePreference,
+      reduceMotion: localPrefs.reduceMotion,
+      showGradientFill: localPrefs.showGradientFill,
+    },
+    setErrorMessage
+  );
 
   const habitSortMode = (settings?.habitSortMode as string) ?? 'manual';
 
   return {
+    clearError,
     compactView: localPrefs.compactView,
     connectorStyle: localPrefs.connectorStyle,
     darkModePreference: localPrefs.darkModePreference,
+    errorMessage,
     habitSortMode,
     handleClose,
     reduceMotion: localPrefs.reduceMotion,

@@ -13,6 +13,7 @@ import type {
 import { TemplateModals } from './TemplateModals';
 
 interface TemplatesScreenModalsProps {
+  habitIdByTemplateId: Map<string, Id<'habits'>>;
   importedTemplateIds: Set<string>;
   importingTemplateId: Id<'templates'> | null;
   previewInitialAnchor: TemplatePreviewAnchor;
@@ -26,6 +27,8 @@ interface TemplatesScreenModalsProps {
   onClosePaywall: () => void;
   /** Detail modal X — dismisses the whole flow onto the home screen. */
   onExitToHome: () => void;
+  /** Post-add primary action — home, then scroll to + highlight the habit. */
+  onGoToHabit: (habitId: Id<'habits'>) => void;
   onCustomize: (template: Doc<'templates'>) => void;
   onDirectImport: (templateId: Id<'templates'>) => Promise<void>;
   onImport: (
@@ -42,6 +45,7 @@ export function TemplatesScreenModals(p: TemplatesScreenModalsProps) {
   return (
     <>
       <TemplateModals
+        habitIdByTemplateId={p.habitIdByTemplateId}
         importedTemplateIds={p.importedTemplateIds}
         importingTemplateId={p.importingTemplateId}
         previewInitialAnchor={p.previewInitialAnchor}
@@ -52,6 +56,7 @@ export function TemplatesScreenModals(p: TemplatesScreenModalsProps) {
         onCloseCustomize={p.onCloseCustomize}
         onCustomize={p.onCustomize}
         onExitToHome={p.onExitToHome}
+        onGoToHabit={p.onGoToHabit}
         onDirectImport={p.onDirectImport}
         onImport={p.onImport}
       />

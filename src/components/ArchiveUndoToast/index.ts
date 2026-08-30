@@ -9,4 +9,5 @@ export {
   ArchiveUndoToast,
   type ArchiveUndoToastProps,
 } from './ArchiveUndoToast';
+export { ActionToast } from './ActionToast';
 export { default } from './ArchiveUndoToast';

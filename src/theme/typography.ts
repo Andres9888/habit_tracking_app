@@ -46,6 +46,16 @@ export const fontWeights = {
 /**
  * Type Scale (Design System: 34/22/17/13)
  * Display: 34, Title: 22, Body: 17, Caption: 13
+ *
+ * Legibility floor — every text role must resolve to one of these tokens:
+ * - Prose, hints, empty states, help text: `caption` (13) or larger. Never smaller.
+ * - Dense UI labels (chips, badges, legends): `label` (12).
+ * - Uppercase eyebrows / section kickers: `overline` (12). Small + all-caps +
+ *   wide tracking is the least legible combination in the app; 12px is the floor
+ *   for it, not a target.
+ * - Data-viz ticks (heatmap, sparkline, calendar glyphs): `micro` (11).
+ *
+ * 11px is the absolute floor (matches the iOS HIG 11pt minimum). Nothing below.
  */
 export const typography = {
   // Display Large (Onboarding headlines) — 34px Literata
@@ -136,6 +146,26 @@ export const typography = {
     fontWeight: fontWeights.regular,
     letterSpacing: 0,
     lineHeight: 24,
+  },
+
+  // Label (Dense UI labels — chips, badges, legends, stat captions) — 12px
+  // Use instead of hand-rolled 11/11.5/12px inline styles.
+  label: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 12,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: 0.1,
+    lineHeight: 16,
+  },
+
+  // Micro (Data-viz ticks only — heatmap cells, sparkline axes, calendar glyphs)
+  // 11px is the hard legibility floor. Never render text below this.
+  micro: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 11,
+    fontWeight: fontWeights.medium,
+    letterSpacing: 0.1,
+    lineHeight: 14,
   },
 
   // Overline (Section headers, uppercase labels) — 12px

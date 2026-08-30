@@ -54,7 +54,9 @@ export function useStreakGoalAnimation(
     streakCount.value = reduceMotion
       ? currentStreak
       : withTiming(currentStreak, timingConfig);
-    days.value = reduceMotion ? targetDays : withTiming(targetDays, timingConfig);
+    days.value = reduceMotion
+      ? targetDays
+      : withTiming(targetDays, timingConfig);
 
     if (reduceMotion) {
       setShowLabels(true);
@@ -107,5 +109,12 @@ export function useStreakGoalAnimation(
     width: `${progress.value}%`,
   }));
 
-  return { barStyle, daysText, isGoalReached, percentText, showLabels, streakText };
+  return {
+    barStyle,
+    daysText,
+    isGoalReached,
+    percentText,
+    showLabels,
+    streakText,
+  };
 }

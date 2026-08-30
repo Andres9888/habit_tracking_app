@@ -127,7 +127,7 @@ export const ringStyles = StyleSheet.create({
   },
   monthPrefixText: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 9,
+    fontSize: 11,
     fontWeight: fontWeights.bold,
     letterSpacing: 0.5,
     marginBottom: 0,

@@ -61,7 +61,10 @@ export function useCalendarDayCellState({
   return {
     animation,
     isDisabled: Boolean(
-      day?.isFuture || !day?.isCurrentMonth || isToggleBlocked
+      day?.isFuture ||
+      day?.state === 'before-creation' ||
+      !day?.isCurrentMonth ||
+      isToggleBlocked
     ),
     isToday,
     showCompleted,

@@ -34,6 +34,9 @@ const REST_MID = '#EDF0E9';
 /** Design's greener wash once today is logged. */
 const DONE_TOP = '#D9EBDF';
 const DONE_MID = '#E9EFE7';
+/** Design's amber wash while a miss is still unanswered. */
+const RECOVERY_TOP = '#F3E7D8';
+const RECOVERY_MID = '#F2EDE2';
 
 /** Design's band ink and chrome. */
 const BAND_INK = '#23211C';
@@ -44,6 +47,8 @@ const DIAL_TRACK = '#D3DFD5';
 export interface BandTokens {
   bandGradient: BandGradient;
   bandGradientDone: BandGradient;
+  /** Amber wash for the recovery variant of the hero. */
+  bandGradientRecovery: BandGradient;
   /** Primary copy on the band. Dark ink — the wash is pale. */
   bandFg: string;
   /** Muted copy: eyebrow, dial level word, why quote. */
@@ -59,7 +64,8 @@ export interface BandTokens {
 export function buildBandTokens(
   colors: SemanticColors,
   isDark: boolean,
-  accent: string
+  accent: string,
+  warm: string
 ): BandTokens {
   if (isDark) {
     // The mock has no dark mode, so the dark wash is the same idea rebuilt
@@ -77,6 +83,11 @@ export function buildBandTokens(
         mixHex(accent, colors.background, 0.09),
         colors.background,
       ],
+      bandGradientRecovery: [
+        mixHex(warm, colors.background, 0.18),
+        mixHex(warm, colors.background, 0.07),
+        colors.background,
+      ],
       bandHairline: mixHex(colors.text.primary, colors.background, 0.2),
       bandMuted: colors.text.secondary,
       bandSoft: withAlpha(accent, 0.14),
@@ -87,6 +98,7 @@ export function buildBandTokens(
     bandFg: BAND_INK,
     bandGradient: [REST_TOP, REST_MID, colors.background],
     bandGradientDone: [DONE_TOP, DONE_MID, colors.background],
+    bandGradientRecovery: [RECOVERY_TOP, RECOVERY_MID, colors.background],
     bandHairline: BAND_HAIRLINE,
     bandMuted: BAND_MUTED,
     bandSoft: withAlpha(accent, 0.08),

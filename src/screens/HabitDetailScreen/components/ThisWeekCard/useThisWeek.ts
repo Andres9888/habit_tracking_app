@@ -2,6 +2,11 @@
 
 import { useMemo } from 'react';
 import { addDays, format, startOfWeek } from 'date-fns';
+import {
+  getHabitDayState,
+  type HabitDayContext,
+  type HabitDayState,
+} from '../../../../features/habits/habitDayState';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import {
   isScheduledWeekday,
@@ -9,36 +14,26 @@ import {
   WEEKDAY_SHORT,
 } from '../../insights';
 
-export type WeekDayState = 'done' | 'today' | 'missed' | 'upcoming' | 'off';
-
 export interface WeekDay {
   date: string;
   dayNum: number;
+  isToday: boolean;
+  scheduled: boolean;
   short: string;
-  state: WeekDayState;
+  state: HabitDayState;
 }
 
-interface UseThisWeekArgs {
+interface UseThisWeekArgs extends HabitDayContext {
   completedDates: Set<string>;
-  daysOfWeek?: number[];
   today?: string;
-}
-
-function stateFor(
-  date: string,
-  today: string,
-  isDone: boolean,
-  isScheduled: boolean
-): WeekDayState {
-  if (isDone) return 'done';
-  if (!isScheduled) return 'off';
-  if (date === today) return 'today';
-  return date < today ? 'missed' : 'upcoming';
 }
 
 export function useThisWeek({
   completedDates,
+  createdAt,
   daysOfWeek,
+  pausedAt,
+  resumedAt,
   today = getLocalDateString(),
 }: UseThisWeekArgs) {
   return useMemo(() => {
@@ -51,16 +46,23 @@ export function useThisWeek({
       const cursor = addDays(monday, index);
       const date = getLocalDateString(cursor);
       const weekday = cursor.getDay();
+      const isScheduled = isScheduledWeekday(scheduled, weekday);
+      const state = getHabitDayState({
+        completed: completedDates.has(date),
+        createdAt,
+        date,
+        daysOfWeek,
+        pausedAt,
+        resumedAt,
+        today,
+      });
       return {
         date,
         dayNum: cursor.getDate(),
+        isToday: date === today,
+        scheduled: isScheduled,
         short: WEEKDAY_SHORT[weekday] ?? '',
-        state: stateFor(
-          date,
-          today,
-          completedDates.has(date),
-          isScheduledWeekday(scheduled, weekday)
-        ),
+        state,
       };
     });
 
@@ -72,9 +74,9 @@ export function useThisWeek({
 
     return {
       days,
-      doneCount: days.filter((day) => day.state === 'done').length,
+      doneCount: days.filter((day) => day.state === 'completed').length,
       rangeLabel: `${format(monday, 'MMM d')} – ${endStamp}`,
-      scheduledCount: days.filter((day) => day.state !== 'off').length,
+      scheduledCount: days.filter((day) => day.scheduled).length,
     };
-  }, [completedDates, daysOfWeek, today]);
+  }, [completedDates, createdAt, daysOfWeek, pausedAt, resumedAt, today]);
 }

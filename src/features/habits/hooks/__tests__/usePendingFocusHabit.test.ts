@@ -50,6 +50,30 @@ describe('usePendingFocusHabit', () => {
     expect(result.current.pendingFocusHabitId).toBeNull();
   });
 
+  it('restarts a full give-up window when a prepared request is committed', () => {
+    const onGiveUp = jest.fn();
+    const { result } = renderHook(() => usePendingFocusHabit(onGiveUp));
+
+    act(() => result.current.preparePendingFocusHabit('habit-1' as never));
+    act(() => jest.advanceTimersByTime(FOCUS_GIVE_UP_MS - 100));
+
+    // User taps "Go to" just before the prepare deadline. The stale prepare
+    // timer must not drop the committed request 100ms later.
+    act(() => result.current.commitPendingFocusHabit('habit-1' as never));
+    act(() => jest.advanceTimersByTime(100));
+    expect(result.current.pendingFocusHabitId).toBe('habit-1');
+    expect(onGiveUp).not.toHaveBeenCalled();
+
+    // The commit gets its own full window…
+    act(() => jest.advanceTimersByTime(FOCUS_GIVE_UP_MS - 200));
+    expect(result.current.pendingFocusHabitId).toBe('habit-1');
+
+    // …and still expires (autoClose path) if never fulfilled.
+    act(() => jest.advanceTimersByTime(100));
+    expect(result.current.pendingFocusHabitId).toBeNull();
+    expect(onGiveUp).toHaveBeenCalledTimes(1);
+  });
+
   it('keeps a fulfilled prepared request until the user commits or cancels', () => {
     const onGiveUp = jest.fn();
     const { result } = renderHook(() => usePendingFocusHabit(onGiveUp));

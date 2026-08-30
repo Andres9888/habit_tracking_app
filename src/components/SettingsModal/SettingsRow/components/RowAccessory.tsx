@@ -13,6 +13,8 @@ interface RowAccessoryProps {
   label: string;
   colors: SettingsRowColors;
   showChevron?: boolean;
+  /** Disclosure state for rows that expand in place — flips the chevron. */
+  expanded?: boolean;
   onToggle: (v: boolean) => void;
 }
 
@@ -23,6 +25,7 @@ export function RowAccessory({
   label,
   colors,
   showChevron,
+  expanded,
   onToggle,
 }: RowAccessoryProps) {
   if (type === 'toggle') {
@@ -42,7 +45,7 @@ export function RowAccessory({
     return (
       <View className='flex-row items-center gap-1'>
         <ValuePill colors={colors} value={value as string} />
-        <RowChevron color={colors.chevron} />
+        <RowChevron color={colors.chevron} expanded={expanded} />
       </View>
     );
   }

@@ -26,6 +26,8 @@ export interface PreviewContentHandlers {
   handleBack?: () => void;
   /** Back when a library is behind us, close otherwise. */
   handleDismiss: () => void;
+  /** Post-add primary action — home, focusing the new habit when known. */
+  handleGoToHabit: () => void;
   handleCustomize: () => void;
   handleImport: () => void;
 }

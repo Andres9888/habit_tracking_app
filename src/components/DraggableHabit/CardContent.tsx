@@ -28,6 +28,14 @@ interface CardContentProps extends DraggableHabitCardProps {
   effectiveAccentColor: string;
 }
 
+/**
+ * Height of the strength/week subtree that deferHeavyContent skips, so the
+ * placeholder reserves the exact space the real content will occupy. Must
+ * match the rendered height of the divider/progress bar + chain block.
+ */
+const DEFERRED_BODY_HEIGHT_COMPACT = 68;
+const DEFERRED_BODY_HEIGHT_FULL = 100;
+
 function CardContentComponent(props: CardContentProps) {
   const { colors: themeColors } = useThemeColors();
   const compact = props.isCompactMode;
@@ -55,7 +63,13 @@ function CardContentComponent(props: CardContentProps) {
             streak={props.streak}
           />
         </View>
-        <View style={{ height: compact ? 68 : 100 }} />
+        <View
+          style={{
+            height: compact
+              ? DEFERRED_BODY_HEIGHT_COMPACT
+              : DEFERRED_BODY_HEIGHT_FULL,
+          }}
+        />
       </>
     );
   }

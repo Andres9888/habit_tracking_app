@@ -30,9 +30,31 @@ export function chartSubtitle(range: ChartRange, bars: WeekBar[]): string {
   return `Last ${bars.length} months · % of scheduled days`;
 }
 
+/** "3 weeks ago" for the bar at `index`, counting back from the last bar. */
+function weeksAgo(index: number, total: number): string {
+  const back = total - 1 - index;
+  if (back <= 0) return 'this week';
+  if (back === 1) return 'last week';
+  return `${back} weeks ago`;
+}
+
+/** The baseline drawn across the chart, in the chart's own units. */
+export function chartAverageLabel(range: ChartRange, bars: WeekBar[]): string {
+  if (bars.length === 0) return '';
+  const mean = bars.reduce((sum, bar) => sum + bar.value, 0) / bars.length;
+  return range === 'weekly'
+    ? `avg ${Math.round(mean * 10) / 10}`
+    : `avg ${Math.round(mean)}%`;
+}
+
 export function chartFootnote(range: ChartRange, bars: WeekBar[]): string {
   if (range === 'weekly') {
-    return 'Based on days you logged. A week with no check-ins shows as zero — nothing is estimated or filled in for you.';
+    const method =
+      'Based on days you logged. A week with no check-ins shows as zero — nothing is estimated or filled in for you.';
+    const best = Math.max(0, ...bars.map((bar) => bar.value));
+    if (best === 0) return method;
+    const index = bars.map((bar) => bar.value).lastIndexOf(best);
+    return `Your best week was ${best} of 7, ${weeksAgo(index, bars.length)}. ${method}`;
   }
   const last = bars[bars.length - 1];
   const month =

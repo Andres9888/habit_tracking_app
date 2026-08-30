@@ -52,7 +52,7 @@ export function SegmentedTextPicker<T extends string>({
             accessibilityRole='radio'
             accessibilityState={{ selected: on }}
             className='flex-1 items-center justify-center rounded-lg py-2.5'
-            hitSlop={4}
+            hitSlop={8}
             style={{ backgroundColor: on ? selectedBg : 'transparent' }}
             onPress={() => handleSelect(key)}
           >

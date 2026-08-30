@@ -6,14 +6,10 @@ export function getSettingsProps(
 ) {
   return {
     archivedHabitsCount: state.archivedHabitsCount,
-    celebrationsEnabled: state.celebrationsEnabled,
     closeSettings: state.closeSettings,
     onPremiumUpsell,
     onSettingsChange: state.onSettingsChange,
-    openHapticTest: state.openHapticTest,
-    setShowHabitStrengthPercentage: state.setShowHabitStrengthPercentage,
     settings: state.settings,
-    showHabitStrengthPercentage: state.showHabitStrengthPercentage,
     showSettings: state.showSettings,
   };
 }

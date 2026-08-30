@@ -80,7 +80,9 @@ export function usePendingFocusHabit(
       if (requestRef.current.autoClose) onGiveUpRef.current?.();
     }, FOCUS_GIVE_UP_MS);
     return () => clearTimeout(timer);
-  }, [request.id, request.ready]);
+    // `autoClose` is a dep so a commit near the prepare deadline restarts a
+    // full window instead of inheriting the stale prepare timer.
+  }, [request.autoClose, request.id, request.ready]);
 
   return {
     clearPendingFocusHabit,

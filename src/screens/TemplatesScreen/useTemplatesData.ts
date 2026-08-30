@@ -66,6 +66,11 @@ export function useTemplatesData() {
     {},
     { entryName: 'templates.getImportedTemplateIds' }
   );
+  const importedHabitIds = useCachedQuery(
+    api.templates.getImportedTemplateHabitIds,
+    {},
+    { entryName: 'templates.getImportedTemplateHabitIds' }
+  );
   const isLoading = allTemplates === undefined;
   const userHabitCount = userHabits?.length ?? 0;
   const isPremiumUser = settings?.hasPremium ?? false;
@@ -86,6 +91,7 @@ export function useTemplatesData() {
   return {
     allTemplates,
     categories,
+    importedHabitIds,
     importTemplate,
     initialImportedIds,
     isLoading,

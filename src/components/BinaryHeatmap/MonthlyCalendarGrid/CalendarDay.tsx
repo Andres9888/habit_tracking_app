@@ -99,6 +99,7 @@ export const CalendarDay = memo(function CalendarDay({
           isMissed={Boolean(
             day?.isMissed && day?.isCurrentMonth && !day?.isFuture
           )}
+          isPaused={Boolean(day?.state === 'paused' && day?.isCurrentMonth)}
           isToday={cell.isToday}
           joinRight={joinRight}
           showCompleted={cell.showCompleted}

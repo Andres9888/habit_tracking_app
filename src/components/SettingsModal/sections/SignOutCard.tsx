@@ -2,7 +2,11 @@
  *
  *  Signing out is not destructive: the account and every habit survive it. It
  *  used to share a card with Delete account, which lent it a severity it
- *  doesn't have and, worse, softened the row that genuinely is irreversible. */
+ *  doesn't have and, worse, softened the row that genuinely is irreversible.
+ *
+ *  It also used to render the DESTRUCTIVE token pair while this comment argued
+ *  it wasn't destructive. It now wears the neutral tile, leaving red on this
+ *  page to mean one thing: Delete account. */
 import { LogOut } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -23,7 +27,6 @@ export function SignOutCard({ isSigningOut, onSignOut }: Props) {
         icon={<LogOut color={settings.signOut.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.signOut.bg}
         label={isSigningOut ? 'Signing out…' : 'Sign out'}
-        labelColor={settings.signOut.icon}
         type='navigation'
         onPress={isSigningOut ? undefined : onSignOut}
       />

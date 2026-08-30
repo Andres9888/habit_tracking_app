@@ -10,7 +10,7 @@ const ROUND_MILESTONES = [7, 14, 30, 60, 100, 180, 365] as const;
 
 export interface MilestoneTarget {
   target: number;
-  /** True when the target is a round milestone rather than the personal best. */
+  /** True when the target IS the personal best rather than a round milestone. */
   isBest: boolean;
 }
 
@@ -33,17 +33,31 @@ export function milestoneTarget(
 export function milestoneCaption(
   currentStreak: number,
   target: number,
-  isBest: boolean
+  isBest: boolean,
+  goalDuration?: number
 ): string {
+  const goal = goalDuration ?? 0;
   const remaining = Math.max(0, target - currentStreak);
+  const goalRemaining = goal - currentStreak;
+  const goalCaption =
+    goal > 0 && currentStreak > 0 && goalRemaining > 0
+      ? ` ${goalRemaining} ${goalRemaining === 1 ? 'day' : 'days'} from your ${goal}-day goal.`
+      : '';
   if (currentStreak === 0) {
+    const targetDayWord = target === 1 ? 'day' : 'days';
     return isBest
-      ? `Your best run is ${target} days — today starts the next one`
+      ? `Your best run is ${target} ${targetDayWord} — today starts the next one`
       : 'Today starts the next run';
   }
-  if (remaining === 0) return 'Personal best territory';
+  // The goal clause is its own sentence, so the streak clause has to be closed
+  // before it is appended — otherwise the caption reads as one run-on line.
+  const withGoal = (lead: string) =>
+    goalCaption ? `${lead}.${goalCaption}` : lead;
+  if (remaining === 0) return withGoal('Personal best territory');
   const dayWord = remaining === 1 ? 'day' : 'days';
-  return isBest
-    ? `${remaining} ${dayWord} from your best streak ever`
-    : `${remaining} ${dayWord} to ${target}`;
+  return withGoal(
+    isBest
+      ? `${remaining} ${dayWord} from your best streak ever`
+      : `${remaining} ${dayWord} to ${target}`
+  );
 }

@@ -43,6 +43,11 @@ export const styles = StyleSheet.create({
   futureFill: {
     backgroundColor: '#F6F3EE',
   },
+  // Half-strength green — the History legend lists "Paused" as its own row, so
+  // the cell cannot share the plain "not scheduled" surface.
+  pausedFill: {
+    backgroundColor: '#8FC3AB',
+  },
   missedRing: {
     borderColor: '#D6CFC3',
     borderStyle: 'dashed',

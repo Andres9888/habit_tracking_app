@@ -57,15 +57,15 @@ Back always returns to the previous route. Closing from Detail leaves the modal 
 
 The page shape stays the same. Only the card above the button and the action slot contents change.
 
-| State         | When                                                  | Card above the button                    | Primary slot                                                                                |
-| ------------- | ----------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------- |
-| **Ready**     | Today not logged, yesterday was (or there is no miss) | Why line                                 | **Complete today** + “Logs today’s date. You can undo anytime.”                             |
-| **Completed** | Today is logged                                       | Why line                                 | **Done today** confirmation. Undo and Add/Edit note sit underneath — not a second complete. |
-| **Recovery**  | Yesterday was scheduled and not logged                | Amber **Pick it back up** (replaces why) | Same Complete today as Ready                                                                |
+| State         | When                                                  | Card above the button                                                                                                                                         | Primary slot                                                                                          |
+| ------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| **Ready**     | Today not logged, yesterday was (or there is no miss) | Why line                                                                                                                                                      | Live toggle: empty circle, **Complete today**, hint word **Tap**. It stays live after logging.        |
+| **Completed** | Today is logged                                       | Why line                                                                                                                                                      | Same live toggle: filled check, **Logged today**, hint word **Undo**. Re-tapping unlogs today.        |
+| **Recovery**  | The last scheduled day was not logged                 | Amber recovery card (replaces why): headline “{Day} got away. {N} days didn’t.” — or “{Day} got away. Today doesn’t have to.” when no run was actually broken | Same live toggle as Ready. The fixed-height slot below shows the recovery hint until today is logged. |
 
-Recovery **replaces** the why card. It does not stack under it. Amber exists only here, so the color itself means “start again,” not “you failed.”
+Recovery **replaces** the why card. It does not stack under it. Amber exists only here, so the color itself means “start again,” not “you failed.” The amber wash covers the hero **and** the fixed header — the header is a separate node from the hero gradient, so it takes the same first stop or the top of the page shows a mint-over-amber seam. While recovery is on screen the strength snapshot is hidden: being scored is the wrong response to a bad day. The **Analytics door stays**. An earlier revision hid it too, following the prototype, but recovery is the ordinary state for anyone who did not log the last scheduled day, and the record doors are the only route to Analytics anywhere in the app — so the page effectively disappeared. A door is not a grade.
 
-The action area is a **fixed-height slot** in all three states so History and Analytics never jump when today completes.
+The action area is a **fixed-height slot** in all three states so History and Analytics never jump when today completes. Under the toggle, that fixed-height secondary slot holds only the note row, the recovery hint, the unavailable text, or the caption “Tap to log today. You can undo anytime.”
 
 ---
 
@@ -85,9 +85,9 @@ Scroll order, top to bottom.
 
 **Why:** You should recognize the habit before you see any number. Schedule is context, not a chart.
 
-### Strength dial
+### Strength snapshot
 
-**What:** 120px ring. Number + band (e.g. `42 · Building`). Caption: “Habit strength · a snapshot, not a score.”
+**What:** Compact row card with a 44px ring, the number inside the ring, a band label, and the caption “Momentum from every check-in, weighted toward recent days. A miss dips it — it never resets.” Hidden in recovery. Being scored is the wrong response to a bad day; the guilt is the churn risk, not the missing chart.
 
 **Why:** One honest snapshot of how established the habit feels. No `%`, no leaderboard, no comparison to other people. Strength is not a grade and not a streak.
 
@@ -103,15 +103,21 @@ Scroll order, top to bottom.
 
 ### Recovery card
 
-**What:** “Pick it back up.” Copy is factual: yesterday wasn’t logged. Offer today’s two-minute version.
+**What:** Headline “{Day} got away. {N} days didn’t.” where N is the run the miss actually ended, spelled out (“Eight days didn’t.”); with no broken run it reads “{Day} got away. Today doesn’t have to.” Body: “Strength dipped, not to zero, and your {best}-day record still stands. The only rule that matters today: **never miss twice.**” Then today’s two-minute version in the slot below.
 
-**Why:** A miss is a start-again moment. No rest-day UX, no streak shaming, no rank.
+N comes from the completion log — the same runs the History rail draws — never from `habit.currentStreak`, which is a stored field nothing recomputes on a miss.
 
-**Must not:** Use amber anywhere else. Must not accuse (“you broke a streak of N”).
+**Why:** A miss is a start-again moment, and the honest framing is that the days already banked are still banked. No rest-day UX, no streak shaming, no rank.
 
-### Complete today / Done today
+**Must not:** Use amber anywhere else. Must not accuse (“you broke a streak of N”). Must not invent a strength delta — the decay is proportional, so “dipped 3 points” is a number the app cannot know.
 
-**What:** One primary action. Ready logs today. Completed confirms with **Done today**; **Undo** and **Add a note / Edit note** sit in the pair below. Caption when incomplete: you can undo anytime.
+### Complete today / Logged today
+
+**What:** One live toggle. Ready shows an empty circle, **Complete today**, and the hint word **Tap**. Logged shows a filled check, **Logged today**, and the hint word **Undo**. Re-tapping unlogs today, so the control never swaps out. The fixed secondary slot below it shows “Tap to log today. You can undo anytime.” before logging, the recovery hint in recovery, and **Add a note / Edit note** after logging.
+
+When today changes from not logged to logged, show a green success toast for 4000ms: `Logged — {N}-day streak.` with an **Undo** action. It fires only on a genuine not-logged → logged transition; never on unlog, never on mount when today is already logged, and never when the screen switches to a different habit. Pressing **Undo** unlogs the day the toast fired for — captured at fire time, not read at press time — and dismisses the toast. The toast also auto-hides if today stops being logged by any other route.
+
+`{N}` is the post-toggle streak read off the completion log, frozen at the moment the toast fires. It is never `habit.currentStreak`: that field is stored, is not recomputed on a miss, and made the toast announce “9-day streak” on the first day back before correcting itself.
 
 **Why:** The daily tap must stay one tap and never bury. After success, the screen should feel finished — not offer a second complete. Notes are optional and private; they do not require a completed day, but the completed state is the natural moment to add one.
 
@@ -119,7 +125,7 @@ Scroll order, top to bottom.
 
 ### This week
 
-**What:** Seven pips, date range, `N days logged`. Today has a distinct pip (white ring, green center). Future days are inert.
+**What:** Seven pips, date range, `N days logged`. Today has a distinct pip (white ring, green center). Future and pre-creation days are inert. Scheduled misses, unscheduled days, and known pause windows use the same record states as History and Day.
 
 **Why:** A small, trustworthy snapshot of _this_ week — enough to feel the week without opening History. A count from the record, not an “N of M” quota. Streak totals and year grids do not belong here.
 
@@ -129,12 +135,14 @@ Scroll order, top to bottom.
 - **Past** → Day / Entry (inspect or correct)
 - **Future** → ignore
 
-### The record (History + Analytics doors)
+### The record
 
 **What:** Two rows that never move.
 
-- History — “Dates, notes, and edits”
-- Analytics — “Patterns from real check-ins”
+- Full history — “Runs, calendar and the year grid”
+- Analytics — “Trend, patterns and what’s working”
+
+In recovery, hide the Analytics row for the same reason the strength snapshot drops out: being scored is the wrong response to a bad day. That is different from completion. Hard rule 8 still stands: when today completes, the History / Analytics rows do not move.
 
 **Why:** Detail is not the archive and not the lab. These are doors, not previews of those screens. Putting a year heatmap or a chart here would turn Detail back into a dashboard.
 
@@ -154,19 +162,21 @@ Detail is a recommitment surface. Pause is an exit from showing up. A “hold yo
 
 Pause/resume mutations stay in the backend for Settings and other surfaces that already use them. Revisit only if travel/hold becomes a real, documented support problem — and even then it belongs in Edit/Settings, not on this recommitment surface. Do not invent rest-day UX.
 
+If a previously paused habit is opened, Detail shows a neutral, non-actionable paused state. It never offers Complete or Recovery until the habit is active again.
+
 ---
 
 ## History
 
 **Job:** The record. Every date, note, and correction. This is the only place a past day should be edited (plus Day, which History opens).
 
-| Section                                         | Why                                                                                                   |
-| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| Month bar **above** the calendar card           | Changing month is navigation, not part of the grid.                                                   |
-| Month grid                                      | See the month at a glance. Cells are large enough to open a day.                                      |
-| Legend: Completed / No entry / Today / Upcoming | States stay legible without relying on color alone (filled disc, dashed ring, solid ring, flat fill). |
-| Logged entries                                  | A list you can scan; a note mark means “there is writing,” not a score.                               |
-| Footnote                                        | Tells you past dates are for seeing or correcting, not for silent toggles.                            |
+| Section                                                                | Why                                                                                                      |
+| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Month bar **above** the calendar card                                  | Changing month is navigation, not part of the grid.                                                      |
+| Month grid                                                             | See the month at a glance. Cells are large enough to open a day.                                         |
+| Legend: Completed / Missed / Not scheduled / Paused / Today / Upcoming | States stay legible without calling an open, off-schedule, pre-creation, or paused date a miss.          |
+| Daily record                                                           | Every date since creation, with truthful states and notes; a note means “there is writing,” not a score. |
+| Footnote                                                               | Tells you past dates are for seeing or correcting, not for silent toggles.                               |
 
 **Must not:** Habit-level stats cards, year heatmap, or toggling a day without opening it. Year cells are too small to edit; even month cells here **open Day** instead of flipping completion in place.
 
@@ -193,13 +203,15 @@ Pause/resume mutations stay in the backend for Settings and other surfaces that 
 
 **Job:** Patterns from real check-ins. Nothing is predicted.
 
-| Section               | Why                                                                                                                                                                                     |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Year at a glance**  | Establishing shot: 365 binary days (logged or not), not a score. Lives **here**, never on Detail. Tap a square → that month in History. Cells are too small to edit.                    |
-| Weekly / Monthly tabs | Same log, two grains. **Weekly stays counts.** **Monthly is % of scheduled days** (current month only counts days that have happened). Empty weeks show as zero — nothing is filled in. |
-| Range chart           | How the log actually moved.                                                                                                                                                             |
-| What the log shows    | Tappable insight rows. Each claim can be audited.                                                                                                                                       |
-| Footnote              | “Every number here comes from check-ins you recorded.”                                                                                                                                  |
+| Section               | Why                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Where you stand**   | Verdict first, in words: headline, the month-over-month body, then the sparkline as proof. Between body and sparkline sits the **next step** — one derived line, e.g. “Covering Fridays would have put August at 93%. It’s the only weekday under 60%.” It states arithmetic that already happened; it never claims a month that has not been lived.                                                                                                                                                                                                                                                              |
+| Next-step suppression | The next step is **omitted entirely** — no placeholder, no hedge — unless all of: a weak weekday exists (`oneFix`), this month has at least one uncovered miss on it, covering those misses raises this month's rate, and some earlier month already beat this month (there is room to climb). Its job is the **projection**; when it can't add one it renders nothing, because “Fridays are where it slips” is already a row below. The evidence clause degrades in the same way: “the only weekday under 60%” only when literally true, else “Fridays sit at 25% — every other day is above 50%”, else nothing. |
+| **Year at a glance**  | Establishing shot: 365 binary days (logged or not), not a score. Lives **here**, never on Detail. Tap a square → that month in History. Cells are too small to edit.                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| Weekly / Monthly tabs | Same log, two grains. **Weekly stays counts.** **Monthly is % of scheduled days** (current month only counts days that have happened). Empty weeks show as zero — nothing is filled in.                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Range chart           | How the log actually moved.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| What the log shows    | Tappable insight rows. Each claim can be audited.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Footnote              | “Every number here comes from check-ins you recorded.”                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 
 **Must not:** Edit a day, show a strength dashboard, or invent rest days. A pattern is not a cause — Insight says so.
 
@@ -221,6 +233,7 @@ Pause/resume mutations stay in the backend for Settings and other surfaces that 
 
 1. **Shown on Habit Detail** — why (the sentence above Complete today) and optional identity (used only if why is empty).
 2. **Written here, not on Detail** — WOOP (Wish, Outcome, Obstacle, Plan). Naming the obstacle is the useful part.
+3. **Manage habit** — Archive and Delete live at the bottom of Edit. Archive explains that the habit can be restored from Settings; Delete explicitly confirms permanent history removal.
 
 **Why:** A hard morning uses the plan; it does not need this whole page in the way of the button.
 
@@ -253,21 +266,25 @@ Do not reopen these without an explicit product decision:
 7. Insights must be **auditable** against real check-ins. Nothing is predicted.
 8. The History / Analytics rows **do not move** when today completes.
 9. **No Pause on Detail.** We are not going with pause on this flow unless travel/hold becomes a documented support problem — and even then it must not sit on the recommitment surface.
+10. **Archive and Delete live in Edit, not Detail.** Archive keeps history and explains restoration; Delete requires explicit confirmation.
 
 ---
 
 ## Code map
 
-| Piece                                     | Where                                                                 |
-| ----------------------------------------- | --------------------------------------------------------------------- |
-| Modal + header + note sheet               | `src/screens/HabitDetailScreen/HabitDetailScreen.tsx`                 |
-| Route stack                               | `useDetailFlow.ts`, `useDetailFlowActions.ts`, `DetailFlowSwitch.tsx` |
-| Detail scroll                             | `HabitDetailContent.tsx` → `DetailHeroBanner` + `HabitDetailSections` |
-| Hero (name, dial, why/recovery, complete) | `components/DetailHeroBanner/`                                        |
-| Why fallback                              | `components/resolveWhy.ts`                                            |
-| This week / doors / insight line          | `ThisWeekCard`, `RecordDoors`, `InsightLine`                          |
-| History                                   | `components/HabitHistoryScreen/`                                      |
-| Day                                       | `components/DayDetailScreen/`                                         |
-| Analytics                                 | `components/HabitAnalyticsScreen/`                                    |
-| Insight                                   | `components/InsightDetailScreen/`                                     |
-| Day notes                                 | `useDayNotes.ts`, `convex/habits/updateDayNote.ts`                    |
+| Piece                                     | Where                                                                                                                               |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Modal + header + note sheet               | `src/screens/HabitDetailScreen/HabitDetailScreen.tsx`                                                                               |
+| Route stack                               | `useDetailFlow.ts`, `useDetailFlowActions.ts`, `DetailFlowSwitch.tsx`                                                               |
+| Detail scroll                             | `HabitDetailContent.tsx`, `HabitDetailContent.hooks.ts`, `HabitDetailContent.types.ts` → `DetailHeroBanner` + `HabitDetailSections` |
+| Hero (name, dial, why/recovery, complete) | `components/DetailHeroBanner/`                                                                                                      |
+| Completion undo toast                     | `completionToast.ts`, `useCompletionToast.ts`, `components/CompletionUndoToast.tsx`                                                 |
+| Insight palette                           | `insightPalette.ts` → `insightPalette.core.ts`, `insightPalette.tokens.ts`, `insightPalette.types.ts`                               |
+| Strength snapshot                         | `components/StrengthSnapshot.tsx`, `components/StrengthDial.tsx`                                                                    |
+| Why fallback                              | `components/resolveWhy.ts`                                                                                                          |
+| This week / doors / insight line          | `ThisWeekCard`, `RecordDoors`, `InsightLine`                                                                                        |
+| History                                   | `components/HabitHistoryScreen/`                                                                                                    |
+| Day                                       | `components/DayDetailScreen/`                                                                                                       |
+| Analytics                                 | `components/HabitAnalyticsScreen/`                                                                                                  |
+| Insight                                   | `components/InsightDetailScreen/`                                                                                                   |
+| Day notes                                 | `useDayNotes.ts`, `convex/habits/updateDayNote.ts`                                                                                  |

@@ -2,6 +2,7 @@
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
+import { airy } from '@/theme/airyScale';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 import { useThemeColors } from '../../theme/ThemeContext';
 
@@ -19,7 +20,7 @@ export function SettingsHeader({ onClose }: SettingsHeaderProps) {
       style={{
         backgroundColor: themeColors.background,
         paddingTop: Math.max(insets.top + 8, 16),
-        paddingHorizontal: 20,
+        paddingHorizontal: airy.screenPadH,
         paddingBottom: 12,
       }}
     >
@@ -29,7 +30,7 @@ export function SettingsHeader({ onClose }: SettingsHeaderProps) {
           <Text
             style={{
               fontFamily: fontFamilies.primary.text,
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: fontWeights.bold,
               letterSpacing: 2.5,
               textTransform: 'uppercase',

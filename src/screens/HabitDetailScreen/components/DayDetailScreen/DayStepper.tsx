@@ -49,7 +49,7 @@ function StepButton({
         <Text
           style={{
             color: palette.textTertiary,
-            fontSize: 10,
+            fontSize: 12,
             fontWeight: fontWeights.bold,
             letterSpacing: 1,
             textTransform: 'uppercase',

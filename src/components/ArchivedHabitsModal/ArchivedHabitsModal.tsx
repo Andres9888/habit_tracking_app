@@ -20,6 +20,7 @@ const ItemSeparator = () => <View style={{ height: 14 }} />;
 
 export default function ArchivedHabitsModal({
   onBack,
+  onClose,
 }: ArchivedHabitsModalProps) {
   const insets = useSafeAreaInsets();
   const state = useArchivedHabitsModalState();
@@ -77,6 +78,7 @@ export default function ArchivedHabitsModal({
         insets={insets}
         selectionMode={state.selectionMode}
         onBack={onBack}
+        onClose={onClose}
         onSelectPress={handleSelectPress}
       />
       {state.isLoading ? (

@@ -49,7 +49,7 @@ export function TimelineBlock({ template }: { template: Template }) {
                         },
                   ]}
                 >
-                  {node.peak ? <Text style={{ fontSize: 9 }}>💎</Text> : null}
+                  {node.peak ? <Text style={{ fontSize: 11 }}>💎</Text> : null}
                 </View>
                 <View style={{ flex: 1, minWidth: 0 }}>
                   <Text

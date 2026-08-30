@@ -34,6 +34,17 @@ export interface FullsizeTemplatePreviewProps {
   isImporting?: boolean;
   /** Has been successfully imported */
   isImported?: boolean;
+  /**
+   * The habit this template produced, when known. Unknown (null/undefined) is
+   * expected — e.g. the imported-habit map has not resolved yet — and makes the
+   * post-add primary action fall back to `onClose`.
+   */
+  importedHabitId?: Id<'habits'> | null;
+  /**
+   * Post-add primary action: leave for home and focus the habit there. Falls
+   * back to `onClose` when absent or when `importedHabitId` is unknown.
+   */
+  onGoToHabit?: (habitId: Id<'habits'>) => void;
 }
 
 /** Press handler interface for animated buttons */
@@ -56,7 +67,7 @@ export interface EntranceAnimationValues {
 /** Animation values for success state */
 export interface SuccessAnimationValues {
   checkmarkScale: SharedValue<number>;
-  successPillScale: SharedValue<number>;
+  successPanelProgress: SharedValue<number>;
 }
 
 /** Button scale values for press feedback */

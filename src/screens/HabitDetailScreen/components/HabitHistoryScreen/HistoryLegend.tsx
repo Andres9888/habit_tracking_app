@@ -1,5 +1,5 @@
 /**
- * HistoryLegend — Completed / No entry / Today / Upcoming, as in the mock.
+ * HistoryLegend — completed, missed, rest, today and upcoming states.
  */
 import type { ReactNode } from 'react';
 import { Text, View } from 'react-native';
@@ -64,8 +64,10 @@ export function HistoryLegend() {
           <Swatch borderColor={palette.missedRing} borderStyle='dashed' />
         }
       >
-        No entry
+        Missed
       </Item>
+      <Item swatch={<Swatch fill={palette.cellFuture} />}>Not scheduled</Item>
+      <Item swatch={<Swatch fill={palette.greenSoft} />}>Paused</Item>
       <Item swatch={<Swatch borderColor={palette.green} borderStyle='solid' />}>
         Today
       </Item>

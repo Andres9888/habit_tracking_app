@@ -1,4 +1,5 @@
-/** AboutSupportSection — advocacy + feedback. Changelog lives in the footer. */
+/** AboutSupportSection — Quiet Configuration Index §6: advocacy + feedback.
+ *  Changelog lives in the footer. */
 import { Heart, MessageSquare } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { SettingsSection } from '../SettingsSection';
@@ -22,7 +23,7 @@ export function AboutSupportSection({
   return (
     <SettingsSection
       icon={<Heart color={sectionIconColor} size={iconSize} />}
-      title='Support'
+      title='Help & About'
     >
       <SettingsRow
         icon={<Heart color={settings.star.icon} size={iconSize} />}

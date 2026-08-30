@@ -1,10 +1,32 @@
 import { fireEvent, render } from '@testing-library/react-native';
 import type { Habit } from '../../../../../features/habits/types';
+import type { HabitInsights } from '../../../insights';
 import { HabitAnalyticsScreen } from '../HabitAnalyticsScreen';
 
-jest.mock('../../HabitDetailHistory', () => ({
-  YearGlanceCard: () => null,
-}));
+const WORKING = {
+  daypart: {
+    endHour: 8,
+    key: 'early',
+    label: 'Early morning',
+    phrase: 'early morning',
+    startHour: 5,
+  },
+  otherPct: 20,
+  reminderInWindow: true,
+  sample: 20,
+  sharePct: 80,
+} as HabitInsights['working'];
+
+const baseInsights: HabitInsights = {
+  daysOfData: 40,
+  doneDates: new Set(['2026-08-10', '2026-08-11']),
+  oneFix: null,
+  working: WORKING,
+  yearCompletions: 2,
+  yearRatePct: 20,
+};
+
+let mockInsights: HabitInsights = baseInsights;
 
 jest.mock('../../../../../utils/getLocalDateString', () => ({
   getLocalDateString: (date?: Date) => {
@@ -17,26 +39,7 @@ jest.mock('../../../../../utils/getLocalDateString', () => ({
 
 jest.mock('../../../insights', () => ({
   ...jest.requireActual('../../../insights'),
-  useHabitInsights: () => ({
-    daysOfData: 40,
-    doneDates: new Set(['2026-08-10', '2026-08-11']),
-    oneFix: null,
-    working: {
-      daypart: {
-        endHour: 8,
-        key: 'early',
-        label: 'Early morning',
-        phrase: 'early morning',
-        startHour: 5,
-      },
-      otherPct: 20,
-      reminderInWindow: true,
-      sample: 20,
-      sharePct: 80,
-    },
-    yearCompletions: 2,
-    yearRatePct: 20,
-  }),
+  useHabitInsights: () => mockInsights,
 }));
 
 const habit = {
@@ -44,6 +47,18 @@ const habit = {
   createdAt: Date.parse('2026-06-01T09:00:00Z'),
   name: 'Wake-Up Movement',
 } as unknown as Habit;
+
+/** Consecutive days from `start`, as YYYY-MM-DD in August 2026. */
+function august(start: number, length: number): string[] {
+  return Array.from(
+    { length },
+    (_, offset) => `2026-08-${String(start + offset).padStart(2, '0')}`
+  );
+}
+
+beforeEach(() => {
+  mockInsights = baseInsights;
+});
 
 describe('HabitAnalyticsScreen', () => {
   it('shows the weekly chart and opens an insight', () => {
@@ -71,6 +86,41 @@ describe('HabitAnalyticsScreen', () => {
     );
     fireEvent.press(getByText('Monthly'));
     expect(getByText('Share of days logged each month')).toBeTruthy();
-    expect(getByText(/of scheduled days/)).toBeTruthy();
+    expect(getByText(/months · % of scheduled days/)).toBeTruthy();
+  });
+
+  it('opens on the verdict and carries the streak rail', () => {
+    const { getByLabelText, getByText } = render(
+      <HabitAnalyticsScreen
+        habit={{ ...habit, bestStreak: 5, currentStreak: 2 } as Habit}
+        onOpenHistory={jest.fn()}
+        onOpenInsight={jest.fn()}
+      />
+    );
+    expect(getByText('Where you stand')).toBeTruthy();
+    expect(getByLabelText('Current streak: 2')).toBeTruthy();
+    expect(getByLabelText('Longest: 5')).toBeTruthy();
+  });
+
+  it('sends the streak-trend row to History, where the runs live', () => {
+    const onOpenHistory = jest.fn();
+    // Four runs that lengthen: 1, 2, 4 and 5 days, each broken by a miss.
+    const doneDates = new Set([
+      ...august(1, 1),
+      ...august(3, 2),
+      ...august(6, 4),
+      ...august(11, 5),
+    ]);
+    mockInsights = { ...baseInsights, doneDates, working: null };
+
+    const { getByLabelText } = render(
+      <HabitAnalyticsScreen
+        habit={habit}
+        onOpenHistory={onOpenHistory}
+        onOpenInsight={jest.fn()}
+      />
+    );
+    fireEvent.press(getByLabelText('Streaks are getting longer'));
+    expect(onOpenHistory).toHaveBeenCalled();
   });
 });

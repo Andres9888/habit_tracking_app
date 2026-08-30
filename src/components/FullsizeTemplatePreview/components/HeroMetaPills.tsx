@@ -23,6 +23,7 @@ import { heroStyles } from '../styles';
 import { useDetailPalette } from '../detailPalette';
 import { getAutomaticityMeta } from '../utils/automaticityMeta';
 import { isScienceBacked } from '../utils/scienceBadge';
+import { resolveMetadataValue } from '../utils/templateMetadata';
 import {
   FREQUENCY_LABELS,
   CATEGORY_LABELS,
@@ -43,13 +44,21 @@ export function HeroMetaPills({ template }: HeroMetaPillsProps) {
     strokeWidth: 2,
   };
 
-  const frequency =
-    FREQUENCY_LABELS[template?.frequency] || template?.frequency || 'Daily';
-  const category =
-    CATEGORY_LABELS[template?.category] || template?.category || 'General';
+  const frequency = resolveMetadataValue(
+    FREQUENCY_LABELS,
+    template?.frequency,
+    'Daily'
+  );
+  const category = resolveMetadataValue(
+    CATEGORY_LABELS,
+    template?.category,
+    'General'
+  );
   const duration = template?.estimatedMinutes
     ? `${template.estimatedMinutes} min`
-    : CATEGORY_DURATION_DEFAULTS[template?.category] || '5-10 min';
+    : typeof template?.category === 'string'
+      ? (CATEGORY_DURATION_DEFAULTS?.[template.category] ?? '5-10 min')
+      : '5-10 min';
   const automaticity = getAutomaticityMeta(template);
 
   return (

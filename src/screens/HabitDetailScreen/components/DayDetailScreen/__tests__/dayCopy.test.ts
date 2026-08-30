@@ -24,11 +24,22 @@ describe('dayCopy', () => {
   });
 
   it('describes completed, open, and missed days', () => {
-    expect(dayStatusCopy(true, false, '7:06 AM')).toEqual({
+    expect(dayStatusCopy('completed', '7:06 AM')).toEqual({
       subtitle: 'Logged at 7:06 AM',
       title: 'Completed',
     });
-    expect(dayStatusCopy(false, true).title).toBe('Not logged yet');
-    expect(dayStatusCopy(false, false).title).toBe('No entry');
+    expect(dayStatusCopy('open-today').title).toBe('Not logged yet');
+    expect(dayStatusCopy('missed').title).toBe('Missed');
+  });
+
+  it('does not describe unscheduled or paused days as misses', () => {
+    expect(dayStatusCopy('unscheduled')).toEqual({
+      subtitle: 'This day is outside this habit’s schedule.',
+      title: 'Not scheduled',
+    });
+    expect(dayStatusCopy('paused')).toEqual({
+      subtitle: 'This habit was paused on this day.',
+      title: 'Paused',
+    });
   });
 });

@@ -1,6 +1,10 @@
-/** NotificationPermissionWarning — amber guard shown ONLY when reminders are on
- *  but the OS has notifications denied, so nothing can actually be delivered.
- *  "Fix" deep-links to the system settings page for this app. */
+/** NotificationPermissionWarning — shown ONLY when reminders are on but the OS
+ *  has notifications denied, so nothing can actually be delivered.
+ *  "Fix" deep-links to the system settings page for this app.
+ *
+ *  Uses the ERROR token pair, not amber: amber is the PRO marker, and a banner
+ *  that means "this feature cannot work right now" reading in the same colour
+ *  as the premium badge taught people to skim past both. */
 import { AlertTriangle } from 'lucide-react-native';
 import { Linking, Platform, Pressable, Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
@@ -35,18 +39,18 @@ export function NotificationPermissionWarning() {
       <View
         className='flex-row items-center rounded-xl px-3 py-2.5'
         style={{
-          backgroundColor: themeColors.status.warningLight,
+          backgroundColor: themeColors.status.errorLight,
           gap: 10,
         }}
       >
         <AlertTriangle
-          color={themeColors.status.warning}
+          color={themeColors.status.error}
           size={iconSizes.small}
         />
         <Text
           style={{
             ...typography.caption,
-            color: themeColors.status.warningText,
+            color: themeColors.status.errorText,
             flex: 1,
             lineHeight: 18,
           }}
@@ -63,7 +67,7 @@ export function NotificationPermissionWarning() {
           <Text
             style={{
               ...typography.caption,
-              color: themeColors.status.warning,
+              color: themeColors.status.error,
               fontWeight: fontWeights.bold,
             }}
           >

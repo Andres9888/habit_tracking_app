@@ -67,8 +67,13 @@ export function CalendarTabContent({
           bare
           completedDates={completedDates}
           currentMonth={currentMonth}
+          dayContext={{
+            createdAt: habit.createdAt,
+            daysOfWeek: habit.daysOfWeek,
+            pausedAt: habit.pausedAt,
+            resumedAt: habit.resumedAt,
+          }}
           habitColor={habitColor}
-          habitCreatedAt={habit.createdAt}
           habitId={habit._id}
           hideNavigation={hideGridNavigation}
           pendingToggleDate={pendingToggleDate}

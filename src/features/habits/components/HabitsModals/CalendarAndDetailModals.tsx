@@ -46,6 +46,25 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
     void onDeleteHabit(habitId);
   };
 
+  // One instance, two mount points. Habit Detail is a React Native <Modal>,
+  // which renders nothing while closed, so an edit screen living only in its
+  // `editOverlay` slot is dead for every Edit entry point that does not open
+  // Habit Detail first (quick actions). Mount it as a sibling in that case.
+  const editScreen = (
+    <HabitEditScreen
+      habitId={habitToEdit?._id ?? null}
+      initialHabit={habitToEdit}
+      visible={showEditScreen}
+      onClose={closeEditScreen}
+      onHabitRemoved={() => {
+        closeEditScreen();
+        closeHabitDetail();
+      }}
+      onOpenCueEditor={openMotivationFromEdit}
+      onOpenVisionBoard={openMotivationFromEdit}
+    />
+  );
+
   return (
     <>
       <ErrorBoundary>
@@ -61,20 +80,7 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
       </ErrorBoundary>
       <ErrorBoundary>
         <HabitDetailScreen
-          editOverlay={
-            <HabitEditScreen
-              habitId={habitToEdit?._id ?? null}
-              initialHabit={habitToEdit}
-              visible={showEditScreen}
-              onClose={closeEditScreen}
-              onHabitRemoved={() => {
-                closeEditScreen();
-                closeHabitDetail();
-              }}
-              onOpenCueEditor={openMotivationFromEdit}
-              onOpenVisionBoard={openMotivationFromEdit}
-            />
-          }
+          editOverlay={showHabitDetail ? editScreen : null}
           habit={selectedHabit}
           tracking={tracking}
           visible={showHabitDetail}
@@ -87,6 +93,7 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
           onOpenCalendar={openHabitCalendar}
         />
       </ErrorBoundary>
+      {showHabitDetail ? null : <ErrorBoundary>{editScreen}</ErrorBoundary>}
     </>
   );
 }

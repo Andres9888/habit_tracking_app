@@ -1,16 +1,16 @@
-/** StreakRemindersSection — streak reminder notifications toggle */
+/** StreakRemindersSection — Quiet Configuration Index §4: streak reminder
+ *  notifications only. Completion sound moved to Behavior; conversion rows
+ *  removed from this surface entirely. */
 import { Platform } from 'react-native';
 import { Bell } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { SettingsRow } from '../SettingsRow';
 import { SettingsSection } from '../SettingsSection';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { useSettingsSearch } from '../search';
 import { AndroidTimePickerDialog } from './components/AndroidTimePickerDialog';
 import { DisabledHint } from './components/DisabledHint';
 import { NotificationPermissionWarning } from './components/NotificationPermissionWarning';
 import { ReminderInsetCard } from './components/ReminderInsetCard';
-import { SoundHapticsRows } from './components/SoundHapticsRows';
 import {
   useStreakRemindersAnimations,
   useTimePickerState,
@@ -22,7 +22,6 @@ import type { StreakRemindersSectionProps } from './StreakRemindersSection.types
 export function StreakRemindersSection(props: StreakRemindersSectionProps) {
   const { setShowTimePicker, showTimePicker } = useTimePickerState();
   const { colors: themeColors, isDark, settings } = useThemeColors();
-  const { isSearching } = useSettingsSearch();
   const { permissionGranted } = useNotificationPermissionStatus(props.enabled);
   const animations = useStreakRemindersAnimations(
     props.enabled,
@@ -45,8 +44,8 @@ export function StreakRemindersSection(props: StreakRemindersSectionProps) {
   const insetCardBackground = themeColors.surface;
 
   return (
-    <SettingsSection icon={props.icon} title='Reminders'>
-      {props.enabled && !permissionGranted && !isSearching ? (
+    <SettingsSection icon={props.icon} title='Notifications'>
+      {props.enabled && !permissionGranted ? (
         <NotificationPermissionWarning />
       ) : null}
       <SettingsRow
@@ -61,41 +60,29 @@ export function StreakRemindersSection(props: StreakRemindersSectionProps) {
         value={props.enabled}
         onToggle={(v) => void props.onToggle(v)}
       />
-      {isSearching ? null : (
-        <>
-          <ReminderInsetCard
-            enabled={props.enabled}
-            insetBackground={insetBackground}
-            insetBorder={insetBorder}
-            insetCardBackground={insetCardBackground}
-            insetExpandStyle={animations.insetExpand.contentAnimatedStyle}
-            isPremium={props.isPremium}
-            pickerExpandStyle={animations.pickerExpand.contentAnimatedStyle}
-            reminderTime={props.reminderTime}
-            showTimePicker={showTimePicker}
-            onInsetLayout={animations.handleInsetLayout}
-            onPickerLayout={animations.handlePickerLayout}
-            onPremiumUpsell={props.onPremiumUpsell}
-            onTimeChange={onTimeChange}
-            onToggleTimePicker={handleToggleTimePicker}
-          />
-          <DisabledHint
-            hintStyle={animations.hintExpand.contentAnimatedStyle}
-            pointerEvents={props.enabled ? 'none' : 'auto'}
-            onLayout={animations.handleHintLayout}
-          />
-          <AndroidTimePickerDialog
-            reminderTime={props.reminderTime}
-            visible={showTimePicker}
-            onChange={onTimeChange}
-          />
-        </>
-      )}
-      <SoundHapticsRows
-        enabled={props.completionSoundEnabled}
-        soundType={props.completionSoundType}
-        onChangeEnabled={props.onChangeCompletionSoundEnabled}
-        onChangeType={props.onChangeCompletionSoundType}
+      <ReminderInsetCard
+        enabled={props.enabled}
+        insetBackground={insetBackground}
+        insetBorder={insetBorder}
+        insetCardBackground={insetCardBackground}
+        insetExpandStyle={animations.insetExpand.contentAnimatedStyle}
+        pickerExpandStyle={animations.pickerExpand.contentAnimatedStyle}
+        reminderTime={props.reminderTime}
+        showTimePicker={showTimePicker}
+        onInsetLayout={animations.handleInsetLayout}
+        onPickerLayout={animations.handlePickerLayout}
+        onTimeChange={onTimeChange}
+        onToggleTimePicker={handleToggleTimePicker}
+      />
+      <DisabledHint
+        hintStyle={animations.hintExpand.contentAnimatedStyle}
+        pointerEvents={props.enabled ? 'none' : 'auto'}
+        onLayout={animations.handleHintLayout}
+      />
+      <AndroidTimePickerDialog
+        reminderTime={props.reminderTime}
+        visible={showTimePicker}
+        onChange={onTimeChange}
       />
     </SettingsSection>
   );

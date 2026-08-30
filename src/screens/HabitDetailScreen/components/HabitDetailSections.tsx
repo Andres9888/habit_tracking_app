@@ -1,6 +1,11 @@
 /**
  * HabitDetailSections — recommitment stack below the hero:
- * strength snapshot → This week → History/Analytics doors → one insight line.
+ * strength snapshot → This week → streak goal → record doors → one insight
+ * line.
+ *
+ * In recovery the strength dial and the Analytics door drop out. Being scored
+ * is the wrong response to a bad day; the guilt is the churn risk, not the
+ * missing chart.
  */
 import { View } from 'react-native';
 import type { Habit } from '../../../features/habits/types';
@@ -8,6 +13,7 @@ import { spacing } from '../../../theme/spacing';
 import { getLocalDateString } from '../../../utils/getLocalDateString';
 import type { HabitInsights } from '../insights';
 import type { InsightId } from '../useDetailFlow';
+import { DetailGoalCard } from './DetailGoalCard';
 import { InsightLine } from './InsightLine';
 import { RecordDoors } from './RecordDoors';
 import { StrengthSnapshot } from './StrengthSnapshot';
@@ -15,8 +21,13 @@ import { ThisWeekCard } from './ThisWeekCard';
 
 interface HabitDetailSectionsProps {
   completedDates: Set<string>;
+  /** Log-derived current streak; `habit.currentStreak` is stale after a miss. */
+  currentStreak: number;
   habit: Habit;
   insights: HabitInsights;
+  isCompletedToday: boolean;
+  /** A miss is still unanswered: suppress the score and the Analytics door. */
+  isRecovery?: boolean;
   onDayPress: (date: string, isCompleted: boolean) => void;
   onOpenAnalytics: () => void;
   onOpenDay: (date: string) => void;
@@ -26,8 +37,11 @@ interface HabitDetailSectionsProps {
 
 export function HabitDetailSections({
   completedDates,
+  currentStreak,
   habit,
   insights,
+  isCompletedToday,
+  isRecovery = false,
   onDayPress,
   onOpenAnalytics,
   onOpenDay,
@@ -38,16 +52,25 @@ export function HabitDetailSections({
 
   return (
     <View style={{ gap: spacing.md, padding: 20, paddingBottom: 40 }}>
-      <StrengthSnapshot habit={habit} />
+      {isRecovery ? null : <StrengthSnapshot habit={habit} />}
       <ThisWeekCard
+        bestStreak={habit.bestStreak ?? 0}
         completedDates={completedDates}
-        daysOfWeek={habit.daysOfWeek}
+        currentStreak={currentStreak}
+        daysLogged={insights.yearCompletions}
+        dayContext={{
+          createdAt: habit.createdAt,
+          daysOfWeek: habit.daysOfWeek,
+          pausedAt: habit.pausedAt,
+          resumedAt: habit.resumedAt,
+        }}
         onDayPress={(date, done) => {
           if (date > today) return;
           if (date === today) onDayPress(date, done);
           else onOpenDay(date);
         }}
       />
+      <DetailGoalCard habit={habit} loggedToday={isCompletedToday} />
       <RecordDoors
         onOpenAnalytics={onOpenAnalytics}
         onOpenHistory={onOpenHistory}

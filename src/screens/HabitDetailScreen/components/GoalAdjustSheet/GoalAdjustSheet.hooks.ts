@@ -27,7 +27,8 @@ export function useGoalAdjust({
   visible,
   onClose,
 }: UseGoalAdjustArgs) {
-  const { triggerSelection, triggerSuccess, triggerWarning } = useHapticFeedback();
+  const { triggerSelection, triggerSuccess, triggerWarning } =
+    useHapticFeedback();
   const updateHabit = useMutation(api.habits.update);
   const [selected, setSelected] = useState<number>(currentGoal);
   const [saving, setSaving] = useState(false);
@@ -75,5 +76,12 @@ export function useGoalAdjust({
     }
   };
 
-  return { confirmRemove, handleRemove, handleSelect, handleUpdate, saving, selected };
+  return {
+    confirmRemove,
+    handleRemove,
+    handleSelect,
+    handleUpdate,
+    saving,
+    selected,
+  };
 }

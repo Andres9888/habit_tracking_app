@@ -48,13 +48,13 @@ export function useDraggableHabitAnimations({
   const [showNewRecord, setShowNewRecord] = useState(false);
 
   useEntranceAnimation(fade, translateY, reduceMotionPreference, mountVisible);
-  useHighlightAnimation(
-    isJustCreated,
-    holdHighlight,
-    reduceMotionPreference,
+  useHighlightAnimation({
     cardScale,
-    highlightGlow
-  );
+    highlightGlow,
+    holdHighlight,
+    isJustCreated,
+    reduceMotionPreference,
+  });
   useIconPulse(isWeekComplete, reduceMotionPreference, iconPulse);
   useNewRecordAnimation(
     isNewPersonalRecord,

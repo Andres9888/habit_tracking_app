@@ -35,7 +35,7 @@ export function StrengthCurveTypeBar({ growthType }: Props) {
       <View style={{ flex: 1, minWidth: 0, gap: 2 }}>
         <Text
           style={{
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: fontWeights.bold,
             letterSpacing: 0.5,
             textTransform: 'uppercase',

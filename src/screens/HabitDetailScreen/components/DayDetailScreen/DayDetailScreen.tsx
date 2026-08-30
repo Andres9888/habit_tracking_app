@@ -1,9 +1,10 @@
 /* eslint-disable max-lines */
 import { Text, View } from 'react-native';
+import { getHabitDayState } from '../../../../features/habits/habitDayState';
 import type { Habit } from '../../../../features/habits/types';
 import { fontFamilies, fontWeights } from '../../../../theme/typography';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
-import { useHabitInsights } from '../../insights';
+import { useHabitTrackingRange } from '../../insights';
 import { useInsightPalette } from '../../insightPalette';
 import { FlowPage } from '../FlowPage';
 import { FlowSectionLabel } from '../FlowSectionLabel';
@@ -40,21 +41,34 @@ export function DayDetailScreen({
   const palette = useInsightPalette();
   const today = getLocalDateString();
   const date = focusDate && focusDate <= today ? focusDate : today;
-  const insights = useHabitInsights({
-    daysOfWeek: habit.daysOfWeek,
-    habitCreatedAt: habit.createdAt,
+  // Query this exact day rather than reading the insights window: that window
+  // is a rolling 400 days, so an older day would read as never completed and
+  // the correction rows below would toggle away a real completion.
+  const rows = useHabitTrackingRange({
+    endDate: date,
     habitId: habit._id,
+    startDate: date,
   });
-  const done = insights.doneDates.has(date);
+  const row = rows?.find((entry) => entry.date === date);
+  const done = Boolean(row?.completed);
   const isToday = date === today;
+  const dayState = getHabitDayState({
+    completed: done,
+    createdAt: habit.createdAt,
+    date,
+    daysOfWeek: habit.daysOfWeek,
+    pausedAt: habit.pausedAt,
+    resumedAt: habit.resumedAt,
+    today,
+  });
   const timeLabel =
-    isToday && insights.todayCompletedAt
-      ? new Date(insights.todayCompletedAt).toLocaleTimeString('en-US', {
+    isToday && done && row
+      ? new Date(row._creationTime).toLocaleTimeString('en-US', {
           hour: 'numeric',
           minute: '2-digit',
         })
       : undefined;
-  const status = dayStatusCopy(done, isToday, timeLabel);
+  const status = dayStatusCopy(dayState, timeLabel);
   const earliest = habit.createdAt
     ? getLocalDateString(new Date(habit.createdAt))
     : `${today.slice(0, 4)}-01-01`;

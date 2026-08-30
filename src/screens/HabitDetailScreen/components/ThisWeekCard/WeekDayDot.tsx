@@ -9,16 +9,10 @@ import { borderRadius } from '../../../../theme/spacing';
 import { fontWeights } from '../../../../theme/typography';
 import type { InsightPalette } from '../../insightPalette';
 import type { WeekDay } from './useThisWeek';
+import { formatDayShort } from '../DayDetailScreen/dayCopy';
+import { habitDayStateLabel } from '../../../../features/habits/habitDayState';
 
 const DOT = 34;
-const STATE_LABEL: Record<WeekDay['state'], string> = {
-  done: 'done',
-  missed: 'missed',
-  off: 'not scheduled',
-  today: 'today, not yet done',
-  upcoming: 'upcoming',
-};
-
 interface WeekDayDotProps {
   day: WeekDay;
   palette: InsightPalette;
@@ -26,8 +20,8 @@ interface WeekDayDotProps {
 }
 
 function dotStyle(state: WeekDay['state'], palette: InsightPalette) {
-  if (state === 'done') return { backgroundColor: palette.green };
-  if (state === 'today') {
+  if (state === 'completed') return { backgroundColor: palette.green };
+  if (state === 'open-today') {
     return {
       backgroundColor: palette.card,
       borderColor: palette.ctaGreen,
@@ -41,17 +35,33 @@ function dotStyle(state: WeekDay['state'], palette: InsightPalette) {
       borderWidth: 1.5,
     };
   }
-  if (state === 'off') return { backgroundColor: palette.cellFuture };
+  if (
+    state === 'before-creation' ||
+    state === 'unscheduled' ||
+    state === 'paused'
+  ) {
+    return { backgroundColor: palette.cellFuture };
+  }
   return { backgroundColor: palette.cellEmpty };
 }
 
 export function WeekDayDot({ day, onPress, palette }: WeekDayDotProps) {
-  const isEmphasised = day.state === 'today' || day.state === 'done';
+  const isEmphasised = day.state === 'open-today' || day.state === 'completed';
+  const isInteractive =
+    day.state !== 'before-creation' &&
+    day.state !== 'upcoming' &&
+    day.state !== 'unscheduled' &&
+    !(day.state === 'paused' && day.isToday);
 
   return (
     <Pressable
-      accessibilityLabel={`${day.date}, ${STATE_LABEL[day.state]}`}
-      accessibilityRole='button'
+      accessibilityHint={
+        isInteractive ? 'Opens or updates this day' : undefined
+      }
+      accessibilityLabel={`${formatDayShort(day.date)}, ${habitDayStateLabel(day.state)}`}
+      accessibilityRole={isInteractive ? 'button' : 'text'}
+      accessibilityState={{ disabled: !isInteractive }}
+      disabled={!isInteractive}
       hitSlop={5}
       style={{
         alignItems: 'center',
@@ -60,12 +70,14 @@ export function WeekDayDot({ day, onPress, palette }: WeekDayDotProps) {
         minHeight: 44,
         minWidth: 40,
       }}
-      onPress={() => onPress(day.date, day.state === 'done')}
+      onPress={() => onPress(day.date, day.state === 'completed')}
     >
       <Text
         style={{
           color:
-            day.state === 'today' ? palette.ctaGreen : palette.textTertiary,
+            day.state === 'open-today'
+              ? palette.ctaGreen
+              : palette.textTertiary,
           fontSize: 11,
           fontWeight: isEmphasised ? fontWeights.bold : fontWeights.regular,
         }}
@@ -82,10 +94,10 @@ export function WeekDayDot({ day, onPress, palette }: WeekDayDotProps) {
           ...dotStyle(day.state, palette),
         }}
       >
-        {day.state === 'done' ? (
+        {day.state === 'completed' ? (
           <Check color={palette.onGreen} size={15} strokeWidth={3} />
         ) : null}
-        {day.state === 'today' ? (
+        {day.state === 'open-today' ? (
           <View
             style={{
               backgroundColor: palette.ctaGreen,
@@ -99,12 +111,13 @@ export function WeekDayDot({ day, onPress, palette }: WeekDayDotProps) {
       <Text
         style={{
           color:
-            day.state === 'today'
+            day.state === 'open-today'
               ? palette.textSecondary
               : palette.textTertiary,
           fontSize: 11,
           fontVariant: ['tabular-nums'],
-          fontWeight: day.state === 'today' ? fontWeights.semibold : undefined,
+          fontWeight:
+            day.state === 'open-today' ? fontWeights.semibold : undefined,
         }}
       >
         {day.dayNum}

@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import { Alert, Linking, Platform, Share } from 'react-native';
 import { EXTERNAL_URLS } from '../../constants';
 
-const SHARE_MESSAGE = `I'm building better habits with Chain Day — a simple app that turns daily consistency into visible streaks. Try it free!\n\n${EXTERNAL_URLS.APP_STORE}`;
+const SHARE_MESSAGE = `I'm building better habits with Chain Day. It turns daily consistency into visible streaks. Try it free!\n\n${EXTERNAL_URLS.APP_STORE}`;
 
 export function useSupportActions() {
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
@@ -32,7 +32,7 @@ export function useSupportActions() {
   const handleShare = useCallback(() => {
     void Share.share({
       message: SHARE_MESSAGE,
-      title: 'Chain Day — Build Better Habits',
+      title: 'Chain Day',
       url: Platform.OS === 'ios' ? EXTERNAL_URLS.APP_STORE : undefined,
     });
   }, []);

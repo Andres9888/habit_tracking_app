@@ -8,6 +8,7 @@ import { durations, enterEasing } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { typography, fontWeights } from '@/theme/typography';
 import { SettingsCountBadge } from '../../SettingsModal/SettingsCountBadge';
+import { ModalCloseButton } from '../../ui/ModalCloseButton';
 
 const ENTERING = FadeInDown.duration(durations.enter).easing(enterEasing);
 
@@ -16,6 +17,7 @@ interface ModalHeaderProps {
   habitCount: number;
   selectionMode: boolean;
   onBack: () => void;
+  onClose: () => void;
   onSelectPress: () => void;
 }
 
@@ -24,6 +26,7 @@ export function ModalHeader({
   habitCount,
   selectionMode,
   onBack,
+  onClose,
   onSelectPress,
 }: ModalHeaderProps) {
   const { colors, isDark } = useThemeColors();
@@ -73,33 +76,41 @@ export function ModalHeader({
               strokeWidth={2}
             />
           </Pressable>
-          <Pressable
-            accessibilityLabel={
-              selectionMode ? 'Cancel selection' : 'Enter selection mode'
-            }
-            accessibilityRole='button'
-            accessibilityState={{ disabled: selectDisabled }}
-            disabled={selectDisabled}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            style={{
-              paddingHorizontal: 10,
-              paddingVertical: 8,
-              borderRadius: 8,
-              opacity: selectDisabled ? 0.4 : 1,
-            }}
-            onPress={onSelectPress}
-          >
-            <Text
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+            <Pressable
+              accessibilityLabel={
+                selectionMode ? 'Cancel selection' : 'Enter selection mode'
+              }
+              accessibilityRole='button'
+              accessibilityState={{ disabled: selectDisabled }}
+              disabled={selectDisabled}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               style={{
-                fontSize: 14,
-                fontWeight: fontWeights.semibold,
-                color: selectColor,
-                letterSpacing: -0.1,
+                paddingHorizontal: 10,
+                paddingVertical: 8,
+                borderRadius: 8,
+                opacity: selectDisabled ? 0.4 : 1,
               }}
+              onPress={onSelectPress}
             >
-              {selectLabel}
-            </Text>
-          </Pressable>
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: fontWeights.semibold,
+                  color: selectColor,
+                  letterSpacing: -0.1,
+                }}
+              >
+                {selectLabel}
+              </Text>
+            </Pressable>
+            <ModalCloseButton
+              hint='Closes settings'
+              label='Close'
+              onClose={onClose}
+              variant='subtle'
+            />
+          </View>
         </View>
         <View style={{ paddingHorizontal: 20, paddingBottom: 4 }}>
           <Text

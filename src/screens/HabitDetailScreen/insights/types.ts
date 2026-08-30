@@ -70,7 +70,7 @@ export interface HabitInsights {
   /** Completions in the current calendar year. */
   yearCompletions: number;
   /**
-   * Every date with a logged completion in the fetched window (year-to-date).
+   * Every date with a logged completion in the rolling long-history window.
    * The monthly-trend analysis reads this instead of the app-level tracking
    * buffer, which only reaches ~90 days back.
    */

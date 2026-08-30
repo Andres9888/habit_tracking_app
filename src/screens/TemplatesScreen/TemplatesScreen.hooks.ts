@@ -8,7 +8,8 @@ import type { Doc, Id } from '../../../convex/_generated/dataModel';
 import type { Category, SortOption } from '../templates/constants';
 import { useExpandedCategories } from './hooks/useExpandedCategories';
 import { useFeedbackState } from './hooks/useFeedbackState';
-import { useImportedTemplateIdsSync } from './hooks/useImportedTemplateIdsSync';
+import type { ImportedHabitIdPair } from './hooks/useImportedHabitIdMap';
+import { useImportedTemplateState } from './hooks/useImportedTemplateState';
 import type {
   BrowseTab,
   TemplatePreviewAnchor,
@@ -17,11 +18,13 @@ import type {
 
 interface UseTemplatesScreenStateOptions {
   categories: { id: string }[] | undefined;
+  importedHabitIds?: readonly ImportedHabitIdPair[];
   initialImportedIds?: Set<string>;
 }
 
 export function useTemplatesScreenState({
   categories,
+  importedHabitIds,
   initialImportedIds,
 }: UseTemplatesScreenStateOptions) {
   const flatListRef = useRef<FlatList<Doc<'templates'>>>(null);
@@ -39,12 +42,10 @@ export function useTemplatesScreenState({
   const [previewInitialAnchor, setPreviewInitialAnchor] =
     useState<TemplatePreviewAnchor>('top');
   const [showCustomizeModal, setShowCustomizeModal] = useState(false);
-  const {
-    frozenImportedIds,
-    importedTemplateIds,
-    isImportedStateReady,
-    setImportedTemplateIds,
-  } = useImportedTemplateIdsSync(initialImportedIds);
+  const imported = useImportedTemplateState(
+    initialImportedIds,
+    importedHabitIds
+  );
   const feedback = useFeedbackState();
   const [importingTemplateId, setImportingTemplateId] =
     useState<Id<'templates'> | null>(null);
@@ -73,11 +74,9 @@ export function useTemplatesScreenState({
     expandedCategories,
     ...feedback,
     flatListRef,
-    frozenImportedIds,
     hasActiveFilters,
-    importedTemplateIds,
+    ...imported,
     importingTemplateId,
-    isImportedStateReady,
     isSearchActive,
     isSearching,
     isSeeding,
@@ -87,7 +86,6 @@ export function useTemplatesScreenState({
     selectedCategory,
     setBrowseTab,
     setExpandedCategories,
-    setImportedTemplateIds,
     setImportingTemplateId,
     setIsSeeding,
     setPreviewInitialAnchor,

@@ -1,4 +1,8 @@
-/** SettingsRow - AnimatedPressable, haptics, toggle pulse */
+/** SettingsRow - AnimatedPressable, haptics, toggle pulse.
+ *  Accessibility contract: every row exposes its label; toggle rows expose
+ *  On/Off as their value, selection rows expose the current value string;
+ *  expandable rows expose expanded state and a disclosure hint; disabled/busy
+ *  reach assistive tech via accessibilityState. */
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { getSettingsRowColors } from './SettingsRow.colors';
 import {
@@ -9,7 +13,7 @@ import { SettingsRowContent } from './components/SettingsRowContent';
 import { useSettingsRowDivider } from './SettingsRowDivider.provider';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { useFocusRing } from '../../../utils/accessibility';
-import { useSettingsSearch, rowMatchesQuery } from '../search';
+import { getSettingsRowA11y } from './SettingsRow.a11y';
 import type { SettingsRowProps } from './SettingsRow.types';
 
 export function SettingsRow({
@@ -26,6 +30,11 @@ export function SettingsRow({
   rightAccessory,
   showChevron,
   hapticStyle,
+  accessibilityLabel,
+  accessibilityHint,
+  expanded,
+  disabled,
+  busy,
 }: SettingsRowProps) {
   const { colors: themeColors, isDark } = useThemeColors();
   const colors = getSettingsRowColors(isDark);
@@ -35,12 +44,7 @@ export function SettingsRow({
     { hapticStyle, onPress, onToggle },
     triggerPulse
   );
-  const { query } = useSettingsSearch();
-  const rowVisible = rowMatchesQuery(query, label);
-  const showTopBorder = useSettingsRowDivider(rowVisible);
-
-  // Live search filter: hide rows whose label doesn't match the active query.
-  if (!rowVisible) return null;
+  const showTopBorder = useSettingsRowDivider(true, label);
 
   const isInteractiveInfo =
     type === 'info' && (!!rightAccessory || !!showChevron || !!onPress);
@@ -48,6 +52,7 @@ export function SettingsRow({
     <SettingsRowContent
       badge={badge}
       colors={colors}
+      expanded={expanded}
       icon={icon}
       iconBackgroundColor={iconBackgroundColor}
       isInteractiveInfo={isInteractiveInfo}
@@ -65,12 +70,30 @@ export function SettingsRow({
     />
   );
 
-  if ((type === 'toggle' || type === 'info') && !onPress) return content;
+  const a11y = getSettingsRowA11y({
+    accessibilityHint,
+    accessibilityLabel,
+    busy,
+    disabled,
+    expanded,
+    label,
+    type,
+    value,
+  });
+
+  // Rows that render without a pressable wrapper (pure toggles) already get
+  // their full announcement from the inner AnimatedToggle switch — label,
+  // role, checked state, On/Off value — so the wrapper stays transparent to
+  // avoid duplicate accessibility nodes.
+  if ((type === 'toggle' || type === 'info') && !onPress) {
+    return content;
+  }
+
   return (
     <AnimatedPressable
-      accessibilityHint={type === 'toggle' ? 'Shows more options' : undefined}
-      accessibilityLabel={label}
+      {...a11y}
       accessibilityRole='button'
+      disabled={disabled}
       style={focusStyle}
       onPress={handleNavPress}
       {...focusHandlers}

@@ -23,6 +23,7 @@ interface CalendarDayBodyProps {
   useSolidCompletedFill: boolean;
   isFuture?: boolean;
   isMissed?: boolean;
+  isPaused?: boolean;
 }
 
 export const CalendarDayBody = memo(function CalendarDayBody({
@@ -41,6 +42,7 @@ export const CalendarDayBody = memo(function CalendarDayBody({
   useSolidCompletedFill,
   isFuture = false,
   isMissed = false,
+  isPaused = false,
 }: CalendarDayBodyProps) {
   const circle = useSolidCompletedFill;
   return (
@@ -50,6 +52,7 @@ export const CalendarDayBody = memo(function CalendarDayBody({
         circle ? styles.dayCellCircle : null,
         cellPopStyle,
         circle && isFuture && !showCompleted ? styles.futureFill : null,
+        circle && isPaused && !showCompleted ? styles.pausedFill : null,
         circle && isMissed && !showCompleted && !isToday
           ? styles.missedRing
           : null,

@@ -30,7 +30,9 @@ function luminance(hexColor: string): number | null {
   const green = parseInt(hex.slice(3, 5), 16);
   const blue = parseInt(hex.slice(5, 7), 16);
 
-  return 0.2126 * toLinear(red) + 0.7152 * toLinear(green) + 0.0722 * toLinear(blue);
+  return (
+    0.2126 * toLinear(red) + 0.7152 * toLinear(green) + 0.0722 * toLinear(blue)
+  );
 }
 
 function contrastRatio(colorA: string, colorB: string): number | null {

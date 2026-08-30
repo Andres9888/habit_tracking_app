@@ -1,10 +1,8 @@
 /** HabitDataRows — archive + export entry points.
- *  Both live in Habits now (mock decision 3B: 7 cards → 6 — a lone navigational
- *  row didn't earn its own Privacy & Security card). */
+ *  Both live in Data & Privacy now (Quiet Configuration Index §5). */
 import { BookOpen, Download } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { SettingsRow } from '../SettingsRow';
-import { useSettingsToast } from '../SettingsToast';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface HabitDataRowsProps {
@@ -19,13 +17,12 @@ export function HabitDataRows({
   onExportHabitsData,
 }: HabitDataRowsProps) {
   const { settings } = useThemeColors();
-  const { showToast } = useSettingsToast();
 
-  // Only claim the export started if there is actually a handler to run.
+  // No toast here: the downstream flow asks the user to pick CSV or JSON and
+  // can be cancelled — claiming "Export started…" before any of that is a lie.
   const handleExport = () => {
     if (!onExportHabitsData) return;
     void onExportHabitsData();
-    showToast('Export started…');
   };
 
   return (

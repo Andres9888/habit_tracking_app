@@ -2,7 +2,25 @@
 
 import { getLevelFromStrength } from '../../../../components/ProgressSectionConsolidated/types/levelHelpers';
 import type { Habit } from '../../../../features/habits/types';
+import type { HabitDayState } from '../../../../features/habits/habitDayState';
 import { reminderHour } from '../../insights';
+import type { BandGradient, InsightPalette } from '../../insightPalette';
+
+/**
+ * The hero wash. The header tint, the hero gradient and the ScrollView's
+ * overscroll fill all read stop 0, so all three must resolve it the same way —
+ * hence one helper rather than three copies of the ternary.
+ */
+export function heroWash(
+  palette: InsightPalette,
+  todayState: HabitDayState,
+  isRecovery: boolean
+): BandGradient {
+  if (isRecovery) return palette.bandGradientRecovery;
+  return todayState === 'completed'
+    ? palette.bandGradientDone
+    : palette.bandGradient;
+}
 
 /** Strength is stored 0-1; the dial and the rest of the app show 0-100. */
 export function strengthPercent(habit: Habit): number {
@@ -64,13 +82,9 @@ export function scheduleLabel(habit: Habit): string {
 }
 
 /**
- * The two-minute framing line. Leans on the habit's implementation-intention
- * cue when one exists, so the smaller ask still has a concrete trigger.
+ * Honest, habit-specific recovery guidance sized for the fixed action slot.
  */
 export function twoMinuteHint(habit: Habit): string {
-  const cue = habit.cueAfterBehavior?.trim();
-  if (cue) {
-    return `${cue}, do the smallest version you'd still be proud of. Showing up is the streak.`;
-  }
-  return 'Do the smallest version you would still be proud of — two minutes counts. Showing up is the streak.';
+  const name = habit.name.trim() || 'this habit';
+  return `Try two minutes of ${name}. Stopping early still counts.`;
 }

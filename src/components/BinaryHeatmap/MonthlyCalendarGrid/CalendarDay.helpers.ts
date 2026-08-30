@@ -1,5 +1,6 @@
 /** CalendarDay helpers — text color resolution + accessibility strings. */
 import type { DayData } from './types';
+import { habitDayStateLabel } from '../../../features/habits/habitDayState';
 
 export interface CalendarDayColors {
   inverse: string;
@@ -56,13 +57,24 @@ export function getDayAccessibility(
   showMissed: boolean,
   isToday: boolean
 ): { hint: string; label: string } {
-  const state = showCompleted ? ', completed' : showMissed ? ', missed' : '';
+  const state = showCompleted
+    ? 'completed'
+    : showMissed
+      ? 'missed'
+      : habitDayStateLabel(day.state);
+  // Adjacent-month filler cells are rendered greyed out and disabled, so their
+  // own day state (often 'missed') would announce a miss the user cannot act on.
+  const isFiller = !day.isCurrentMonth;
+  const unavailable =
+    isFiller || day.state === 'before-creation' || day.state === 'upcoming';
   return {
-    hint: day?.isFuture
+    hint: unavailable
       ? 'Not available'
       : showCompleted
         ? 'Press to mark as incomplete'
-        : 'Press to mark as complete',
-    label: `Day ${day?.dayNumber ?? ''}${state}${isToday ? ', today' : ''}`,
+        : 'Press to open or update this day',
+    label: isFiller
+      ? `Day ${day.dayNumber}, not available`
+      : `Day ${day.dayNumber}, ${state}${isToday ? ', today' : ''}`,
   };
 }

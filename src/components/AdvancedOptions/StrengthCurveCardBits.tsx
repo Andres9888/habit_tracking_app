@@ -18,7 +18,7 @@ export function SuggestedPill({ bg }: { bg: string }) {
     >
       <Text
         style={{
-          fontSize: 9,
+          fontSize: 12,
           fontWeight: fontWeights.bold,
           color: '#fff',
           textTransform: 'uppercase',
@@ -59,7 +59,7 @@ export function PctBadge({
         }}
       >
         +{growthPct}%
-        <Text style={{ fontSize: 9, fontWeight: fontWeights.bold }}>/day</Text>
+        <Text style={{ fontSize: 11, fontWeight: fontWeights.bold }}>/day</Text>
       </Text>
     </View>
   );

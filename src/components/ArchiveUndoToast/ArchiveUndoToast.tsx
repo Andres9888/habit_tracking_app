@@ -55,7 +55,11 @@ export function ArchiveUndoToast({
           >
             <View style={styles.content}>
               <View style={styles.iconContainer}>
-                <Archive color={amberIconColor} size={iconSizes.medium} strokeWidth={2} />
+                <Archive
+                  color={amberIconColor}
+                  size={iconSizes.medium}
+                  strokeWidth={2}
+                />
               </View>
 
               <Text numberOfLines={1} style={styles.message}>
@@ -72,7 +76,11 @@ export function ArchiveUndoToast({
                 ]}
                 onPress={handleUndo}
               >
-                <Undo2 color={amberIconColor} size={iconSizes.small} strokeWidth={2.5} />
+                <Undo2
+                  color={amberIconColor}
+                  size={iconSizes.small}
+                  strokeWidth={2.5}
+                />
                 <Text style={styles.undoText}>UNDO</Text>
               </Pressable>
             </View>

@@ -12,5 +12,5 @@ export interface UseAnimatedStylesProps {
   importButtonScale: SharedValue<number>;
   customizeButtonScale: SharedValue<number>;
   checkmarkScale: SharedValue<number>;
-  successPillScale: SharedValue<number>;
+  successPanelProgress: SharedValue<number>;
 }

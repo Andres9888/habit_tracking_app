@@ -63,7 +63,7 @@ export function StrengthCurveCtaCard({ mode, onPress }: Props) {
                   style={{
                     color: colors.text.tertiary,
                     fontFamily: typography.caption.fontFamily,
-                    fontSize: 11.5,
+                    fontSize: 12,
                     lineHeight: 15,
                     marginTop: 1,
                   }}

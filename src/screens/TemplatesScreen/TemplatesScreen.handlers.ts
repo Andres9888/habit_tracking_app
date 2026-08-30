@@ -24,6 +24,7 @@ export function useTemplateHandlers(opts: UseTemplateHandlersOptions) {
     isPremiumUser: opts.isPremiumUser,
     onShowPaywall: opts.onShowPaywall,
     previewTemplate: opts.previewTemplate,
+    recordImportedHabitId: opts.recordImportedHabitId,
     setFeedbackHabitId: opts.setFeedbackHabitId,
     setFeedbackVariant: opts.setFeedbackVariant,
     setImportedTemplateIds: opts.setImportedTemplateIds,

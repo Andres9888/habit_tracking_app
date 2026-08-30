@@ -1,4 +1,5 @@
 import { addDays, differenceInCalendarDays, format } from 'date-fns';
+import type { HabitDayState } from '../../../../features/habits/habitDayState';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import { parseLocalDate } from '../../insights';
 
@@ -36,24 +37,47 @@ export function adjacentDay(
 }
 
 export function dayStatusCopy(
-  done: boolean,
-  isToday: boolean,
+  state: HabitDayState,
   timeLabel?: string
 ): { subtitle: string; title: string } {
-  if (done) {
+  if (state === 'completed') {
     return {
       subtitle: timeLabel ? `Logged at ${timeLabel}` : 'Logged as completed.',
       title: 'Completed',
     };
   }
-  if (isToday) {
+  if (state === 'before-creation') {
+    return {
+      subtitle: 'This habit had not started yet.',
+      title: 'Before habit started',
+    };
+  }
+  if (state === 'unscheduled') {
+    return {
+      subtitle: 'This day is outside this habit’s schedule.',
+      title: 'Not scheduled',
+    };
+  }
+  if (state === 'paused') {
+    return {
+      subtitle: 'This habit was paused on this day.',
+      title: 'Paused',
+    };
+  }
+  if (state === 'open-today') {
     return {
       subtitle: 'Today is still open. You can log it here or from the habit.',
       title: 'Not logged yet',
     };
   }
+  if (state === 'upcoming') {
+    return {
+      subtitle: 'This day has not happened yet.',
+      title: 'Upcoming',
+    };
+  }
   return {
-    subtitle: 'Nothing was recorded for this day.',
-    title: 'No entry',
+    subtitle: 'This scheduled day was not logged.',
+    title: 'Missed',
   };
 }

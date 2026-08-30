@@ -70,10 +70,9 @@ export function PreviewContent({
         successPillStyle={animatedStyles.successPillStyle}
         templateName={template?.name ?? ''}
         onCustomize={handlers.handleCustomize}
-        // "Find another habit" means the library, not the home screen — so it
-        // follows the back path, not the X path.
-        onDone={handlers.handleDismiss}
+        onGoToToday={handlers.handleGoToHabit}
         onImport={handlers.handleImport}
+        onKeepExploring={handlers.handleBack}
       />
     </Animated.View>
   );

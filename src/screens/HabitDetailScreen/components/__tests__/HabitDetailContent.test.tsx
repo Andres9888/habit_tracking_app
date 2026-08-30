@@ -7,6 +7,7 @@ import { fireEvent, render } from '@testing-library/react-native';
 import { ScrollView } from 'react-native';
 import type { Habit } from '../../../../features/habits/types';
 import { HabitDetailContent } from '../HabitDetailContent';
+import { formatDayShort } from '../DayDetailScreen/dayCopy';
 
 const trackingRows: {
   completed: boolean;
@@ -25,6 +26,10 @@ function ymd(offsetDays: number): string {
     String(d.getMonth() + 1).padStart(2, '0'),
     String(d.getDate()).padStart(2, '0'),
   ].join('-');
+}
+
+function weekLabel(offsetDays: number, state: string): string {
+  return `${formatDayShort(ymd(offsetDays))}, ${state}`;
 }
 
 const WEEKDAY_NAME = [
@@ -74,6 +79,7 @@ function renderContent(
     onOpenAnalytics?: () => void;
     onOpenHistory?: () => void;
     onPinnedChange?: (pinned: boolean) => void;
+    onRecoveryChange?: (isRecovery: boolean) => void;
   } = {}
 ) {
   return render(
@@ -85,6 +91,7 @@ function renderContent(
       onOpenAnalytics={handlers.onOpenAnalytics}
       onOpenHistory={handlers.onOpenHistory}
       onPinnedChange={handlers.onPinnedChange}
+      onRecoveryChange={handlers.onRecoveryChange}
     />
   );
 }
@@ -98,46 +105,74 @@ describe('HabitDetailContent', () => {
         daysOfWeek: [yesterday.getDay()],
       });
 
-    expect(getByLabelText(`${ymd(-1)}, missed`)).toBeTruthy();
-    expect(getByLabelText(`${ymd(0)}, not scheduled`)).toBeTruthy();
+    expect(getByLabelText(weekLabel(-1, 'missed'))).toBeTruthy();
+    expect(getByLabelText(weekLabel(0, 'not scheduled'))).toBeTruthy();
 
     expect(getByText('Today · not scheduled')).toBeTruthy();
     expect(getByText('Nothing is owed today.')).toBeTruthy();
     expect(getByText('Not scheduled today')).toBeTruthy();
     expect(queryByLabelText('Complete today')).toBeNull();
-    expect(queryByText('Pick it back up')).toBeNull();
+    expect(
+      queryByText('Yesterday got away. Today doesn’t have to.')
+    ).toBeNull();
   });
 
   it('renders the hero, This week card and record doors', () => {
+    completeYesterday();
     const { getByText, queryByText } = renderContent();
     expect(getByText('Wake-Up Movement')).toBeTruthy();
     expect(getByText('Daily')).toBeTruthy();
     expect(getByText('This week')).toBeTruthy();
-    expect(getByText('0 days logged')).toBeTruthy();
+    expect(getByText('1 day logged')).toBeTruthy();
     expect(getByText('The record')).toBeTruthy();
-    expect(getByText('History')).toBeTruthy();
+    expect(getByText('Full history')).toBeTruthy();
+    expect(getByText('Runs, calendar and the year grid')).toBeTruthy();
     expect(getByText('Analytics')).toBeTruthy();
+    expect(getByText('Trend, patterns and what’s working')).toBeTruthy();
     expect(queryByText('Going away?')).toBeNull();
     expect(queryByText('Pause without losing your streak')).toBeNull();
   });
 
+  it('announces readable week dates and keeps future pips inert', () => {
+    // The strip is Monday-first, so "tomorrow" is only in this week from Monday
+    // through Saturday. On a Sunday the honest assertion is the other one:
+    // there is no upcoming pip at all.
+    const daysLeftInWeek = 6 - ((new Date().getDay() + 6) % 7);
+    const { getByLabelText, queryByLabelText } = renderContent();
+
+    if (daysLeftInWeek === 0) {
+      expect(queryByLabelText(weekLabel(1, 'upcoming'))).toBeNull();
+      return;
+    }
+    const upcoming = getByLabelText(weekLabel(daysLeftInWeek, 'upcoming'));
+
+    expect(upcoming.props.accessibilityState).toEqual({ disabled: true });
+  });
+
   it('opens History and Analytics from the record doors', () => {
+    completeYesterday();
     const onOpenHistory = jest.fn();
     const onOpenAnalytics = jest.fn();
     const { getByLabelText } = renderContent(
       {},
       { onOpenAnalytics, onOpenHistory }
     );
-    fireEvent.press(getByLabelText('History'));
+    fireEvent.press(getByLabelText('Full history'));
     fireEvent.press(getByLabelText('Analytics'));
     expect(onOpenHistory).toHaveBeenCalledTimes(1);
     expect(onOpenAnalytics).toHaveBeenCalledTimes(1);
   });
 
-  it('keeps streak numbers off the week strip', () => {
-    const { queryByLabelText } = renderContent();
-    expect(queryByLabelText('Current streak: 9')).toBeNull();
-    expect(queryByLabelText('Longest: 12')).toBeNull();
+  it('keeps lifecycle controls and standing scoreboards off Detail', () => {
+    const { queryByLabelText, queryByText } = renderContent();
+
+    expect(queryByText('Manage')).toBeNull();
+    expect(queryByLabelText('Archive')).toBeNull();
+    expect(queryByLabelText('Delete habit')).toBeNull();
+    expect(queryByText('Where you stand')).toBeNull();
+    expect(queryByText('Current streak')).toBeNull();
+    expect(queryByText('Best streak')).toBeNull();
+    expect(queryByText('Pause')).toBeNull();
   });
 
   it('turns completion into confirmation with the existing secondary actions', () => {
@@ -151,9 +186,9 @@ describe('HabitDetailContent', () => {
     );
     expect(getByText('Today · complete')).toBeTruthy();
     expect(getByText('You showed up today.')).toBeTruthy();
-    expect(getByText('Done today')).toBeTruthy();
-    expect(getByLabelText(`${ymd(0)}, done`)).toBeTruthy();
-    expect(getByLabelText('Undo today’s check-in')).toBeTruthy();
+    expect(getByText('Logged today')).toBeTruthy();
+    expect(getByLabelText(weekLabel(0, 'completed'))).toBeTruthy();
+    expect(getByLabelText('Logged today. Tap to undo.')).toBeTruthy();
     expect(getByLabelText('Add a note')).toBeTruthy();
   });
 
@@ -162,9 +197,17 @@ describe('HabitDetailContent', () => {
     const result = renderContent();
     const { getByLabelText, getByText, queryByText } = result;
     expect(getByLabelText(/Habit strength 68 percent/)).toBeTruthy();
+    expect(
+      queryByText(
+        'Momentum from every check-in, weighted toward recent days. A miss dips it — it never resets.'
+      )
+    ).toBeTruthy();
+    expect(queryByText('↑ 3')).toBeNull();
     expect(queryByText('9 day streak')).toBeNull();
     expect(
-      getByText('Habit strength · a small snapshot, not today’s task')
+      getByText(
+        'Momentum from every check-in, weighted toward recent days. A miss dips it — it never resets.'
+      )
     ).toBeTruthy();
     expect(queryByText('Habit strength · a snapshot, not a score')).toBeNull();
 
@@ -180,23 +223,53 @@ describe('HabitDetailContent', () => {
     completeYesterday();
     const { getByLabelText, getByText } = renderContent();
     expect(getByText(/Have energy for the kids/)).toBeTruthy();
-    expect(getByLabelText(`${ymd(-1)}, done`)).toBeTruthy();
+    expect(getByLabelText(weekLabel(-1, 'completed'))).toBeTruthy();
   });
 
   it('swaps the why card for recovery when yesterday was missed', () => {
     const result = renderContent();
     const { getByLabelText, getByText, queryByText } = result;
-    expect(getByText('Pick it back up')).toBeTruthy();
-    expect(getByText(/Yesterday wasn’t logged/)).toBeTruthy();
-    expect(getByLabelText(`${ymd(-1)}, missed`)).toBeTruthy();
+    expect(
+      getByText('Yesterday got away. Today doesn’t have to.')
+    ).toBeTruthy();
+    expect(
+      getByLabelText(
+        'Yesterday got away. Today doesn’t have to. Strength dipped, not to zero, and your 12-day record still stands. The only rule that matters today: never miss twice.'
+      )
+    ).toBeTruthy();
+    expect(getByText('Two-minute version')).toBeTruthy();
+    expect(
+      getByText(
+        'Try two minutes of Wake-Up Movement. Stopping early still counts.'
+      )
+    ).toBeTruthy();
+    expect(queryByText(/Showing up is the streak/)).toBeNull();
+    expect(getByLabelText(weekLabel(-1, 'missed'))).toBeTruthy();
     expect(queryByText(/Have energy for the kids/)).toBeNull();
-    expect(queryByText('Best streak')).toBeNull();
+    // Strength is suppressed after a miss; the Analytics DOOR is not. Recovery
+    // is the ordinary state for anyone who did not log the last scheduled day,
+    // and these rows are the only route to Analytics in the app.
+    expect(getByText('Analytics')).toBeTruthy();
+    expect(
+      queryByText(
+        'Habit strength · a single snapshot. Trends live in Analytics.'
+      )
+    ).toBeNull();
 
     const text = renderedStrings(result.toJSON());
-    expect(text.indexOf('Pick it back up')).toBeLessThan(
-      text.indexOf('Complete today')
-    );
-    expect(text.indexOf('Complete today')).toBeLessThan(text.indexOf('Strong'));
+    expect(
+      text.indexOf('Yesterday got away. Today doesn’t have to.')
+    ).toBeLessThan(text.indexOf('Complete today'));
+    expect(queryByText('Strong')).toBeNull();
+  });
+
+  it('keeps both record doors reachable during recovery', () => {
+    const onOpenAnalytics = jest.fn();
+    const { getByLabelText } = renderContent({}, { onOpenAnalytics });
+
+    fireEvent.press(getByLabelText('Analytics'));
+
+    expect(onOpenAnalytics).toHaveBeenCalledTimes(1);
   });
 
   it('does not claim recovery when the week record has the scheduled completion', () => {
@@ -210,8 +283,51 @@ describe('HabitDetailContent', () => {
     );
 
     expect(getByText(/Have energy for the kids/)).toBeTruthy();
-    expect(getByLabelText(`${ymd(-1)}, done`)).toBeTruthy();
-    expect(queryByText('Pick it back up')).toBeNull();
+    expect(getByLabelText(weekLabel(-1, 'completed'))).toBeTruthy();
+    expect(
+      queryByText('Yesterday got away. Today doesn’t have to.')
+    ).toBeNull();
+  });
+
+  it('keeps a currently paused habit neutral instead of offering completion or recovery', () => {
+    const { getByText, queryByLabelText, queryByText } = renderContent({
+      pausedAt: Date.now() - 86_400_000,
+      resumedAt: undefined,
+    });
+
+    expect(getByText('Today · paused')).toBeTruthy();
+    expect(
+      getByText('Check-ins resume when this habit is active again.')
+    ).toBeTruthy();
+    expect(queryByLabelText('Complete today')).toBeNull();
+    expect(
+      queryByText('Yesterday got away. Today doesn’t have to.')
+    ).toBeNull();
+  });
+
+  it('does not turn a day before habit creation into recovery', () => {
+    const { queryByText } = renderContent({
+      createdAt: Date.now(),
+    });
+
+    expect(
+      queryByText('Yesterday got away. Today doesn’t have to.')
+    ).toBeNull();
+  });
+
+  it('reserves the recovery guidance slot in every hero state', () => {
+    completeYesterday();
+    const ready = renderContent();
+    const readySlot = ready.getByTestId('hero-secondary-slot');
+    const readyHeight = readySlot.props.style.height;
+    ready.unmount();
+
+    trackingRows.length = 0;
+    const recovery = renderContent();
+    expect(recovery.getByTestId('hero-secondary-slot').props.style.height).toBe(
+      readyHeight
+    );
+    expect(readyHeight).toBeGreaterThan(0);
   });
 
   it('names the last scheduled day when recovery follows an off day', () => {
@@ -223,9 +339,32 @@ describe('HabitDetailContent', () => {
       daysOfWeek: [lastScheduled.getDay(), today.getDay()],
     });
 
-    expect(getByText('Pick it back up')).toBeTruthy();
-    expect(getByText(new RegExp(`${weekday} wasn’t logged`))).toBeTruthy();
-    expect(queryByText(/Yesterday wasn’t logged/)).toBeNull();
+    expect(
+      getByText(`${weekday} got away. Today doesn’t have to.`)
+    ).toBeTruthy();
+    expect(queryByText(/Yesterday got away/)).toBeNull();
+  });
+
+  it('reports recovery upward so the fixed header can take the same wash', () => {
+    const onRecoveryChange = jest.fn();
+    const recovery = renderContent({}, { onRecoveryChange });
+    expect(onRecoveryChange).toHaveBeenLastCalledWith(true);
+    recovery.unmount();
+
+    onRecoveryChange.mockClear();
+    completeYesterday();
+    renderContent({}, { onRecoveryChange });
+    expect(onRecoveryChange).toHaveBeenLastCalledWith(false);
+  });
+
+  it('captions the streak rail from the log, not the stored habit field', () => {
+    // The habit doc still claims a 9-day streak; the log says the run ended.
+    const { getByText, queryByText } = renderContent();
+
+    expect(
+      getByText('Your best run is 12 days — today starts the next one')
+    ).toBeTruthy();
+    expect(queryByText('3 days from your best streak ever')).toBeNull();
   });
 
   it('keeps the recovery state away once today is logged', () => {
@@ -238,7 +377,9 @@ describe('HabitDetailContent', () => {
         onDayPress={jest.fn()}
       />
     );
-    expect(queryByText('Pick it back up')).toBeNull();
+    expect(
+      queryByText('Yesterday got away. Today doesn’t have to.')
+    ).toBeNull();
   });
 
   it('falls back to identity on Detail when why is empty', () => {

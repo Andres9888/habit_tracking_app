@@ -20,7 +20,6 @@ export function AccountGroupCard({ title, children }: Props) {
     <View className='gap-2'>
       {title ? (
         <Text
-          className='px-2'
           style={{ ...settingsSectionTitle, color: themeColors.text.primary }}
         >
           {title}

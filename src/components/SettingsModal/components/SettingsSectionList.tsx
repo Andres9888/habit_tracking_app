@@ -19,11 +19,12 @@ export function SettingsSectionList(p: SettingsSectionListProps) {
     <>
       <SettingsPrimarySections {...p} sectionIconColor={p.sectionIconColor} />
       <SettingsSecondarySections
-        isPremium={p.isPremium}
+        archivedHabitsCount={p.archivedHabitsCount}
         sectionIconColor={p.sectionIconColor}
+        onExportHabitsData={p.onExportHabitsData}
         onFeedback={p.onFeedback}
         onLoveChainDay={p.onLoveChainDay}
-        onPremiumUpsell={p.onPremiumUpsell}
+        onOpenArchivedHabits={p.onOpenArchivedHabits}
         onPrivacy={p.onPrivacy}
         onTerms={p.onTerms}
         onWhatsNew={p.onWhatsNew}

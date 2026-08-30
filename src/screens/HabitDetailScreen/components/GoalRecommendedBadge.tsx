@@ -46,7 +46,7 @@ export function GoalRecommendedBadge({
             numberOfLines={1}
             style={{
               color: colors.text.inverse,
-              fontSize: 9,
+              fontSize: 12,
               fontWeight: fontWeights.bold,
               letterSpacing: 0.4,
               lineHeight: 11,

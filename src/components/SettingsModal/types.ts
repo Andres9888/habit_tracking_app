@@ -12,31 +12,29 @@ export interface SettingsModalSettingsDocument {
   habitSortMode?: string;
 }
 
+/**
+ * Props SettingsModal actually consumes.
+ *
+ * `celebrationsEnabled`, `showCharacterScreen`, `showHabitStrengthPercentage`,
+ * `onOpenHapticTest`, `isCompact` and `onChangeCompact` used to be declared
+ * here and passed by the host — and forwarded to nothing. They were the tail of
+ * removed features, and they made this contract advertise settings the screen
+ * has not offered in months.
+ */
 export interface SettingsModalProps {
-  celebrationsEnabled?: boolean;
   completionSoundEnabled?: boolean;
   completionSoundType?: CompletionSoundType;
   dayShape?: 'circle' | 'square';
   habitCompletionIcon?: 'chain' | 'checkbox';
   onChangeDayShape?: (value: 'circle' | 'square') => void | Promise<void>;
-  onChangeShowCharacterScreen?: (value: boolean) => void | Promise<void>;
   onChangeHabitCompletionIcon?: (
     value: 'chain' | 'checkbox'
   ) => void | Promise<void>;
-  onChangeCelebrationsEnabled?: (value: boolean) => void | Promise<void>;
   onChangeCompletionSoundEnabled?: (value: boolean) => void | Promise<void>;
   onChangeCompletionSoundType?: (
     value: CompletionSoundType
   ) => void | Promise<void>;
-  onChangeCompact?: (value: boolean) => void | Promise<void>;
-  showHabitStrengthPercentage?: boolean;
-  onChangeShowHabitStrengthPercentage?: (
-    value: boolean
-  ) => void | Promise<void>;
-  isCompact?: boolean;
-  onOpenHapticTest?: () => void;
   onClose: () => void;
-  showCharacterScreen?: boolean;
   visible: boolean;
   warmMount?: boolean;
   // Streak reminders

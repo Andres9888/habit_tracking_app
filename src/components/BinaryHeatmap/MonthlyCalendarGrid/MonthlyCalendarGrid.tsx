@@ -17,8 +17,8 @@ import { WeekdayHeaderRow } from './WeekdayHeaderRow';
 
 export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   completedDates,
+  dayContext,
   habitColor,
-  habitCreatedAt,
   currentMonth: controlledMonth,
   onCurrentMonthChange,
   useSolidCompletedFill = false,
@@ -39,7 +39,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   const { weeks } = useCalendarDays({
     completedDates,
     currentMonth,
-    habitCreatedAt,
+    dayContext,
   });
   const insights = useMonthInsights(completedDates, currentMonth);
   const { cardBg, completedBg, connectorStyle, dayShape } =

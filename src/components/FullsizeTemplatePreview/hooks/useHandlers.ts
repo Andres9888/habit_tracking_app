@@ -5,6 +5,10 @@
  *   handleBack  → the Habit Library, which stays mounted behind the overlay.
  *   handleClose → the home screen, dismissing the library too.
  *
+ * `handleGoToHabit` is the post-add primary action: home, plus a request to
+ * scroll to and highlight the new habit. With no habit id (or no handler) it
+ * degrades to `handleClose`, i.e. today's plain exit-to-home.
+ *
  * `handleDismiss` is what implicit gestures (hardware back, backdrop,
  * swipe) resolve to. It maps to BACK, never home: an implicit dismissal
  * means "undo the thing I just opened", and taking someone out of the
@@ -19,6 +23,8 @@ import { triggerHaptic } from '@/utils/haptics';
 
 interface UseHandlersProps {
   template: Doc<'templates'> | null;
+  importedHabitId?: Id<'habits'> | null;
+  onGoToHabit?: (habitId: Id<'habits'>) => void;
   isImporting: boolean;
   isImported: boolean;
   reducedMotion: boolean;
@@ -30,6 +36,8 @@ interface UseHandlersProps {
 
 export const useHandlers = ({
   template,
+  importedHabitId,
+  onGoToHabit,
   isImporting,
   isImported,
   reducedMotion,
@@ -69,6 +77,14 @@ export const useHandlers = ({
     onCustomize(template);
   }, [template, onCustomize, reducedMotion]);
 
+  const handleGoToHabit = useCallback(() => {
+    if (!reducedMotion) {
+      triggerHaptic('tap');
+    }
+    if (importedHabitId && onGoToHabit) onGoToHabit(importedHabitId);
+    else onClose();
+  }, [importedHabitId, onClose, onGoToHabit, reducedMotion]);
+
   const handleDismiss = useCallback(() => {
     if (onBack) {
       handleBack();
@@ -81,6 +97,7 @@ export const useHandlers = ({
     handleClose,
     handleBack: onBack ? handleBack : undefined,
     handleDismiss,
+    handleGoToHabit,
     handleCustomize,
     handleImport,
   };

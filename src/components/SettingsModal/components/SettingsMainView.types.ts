@@ -39,4 +39,7 @@ export interface SettingsMainViewProps {
   onChangeStreakReminderTime: SettingsModalProps['onChangeStreakReminderTime'];
   onPremiumUpsell: SettingsModalProps['onPremiumUpsell'];
   onExportHabitsData: SettingsModalProps['onExportHabitsData'];
+  /** Non-null when a settings write was rejected and the row was rolled back. */
+  errorMessage: ModalLogic['errorMessage'];
+  clearError: ModalLogic['clearError'];
 }

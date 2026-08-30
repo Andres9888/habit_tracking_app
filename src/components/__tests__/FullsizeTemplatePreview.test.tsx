@@ -508,7 +508,7 @@ describe('FullsizeTemplatePreview', () => {
 
     it('shows success state when isImported is true', () => {
       const template = createMockTemplate();
-      const { getByText, queryByText, queryByLabelText } = render(
+      const { getByText, queryByLabelText } = render(
         <FullsizeTemplatePreview
           template={template}
           visible={true}
@@ -519,10 +519,13 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(getByText('Added')).toBeTruthy();
-      // The import button should not be shown (it's replaced with success button)
+      expect(
+        getByText('Morning Meditation is in your habits')
+      ).toBeTruthy();
+      expect(
+        getByText('Go to Today and complete Morning Meditation')
+      ).toBeTruthy();
       expect(queryByLabelText(/Add .* to my habits/i)).toBeNull();
-      // Customize link is replaced with "Find another habit" after add
       expect(queryByLabelText('Customize habit before adding')).toBeNull();
     });
 
@@ -558,11 +561,10 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      // In imported state, the button shows "Added!" - it's not pressable
-      const successButton = getByText('Added');
-      expect(successButton).toBeTruthy();
+      expect(
+        getByText('Morning Meditation is in your habits')
+      ).toBeTruthy();
 
-      // There should be no import button
       expect(queryByLabelText(/Add .* to my habits/i)).toBeNull();
 
       // onImport should never have been called

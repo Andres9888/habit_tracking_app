@@ -1,120 +1,86 @@
 /**
- * HeroTodayActions — Complete today, then a fixed-height caption or
- * Undo / Add a note pair so History / Analytics never jump.
+ * HeroTodayActions — the check-in toggle, then a fixed-height secondary slot so
+ * the sections below never jump between states.
+ *
+ * The toggle carries both "Complete today" and "Logged today", including undo,
+ * so the slot only holds the caption, the recovery hint, or the note row.
  */
 import { Text, View } from 'react-native';
-import { Check } from 'lucide-react-native';
-import { BAND_GREEN, useInsightPalette } from '../../insightPalette';
-import { HeroActionPair } from './HeroActionPair';
-import { HeroCompleteBar } from './HeroCompleteBar';
+import type { HabitDayState } from '../../../../features/habits/habitDayState';
+import { useInsightPalette } from '../../insightPalette';
+import { HeroCheckInToggle } from './HeroCheckInToggle';
+import { HeroNoteRow } from './HeroNoteRow';
+import { HeroRecoveryHint } from './HeroRecoveryHint';
+import { HeroUnavailableBar } from './HeroUnavailableBar';
 
 interface HeroTodayActionsProps {
-  isCompletedToday: boolean;
-  isScheduledToday: boolean;
   isToggling: boolean;
+  recoveryHint?: string;
   todayNote?: string;
+  todayState: HabitDayState;
   onOpenNote: () => void;
   onToggleToday: () => void;
 }
 
 export function HeroTodayActions({
-  isCompletedToday,
-  isScheduledToday,
   isToggling,
+  recoveryHint,
   todayNote,
+  todayState,
   onOpenNote,
   onToggleToday,
 }: HeroTodayActionsProps) {
   const palette = useInsightPalette();
+  const isCompletedToday = todayState === 'completed';
+  const isUnavailable =
+    todayState !== 'completed' && todayState !== 'open-today';
+  const unavailableLabel =
+    todayState === 'paused' ? 'Habit paused' : 'Not scheduled today';
 
   return (
     <View style={{ gap: 8, paddingBottom: 4, paddingTop: 11 }}>
-      {!isScheduledToday && !isCompletedToday ? (
-        <View
-          accessibilityLabel='Not scheduled today'
-          accessibilityRole='text'
-          style={{
-            alignItems: 'center',
-            backgroundColor: palette.cellFuture,
-            borderColor: palette.cardBorder,
-            borderRadius: 17,
-            borderWidth: 1,
-            height: 56,
-            justifyContent: 'center',
-          }}
-        >
-          <Text
-            style={{
-              color: palette.textSecondary,
-              fontSize: 15,
-              fontWeight: '600',
-            }}
-          >
-            Not scheduled today
-          </Text>
-        </View>
-      ) : isCompletedToday ? (
-        <View
-          accessibilityLabel='Done today'
-          accessibilityRole='text'
-          style={{
-            alignItems: 'center',
-            backgroundColor: palette.greenWash,
-            borderColor: palette.bandHairline,
-            borderRadius: 17,
-            borderWidth: 1.5,
-            flexDirection: 'row',
-            gap: 9,
-            height: 56,
-            justifyContent: 'center',
-          }}
-        >
-          <Check color={BAND_GREEN} size={20} strokeWidth={2.2} />
-          <Text
-            style={{
-              color: BAND_GREEN,
-              fontSize: 17,
-              fontWeight: '600',
-            }}
-          >
-            Done today
-          </Text>
-        </View>
+      {isUnavailable ? (
+        <HeroUnavailableBar label={unavailableLabel} />
       ) : (
-        <HeroCompleteBar disabled={isToggling} onPress={onToggleToday} />
-      )}
-      {!isScheduledToday && !isCompletedToday ? (
-        <Text
-          style={{
-            color: palette.textTertiary,
-            fontSize: 12,
-            height: 48,
-            lineHeight: 48,
-            textAlign: 'center',
-          }}
-        >
-          No completion is required. History remains available below.
-        </Text>
-      ) : isCompletedToday ? (
-        <HeroActionPair
+        <HeroCheckInToggle
+          checked={isCompletedToday}
           disabled={isToggling}
-          noteLabel={todayNote ? 'Edit note' : 'Add a note'}
-          onAddNote={onOpenNote}
-          onUndo={onToggleToday}
+          onPress={onToggleToday}
         />
-      ) : (
-        <Text
-          style={{
-            color: palette.textTertiary,
-            fontSize: 13,
-            height: 48,
-            lineHeight: 48,
-            textAlign: 'center',
-          }}
-        >
-          Logs today’s date. You can undo anytime.
-        </Text>
       )}
+      <View
+        testID='hero-secondary-slot'
+        style={{ height: 48, justifyContent: 'center' }}
+      >
+        {isUnavailable ? (
+          <Text
+            style={{
+              color: palette.textTertiary,
+              fontSize: 12,
+              textAlign: 'center',
+            }}
+          >
+            {'History remains available below.'}
+          </Text>
+        ) : isCompletedToday ? (
+          <HeroNoteRow
+            label={todayNote ? 'Edit note' : 'Add a note'}
+            onPress={onOpenNote}
+          />
+        ) : recoveryHint ? (
+          <HeroRecoveryHint hint={recoveryHint} />
+        ) : (
+          <Text
+            style={{
+              color: palette.textTertiary,
+              fontSize: 13,
+              textAlign: 'center',
+            }}
+          >
+            Tap to log today. You can undo anytime.
+          </Text>
+        )}
+      </View>
     </View>
   );
 }

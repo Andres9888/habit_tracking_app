@@ -36,13 +36,16 @@ export function useDetailFlow() {
     [route]
   );
 
-  const back = useCallback(() => {
-    setStack((prev) => {
-      const nextRoute = prev[prev.length - 1] ?? 'detail';
-      setRoute(nextRoute);
-      return prev.slice(0, -1);
-    });
+  const replace = useCallback((next: DetailRoute, nextParams?: FlowParams) => {
+    setRoute(next);
+    setParams(nextParams ?? {});
   }, []);
+
+  const back = useCallback(() => {
+    const nextRoute = stack[stack.length - 1] ?? 'detail';
+    setRoute(nextRoute);
+    setStack(stack.slice(0, -1));
+  }, [stack]);
 
   const reset = useCallback(() => {
     setRoute('detail');
@@ -57,6 +60,7 @@ export function useDetailFlow() {
     backLabel: TITLES[previous],
     go,
     params,
+    replace,
     reset,
     route,
     title: TITLES[route],

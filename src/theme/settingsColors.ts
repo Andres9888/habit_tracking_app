@@ -65,9 +65,10 @@ const buildSettingsColors = (
   bell: base,
   clock: base,
   premiumTime: base,
-  // Account
+  // Account — signing out is reversible, so it gets the neutral tile. Only
+  // Delete account, which is genuinely irreversible, wears destructive.
   user: base,
-  signOut: destructive,
+  signOut: neutral,
   deleteAccount: destructive,
   // Premium
   crown: base,

@@ -28,6 +28,8 @@ function FullsizeTemplatePreviewComponent({
   onBack,
   onImport,
   onCustomize,
+  onGoToHabit,
+  importedHabitId,
   isImporting = false,
   isImported = false,
 }: FullsizeTemplatePreviewProps) {
@@ -50,13 +52,15 @@ function FullsizeTemplatePreviewComponent({
   });
   useExitAnimations({ ...entranceAnimations, reducedMotion, visible });
   const successAnimations = useSuccessAnimations({ isImported, reducedMotion });
-  const buttons = useButtonAnimations({ reducedMotion });
+  const buttons = useButtonAnimations({ isImported, reducedMotion, visible });
   const handlers = useHandlers({
+    importedHabitId,
     isImported,
     isImporting,
     onBack,
     onClose,
     onCustomize,
+    onGoToHabit,
     onImport,
     reducedMotion,
     template: effectiveTemplate,

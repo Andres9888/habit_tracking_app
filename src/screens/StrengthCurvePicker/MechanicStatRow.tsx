@@ -61,7 +61,7 @@ export function MechanicStatRow({
         <Text
           style={{
             color: colors.text.tertiary,
-            fontSize: 10 * scale,
+            fontSize: 11 * scale,
             marginTop: 1 * scale,
           }}
         >
@@ -97,7 +97,7 @@ export function MechanicStatRow({
         <Text
           style={{
             color: colors.text.tertiary,
-            fontSize: 10 * scale,
+            fontSize: 11 * scale,
             marginTop: 1 * scale,
           }}
         >

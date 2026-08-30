@@ -1,9 +1,8 @@
 /** AccountPage — Sub-page: profile hero, premium, account actions, danger zone */
-import Constants from 'expo-constants';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
-import { typography } from '../../theme/typography';
+import { airy } from '@/theme/airyScale';
 import { ScreenHeader } from '../ScreenHeader';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
 import { ProfileCard } from './ProfileCard';
@@ -11,6 +10,7 @@ import { PremiumStatus } from './sections';
 import { AccountActionsCard } from './sections/AccountActionsCard';
 import { AccountDangerCard } from './sections/AccountDangerCard';
 import { SignOutCard } from './sections/SignOutCard';
+import { settingsScreenHeaderTitle } from './settingsScreenHeaderTitle';
 import { useAccountActions } from './useAccountActions';
 import { useThemeColors } from '../../theme/ThemeContext';
 
@@ -44,13 +44,15 @@ export function AccountPage({
             <ModalCloseButton label='Close settings' onClose={onClose} />
           }
           title='Account'
+          titleStyle={settingsScreenHeaderTitle}
           onBack={onBack}
         />
       </View>
       <Animated.ScrollView
-        className='flex-1 px-4'
+        className='flex-1'
         contentContainerStyle={{ paddingBottom: bottomPadding, paddingTop: 4 }}
         showsVerticalScrollIndicator={false}
+        style={{ paddingHorizontal: airy.screenPadH }}
       >
         <View className='gap-5'>
           <ProfileCard isPremium={isPremium} />
@@ -69,13 +71,9 @@ export function AccountPage({
             onDeleteAccount={actions.handleDeleteAccount}
           />
         </View>
-        <Text
-          className='pt-6 text-center'
-          style={{ ...typography.caption, color: themeColors.text.tertiary }}
-        >
-          Chain Day · Version {Constants.expoConfig?.version ?? '1.0.0'} (
-          {Constants.expoConfig?.ios?.buildNumber ?? '1'})
-        </Text>
+        {/* The version string lives in exactly one place — the Settings root
+            footer (AppVersionFooter). It used to be printed here too, in a
+            different format. */}
       </Animated.ScrollView>
     </View>
   );

@@ -69,13 +69,13 @@ export function createDashboardStyles(colors: SemanticColors) {
     },
     heroStatLabel: {
       color: colors.text.secondary,
-      fontSize: 11,
+      fontSize: 12,
       letterSpacing: 0.4,
       textTransform: 'uppercase',
     },
     metricLabel: {
       color: colors.text.secondary,
-      fontSize: 10,
+      fontSize: 11,
       marginTop: 4,
       textAlign: 'center',
     },

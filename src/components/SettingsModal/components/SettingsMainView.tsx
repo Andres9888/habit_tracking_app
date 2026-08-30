@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import Animated, { useReducedMotion } from 'react-native-reanimated';
+import { Toast } from '../../Toast';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { useDeferredMount } from '../../../hooks/useDeferredMount';
 import type { HabitSortMode } from '../../../features/habits/types';
@@ -41,6 +42,14 @@ export function SettingsMainView(props: SettingsMainViewProps) {
       >
         {content}
       </Animated.View>
+      {/* Rendered above the view switcher so a rejected write is reported even
+          if the user has already navigated into a sub-page. */}
+      <Toast
+        message={props.errorMessage ?? ''}
+        variant='error'
+        visible={props.errorMessage !== null}
+        onDismiss={props.clearError}
+      />
     </View>
   );
 }

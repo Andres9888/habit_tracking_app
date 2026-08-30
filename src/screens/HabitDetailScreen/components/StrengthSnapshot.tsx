@@ -1,19 +1,24 @@
+/**
+ * StrengthSnapshot — the one number, with an honest description of it.
+ *
+ * The caption has to match `convex/habitStrength/momentum.ts`: strength is
+ * simulated day by day, growing into the gap on a check-in and decaying
+ * PROPORTIONALLY on a miss (strength × (1 − baseDecay)). So recent days really
+ * do dominate, and a miss can never take it to zero — but there is no
+ * "last two weeks" window and no fixed points-per-miss, which is why the
+ * prototype's "weighted to the last two weeks / dips a few points" is not what
+ * ships here.
+ */
 import { Text, View } from 'react-native';
-import Svg, { Circle } from 'react-native-svg';
 import type { Habit } from '../../../features/habits/types';
 import { borderRadius, shadows } from '../../../theme/spacing';
-import { fontFamilies, fontWeights } from '../../../theme/typography';
+import { fontWeights } from '../../../theme/typography';
 import { useInsightPalette } from '../insightPalette';
 import {
   strengthLabel,
   strengthPercent,
 } from './DetailHeroBanner/DetailHeroBanner.utils';
-
-const SIZE = 44;
-const CENTER = SIZE / 2;
-const RADIUS = 17;
-const STROKE = 5;
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+import { StrengthDial } from './StrengthDial';
 
 interface StrengthSnapshotProps {
   habit: Habit;
@@ -42,44 +47,12 @@ export function StrengthSnapshot({ habit }: StrengthSnapshotProps) {
         ...shadows.subtle,
       }}
     >
-      <View style={{ height: SIZE, justifyContent: 'center', width: SIZE }}>
-        <Svg height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} width={SIZE}>
-          <Circle
-            cx={CENTER}
-            cy={CENTER}
-            fill='none'
-            r={RADIUS}
-            stroke={palette.dialTrack}
-            strokeWidth={STROKE}
-          />
-          <Circle
-            cx={CENTER}
-            cy={CENTER}
-            fill='none'
-            r={RADIUS}
-            rotation={-90}
-            stroke={palette.green}
-            strokeDasharray={`${CIRCUMFERENCE} ${CIRCUMFERENCE}`}
-            strokeDashoffset={CIRCUMFERENCE * (1 - percent / 100)}
-            strokeLinecap='round'
-            strokeWidth={STROKE}
-            origin={`${CENTER}, ${CENTER}`}
-          />
-        </Svg>
-        <Text
-          style={{
-            color: palette.textPrimary,
-            fontFamily: fontFamilies.primary.display,
-            fontSize: 13,
-            left: 0,
-            position: 'absolute',
-            right: 0,
-            textAlign: 'center',
-          }}
-        >
-          {percent}
-        </Text>
-      </View>
+      <StrengthDial
+        percent={percent}
+        progressColor={palette.green}
+        textColor={palette.textPrimary}
+        trackColor={palette.dialTrack}
+      />
       <View style={{ flex: 1 }}>
         <Text
           style={{
@@ -98,7 +71,8 @@ export function StrengthSnapshot({ habit }: StrengthSnapshotProps) {
             marginTop: 2,
           }}
         >
-          Habit strength · a small snapshot, not today’s task
+          Momentum from every check-in, weighted toward recent days. A miss dips
+          it — it never resets.
         </Text>
       </View>
     </View>

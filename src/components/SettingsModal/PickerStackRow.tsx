@@ -26,7 +26,7 @@ export function PickerStackRow({
 }: PickerStackRowProps) {
   const { colors: themeColors, isDark } = useThemeColors();
   const colors = getSettingsRowColors(isDark);
-  const showTopBorder = useSettingsRowDivider(true);
+  const showTopBorder = useSettingsRowDivider(true, label);
 
   return (
     <View

@@ -40,13 +40,12 @@ export const STRINGS = {
 
     sound: 'Sound',
 
-    templateCTA: 'Browse curated habits',
+    templateCTA: 'Browse the Habit library',
 
-    templateHeroSubtitle: 'Browse curated routines and auto-fill the details.',
+    templateHeroSubtitle: 'Pick a proven habit — the details fill themselves.',
 
     title: 'Create Habit',
-    templateHeroTitle: 'Start from Template',
-    templatePrompt: 'Want a ready-made routine?',
+    templatePrompt: 'Want a head start?',
   },
 } as const;
 

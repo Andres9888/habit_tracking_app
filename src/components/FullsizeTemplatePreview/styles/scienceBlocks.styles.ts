@@ -55,7 +55,7 @@ export const scienceBlockStyles = StyleSheet.create({
   },
   tlWhen: {
     fontFamily: fontFamilies.monospace,
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: fontWeights.bold,
     letterSpacing: 0.3,
     textTransform: 'uppercase',

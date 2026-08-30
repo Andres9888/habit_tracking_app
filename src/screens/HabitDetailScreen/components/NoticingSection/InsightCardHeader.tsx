@@ -39,7 +39,7 @@ export function InsightCardHeader({
         <Text
           style={{
             color: accent,
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: fontWeights.bold,
             letterSpacing: 1.5,
             textTransform: 'uppercase',

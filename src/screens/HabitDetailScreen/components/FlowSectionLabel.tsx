@@ -9,7 +9,7 @@ export function FlowSectionLabel({ children }: { children: string }) {
     <Text
       style={{
         color: palette.textTertiary,
-        fontSize: 11,
+        fontSize: 12,
         fontWeight: fontWeights.bold,
         letterSpacing: 1.2,
         marginBottom: 8,

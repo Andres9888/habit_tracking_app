@@ -18,4 +18,14 @@ export interface SettingsRowProps {
   labelColor?: string;
   /** Override haptic: toggle→Medium, selection→Selection, navigation→Light */
   hapticStyle?: 'light' | 'medium' | 'heavy' | 'selection';
+  /** Screen-reader label when the visible label is user-specific or incomplete. */
+  accessibilityLabel?: string;
+  /** Screen-reader guidance for rows that disclose additional controls. */
+  accessibilityHint?: string;
+  /** Disclosure state for expandable selection/toggle rows. */
+  expanded?: boolean;
+  /** Prevent interaction and expose the disabled state to assistive technology. */
+  disabled?: boolean;
+  /** Expose an in-flight action without pretending it is still actionable. */
+  busy?: boolean;
 }

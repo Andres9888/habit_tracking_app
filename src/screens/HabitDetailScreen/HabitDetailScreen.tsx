@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 /** HabitDetailScreen - Optimized for 9+ scores across all dimensions */
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, View } from 'react-native';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme';
@@ -59,10 +59,13 @@ function HabitDetailScreenContent({
     bestStreak: displayHabit?.bestStreak ?? 0,
     currentStreak: displayHabit?.currentStreak ?? 0,
     habitId: displayHabit?._id,
+    pausedAt: displayHabit?.pausedAt,
+    resumedAt: displayHabit?.resumedAt,
     tracking,
     visible,
   });
   const calendarHandlers = useCalendarHandlers({
+    completedDates: screenState.completedDates,
     habit: displayHabit,
     onArchive,
     onClose,
@@ -91,12 +94,25 @@ function HabitDetailScreenContent({
   const handlePinnedChange = useCallback((pinned: boolean) => {
     setIsTitlePinned(pinned);
   }, []);
+  // The fixed header can't share the hero's gradient node, so recovery has to
+  // travel up from the content or the amber hero meets a mint header at the
+  // seam.
+  const [isRecovery, setIsRecovery] = useState(false);
+  const handleRecoveryChange = useCallback((recovery: boolean) => {
+    setIsRecovery(recovery);
+  }, []);
   const flow = useDetailFlow();
+  // Non-detail routes unmount the hero ScrollView. Clear its pinned-header
+  // state at the same time so returning to a fresh, top-positioned Detail
+  // does not render the stale compact title above the hero title.
+  useEffect(() => {
+    if (flow.route !== 'detail') setIsTitlePinned(false);
+  }, [flow.route]);
   const resetFlowAndPin = useCallback(() => {
     flow.reset();
     setIsTitlePinned(false);
   }, [flow.reset]);
-  const actions = useDetailFlowActions(flow.go);
+  const actions = useDetailFlowActions(flow.go, flow.replace, flow.route);
   const dayNotes = useDayNotes(displayHabit);
   const [noteDate, setNoteDate] = useState<string | null>(null);
   const today = getLocalDateString();
@@ -134,6 +150,7 @@ function HabitDetailScreenContent({
                 {flow.route === 'detail' ? (
                   <DetailBandHeader
                     isCompletedToday={screenState.isCompletedToday}
+                    isRecovery={isRecovery}
                     isTitlePinned={isTitlePinned}
                     title={getHabitDisplayName(displayHabit)}
                     onClose={onClose}
@@ -164,6 +181,7 @@ function HabitDetailScreenContent({
                   onOpenInsight={actions.openInsight}
                   onOpenNote={setNoteDate}
                   onPinnedChange={handlePinnedChange}
+                  onRecoveryChange={handleRecoveryChange}
                 />
               </View>
             </View>

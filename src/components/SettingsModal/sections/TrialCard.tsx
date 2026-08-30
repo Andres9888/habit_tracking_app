@@ -1,12 +1,16 @@
-/** TrialCard — gold free-trial conversion card under the profile hero */
+/** TrialCard — free-trial conversion card under the profile hero.
+ *
+ *  Themed, not hardcoded. This used to import the STATIC palette
+ *  (colors.streak[100] / gray[800] / gray[600]), so in dark mode the single
+ *  highest-intent surface in the app rendered as a pale mint slab carrying
+ *  near-black text on a #111827 canvas. */
 import { Text, View } from 'react-native';
-import { Crown } from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
-import { shadows } from '@/theme';
 import { airy } from '@/theme/airyScale';
-import { colors } from '@/theme/colors';
 import { typography, fontWeights } from '@/theme/typography';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { getRaisedSurface, settingsCardShadow } from '../raisedSurface';
+import { TrialCardHeader } from './TrialCardHeader';
 
 interface TrialCardProps {
   daysLeft: number;
@@ -19,6 +23,7 @@ export function TrialCard({
   priceString,
   onUpgrade,
 }: TrialCardProps) {
+  const { colors: themeColors, isDark } = useThemeColors();
   const trialLine =
     daysLeft > 0
       ? `${daysLeft} ${daysLeft === 1 ? 'day' : 'days'} left in your free trial`
@@ -27,49 +32,21 @@ export function TrialCard({
 
   return (
     <View
-      className='overflow-hidden rounded-2xl p-4'
+      className='overflow-hidden p-4'
       style={{
-        backgroundColor: colors.streak[100],
-        borderColor: `${colors.streak[700]}33`,
+        backgroundColor: getRaisedSurface(isDark),
+        borderColor: themeColors.status.warning,
         borderRadius: airy.cardRadius,
         borderWidth: 1,
-        ...shadows.card,
+        ...settingsCardShadow,
       }}
     >
-      <View className='flex-row items-center' style={{ gap: 14 }}>
-        <View
-          className='h-11 w-11 items-center justify-center rounded-xl'
-          style={{ backgroundColor: colors.streak[700] }}
-        >
-          <Crown color='#FFFFFF' size={iconSizes.medium} />
-        </View>
-        <View className='flex-1'>
-          <Text
-            style={{
-              ...typography.body,
-              fontWeight: fontWeights.bold,
-              color: colors.gray[800],
-            }}
-          >
-            Chain Day Pro
-          </Text>
-          <Text
-            className='mt-0.5'
-            style={{
-              ...typography.caption,
-              fontWeight: fontWeights.semibold,
-              color: colors.streak[700],
-            }}
-          >
-            {trialLine}
-          </Text>
-        </View>
-      </View>
+      <TrialCardHeader trialLine={trialLine} />
       <Text
         className='mt-3'
         style={{
           ...typography.bodySmall,
-          color: colors.gray[600],
+          color: themeColors.text.secondary,
           lineHeight: 19,
         }}
       >
@@ -82,14 +59,17 @@ export function TrialCard({
         onPress={onUpgrade}
       >
         <View
-          className='mt-4 items-center rounded-xl py-3'
-          style={{ backgroundColor: colors.primary[600] }}
+          className='mt-4 items-center py-3'
+          style={{
+            backgroundColor: themeColors.primary[600],
+            borderRadius: airy.buttonRadius,
+          }}
         >
           <Text
             style={{
               ...typography.body,
               fontWeight: fontWeights.bold,
-              color: '#FFFFFF',
+              color: themeColors.text.inverse,
             }}
           >
             {cta}

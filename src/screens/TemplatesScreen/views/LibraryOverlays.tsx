@@ -7,6 +7,7 @@
  * of inflating TemplatesScreen's render.
  */
 
+import type { Id } from '../../../../convex/_generated/dataModel';
 import { TemplatesScreenModals } from '../components';
 import { useLibraryScreenActions } from '../hooks/useLibraryScreenActions';
 import type { useTemplatesScreenProps } from '../hooks/useTemplatesScreenProps';
@@ -22,6 +23,12 @@ interface LibraryOverlaysProps {
   state: ScreenProps['state'];
   /** Dismisses the Habit Library itself, landing the user on the home screen. */
   onCloseLibrary?: () => void;
+  /**
+   * Dismisses the library and asks home to scroll to + highlight the habit the
+   * previewed template produced. Falls back to `onCloseLibrary` when omitted or
+   * when the habit id is unknown.
+   */
+  onGoToHabit?: (habitId: Id<'habits'>) => void;
 }
 
 export function LibraryFeedbackOverlays({
@@ -54,6 +61,7 @@ export function LibraryModals({
   packConfirm,
   state,
   onCloseLibrary,
+  onGoToHabit,
 }: LibraryOverlaysProps) {
   // The detail modal has two distinct exits and they must not collapse into
   // one. Back only hides the overlay — CatalogView stays mounted underneath
@@ -66,9 +74,21 @@ export function LibraryModals({
     state.setShowFullsizePreview(false);
     onCloseLibrary?.();
   };
+  // Unlike exit-to-home the preview stays up: home closes the whole library
+  // once the row is on screen, so hiding the preview first would only flash
+  // the catalog underneath for a few hundred ms.
+  const handleGoToHabit = (habitId: Id<'habits'>) => {
+    if (onGoToHabit) {
+      onGoToHabit(habitId);
+      return;
+    }
+    state.setShowFullsizePreview(false);
+    onCloseLibrary?.();
+  };
 
   return (
     <TemplatesScreenModals
+      habitIdByTemplateId={state.habitIdByTemplateId}
       importedTemplateIds={state.importedTemplateIds}
       importingTemplateId={state.importingTemplateId}
       previewInitialAnchor={state.previewInitialAnchor}
@@ -80,6 +100,7 @@ export function LibraryModals({
       onCloseCustomize={() => state.setShowCustomizeModal(false)}
       onClosePaywall={() => state.setShowPaywall(false)}
       onExitToHome={handleExitToHome}
+      onGoToHabit={handleGoToHabit}
       onCustomize={handlers.handleCustomizeFromPreview}
       onDirectImport={actions.handleDetailsDirectImport}
       onImport={handlers.handleTemplateImport}

@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react-native';
 import { useDetailFlow } from '../useDetailFlow';
+import { useDetailFlowActions } from '../useDetailFlowActions';
 
 describe('useDetailFlow', () => {
   it('pushes History and Analytics and pops back to Detail', () => {
@@ -35,5 +36,24 @@ describe('useDetailFlow', () => {
     act(() => result.current.reset());
     expect(result.current.route).toBe('detail');
     expect(result.current.params).toEqual({});
+  });
+
+  it('steps between days without stacking one Entry screen per date', () => {
+    const { result } = renderHook(() => {
+      const flow = useDetailFlow();
+      return {
+        ...flow,
+        actions: useDetailFlowActions(flow.go, flow.replace, flow.route),
+      };
+    });
+
+    act(() => result.current.actions.openHistory());
+    act(() => result.current.actions.openDay('2026-08-12'));
+    act(() => result.current.actions.openDay('2026-08-11'));
+
+    expect(result.current.params.focusDate).toBe('2026-08-11');
+    expect(result.current.backLabel).toBe('History');
+    act(() => result.current.back());
+    expect(result.current.route).toBe('history');
   });
 });

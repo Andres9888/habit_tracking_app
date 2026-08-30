@@ -79,7 +79,7 @@ export function HabitNoteCard({
         <Text
           style={{
             color: palette.textTertiary,
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: fontWeights.bold,
             letterSpacing: 1.5,
             textTransform: 'uppercase',
@@ -87,7 +87,7 @@ export function HabitNoteCard({
         >
           Note
         </Text>
-        <Text style={{ color: palette.textTertiary, fontSize: 11 }}>
+        <Text style={{ color: palette.textTertiary, fontSize: 12 }}>
           optional
         </Text>
       </View>

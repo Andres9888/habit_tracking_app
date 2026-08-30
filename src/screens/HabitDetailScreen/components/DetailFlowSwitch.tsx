@@ -25,6 +25,7 @@ export interface DetailFlowSwitchProps {
   onOpenInsight: (id: InsightId) => void;
   onOpenNote: (date: string) => void;
   onPinnedChange: (pinned: boolean) => void;
+  onRecoveryChange?: (isRecovery: boolean) => void;
 }
 
 export function DetailFlowSwitch(props: DetailFlowSwitchProps) {
@@ -95,6 +96,7 @@ export function DetailFlowSwitch(props: DetailFlowSwitchProps) {
       onOpenInsight={props.onOpenInsight}
       onOpenNote={() => onOpenNote(getLocalDateString())}
       onPinnedChange={props.onPinnedChange}
+      onRecoveryChange={props.onRecoveryChange}
     />
   );
 }

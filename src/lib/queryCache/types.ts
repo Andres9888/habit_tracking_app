@@ -6,6 +6,7 @@ export type QueryCacheEntryName =
   | 'habits.list'
   | 'habits.listArchived'
   | 'settings.get'
+  | 'templates.getImportedTemplateHabitIds'
   | 'templates.getImportedTemplateIds'
   | 'templates.list';
 
@@ -16,6 +17,12 @@ export interface CacheEntryDefinition {
   storage: QueryCacheStorage;
   version: number;
   latestFallback?: boolean;
+  /**
+   * This entry used to persist to Keychain-backed 'secure' storage. Hydration
+   * and scope clears drop the stale secure copy so it is not orphaned there
+   * once the entry moved to 'plain'.
+   */
+  migratedFromSecure?: boolean;
   /**
    * Entry-level default for the `:latest` fallback guard. Applied to every
    * subscriber of this entry unless a call site overrides it via

@@ -62,7 +62,7 @@ export function SortDirectionSegments({
               accessibilityRole='radio'
               accessibilityState={{ selected: on }}
               className='flex-1 flex-row items-center justify-center gap-1 rounded-lg py-2'
-              hitSlop={4}
+              hitSlop={8}
               style={{ backgroundColor: on ? selectedBg : 'transparent' }}
               onPress={() => handleDirectionSelect(isAsc)}
             >

@@ -24,7 +24,7 @@ export const useSwipeActions = ({
   onDelete,
   setPendingArchive,
   setPendingDelete,
-  }: UseSwipeActionsProps) => {
+}: UseSwipeActionsProps) => {
   const handleSwipeDelete = useCallback(() => {
     void triggerHaptic('heavy');
     setPendingDelete(true);

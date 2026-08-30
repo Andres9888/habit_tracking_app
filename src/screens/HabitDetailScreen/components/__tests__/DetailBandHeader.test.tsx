@@ -1,5 +1,5 @@
 import { fireEvent, render } from '@testing-library/react-native';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { DetailBandHeader } from '../DetailBandHeader';
 
 jest.mock('react-native-safe-area-context', () => ({
@@ -38,6 +38,12 @@ function renderHeader(isTitlePinned = false) {
   );
 }
 
+/** The band's outermost View carries the wash's first stop. */
+function washStop(tree: ReturnType<typeof render>): string {
+  const [band] = tree.UNSAFE_getAllByType(View);
+  return StyleSheet.flatten(band.props.style).backgroundColor as string;
+}
+
 describe('DetailBandHeader', () => {
   it('keeps the habit name out of the chrome at rest', () => {
     const { getByLabelText, getByText, queryByText } = renderHeader();
@@ -57,6 +63,53 @@ describe('DetailBandHeader', () => {
     const { getByText, queryByText } = renderHeader(true);
     expect(getByText('Opposite Action')).toBeTruthy();
     expect(queryByText('Today')).toBeNull();
+  });
+
+  it('keeps the pinned Edit control green and unfilled', () => {
+    const { getByLabelText } = renderHeader(true);
+    const editButton = getByLabelText('Edit habit');
+    const [compactControl] = editButton.findAllByType(View);
+
+    expect(StyleSheet.flatten(compactControl.props.style)).toEqual(
+      expect.objectContaining({
+        backgroundColor: 'transparent',
+        borderColor: 'transparent',
+      })
+    );
+    expect(
+      editButton.findAll((node) => node.props.color === '#0C7C59')
+    ).not.toHaveLength(0);
+  });
+
+  it('follows the hero into the amber recovery wash', () => {
+    // The header is fixed while the hero scrolls, so a mint header over an
+    // amber hero is a visible seam at the top of the page.
+    const rest = renderHeader();
+    expect(washStop(rest)).toBe('#E3EDE6');
+    rest.unmount();
+
+    const recovery = render(
+      <DetailBandHeader
+        isRecovery
+        isTitlePinned={false}
+        title='Opposite Action'
+        onClose={jest.fn()}
+        onEdit={jest.fn()}
+      />
+    );
+    expect(washStop(recovery)).toBe('#F3E7D8');
+    recovery.unmount();
+
+    const done = render(
+      <DetailBandHeader
+        isCompletedToday
+        isTitlePinned={false}
+        title='Opposite Action'
+        onClose={jest.fn()}
+        onEdit={jest.fn()}
+      />
+    );
+    expect(washStop(done)).toBe('#D9EBDF');
   });
 
   it('closes to Home and opens Edit', () => {

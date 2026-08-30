@@ -26,7 +26,8 @@ export function applyOptimisticToday(
   server: ServerTodayStats,
   optimisticToggle: boolean | undefined
 ): OptimisticTodayStats {
-  const { completedToday, currentStreak, bestStreak, totalCompletions } = server;
+  const { completedToday, currentStreak, bestStreak, totalCompletions } =
+    server;
 
   // No pending op, or it agrees with the server → nothing to overlay.
   if (optimisticToggle === undefined || optimisticToggle === completedToday) {

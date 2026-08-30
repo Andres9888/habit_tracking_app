@@ -7,6 +7,7 @@ export {
   listTemplateNames,
 } from './templates/queries';
 
+export { getImportedTemplateHabitIds } from './templates/importedHabitIds';
 export { importTemplate } from './templates/importTemplate';
 export { clearTemplates, dedupeTemplates } from './templates/clearAndDedupe';
 export { updateYoutubeLinks } from './templates/updateLinks';

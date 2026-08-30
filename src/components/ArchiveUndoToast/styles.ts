@@ -5,7 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius, shadows } from '../../theme/spacing';
-import { typography, fontFamilies, fontWeights} from '../../theme/typography';
+import { typography, fontFamilies, fontWeights } from '../../theme/typography';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 export function useToastStyles() {

@@ -35,4 +35,43 @@ describe('buildHistoryEntries', () => {
       buildHistoryEntries(new Date(2026, 8, 1), new Set(), '2026-08-15')
     ).toEqual([]);
   });
+
+  it('distinguishes scheduled misses from rest days', () => {
+    const entries = buildHistoryEntries(
+      new Date(2026, 7, 1),
+      new Set<string>(),
+      '2026-08-20',
+      {},
+      { daysOfWeek: [1, 2, 3, 4, 5] }
+    );
+
+    expect(entries.find((entry) => entry.date === '2026-08-18')).toMatchObject({
+      state: 'missed',
+    });
+    expect(entries.find((entry) => entry.date === '2026-08-16')).toMatchObject({
+      state: 'unscheduled',
+    });
+  });
+
+  it('does not manufacture misses before creation, during pause, or today', () => {
+    const entries = buildHistoryEntries(
+      new Date(2026, 7, 1),
+      new Set<string>(),
+      '2026-08-20',
+      {},
+      {
+        createdAt: new Date(2026, 7, 10, 12).getTime(),
+        pausedAt: new Date(2026, 7, 11, 12).getTime(),
+        resumedAt: new Date(2026, 7, 13, 12).getTime(),
+      }
+    );
+
+    expect(entries.some((entry) => entry.date === '2026-08-09')).toBe(false);
+    expect(entries.find((entry) => entry.date === '2026-08-12')).toMatchObject({
+      state: 'paused',
+    });
+    expect(entries.find((entry) => entry.date === '2026-08-20')).toMatchObject({
+      state: 'open-today',
+    });
+  });
 });

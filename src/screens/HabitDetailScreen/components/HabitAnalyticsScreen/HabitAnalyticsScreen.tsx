@@ -1,29 +1,40 @@
+/**
+ * Analytics — verdict first, then the evidence.
+ *
+ * The year grid used to open this page; it moved to History, whose job is "what
+ * happened?". Analytics answers "am I improving?", so it opens on a sentence,
+ * carries the streak rail people quote about themselves, and closes on the
+ * findings the log supports.
+ */
 import { useMemo, useState } from 'react';
 import type { Habit } from '../../../../features/habits/types';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
-import { useHabitInsights } from '../../insights';
+import { useHabitInsights, useStreakRuns } from '../../insights';
 import { useInsightPalette } from '../../insightPalette';
 import type { InsightId } from '../../useDetailFlow';
 import { FlowPage } from '../FlowPage';
 import { FlowSectionLabel } from '../FlowSectionLabel';
-import { YearGlanceCard } from '../HabitDetailHistory';
 import { useHistoryMonths } from '../HabitDetailHistory/useHistoryMonths';
 import { analyticsInsightRows } from './analyticsInsightRows';
 import {
+  chartAverageLabel,
   chartFootnote,
   chartSubtitle,
   chartTitle,
-  YEAR_TAP_CAPTION,
 } from './chartCopy';
 import { InsightRows } from './InsightRows';
 import { buildMonthlyBars } from './monthlyBars';
+import { buildNextStep } from './nextStep';
 import { RangeChart } from './RangeChart';
 import { RangeTabs, type ChartRange } from './RangeTabs';
+import { StreakRail } from './StreakRail';
+import { buildVerdict } from './verdict';
+import { VerdictCard } from './VerdictCard';
 import { buildWeeklyBars } from './weeklyBars';
 
 interface HabitAnalyticsScreenProps {
   habit: Habit;
-  onOpenHistory: (date: string) => void;
+  onOpenHistory: (date?: string) => void;
   onOpenInsight: (id: InsightId) => void;
 }
 
@@ -52,23 +63,28 @@ export function HabitAnalyticsScreen({
         : buildMonthlyBars(insights.doneDates, today, habit.daysOfWeek),
     [habit.daysOfWeek, insights.doneDates, range, today]
   );
-  const yearSub = months.rangeLabel
-    ? `${months.rangeLabel} · days you logged`
-    : 'Days you logged';
+  const runs = useStreakRuns(insights.doneDates, {
+    pausedAt: habit.pausedAt,
+    resumedAt: habit.resumedAt,
+  });
+  const verdict = buildVerdict(months.rates);
+  const nextStep = buildNextStep(insights, months.rates, today)?.text;
 
   return (
     <FlowPage footnote='Every number here comes from check-ins you recorded. Nothing is predicted.'>
-      <YearGlanceCard
-        caption={YEAR_TAP_CAPTION}
-        completedDates={insights.doneDates}
-        habitColor={palette.green}
-        habitCreatedAt={habit.createdAt}
+      {verdict ? (
+        <VerdictCard nextStep={nextStep} palette={palette} verdict={verdict} />
+      ) : null}
+      <StreakRail
+        bestStreak={habit.bestStreak ?? 0}
+        currentStreak={habit.currentStreak ?? 0}
+        daysLogged={insights.yearCompletions}
+        goalDuration={habit.goalDuration}
         palette={palette}
-        rangeLabel={yearSub}
-        onNavigateToMonth={onOpenHistory}
       />
       <RangeTabs range={range} onChange={setRange} />
       <RangeChart
+        averageLabel={chartAverageLabel(range, bars)}
         bars={bars}
         footnote={chartFootnote(range, bars)}
         scaleMax={range === 'monthly' ? 100 : undefined}
@@ -77,7 +93,8 @@ export function HabitAnalyticsScreen({
       />
       <FlowSectionLabel>What the log shows</FlowSectionLabel>
       <InsightRows
-        rows={analyticsInsightRows(insights)}
+        rows={analyticsInsightRows(insights, runs)}
+        onOpenHistory={() => onOpenHistory()}
         onOpenInsight={onOpenInsight}
       />
     </FlowPage>

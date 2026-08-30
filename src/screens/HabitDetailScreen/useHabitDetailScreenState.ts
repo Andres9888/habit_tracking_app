@@ -8,11 +8,15 @@ import type { Id } from '../../../convex/_generated/dataModel';
 import type { HabitTrackingEntry } from '../../features/habits/types';
 import { useOptimisticToggle } from '../../lib/optimistic/hooks/useOptimisticState';
 import { applyOptimisticToday } from './optimisticToday';
+import { useDetailCompletedDates } from './useDetailCompletedDates';
+import { useLoggedStreak } from './useLoggedStreak';
 
 interface UseHabitDetailScreenStateProps {
   bestStreak: number;
   currentStreak: number;
   habitId: Id<'habits'> | undefined;
+  pausedAt?: number;
+  resumedAt?: number;
   tracking: HabitTrackingEntry[];
   visible?: boolean;
 }
@@ -21,6 +25,8 @@ export const useHabitDetailScreenState = ({
   bestStreak,
   currentStreak,
   habitId,
+  pausedAt,
+  resumedAt,
   tracking,
   visible: _visible,
 }: UseHabitDetailScreenStateProps) => {
@@ -36,26 +42,7 @@ export const useHabitDetailScreenState = ({
   // Today's date
   const today = useMemo(() => getLocalDateString(), []);
 
-  // Create a stable string key for completed dates to prevent unnecessary re-renders
-  // when tracking array reference changes but content is the same
-  const completedDatesKey = useMemo(() => {
-    if (!habitId || !tracking || !Array.isArray(tracking)) return '';
-    const dates = tracking
-      .filter((entry) => entry && entry.habitId === habitId && entry.completed)
-      .map((entry) => entry.date)
-      .filter((date): date is string => typeof date === 'string');
-    if (dates.length === 0) return '';
-    return dates.sort().join(',');
-  }, [habitId, tracking]);
-
-  // Completed dates set - only recalculates when the actual dates change
-  // Note: ''.split(',') returns [''] not [], so we must check for empty string first
-  const completedDates = useMemo(() => {
-    if (!completedDatesKey) {
-      return new Set<string>();
-    }
-    return new Set(completedDatesKey.split(','));
-  }, [completedDatesKey]);
+  const completedDates = useDetailCompletedDates(habitId, tracking);
 
   // Overlay any pending optimistic toggle for today so the hero (Done button,
   // streak, total) reacts instantly like the calendar, then self-reconciles.
@@ -73,11 +60,21 @@ export const useHabitDetailScreenState = ({
     optimisticToggle
   );
 
+  // What the toast is allowed to say. `optimistic.currentStreak` is the habit
+  // doc's stored value ±1, which is a lie the moment a miss went unrecorded.
+  const loggedStreak = useLoggedStreak(completedDates, {
+    isCompletedToday: optimistic.isCompletedToday,
+    pausedAt,
+    resumedAt,
+    today,
+  });
+
   return {
     bestStreak: optimistic.bestStreak,
     completedDates,
     currentStreak: optimistic.currentStreak,
     isCompletedToday: optimistic.isCompletedToday,
+    loggedStreak,
     pendingArchive,
     pendingDelete,
     pendingToggleDate,

@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import type { Habit, HabitSortMode } from '../types';
+import { useStableSortOrder } from './useStableSortOrder';
 
 interface UseHabitsSortingParams {
   habitsFromQuery: Habit[];
@@ -12,7 +13,7 @@ export function useHabitsSorting({
   habitSortMode,
   getStreak,
 }: UseHabitsSortingParams): Habit[] {
-  return useMemo(() => {
+  const sorted = useMemo(() => {
     if (habitSortMode === 'manual') {
       return habitsFromQuery;
     }
@@ -29,6 +30,10 @@ export function useHabitsSorting({
 
     return sortByStreak(sortedHabits, habitSortMode, getStreak);
   }, [getStreak, habitSortMode, habitsFromQuery]);
+
+  // Streak/strength keys move on every toggle; hold the order for the session
+  // so completing a habit never relocates its row (see useStableSortOrder).
+  return useStableSortOrder(sorted, habitSortMode);
 }
 
 function sortByName(habits: Habit[], mode: 'name_asc' | 'name_desc'): Habit[] {

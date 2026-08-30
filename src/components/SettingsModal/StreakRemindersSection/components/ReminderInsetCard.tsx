@@ -2,7 +2,6 @@ import { Platform, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ReminderTimeRow } from './ReminderTimeRow';
-import { PremiumUpsellRow } from './PremiumUpsellRow';
 import { timeStringToDate } from '../../timeHelpers';
 
 interface ReminderInsetCardProps {
@@ -10,7 +9,6 @@ interface ReminderInsetCardProps {
   insetBorder: string;
   insetCardBackground: string;
   reminderTime: string;
-  isPremium: boolean;
   showTimePicker: boolean;
   insetExpandStyle: ReturnType<
     typeof import('react-native-reanimated').useAnimatedStyle
@@ -23,7 +21,6 @@ interface ReminderInsetCardProps {
   onPickerLayout: (event: import('react-native').LayoutChangeEvent) => void;
   onToggleTimePicker: () => void;
   onTimeChange: (event: unknown, date?: Date) => void;
-  onPremiumUpsell?: () => void;
 }
 
 export function ReminderInsetCard(p: ReminderInsetCardProps) {
@@ -72,12 +69,6 @@ export function ReminderInsetCard(p: ReminderInsetCardProps) {
               ) : null}
             </View>
           </Animated.View>
-          {p.isPremium ? null : (
-            <PremiumUpsellRow
-              insetBorder={p.insetBorder}
-              onPremiumUpsell={p.onPremiumUpsell}
-            />
-          )}
         </View>
       </View>
     </Animated.View>

@@ -21,6 +21,11 @@ export interface UseTemplateHandlersOptions {
   isPremiumUser: boolean;
   onShowPaywall?: () => void;
   previewTemplate: Doc<'templates'> | null;
+  /** Records the habit a template import produced, for "Go to Today". */
+  recordImportedHabitId: (
+    templateId: Id<'templates'>,
+    habitId: Id<'habits'>
+  ) => void;
   seedTemplates: (args: Record<string, never>) => Promise<unknown>;
   setExpandedCategories: React.Dispatch<React.SetStateAction<Set<string>>>;
   setFeedbackHabitId: React.Dispatch<React.SetStateAction<Id<'habits'> | null>>;

@@ -11,6 +11,7 @@ import { footerStyles } from '../styles';
 import { useDetailPalette } from '../detailPalette';
 import { FooterPrimaryAction } from './FooterPrimaryAction';
 import { FooterSecondaryActions } from './FooterSecondaryActions';
+import { PostAddCommitPanel } from './PostAddCommitPanel';
 import type { FooterSectionProps } from './FooterSection.types';
 
 const IMPORT_LABEL = 'Add this habit';
@@ -29,7 +30,8 @@ export function FooterSection({
   customizeButtonScale,
   onImport,
   onCustomize,
-  onDone,
+  onGoToToday,
+  onKeepExploring,
 }: FooterSectionProps) {
   const palette = useDetailPalette();
 
@@ -51,27 +53,39 @@ export function FooterSection({
             { paddingBottom: Math.max(bottomInset, 20) },
           ]}
         >
-          <FooterPrimaryAction
-            checkmarkAnimatedStyle={checkmarkAnimatedStyle}
-            createPressHandlers={createPressHandlers}
-            importButtonScale={importButtonScale}
-            importButtonStyle={importButtonStyle}
-            importLabel={IMPORT_LABEL}
-            isImported={isImported}
-            isImporting={isImporting}
-            successPillStyle={successPillStyle}
-            templateName={templateName}
-            onImport={onImport}
-          />
-          <FooterSecondaryActions
-            createPressHandlers={createPressHandlers}
-            customizeButtonScale={customizeButtonScale}
-            customizeButtonStyle={customizeButtonStyle}
-            isImported={isImported}
-            isImporting={isImporting}
-            onCustomize={onCustomize}
-            onDone={onDone}
-          />
+          {isImported ? (
+            <PostAddCommitPanel
+              checkmarkAnimatedStyle={checkmarkAnimatedStyle}
+              createPressHandlers={createPressHandlers}
+              primaryButtonScale={importButtonScale}
+              primaryButtonStyle={importButtonStyle}
+              secondaryButtonScale={customizeButtonScale}
+              secondaryButtonStyle={customizeButtonStyle}
+              successPanelStyle={successPillStyle}
+              templateName={templateName}
+              onGoToToday={onGoToToday}
+              onKeepExploring={onKeepExploring}
+            />
+          ) : (
+            <>
+              <FooterPrimaryAction
+                createPressHandlers={createPressHandlers}
+                importButtonScale={importButtonScale}
+                importButtonStyle={importButtonStyle}
+                importLabel={IMPORT_LABEL}
+                isImporting={isImporting}
+                templateName={templateName}
+                onImport={onImport}
+              />
+              <FooterSecondaryActions
+                createPressHandlers={createPressHandlers}
+                customizeButtonScale={customizeButtonScale}
+                customizeButtonStyle={customizeButtonStyle}
+                isImporting={isImporting}
+                onCustomize={onCustomize}
+              />
+            </>
+          )}
         </View>
       </LinearGradient>
     </View>

@@ -56,17 +56,47 @@ export const footerStyles = StyleSheet.create({
     fontSize: 17,
     fontWeight: fontWeights.bold,
   },
-  successButton: {
+  successCheck: {
     alignItems: 'center',
     borderRadius: 999,
-    flexDirection: 'row',
-    gap: 10,
-    height: 56,
+    height: 34,
     justifyContent: 'center',
+    width: 34,
   },
-  successButtonText: {
+  successHeading: {
+    flex: 1,
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: fontWeights.bold,
+  },
+  successMessage: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: typography.caption.fontSize,
+    lineHeight: 20,
+  },
+  successPanel: {
+    borderRadius: 24,
+    borderWidth: 1,
+    gap: 12,
+    padding: 16,
+  },
+  successPanelHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 10,
+  },
+  successPrimaryButton: {
+    alignItems: 'center',
+    borderRadius: 999,
+    justifyContent: 'center',
+    minHeight: 52,
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+  },
+  successPrimaryText: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 16,
+    fontWeight: fontWeights.bold,
+    textAlign: 'center',
   },
 });

@@ -15,7 +15,7 @@ export function MonthGridHeader({ palette }: { palette: InsightPalette }) {
             color: palette.textTertiary,
             flexBasis: '14.2857%',
             fontFamily: fontFamilies.primary.text,
-            fontSize: 10,
+            fontSize: 11,
             textAlign: 'center',
           }}
         >

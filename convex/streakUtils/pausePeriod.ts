@@ -6,18 +6,21 @@
  * habit is currently paused (re-pause after resume).
  */
 export interface PauseInfo {
+  /** Optional client-local conversion; server callers normally use timezone. */
+  dateKeyForMs?: (ms: number) => string;
   pausedAt?: number;
   resumedAt?: number;
   timezone?: string;
 }
 
-function msToDateKey(ms: number, timezone?: string): string {
-  if (!timezone) return new Date(ms).toISOString().slice(0, 10);
+function msToDateKey(ms: number, pauseInfo: PauseInfo): string {
+  if (pauseInfo.dateKeyForMs) return pauseInfo.dateKeyForMs(ms);
+  if (!pauseInfo.timezone) return new Date(ms).toISOString().slice(0, 10);
   try {
     const parts = new Intl.DateTimeFormat('en-CA', {
       day: '2-digit',
       month: '2-digit',
-      timeZone: timezone,
+      timeZone: pauseInfo.timezone,
       year: 'numeric',
     }).formatToParts(new Date(ms));
     const year = parts.find((part) => part.type === 'year')?.value ?? '';
@@ -38,14 +41,14 @@ export function isCurrentlyPaused(pauseInfo?: PauseInfo): boolean {
 }
 
 function pauseStartKey(pauseInfo: PauseInfo): string {
-  return msToDateKey(pauseInfo.pausedAt as number, pauseInfo.timezone);
+  return msToDateKey(pauseInfo.pausedAt as number, pauseInfo);
 }
 
 function pauseEndKey(pauseInfo: PauseInfo): string | undefined {
   if (isCurrentlyPaused(pauseInfo) || pauseInfo.resumedAt === undefined) {
     return undefined;
   }
-  return msToDateKey(pauseInfo.resumedAt, pauseInfo.timezone);
+  return msToDateKey(pauseInfo.resumedAt, pauseInfo);
 }
 
 export function isPausedMissDay(date: string, pauseInfo?: PauseInfo): boolean {

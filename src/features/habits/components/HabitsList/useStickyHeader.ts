@@ -8,6 +8,7 @@
  */
 
 import { useMemo } from 'react';
+import type { SharedValue } from 'react-native-reanimated';
 import {
   useSharedValue,
   useDerivedValue,
@@ -21,8 +22,12 @@ import type { StickyHeaderContextValue } from '../../../../components/CalendarTi
 const STICKY_THRESHOLD = 48;
 const ANIM_DURATION = 180;
 
-export function useStickyHeader(enabled = false) {
-  const scrollY = useSharedValue(0);
+export function useStickyHeader(
+  enabled = false,
+  externalScrollY?: SharedValue<number>
+) {
+  const ownScrollY = useSharedValue(0);
+  const scrollY = externalScrollY ?? ownScrollY;
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {

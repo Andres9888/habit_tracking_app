@@ -18,7 +18,10 @@ interface ChipPalette {
   fillSelected: string;
 }
 
-export function useGoalPresetChipAnimation(selected: boolean, palette: ChipPalette) {
+export function useGoalPresetChipAnimation(
+  selected: boolean,
+  palette: ChipPalette
+) {
   const reduceMotion = useReduceMotion();
   const progress = useSharedValue(selected ? 1 : 0);
 

@@ -3,6 +3,10 @@
  */
 
 import type { Id } from '../../../../convex/_generated/dataModel';
+import type {
+  HabitDayContext,
+  HabitDayState,
+} from '../../../features/habits/habitDayState';
 
 export interface DayData {
   date: Date;
@@ -15,13 +19,14 @@ export interface DayData {
   isCompleted: boolean;
   /** Whether this day was a missed day (should have been tracked but wasn't) */
   isMissed: boolean;
+  state: HabitDayState;
 }
 
 export interface MonthlyCalendarGridProps {
   habitId: Id<'habits'>;
   completedDates: Set<string>;
+  dayContext?: HabitDayContext;
   habitColor: string;
-  habitCreatedAt?: number;
   /** Controlled month — when set, grid follows this date. */
   currentMonth?: Date;
   onCurrentMonthChange?: (month: Date) => void;

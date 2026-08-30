@@ -27,7 +27,7 @@ export function NextStepCard({ label, onPress, text }: NextStepCardProps) {
           <Text
             style={{
               color: palette.ctaGreen,
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: fontWeights.bold,
               letterSpacing: 1.4,
               textTransform: 'uppercase',

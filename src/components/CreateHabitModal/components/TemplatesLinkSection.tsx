@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { LayoutGrid, ChevronRight } from 'lucide-react-native';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import { STRINGS } from '../../../constants';
 import { iconSizes } from '@/theme/iconSizes';
 
 interface TemplatesLinkSectionProps {
@@ -17,14 +18,14 @@ interface TemplatesLinkSectionProps {
 /**
  * V8 Templates Link Section
  *
- * A card-style button that links to the templates browse view.
+ * A card-style button that links to the Habit library.
  * Positioned below the Reminder Selector, providing users with
  * inspiration for science-backed habit templates.
  *
  * Design spec:
  * - Layout-grid icon
- * - "Need inspiration?" heading
- * - "Browse science-backed templates" subtext
+ * - Heading/subtext from STRINGS.CREATE_HABIT so entry copy and the
+ *   library's own title stay on one "Habit library / habits" noun spine
  * - Chevron indicating actionable link
  */
 export const TemplatesLinkSection = ({
@@ -55,15 +56,15 @@ export const TemplatesLinkSection = ({
     triggerSelection();
     onPress();
     AccessibilityInfo.announceForAccessibility(
-      'Opening templates browser to browse science-backed habit templates'
+      `Opening ${STRINGS.CREATE_HABIT.templateCTA}`
     );
   };
 
   return (
     <View className='mb-6' testID='templates-link-section'>
       <Pressable
-        accessibilityHint='Opens the templates browser to browse pre-made habit templates'
-        accessibilityLabel='Need inspiration? Browse science-backed templates'
+        accessibilityHint='Opens the Habit library'
+        accessibilityLabel={STRINGS.CREATE_HABIT.templateCTA}
         accessibilityRole='button'
         testID='templates-link-button'
         onPress={handlePress}

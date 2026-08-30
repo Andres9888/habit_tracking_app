@@ -63,6 +63,7 @@ const HeaderWrapper = memo(function HeaderWrapper({
  */
 
 export function HabitsListContent({
+  deferHeavyFocusContent,
   focusEstimatedRowLength,
   props,
   state,
@@ -129,6 +130,18 @@ export function HabitsListContent({
     [handlers, props, state]
   );
 
+  // Mounted cells re-render only when this changes identity. It must carry
+  // both per-row inputs that can change on an already-mounted card — the
+  // highlight target and the shell→full readiness flip — and nothing else,
+  // so unrelated renders keep cell memoization intact.
+  const extraData = useMemo(
+    () => ({
+      deferHeavyFocusContent,
+      justCreatedHabitId: state.justCreatedHabitId,
+    }),
+    [deferHeavyFocusContent, state.justCreatedHabitId]
+  );
+
   const renderHabitItem = useCallback(
     (p: RenderItemParams<Habit>) =>
       renderHabitRow({
@@ -183,23 +196,23 @@ export function HabitsListContent({
             contentContainerStyle={contentContainerStyle}
             data={list.habits}
             // DraggableFlatList memoises mounted rows and only re-renders them
-            // when extraData changes; the focus/just-created highlight is
-            // per-row state that must reach an already-mounted card.
-            extraData={state.justCreatedHabitId}
+            // when extraData changes; the focus/just-created highlight and the
+            // deferHeavyContent readiness flip are per-row state that must
+            // reach an already-mounted card.
+            extraData={extraData}
             getItemLayout={
               focusRequestPending ? getFocusedItemLayout : undefined
             }
             initialScrollIndex={focusAnchor?.index}
-            // Window is measured in viewports. Keep several viewports ready on
-            // either side and schedule the next batch within one 60 Hz frame.
-            initialNumToRender={8}
+            initialNumToRender={6}
             keyExtractor={handlers.keyExtractor}
-            maxToRenderPerBatch={10}
+            maxToRenderPerBatch={6}
+            removeClippedSubviews
             renderItem={renderHabitItem}
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={false}
-            updateCellsBatchingPeriod={16}
-            windowSize={11}
+            updateCellsBatchingPeriod={32}
+            windowSize={5}
             {...focusPerf}
             onDragBegin={handlers.handleDragBegin}
             onDragEnd={(params) => {

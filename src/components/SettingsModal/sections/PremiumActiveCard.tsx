@@ -1,10 +1,18 @@
-/** PremiumActiveCard — quiet status card for active subscribers */
+/** PremiumActiveCard — quiet status card for active subscribers.
+ *
+ *  Section title is 'Subscription' in BOTH states (see FreePlanCard): the page
+ *  used to rename its own section depending on who was looking at it. The
+ *  status badge is the shared ProfilePremiumBadge, so premium reads the same
+ *  amber here as it does on the profile hero one screen back — it previously
+ *  rendered green-on-amber here and amber-on-amber there. */
 import { Text, View } from 'react-native';
 import { Crown, Settings } from 'lucide-react-native';
+import { airy } from '@/theme/airyScale';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 import { SettingsSection } from '../SettingsSection';
 import { SettingsRow } from '../SettingsRow';
+import { ProfilePremiumBadge } from '../ProfilePremiumBadge';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { AnnualUpgradeRow } from './AnnualUpgradeRow';
 import { handleManageSubscription } from './PremiumStatus.helpers';
@@ -17,11 +25,18 @@ export function PremiumActiveCard({ onUpgrade }: PremiumActiveCardProps) {
   const { colors: themeColors, settings } = useThemeColors();
 
   return (
-    <SettingsSection title='Premium'>
+    <SettingsSection title='Subscription'>
       <View className='flex-row items-center px-4 py-4'>
+        {/* Same tile geometry as every SettingsRow — this was hand-rolled at
+            40×40 rounded-xl, 2px short of the shared token. */}
         <View
-          className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
-          style={{ backgroundColor: settings.crown.bg }}
+          className='mr-4 items-center justify-center'
+          style={{
+            backgroundColor: settings.crown.bg,
+            borderRadius: airy.tileRadius,
+            height: airy.tileSize,
+            width: airy.tileSize,
+          }}
         >
           <Crown color={settings.crown.icon} size={iconSizes.small} />
         </View>
@@ -36,21 +51,7 @@ export function PremiumActiveCard({ onUpgrade }: PremiumActiveCardProps) {
             >
               Premium
             </Text>
-            <View
-              className='rounded-full px-2 py-0.5'
-              style={{ backgroundColor: themeColors.status.streakLight }}
-            >
-              <Text
-                style={{
-                  ...typography.tabBar,
-                  fontWeight: fontWeights.bold,
-                  textTransform: 'uppercase',
-                  color: settings.crown.icon,
-                }}
-              >
-                Active
-              </Text>
-            </View>
+            <ProfilePremiumBadge label='Active' variant='compact' />
           </View>
           <Text
             className='mt-0.5'

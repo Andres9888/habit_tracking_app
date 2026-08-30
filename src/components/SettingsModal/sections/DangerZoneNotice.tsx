@@ -26,7 +26,7 @@ export function DangerZoneNotice() {
       <Text
         style={{
           color: settings.deleteAccount.icon,
-          fontSize: 11,
+          fontSize: 12,
           fontWeight: fontWeights.bold,
           letterSpacing: 0.9,
           textTransform: 'uppercase',
@@ -41,7 +41,7 @@ export function DangerZoneNotice() {
           marginTop: 4,
         }}
       >
-        Deleting your account removes every habit, streak and backup. This
+        Deleting your account removes every habit, streak, and backup. This
         can&apos;t be undone.
       </Text>
     </View>

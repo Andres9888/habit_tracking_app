@@ -6,6 +6,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { View } from 'react-native';
 import type { Habit } from '../../../../features/habits/types';
+import type { HabitDayState } from '../../../../features/habits/habitDayState';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import { useInsightPalette } from '../../insightPalette';
 import { HeroTitleRow } from './HeroTitleRow';
@@ -13,32 +14,34 @@ import { HeroTodayActions } from './HeroTodayActions';
 import { HeroRecoveryCard } from './HeroRecoveryCard';
 import { HeroStateCard } from './HeroStateCard';
 import { HeroWhyPill } from './HeroWhyPill';
+import { heroWash, twoMinuteHint } from './DetailHeroBanner.utils';
 
 interface DetailHeroBannerProps {
+  /** Length of the run the miss ended — recovery copy only. */
+  brokenRun?: number;
   habit: Habit;
-  isCompletedToday: boolean;
-  isScheduledToday: boolean;
   isToggling: boolean;
   recoveryDayLabel?: string;
   todayNote?: string;
+  todayState: HabitDayState;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
   onOpenNote: () => void;
 }
 
 export function DetailHeroBanner({
+  brokenRun = 0,
   habit,
-  isCompletedToday,
-  isScheduledToday,
   isToggling,
   recoveryDayLabel,
   todayNote,
+  todayState,
   onDayPress,
   onOpenNote,
 }: DetailHeroBannerProps) {
   const palette = useInsightPalette();
-  const wash = isCompletedToday
-    ? palette.bandGradientDone
-    : palette.bandGradient;
+  const isCompletedToday = todayState === 'completed';
+  const isRecovery = todayState === 'open-today' && Boolean(recoveryDayLabel);
+  const wash = heroWash(palette, todayState, isRecovery);
 
   return (
     <View>
@@ -50,12 +53,16 @@ export function DetailHeroBanner({
         <HeroTitleRow habit={habit} palette={palette} />
       </LinearGradient>
       <View style={{ backgroundColor: wash[2], paddingHorizontal: 20 }}>
-        {isCompletedToday ? (
+        {todayState === 'completed' ? (
           <HeroStateCard palette={palette} state='completed' />
-        ) : !isScheduledToday ? (
+        ) : todayState === 'paused' ? (
+          <HeroStateCard palette={palette} state='paused' />
+        ) : todayState !== 'open-today' ? (
           <HeroStateCard palette={palette} state='off' />
         ) : recoveryDayLabel ? (
           <HeroRecoveryCard
+            bestStreak={habit.bestStreak ?? 0}
+            brokenRun={brokenRun}
             missedDayLabel={recoveryDayLabel}
             palette={palette}
           />
@@ -63,10 +70,10 @@ export function DetailHeroBanner({
           <HeroWhyPill habit={habit} palette={palette} />
         )}
         <HeroTodayActions
-          isCompletedToday={isCompletedToday}
-          isScheduledToday={isScheduledToday}
           isToggling={isToggling}
+          recoveryHint={isRecovery ? twoMinuteHint(habit) : undefined}
           todayNote={todayNote}
+          todayState={todayState}
           onOpenNote={onOpenNote}
           onToggleToday={() =>
             onDayPress(getLocalDateString(), isCompletedToday)

@@ -24,6 +24,6 @@ export interface FooterSectionProps {
   customizeButtonScale: SharedValue<number>;
   onImport: () => void;
   onCustomize: () => void;
-  /** Post-add exit — the page has nothing left to offer once the habit is in. */
-  onDone: () => void;
+  onGoToToday: () => void;
+  onKeepExploring?: () => void;
 }

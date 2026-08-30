@@ -28,7 +28,7 @@ export function GrowthIconsCustomExpand({ value, fallback, onChange }: Props) {
       <Text
         style={{
           fontFamily: fontFamilies.primary.text,
-          fontSize: 11,
+          fontSize: 12,
           fontWeight: fontWeights.bold,
           letterSpacing: 0.8,
           textTransform: 'uppercase',

@@ -1,5 +1,5 @@
 /**
- * useHabitInsights — fetches this habit's year-to-date history and derives the
+ * useHabitInsights — fetches this habit's rolling 400-day history and derives the
  * "What we're noticing" cards from it.
  *
  * Deliberately a separate query from the app-level `habits.getTracking` window:
@@ -8,12 +8,12 @@
  */
 
 import { useMemo } from 'react';
-import { api } from '../../../../convex/_generated/api';
+import { subDays } from 'date-fns';
 import type { Id } from '../../../../convex/_generated/dataModel';
-import { useCachedQuery } from '../../../lib/queryCache';
 import { getLocalDateString } from '../../../utils/getLocalDateString';
 import { buildInsights } from './buildInsights';
 import type { HabitInsights, InsightEntry } from './types';
+import { useHabitTrackingRange } from './useHabitTrackingRange';
 
 const EMPTY: HabitInsights = {
   daysOfData: 0,
@@ -41,18 +41,15 @@ export function useHabitInsights({
   reminderTime,
 }: UseHabitInsightsArgs): HabitInsights {
   const today = getLocalDateString();
-  const args = useMemo(() => {
-    if (!enabled || !habitId) return 'skip' as const;
-    return {
-      endDate: today,
-      habitId,
-      startDate: `${today.slice(0, 4)}-01-01`,
-    };
-  }, [enabled, habitId, today]);
-
-  const rows = useCachedQuery(api.habits.getHabitTracking, args, {
-    entryName: 'habits.getHabitTracking',
-    fallbackToLatest: false,
+  const startDate = useMemo(
+    () => getLocalDateString(subDays(new Date(`${today}T00:00:00`), 400)),
+    [today]
+  );
+  const rows = useHabitTrackingRange({
+    enabled,
+    endDate: today,
+    habitId,
+    startDate,
   });
 
   return useMemo(() => {

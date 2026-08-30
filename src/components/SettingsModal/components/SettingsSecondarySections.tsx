@@ -1,54 +1,50 @@
-/** Lower settings, spec 4a: premium banner → Support card → one-line footer */
-import Constants from 'expo-constants';
+/** Lower settings, Quiet Configuration Index order:
+ *  Data & Privacy (archive + export) → Help & About → one-line footer.
+ *  Conversion surfaces stay off this screen for now — see
+ *  docs/settings-conversion-surfaces.md before adding one back. */
 import Animated from 'react-native-reanimated';
-import { AboutFooter, AboutSupportSection, ProSettingsCard } from '../sections';
+import { AboutSupportSection } from '../sections';
+import { AppVersionFooter } from './AppVersionFooter';
+import { DataPrivacySection } from './DataPrivacySection';
 import { sectionEnterAnim } from '../SettingsContent.constants';
-import { sectionHasMatch, useSettingsSearch } from '../search';
 
 interface SecondarySectionsProps {
   sectionIconColor: string;
-  isPremium: boolean;
+  archivedHabitsCount?: number;
+  onOpenArchivedHabits: () => void;
+  onExportHabitsData?: () => void | Promise<void>;
   onFeedback: () => void;
   onLoveChainDay: () => void;
   onPrivacy: () => void;
   onTerms: () => void;
   onWhatsNew: () => void;
-  onPremiumUpsell?: () => void;
 }
 
 export function SettingsSecondarySections(p: SecondarySectionsProps) {
-  const { query, isSearching } = useSettingsSearch();
-
   return (
     <>
-      {isSearching ? null : (
-        <Animated.View entering={sectionEnterAnim(5)}>
-          <ProSettingsCard
-            isPremium={p.isPremium}
-            onUpgrade={p.onPremiumUpsell}
-          />
-        </Animated.View>
-      )}
-      {sectionHasMatch(query, 'support') ? (
-        <Animated.View entering={isSearching ? undefined : sectionEnterAnim(6)}>
-          <AboutSupportSection
-            sectionIconColor={p.sectionIconColor}
-            onFeedback={p.onFeedback}
-            onLoveChainDay={p.onLoveChainDay}
-          />
-        </Animated.View>
-      ) : null}
-      {isSearching ? null : (
-        <Animated.View entering={sectionEnterAnim(7)}>
-          <AboutFooter
-            buildNumber={Constants.expoConfig?.ios?.buildNumber ?? '1'}
-            version={Constants.expoConfig?.version ?? '1.0.0'}
-            onPrivacy={p.onPrivacy}
-            onTerms={p.onTerms}
-            onWhatsNew={p.onWhatsNew}
-          />
-        </Animated.View>
-      )}
+      <Animated.View entering={sectionEnterAnim(4)}>
+        <DataPrivacySection
+          archivedHabitsCount={p.archivedHabitsCount}
+          sectionIconColor={p.sectionIconColor}
+          onExportHabitsData={p.onExportHabitsData}
+          onOpenArchivedHabits={p.onOpenArchivedHabits}
+        />
+      </Animated.View>
+      <Animated.View entering={sectionEnterAnim(5)}>
+        <AboutSupportSection
+          sectionIconColor={p.sectionIconColor}
+          onFeedback={p.onFeedback}
+          onLoveChainDay={p.onLoveChainDay}
+        />
+      </Animated.View>
+      <Animated.View entering={sectionEnterAnim(6)}>
+        <AppVersionFooter
+          onPrivacy={p.onPrivacy}
+          onTerms={p.onTerms}
+          onWhatsNew={p.onWhatsNew}
+        />
+      </Animated.View>
     </>
   );
 }

@@ -16,18 +16,20 @@ import { milestoneTarget, milestoneCaption } from './milestoneTarget';
 interface MilestoneBarProps {
   bestStreak: number;
   currentStreak: number;
+  goalDuration?: number;
   palette: InsightPalette;
 }
 
 export function MilestoneBar({
   bestStreak,
   currentStreak,
+  goalDuration,
   palette,
 }: MilestoneBarProps) {
   const { target, isBest } = milestoneTarget(currentStreak, bestStreak);
   const fillPct =
     target === 0 ? 0 : Math.min(100, (currentStreak / target) * 100);
-  const caption = milestoneCaption(currentStreak, target, isBest);
+  const caption = milestoneCaption(currentStreak, target, isBest, goalDuration);
 
   return (
     <View

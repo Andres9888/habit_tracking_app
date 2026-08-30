@@ -71,6 +71,11 @@ export function HabitsList(props: HabitsListProps) {
   const deferHeavyFocusContent = Boolean(
     pendingFocusHabitId && focusContentReadyId !== pendingFocusHabitId
   );
+  // A prepared (not yet committed) focus request keeps the target's ring
+  // armed while the library still covers the list.
+  const holdJustCreatedHighlight = Boolean(
+    modals.pendingFocusHabitId && !modals.focusRequestAutoClose
+  );
   const focusLayoutRef = useRef<{
     focusId: string | null;
     laidOutIds: Set<string>;
@@ -138,9 +143,7 @@ export function HabitsList(props: HabitsListProps) {
     onSettingsChange: modals.onSettingsChange,
     state: {
       initialEntranceDoneRef: state.initialEntranceDoneRef,
-      holdJustCreatedHighlight: Boolean(
-        modals.pendingFocusHabitId && !modals.focusRequestAutoClose
-      ),
+      holdJustCreatedHighlight,
       justCreatedHabitId: state.justCreatedHabitId,
       setJustCreatedHabitId: state.setJustCreatedHabitId,
       setShouldTriggerHabitEntrance: state.setShouldTriggerHabitEntrance,
@@ -164,9 +167,7 @@ export function HabitsList(props: HabitsListProps) {
     selectedIds: props.selectedIds,
     onToggleSelection: props.onToggleSelection,
     highlightHabitId: state.justCreatedHabitId,
-    holdHighlight: Boolean(
-      modals.pendingFocusHabitId && !modals.focusRequestAutoClose
-    ),
+    holdHighlight: holdJustCreatedHighlight,
     isReorderingEnabled: handlers.isReorderingEnabled,
     notifyWeekCompletion: list.notifyWeekCompletion,
     onHabitEntranceComplete: state.handleHabitEntranceComplete,
@@ -182,6 +183,7 @@ export function HabitsList(props: HabitsListProps) {
 
   return (
     <HabitsListContent
+      deferHeavyFocusContent={deferHeavyFocusContent}
       focusEstimatedRowLength={focusEstimatedRowLength}
       handlers={handlers}
       listRef={listRef}

@@ -13,6 +13,7 @@ import { CalendarLookRows } from './components/CalendarLookRows';
 import { SettingsRow } from './SettingsRow';
 import { SettingsRowDividerProvider } from './SettingsRow/SettingsRowDivider.provider';
 import { getRaisedSurface } from './raisedSurface';
+import { settingsScreenHeaderTitle } from './settingsScreenHeaderTitle';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { CalendarLookPageProps } from './CalendarLookPage.types';
 
@@ -40,13 +41,15 @@ export function CalendarLookPage(p: CalendarLookPageProps) {
             <ModalCloseButton label='Close settings' onClose={p.onClose} />
           }
           title='Calendar look'
+          titleStyle={settingsScreenHeaderTitle}
           onBack={p.onBack}
         />
       </View>
       <Animated.ScrollView
-        className='flex-1 px-4'
+        className='flex-1'
         contentContainerStyle={{ paddingBottom: bottomPadding, paddingTop: 4 }}
         showsVerticalScrollIndicator={false}
+        style={{ paddingHorizontal: airy.screenPadH }}
       >
         <View className='overflow-hidden rounded-2xl' style={cardStyle}>
           <SettingsRowDividerProvider>

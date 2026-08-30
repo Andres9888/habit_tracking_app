@@ -36,6 +36,10 @@ export function useHabitCalendarModal({
 
   const handleEditPress = useCallback(() => setShowEditScreen(true), []);
   const handleCloseEdit = useCallback(() => setShowEditScreen(false), []);
+  const handleHabitRemoved = useCallback(() => {
+    setShowEditScreen(false);
+    onClose();
+  }, [onClose]);
   const handleQuickLogPress = useCallback(() => {
     if (!habit || !derived || derived.isTodayCompleted) return;
     toggleHabit({ date: derived.todayDateString, habitId: habit._id });
@@ -58,6 +62,7 @@ export function useHabitCalendarModal({
     habitTrackingEntries: derived.habitTrackingEntries,
     handleCloseEdit,
     handleEditPress,
+    handleHabitRemoved,
     handleOpenAdvancedFeatures,
     handleQuickLogPress,
     isTodayCompleted: derived.isTodayCompleted,

@@ -16,12 +16,17 @@ const DEFINITIONS: Record<QueryCacheEntryName, CacheEntryDefinition> = {
     storage: 'secure',
     version: 1,
   },
-  // Habit-scoped year-to-date history behind the detail screen's insight
-  // cards. Keyed by habit ID like `habits.get`, so no cross-ID latest fallback.
+  // Habit-scoped ranges behind Detail insights and History. The complete args
+  // key prevents fallback across habits or requested ranges.
+  // 'plain': rows carry only habit IDs, dates and booleans — no habit content
+  // (names live in habits.get / habits.list). History requests the full
+  // since-creation range, and sensitiveStorage chunks secure values every 512
+  // chars, so 'secure' turned one persist into hundreds of Keychain writes.
   'habits.getHabitTracking': {
+    migratedFromSecure: true,
     name: 'habits.getHabitTracking',
-    storage: 'secure',
-    version: 1,
+    storage: 'plain',
+    version: 2,
   },
   'habits.getTracking': {
     latestFallback: true,
@@ -46,6 +51,14 @@ const DEFINITIONS: Record<QueryCacheEntryName, CacheEntryDefinition> = {
     name: 'settings.get',
     storage: 'secure',
     version: 2,
+  },
+  // 'plain': opaque template/habit ID pairs (no habit content); keys are
+  // user-scoped and cleared on logout via clearQueryCacheForScope.
+  'templates.getImportedTemplateHabitIds': {
+    latestFallback: true,
+    name: 'templates.getImportedTemplateHabitIds',
+    storage: 'plain',
+    version: 1,
   },
   // 'plain': only opaque template IDs (no habit content); keys are
   // user-scoped and cleared on logout via clearQueryCacheForScope.

@@ -25,6 +25,7 @@ import { HabitFormBody } from '../../components/CreateHabitModal/components/Habi
 import { ModalHeader } from '../../components/CreateHabitModal/components/ModalHeader';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
 import { HabitEditSkeleton } from './HabitEditSkeleton';
+import { EditLifecycleActions } from './EditLifecycleActions';
 import { MotivationSection } from './motivation';
 import { useHabitEditScreen } from './useHabitEditScreen';
 import type { HabitEditScreenProps } from './types';
@@ -172,6 +173,10 @@ function HabitEditScreenContent({
                       />
                     ) : null}
                   </Pressable>
+                  <EditLifecycleActions
+                    onArchive={state.handleArchive}
+                    onDelete={state.handleDelete}
+                  />
                 </View>
               </ScrollView>
             </>

@@ -80,6 +80,22 @@ export function useSyncOrchestrator(
     return () => orchestrator.stop();
   }, [orchestrator, autoStart, onOnline]);
 
+  // Cold-boot / restore sync: the orchestrator only reacts to online
+  // *transitions*, so a queue restored while already online would otherwise
+  // wait for the next connectivity flip. Kick a sync whenever we're online
+  // and pending work appears (on mount and on queue restoration).
+  useEffect(() => {
+    if (!autoStart || !isOnline) return;
+    const queueManager = getOfflineQueueManager();
+    const kick = () => {
+      if (queueManager.getStats().pendingCount > 0) orchestrator.scheduleSync();
+    };
+    kick();
+    return queueManager.subscribe((event) => {
+      if (event.type === 'queue:restored') kick();
+    });
+  }, [autoStart, isOnline, orchestrator]);
+
   useEffect(() => {
     const queueManager = getOfflineQueueManager();
     const checkPending = () => {

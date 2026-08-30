@@ -13,7 +13,7 @@ export function InsightEmptyCard() {
       <Text
         style={{
           color: palette.ctaGreen,
-          fontSize: 11,
+          fontSize: 12,
           fontWeight: fontWeights.bold,
           letterSpacing: 1.5,
           textTransform: 'uppercase',

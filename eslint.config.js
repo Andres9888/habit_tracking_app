@@ -406,6 +406,17 @@ export default tseslint.config(
           selector: "Property[key.name='borderRadius'][value.value=9999]",
           message: 'Use borderRadius.full from theme instead of 9999',
         },
+        {
+          // Legibility floor. 11px matches the iOS HIG 11pt minimum; below that,
+          // label text stops being readable at arm's length on a handset.
+          // Violations are at zero as of the readability pass — keep it there.
+          // Data-viz ticks use typography.micro (11); dense labels use
+          // typography.label (12); prose/hints use typography.caption (13).
+          selector:
+            "Property[key.name='fontSize'][value.type='Literal'][value.value<11]",
+          message:
+            'Text below 11px is below the legibility floor. Use typography.micro (11) for data-viz ticks, typography.label (12) for dense labels, or typography.caption (13) for prose. See src/theme/typography.ts',
+        },
       ],
     },
   }

@@ -1,4 +1,5 @@
-/** SettingsContent - Settings layout: Profile → Look & Feel → Reminders → Habits → Premium → Support */
+/** SettingsContent - Quiet Configuration Index layout:
+ *  Account → Appearance → Behavior → Notifications → Data & Privacy → Help & About */
 import { View } from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
@@ -13,9 +14,6 @@ import type { SettingsContentProps } from './types';
 import { SCROLL_STYLES } from './SettingsContent.constants';
 import { SettingsSectionList } from './components/SettingsSectionList';
 import { SettingsToastProvider } from './SettingsToast';
-// No search field — filter plumbing retained so rows/sections can self-filter
-// if a search entry point ever returns.
-import { SettingsSearchProvider } from './search';
 
 const useSectionIconColor = () => {
   const { settings } = useThemeColors();
@@ -49,7 +47,7 @@ export function SettingsContent(p: SettingsContentProps) {
           ]}
         />
         <Animated.ScrollView
-          className='flex-1 px-4'
+          className='flex-1'
           contentContainerStyle={{
             paddingBottom: bottomPadding,
             paddingTop: 4,
@@ -57,24 +55,28 @@ export function SettingsContent(p: SettingsContentProps) {
           keyboardShouldPersistTaps='handled'
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
-          style={{ backgroundColor: themeColors.background }}
+          // One gutter for the whole screen. The header sat at 20, the scroll
+          // container at 16 and section labels at 24 (px-2 inside px-4), so
+          // nothing on the page shared a left edge.
+          style={{
+            backgroundColor: themeColors.background,
+            paddingHorizontal: airy.screenPadH,
+          }}
           onScroll={scrollHandler}
         >
-          <SettingsSearchProvider query=''>
-            <View style={{ gap: airy.sectionGap }}>
-              <SettingsSectionList
-                {...p}
-                sectionIconColor={sectionIconColor}
-                isDeletingAccount={actions.isDeletingAccount}
-                onDeleteAccount={actions.handleDeleteAccount}
-                onFeedback={actions.handleFeedback}
-                onLoveChainDay={actions.handleLoveChainDay}
-                onPrivacy={actions.openPrivacy}
-                onTerms={actions.openTerms}
-                onWhatsNew={actions.handleWhatsNew}
-              />
-            </View>
-          </SettingsSearchProvider>
+          <View style={{ gap: airy.sectionGap }}>
+            <SettingsSectionList
+              {...p}
+              sectionIconColor={sectionIconColor}
+              isDeletingAccount={actions.isDeletingAccount}
+              onDeleteAccount={actions.handleDeleteAccount}
+              onFeedback={actions.handleFeedback}
+              onLoveChainDay={actions.handleLoveChainDay}
+              onPrivacy={actions.openPrivacy}
+              onTerms={actions.openTerms}
+              onWhatsNew={actions.handleWhatsNew}
+            />
+          </View>
         </Animated.ScrollView>
         <FeedbackModal
           visible={actions.showFeedbackModal}

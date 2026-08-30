@@ -65,13 +65,9 @@ function getTrackingStartDate(habits: HabitDoc[]): string {
  */
 export function SettingsModalSection({
   archivedHabitsCount,
-  celebrationsEnabled,
   settings,
   showSettings,
-  showHabitStrengthPercentage,
   closeSettings,
-  openHapticTest,
-  setShowHabitStrengthPercentage,
   onSettingsChange,
   onPremiumUpsell,
 }: SettingsModalSectionProps) {
@@ -156,7 +152,6 @@ export function SettingsModalSection({
     <Suspense fallback={null}>
       <SettingsModal
         archivedHabitsCount={archivedHabitsCount}
-        celebrationsEnabled={celebrationsEnabled}
         completionSoundEnabled={
           settings?.completionSoundEnabled ??
           DEFAULT_SETTINGS.completionSoundEnabled
@@ -170,10 +165,6 @@ export function SettingsModalSection({
         }
         isPremium={settings?.hasPremium ?? DEFAULT_SETTINGS.hasPremium}
         settingsDocument={settings as SettingsModalSettingsDocument | undefined}
-        showCharacterScreen={
-          settings?.showCharacterScreen ?? DEFAULT_SETTINGS.showCharacterScreen
-        }
-        showHabitStrengthPercentage={showHabitStrengthPercentage}
         stickyCalendarHeader={
           settings?.stickyCalendarHeader ??
           DEFAULT_SETTINGS.stickyCalendarHeader
@@ -191,19 +182,12 @@ export function SettingsModalSection({
         onChangeHabitCompletionIcon={(value) =>
           onSettingsChange({ habitCompletionIcon: value })
         }
-        onChangeShowCharacterScreen={(value) =>
-          onSettingsChange({ showCharacterScreen: value })
-        }
-        onChangeShowHabitStrengthPercentage={(value) =>
-          setShowHabitStrengthPercentage(value)
-        }
         onChangeStickyCalendarHeader={(value) =>
           onSettingsChange({ stickyCalendarHeader: value })
         }
         onChangeStreakReminderTime={streakReminders.setReminderTime}
         onClose={closeSettings}
         onExportHabitsData={handleExportHabitsData}
-        onOpenHapticTest={openHapticTest}
         onPremiumUpsell={onPremiumUpsell}
         onToggleStreakReminders={streakReminders.setEnabled}
       />

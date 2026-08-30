@@ -11,6 +11,7 @@ export function useTemplatesScreenProps() {
   const data = useTemplatesData();
   const state = useTemplatesScreenState({
     categories: data.categories,
+    importedHabitIds: data.importedHabitIds,
     initialImportedIds: data.initialImportedIds,
   });
 
@@ -20,6 +21,7 @@ export function useTemplatesScreenProps() {
     previewTemplate: state.previewTemplate,
     isPremiumUser: data.isPremiumUser,
     onShowPaywall: () => state.setShowPaywall(true),
+    recordImportedHabitId: state.recordImportedHabitId,
     seedTemplates: data.seedTemplates,
     setShowCelebration: state.setShowCelebration,
     setExpandedCategories: state.setExpandedCategories,

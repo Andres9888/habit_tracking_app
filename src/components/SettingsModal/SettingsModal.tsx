@@ -41,6 +41,8 @@ function SettingsModalContent(props: SettingsModalProps) {
     >
       <SettingsMainView
         archivedHabitsCount={props.archivedHabitsCount ?? 0}
+        clearError={logic.clearError}
+        errorMessage={logic.errorMessage}
         compactView={logic.compactView}
         completionSoundEnabled={props.completionSoundEnabled}
         completionSoundType={props.completionSoundType}

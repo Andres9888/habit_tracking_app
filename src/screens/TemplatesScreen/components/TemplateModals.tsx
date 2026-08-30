@@ -11,6 +11,7 @@ import type {
 } from '../TemplatesScreen.types';
 
 interface TemplateModalsProps {
+  habitIdByTemplateId: Map<string, Id<'habits'>>;
   importedTemplateIds: Set<string>;
   importingTemplateId: Id<'templates'> | null;
   previewInitialAnchor: TemplatePreviewAnchor;
@@ -22,6 +23,8 @@ interface TemplateModalsProps {
   onCloseCustomize: () => void;
   /** Detail modal X — dismisses the overlay and the library behind it. */
   onExitToHome: () => void;
+  /** Post-add primary action — home, then scroll to + highlight the habit. */
+  onGoToHabit: (habitId: Id<'habits'>) => void;
   onCustomize: (template: Doc<'templates'>) => void;
   onDirectImport: (templateId: Id<'templates'>) => Promise<void>;
   onImport: (
@@ -31,6 +34,7 @@ interface TemplateModalsProps {
 }
 
 export function TemplateModals({
+  habitIdByTemplateId,
   importedTemplateIds,
   importingTemplateId,
   previewInitialAnchor,
@@ -40,6 +44,7 @@ export function TemplateModals({
   onBackToLibrary,
   onCloseCustomize,
   onExitToHome,
+  onGoToHabit,
   onCustomize,
   onDirectImport,
   onImport,
@@ -50,10 +55,14 @@ export function TemplateModals({
   const isImporting = previewTemplate
     ? importingTemplateId === previewTemplate._id
     : false;
+  const importedHabitId = previewTemplate
+    ? (habitIdByTemplateId.get(previewTemplate._id) ?? null)
+    : null;
 
   return (
     <>
       <FullsizeTemplatePreview
+        importedHabitId={importedHabitId}
         initialAnchor={previewInitialAnchor}
         isImported={isImported}
         isImporting={isImporting}
@@ -62,6 +71,7 @@ export function TemplateModals({
         onBack={onBackToLibrary}
         onClose={onExitToHome}
         onCustomize={onCustomize}
+        onGoToHabit={onGoToHabit}
         onImport={onDirectImport}
       />
       <TemplatePreviewModal

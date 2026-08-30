@@ -48,6 +48,7 @@ export function AnimatedToggle({
       accessibilityLabel={label}
       accessibilityRole='switch'
       accessibilityState={{ checked: value }}
+      accessibilityValue={{ text: value ? 'On' : 'Off' }}
       hitSlop={8}
       onPress={() => onValueChange(!value)}
     >

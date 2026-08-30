@@ -55,11 +55,14 @@ export function SettingsSectionHeader({
           <Text
             className='ml-2 rounded-full px-2 py-0.5'
             style={{
+              // Neutral: amber is reserved for PRO markers.
               ...typography.tabBar,
+              borderColor: themeColors.border,
+              borderWidth: 1,
               fontWeight: fontWeights.semibold,
               textTransform: 'uppercase',
-              backgroundColor: themeColors.status.warningLight,
-              color: themeColors.status.warningText,
+              backgroundColor: themeColors.background,
+              color: themeColors.text.secondary,
             }}
           >
             {subtitle}

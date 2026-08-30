@@ -22,7 +22,7 @@ export function StaticSectionLabel({
   const { colors: themeColors } = useThemeColors();
 
   return (
-    <View className='flex-row items-center px-2' style={{ gap: 7 }}>
+    <View className='flex-row items-center' style={{ gap: 7 }}>
       <Text
         style={{
           ...settingsSectionTitle,
@@ -35,11 +35,16 @@ export function StaticSectionLabel({
         <Text
           className='ml-2 rounded-full px-2 py-0.5'
           style={{
+            // Neutral, not amber: amber is the PRO marker. A section badge
+            // wearing it made "premium", "metadata" and "something is broken"
+            // all the same colour.
             ...typography.tabBar,
+            borderColor: themeColors.border,
+            borderWidth: 1,
             fontWeight: fontWeights.semibold,
             textTransform: 'uppercase',
-            backgroundColor: themeColors.status.warningLight,
-            color: themeColors.status.warningText,
+            backgroundColor: themeColors.background,
+            color: themeColors.text.secondary,
           }}
         >
           {subtitle}

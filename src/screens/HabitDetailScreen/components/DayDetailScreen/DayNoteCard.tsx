@@ -25,7 +25,7 @@ export function DayNoteCard({ note }: DayNoteCardProps) {
       <Text
         style={{
           color: palette.textTertiary,
-          fontSize: 11,
+          fontSize: 12,
           fontWeight: fontWeights.bold,
           letterSpacing: 1.5,
           textTransform: 'uppercase',

@@ -1,10 +1,10 @@
 import { Text, View } from 'react-native';
-import { CalendarOff, CheckCircle2 } from 'lucide-react-native';
+import { CalendarOff, CheckCircle2, PauseCircle } from 'lucide-react-native';
 import { borderRadius } from '../../../../theme/spacing';
 import { fontFamilies, fontWeights } from '../../../../theme/typography';
 import type { InsightPalette } from '../../insightPalette';
 
-type HeroState = 'completed' | 'off';
+type HeroState = 'completed' | 'off' | 'paused';
 
 interface HeroStateCardProps {
   palette: InsightPalette;
@@ -13,7 +13,7 @@ interface HeroStateCardProps {
 
 const COPY = {
   completed: {
-    body: 'The record is saved. Add a private note only if it helps.',
+    body: 'Today is logged. Add a private note only if it helps.',
     eyebrow: 'Today · complete',
     title: 'You showed up today.',
   },
@@ -22,12 +22,21 @@ const COPY = {
     eyebrow: 'Today · not scheduled',
     title: 'Nothing is owed today.',
   },
+  paused: {
+    body: 'Check-ins resume when this habit is active again.',
+    eyebrow: 'Today · paused',
+    title: 'This habit is paused.',
+  },
 } as const;
 
 export function HeroStateCard({ palette, state }: HeroStateCardProps) {
   const copy = COPY[state];
   const isCompleted = state === 'completed';
-  const Icon = isCompleted ? CheckCircle2 : CalendarOff;
+  const Icon = isCompleted
+    ? CheckCircle2
+    : state === 'paused'
+      ? PauseCircle
+      : CalendarOff;
 
   return (
     <View
@@ -63,7 +72,7 @@ export function HeroStateCard({ palette, state }: HeroStateCardProps) {
         <Text
           style={{
             color: isCompleted ? palette.green : palette.textTertiary,
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: fontWeights.bold,
             letterSpacing: 1.2,
             textTransform: 'uppercase',

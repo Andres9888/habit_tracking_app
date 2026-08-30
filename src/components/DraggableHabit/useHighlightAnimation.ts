@@ -22,13 +22,22 @@ import { runHighlightGlow } from './highlightAnimations';
 const STATIC_HOLD_MS = 1800;
 const STATIC_FADE_MS = 600;
 
-export function useHighlightAnimation(
-  isJustCreated: boolean,
-  holdHighlight: boolean,
-  reduceMotionPreference: boolean,
-  cardScale: SharedValue<number>,
-  highlightGlow: SharedValue<number>
-) {
+export interface HighlightAnimationOptions {
+  cardScale: SharedValue<number>;
+  highlightGlow: SharedValue<number>;
+  /** Keep the ring lit without starting its visible fade (prearmed focus). */
+  holdHighlight: boolean;
+  isJustCreated: boolean;
+  reduceMotionPreference: boolean;
+}
+
+export function useHighlightAnimation({
+  cardScale,
+  highlightGlow,
+  holdHighlight,
+  isJustCreated,
+  reduceMotionPreference,
+}: HighlightAnimationOptions) {
   useEffect(() => {
     if (!isJustCreated) {
       highlightGlow.value = 0;

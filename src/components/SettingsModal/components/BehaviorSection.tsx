@@ -1,6 +1,5 @@
-/** BehaviorSection — Habits: sort order + archive + export.
- *  Completion sound lives under Reminders; export folded back in here per the
- *  mock's 3B grouping (6 cards, not 7). */
+/** BehaviorSection — Quiet Configuration Index §3: sort order + completion
+ *  sound (moved out of Reminders). Archive/export moved to Data & Privacy. */
 import { useState } from 'react';
 import { ArrowUpDown, SlidersHorizontal } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
@@ -12,18 +11,21 @@ import {
   getSortFamily,
   SORT_FAMILIES,
 } from '../SortOrderPicker.constants';
-import { HabitDataRows } from './HabitDataRows';
+import { SoundHapticsRows } from './SoundHapticsRows';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { rowMatchesQuery, useSettingsSearch } from '../search';
 import type { HabitSortMode } from '../../../features/habits/types';
+import type { CompletionSoundType } from '../../../../convex/settings/types';
 
 interface BehaviorSectionProps {
   sectionIconColor: string;
   habitSortMode: string;
   onChangeHabitSortMode: (mode: HabitSortMode) => void;
-  archivedHabitsCount?: number;
-  onOpenArchivedHabits: () => void;
-  onExportHabitsData?: () => void | Promise<void>;
+  completionSoundEnabled: boolean;
+  completionSoundType: CompletionSoundType;
+  onChangeCompletionSoundEnabled: (value: boolean) => void | Promise<void>;
+  onChangeCompletionSoundType: (
+    value: CompletionSoundType
+  ) => void | Promise<void>;
 }
 
 function getSortSummary(mode: HabitSortMode) {
@@ -35,7 +37,6 @@ function getSortSummary(mode: HabitSortMode) {
 export function BehaviorSection(p: BehaviorSectionProps) {
   const { settings: icons } = useThemeColors();
   const iconSize = iconSizes.small;
-  const { query } = useSettingsSearch();
   // The two-tier picker used to render permanently expanded — the tallest block
   // on the page for a preference most people set once. Now it opens on tap,
   // matching Calendar look and Theme.
@@ -44,7 +45,7 @@ export function BehaviorSection(p: BehaviorSectionProps) {
   return (
     <SettingsSection
       icon={<SlidersHorizontal color={p.sectionIconColor} size={iconSize} />}
-      title='Habits'
+      title='Behavior'
     >
       <SettingsRow
         icon={<ArrowUpDown color={icons.sort.icon} size={iconSize} />}
@@ -53,18 +54,20 @@ export function BehaviorSection(p: BehaviorSectionProps) {
         subtitle='How habits are ordered'
         type='selection'
         value={getSortSummary(p.habitSortMode as HabitSortMode)}
+        expanded={sortExpanded}
         onPress={() => setSortExpanded((open) => !open)}
       />
-      {sortExpanded && rowMatchesQuery(query, 'Sort order') ? (
+      {sortExpanded ? (
         <SortOrderPicker
           selected={p.habitSortMode as HabitSortMode}
           onSelect={p.onChangeHabitSortMode}
         />
       ) : null}
-      <HabitDataRows
-        archivedHabitsCount={p.archivedHabitsCount}
-        onExportHabitsData={p.onExportHabitsData}
-        onOpenArchivedHabits={p.onOpenArchivedHabits}
+      <SoundHapticsRows
+        enabled={p.completionSoundEnabled}
+        soundType={p.completionSoundType}
+        onChangeEnabled={p.onChangeCompletionSoundEnabled}
+        onChangeType={p.onChangeCompletionSoundType}
       />
     </SettingsSection>
   );

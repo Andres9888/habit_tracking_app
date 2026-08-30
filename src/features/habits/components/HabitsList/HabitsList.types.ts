@@ -40,6 +40,11 @@ export interface HabitsListProps {
 
 export interface HabitsListContentProps {
   props: HabitsListProps;
+  /**
+   * True while focus-remounted rows render as light shells. Must reach mounted
+   * cells via the list's `extraData` when it flips off one frame later.
+   */
+  deferHeavyFocusContent: boolean;
   /** Measured average used only to seed a far focus target's initial region. */
   focusEstimatedRowLength: number;
   /** Attached to the DraggableFlatList so focus requests can scroll it. */

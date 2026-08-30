@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Dimensions, Keyboard, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
@@ -13,9 +13,27 @@ interface ToastKeyboardPosition {
   translateY: Animated.AnimatedInterpolation<number>;
 }
 
+/**
+ * Keyboard metrics are reported in screen coordinates, so the overlap math
+ * must track the screen height across rotation — a stale portrait height
+ * would misplace the toast in landscape.
+ */
+function useScreenHeight(): number {
+  const [screenHeight, setScreenHeight] = useState(
+    () => Dimensions.get('screen').height
+  );
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ screen }) => {
+      setScreenHeight(screen.height);
+    });
+    return () => subscription.remove();
+  }, []);
+  return screenHeight;
+}
+
 export function useToastKeyboardPosition(): ToastKeyboardPosition {
   const insets = useSafeAreaInsets();
-  const screenHeight = Dimensions.get('screen').height;
+  const screenHeight = useScreenHeight();
   const initialMetrics = Keyboard.metrics();
   const shouldLiftForKeyboard = Platform.OS === 'ios';
   const initialKeyboardOverlap = initialMetrics

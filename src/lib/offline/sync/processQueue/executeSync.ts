@@ -80,6 +80,10 @@ function handleSyncFailure(
   });
 
   if (exhausted) {
+    // Permanent failure: the optimistic layer has already been reverted via
+    // the failed-final event, so drop the op instead of leaving a zombie
+    // that is never retried and keeps the queue unhealthy.
+    queueManager.remove(operation.id);
     callbacks?.onFailure?.(operation, errorMsg);
   } else {
     queueManager.markPending(operation.id);

@@ -42,7 +42,7 @@ export function HeatmapGrid({ cells, onDayPress, palette }: HeatmapGridProps) {
           key={`head-${index}`}
           style={{
             color: palette.textTertiary,
-            fontSize: 10,
+            fontSize: 11,
             textAlign: 'center',
             width: `${100 / 7}%`,
           }}

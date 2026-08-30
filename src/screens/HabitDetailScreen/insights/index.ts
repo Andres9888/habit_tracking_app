@@ -13,6 +13,15 @@ export {
   recoveryHeadline,
   recoveryMissedDayLabel,
 } from './missedYesterday';
+export { brokenRunLength } from './brokenRunLength';
+export type { BrokenRunOptions } from './brokenRunLength';
+export { effectiveDayDiff, type PauseWindow } from './effectiveDayDiff';
+export {
+  NEVER_MISS_TWICE,
+  recoveryBodyCopy,
+  recoveryHeadlineCopy,
+  spellCount,
+} from './recoveryCopy';
 export {
   bestMonth,
   buildMonthlyRates,
@@ -30,7 +39,17 @@ export {
   WEEKDAY_PLURAL,
   WEEKDAY_SHORT,
 } from './schedule';
+export {
+  buildStreakRuns,
+  rankStreakRuns,
+  runRangeLabel,
+  runTrend,
+  streakStats,
+} from './streakRuns';
+export type { RunTrend, StreakRun, StreakStats } from './streakRuns';
+export { useStreakRuns } from './useStreakRuns';
 export { useHabitInsights } from './useHabitInsights';
+export { useHabitTrackingRange } from './useHabitTrackingRange';
 export { buildWeekdayStats, findOneFix } from './weekdayStats';
 export type {
   Daypart,

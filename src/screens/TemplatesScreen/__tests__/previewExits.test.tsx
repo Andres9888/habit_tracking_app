@@ -8,14 +8,21 @@
  */
 
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react-native';
 import { useQuery } from 'convex/react';
 import { queryCacheStore } from '../../../lib/queryCache/store/state';
 import TemplatesScreen from '../TemplatesScreen';
 
+const mockImportTemplate = jest.fn();
+
 jest.mock('convex/react', () => ({
   useQuery: jest.fn(),
-  useMutation: () => jest.fn(),
+  useMutation: () => mockImportTemplate,
   ConvexProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 
@@ -23,6 +30,7 @@ jest.mock('convex/react', () => ({
 // needs getImportedTemplateIds to return an id while templates.list returns a
 // row, and those two cannot be the same value.
 let mockImportedIds: string[] = [];
+let mockImportedHabitIds: { templateId: string; habitId: string }[] = [];
 jest.mock('../../../lib/queryCache', () => ({
   useCachedQuery: (
     _query: unknown,
@@ -32,6 +40,9 @@ jest.mock('../../../lib/queryCache', () => ({
     if (options?.entryName === 'templates.list') return mockTemplates;
     if (options?.entryName === 'templates.getImportedTemplateIds') {
       return mockImportedIds;
+    }
+    if (options?.entryName === 'templates.getImportedTemplateHabitIds') {
+      return mockImportedHabitIds;
     }
     if (options?.entryName === 'settings.get') return { hasPremium: false };
     return [];
@@ -66,9 +77,14 @@ jest.mock('@/utils/haptics', () => ({ triggerHaptic: jest.fn() }));
 const mockUseQuery = useQuery as jest.Mock;
 
 /** Renders the library and opens the detail modal for the seeded habit. */
-function openPreview() {
+function openPreview(onGoToHabit?: jest.Mock) {
   const onCloseLibrary = jest.fn();
-  render(<TemplatesScreen onCloseLibrary={onCloseLibrary} />);
+  render(
+    <TemplatesScreen
+      onCloseLibrary={onCloseLibrary}
+      onGoToHabit={onGoToHabit}
+    />
+  );
   fireEvent.press(screen.getByLabelText('Daily walk habit'));
   return onCloseLibrary;
 }
@@ -76,7 +92,12 @@ function openPreview() {
 describe('template detail exits', () => {
   beforeEach(() => {
     mockImportedIds = [];
+    mockImportedHabitIds = [];
     mockUseQuery.mockImplementation(() => mockTemplates);
+    mockImportTemplate.mockResolvedValue({
+      habitId: 'habit-1',
+      success: true,
+    });
   });
 
   afterEach(() => {
@@ -129,9 +150,106 @@ describe('template detail exits', () => {
     mockImportedIds = ['template-1'];
     const onCloseLibrary = openPreview();
 
-    fireEvent.press(screen.getByTestId('templates-preview-find-another'));
+    fireEvent.press(screen.getByTestId('templates-preview-keep-exploring'));
 
     expect(onCloseLibrary).not.toHaveBeenCalled();
     expect(screen.getByTestId('templates-catalog-view')).toBeTruthy();
+  });
+
+  it('keeps list Add out of the drill-down and shows a dismissible panel', async () => {
+    render(<TemplatesScreen />);
+
+    fireEvent.press(screen.getByLabelText('Add Daily walk habit'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('templates-toast')).toBeTruthy();
+    });
+    expect(screen.getByText('Daily walk is in your habits')).toBeTruthy();
+    expect(screen.getByText('Go to Daily walk')).toBeTruthy();
+    expect(screen.queryByTestId('templates-preview-added')).toBeNull();
+    expect(screen.queryByTestId('templates-preview-back')).toBeNull();
+    expect(screen.queryByTestId('make-it-stick-sheet')).toBeNull();
+    expect(mockImportTemplate).toHaveBeenCalledWith({
+      templateId: 'template-1',
+    });
+
+    fireEvent.press(screen.getByText('Keep exploring habits'));
+    await waitFor(() => {
+      expect(screen.queryByTestId('templates-toast')).toBeNull();
+    });
+    expect(screen.getByTestId('templates-catalog-view')).toBeTruthy();
+  });
+  it('sends the list-add toast primary to the habit it just created', async () => {
+    const onGoToHabit = jest.fn();
+    const onCloseLibrary = jest.fn();
+    render(
+      <TemplatesScreen
+        onCloseLibrary={onCloseLibrary}
+        onGoToHabit={onGoToHabit}
+      />
+    );
+
+    fireEvent.press(screen.getByLabelText('Add Daily walk habit'));
+    await waitFor(() => {
+      expect(screen.getByText('Go to Daily walk')).toBeTruthy();
+    });
+
+    fireEvent.press(screen.getByText('Go to Daily walk'));
+
+    // The toast dismisses first and hands off after a short delay.
+    await waitFor(() => {
+      expect(onGoToHabit).toHaveBeenCalledWith('habit-1');
+    });
+    expect(onCloseLibrary).not.toHaveBeenCalled();
+  });
+
+  it('sends the post-add primary action to the habit it just created', async () => {
+    const onGoToHabit = jest.fn();
+    const onCloseLibrary = openPreview(onGoToHabit);
+
+    fireEvent.press(screen.getByTestId('templates-preview-quick-add'));
+    await waitFor(() => {
+      expect(screen.getByTestId('templates-preview-added')).toBeTruthy();
+    });
+
+    fireEvent.press(screen.getByTestId('templates-preview-go-to-today'));
+
+    // Home focuses the habit; it must not also take the plain exit path.
+    expect(onGoToHabit).toHaveBeenCalledTimes(1);
+    expect(onGoToHabit).toHaveBeenCalledWith('habit-1');
+    expect(onCloseLibrary).not.toHaveBeenCalled();
+  });
+
+  it('resolves the habit for a template imported in an earlier session', () => {
+    mockImportedIds = ['template-1'];
+    mockImportedHabitIds = [{ habitId: 'habit-1', templateId: 'template-1' }];
+    const onGoToHabit = jest.fn();
+    const onCloseLibrary = openPreview(onGoToHabit);
+
+    fireEvent.press(screen.getByTestId('templates-preview-go-to-today'));
+
+    expect(onGoToHabit).toHaveBeenCalledWith('habit-1');
+    expect(onCloseLibrary).not.toHaveBeenCalled();
+  });
+
+  it('falls back to plain exit-to-home when the habit is unknown', () => {
+    mockImportedIds = ['template-1'];
+    const onGoToHabit = jest.fn();
+    const onCloseLibrary = openPreview(onGoToHabit);
+
+    fireEvent.press(screen.getByTestId('templates-preview-go-to-today'));
+
+    expect(onGoToHabit).not.toHaveBeenCalled();
+    expect(onCloseLibrary).toHaveBeenCalledTimes(1);
+  });
+
+  it('falls back to plain exit-to-home with no onGoToHabit handler', () => {
+    mockImportedIds = ['template-1'];
+    mockImportedHabitIds = [{ habitId: 'habit-1', templateId: 'template-1' }];
+    const onCloseLibrary = openPreview();
+
+    fireEvent.press(screen.getByTestId('templates-preview-go-to-today'));
+
+    expect(onCloseLibrary).toHaveBeenCalledTimes(1);
   });
 });
