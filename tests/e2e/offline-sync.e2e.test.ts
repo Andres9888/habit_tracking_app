@@ -14,7 +14,8 @@ import {
   createOfflineQueueManager,
   getOfflineQueueManager,
   resetOfflineQueueManager,
-} from '../../src/lib/offline';
+  type OfflineQueueManagerAPI,
+} from '../../src/lib/offline/queueManager';
 import { SyncOrchestrator } from '../../src/lib/offline/sync/SyncOrchestrator';
 import { OfflineSyncManager } from '../../src/lib/offline/syncManager';
 import {
@@ -37,12 +38,11 @@ import type {
 import { cleanupOrphans } from '../../src/lib/offline/sync/cleanupOrphans';
 import type { HabitExistsResult } from '../../src/lib/offline/sync/cleanupOrphans';
 import type {
-  OfflineQueueManagerAPI,
   OfflineQueueState,
   OfflineOperation,
-  SyncOrchestratorEvent,
-  ClassifiedError,
-} from '../../src/lib/offline';
+} from '../../src/lib/offline/queue';
+import type { SyncOrchestratorEvent } from '../../src/lib/offline/sync/types';
+import type { ClassifiedError } from '../../src/lib/offline/types';
 
 // Mock AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () => ({

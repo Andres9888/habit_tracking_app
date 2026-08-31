@@ -1,5 +1,5 @@
 import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
-import type { CreateHabitPayload } from '../../../lib/offline';
+import type { CreateHabitPayload } from '../../../lib/offline/queue';
 import type { OptimisticHabitCreateInput } from '../../../features/habits/hooks/optimisticHabitCreationStore.types';
 import { formatReminderTime24 } from '../../../utils/notifications';
 import type { CreateHabitData } from './useCreateHabitHandlers.types';

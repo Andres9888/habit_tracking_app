@@ -4,7 +4,7 @@ import { api } from '../../../../convex/_generated/api';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
 import { useUserDefaultProgressEmojis } from '../../../hooks/useProgressEmojis';
 import { markFirstHabitCreated } from '../../../hooks/useStreakReminders/useStreakReminderSettings';
-import type { CreateHabitPayload } from '../../../lib/offline';
+import type { CreateHabitPayload } from '../../../lib/offline/queue';
 import { useOfflineMutation } from '../../../lib/optimistic';
 import { validateHabitName } from '../../../utils/validation';
 import { optimisticHabitCreationStore } from '../../../features/habits/hooks/optimisticHabitCreationStore';

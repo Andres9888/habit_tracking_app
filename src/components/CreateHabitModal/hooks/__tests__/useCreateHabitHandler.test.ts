@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react-native';
 import {
   getOfflineQueueManager,
   resetOfflineQueueManager,
-} from '../../../../lib/offline';
+} from '../../../../lib/offline/queueManager';
 import { optimisticHabitCreationStore } from '../../../../features/habits/hooks/optimisticHabitCreationStore';
 import { useCreateHabitHandler } from '../useCreateHabitHandler';
 

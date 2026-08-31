@@ -1,4 +1,7 @@
-import type { OfflineOperation, OfflineOperationType } from '../../offline';
+import type {
+  OfflineOperation,
+  OfflineOperationType,
+} from '../../offline/queue';
 
 export type OfflineMutationPayload<T extends OfflineOperationType> =
   OfflineOperation<T>['payload'];

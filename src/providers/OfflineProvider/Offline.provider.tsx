@@ -8,7 +8,7 @@
  */
 
 import { createContext, useEffect } from 'react';
-import { getOfflineQueueManager } from '../../lib/offline';
+import { getOfflineQueueManager } from '../../lib/offline/queueManager';
 import { syncOptimisticFromQueueEvent } from '../../lib/offline/rehydrate';
 import type { OfflineContextValue, OfflineProviderProps } from './types';
 import { useOfflineContextValue } from './useOfflineContextValue';

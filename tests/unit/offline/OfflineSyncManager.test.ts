@@ -6,9 +6,9 @@ import {
   OfflineSyncManager,
   getOfflineSyncManager,
   resetOfflineSyncManager,
-  createRetryContext,
   type SyncItem,
-} from '~/lib/offline';
+} from '~/lib/offline/syncManager';
+import { createRetryContext } from '~/lib/offline/retryStrategy';
 
 describe('OfflineSyncManager', () => {
   beforeEach(() => {

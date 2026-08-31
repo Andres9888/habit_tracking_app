@@ -2,8 +2,11 @@
  * Circuit Breaker Tests
  */
 
-import { CircuitBreaker, createCircuitBreaker } from '~/lib/offline';
-import type { ClassifiedError } from '~/lib/offline';
+import {
+  CircuitBreaker,
+  createCircuitBreaker,
+} from '~/lib/offline/circuitBreaker';
+import type { ClassifiedError } from '~/lib/offline/types';
 
 describe('CircuitBreaker', () => {
   const createTestError = (

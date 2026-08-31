@@ -3,7 +3,7 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 import {
   getOfflineQueueManager,
   resetOfflineQueueManager,
-} from '../../offline';
+} from '../../offline/queueManager';
 import { useOfflineMutation } from '../hooks/useOfflineMutation';
 
 const habitId = 'habit_1' as Id<'habits'>;

@@ -12,12 +12,12 @@ import type { Id } from '../../convex/_generated/dataModel';
 import {
   createOfflineQueueManager,
   resetOfflineQueueManager,
-} from '../../src/lib/offline';
+  type OfflineQueueManagerAPI,
+} from '../../src/lib/offline/queueManager';
 import type {
-  OfflineQueueManagerAPI,
   CreateHabitPayload,
   UpdateHabitPayload,
-} from '../../src/lib/offline';
+} from '../../src/lib/offline/queue';
 
 // Mock AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () => ({

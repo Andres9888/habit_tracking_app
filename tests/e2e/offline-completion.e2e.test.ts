@@ -14,15 +14,15 @@ import type { Id } from '../../convex/_generated/dataModel';
 import { optimisticStore } from '../../src/lib/optimistic';
 import {
   calculateOfflineStreak,
+  mergeTrackingWithPending,
+  type TrackingRecord,
+} from '../../src/lib/offline/calculations';
+import {
   createOfflineQueueManager,
   getOfflineQueueManager,
-  mergeTrackingWithPending,
   resetOfflineQueueManager,
-} from '../../src/lib/offline';
-import type {
-  OfflineQueueManagerAPI,
-  TrackingRecord,
-} from '../../src/lib/offline';
+  type OfflineQueueManagerAPI,
+} from '../../src/lib/offline/queueManager';
 
 jest.mock('../../src/lib/offline/persistence/offlineStorage', () => ({
   offlineStorage: {

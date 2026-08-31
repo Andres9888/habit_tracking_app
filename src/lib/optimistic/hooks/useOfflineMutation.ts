@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
+import { isNetworkError } from '../../offline/errorClassifier';
 import {
   generateOperationId,
   getOfflineQueueManager,
-  isNetworkError,
-  type OfflineOperationType,
-} from '../../offline';
+} from '../../offline/queueManager';
+import type { OfflineOperationType } from '../../offline/queue';
 import type {
   OfflineMutationOptions,
   OfflineMutationPayload,

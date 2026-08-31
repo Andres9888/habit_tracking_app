@@ -1,7 +1,7 @@
 import { useAuth } from '@clerk/clerk-expo';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { getOfflineQueueManager } from '../../lib/offline';
+import { getOfflineQueueManager } from '../../lib/offline/queueManager';
 import { rehydrateOptimisticFromQueue } from '../../lib/offline/rehydrate';
 import { setQueueStorageScope } from '../../lib/offline/persistence';
 import { setOptimisticStoreScope } from '../../lib/optimistic/store/persistence';

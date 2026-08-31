@@ -3,7 +3,7 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 import {
   getOfflineQueueManager,
   resetOfflineQueueManager,
-} from '../../offline';
+} from '../../offline/queueManager';
 import { optimisticStore } from '../store';
 import {
   useOfflineArchiveHabit,

@@ -13,7 +13,8 @@ import type { Id } from '../../convex/_generated/dataModel';
 import {
   createOfflineQueueManager,
   resetOfflineQueueManager,
-} from '../../src/lib/offline';
+  type OfflineQueueManagerAPI,
+} from '../../src/lib/offline/queueManager';
 import { SyncOrchestrator } from '../../src/lib/offline/sync/SyncOrchestrator';
 import { OfflineSyncManager } from '../../src/lib/offline/syncManager';
 import {
@@ -25,11 +26,10 @@ import {
 import { createHabitDateKey } from '../../src/lib/offline/sync/conflictResolver/helpers';
 import { processQueue } from '../../src/lib/offline/sync/processQueue';
 import type {
-  OfflineQueueManagerAPI,
   OfflineOperation,
   OfflineQueueState,
-  SyncOrchestratorEvent,
-} from '../../src/lib/offline';
+} from '../../src/lib/offline/queue';
+import type { SyncOrchestratorEvent } from '../../src/lib/offline/sync/types';
 import type {
   CompletionStateChecker,
   BatchCompletionStateChecker,

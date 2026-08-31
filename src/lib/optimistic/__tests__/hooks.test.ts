@@ -19,7 +19,7 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 import {
   resetOfflineQueueManager,
   getOfflineQueueManager,
-} from '../../offline';
+} from '../../offline/queueManager';
 
 // Helper to create mock habit ID
 const mockHabitId = (id: string) => id as Id<'habits'>;
