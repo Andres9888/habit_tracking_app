@@ -1,12 +1,15 @@
+import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { minimatch } from 'minimatch';
 
 import jestConfig from '../../jest.config.js';
+import scenarioJestConfig from '../../tests/e2e-scenarios/jest.scenarios.config.cjs';
 import projectDirectoryPatterns from '../config/project-directory-patterns.cjs';
 
 const { createMetroBlockList } = projectDirectoryPatterns;
+const requireFromProject = createRequire(import.meta.url);
 const projectRoot = fileURLToPath(new URL('../..', import.meta.url));
 const normalizedProjectRoot = projectRoot.replaceAll(path.sep, '/');
 const sampleSourcePath = path.join(projectRoot, 'src', 'tooling-check.ts');
@@ -23,6 +26,25 @@ function matchesJestPath(pattern, filePath) {
     escapeRegex(normalizedProjectRoot)
   );
   return new RegExp(expandedPattern).test(filePath);
+}
+
+function assertResolvableJestTransforms(transforms) {
+  for (const [pattern, definition] of Object.entries(transforms ?? {})) {
+    const transformer = Array.isArray(definition) ? definition[0] : definition;
+    if (typeof transformer !== 'string') {
+      throw new Error(`Jest transform ${pattern} has no module name`);
+    }
+    try {
+      requireFromProject.resolve(transformer);
+    } catch (error) {
+      throw new Error(
+        `Jest transform ${pattern} cannot resolve ${transformer}`,
+        {
+          cause: error,
+        }
+      );
+    }
+  }
 }
 
 const ignoreGroups = [
@@ -78,5 +100,7 @@ if (!minimatch('src/example.test.ts', '**/*.{ts,tsx}')) {
     'minimatch brace expansion is incompatible with this install'
   );
 }
+
+assertResolvableJestTransforms(scenarioJestConfig.transform);
 
 console.log('Project tooling checks passed');

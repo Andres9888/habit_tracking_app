@@ -1,7 +1,7 @@
 /**
  * Scenario S14: Browse and apply a habit template.
  *
- * PASS when the templates library renders its struggle prompt and a popular
+ * PASS when the habit library renders its catalog heading and a popular
  * template, and tapping "Add <template>" applies it via templates:importTemplate.
  */
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
@@ -29,7 +29,7 @@ describe('S14 Templates browse & apply', () => {
 
   it('lists templates and imports one on tap', async () => {
     renderScreen(<TemplatesScreen />);
-    expect(await screen.findByText('What do you want to change?')).toBeTruthy();
+    expect(await screen.findByText('Habit library')).toBeTruthy();
     expect(screen.getByText('Drink Water')).toBeTruthy();
     fireEvent.press(screen.getByLabelText('Add Drink Water habit'));
     await waitFor(() =>

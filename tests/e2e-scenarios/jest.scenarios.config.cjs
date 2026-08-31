@@ -5,6 +5,7 @@
  * and (b) layers an extra setup file that mocks the native modules full screens
  * pull in. Run with: npx jest -c tests/e2e-scenarios/jest.scenarios.config.cjs
  */
+const expoPreset = require('jest-expo/jest-preset');
 const path = require('node:path');
 const root = path.resolve(__dirname, '../..');
 
@@ -15,8 +16,7 @@ module.exports = {
   // babel.config.cjs). Mirror that transform but layer on a plugin that rewrites
   // dynamic import() -> require() so React.lazy() overlays render under jest.
   transform: {
-    '^.+\\.(bmp|gif|jpg|jpeg|mp4|png|psd|svg|webp)$':
-      require.resolve('react-native/jest/assetFileTransformer.js'),
+    ...expoPreset.transform,
     '\\.[jt]sx?$': [
       'babel-jest',
       {
@@ -41,7 +41,8 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': '<rootDir>/__mocks__/styleMock.js',
-    '^react-native-reanimated/mock$': '<rootDir>/__mocks__/react-native-reanimated-mock.js',
+    '^react-native-reanimated/mock$':
+      '<rootDir>/__mocks__/react-native-reanimated-mock.js',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^~/(.*)$': '<rootDir>/src/$1',
   },

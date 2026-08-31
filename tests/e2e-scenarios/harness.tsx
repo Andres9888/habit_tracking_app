@@ -16,6 +16,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { getFunctionName } from 'convex/server';
 import { useMutation, useQuery } from 'convex/react';
 
+import type { Habit, HabitId } from '../../src/features/habits/types';
 import { ThemeColorProvider } from '../../src/theme/ThemeContext';
 import { LazyProviders } from '../../src/providers/LazyProviders';
 import { computeOverviewStats } from '../../convex/analyticsOverview';
@@ -106,12 +107,14 @@ export function isoDay(offsetDays = 0): string {
   return d.toISOString().slice(0, 10);
 }
 
-export type HabitOverrides = Partial<ReturnType<typeof makeHabit>>;
+export type HabitOverrides = Partial<Habit> & {
+  id?: HabitId | string;
+};
 
-export function makeHabit(overrides: Record<string, unknown> = {}) {
-  const id = (overrides.id as string) ?? (overrides._id as string) ?? 'habit_1';
+export function makeHabit(overrides: HabitOverrides = {}): Habit {
+  const { id: idAlias, ...habitOverrides } = overrides;
+  const id = (idAlias ?? habitOverrides._id ?? 'habit_1') as HabitId;
   return {
-    _id: id,
     _creationTime: Date.now() - 30 * DAY_MS,
     name: 'Morning Run',
     icon: '🏃',
@@ -142,8 +145,9 @@ export function makeHabit(overrides: Record<string, unknown> = {}) {
     strengthAlgorithm: 'balanced',
     userId: 'test-user',
     ownerId: 'test-user',
-    ...overrides,
-  };
+    ...habitOverrides,
+    _id: id,
+  } as Habit;
 }
 
 export function makeTracking(habitId: string, completedDays: number[] = []) {
