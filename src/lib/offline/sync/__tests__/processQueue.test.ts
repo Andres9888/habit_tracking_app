@@ -99,7 +99,6 @@ describe('processQueue', () => {
         progress: 0,
         syncedCount: 0,
       }),
-      processBatch: jest.fn(),
       resetCircuit: jest.fn(),
       resetStats: jest.fn(),
       subscribe: jest.fn().mockReturnValue(() => {}),
@@ -212,6 +211,12 @@ describe('processQueue', () => {
       expect(result.success).toBe(false);
       expect(result.shouldRetry).toBe(true);
       expect(result.error).toBe('Network error');
+      expect(mockQueueManager.markFailed).toHaveBeenCalledWith(
+        'retry-op',
+        'Network error',
+        'network',
+        { final: false }
+      );
       expect(mockQueueManager.markPending).toHaveBeenCalledWith('retry-op');
     });
 
@@ -241,6 +246,7 @@ describe('processQueue', () => {
         'server',
         { final: true }
       );
+      expect(mockQueueManager.remove).toHaveBeenCalledWith('fail-op');
     });
 
     it('skips non-pending operations', async () => {

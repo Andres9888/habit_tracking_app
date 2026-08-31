@@ -38,10 +38,4 @@ export interface SyncResult<T> {
   error?: ClassifiedError;
 }
 
-export interface BatchResult<T> {
-  successful: SyncItem<T>[];
-  failed: SyncItem<T>[];
-  skipped: SyncItem<T>[];
-}
-
 export { type SyncEventType, type SyncStatus, type SyncEvent } from '../types';

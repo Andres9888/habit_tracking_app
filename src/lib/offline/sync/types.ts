@@ -102,9 +102,7 @@ export type ToggleSyncExecutor = (
 /**
  * Generic executor function for syncing any operation type
  */
-export type SyncExecutor = (
-  operation: OfflineOperation
-) => Promise<void>;
+export type SyncExecutor = (operation: OfflineOperation) => Promise<void>;
 
 /**
  * Factory for creating sync executors with Convex mutations
@@ -117,4 +115,4 @@ export interface SyncExecutorFactory {
 
 export { type OfflineOperation, type ToggleCompletionPayload } from '../queue';
 export { type SyncEvent, type SyncStatus } from '../types';
-export { type BatchResult, type SyncItem } from '../syncManager';
+export { type SyncItem } from '../syncManager';

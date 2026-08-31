@@ -18,8 +18,6 @@ export {
   DEFAULT_ORCHESTRATOR_CONFIG,
   filterPendingOperations,
   getOperationsForSync,
-  operationsToSyncItems,
-  operationToSyncItem,
   shouldSkipSync,
 } from '../helpers';
 

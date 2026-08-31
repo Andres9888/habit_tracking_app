@@ -357,11 +357,33 @@ describe('Offline Sync E2E', () => {
 
         const result = await orchestrator.sync();
 
-        // First sync processes the operation, and it may be marked for retry (not permanent fail)
-        // The operation is processed, whether it's marked failed or skipped depends on retry exhaustion
         expect(result.processed).toBe(1);
-        // Operations can be marked as failed, skipped, or succeeded depending on retry context
-        expect(result.failed + result.skipped + result.succeeded).toBe(1);
+        expect(result.skipped).toBe(1);
+        expect(queueManager.getState().operations).toEqual([
+          expect.objectContaining({
+            lastError: 'Temporary failure',
+            retryCount: 1,
+            status: 'pending',
+          }),
+        ]);
+      });
+
+      it('removes operations after a non-retryable failure', async () => {
+        mockExecutor.mockRejectedValueOnce(new Error('401 Unauthorized'));
+        const events: string[] = [];
+        queueManager.subscribe((event) => events.push(event.type));
+
+        queueManager.enqueue('toggleCompletion', {
+          date: '2026-01-30',
+          habitId: mockHabitId('permanent_failure'),
+          toCompleted: true,
+        });
+
+        const result = await orchestrator.sync();
+
+        expect(result.failed).toBe(1);
+        expect(queueManager.getState().operations).toEqual([]);
+        expect(events).toContain('operation:failed-final');
       });
     });
 

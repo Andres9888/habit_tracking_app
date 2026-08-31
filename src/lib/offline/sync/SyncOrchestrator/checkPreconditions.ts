@@ -2,7 +2,7 @@
  * Sync Preconditions Checker
  */
 
-import { OfflineSyncManager } from '../../syncManager';
+import type { OfflineSyncManager } from '../../syncManager';
 import type {
   SyncOrchestratorResult,
   SyncOrchestratorState,

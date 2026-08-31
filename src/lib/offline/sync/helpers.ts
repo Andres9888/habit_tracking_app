@@ -1,55 +1,10 @@
 /**
  * Sync Orchestrator Helpers
  *
- * Utility functions for converting offline operations to sync items
- * and managing sync state transitions.
+ * Utility functions for selecting operations and managing sync scheduling.
  */
 
 import type { OfflineOperation } from '../queue';
-import type { RetryContext } from '../types';
-import type { SyncItem } from '../syncManager';
-
-/**
- * Create a retry context with a specific attempt count
- *
- * @param attemptCount - Number of previous attempts
- * @returns RetryContext for sync manager
- */
-function createRetryContextWithCount(attemptCount: number): RetryContext {
-  return {
-    attemptCount,
-    exhausted: false,
-  };
-}
-
-/**
- * Convert an OfflineOperation to a SyncItem for the sync manager
- *
- * @param operation - The offline queue operation to convert
- * @returns SyncItem compatible with OfflineSyncManager
- */
-export function operationToSyncItem(
-  operation: OfflineOperation
-): SyncItem<OfflineOperation> {
-  return {
-    id: operation.id,
-    payload: operation,
-    retryContext: createRetryContextWithCount(operation.retryCount),
-    type: operation.type,
-  };
-}
-
-/**
- * Convert multiple operations to sync items
- *
- * @param operations - Array of offline operations
- * @returns Array of sync items
- */
-export function operationsToSyncItems(
-  operations: OfflineOperation[]
-): SyncItem<OfflineOperation>[] {
-  return operations.map((op) => operationToSyncItem(op));
-}
 
 /**
  * Filter pending operations from the queue state

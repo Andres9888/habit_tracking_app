@@ -73,44 +73,17 @@ describe('OfflineSyncManager', () => {
     });
   });
 
-  describe('processBatch', () => {
-    it('processes all items successfully', async () => {
-      const manager = new OfflineSyncManager();
-      const items = [
-        createTestItem('1', {}),
-        createTestItem('2', {}),
-        createTestItem('3', {}),
-      ];
-      const executor = jest.fn().mockResolvedValue(undefined);
-      const result = await manager.processBatch(items, executor);
-      expect(result.successful.length).toBe(3);
-      expect(executor).toHaveBeenCalledTimes(3);
-    });
-
-    it('calls progress callback', async () => {
-      const manager = new OfflineSyncManager();
-      const items = [createTestItem('1', {}), createTestItem('2', {})];
-      const executor = jest.fn().mockResolvedValue(undefined);
-      const onProgress = jest.fn();
-      await manager.processBatch(items, executor, onProgress);
-      expect(onProgress).toHaveBeenCalledTimes(2);
-    });
-  });
-
   describe('event emission', () => {
-    it('emits sync events', async () => {
+    it('emits item success events', async () => {
       const manager = new OfflineSyncManager();
       const listener = jest.fn();
       manager.subscribe(listener);
-      await manager.processBatch(
-        [createTestItem('1', {})],
+      await manager.syncItem(
+        createTestItem('1', {}),
         jest.fn().mockResolvedValue(undefined)
       );
       expect(listener).toHaveBeenCalledWith(
-        expect.objectContaining({ type: 'sync:start' })
-      );
-      expect(listener).toHaveBeenCalledWith(
-        expect.objectContaining({ type: 'sync:complete' })
+        expect.objectContaining({ type: 'sync:item:success' })
       );
     });
 
