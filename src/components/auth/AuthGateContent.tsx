@@ -1,9 +1,10 @@
-import { lazy, Suspense, type ReactNode } from 'react';
+import { lazy, Suspense, type ReactElement, type ReactNode } from 'react';
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 
 import HabitsApp from '../../features/habits/HabitsApp';
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
 import { enterEasing } from '../../theme/animations';
+import type { AuthScreenKey } from './resolveAuthDestination';
 import { BrandedLoadingScreen } from './BrandedLoadingScreen';
 
 const OnboardingFlowV2 = lazy(() =>
@@ -16,8 +17,6 @@ const RevenueCatPaywall = lazy(() =>
     default: module.RevenueCatPaywall,
   }))
 );
-
-export type AuthScreenKey = 'welcome' | 'onboarding' | 'paywall' | 'app';
 
 const ENTER = FadeInDown.duration(280).easing(enterEasing);
 const EXIT = FadeOut.duration(300);
@@ -43,51 +42,54 @@ function ScreenShell({
   );
 }
 
-export function AuthGateContent({
-  markComplete,
-  onPaywallDismiss,
-  screenKey,
-}: {
+interface AuthGateContentProps {
   markComplete: () => void;
   onPaywallDismiss: () => void;
   screenKey: AuthScreenKey;
-}) {
-  let content: ReactNode;
+}
 
+function renderAuthScreen({
+  markComplete,
+  onPaywallDismiss,
+  screenKey,
+}: AuthGateContentProps): ReactElement {
   switch (screenKey) {
     case 'welcome': {
-      content = (
+      return (
         <ScreenShell screenKey='welcome'>
           <WelcomeScreen />
         </ScreenShell>
       );
-      break;
     }
     case 'onboarding': {
-      content = (
+      return (
         <ScreenShell screenKey='onboarding'>
           <OnboardingFlowV2 onComplete={markComplete} />
         </ScreenShell>
       );
-      break;
     }
     case 'paywall': {
-      content = (
+      return (
         <ScreenShell screenKey='paywall'>
           <BrandedLoadingScreen />
           <RevenueCatPaywall visible onClose={onPaywallDismiss} />
         </ScreenShell>
       );
-      break;
     }
-    default: {
-      content = (
+    case 'app': {
+      return (
         <ScreenShell screenKey='app' withExit={false}>
           <HabitsApp />
         </ScreenShell>
       );
     }
   }
+}
 
-  return <Suspense fallback={<BrandedLoadingScreen />}>{content}</Suspense>;
+export function AuthGateContent(props: AuthGateContentProps) {
+  return (
+    <Suspense fallback={<BrandedLoadingScreen />}>
+      {renderAuthScreen(props)}
+    </Suspense>
+  );
 }

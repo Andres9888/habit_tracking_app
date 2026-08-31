@@ -20,7 +20,7 @@ import { useConvexAuthReady } from '../../providers';
 // the whole onboarding tree (incl. the RevenueCat paywall) into the startup
 // chunk and defeat the lazy() split in AuthGateContent.
 import { useOnboardingV2Complete } from '../../screens/onboarding-v2/useOnboardingV2Complete';
-import { getScreenKey, shouldShowLoadingScreen } from './AuthGate.helpers';
+import { resolveAuthDestination } from './resolveAuthDestination';
 import { AuthGateContent } from './AuthGateContent';
 import { BrandedLoadingScreen } from './BrandedLoadingScreen';
 import { useAuthGateUserSync } from './useAuthGateUserSync';
@@ -32,36 +32,31 @@ export function AuthGate() {
   const isCacheHydrated = useQueryCacheHydrated();
   const { complete: onboardingComplete, markComplete } =
     useOnboardingV2Complete(isSignedIn ?? false);
-  const { isReady: isSettingsReady, settings } =
-    useStartupSettings(isSignedIn);
+  const { isReady: isSettingsReady, settings } = useStartupSettings(isSignedIn);
   const [paywallDismissed, setPaywallDismissed] = useState(false);
 
   useAuthGateUserSync(isSignedIn, isConvexReady);
 
-  if (
-    shouldShowLoadingScreen({
-      isCacheHydrated,
-      isLoaded,
-      isSettingsReady,
-      isSignedIn,
-      onboardingComplete,
-    })
-  ) {
+  const destination = resolveAuthDestination({
+    hasEntitlement: settings?.hasPremium === true,
+    isAuthLoaded: isLoaded,
+    isCacheHydrated,
+    isPaywallDismissed: paywallDismissed,
+    isSettingsReady,
+    isSignedIn,
+    onboardingComplete,
+  });
+
+  if (destination === 'loading') {
     return <BrandedLoadingScreen />;
   }
-
-  const screenKey = getScreenKey(
-    isSignedIn ?? false,
-    onboardingComplete ?? false,
-    settings?.hasPremium === true || paywallDismissed
-  );
 
   return (
     <GestureHandlerRootView className='flex-1'>
       <AuthGateContent
         markComplete={markComplete}
         onPaywallDismiss={() => setPaywallDismissed(true)}
-        screenKey={screenKey}
+        screenKey={destination}
       />
     </GestureHandlerRootView>
   );
