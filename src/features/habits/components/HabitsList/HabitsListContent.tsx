@@ -88,10 +88,13 @@ export function HabitsListContent({
     list.habits,
     focusEstimatedRowLength
   );
-  // The anchor intentionally outlives the request. Keep its mount geometry
-  // stable after reveal; dropping getItemLayout during the modal exit makes
-  // a far list re-anchor toward row zero before the ring is visible.
-  const focusRequestPending = focusAnchor != null;
+  // The anchor intentionally outlives the request. Keep only its mount
+  // geometry after reveal; dropping getItemLayout during the modal exit makes
+  // a far list re-anchor toward row zero before the ring is visible. The
+  // smaller render window is temporary and must not retune ordinary scrolling
+  // after the request clears.
+  const focusGeometryRetained = focusAnchor != null;
+  const focusRequestPending = props.modals.pendingFocusHabitId != null;
   const focusPerf = focusRequestPending ? FOCUS_LIST_PERF : undefined;
   const { scrollHandler, contextValue } = useStickyHeader(
     stickyEnabled,
@@ -201,7 +204,7 @@ export function HabitsListContent({
             // reach an already-mounted card.
             extraData={extraData}
             getItemLayout={
-              focusRequestPending ? getFocusedItemLayout : undefined
+              focusGeometryRetained ? getFocusedItemLayout : undefined
             }
             initialScrollIndex={focusAnchor?.index}
             initialNumToRender={6}

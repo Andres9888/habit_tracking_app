@@ -30,6 +30,7 @@ import { useHabitsListState } from './useHabitsListState';
 import { useHabitsListHandlers } from './useHabitsListHandlers';
 import { HabitsListContent } from './HabitsListContent';
 import { useFocusHabitRequest } from './useFocusHabitRequest';
+import { shouldHoldFocusHighlight } from './focusHighlight';
 import { isFocusNeighborhoodLaidOut } from './focusNeighborhood';
 import { ENTRANCE_STAGGER_DELAY } from './constants';
 import type { Habit } from '../../types';
@@ -73,9 +74,11 @@ export function HabitsList(props: HabitsListProps) {
   );
   // A prepared (not yet committed) focus request keeps the target's ring
   // armed while the library still covers the list.
-  const holdJustCreatedHighlight = Boolean(
-    modals.pendingFocusHabitId && !modals.focusRequestAutoClose
-  );
+  const holdJustCreatedHighlight = shouldHoldFocusHighlight({
+    autoClose: modals.focusRequestAutoClose,
+    focusReady: modals.focusReady,
+    pendingFocusHabitId: modals.pendingFocusHabitId,
+  });
   const focusLayoutRef = useRef<{
     focusId: string | null;
     laidOutIds: Set<string>;
