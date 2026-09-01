@@ -15,7 +15,7 @@ import type {
 } from '../types';
 import { DEFAULT_ORCHESTRATOR_CONFIG, getOperationsForSync } from '../helpers';
 import { createSyncResult, createErrorResult } from '../resultHelpers';
-import { executeSyncCycle } from './syncExecution';
+import { executeSyncCycle } from './executeSyncCycle';
 import { checkPreconditions } from './checkPreconditions';
 import { createEmitter } from './lifecycle';
 
@@ -88,9 +88,9 @@ export class SyncOrchestrator {
     const earlyResult = checkPreconditions({
       executor: this.executor,
       minSyncIntervalMs: this.config.minSyncIntervalMs,
-      onCancelled: (r) => this.emit('sync:cancelled', { reason: r }),
-      onError: (res) =>
-        this.emit('sync:error', { error: res.error, result: res }),
+      onCancelled: (reason) => this.emit('sync:cancelled', { reason }),
+      onError: (result) =>
+        this.emit('sync:error', { error: result.error, result }),
       state: this.state,
       syncManager: this.syncManager,
     });
@@ -100,23 +100,45 @@ export class SyncOrchestrator {
       this.config.batchSize
     );
     if (ops.length === 0) return createSyncResult(true, 0, 0, 0, 0);
-    this.emit('sync:started');
+
+    this.beginSync();
+
     try {
       const result = await executeSyncCycle({
+        batchSize: this.config.batchSize,
         executor: this.executor!,
         onProgress,
-        operations: ops,
         queueManager: this.queueManager,
-        state: this.state,
         syncManager: this.syncManager,
       });
-      this.emit('sync:completed', { result });
-      return result;
+      return this.completeSync(result);
     } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
-      this.emit('sync:error', { error: err, result: createErrorResult(err) });
-      return createErrorResult(err);
+      return this.failSync(error);
     }
+  }
+
+  private beginSync(): void {
+    this.state.isSyncing = true;
+    this.state.lastSyncAttemptAt = Date.now();
+    this.emit('sync:started');
+  }
+
+  private completeSync(result: SyncOrchestratorResult): SyncOrchestratorResult {
+    this.state.isSyncing = false;
+    if (result.succeeded > 0) this.state.lastSuccessfulSyncAt = Date.now();
+    this.state.lastResult = result;
+    this.emit('sync:completed', { result });
+    return result;
+  }
+
+  private failSync(error: unknown): SyncOrchestratorResult {
+    const normalizedError =
+      error instanceof Error ? error : new Error(String(error));
+    const result = createErrorResult(normalizedError);
+    this.state.isSyncing = false;
+    this.state.lastResult = result;
+    this.emit('sync:error', { error: normalizedError, result });
+    return result;
   }
 
   getState(): SyncOrchestratorState {

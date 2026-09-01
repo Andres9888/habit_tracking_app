@@ -8,7 +8,8 @@
  */
 
 import { useMemo } from 'react';
-import { calculateOfflineStreak, useOfflineQueue } from '../../../lib/offline';
+import { calculateOfflineStreak } from '../../../lib/offline/calculations';
+import { useOfflineQueue } from '../../../lib/offline/hooks';
 import type {
   UseOfflineHabitStateOptions,
   UseOfflineHabitStateReturn,

@@ -1,4 +1,5 @@
 import type { Id } from '../../../../convex/_generated/dataModel';
+import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
 
 export interface ConvexMutations {
   toggleHabit: (args: {
@@ -8,6 +9,7 @@ export interface ConvexMutations {
     timezone?: string;
   }) => Promise<unknown>;
   createHabit: (args: {
+    clientRequestId?: string;
     name: string;
     icon?: string;
     color?: string;
@@ -17,6 +19,7 @@ export interface ConvexMutations {
     goalDuration?: number;
     notes?: string;
     preferredTime?: string;
+    progressEmojis?: ProgressEmojiSet;
     remindersEnabled?: boolean;
     reminderTime?: string;
     reminderSound?: string;

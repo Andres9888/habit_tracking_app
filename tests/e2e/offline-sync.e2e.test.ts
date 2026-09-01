@@ -14,7 +14,8 @@ import {
   createOfflineQueueManager,
   getOfflineQueueManager,
   resetOfflineQueueManager,
-} from '../../src/lib/offline';
+  type OfflineQueueManagerAPI,
+} from '../../src/lib/offline/queueManager';
 import { SyncOrchestrator } from '../../src/lib/offline/sync/SyncOrchestrator';
 import { OfflineSyncManager } from '../../src/lib/offline/syncManager';
 import {
@@ -37,12 +38,11 @@ import type {
 import { cleanupOrphans } from '../../src/lib/offline/sync/cleanupOrphans';
 import type { HabitExistsResult } from '../../src/lib/offline/sync/cleanupOrphans';
 import type {
-  OfflineQueueManagerAPI,
   OfflineQueueState,
   OfflineOperation,
-  SyncOrchestratorEvent,
-  ClassifiedError,
-} from '../../src/lib/offline';
+} from '../../src/lib/offline/queue';
+import type { SyncOrchestratorEvent } from '../../src/lib/offline/sync/types';
+import type { ClassifiedError } from '../../src/lib/offline/types';
 
 // Mock AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () => ({
@@ -186,8 +186,8 @@ describe('Offline Sync E2E', () => {
 
       it('should process operations in FIFO order (FR-005)', async () => {
         const processedOrder: string[] = [];
-        mockExecutor.mockImplementation(async (payload) => {
-          processedOrder.push(payload.habitId);
+        mockExecutor.mockImplementation(async (operation) => {
+          processedOrder.push(operation.payload.habitId);
         });
 
         // Enqueue in specific order
@@ -357,11 +357,33 @@ describe('Offline Sync E2E', () => {
 
         const result = await orchestrator.sync();
 
-        // First sync processes the operation, and it may be marked for retry (not permanent fail)
-        // The operation is processed, whether it's marked failed or skipped depends on retry exhaustion
         expect(result.processed).toBe(1);
-        // Operations can be marked as failed, skipped, or succeeded depending on retry context
-        expect(result.failed + result.skipped + result.succeeded).toBe(1);
+        expect(result.skipped).toBe(1);
+        expect(queueManager.getState().operations).toEqual([
+          expect.objectContaining({
+            lastError: 'Temporary failure',
+            retryCount: 1,
+            status: 'pending',
+          }),
+        ]);
+      });
+
+      it('removes operations after a non-retryable failure', async () => {
+        mockExecutor.mockRejectedValueOnce(new Error('401 Unauthorized'));
+        const events: string[] = [];
+        queueManager.subscribe((event) => events.push(event.type));
+
+        queueManager.enqueue('toggleCompletion', {
+          date: '2026-01-30',
+          habitId: mockHabitId('permanent_failure'),
+          toCompleted: true,
+        });
+
+        const result = await orchestrator.sync();
+
+        expect(result.failed).toBe(1);
+        expect(queueManager.getState().operations).toEqual([]);
+        expect(events).toContain('operation:failed-final');
       });
     });
 

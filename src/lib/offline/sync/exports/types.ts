@@ -4,7 +4,6 @@
 
 // Main sync types
 export type {
-  BatchResult,
   OfflineOperation,
   SyncEvent,
   SyncExecutorFactory,

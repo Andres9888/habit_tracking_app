@@ -25,5 +25,10 @@ export interface PendingCreatedHabitRecord {
   tempHabit: Habit;
 }
 
+export interface ReconciledHabitCreation {
+  serverHabit: Habit;
+  tempHabit: Habit;
+}
+
 export type PendingCreatedHabitSnapshot = Habit[];
 export type StoreListener = () => void;

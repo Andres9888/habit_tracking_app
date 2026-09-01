@@ -62,6 +62,37 @@ describe('optimisticHabitCreationStore', () => {
     expect(optimisticHabitCreationStore.getSnapshot()).toEqual([]);
   });
 
+  it('reconciles by client request ID even when mutable fields differ', () => {
+    optimisticHabitCreationStore.addWithId(
+      'operation_exact',
+      {
+        color: '#A58B6F',
+        name: 'Original name',
+        remindersEnabled: false,
+        tempId: 'temp_habit_exact',
+      },
+      Date.now()
+    );
+    const serverHabit = {
+      _creationTime: Date.now(),
+      _id: 'habit_server_exact',
+      clientRequestId: 'temp_habit_exact',
+      color: '#000000',
+      createdAt: Date.now(),
+      name: 'Server-normalized name',
+    } as Habit;
+
+    const matches = optimisticHabitCreationStore.reconcile([serverHabit]);
+
+    expect(matches).toEqual([
+      expect.objectContaining({
+        serverHabit,
+        tempHabit: expect.objectContaining({ _id: 'temp_habit_exact' }),
+      }),
+    ]);
+    expect(optimisticHabitCreationStore.getSnapshot()).toEqual([]);
+  });
+
   it('removes a temporary habit after a failed create', () => {
     const operationId = optimisticHabitCreationStore.add({
       color: '#A58B6F',

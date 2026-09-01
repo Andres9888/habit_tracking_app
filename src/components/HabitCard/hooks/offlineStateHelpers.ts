@@ -7,9 +7,9 @@
 
 import type {
   OfflineOperation,
-  PendingToggleOperation,
   ToggleCompletionOperation,
-} from '../../../lib/offline';
+} from '../../../lib/offline/queue';
+import type { PendingToggleOperation } from '../../../lib/offline/calculations';
 
 /**
  * Filter operations for a specific habit

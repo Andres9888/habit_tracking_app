@@ -13,6 +13,7 @@ function projectHabitForList(habit: Doc<'habits'>) {
     _id: habit._id,
     archived: habit.archived,
     bestStreak: habit.bestStreak,
+    clientRequestId: habit.clientRequestId,
     color: habit.color,
     createdAt: habit.createdAt,
     currentStreak: habit.currentStreak,

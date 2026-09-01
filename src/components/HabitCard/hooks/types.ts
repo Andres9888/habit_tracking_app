@@ -6,7 +6,10 @@
  */
 
 import type { Id } from '../../../../convex/_generated/dataModel';
-import type { StreakData, TrackingRecord } from '../../../lib/offline';
+import type {
+  StreakData,
+  TrackingRecord,
+} from '../../../lib/offline/calculations';
 
 /**
  * Options for useOfflineHabitState hook

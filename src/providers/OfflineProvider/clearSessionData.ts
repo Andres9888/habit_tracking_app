@@ -1,4 +1,4 @@
-import { getOfflineQueueManager } from '../../lib/offline';
+import { getOfflineQueueManager } from '../../lib/offline/queueManager';
 import {
   clearLegacyQueueState,
   clearQueueState,

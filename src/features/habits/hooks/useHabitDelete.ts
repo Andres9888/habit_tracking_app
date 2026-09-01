@@ -1,15 +1,14 @@
 import { useCallback, useRef } from 'react';
 import { Alert } from 'react-native';
-import { useMutation } from 'convex/react';
-import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit } from '../types';
 import { triggerHaptic } from '@/utils/haptics';
 import { cancelHabitReminder } from '@/utils/notifications';
 import { logInteraction } from '../../../lib/analytics/interactions';
+import { useOfflineRemoveHabit } from '../../../lib/optimistic';
 
 export function useHabitDelete(habits: Habit[]) {
-  const removeHabit = useMutation(api.habits.remove);
+  const removeHabit = useOfflineRemoveHabit();
 
   // Latest-ref: habits gets a new identity on every toggle; reading it through
   // a ref keeps handleDelete stable so memo'd habit cards don't re-render.
@@ -34,13 +33,17 @@ export function useHabitDelete(habits: Habit[]) {
             onPress: async () => {
               try {
                 await cancelHabitReminder(String(habitId));
-                await removeHabit({ habitId });
+                await removeHabit({ habitId, habitName });
                 triggerHaptic('success');
                 logInteraction('habit_deleted', { habitId, habitName });
               } catch (error_) {
-                if (__DEV__) console.error('[useHabitDelete] Delete failed:', error_);
+                if (__DEV__)
+                  console.error('[useHabitDelete] Delete failed:', error_);
                 triggerHaptic('error');
-                Alert.alert('Error', `Failed to delete "${habitName}". Please try again.`);
+                Alert.alert(
+                  'Error',
+                  `Failed to delete "${habitName}". Please try again.`
+                );
               }
             },
           },

@@ -86,15 +86,13 @@ describe('SyncOrchestrator', () => {
         progress: 0,
         syncedCount: 0,
       }),
-      processBatch: jest.fn().mockResolvedValue({
-        failed: [],
-        skipped: [],
-        successful: [],
-      }),
       resetCircuit: jest.fn(),
       resetStats: jest.fn(),
       subscribe: jest.fn().mockReturnValue(() => {}),
-      syncItem: jest.fn(),
+      syncItem: jest.fn().mockImplementation(async (item) => ({
+        item,
+        success: true,
+      })),
     } as unknown as jest.Mocked<OfflineSyncManager>;
 
     orchestrator = new SyncOrchestrator(mockQueueManager, mockSyncManager, {
@@ -278,17 +276,6 @@ describe('SyncOrchestrator', () => {
       ];
       mockQueueManager.getState.mockReturnValue(createMockQueueState(ops));
 
-      mockSyncManager.processBatch.mockResolvedValue({
-        failed: [],
-        skipped: [],
-        successful: ops.map((op) => ({
-          id: op.id,
-          payload: op.payload,
-          retryContext: { attemptCount: 0, exhausted: false },
-          type: op.type,
-        })),
-      });
-
       await orchestrator.sync();
 
       // Verify operations were marked syncing in order
@@ -297,83 +284,102 @@ describe('SyncOrchestrator', () => {
       expect(mockQueueManager.markSyncing).toHaveBeenCalledWith('op-3');
     });
 
+    it('reports progress after each completed operation', async () => {
+      const ops = [
+        createMockOperation({ createdAt: 100, id: 'op-1' }),
+        createMockOperation({ createdAt: 200, id: 'op-2' }),
+      ];
+      mockQueueManager.getState.mockReturnValue(createMockQueueState(ops));
+      const onProgress = jest.fn();
+
+      await orchestrator.sync(onProgress);
+
+      expect(onProgress.mock.calls).toEqual([
+        [1, 2],
+        [2, 2],
+      ]);
+    });
+
     it('marks successful operations as completed', async () => {
       const op = createMockOperation({ id: 'op-success' });
       mockQueueManager.getState.mockReturnValue(createMockQueueState([op]));
-
-      mockSyncManager.processBatch.mockResolvedValue({
-        failed: [],
-        skipped: [],
-        successful: [
-          {
-            id: op.id,
-            payload: op.payload,
-            retryContext: { attemptCount: 0, exhausted: false },
-            type: op.type,
-          },
-        ],
-      });
 
       await orchestrator.sync();
 
       expect(mockQueueManager.markCompleted).toHaveBeenCalledWith('op-success');
     });
 
-    it('marks failed operations as failed with error info', async () => {
+    it('removes operations after a permanent failure', async () => {
       const op = createMockOperation({ id: 'op-fail' });
       mockQueueManager.getState.mockReturnValue(createMockQueueState([op]));
 
-      mockSyncManager.processBatch.mockResolvedValue({
-        failed: [
-          {
-            id: op.id,
-            payload: op.payload,
-            retryContext: {
-              attemptCount: 6,
-              exhausted: true,
-              lastError: {
-                category: 'server',
-                isRetryable: true,
-                message: 'Server error',
-                original: new Error('Server error'),
-              },
+      mockSyncManager.syncItem.mockImplementation(async (item) => ({
+        error: {
+          category: 'server',
+          isRetryable: false,
+          message: 'Server error',
+          original: new Error('Server error'),
+        },
+        item: {
+          ...item,
+          retryContext: {
+            attemptCount: 1,
+            exhausted: true,
+            lastError: {
+              category: 'server',
+              isRetryable: false,
+              message: 'Server error',
+              original: new Error('Server error'),
             },
-            type: op.type,
           },
-        ],
-        skipped: [],
-        successful: [],
-      });
+        },
+        success: false,
+      }));
 
-      await orchestrator.sync();
+      const result = await orchestrator.sync();
 
       expect(mockQueueManager.markFailed).toHaveBeenCalledWith(
         'op-fail',
         'Server error',
-        'server'
+        'server',
+        { final: true }
       );
+      expect(mockQueueManager.remove).toHaveBeenCalledWith('op-fail');
+      expect(result.failed).toBe(1);
     });
 
-    it('marks skipped operations as pending for retry', async () => {
-      const op = createMockOperation({ id: 'op-skip' });
+    it('persists a transient failure and returns it to pending', async () => {
+      const op = createMockOperation({ id: 'op-retry' });
       mockQueueManager.getState.mockReturnValue(createMockQueueState([op]));
 
-      mockSyncManager.processBatch.mockResolvedValue({
-        failed: [],
-        skipped: [
-          {
-            id: op.id,
-            payload: op.payload,
-            retryContext: { attemptCount: 0, exhausted: false },
-            type: op.type,
+      mockSyncManager.syncItem.mockImplementation(async (item) => ({
+        error: {
+          category: 'network',
+          isRetryable: true,
+          message: 'Network error',
+          original: new Error('Network error'),
+        },
+        item: {
+          ...item,
+          retryContext: {
+            attemptCount: 1,
+            exhausted: false,
           },
-        ],
-        successful: [],
-      });
+        },
+        success: false,
+      }));
 
-      await orchestrator.sync();
+      const result = await orchestrator.sync();
 
-      expect(mockQueueManager.markPending).toHaveBeenCalledWith('op-skip');
+      expect(mockQueueManager.markFailed).toHaveBeenCalledWith(
+        'op-retry',
+        'Network error',
+        'network',
+        { final: false }
+      );
+      expect(mockQueueManager.markPending).toHaveBeenCalledWith('op-retry');
+      expect(result.failed).toBe(0);
+      expect(result.skipped).toBe(1);
     });
 
     it('emits sync:started and sync:completed events', async () => {
@@ -381,19 +387,28 @@ describe('SyncOrchestrator', () => {
         createMockQueueState([createMockOperation()])
       );
 
-      mockSyncManager.processBatch.mockResolvedValue({
-        failed: [],
-        skipped: [],
-        successful: [],
-      });
-
-      const events: SyncOrchestratorEvent[] = [];
-      orchestrator.subscribe((event) => events.push(event));
+      const events: Array<{
+        event: SyncOrchestratorEvent;
+        isSyncing: boolean;
+      }> = [];
+      orchestrator.subscribe((event) =>
+        events.push({ event, isSyncing: orchestrator.getState().isSyncing })
+      );
 
       await orchestrator.sync();
 
-      expect(events.map((e) => e.type)).toContain('sync:started');
-      expect(events.map((e) => e.type)).toContain('sync:completed');
+      expect(events).toContainEqual(
+        expect.objectContaining({
+          event: expect.objectContaining({ type: 'sync:started' }),
+          isSyncing: true,
+        })
+      );
+      expect(events).toContainEqual(
+        expect.objectContaining({
+          event: expect.objectContaining({ type: 'sync:completed' }),
+          isSyncing: false,
+        })
+      );
     });
 
     it('returns correct result counts', async () => {
@@ -404,31 +419,23 @@ describe('SyncOrchestrator', () => {
       ];
       mockQueueManager.getState.mockReturnValue(createMockQueueState(ops));
 
-      mockSyncManager.processBatch.mockResolvedValue({
-        failed: [
-          {
-            id: 'op-3',
-            payload: ops[2].payload,
-            retryContext: { attemptCount: 6, exhausted: true },
-            type: ops[2].type,
-          },
-        ],
-        skipped: [],
-        successful: [
-          {
-            id: 'op-1',
-            payload: ops[0].payload,
-            retryContext: { attemptCount: 0, exhausted: false },
-            type: ops[0].type,
-          },
-          {
-            id: 'op-2',
-            payload: ops[1].payload,
-            retryContext: { attemptCount: 0, exhausted: false },
-            type: ops[1].type,
-          },
-        ],
-      });
+      mockSyncManager.syncItem.mockImplementation(async (item) =>
+        item.id === 'op-3'
+          ? {
+              error: {
+                category: 'server',
+                isRetryable: false,
+                message: 'Permanent failure',
+                original: new Error('Permanent failure'),
+              },
+              item: {
+                ...item,
+                retryContext: { attemptCount: 1, exhausted: true },
+              },
+              success: false,
+            }
+          : { item, success: true }
+      );
 
       const result = await orchestrator.sync();
 
@@ -439,14 +446,13 @@ describe('SyncOrchestrator', () => {
       expect(result.skipped).toBe(0);
     });
 
-    it('handles processBatch errors gracefully', async () => {
+    it('handles queue processor errors gracefully', async () => {
       mockQueueManager.getState.mockReturnValue(
         createMockQueueState([createMockOperation()])
       );
-
-      mockSyncManager.processBatch.mockRejectedValue(
-        new Error('Network failure')
-      );
+      mockQueueManager.markSyncing.mockImplementationOnce(() => {
+        throw new Error('Queue transition failure');
+      });
 
       const listener = jest.fn();
       orchestrator.subscribe(listener);
@@ -454,7 +460,7 @@ describe('SyncOrchestrator', () => {
       const result = await orchestrator.sync();
 
       expect(result.initiated).toBe(false);
-      expect(result.error?.message).toBe('Network failure');
+      expect(result.error?.message).toBe('Queue transition failure');
       expect(listener).toHaveBeenCalledWith(
         expect.objectContaining({ type: 'sync:error' })
       );
@@ -464,12 +470,6 @@ describe('SyncOrchestrator', () => {
       mockQueueManager.getState.mockReturnValue(
         createMockQueueState([createMockOperation()])
       );
-      mockSyncManager.processBatch.mockResolvedValue({
-        failed: [],
-        skipped: [],
-        successful: [],
-      });
-
       await orchestrator.sync();
       const result = await orchestrator.sync(); // Immediate second call
 
@@ -482,12 +482,6 @@ describe('SyncOrchestrator', () => {
       );
       mockQueueManager.getState.mockReturnValue(createMockQueueState(ops));
 
-      mockSyncManager.processBatch.mockResolvedValue({
-        failed: [],
-        skipped: [],
-        successful: [],
-      });
-
       const customOrchestrator = new SyncOrchestrator(
         mockQueueManager,
         mockSyncManager,
@@ -497,15 +491,11 @@ describe('SyncOrchestrator', () => {
 
       await customOrchestrator.sync();
 
-      expect(mockSyncManager.processBatch).toHaveBeenCalledWith(
-        expect.arrayContaining([expect.objectContaining({ id: 'op-0' })]),
-        expect.any(Function),
-        undefined
+      expect(mockSyncManager.syncItem).toHaveBeenCalledTimes(25);
+      expect(mockSyncManager.syncItem).toHaveBeenCalledWith(
+        expect.objectContaining({ id: 'op-0' }),
+        expect.any(Function)
       );
-
-      // Should only process 25 items
-      const processedOps = mockSyncManager.processBatch.mock.calls[0][0];
-      expect(processedOps.length).toBe(25);
 
       customOrchestrator.stop();
     });
@@ -601,11 +591,6 @@ describe('SyncOrchestrator', () => {
       mockQueueManager.getState.mockReturnValue(
         createMockQueueState([createMockOperation()])
       );
-      mockSyncManager.processBatch.mockResolvedValue({
-        failed: [],
-        skipped: [],
-        successful: [],
-      });
       orchestrator.setExecutor(jest.fn().mockResolvedValue(undefined));
 
       await orchestrator.sync();
@@ -616,18 +601,6 @@ describe('SyncOrchestrator', () => {
     it('updates lastSuccessfulSyncAt on successful sync', async () => {
       const op = createMockOperation();
       mockQueueManager.getState.mockReturnValue(createMockQueueState([op]));
-      mockSyncManager.processBatch.mockResolvedValue({
-        failed: [],
-        skipped: [],
-        successful: [
-          {
-            id: op.id,
-            payload: op.payload,
-            retryContext: { attemptCount: 0, exhausted: false },
-            type: op.type,
-          },
-        ],
-      });
       orchestrator.setExecutor(jest.fn().mockResolvedValue(undefined));
 
       await orchestrator.sync();
@@ -639,11 +612,6 @@ describe('SyncOrchestrator', () => {
       mockQueueManager.getState.mockReturnValue(
         createMockQueueState([createMockOperation()])
       );
-      mockSyncManager.processBatch.mockResolvedValue({
-        failed: [],
-        skipped: [],
-        successful: [],
-      });
       orchestrator.setExecutor(jest.fn().mockResolvedValue(undefined));
 
       await orchestrator.sync();

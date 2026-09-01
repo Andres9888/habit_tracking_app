@@ -12,7 +12,7 @@ import { useOfflineContext } from './useOfflineContext';
 import {
   getOfflineQueueManager,
   resetOfflineQueueManager,
-} from '../../lib/offline';
+} from '../../lib/offline/queueManager';
 import * as persistence from '../../lib/offline/persistence';
 import { optimisticStore } from '../../lib/optimistic/store';
 

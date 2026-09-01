@@ -14,13 +14,18 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
 import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
 import { getUserTimezone } from '../../../utils/timezone';
+import {
+  useOfflineArchiveHabit,
+  useOfflinePauseHabit,
+  useOfflineRemoveHabit,
+} from '../../../lib/optimistic';
 
 export interface UseHabitMutationsResult {
   toggleHabit: ReturnType<typeof useMutation<typeof api.habits.toggleHabit>>;
-  archiveHabit: ReturnType<typeof useMutation<typeof api.habits.archive>>;
-  pauseHabit: ReturnType<typeof useMutation<typeof api.habits.pause>>;
+  archiveHabit: ReturnType<typeof useOfflineArchiveHabit>;
+  pauseHabit: ReturnType<typeof useOfflinePauseHabit>;
   resumeHabit: ReturnType<typeof useMutation<typeof api.habits.resume>>;
-  removeHabit: ReturnType<typeof useMutation<typeof api.habits.remove>>;
+  removeHabit: ReturnType<typeof useOfflineRemoveHabit>;
   reorderHabits: ReturnType<
     typeof useMutation<typeof api.habits.reorderHabits>
   >;
@@ -50,20 +55,15 @@ export interface UseHabitMutationsResult {
 export function useHabitMutations(): UseHabitMutationsResult {
   const isOnline = useIsOnline();
   const toggleHabit = useToggleHabitWithTimezone();
-  const archiveHabit = useMutation(api.habits.archive);
-  const rawPauseHabit = useMutation(api.habits.pause);
+  const archiveHabit = useOfflineArchiveHabit();
+  const pauseHabit = useOfflinePauseHabit();
   const rawResumeHabit = useMutation(api.habits.resume);
-  const pauseHabit = useCallback(
-    (args: { habitId: Id<'habits'> }) =>
-      rawPauseHabit({ ...args, timezone: getUserTimezone() }),
-    [rawPauseHabit]
-  ) as typeof rawPauseHabit;
   const resumeHabit = useCallback(
     (args: { habitId: Id<'habits'> }) =>
       rawResumeHabit({ ...args, timezone: getUserTimezone() }),
     [rawResumeHabit]
   ) as typeof rawResumeHabit;
-  const removeHabit = useMutation(api.habits.remove);
+  const removeHabit = useOfflineRemoveHabit();
   const reorderHabits = useMutation(api.habits.reorderHabits);
   const updateSettings = useMutation(api.settings.update);
 

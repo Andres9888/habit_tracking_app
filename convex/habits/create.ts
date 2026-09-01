@@ -8,6 +8,10 @@ import { createHabitArgs } from './types';
 import { findMaxOrderForUser } from './utils';
 import { validateDaysOfWeek, validateHabitFields } from './validation';
 import { enforceRateLimit } from '../lib/rateLimit';
+import {
+  findHabitByClientRequestId,
+  validateClientRequestId,
+} from './clientRequestId';
 
 export const create = mutation({
   args: createHabitArgs,
@@ -25,6 +29,16 @@ export const create = mutation({
     // SEC-003: Input validation
     const validated = validateHabitFields(args);
     validateDaysOfWeek(args.daysOfWeek);
+    const clientRequestId = validateClientRequestId(args.clientRequestId);
+
+    if (clientRequestId) {
+      const existingHabit = await findHabitByClientRequestId(
+        ctx,
+        userId,
+        clientRequestId
+      );
+      if (existingHabit) return existingHabit._id;
+    }
 
     // Single indexed read — no need to load every habit document just to take
     // the maximum order.
@@ -32,6 +46,7 @@ export const create = mutation({
 
     return await ctx.db.insert('habits', {
       bestStreak: 0,
+      clientRequestId,
       createdAt: Date.now(),
       cueAfterBehavior: validated.cueAfterBehavior,
       cueLocation: validated.cueLocation,

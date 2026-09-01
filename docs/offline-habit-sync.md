@@ -294,15 +294,9 @@ As a user who may have completed habits on multiple devices while both were offl
   - Implements FR-006 (exponential backoff retry logic)
   - Created 42 comprehensive tests in `__tests__/retryStrategy.test.ts`
   - Exports via `src/lib/offline/sync/index.ts`
-- [x] T018 [P] [US2] Wire NetworkStatusContext in `src/contexts/NetworkStatusContext/useNetworkSync.ts`
-  - Created `useNetworkSync.ts` and `useNetworkSync.types.ts` as the network-to-sync bridge hook
-  - Bridges NetworkStatusContext with SyncOrchestrator for auto-sync on reconnect (FR-004)
-  - Features: configurable reconnect delay, debounced sync triggering, enabled/disabled toggle
-  - Exposes: `isOnline`, `isSyncing`, `hasPendingOperations`, `pendingCount`, `triggerSync`, `lastSyncResult`
-  - Callback options: `onOnline`, `onOffline`, `onSyncStart`, `onSyncComplete`, `onSyncError`
-  - Fixed missing `NetworkStatusContext` re-export in `NetworkStatusProvider.tsx`
-  - Created 9 comprehensive tests in `__tests__/useNetworkSync.test.tsx`
-  - Exports via `src/contexts/NetworkStatusContext/index.ts`
+- [x] T018 [P] [US2] Wire network state to the sync orchestrator
+  - `SyncStatusProvider` is the single React bridge for reconnect sync, status, callbacks, and manual retry.
+  - The duplicate network bridge and its tests were removed after the provider absorbed that behavior.
 - [x] T019 [US2] FIFO queue processing in `src/lib/offline/sync/processQueue.ts`
   - Created decomposed module: `processQueue/types.ts`, `processQueue/processSingleOperation.ts`, `processQueue/processQueue.ts`, `processQueue/index.ts`
   - `processQueue()`: Processes pending operations in FIFO order (oldest first) with configurable batch size

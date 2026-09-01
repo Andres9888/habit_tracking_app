@@ -1,16 +1,17 @@
 /**
  * Scenarios S07–S10: Habit detail, completion, edit, and streak goal.
  *
- * S07 Detail view — PASS: streak, strength section, and the completion heatmap
+ * S07 Detail view — PASS: today's action, strength snapshot, and record routes
  *   render for the opened habit.
- * S08 Complete from detail — PASS: tapping "Mark as done for today" calls the
+ * S08 Complete from detail — PASS: tapping "Complete today" calls the
  *   habits:toggleHabit mutation.
  * S09 Edit a habit — PASS: tapping "Edit habit" invokes the onEdit handler.
- * S10 Streak goal — PASS: the streak-goal control and its recommended option
- *   ("66d") render.
+ * S10 Streak goal — PASS: Edit → More to customize exposes the recommended
+ *   streak-goal preset.
  */
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import HabitDetailScreen from '../../src/screens/HabitDetailScreen';
+import HabitEditScreen from '../../src/screens/HabitEditScreen';
 import {
   getMutation,
   makeHabit,
@@ -48,16 +49,18 @@ describe('HabitDetailScreen', () => {
     getMutation('habits:toggleHabit');
   });
 
-  it('S07: shows streak, strength and the completion heatmap', async () => {
+  it("S07: shows today's action, strength and record routes", async () => {
     renderDetail();
-    expect(await screen.findByText('5-day streak')).toBeTruthy();
-    expect(screen.getByText('Strength')).toBeTruthy();
-    expect(screen.getByLabelText('Habit completion heatmap')).toBeTruthy();
+    expect(await screen.findByText('Morning Run')).toBeTruthy();
+    expect(screen.getByLabelText('Complete today')).toBeTruthy();
+    expect(screen.getByLabelText(/^Habit strength 62 percent/)).toBeTruthy();
+    expect(screen.getByLabelText('History')).toBeTruthy();
+    expect(screen.getByLabelText('Analytics')).toBeTruthy();
   });
 
   it('S08: marking done for today toggles completion', async () => {
     renderDetail();
-    const done = await screen.findByLabelText('Mark as done for today');
+    const done = await screen.findByLabelText('Complete today');
     fireEvent.press(done);
     await waitFor(() =>
       expect(getMutation('habits:toggleHabit')).toHaveBeenCalled()
@@ -70,9 +73,21 @@ describe('HabitDetailScreen', () => {
     await waitFor(() => expect(onEdit).toHaveBeenCalled());
   });
 
-  it('S10: exposes the streak goal control with a recommended option', async () => {
-    renderDetail();
-    expect(await screen.findByLabelText('Set streak goal')).toBeTruthy();
-    expect(screen.getByLabelText('66d, recommended')).toBeTruthy();
+  it('S10: exposes the recommended streak goal in the edit surface', async () => {
+    const habit = makeHabit({ goalDuration: 0 });
+    renderScreen(
+      <HabitEditScreen
+        habitId={habit._id}
+        initialHabit={habit}
+        visible
+        onClose={() => {}}
+      />
+    );
+    fireEvent.press(
+      await screen.findByLabelText('More to customize, 3 options')
+    );
+    expect(
+      await screen.findByLabelText('7 day streak goal, STARTER')
+    ).toBeTruthy();
   });
 });

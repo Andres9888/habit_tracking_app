@@ -3,8 +3,6 @@
  */
 
 import {
-  operationToSyncItem,
-  operationsToSyncItems,
   filterPendingOperations,
   getOperationsForSync,
   shouldSkipSync,
@@ -27,49 +25,6 @@ describe('Sync Orchestrator Helpers', () => {
     status: 'pending',
     type: 'toggleCompletion',
     ...overrides,
-  });
-
-  describe('operationToSyncItem', () => {
-    it('converts an operation to a sync item', () => {
-      const operation = createOperation({ id: 'test-op-1', retryCount: 2 });
-      const syncItem = operationToSyncItem(operation);
-
-      expect(syncItem.id).toBe('test-op-1');
-      expect(syncItem.type).toBe('toggleCompletion');
-      expect(syncItem.payload).toEqual(operation);
-      expect(syncItem.retryContext.attemptCount).toBe(2);
-    });
-
-    it('creates retry context with correct attempt count', () => {
-      const operation = createOperation({ retryCount: 5 });
-      const syncItem = operationToSyncItem(operation);
-
-      expect(syncItem.retryContext.attemptCount).toBe(5);
-      expect(syncItem.retryContext.exhausted).toBe(false);
-    });
-  });
-
-  describe('operationsToSyncItems', () => {
-    it('converts multiple operations to sync items', () => {
-      const operations = [
-        createOperation({ id: 'op-1' }),
-        createOperation({ id: 'op-2' }),
-        createOperation({ id: 'op-3' }),
-      ];
-
-      const syncItems = operationsToSyncItems(operations);
-
-      expect(syncItems).toHaveLength(3);
-      expect(syncItems.map((item) => item.id)).toEqual([
-        'op-1',
-        'op-2',
-        'op-3',
-      ]);
-    });
-
-    it('handles empty array', () => {
-      expect(operationsToSyncItems([])).toEqual([]);
-    });
   });
 
   describe('filterPendingOperations', () => {

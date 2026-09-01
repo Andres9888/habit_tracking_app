@@ -36,6 +36,10 @@ export {
   useOptimisticUnarchiveMutation,
   useOptimisticReorderMutation,
   useOptimisticPauseMutation,
+  useOfflineMutation,
+  useOfflineArchiveHabit,
+  useOfflinePauseHabit,
+  useOfflineRemoveHabit,
 } from './hooks';
 
 export type {
@@ -55,3 +59,8 @@ export type {
 
 // T010: Offline queue integration types
 export type { OptimisticToggleOptions, ToggleMutationResult } from './hooks';
+export type {
+  OfflineMutationOptions,
+  OfflineMutationPayload,
+  OfflineMutationResult,
+} from './hooks';

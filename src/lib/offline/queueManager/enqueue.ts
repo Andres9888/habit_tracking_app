@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 /**
  * Queue Enqueue Operation
  */
@@ -32,7 +31,7 @@ export function createEnqueue(
     options: QueueOperationOptions = {}
   ): QueueOperationResult {
     const state = getState();
-    const { allowDuplicate = false } = options;
+    const { allowDuplicate = false, operationId } = options;
 
     // Toggle-completion operations dedupe on (habitId, date) so a rapid
     // toggle/untoggle collapses to the latest intent. Other operation types
@@ -72,7 +71,8 @@ export function createEnqueue(
       setState,
       notify,
       emit,
-      getState
+      getState,
+      operationId
     );
   };
 }

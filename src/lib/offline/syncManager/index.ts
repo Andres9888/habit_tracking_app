@@ -10,5 +10,4 @@ export type {
   SyncItemExecutor,
   SyncEventListener,
   SyncResult,
-  BatchResult,
 } from './types';

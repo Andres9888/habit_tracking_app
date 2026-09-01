@@ -6,13 +6,13 @@ import {
   calculateDelay,
   createRetryContext,
   updateRetryContext,
-  shouldRetryContext,
+  shouldRetry as shouldRetryContext,
   getTimeUntilRetry,
   executeWithRetry,
   selectStrategy,
   DEFAULT_RETRY_STRATEGY,
-} from '~/lib/offline';
-import type { ClassifiedError } from '~/lib/offline';
+} from '~/lib/offline/retryStrategy';
+import type { ClassifiedError } from '~/lib/offline/types';
 
 describe('retryStrategy', () => {
   const createTestError = (
@@ -29,7 +29,9 @@ describe('retryStrategy', () => {
 
   describe('calculateDelay', () => {
     it('calculates exponential backoff', () => {
-      const strategy = Object.assign({}, DEFAULT_RETRY_STRATEGY, { jitterFactor: 0 });
+      const strategy = Object.assign({}, DEFAULT_RETRY_STRATEGY, {
+        jitterFactor: 0,
+      });
       expect(calculateDelay(0, strategy)).toBe(1000);
       expect(calculateDelay(1, strategy)).toBe(2000);
       expect(calculateDelay(2, strategy)).toBe(4000);
@@ -45,7 +47,9 @@ describe('retryStrategy', () => {
     });
 
     it('uses error suggested delay for first retry', () => {
-      const strategy = Object.assign({}, DEFAULT_RETRY_STRATEGY, { jitterFactor: 0 });
+      const strategy = Object.assign({}, DEFAULT_RETRY_STRATEGY, {
+        jitterFactor: 0,
+      });
       expect(calculateDelay(0, strategy, 30000)).toBe(30000);
     });
   });

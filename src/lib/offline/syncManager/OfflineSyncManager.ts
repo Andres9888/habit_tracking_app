@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 /**
  * Offline Sync Manager
  */
@@ -12,10 +11,8 @@ import type {
   SyncItemExecutor,
   SyncEventListener,
   SyncResult,
-  BatchResult,
 } from './types';
 import { processItem } from './processItem';
-import { processBatch as processBatchFn } from './processBatch';
 import { emitSyncEvent } from './emitSyncEvent';
 import { createSyncCircuit } from './createSyncCircuit';
 
@@ -63,34 +60,20 @@ export class OfflineSyncManager {
     item: SyncItem<T>,
     executor: SyncItemExecutor<T>
   ): Promise<SyncResult<T>> {
-    return processItem(
-      item,
-      executor,
-      this.circuitBreaker,
-      this.retryStrategy,
-      this.emit.bind(this),
-      this.stats
-    );
-  }
-
-  async processBatch<T>(
-    items: SyncItem<T>[],
-    executor: SyncItemExecutor<T>,
-    onProgress?: (p: number, t: number) => void
-  ): Promise<BatchResult<T>> {
     this.isSyncing = true;
-    const result = await processBatchFn(
-      items,
-      executor,
-      this.circuitBreaker,
-      this.retryStrategy,
-      this.emit.bind(this),
-      this.stats,
-      onProgress
-    );
-    this.isSyncing = false;
-    this.lastSyncAt = Date.now();
-    return result;
+    try {
+      return await processItem(
+        item,
+        executor,
+        this.circuitBreaker,
+        this.retryStrategy,
+        this.emit.bind(this),
+        this.stats
+      );
+    } finally {
+      this.isSyncing = false;
+      this.lastSyncAt = Date.now();
+    }
   }
 
   getNextRetryDelay(ctx: {

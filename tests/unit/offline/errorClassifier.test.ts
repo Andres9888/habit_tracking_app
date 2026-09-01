@@ -7,7 +7,7 @@ import {
   getDisplayMessage,
   isNetworkError,
   shouldRetry,
-} from '~/lib/offline';
+} from '~/lib/offline/errorClassifier';
 
 describe('errorClassifier', () => {
   describe('classifyError', () => {

@@ -12,6 +12,7 @@ export { listHabitValidator } from './listHabitValidator';
 
 /** Create habit args validator */
 export const createHabitArgs = {
+  clientRequestId: v.optional(v.string()),
   cueAfterBehavior: v.optional(v.string()),
   cueLocation: v.optional(v.string()),
   cueTime: v.optional(v.string()),

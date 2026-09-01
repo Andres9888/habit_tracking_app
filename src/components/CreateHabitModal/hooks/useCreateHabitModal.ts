@@ -5,11 +5,9 @@ import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { checkReminderPermissions } from './useHabitReminders';
 import { useCreateHabitHandlers } from './useCreateHabitHandlers';
 import { showCreateError } from '../../../utils/errorAlerts';
-import {
-  useHabitData,
-  useModalCleanup,
-} from './useCreateHabitModalEffects';
+import { useHabitData, useModalCleanup } from './useCreateHabitModalEffects';
 import { EXIT_DURATIONS } from '../../Modal/Modal.constants';
+import { createOptimisticHabitId } from '../../../features/habits/hooks/optimisticHabitCreationStore';
 
 export const useCreateHabitModal = (props: CreateHabitModalProps) => {
   const { visible, onClose, habitToEdit } = props;
@@ -54,12 +52,15 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
         await handleEdit({ ...data, habitToEdit });
         cleanup();
       } else {
+        const clientRequestId = createOptimisticHabitId();
         cleanup();
         setTimeout(form.resetForm, EXIT_DURATIONS.fullScreen);
         // On failure the optimistic habit rolls back, so tell the user why
         // and offer a retry instead of letting it vanish silently.
         const runCreate = () => {
-          void createNewHabit(data).catch(() => showCreateError(runCreate));
+          void createNewHabit({ ...data, clientRequestId }).catch(() =>
+            showCreateError(runCreate)
+          );
         };
         runCreate();
       }

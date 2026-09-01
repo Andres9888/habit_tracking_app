@@ -1,3 +1,5 @@
+/* eslint-disable max-lines -- Central queue payload and operation type registry. */
+
 /**
  * Offline Queue Types
  *
@@ -6,6 +8,7 @@
  */
 
 import type { Id } from '../../../../convex/_generated/dataModel';
+import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
 import type { ErrorCategory } from '../types';
 
 /**
@@ -58,6 +61,8 @@ export interface CreateHabitPayload {
   notes?: string;
   /** Optional preferred time */
   preferredTime?: string;
+  /** Growth emoji set captured from the current user default. */
+  progressEmojis?: ProgressEmojiSet;
   /** Optional frequency/cadence */
   frequency?: string;
   /** Optional weekly day selection */
@@ -120,6 +125,8 @@ export interface PauseHabitPayload {
 export interface RemoveHabitPayload {
   /** ID of the habit being removed */
   habitId: Id<'habits'>;
+  /** Display name captured at enqueue time. */
+  habitName?: string;
 }
 
 /**
