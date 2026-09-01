@@ -123,6 +123,24 @@ export const colors = {
     700: '#047857', // High-contrast text on colored surfaces
   },
 
+  /**
+   * Recovery & Comeback — warm amber (accent, ≤10% visible area)
+   *
+   * Distinct from `streak.*` gold by intent: gold marks momentum *earned*,
+   * amber marks a habit being *rebuilt* after a miss. Originated as the Habit
+   * Detail screen's local `insightPalette` amber and was promoted here so
+   * recovery states read the same everywhere.
+   */
+  recovery: {
+    100: '#FBF0E3', // Recovery surface tint — card fills behind recovery copy
+    200: '#F0DFC8', // Recovery borders and hairlines
+    300: '#F5A25B', // Light amber — dial arcs, decorative strokes
+    400: '#E5A76B', // Dark-mode ink — WCAG AA on dark surfaces
+    500: '#E5893B', // Primary recovery accent — bars, fills, indicators (2.34:1 on recovery.100 — never text)
+    600: '#B0723A', // Recovery ink — 3.51:1 on recovery.100, large text (≥18.66px) or non-text only
+    700: '#8A5526', // High-contrast recovery text — WCAG AA 5.48:1 on recovery.100
+  },
+
   // Secondary Colors (Trust & Calm)
   secondary: {
     100: '#dbeafe',

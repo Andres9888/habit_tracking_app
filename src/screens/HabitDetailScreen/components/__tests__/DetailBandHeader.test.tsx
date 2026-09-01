@@ -15,7 +15,12 @@ jest.mock('../../../../theme/ThemeContext', () => ({
       card: '#EDEAE5',
       gray: { 900: '#1A1816' },
       primary: { 500: '#10b981', 600: '#059669', 700: '#047857' },
-      status: { streak: '#D97706' },
+      status: {
+        recovery: '#E5893B',
+        recoveryLight: '#FBF0E3',
+        recoveryText: '#8A5526',
+        streak: '#D97706',
+      },
       text: {
         inverse: '#fff',
         primary: '#2D2A26',
