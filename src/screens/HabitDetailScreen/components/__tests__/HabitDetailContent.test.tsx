@@ -357,14 +357,17 @@ describe('HabitDetailContent', () => {
     expect(onRecoveryChange).toHaveBeenLastCalledWith(false);
   });
 
-  it('captions the streak rail from the log, not the stored habit field', () => {
-    // The habit doc still claims a 9-day streak; the log says the run ended.
+  it('keeps streak totals off the This week card', () => {
+    completeYesterday();
     const { getByText, queryByText } = renderContent();
 
-    expect(
-      getByText('Your best run is 12 days — today starts the next one')
-    ).toBeTruthy();
-    expect(queryByText('3 days from your best streak ever')).toBeNull();
+    expect(getByText('This week')).toBeTruthy();
+    expect(getByText('1 day logged')).toBeTruthy();
+    expect(queryByText('Current')).toBeNull();
+    expect(queryByText('Longest')).toBeNull();
+    expect(queryByText('Days done')).toBeNull();
+    expect(queryByText(/today starts the next one/)).toBeNull();
+    expect(queryByText(/from your best streak/)).toBeNull();
   });
 
   it('keeps the recovery state away once today is logged', () => {

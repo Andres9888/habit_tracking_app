@@ -37,7 +37,6 @@ interface HabitDetailSectionsProps {
 
 export function HabitDetailSections({
   completedDates,
-  currentStreak,
   habit,
   insights,
   isCompletedToday,
@@ -54,10 +53,7 @@ export function HabitDetailSections({
     <View style={{ gap: spacing.md, padding: 20, paddingBottom: 40 }}>
       {isRecovery ? null : <StrengthSnapshot habit={habit} />}
       <ThisWeekCard
-        bestStreak={habit.bestStreak ?? 0}
         completedDates={completedDates}
-        currentStreak={currentStreak}
-        daysLogged={insights.yearCompletions}
         dayContext={{
           createdAt: habit.createdAt,
           daysOfWeek: habit.daysOfWeek,
