@@ -90,9 +90,11 @@ describe('HabitAnalyticsScreen', () => {
   });
 
   it('opens on the verdict and carries the streak rail', () => {
+    // Yesterday and today logged, so the rail's Current is a live run.
+    mockInsights = { ...baseInsights, doneDates: new Set(august(14, 2)) };
     const { getByLabelText, getByText } = render(
       <HabitAnalyticsScreen
-        habit={{ ...habit, bestStreak: 5, currentStreak: 2 } as Habit}
+        habit={{ ...habit, bestStreak: 5 } as Habit}
         onOpenHistory={jest.fn()}
         onOpenInsight={jest.fn()}
       />
@@ -100,6 +102,21 @@ describe('HabitAnalyticsScreen', () => {
     expect(getByText('Where you stand')).toBeTruthy();
     expect(getByLabelText('Current streak: 2')).toBeTruthy();
     expect(getByLabelText('Longest: 5')).toBeTruthy();
+  });
+
+  it('takes Current from the log, not the stored streak field', () => {
+    // `habit.currentStreak` is not recomputed on a miss: with nothing logged,
+    // the rail must say 0 rather than repeat the run that already ended.
+    mockInsights = { ...baseInsights, doneDates: new Set<string>() };
+    const { getByLabelText } = render(
+      <HabitAnalyticsScreen
+        habit={{ ...habit, bestStreak: 9, currentStreak: 9 } as Habit}
+        onOpenHistory={jest.fn()}
+        onOpenInsight={jest.fn()}
+      />
+    );
+    expect(getByLabelText('Current streak: 0')).toBeTruthy();
+    expect(getByLabelText('Longest: 9')).toBeTruthy();
   });
 
   it('sends the streak-trend row to History, where the runs live', () => {

@@ -8,13 +8,16 @@
  * screen read as a bug, and only one of them could ever be corrected.
  *
  * Everything here is derived from year-to-date check-ins, which is the window
- * the habit is actually queried over. The one exception is the rail's Current
- * and Longest, which the backend maintains across all time — so the runs card
- * is told the all-time best and only stars a run that matches it, instead of
- * crowning a year-to-date run the rail already contradicts.
+ * the habit is actually queried over. The one exception is the rail's Longest,
+ * which the backend maintains across all time — so the runs card is told the
+ * all-time best and only stars a run that matches it, instead of crowning a
+ * year-to-date run the rail already contradicts. Current is NOT taken from the
+ * habit document: `habit.currentStreak` is a stored field that nothing
+ * recomputes on a miss, so it went on quoting a run these very bars show as
+ * over. It comes from the same runs instead.
  */
 import type { Habit } from '../../../../features/habits/types';
-import { useStreakRuns } from '../../insights';
+import { streakStats, useStreakRuns } from '../../insights';
 import type { InsightPalette } from '../../insightPalette';
 import { HistoryStatsCard } from './HistoryStatsCard';
 import { StreakRunsCard } from './StreakRunsCard';
@@ -52,7 +55,7 @@ export function HistoryFrame({
     <>
       <HistoryStatsCard
         bestStreak={habit.bestStreak ?? 0}
-        currentStreak={habit.currentStreak ?? 0}
+        currentStreak={streakStats(runs).current}
         palette={palette}
         yearCompletions={yearCompletions}
         yearRatePct={yearRatePct}

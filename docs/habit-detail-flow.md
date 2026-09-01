@@ -63,7 +63,7 @@ The page shape stays the same. Only the card above the button and the action slo
 | **Completed** | Today is logged                                       | Why line                                                                                                                                                      | Same live toggle: filled check, **Logged today**, hint word **Undo**. Re-tapping unlogs today.        |
 | **Recovery**  | The last scheduled day was not logged                 | Amber recovery card (replaces why): headline “{Day} got away. {N} days didn’t.” — or “{Day} got away. Today doesn’t have to.” when no run was actually broken | Same live toggle as Ready. The fixed-height slot below shows the recovery hint until today is logged. |
 
-Recovery **replaces** the why card. It does not stack under it. Amber exists only here, so the color itself means “start again,” not “you failed.” The amber wash covers the hero **and** the fixed header — the header is a separate node from the hero gradient, so it takes the same first stop or the top of the page shows a mint-over-amber seam. While recovery is on screen the strength snapshot is hidden: being scored is the wrong response to a bad day. The **Analytics door stays**. An earlier revision hid it too, following the prototype, but recovery is the ordinary state for anyone who did not log the last scheduled day, and the record doors are the only route to Analytics anywhere in the app — so the page effectively disappeared. A door is not a grade.
+Recovery **replaces** the why card. It does not stack under it. Amber exists only here, so the color itself means “start again,” not “you failed.” The amber wash covers the hero **and** the fixed header — the header is a separate node from the hero gradient, so it takes the same first stop or the top of the page shows a mint-over-amber seam. While recovery is on screen the strength snapshot stays, with the caption “Dipped, not reset. Recent days still count most.” Strength is the one number built to survive a miss; hiding it hid the reassurance. The **Analytics door stays**. An earlier revision hid it too, following the prototype, but recovery is the ordinary state for anyone who did not log the last scheduled day, and the record doors are the only route to Analytics anywhere in the app — so the page effectively disappeared. A door is not a grade.
 
 The action area is a **fixed-height slot** in all three states so History and Analytics never jump when today completes. Under the toggle, that fixed-height secondary slot holds only the note row, the recovery hint, the unavailable text, or the caption “Tap to log today. You can undo anytime.”
 
@@ -71,7 +71,7 @@ The action area is a **fixed-height slot** in all three states so History and An
 
 ## Habit Detail — section by section
 
-Scroll order, top to bottom.
+Scroll order, top to bottom: Header, Habit name + schedule, Why card / Recovery card, Complete today, This week, Strength snapshot, Streak goal (`components/DetailGoalCard/`), The record, Insight.
 
 ### Header
 
@@ -85,14 +85,6 @@ Scroll order, top to bottom.
 
 **Why:** You should recognize the habit before you see any number. Schedule is context, not a chart.
 
-### Strength snapshot
-
-**What:** Compact row card with a 44px ring, the number inside the ring, a band label, and the caption “Momentum from every check-in, weighted toward recent days. A miss dips it — it never resets.” Hidden in recovery. Being scored is the wrong response to a bad day; the guilt is the churn risk, not the missing chart.
-
-**Why:** One honest snapshot of how established the habit feels. No `%`, no leaderboard, no comparison to other people. Strength is not a grade and not a streak.
-
-**Must not:** Become a second dashboard (progress bar + ladder + the same number restated). Full strength explanation, if any, belongs elsewhere — not as a wall of stats on Detail.
-
 ### Why card
 
 **What:** One sentence. Priority: **why → identity → wish**. Hidden if all three are empty. Never a placeholder essay.
@@ -103,7 +95,7 @@ Scroll order, top to bottom.
 
 ### Recovery card
 
-**What:** Headline “{Day} got away. {N} days didn’t.” where N is the run the miss actually ended, spelled out (“Eight days didn’t.”); with no broken run it reads “{Day} got away. Today doesn’t have to.” Body: “Strength dipped, not to zero, and your {best}-day record still stands. The only rule that matters today: **never miss twice.**” Then today’s two-minute version in the slot below.
+**What:** Headline “{Day} got away. {N} days didn’t.” where N is the run the miss actually ended, spelled out (“Eight days didn’t.”); with no broken run it reads “{Day} got away. Today doesn’t have to.” Body: one sentence, “Your {best}-day record still stands.” (or “That {N}-day run is still your record.” when the broken run was the record, or “Today starts the next one.” with no record). No rule, no strength delta: the dial is on the page and the two-minute version is in the slot below.
 
 N comes from the completion log — the same runs the History rail draws — never from `habit.currentStreak`, which is a stored field nothing recomputes on a miss.
 
@@ -127,7 +119,7 @@ When today changes from not logged to logged, show a green success toast for 400
 
 **What:** Seven pips, date range, `N days logged`. Today has a distinct pip (white ring, green center). Future and pre-creation days are inert. Scheduled misses, unscheduled days, and known pause windows use the same record states as History and Day.
 
-**Why:** A small, trustworthy snapshot of _this_ week — enough to feel the week without opening History. A count from the record, not an “N of M” quota. Streak totals and year grids do not belong here.
+**Why:** A small, trustworthy snapshot of _this_ week — enough to feel the week without opening History. A count from the record, not an “N of M” quota. Streak totals and year grids do not belong here. The rail (Current / Longest / Days done) that shipped here for a while is gone; those numbers live on the Goal ladder and on Analytics.
 
 **Taps:**
 
@@ -135,14 +127,24 @@ When today changes from not logged to logged, show a green success toast for 400
 - **Past** → Day / Entry (inspect or correct)
 - **Future** → ignore
 
+### Strength snapshot
+
+**What:** Compact row card with a 44px ring, the number inside the ring, a band label, and the caption “Momentum from every check-in, weighted toward recent days. A miss dips it — it never resets.” Visible in recovery with the caption “Dipped, not reset. Recent days still count most.”
+
+**Why:** One honest snapshot of how established the habit feels. No `%`, no leaderboard, no comparison to other people. Strength is not a grade and not a streak.
+
+**Must not:** Become a second dashboard (progress bar + ladder + the same number restated). Full strength explanation, if any, belongs elsewhere — not as a wall of stats on Detail.
+
 ### The record
 
 **What:** Two rows that never move.
 
-- Full history — “Runs, calendar and the year grid”
-- Analytics — “Trend, patterns and what’s working”
+- **Calendar & notes** — “View or correct past days” (→ History)
+- **Patterns & trends** — “See what helps you stay consistent” (→ Analytics)
 
-In recovery, hide the Analytics row for the same reason the strength snapshot drops out: being scored is the wrong response to a bad day. That is different from completion. Hard rule 8 still stands: when today completes, the History / Analytics rows do not move.
+Internally the screens stay History and Analytics; the visible labels use the user’s words.
+
+In recovery both rows stay, and so does the strength snapshot: a door is not a grade, and strength is the one number built to survive a miss. Hard rule 8 still stands: when today completes, the History / Analytics rows do not move.
 
 **Why:** Detail is not the archive and not the lab. These are doors, not previews of those screens. Putting a year heatmap or a chart here would turn Detail back into a dashboard.
 

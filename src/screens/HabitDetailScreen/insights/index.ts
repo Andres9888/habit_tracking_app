@@ -17,7 +17,6 @@ export { brokenRunLength } from './brokenRunLength';
 export type { BrokenRunOptions } from './brokenRunLength';
 export { effectiveDayDiff, type PauseWindow } from './effectiveDayDiff';
 export {
-  NEVER_MISS_TWICE,
   recoveryBodyCopy,
   recoveryHeadlineCopy,
   spellCount,

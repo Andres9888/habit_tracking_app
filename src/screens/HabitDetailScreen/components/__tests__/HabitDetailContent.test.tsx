@@ -8,6 +8,7 @@ import { ScrollView } from 'react-native';
 import type { Habit } from '../../../../features/habits/types';
 import { HabitDetailContent } from '../HabitDetailContent';
 import { formatDayShort } from '../DayDetailScreen/dayCopy';
+import { RECOVERY_STRENGTH_CAPTION } from '../StrengthSnapshot';
 
 const trackingRows: {
   completed: boolean;
@@ -125,10 +126,12 @@ describe('HabitDetailContent', () => {
     expect(getByText('This week')).toBeTruthy();
     expect(getByText('1 day logged')).toBeTruthy();
     expect(getByText('The record')).toBeTruthy();
-    expect(getByText('Full history')).toBeTruthy();
-    expect(getByText('Runs, calendar and the year grid')).toBeTruthy();
-    expect(getByText('Analytics')).toBeTruthy();
-    expect(getByText('Trend, patterns and what’s working')).toBeTruthy();
+    expect(getByText('Calendar & notes')).toBeTruthy();
+    expect(getByText('View or correct past days')).toBeTruthy();
+    expect(getByText('Patterns & trends')).toBeTruthy();
+    expect(getByText('See what helps you stay consistent')).toBeTruthy();
+    expect(queryByText('Full history')).toBeNull();
+    expect(queryByText('Analytics')).toBeNull();
     expect(queryByText('Going away?')).toBeNull();
     expect(queryByText('Pause without losing your streak')).toBeNull();
   });
@@ -157,8 +160,8 @@ describe('HabitDetailContent', () => {
       {},
       { onOpenAnalytics, onOpenHistory }
     );
-    fireEvent.press(getByLabelText('Full history'));
-    fireEvent.press(getByLabelText('Analytics'));
+    fireEvent.press(getByLabelText('Calendar & notes'));
+    fireEvent.press(getByLabelText('Patterns & trends'));
     expect(onOpenHistory).toHaveBeenCalledTimes(1);
     expect(onOpenAnalytics).toHaveBeenCalledTimes(1);
   });
@@ -215,8 +218,10 @@ describe('HabitDetailContent', () => {
     expect(
       text.indexOf('Have energy for the kids before the day takes over.')
     ).toBeLessThan(text.indexOf('Complete today'));
-    expect(text.indexOf('Complete today')).toBeLessThan(text.indexOf('Strong'));
-    expect(text.indexOf('Strong')).toBeLessThan(text.indexOf('This week'));
+    expect(text.indexOf('Complete today')).toBeLessThan(
+      text.indexOf('This week')
+    );
+    expect(text.indexOf('This week')).toBeLessThan(text.indexOf('Strong'));
   });
 
   it('quotes the user’s why when yesterday was kept', () => {
@@ -234,7 +239,7 @@ describe('HabitDetailContent', () => {
     ).toBeTruthy();
     expect(
       getByLabelText(
-        'Yesterday got away. Today doesn’t have to. Strength dipped, not to zero, and your 12-day record still stands. The only rule that matters today: never miss twice.'
+        'Yesterday got away. Today doesn’t have to. Your 12-day record still stands.'
       )
     ).toBeTruthy();
     expect(getByText('Two-minute version')).toBeTruthy();
@@ -246,10 +251,10 @@ describe('HabitDetailContent', () => {
     expect(queryByText(/Showing up is the streak/)).toBeNull();
     expect(getByLabelText(weekLabel(-1, 'missed'))).toBeTruthy();
     expect(queryByText(/Have energy for the kids/)).toBeNull();
-    // Strength is suppressed after a miss; the Analytics DOOR is not. Recovery
-    // is the ordinary state for anyone who did not log the last scheduled day,
-    // and these rows are the only route to Analytics in the app.
-    expect(getByText('Analytics')).toBeTruthy();
+    // Neither Strength nor the Analytics door is suppressed after a miss.
+    // Recovery is the ordinary state for anyone who did not log the last
+    // scheduled day, and these rows are the only route to Analytics in the app.
+    expect(getByText('Patterns & trends')).toBeTruthy();
     expect(
       queryByText(
         'Habit strength · a single snapshot. Trends live in Analytics.'
@@ -260,14 +265,23 @@ describe('HabitDetailContent', () => {
     expect(
       text.indexOf('Yesterday got away. Today doesn’t have to.')
     ).toBeLessThan(text.indexOf('Complete today'));
-    expect(queryByText('Strong')).toBeNull();
+    // Strength is the one number built to survive a miss (proportional decay,
+    // never to zero). Hiding it in recovery hid the reassurance and left the
+    // ladder's empty run as the only score. Keep it, with a recovery caption.
+    expect(getByText('Strong')).toBeTruthy();
+    expect(getByText(RECOVERY_STRENGTH_CAPTION)).toBeTruthy();
+    expect(
+      queryByText(
+        'Momentum from every check-in, weighted toward recent days. A miss dips it — it never resets.'
+      )
+    ).toBeNull();
   });
 
   it('keeps both record doors reachable during recovery', () => {
     const onOpenAnalytics = jest.fn();
     const { getByLabelText } = renderContent({}, { onOpenAnalytics });
 
-    fireEvent.press(getByLabelText('Analytics'));
+    fireEvent.press(getByLabelText('Patterns & trends'));
 
     expect(onOpenAnalytics).toHaveBeenCalledTimes(1);
   });
@@ -357,14 +371,17 @@ describe('HabitDetailContent', () => {
     expect(onRecoveryChange).toHaveBeenLastCalledWith(false);
   });
 
-  it('captions the streak rail from the log, not the stored habit field', () => {
-    // The habit doc still claims a 9-day streak; the log says the run ended.
+  it('keeps streak totals off the This week card', () => {
+    completeYesterday();
     const { getByText, queryByText } = renderContent();
 
-    expect(
-      getByText('Your best run is 12 days — today starts the next one')
-    ).toBeTruthy();
-    expect(queryByText('3 days from your best streak ever')).toBeNull();
+    expect(getByText('This week')).toBeTruthy();
+    expect(getByText('1 day logged')).toBeTruthy();
+    expect(queryByText('Current')).toBeNull();
+    expect(queryByText('Longest')).toBeNull();
+    expect(queryByText('Days done')).toBeNull();
+    expect(queryByText(/today starts the next one/)).toBeNull();
+    expect(queryByText(/from your best streak/)).toBeNull();
   });
 
   it('keeps the recovery state away once today is logged', () => {
@@ -424,5 +441,20 @@ describe('HabitDetailContent', () => {
     });
     expect(getByText('Morning routine · Daily')).toBeTruthy();
     expect(queryByText('Daily habit')).toBeNull();
+  });
+
+  it('draws the goal ladder from the log, not the stored streak field', () => {
+    // habit.currentStreak still claims 9; the log has no open run.
+    const { getByText, queryByText } = renderContent({ goalDuration: 30 });
+
+    expect(getByText('30 days — day 1 starts today.')).toBeTruthy();
+    expect(queryByText("30 days — you're 9 in.")).toBeNull();
+  });
+
+  it('counts the open run on the goal ladder once yesterday is logged', () => {
+    completeYesterday();
+    const { getByText } = renderContent({ goalDuration: 30 });
+
+    expect(getByText("30 days — you're 1 in.")).toBeTruthy();
   });
 });

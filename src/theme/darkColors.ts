@@ -98,6 +98,9 @@ export const darkColors = {
     premium: '#A78BFA',
     premiumLight: 'rgba(139,92,246,0.15)',
     premiumText: '#C4B5FD',
+    recovery: '#E5A76B',
+    recoveryLight: 'rgba(229,137,59,0.14)',
+    recoveryText: '#F0C79B',
     streak: '#FBBF24',
     streakLight: 'rgba(245,158,11,0.15)',
     streakText: '#FDE68A',
@@ -205,6 +208,9 @@ export const lightColors = {
     premium: '#7C3AED',
     premiumLight: '#EDE9FE',
     premiumText: '#6D28D9',
+    recovery: '#E5893B',
+    recoveryLight: '#FBF0E3',
+    recoveryText: '#8A5526',
     streak: '#D97706',
     streakLight: '#FEF3C7',
     streakText: '#92400E',
@@ -315,6 +321,12 @@ export interface SemanticColors {
     premium: string;
     premiumLight: string;
     premiumText: string;
+    /** Recovery accent — a habit being rebuilt after a miss. Fills/bars only, never text. */
+    recovery: string;
+    /** Recovery surface tint — card fills behind recovery copy */
+    recoveryLight: string;
+    /** Recovery ink — WCAG AA against `recoveryLight` */
+    recoveryText: string;
     streak: string;
     streakLight: string;
     streakText: string;

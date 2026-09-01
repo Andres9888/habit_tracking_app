@@ -12,12 +12,13 @@ jest.mock('../../../../../utils/getLocalDateString', () => ({
   },
 }));
 
-const mockUseHabitTrackingRange = jest.fn(() => [
-  {
-    completed: true,
-    date: '2026-08-12',
-  },
-]);
+const DEFAULT_ROWS = [{ completed: true, date: '2026-08-12' }];
+let trackingRows: { completed: boolean; date: string }[] = DEFAULT_ROWS;
+const mockUseHabitTrackingRange = jest.fn(() => trackingRows);
+
+beforeEach(() => {
+  trackingRows = DEFAULT_ROWS;
+});
 
 jest.mock('../../../insights', () => ({
   ...jest.requireActual('../../../insights'),
@@ -100,6 +101,18 @@ describe('HabitHistoryScreen', () => {
     // 20 August is after the mocked today (15 August): drawn, not a button.
     expect(queryByLabelText('August 20, upcoming')).toBeNull();
     expect(queryByLabelText('August 14, missed')).toBeTruthy();
+  });
+
+  it('takes the rail’s Current from the log, not the stored streak field', () => {
+    // `habit.currentStreak` is not recomputed on a miss: with nothing logged,
+    // the rail must say 0 rather than repeat the run that already ended.
+    trackingRows = [];
+    const { getByLabelText } = renderScreen({
+      habit: { ...habit, currentStreak: 9 } as Habit,
+    });
+
+    expect(getByLabelText('Current: 0')).toBeTruthy();
+    expect(getByLabelText('Longest: 8')).toBeTruthy();
   });
 
   it('says which squares carry a note', () => {

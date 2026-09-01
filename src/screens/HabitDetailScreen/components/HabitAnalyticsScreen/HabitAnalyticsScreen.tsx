@@ -9,7 +9,7 @@
 import { useMemo, useState } from 'react';
 import type { Habit } from '../../../../features/habits/types';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
-import { useHabitInsights, useStreakRuns } from '../../insights';
+import { streakStats, useHabitInsights, useStreakRuns } from '../../insights';
 import { useInsightPalette } from '../../insightPalette';
 import type { InsightId } from '../../useDetailFlow';
 import { FlowPage } from '../FlowPage';
@@ -67,6 +67,9 @@ export function HabitAnalyticsScreen({
     pausedAt: habit.pausedAt,
     resumedAt: habit.resumedAt,
   });
+  // The rail reads the log, not `habit.currentStreak`: the stored field is not
+  // recomputed on a miss, so it kept quoting a run Detail had already ended.
+  const loggedStreak = streakStats(runs).current;
   const verdict = buildVerdict(months.rates);
   const nextStep = buildNextStep(insights, months.rates, today)?.text;
 
@@ -77,7 +80,7 @@ export function HabitAnalyticsScreen({
       ) : null}
       <StreakRail
         bestStreak={habit.bestStreak ?? 0}
-        currentStreak={habit.currentStreak ?? 0}
+        currentStreak={loggedStreak}
         daysLogged={insights.yearCompletions}
         goalDuration={habit.goalDuration}
         palette={palette}
