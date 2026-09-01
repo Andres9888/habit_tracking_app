@@ -24,6 +24,17 @@ export function getGoalContextCopy(currentStreak: number, selected: number) {
     };
   }
 
+  if (currentStreak === 0 && selected > 0) {
+    return {
+      detail: `Day 1 starts today — ${selected} days to go.`,
+      emphasis:
+        selected === RECOMMENDED_GOAL
+          ? 'Science-backed habit window.'
+          : `${label} target.`,
+      warn: false,
+    };
+  }
+
   const remaining = selected - currentStreak;
 
   if (selected === RECOMMENDED_GOAL) {
