@@ -215,8 +215,10 @@ describe('HabitDetailContent', () => {
     expect(
       text.indexOf('Have energy for the kids before the day takes over.')
     ).toBeLessThan(text.indexOf('Complete today'));
-    expect(text.indexOf('Complete today')).toBeLessThan(text.indexOf('Strong'));
-    expect(text.indexOf('Strong')).toBeLessThan(text.indexOf('This week'));
+    expect(text.indexOf('Complete today')).toBeLessThan(
+      text.indexOf('This week')
+    );
+    expect(text.indexOf('This week')).toBeLessThan(text.indexOf('Strong'));
   });
 
   it('quotes the user’s why when yesterday was kept', () => {

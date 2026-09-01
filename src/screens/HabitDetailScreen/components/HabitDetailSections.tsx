@@ -1,6 +1,6 @@
 /**
  * HabitDetailSections — recommitment stack below the hero:
- * strength snapshot → This week → streak goal → record doors → one insight
+ * This week → strength snapshot → streak goal → record doors → one insight
  * line.
  *
  * In recovery the strength dial and the Analytics door drop out. Being scored
@@ -51,7 +51,6 @@ export function HabitDetailSections({
 
   return (
     <View style={{ gap: spacing.md, padding: 20, paddingBottom: 40 }}>
-      {isRecovery ? null : <StrengthSnapshot habit={habit} />}
       <ThisWeekCard
         completedDates={completedDates}
         dayContext={{
@@ -66,6 +65,7 @@ export function HabitDetailSections({
           else onOpenDay(date);
         }}
       />
+      {isRecovery ? null : <StrengthSnapshot habit={habit} />}
       <DetailGoalCard habit={habit} loggedToday={isCompletedToday} />
       <RecordDoors
         onOpenAnalytics={onOpenAnalytics}
