@@ -30,6 +30,7 @@ export function buildCreateHabitPayload(
     remindersEnabled: data.hasReminders,
     strengthAlgorithm: data.strengthAlgorithm,
     tempId: data.clientRequestId,
+    why: data.why.trim() || undefined,
   };
 }
 
@@ -68,5 +69,6 @@ export function toCreateHabitArgs(payload: CreateHabitPayload) {
     reminderTime: payload.reminderTime,
     remindersEnabled: payload.remindersEnabled,
     strengthAlgorithm: payload.strengthAlgorithm,
+    why: payload.why,
   };
 }

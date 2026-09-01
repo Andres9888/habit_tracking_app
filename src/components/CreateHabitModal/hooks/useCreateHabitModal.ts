@@ -29,6 +29,7 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
     strengthAlgorithm: form.strengthAlgorithm,
     progressEmojis: form.progressEmojis,
     streakGoal: form.streakGoal,
+    why: form.why,
   });
 
   const cleanup = useModalCleanup({

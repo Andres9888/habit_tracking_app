@@ -59,6 +59,8 @@ export interface CreateHabitPayload {
   iconColor?: string;
   /** Optional notes */
   notes?: string;
+  /** Optional motivation line. */
+  why?: string;
   /** Optional preferred time */
   preferredTime?: string;
   /** Growth emoji set captured from the current user default. */

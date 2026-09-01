@@ -32,6 +32,7 @@ export const createHabitArgs = {
   strengthAlgorithm: v.optional(
     v.union(v.literal('forgiving'), v.literal('balanced'), v.literal('strict'))
   ),
+  why: v.optional(v.string()),
 };
 
 /** Update habit args validator */

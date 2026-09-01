@@ -24,6 +24,7 @@ interface ResetFormSetters {
   setSelectedDays: (days: number[]) => void;
   setDayPhase: (phase: HubermanPhase | null) => void;
   setReminderOptionState: (option: ReminderOption) => void;
+  setWhy: (why: string) => void;
 }
 
 export const useHabitFormReset = (setters: ResetFormSetters) => {
@@ -40,6 +41,7 @@ export const useHabitFormReset = (setters: ResetFormSetters) => {
     setSelectedDays,
     setSelectedEmoji,
     setShowTimePicker,
+    setWhy,
   } = setters;
 
   return useCallback(() => {
@@ -56,6 +58,7 @@ export const useHabitFormReset = (setters: ResetFormSetters) => {
     setSelectedDays([0, 1, 2, 3, 4, 5, 6]);
     setDayPhase(null);
     setReminderOptionState(smartDefault);
+    setWhy('');
   }, [
     setColorPickerVisible,
     setDayPhase,
@@ -69,5 +72,6 @@ export const useHabitFormReset = (setters: ResetFormSetters) => {
     setSelectedDays,
     setSelectedEmoji,
     setShowTimePicker,
+    setWhy,
   ]);
 };

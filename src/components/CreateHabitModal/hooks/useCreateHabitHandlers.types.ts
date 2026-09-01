@@ -14,6 +14,8 @@ export interface HabitData {
   strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
   progressEmojis: ProgressEmojiSet | undefined;
   streakGoal: number;
+  /** Optional motivation line; trimmed and omitted when blank. */
+  why: string;
 }
 
 export interface CreateHabitData extends HabitData {
