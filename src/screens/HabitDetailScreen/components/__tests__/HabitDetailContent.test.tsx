@@ -125,10 +125,12 @@ describe('HabitDetailContent', () => {
     expect(getByText('This week')).toBeTruthy();
     expect(getByText('1 day logged')).toBeTruthy();
     expect(getByText('The record')).toBeTruthy();
-    expect(getByText('Full history')).toBeTruthy();
-    expect(getByText('Runs, calendar and the year grid')).toBeTruthy();
-    expect(getByText('Analytics')).toBeTruthy();
-    expect(getByText('Trend, patterns and what’s working')).toBeTruthy();
+    expect(getByText('Calendar & notes')).toBeTruthy();
+    expect(getByText('View or correct past days')).toBeTruthy();
+    expect(getByText('Patterns & trends')).toBeTruthy();
+    expect(getByText('See what helps you stay consistent')).toBeTruthy();
+    expect(queryByText('Full history')).toBeNull();
+    expect(queryByText('Analytics')).toBeNull();
     expect(queryByText('Going away?')).toBeNull();
     expect(queryByText('Pause without losing your streak')).toBeNull();
   });
@@ -157,8 +159,8 @@ describe('HabitDetailContent', () => {
       {},
       { onOpenAnalytics, onOpenHistory }
     );
-    fireEvent.press(getByLabelText('Full history'));
-    fireEvent.press(getByLabelText('Analytics'));
+    fireEvent.press(getByLabelText('Calendar & notes'));
+    fireEvent.press(getByLabelText('Patterns & trends'));
     expect(onOpenHistory).toHaveBeenCalledTimes(1);
     expect(onOpenAnalytics).toHaveBeenCalledTimes(1);
   });
@@ -251,7 +253,7 @@ describe('HabitDetailContent', () => {
     // Neither Strength nor the Analytics door is suppressed after a miss.
     // Recovery is the ordinary state for anyone who did not log the last
     // scheduled day, and these rows are the only route to Analytics in the app.
-    expect(getByText('Analytics')).toBeTruthy();
+    expect(getByText('Patterns & trends')).toBeTruthy();
     expect(
       queryByText(
         'Habit strength · a single snapshot. Trends live in Analytics.'
@@ -280,7 +282,7 @@ describe('HabitDetailContent', () => {
     const onOpenAnalytics = jest.fn();
     const { getByLabelText } = renderContent({}, { onOpenAnalytics });
 
-    fireEvent.press(getByLabelText('Analytics'));
+    fireEvent.press(getByLabelText('Patterns & trends'));
 
     expect(onOpenAnalytics).toHaveBeenCalledTimes(1);
   });

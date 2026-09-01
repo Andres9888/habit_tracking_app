@@ -139,8 +139,10 @@ When today changes from not logged to logged, show a green success toast for 400
 
 **What:** Two rows that never move.
 
-- Full history — “Runs, calendar and the year grid”
-- Analytics — “Trend, patterns and what’s working”
+- **Calendar & notes** — “View or correct past days” (→ History)
+- **Patterns & trends** — “See what helps you stay consistent” (→ Analytics)
+
+Internally the screens stay History and Analytics; the visible labels use the user’s words.
 
 In recovery, hide the Analytics row for the same reason the strength snapshot drops out: being scored is the wrong response to a bad day. That is different from completion. Hard rule 8 still stands: when today completes, the History / Analytics rows do not move.
 
