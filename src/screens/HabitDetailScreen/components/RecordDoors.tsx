@@ -14,8 +14,8 @@ interface RecordDoorsProps {
  * recovery, following the prototype — but recovery is the ordinary state for
  * anyone who did not log the last scheduled day, and these rows are the only
  * route to Analytics anywhere in the app, so the page simply vanished. The
- * "don't grade me after a miss" intent is served by hiding the strength dial;
- * a door is not a grade.
+ * "don't grade me after a miss" intent is served by the recovery caption on the
+ * strength dial; a door is not a grade.
  *
  * Titles name what you do there, not the screen: "History" and "Analytics"
  * describe code; "Calendar & notes" and "Patterns & trends" predict the
