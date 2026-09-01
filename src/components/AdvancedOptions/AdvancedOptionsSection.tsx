@@ -23,6 +23,8 @@ export function AdvancedOptionsSection({
   onProgressEmojisChange,
   onStreakGoalChange,
   onExpand,
+  why,
+  onWhyChange,
 }: AdvancedOptionsSectionProps) {
   const { colors } = useThemeColors();
   const [expanded, setExpanded] = useState(false);
@@ -56,6 +58,8 @@ export function AdvancedOptionsSection({
           resolvedStarting={resolvedEmojis.starting}
           streakGoal={streakGoal}
           strengthAlgorithm={strengthAlgorithm}
+          why={why}
+          whyEnabled={Boolean(onWhyChange)}
           onToggle={() => {
             void triggerHaptic('selection');
             setExpanded((v) => !v);
@@ -77,10 +81,12 @@ export function AdvancedOptionsSection({
               strengthAlgorithm={strengthAlgorithm}
               streakGoal={streakGoal}
               userDefaultEmojis={userDefaultEmojis}
+              why={why}
               onProgressEmojisChange={onProgressEmojisChange}
               onSectionExpand={onExpand}
               onStreakGoalChange={onStreakGoalChange}
               onStrengthAlgorithmChange={onStrengthAlgorithmChange}
+              onWhyChange={onWhyChange}
             />
           </View>
         </Animated.View>
