@@ -204,6 +204,41 @@ describe('CreateHabitModal Integration', () => {
     expect(getByText('Daily Reminder')).toBeDefined();
   });
 
+  it('sends the trimmed why with the create payload', async () => {
+    const { getByLabelText } = render(<CreateHabitModal {...defaultProps} />);
+
+    fireEvent.changeText(getByLabelText('Habit name'), 'Morning walk');
+    fireEvent.changeText(
+      // The panel is collapsed on open, so the row is mounted but a11y-hidden.
+      getByLabelText('Your why', { includeHiddenElements: true }),
+      '  To clear my head  '
+    );
+    fireEvent.press(getByLabelText(STRINGS.CREATE_HABIT.createAction));
+
+    await waitFor(() => {
+      expect(mockMutationFn).toHaveBeenCalledWith(
+        expect.objectContaining({ why: 'To clear my head' })
+      );
+    });
+  });
+
+  it('omits why entirely when only whitespace was entered', async () => {
+    const { getByLabelText } = render(<CreateHabitModal {...defaultProps} />);
+
+    fireEvent.changeText(getByLabelText('Habit name'), 'Morning walk');
+    fireEvent.changeText(
+      getByLabelText('Your why', { includeHiddenElements: true }),
+      '   '
+    );
+    fireEvent.press(getByLabelText(STRINGS.CREATE_HABIT.createAction));
+
+    await waitFor(() => {
+      expect(mockMutationFn).toHaveBeenCalled();
+    });
+    const payload = mockMutationFn.mock.calls[0][0];
+    expect(payload.why).toBeUndefined();
+  });
+
   it('does not render removed quick-pick or live-preview chrome', () => {
     const { queryByText, queryByLabelText } = render(
       <CreateHabitModal {...defaultProps} />
