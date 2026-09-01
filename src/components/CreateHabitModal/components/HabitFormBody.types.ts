@@ -64,4 +64,8 @@ export interface HabitFormBodyProps {
   onAdvancedExpand?: () => void;
   /** Ref attached to the daily reminder container so the parent can measure and scroll to it. */
   reminderSectionRef?: RefObject<ViewType | null>;
+  /** One-line motivation, edited inside the Advanced panel. */
+  why?: string;
+  /** Presence of this handler is what enables the Your why row. */
+  onWhyChange?: (text: string) => void;
 }

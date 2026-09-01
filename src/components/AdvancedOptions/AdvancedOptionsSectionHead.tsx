@@ -10,6 +10,10 @@ interface Props {
   title: string;
   valueLabel: string;
   description: string;
+  /** Overrides the neutral value-chip surface (why row uses parchment). */
+  chipBackground?: string;
+  /** Overrides the neutral value-chip text colour. */
+  chipForeground?: string;
 }
 
 export function AdvancedOptionsSectionHead({
@@ -18,6 +22,8 @@ export function AdvancedOptionsSectionHead({
   title,
   valueLabel,
   description,
+  chipBackground,
+  chipForeground,
 }: Props) {
   const t = useAdvancedTokens();
   return (
@@ -58,7 +64,7 @@ export function AdvancedOptionsSectionHead({
             borderRadius: 999,
             paddingHorizontal: 10,
             paddingVertical: 4,
-            backgroundColor: t.tile,
+            backgroundColor: chipBackground ?? t.tile,
           }}
         >
           <Text
@@ -67,7 +73,7 @@ export function AdvancedOptionsSectionHead({
               ...typography.caption,
               fontSize: 12,
               fontWeight: fontWeights.semibold,
-              color: t.muted,
+              color: chipForeground ?? t.muted,
             }}
           >
             {valueLabel}

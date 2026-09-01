@@ -4,10 +4,11 @@ import { View } from 'react-native';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
 import type { GrowthType } from '@/utils/growthTypeMeta';
 import type { ProgressEmojiSet } from '@/utils/progressEmojis';
+import { AdvancedOptionsRow } from './AdvancedOptionsRow';
 import { GrowthIconsInline } from './GrowthIconsInline';
 import { StreakGoalInline } from './StreakGoalInline';
 import { StrengthCurveInline } from './StrengthCurveInline';
-import { useAdvancedTokens } from './useAdvancedTokens';
+import { WhyInline } from './WhyInline';
 
 interface Props {
   strengthAlgorithm: AlgorithmMode;
@@ -28,6 +29,9 @@ interface Props {
   onLayout?: (e: LayoutChangeEvent) => void;
   /** Scrolls the modal down when a section opens below the fold. */
   onSectionExpand?: () => void;
+  why?: string;
+  /** Presence of this handler is what enables the Your why row. */
+  onWhyChange?: (text: string) => void;
 }
 
 export function AdvancedOptionsExpanded({
@@ -44,26 +48,25 @@ export function AdvancedOptionsExpanded({
   onProgressEmojisChange,
   onLayout,
   onSectionExpand,
+  why,
+  onWhyChange,
 }: Props) {
-  const t = useAdvancedTokens();
-
   return (
     <View onLayout={onLayout}>
-      <View style={{ paddingTop: 16, paddingBottom: 16 }}>
+      {onWhyChange ? (
+        <AdvancedOptionsRow divided={false}>
+          <WhyInline why={why ?? ''} onWhyChange={onWhyChange} />
+        </AdvancedOptionsRow>
+      ) : null}
+
+      <AdvancedOptionsRow divided={Boolean(onWhyChange)}>
         <StreakGoalInline
           streakGoal={streakGoal}
           onStreakGoalChange={onStreakGoalChange}
         />
-      </View>
+      </AdvancedOptionsRow>
 
-      <View
-        style={{
-          borderTopWidth: 1,
-          borderTopColor: t.border,
-          paddingTop: 16,
-          paddingBottom: 16,
-        }}
-      >
+      <AdvancedOptionsRow>
         <StrengthCurveInline
           AlgoIcon={AlgoIcon}
           growthType={growthType}
@@ -72,23 +75,16 @@ export function AdvancedOptionsExpanded({
           onExpand={onSectionExpand}
           onSelect={onStrengthAlgorithmChange}
         />
-      </View>
+      </AdvancedOptionsRow>
 
-      <View
-        style={{
-          borderTopWidth: 1,
-          borderTopColor: t.border,
-          paddingTop: 16,
-          paddingBottom: 16,
-        }}
-      >
+      <AdvancedOptionsRow>
         <GrowthIconsInline
           fallback={userDefaultEmojis}
           savedCustom={savedCustomEmojis}
           value={progressEmojis}
           onChange={onProgressEmojisChange}
         />
-      </View>
+      </AdvancedOptionsRow>
     </View>
   );
 }

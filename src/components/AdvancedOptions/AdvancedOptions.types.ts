@@ -18,4 +18,8 @@ export interface AdvancedOptionsSectionProps {
   onStreakGoalChange: (days: number) => void;
   /** Called after the section expands so the parent can scroll it into view. */
   onExpand?: () => void;
+  /** Optional one-line motivation shown above Complete today on Detail. */
+  why?: string;
+  /** Presence of this handler is what enables the Your why row + chip. */
+  onWhyChange?: (text: string) => void;
 }

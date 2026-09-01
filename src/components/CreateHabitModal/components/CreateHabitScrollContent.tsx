@@ -76,6 +76,7 @@ export function CreateHabitScrollContent({
               snapReminderDefaultToPreset
               streakGoal={form.streakGoal}
               strengthAlgorithm={form.strengthAlgorithm}
+              why={form.why}
               onAdvancedExpand={() =>
                 scrollViewRef.current?.scrollToEnd({ animated: true })
               }
@@ -87,6 +88,7 @@ export function CreateHabitScrollContent({
               onReminderToggle={callbacks.handleReminderToggle}
               onStreakGoalChange={form.setStreakGoal}
               onStrengthAlgorithmChange={form.setStrengthAlgorithm}
+              onWhyChange={form.setWhy}
             />
           </Pressable>
         </View>
