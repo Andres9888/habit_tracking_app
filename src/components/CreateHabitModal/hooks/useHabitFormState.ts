@@ -5,7 +5,6 @@
 import { useMemo, useState } from 'react';
 import { DEFAULT_COLOR } from '../constants';
 import type { HabitDoc } from '../types';
-import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
 import { parseHabitName, parseReminderTime } from '../utils';
 import {
   type HubermanPhase,
@@ -13,6 +12,7 @@ import {
 } from '../../../constants/hubermanPhases';
 import type { ReminderOption } from '../components/ReminderSelector';
 import { getReminderOptionFromTime } from './reminderUtils';
+import { useHabitAdvancedState } from './useHabitAdvancedState';
 
 const DEFAULT_SOUND = 'Default';
 
@@ -59,23 +59,10 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
       habitToEdit?.reminderTime
     )
   );
-  const [strengthAlgorithm, setStrengthAlgorithm] = useState<
-    'forgiving' | 'balanced' | 'strict'
-  >(() => {
-    const mode = habitToEdit?.strengthAlgorithm;
-    return mode === 'forgiving' || mode === 'balanced' || mode === 'strict'
-      ? mode
-      : 'balanced';
-  });
-  const [progressEmojis, setProgressEmojis] = useState<
-    ProgressEmojiSet | undefined
-  >(habitToEdit?.progressEmojis as ProgressEmojiSet | undefined);
-  const [streakGoal, setStreakGoal] = useState<number>(
-    habitToEdit?.goalDuration ?? 0
-  );
-  const [why, setWhy] = useState('');
+  const advanced = useHabitAdvancedState(habitToEdit);
 
   return {
+    ...advanced,
     dayPhase,
     frequency,
     habitName,
@@ -100,14 +87,6 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     setSelectedDays,
     setSelectedEmoji,
     setShowTimePicker,
-    setStrengthAlgorithm,
-    setProgressEmojis,
-    setStreakGoal,
-    setWhy,
     showTimePicker,
-    strengthAlgorithm,
-    progressEmojis,
-    streakGoal,
-    why,
   };
 }
