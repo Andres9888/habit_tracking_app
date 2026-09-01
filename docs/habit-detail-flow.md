@@ -63,7 +63,7 @@ The page shape stays the same. Only the card above the button and the action slo
 | **Completed** | Today is logged                                       | Why line                                                                                                                                                      | Same live toggle: filled check, **Logged today**, hint word **Undo**. Re-tapping unlogs today.        |
 | **Recovery**  | The last scheduled day was not logged                 | Amber recovery card (replaces why): headline “{Day} got away. {N} days didn’t.” — or “{Day} got away. Today doesn’t have to.” when no run was actually broken | Same live toggle as Ready. The fixed-height slot below shows the recovery hint until today is logged. |
 
-Recovery **replaces** the why card. It does not stack under it. Amber exists only here, so the color itself means “start again,” not “you failed.” The amber wash covers the hero **and** the fixed header — the header is a separate node from the hero gradient, so it takes the same first stop or the top of the page shows a mint-over-amber seam. While recovery is on screen the strength snapshot is hidden: being scored is the wrong response to a bad day. The **Analytics door stays**. An earlier revision hid it too, following the prototype, but recovery is the ordinary state for anyone who did not log the last scheduled day, and the record doors are the only route to Analytics anywhere in the app — so the page effectively disappeared. A door is not a grade.
+Recovery **replaces** the why card. It does not stack under it. Amber exists only here, so the color itself means “start again,” not “you failed.” The amber wash covers the hero **and** the fixed header — the header is a separate node from the hero gradient, so it takes the same first stop or the top of the page shows a mint-over-amber seam. While recovery is on screen the strength snapshot stays, with the caption “Dipped, not reset. Recent days still count most.” Strength is the one number built to survive a miss; hiding it hid the reassurance. The **Analytics door stays**. An earlier revision hid it too, following the prototype, but recovery is the ordinary state for anyone who did not log the last scheduled day, and the record doors are the only route to Analytics anywhere in the app — so the page effectively disappeared. A door is not a grade.
 
 The action area is a **fixed-height slot** in all three states so History and Analytics never jump when today completes. Under the toggle, that fixed-height secondary slot holds only the note row, the recovery hint, the unavailable text, or the caption “Tap to log today. You can undo anytime.”
 
@@ -87,7 +87,7 @@ Scroll order, top to bottom.
 
 ### Strength snapshot
 
-**What:** Compact row card with a 44px ring, the number inside the ring, a band label, and the caption “Momentum from every check-in, weighted toward recent days. A miss dips it — it never resets.” Hidden in recovery. Being scored is the wrong response to a bad day; the guilt is the churn risk, not the missing chart.
+**What:** Compact row card with a 44px ring, the number inside the ring, a band label, and the caption “Momentum from every check-in, weighted toward recent days. A miss dips it — it never resets.” Visible in recovery with the caption “Dipped, not reset. Recent days still count most.”
 
 **Why:** One honest snapshot of how established the habit feels. No `%`, no leaderboard, no comparison to other people. Strength is not a grade and not a streak.
 

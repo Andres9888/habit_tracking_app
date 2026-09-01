@@ -248,9 +248,9 @@ describe('HabitDetailContent', () => {
     expect(queryByText(/Showing up is the streak/)).toBeNull();
     expect(getByLabelText(weekLabel(-1, 'missed'))).toBeTruthy();
     expect(queryByText(/Have energy for the kids/)).toBeNull();
-    // Strength is suppressed after a miss; the Analytics DOOR is not. Recovery
-    // is the ordinary state for anyone who did not log the last scheduled day,
-    // and these rows are the only route to Analytics in the app.
+    // Neither Strength nor the Analytics door is suppressed after a miss.
+    // Recovery is the ordinary state for anyone who did not log the last
+    // scheduled day, and these rows are the only route to Analytics in the app.
     expect(getByText('Analytics')).toBeTruthy();
     expect(
       queryByText(
@@ -262,7 +262,18 @@ describe('HabitDetailContent', () => {
     expect(
       text.indexOf('Yesterday got away. Today doesn’t have to.')
     ).toBeLessThan(text.indexOf('Complete today'));
-    expect(queryByText('Strong')).toBeNull();
+    // Strength is the one number built to survive a miss (proportional decay,
+    // never to zero). Hiding it in recovery hid the reassurance and left the
+    // ladder's empty run as the only score. Keep it, with a recovery caption.
+    expect(getByText('Strong')).toBeTruthy();
+    expect(
+      getByText('Dipped, not reset. Recent days still count most.')
+    ).toBeTruthy();
+    expect(
+      queryByText(
+        'Momentum from every check-in, weighted toward recent days. A miss dips it — it never resets.'
+      )
+    ).toBeNull();
   });
 
   it('keeps both record doors reachable during recovery', () => {

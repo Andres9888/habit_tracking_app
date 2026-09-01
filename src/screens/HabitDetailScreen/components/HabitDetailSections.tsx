@@ -3,9 +3,8 @@
  * This week → strength snapshot → streak goal → record doors → one insight
  * line.
  *
- * In recovery the strength dial and the Analytics door drop out. Being scored
- * is the wrong response to a bad day; the guilt is the churn risk, not the
- * missing chart.
+ * Nothing drops out in recovery. The strength dial is the one number that
+ * survives a miss, so it stays; the Analytics door is a door, not a grade.
  */
 import { View } from 'react-native';
 import type { Habit } from '../../../features/habits/types';
@@ -26,7 +25,7 @@ interface HabitDetailSectionsProps {
   habit: Habit;
   insights: HabitInsights;
   isCompletedToday: boolean;
-  /** A miss is still unanswered: suppress the score and the Analytics door. */
+  /** The last scheduled day was missed: strength shows its recovery caption. */
   isRecovery?: boolean;
   onDayPress: (date: string, isCompleted: boolean) => void;
   onOpenAnalytics: () => void;
@@ -66,7 +65,7 @@ export function HabitDetailSections({
           else onOpenDay(date);
         }}
       />
-      {isRecovery ? null : <StrengthSnapshot habit={habit} />}
+      <StrengthSnapshot habit={habit} isRecovery={isRecovery} />
       <DetailGoalCard
         currentStreak={currentStreak}
         habit={habit}
