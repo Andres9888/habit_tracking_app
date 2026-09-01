@@ -1,19 +1,15 @@
 /**
  * HeroRecoveryCard — the reframe that replaces the why after a miss.
  *
- * Prototype copy: a serif headline naming the run that survived, then a body
- * that ends on the one rule worth keeping. Amber lives in the wash and the
- * hairline; the card itself stays the normal surface so this reads as the app
- * noticing, not as a warning banner.
+ * Prototype copy: a serif headline naming the run that survived, then one
+ * sentence naming the record the miss did not take. Amber lives in the wash
+ * and the hairline; the card itself stays the normal surface so this reads as
+ * the app noticing, not as a warning banner.
  */
 import { Text, View } from 'react-native';
 import { borderRadius } from '../../../../theme/spacing';
-import { fontFamilies, fontWeights } from '../../../../theme/typography';
-import {
-  NEVER_MISS_TWICE,
-  recoveryBodyCopy,
-  recoveryHeadlineCopy,
-} from '../../insights';
+import { fontFamilies } from '../../../../theme/typography';
+import { recoveryBodyCopy, recoveryHeadlineCopy } from '../../insights';
 import type { InsightPalette } from '../../insightPalette';
 
 interface HeroRecoveryCardProps {
@@ -35,7 +31,7 @@ export function HeroRecoveryCard({
 
   return (
     <View
-      accessibilityLabel={`${headline} ${body}${NEVER_MISS_TWICE}`}
+      accessibilityLabel={`${headline} ${body}`}
       accessibilityRole='summary'
       style={{
         backgroundColor: palette.card,
@@ -65,14 +61,6 @@ export function HeroRecoveryCard({
         }}
       >
         {body}
-        <Text
-          style={{
-            color: palette.textPrimary,
-            fontWeight: fontWeights.semibold,
-          }}
-        >
-          {NEVER_MISS_TWICE}
-        </Text>
       </Text>
     </View>
   );

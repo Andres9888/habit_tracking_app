@@ -23,19 +23,27 @@ describe('recoveryHeadlineCopy', () => {
 describe('recoveryBodyCopy', () => {
   it('keeps the broken run as the record when it matched the best streak', () => {
     expect(recoveryBodyCopy(8, 8)).toBe(
-      'Strength dipped, not to zero, and that 8-day run is still your record. The only rule that matters today: '
+      'That 8-day run is still your record.'
     );
   });
 
   it('falls back to the best streak when it still stands above the broken run', () => {
-    expect(recoveryBodyCopy(0, 12)).toBe(
-      'Strength dipped, not to zero, and your 12-day record still stands. The only rule that matters today: '
-    );
+    expect(recoveryBodyCopy(0, 12)).toBe('Your 12-day record still stands.');
   });
 
-  it('uses the neutral body when no streak record exists yet', () => {
-    expect(recoveryBodyCopy(0, 0)).toBe(
-      'Strength dipped, not to zero. The only rule that matters today: '
-    );
+  it('points at the next run when no record exists yet', () => {
+    expect(recoveryBodyCopy(0, 0)).toBe('Today starts the next one.');
+  });
+
+  it('never states a rule or a strength delta', () => {
+    for (const body of [
+      recoveryBodyCopy(8, 8),
+      recoveryBodyCopy(0, 12),
+      recoveryBodyCopy(0, 0),
+    ]) {
+      expect(body).not.toMatch(/never miss twice/i);
+      expect(body).not.toMatch(/strength/i);
+      expect(body).not.toMatch(/rule/i);
+    }
   });
 });

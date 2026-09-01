@@ -103,7 +103,7 @@ Scroll order, top to bottom.
 
 ### Recovery card
 
-**What:** Headline “{Day} got away. {N} days didn’t.” where N is the run the miss actually ended, spelled out (“Eight days didn’t.”); with no broken run it reads “{Day} got away. Today doesn’t have to.” Body: “Strength dipped, not to zero, and your {best}-day record still stands. The only rule that matters today: **never miss twice.**” Then today’s two-minute version in the slot below.
+**What:** Headline “{Day} got away. {N} days didn’t.” where N is the run the miss actually ended, spelled out (“Eight days didn’t.”); with no broken run it reads “{Day} got away. Today doesn’t have to.” Body: one sentence, “Your {best}-day record still stands.” (or “That {N}-day run is still your record.” when the broken run was the record, or “Today starts the next one.” with no record). No rule, no strength delta: the dial is on the page and the two-minute version is in the slot below.
 
 N comes from the completion log — the same runs the History rail draws — never from `habit.currentStreak`, which is a stored field nothing recomputes on a miss.
 

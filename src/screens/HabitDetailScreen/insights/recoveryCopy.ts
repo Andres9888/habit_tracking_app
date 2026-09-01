@@ -6,15 +6,11 @@
  * same runs the History rail draws, so the sentence can never claim a streak the
  * log does not contain.
  *
- * The prototype also says "Strength dipped 3 points". That number is invented —
- * `convex/habitStrength/momentum.ts` decays proportionally (strength × (1 −
- * baseDecay)), so the drop depends on where you were and which mode the habit
- * runs. We keep the true half of the claim (it dips, it never reaches zero) and
- * drop the fake precision.
+ * The prototype also says "Strength dipped 3 points" and ends on "never miss
+ * twice". The delta is invented — `convex/habitStrength/momentum.ts` decays
+ * proportionally — and the dial now sits on the page in recovery, so the body
+ * says neither. It names the record that still stands and stops.
  */
-
-/** The bolded tail of the recovery body. */
-export const NEVER_MISS_TWICE = 'never miss twice.';
 
 const NUMBER_WORDS = [
   'Zero',
@@ -47,17 +43,20 @@ export function recoveryHeadlineCopy(
   return `${dayLabel} got away. ${spellCount(brokenRun)} days didn’t.`;
 }
 
-/** Everything before the bolded `never miss twice.` */
+/**
+ * One sentence about what the miss did not take. The action ("two minutes")
+ * lives in the fixed slot under the toggle, so the body does not repeat it,
+ * and it states no rule: the job of this card is one tap, not a policy.
+ */
 export function recoveryBodyCopy(
   brokenRun: number,
   bestStreak: number
 ): string {
-  const rule = 'The only rule that matters today: ';
   if (brokenRun > 0 && brokenRun >= bestStreak) {
-    return `Strength dipped, not to zero, and that ${brokenRun}-day run is still your record. ${rule}`;
+    return `That ${brokenRun}-day run is still your record.`;
   }
   if (bestStreak > 0) {
-    return `Strength dipped, not to zero, and your ${bestStreak}-day record still stands. ${rule}`;
+    return `Your ${bestStreak}-day record still stands.`;
   }
-  return `Strength dipped, not to zero. ${rule}`;
+  return 'Today starts the next one.';
 }

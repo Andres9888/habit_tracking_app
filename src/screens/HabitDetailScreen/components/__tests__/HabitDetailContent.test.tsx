@@ -236,7 +236,7 @@ describe('HabitDetailContent', () => {
     ).toBeTruthy();
     expect(
       getByLabelText(
-        'Yesterday got away. Today doesn’t have to. Strength dipped, not to zero, and your 12-day record still stands. The only rule that matters today: never miss twice.'
+        'Yesterday got away. Today doesn’t have to. Your 12-day record still stands.'
       )
     ).toBeTruthy();
     expect(getByText('Two-minute version')).toBeTruthy();
