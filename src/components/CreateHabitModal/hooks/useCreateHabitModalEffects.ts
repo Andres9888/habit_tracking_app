@@ -38,6 +38,7 @@ interface HabitDataParams {
   strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
   progressEmojis: ProgressEmojiSet | undefined;
   streakGoal: number;
+  why: string;
 }
 
 export function useHabitData(params: HabitDataParams) {
@@ -54,6 +55,7 @@ export function useHabitData(params: HabitDataParams) {
       strengthAlgorithm: params.strengthAlgorithm,
       progressEmojis: params.progressEmojis,
       streakGoal: params.streakGoal,
+      why: params.why,
     }),
     [
       params.dayPhase,
@@ -67,6 +69,7 @@ export function useHabitData(params: HabitDataParams) {
       params.strengthAlgorithm,
       params.progressEmojis,
       params.streakGoal,
+      params.why,
     ]
   );
 }

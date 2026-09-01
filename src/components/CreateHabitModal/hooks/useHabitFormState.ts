@@ -73,6 +73,7 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
   const [streakGoal, setStreakGoal] = useState<number>(
     habitToEdit?.goalDuration ?? 0
   );
+  const [why, setWhy] = useState('');
 
   return {
     dayPhase,
@@ -102,9 +103,11 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     setStrengthAlgorithm,
     setProgressEmojis,
     setStreakGoal,
+    setWhy,
     showTimePicker,
     strengthAlgorithm,
     progressEmojis,
     streakGoal,
+    why,
   };
 }

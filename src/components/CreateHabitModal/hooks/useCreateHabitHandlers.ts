@@ -29,6 +29,8 @@ interface HabitData {
   strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
   progressEmojis: ProgressEmojiSet | undefined;
   streakGoal: number;
+  /** Optional motivation line; trimmed and omitted when blank. */
+  why: string;
 }
 
 interface EditHabitData extends HabitData {
@@ -125,6 +127,7 @@ export function useCreateHabitHandlers() {
     strengthAlgorithm,
     progressEmojis,
     streakGoal,
+    why,
   }: HabitData): Promise<void> {
     // Validate habit name
     const validation = validateHabitName(fullHabitName);
@@ -164,6 +167,7 @@ export function useCreateHabitHandlers() {
         reminderSound: hasReminders ? (reminderSound ?? undefined) : undefined,
         reminderTime: formattedReminderTime,
         strengthAlgorithm,
+        why: why.trim() || undefined,
       });
       optimisticHabitCreationStore.confirm(optimisticOperationId);
       isCreateConfirmed = true;
