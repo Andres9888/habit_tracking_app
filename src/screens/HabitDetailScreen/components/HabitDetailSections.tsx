@@ -37,6 +37,7 @@ interface HabitDetailSectionsProps {
 
 export function HabitDetailSections({
   completedDates,
+  currentStreak,
   habit,
   insights,
   isCompletedToday,
@@ -66,7 +67,11 @@ export function HabitDetailSections({
         }}
       />
       {isRecovery ? null : <StrengthSnapshot habit={habit} />}
-      <DetailGoalCard habit={habit} loggedToday={isCompletedToday} />
+      <DetailGoalCard
+        currentStreak={currentStreak}
+        habit={habit}
+        loggedToday={isCompletedToday}
+      />
       <RecordDoors
         onOpenAnalytics={onOpenAnalytics}
         onOpenHistory={onOpenHistory}

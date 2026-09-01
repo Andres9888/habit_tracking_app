@@ -430,4 +430,19 @@ describe('HabitDetailContent', () => {
     expect(getByText('Morning routine · Daily')).toBeTruthy();
     expect(queryByText('Daily habit')).toBeNull();
   });
+
+  it('draws the goal ladder from the log, not the stored streak field', () => {
+    // habit.currentStreak still claims 9; the log has no open run.
+    const { getByText, queryByText } = renderContent({ goalDuration: 30 });
+
+    expect(getByText('30 days — day 1 starts today.')).toBeTruthy();
+    expect(queryByText("30 days — you're 9 in.")).toBeNull();
+  });
+
+  it('counts the open run on the goal ladder once yesterday is logged', () => {
+    completeYesterday();
+    const { getByText } = renderContent({ goalDuration: 30 });
+
+    expect(getByText("30 days — you're 1 in.")).toBeTruthy();
+  });
 });
