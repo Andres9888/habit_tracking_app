@@ -8,6 +8,7 @@ import { ScrollView } from 'react-native';
 import type { Habit } from '../../../../features/habits/types';
 import { HabitDetailContent } from '../HabitDetailContent';
 import { formatDayShort } from '../DayDetailScreen/dayCopy';
+import { RECOVERY_STRENGTH_CAPTION } from '../StrengthSnapshot';
 
 const trackingRows: {
   completed: boolean;
@@ -268,9 +269,7 @@ describe('HabitDetailContent', () => {
     // never to zero). Hiding it in recovery hid the reassurance and left the
     // ladder's empty run as the only score. Keep it, with a recovery caption.
     expect(getByText('Strong')).toBeTruthy();
-    expect(
-      getByText('Dipped, not reset. Recent days still count most.')
-    ).toBeTruthy();
+    expect(getByText(RECOVERY_STRENGTH_CAPTION)).toBeTruthy();
     expect(
       queryByText(
         'Momentum from every check-in, weighted toward recent days. A miss dips it — it never resets.'
