@@ -56,6 +56,7 @@ export const create = mutation({
       strengthLevel: 'starting',
       strengthUpdatedAt: Date.now(),
       userId,
+      why: validated.why,
     });
   },
   returns: v.id('habits'),

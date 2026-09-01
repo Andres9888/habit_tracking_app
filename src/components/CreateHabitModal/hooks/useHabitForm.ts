@@ -88,6 +88,7 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     setSelectedDays: state.setSelectedDays,
     setSelectedEmoji: state.setSelectedEmoji,
     setShowTimePicker: state.setShowTimePicker,
+    setWhy: state.setWhy,
   });
 
   const closeColorPicker = useCallback(
@@ -133,9 +134,11 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     setStrengthAlgorithm: state.setStrengthAlgorithm,
     setProgressEmojis: state.setProgressEmojis,
     setStreakGoal: state.setStreakGoal,
+    setWhy: state.setWhy,
     showTimePicker: state.showTimePicker,
     strengthAlgorithm: state.strengthAlgorithm,
     progressEmojis: state.progressEmojis,
     streakGoal: state.streakGoal,
+    why: state.why,
   };
 };
