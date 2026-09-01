@@ -29,6 +29,15 @@ describe('buildLadder', () => {
     ]);
   });
 
+  it('does not stack the goal dot on the now dot once the goal is reached', () => {
+    expect(buildLadder(7, 7, 7).map((mark) => mark.kind)).toEqual(['now']);
+    expect(buildLadder(30, 19, 30).map((mark) => mark.kind)).toEqual([
+      'past',
+      'record',
+      'now',
+    ]);
+  });
+
   it('has nothing to draw without a goal', () => {
     expect(buildLadder(5, 9, 0)).toEqual([]);
   });

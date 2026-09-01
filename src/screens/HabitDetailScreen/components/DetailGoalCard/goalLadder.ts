@@ -4,7 +4,9 @@
  *
  * Four things can sit on the track: the first-week milestone, where you are
  * now, the record you have to clear, and the goal itself. Duplicates are
- * dropped so a run that has just tied its record does not stack two dots.
+ * dropped so a run that has just tied its record does not stack two dots — and
+ * once the streak has reached the goal, the now mark already sits at the
+ * clamped end of the track, so the goal mark would land on top of it.
  */
 
 export type LadderKind = 'past' | 'now' | 'record' | 'goal';
@@ -36,7 +38,9 @@ export function buildLadder(
   if (bestStreak < goal && bestStreak !== currentStreak) {
     marks.push({ kind: 'record', label: `${bestStreak}★`, value: bestStreak });
   }
-  marks.push({ kind: 'goal', label: String(goal), value: goal });
+  if (currentStreak < goal) {
+    marks.push({ kind: 'goal', label: String(goal), value: goal });
+  }
 
   return marks
     .sort((a, b) => a.value - b.value)
