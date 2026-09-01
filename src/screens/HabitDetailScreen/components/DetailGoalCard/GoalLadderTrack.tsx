@@ -1,17 +1,11 @@
 /**
  * GoalLadderTrack — the goal bar with its milestone dots.
- *
- * Each mark is centred on its position with a fixed-width wrapper: React
- * Native cannot translate by a percentage of the element's own width, so the
- * negative half-width margin is what keeps the dot and its caption centred.
  */
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { borderRadius } from '../../../../theme/spacing';
 import type { InsightPalette } from '../../insightPalette';
 import type { LadderMark } from './goalLadder';
 import { LadderMarkDot } from './LadderMarkDot';
-
-const MARK_WIDTH = 40;
 
 interface GoalLadderTrackProps {
   fillPct: number;
