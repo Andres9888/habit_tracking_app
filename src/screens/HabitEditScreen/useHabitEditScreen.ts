@@ -13,7 +13,6 @@ import type { ProgressEmojiSet } from '../../utils/progressEmojis';
 import { useHabitSaveHandler } from './useHabitSaveHandler';
 import { useHabitActions } from './useHabitActions';
 import { parseHabitName } from '../../components/CreateHabitModal/utils';
-import { useMotivationDraft } from './useMotivationDraft';
 
 interface UseHabitEditScreenProps {
   habitId: Id<'habits'> | null;
@@ -84,6 +83,9 @@ export function useHabitEditScreen({
   const [progressEmojis, setProgressEmojis] = useState<
     ProgressEmojiSet | undefined
   >(initialFormValues.progressEmojis);
+  // Seeded only from habits.get — the list-shaped initialHabit has no why,
+  // so seeding from it would blank a saved value on open.
+  const [why, setWhy] = useState('');
 
   useEffect(() => {
     const sourceHabit = habit ?? initialHabit;
@@ -98,15 +100,14 @@ export function useHabitEditScreen({
     setStreakGoal(values.streakGoal);
     setStrengthAlgorithm(values.strengthAlgorithm);
     setProgressEmojis(values.progressEmojis);
+    if (habit) setWhy(habit.why ?? '');
     formInitializedRef.current = true;
   }, [habit, initialHabit]);
-
-  const { motivation, setMotivationField } = useMotivationDraft(habit ?? null);
 
   const { handleSave, isSaving } = useHabitSaveHandler({
     habitId,
     habitName,
-    motivation: habit ? motivation : undefined,
+    why: habit ? why.trim() : undefined,
     onSuccess: () => {
       triggerSuccess();
       onClose();
@@ -189,14 +190,13 @@ export function useHabitEditScreen({
     handleSave,
     selectedEmoji,
     isSaving,
-    motivation,
-    motivationReady: habit != null,
     setHabitName,
-    setMotivationField,
+    setWhy,
     reminderTime,
     selectedColor,
     streakGoal,
     strengthAlgorithm,
     triggerSelection,
+    why,
   };
 }

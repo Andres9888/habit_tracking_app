@@ -26,7 +26,6 @@ import { ModalHeader } from '../../components/CreateHabitModal/components/ModalH
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
 import { HabitEditSkeleton } from './HabitEditSkeleton';
 import { EditLifecycleActions } from './EditLifecycleActions';
-import { MotivationSection } from './motivation';
 import { useHabitEditScreen } from './useHabitEditScreen';
 import type { HabitEditScreenProps } from './types';
 
@@ -152,6 +151,7 @@ function HabitEditScreenContent({
                       streakGoal={state.streakGoal}
                       strengthAlgorithm={state.strengthAlgorithm}
                       title='Edit your habit'
+                      why={state.why}
                       onAdvancedExpand={() =>
                         scrollViewRef.current?.scrollToEnd({ animated: true })
                       }
@@ -165,13 +165,8 @@ function HabitEditScreenContent({
                       onStrengthAlgorithmChange={
                         state.handleStrengthAlgorithmChange
                       }
+                      onWhyChange={state.setWhy}
                     />
-                    {state.motivationReady ? (
-                      <MotivationSection
-                        values={state.motivation}
-                        onChange={state.setMotivationField}
-                      />
-                    ) : null}
                   </Pressable>
                   <EditLifecycleActions
                     onArchive={state.handleArchive}
