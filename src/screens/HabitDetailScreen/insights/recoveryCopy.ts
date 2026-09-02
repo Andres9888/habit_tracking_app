@@ -33,14 +33,28 @@ export function spellCount(value: number): string {
   return NUMBER_WORDS[value] ?? String(value);
 }
 
-/** "Yesterday got away. Eight days didn't." */
+/**
+ * The subject of the headline. One miss keeps the day's own name
+ * ("Yesterday"); a multi-day miss has to say so, because the week strip is
+ * drawing every one of those dashed circles right underneath. A week or more
+ * stops counting and says "A week" — past that the number is only a scold.
+ */
+function missSubject(dayLabel: string, missedDays: number): string {
+  if (missedDays >= 7) return 'A week';
+  if (missedDays >= 2) return `${spellCount(missedDays)} days`;
+  return dayLabel;
+}
+
+/** "Yesterday got away. Eight days didn't." / "Two days got away. …" */
 export function recoveryHeadlineCopy(
   dayLabel: string,
-  brokenRun: number
+  brokenRun: number,
+  missedDays = 1
 ): string {
-  if (brokenRun <= 0) return `${dayLabel} got away. Today doesn’t have to.`;
-  if (brokenRun === 1) return `${dayLabel} got away. One day didn’t.`;
-  return `${dayLabel} got away. ${spellCount(brokenRun)} days didn’t.`;
+  const subject = missSubject(dayLabel, missedDays);
+  if (brokenRun <= 0) return `${subject} got away. Today doesn’t have to.`;
+  if (brokenRun === 1) return `${subject} got away. One day didn’t.`;
+  return `${subject} got away. ${spellCount(brokenRun)} days didn’t.`;
 }
 
 /**
@@ -52,6 +66,10 @@ export function recoveryBodyCopy(
   brokenRun: number,
   bestStreak: number
 ): string {
+  // Floor: "Your 2-day record still stands" is not reassurance, it is a
+  // reminder of how little there is. Below three days there is no record worth
+  // naming, so the card points forward instead.
+  if (bestStreak < 3) return 'Today starts the next one.';
   if (brokenRun > 0 && brokenRun >= bestStreak) {
     return `That ${brokenRun}-day run is still your record.`;
   }

@@ -17,6 +17,12 @@ export function goalLabelFor(days: number): string {
 interface UseGoalAdjustArgs {
   habitId: Id<'habits'>;
   currentGoal: number;
+  /**
+   * Opening selection when it should differ from the stored goal — Detail
+   * shows a suggested ladder before anything is persisted, so the sheet opens
+   * on that preset. Saving it still writes, because it is not `currentGoal`.
+   */
+  initialGoal?: number;
   visible: boolean;
   onClose: () => void;
 }
@@ -24,22 +30,24 @@ interface UseGoalAdjustArgs {
 export function useGoalAdjust({
   habitId,
   currentGoal,
+  initialGoal,
   visible,
   onClose,
 }: UseGoalAdjustArgs) {
   const { triggerSelection, triggerSuccess, triggerWarning } =
     useHapticFeedback();
   const updateHabit = useMutation(api.habits.update);
-  const [selected, setSelected] = useState<number>(currentGoal);
+  const opening = initialGoal ?? currentGoal;
+  const [selected, setSelected] = useState<number>(opening);
   const [saving, setSaving] = useState(false);
   const [confirmRemove, setConfirmRemove] = useState(false);
 
   useEffect(() => {
     if (visible) {
-      setSelected(currentGoal);
+      setSelected(opening);
       setConfirmRemove(false);
     }
-  }, [visible, currentGoal]);
+  }, [visible, opening]);
 
   const handleSelect = (days: number) => {
     triggerSelection();

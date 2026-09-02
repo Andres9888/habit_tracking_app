@@ -2,20 +2,20 @@
  * DetailGoalCard — the streak goal, on the detail screen rather than behind a
  * disclosure on History.
  *
- * Two states from the Habit Detail Prototype: an inline picker while no target
- * exists, and the ladder once one does. Both own the same Adjust sheet, which
- * is the only place a non-preset number can be chosen or a goal removed.
+ * The ladder always renders. With no stored target it runs on
+ * `suggestedGoal(bestStreak)` and says so in the eyebrow; nothing is written
+ * until the reader opens Change. Sending people to a picker first meant almost
+ * nobody had a goal, and the ladder — the whole motivational device — never
+ * rendered. The Adjust sheet stays the only place a number is chosen, changed
+ * or removed.
  */
 import { useState } from 'react';
-import { useMutation } from 'convex/react';
-import { api } from '../../../../../convex/_generated/api';
 import type { Habit } from '../../../../features/habits/types';
-import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { useThemeColors } from '../../../../theme';
 import { useInsightPalette } from '../../insightPalette';
 import { GoalAdjustSheet } from '../GoalAdjustSheet';
 import { GoalSetCard } from './GoalSetCard';
-import { GoalUnsetCard } from './GoalUnsetCard';
+import { suggestedGoal } from './presets';
 
 interface DetailGoalCardProps {
   /** Log-derived. Never `habit.currentStreak`; that field is not recomputed on a miss. */
@@ -31,43 +31,30 @@ export function DetailGoalCard({
 }: DetailGoalCardProps) {
   const palette = useInsightPalette();
   const { colors } = useThemeColors();
-  const { triggerSuccess } = useHapticFeedback();
-  const updateHabit = useMutation(api.habits.update);
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  const goal = habit.goalDuration ?? 0;
+  const storedGoal = habit.goalDuration ?? 0;
   const bestStreak = habit.bestStreak ?? 0;
-
-  const pick = (days: number) => {
-    triggerSuccess();
-    void updateHabit({ goalDuration: days, habitId: habit._id });
-  };
+  const suggested = storedGoal <= 0;
+  const goal = suggested ? suggestedGoal(bestStreak) : storedGoal;
 
   return (
     <>
-      {goal > 0 ? (
-        <GoalSetCard
-          bestStreak={bestStreak}
-          currentStreak={currentStreak}
-          goal={goal}
-          loggedToday={loggedToday}
-          palette={palette}
-          onChange={() => setSheetOpen(true)}
-        />
-      ) : (
-        <GoalUnsetCard
-          bestStreak={bestStreak}
-          currentStreak={currentStreak}
-          palette={palette}
-          onCustom={() => setSheetOpen(true)}
-          onPick={pick}
-        />
-      )}
+      <GoalSetCard
+        bestStreak={bestStreak}
+        currentStreak={currentStreak}
+        goal={goal}
+        loggedToday={loggedToday}
+        palette={palette}
+        suggested={suggested}
+        onChange={() => setSheetOpen(true)}
+      />
       <GoalAdjustSheet
-        currentGoal={goal}
+        currentGoal={storedGoal}
         currentStreak={currentStreak}
         habitColor={habit.color ?? habit.iconColor ?? colors.primary[700]}
         habitId={habit._id}
+        initialGoal={goal}
         visible={sheetOpen}
         onClose={() => setSheetOpen(false)}
       />

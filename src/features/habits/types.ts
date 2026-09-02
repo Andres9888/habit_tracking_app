@@ -23,8 +23,13 @@ export type ListHabit = FunctionReturnType<typeof api.habits.list>[number];
 /** Full habit document used by screens that fetch `habits.get` on demand. */
 export type FullHabit = Doc<'habits'>;
 
-/** A habit may be the slim list projection or a full on-demand document. */
-export type Habit = (ListHabit | FullHabit) & Partial<FullHabit>;
+/**
+ * A habit may be the slim list projection or a full on-demand document.
+ * `startSmallVersion` is joined from the source template by `habits.get`; it is
+ * authored copy for the smallest version of the habit, never stored on the doc.
+ */
+export type Habit = (ListHabit | FullHabit) &
+  Partial<FullHabit> & { startSmallVersion?: string };
 
 /** Typed Convex ID for a habit. */
 export type HabitId = Id<'habits'>;

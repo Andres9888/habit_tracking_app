@@ -1,4 +1,4 @@
-/** Two-minute guidance under the toggle while a miss is still unanswered. */
+/** Smallest-version guidance under the toggle while a miss is still unanswered. */
 import { Text, View } from 'react-native';
 import { useInsightPalette } from '../../insightPalette';
 
@@ -8,7 +8,7 @@ export function HeroRecoveryHint({ hint }: { hint: string }) {
   return (
     <View
       accessible
-      accessibilityLabel={`Two-minute version. ${hint}`}
+      accessibilityLabel={`Smallest version. ${hint}`}
       accessibilityRole='summary'
     >
       <Text
@@ -19,7 +19,7 @@ export function HeroRecoveryHint({ hint }: { hint: string }) {
           textAlign: 'center',
         }}
       >
-        Two-minute version
+        Smallest version
       </Text>
       <Text
         numberOfLines={2}

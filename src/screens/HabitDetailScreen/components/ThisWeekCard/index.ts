@@ -6,3 +6,4 @@ export type { WeekDay } from './useThisWeek';
 export { WeekStatsRow } from './WeekStatsRow';
 export type { WeekStat } from './WeekStatsRow';
 export { WeekCardHeader } from './WeekCardHeader';
+export { weekProgressLabel } from './weekProgressLabel';

@@ -8,6 +8,7 @@ import { getLocalDateString } from '../../../utils/getLocalDateString';
 import {
   brokenRunLength,
   missedLastScheduledDate,
+  missedRunLength,
   recoveryMissedDayLabel,
   streakStats,
   useStreakRuns,
@@ -17,6 +18,12 @@ interface HabitDetailDayStateArgs {
   completedDates: Set<string>;
   habit: Habit;
   insightDoneDates: Set<string>;
+  /**
+   * False while the 400-day log is still loading. The list only seeds recent
+   * days, so counting a miss run against an empty log would call an old habit
+   * "A week got away" for a frame and then snap back.
+   */
+  insightsReady?: boolean;
   isCompletedToday: boolean;
 }
 
@@ -24,6 +31,7 @@ export function useHabitDetailDayState({
   completedDates,
   habit,
   insightDoneDates,
+  insightsReady = true,
   isCompletedToday,
 }: HabitDetailDayStateArgs) {
   const today = getLocalDateString();
@@ -83,6 +91,19 @@ export function useHabitDetailDayState({
     isRecovery: todayState === 'open-today' && missedDate !== null,
     /** Current streak as the log reports it — never `habit.currentStreak`. */
     loggedStreak: streakStats(runs).current,
+    /**
+     * Consecutive missed scheduled days ending yesterday; 0 outside recovery.
+     * Held at 1 until the log has loaded — the single miss is already proven.
+     */
+    missedDays: !missedDate
+      ? 0
+      : insightsReady
+        ? missedRunLength({
+            completedDates: effectiveCompletedDates,
+            ...dayContext,
+            today,
+          })
+        : 1,
     recoveryDayLabel: missedDate
       ? recoveryMissedDayLabel(missedDate, today)
       : undefined,

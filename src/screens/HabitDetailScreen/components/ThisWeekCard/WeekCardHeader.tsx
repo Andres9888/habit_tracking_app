@@ -7,12 +7,15 @@ interface WeekCardHeaderProps {
   loggedLabel: string;
   palette: InsightPalette;
   rangeLabel: string;
+  /** `accent` is the forward-looking "N days left" framing before any log. */
+  tone?: 'muted' | 'accent';
 }
 
 export function WeekCardHeader({
   loggedLabel,
   palette,
   rangeLabel,
+  tone = 'muted',
 }: WeekCardHeaderProps) {
   return (
     <View
@@ -49,9 +52,10 @@ export function WeekCardHeader({
       </View>
       <Text
         style={{
-          color: palette.textTertiary,
+          color: tone === 'accent' ? palette.ctaGreen : palette.textTertiary,
           fontFamily: fontFamilies.primary.text,
           fontSize: 12,
+          fontWeight: tone === 'accent' ? fontWeights.semibold : undefined,
           paddingTop: 1,
         }}
       >

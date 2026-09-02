@@ -29,15 +29,8 @@ export interface DetailFlowSwitchProps {
 }
 
 export function DetailFlowSwitch(props: DetailFlowSwitchProps) {
-  const {
-    habit,
-    notes,
-    params,
-    pendingToggleDate,
-    route,
-    onOpenDay,
-    onOpenNote,
-  } = props;
+  const { habit, notes, params, route, onOpenDay, onOpenNote } = props;
+  const { pendingToggleDate } = props;
   if (route === 'history') {
     return (
       <HabitHistoryScreen
@@ -90,6 +83,7 @@ export function DetailFlowSwitch(props: DetailFlowSwitchProps) {
       todayNote={props.todayNote}
       visible={props.visible}
       onDayPress={props.onDayPress}
+      onEdit={props.onEdit}
       onOpenAnalytics={props.onOpenAnalytics}
       onOpenDay={onOpenDay}
       onOpenHistory={() => props.onOpenHistory()}

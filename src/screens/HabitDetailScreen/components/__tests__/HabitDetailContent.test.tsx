@@ -8,7 +8,10 @@ import { ScrollView } from 'react-native';
 import type { Habit } from '../../../../features/habits/types';
 import { HabitDetailContent } from '../HabitDetailContent';
 import { formatDayShort } from '../DayDetailScreen/dayCopy';
-import { RECOVERY_STRENGTH_CAPTION } from '../StrengthSnapshot';
+import {
+  DEFAULT_STRENGTH_CAPTION,
+  RECOVERY_STRENGTH_CAPTION,
+} from '../StrengthSnapshot';
 
 const trackingRows: {
   completed: boolean;
@@ -42,6 +45,11 @@ const WEEKDAY_NAME = [
   'Friday',
   'Saturday',
 ] as const;
+
+/** Local midnight of an offset day — pins how far the miss run can walk back. */
+function createdOn(offsetDays: number): number {
+  return new Date(`${ymd(offsetDays)}T00:00:00`).getTime();
+}
 
 function completeYesterday() {
   trackingRows.push({
@@ -77,6 +85,7 @@ const habit = {
 function renderContent(
   overrides: Partial<Habit> = {},
   handlers: {
+    onEdit?: () => void;
     onOpenAnalytics?: () => void;
     onOpenHistory?: () => void;
     onPinnedChange?: (pinned: boolean) => void;
@@ -89,6 +98,7 @@ function renderContent(
       habit={{ ...habit, ...overrides }}
       isCompletedToday={false}
       onDayPress={jest.fn()}
+      onEdit={handlers.onEdit}
       onOpenAnalytics={handlers.onOpenAnalytics}
       onOpenHistory={handlers.onOpenHistory}
       onPinnedChange={handlers.onPinnedChange}
@@ -200,18 +210,10 @@ describe('HabitDetailContent', () => {
     const result = renderContent();
     const { getByLabelText, getByText, queryByText } = result;
     expect(getByLabelText(/Habit strength 68 percent/)).toBeTruthy();
-    expect(
-      queryByText(
-        'Momentum from every check-in, weighted toward recent days. A miss dips it — it never resets.'
-      )
-    ).toBeTruthy();
+    expect(queryByText(DEFAULT_STRENGTH_CAPTION)).toBeTruthy();
     expect(queryByText('↑ 3')).toBeNull();
     expect(queryByText('9 day streak')).toBeNull();
-    expect(
-      getByText(
-        'Momentum from every check-in, weighted toward recent days. A miss dips it — it never resets.'
-      )
-    ).toBeTruthy();
+    expect(getByText(DEFAULT_STRENGTH_CAPTION)).toBeTruthy();
     expect(queryByText('Habit strength · a snapshot, not a score')).toBeNull();
 
     const text = renderedStrings(result.toJSON());
@@ -232,7 +234,9 @@ describe('HabitDetailContent', () => {
   });
 
   it('swaps the why card for recovery when yesterday was missed', () => {
-    const result = renderContent();
+    // Created yesterday, so yesterday is the whole missed run and the headline
+    // can still name the day. Multi-day misses have their own case below.
+    const result = renderContent({ createdAt: createdOn(-1) });
     const { getByLabelText, getByText, queryByText } = result;
     expect(
       getByText('Yesterday got away. Today doesn’t have to.')
@@ -242,15 +246,21 @@ describe('HabitDetailContent', () => {
         'Yesterday got away. Today doesn’t have to. Your 12-day record still stands.'
       )
     ).toBeTruthy();
-    expect(getByText('Two-minute version')).toBeTruthy();
+    // The hint no longer pastes the habit name into "two minutes of {name}".
+    expect(getByText('Smallest version')).toBeTruthy();
     expect(
-      getByText(
-        'Try two minutes of Wake-Up Movement. Stopping early still counts.'
-      )
+      getByText('Do the smallest version you’d still call done. It counts.')
     ).toBeTruthy();
     expect(queryByText(/Showing up is the streak/)).toBeNull();
     expect(getByLabelText(weekLabel(-1, 'missed'))).toBeTruthy();
-    expect(queryByText(/Have energy for the kids/)).toBeNull();
+    // The why pill loses its slot to the recovery card, but the why itself
+    // survives as the compressed line underneath it.
+    expect(queryByText('Your why')).toBeNull();
+    expect(
+      getByText(
+        'Your why · Have energy for the kids before the day takes over.'
+      )
+    ).toBeTruthy();
     // Neither Strength nor the Analytics door is suppressed after a miss.
     // Recovery is the ordinary state for anyone who did not log the last
     // scheduled day, and these rows are the only route to Analytics in the app.
@@ -350,6 +360,7 @@ describe('HabitDetailContent', () => {
     const today = new Date();
     const weekday = WEEKDAY_NAME[lastScheduled.getDay()];
     const { getByText, queryByText } = renderContent({
+      createdAt: createdOn(-3),
       daysOfWeek: [lastScheduled.getDay(), today.getDay()],
     });
 
@@ -456,5 +467,55 @@ describe('HabitDetailContent', () => {
     const { getByText } = renderContent({ goalDuration: 30 });
 
     expect(getByText("30 days — you're 1 in.")).toBeTruthy();
+  });
+
+  it('keeps the full why pill — not the line — in the neutral ready state', () => {
+    completeYesterday();
+    const { getByText, queryByText } = renderContent();
+
+    expect(getByText('Your why')).toBeTruthy();
+    expect(
+      queryByText(
+        'Your why · Have energy for the kids before the day takes over.'
+      )
+    ).toBeNull();
+  });
+
+  it('keeps the why on screen as one line after today is logged', () => {
+    const { getByText, queryByText } = render(
+      <HabitDetailContent
+        isCompletedToday
+        completedDates={new Set<string>()}
+        habit={habit}
+        onDayPress={jest.fn()}
+      />
+    );
+
+    expect(queryByText('Your why')).toBeNull();
+    expect(
+      getByText(
+        'Your why · Have energy for the kids before the day takes over.'
+      )
+    ).toBeTruthy();
+  });
+
+  it('opens Edit from the plan line under the habit name', () => {
+    const onEdit = jest.fn();
+    const { getByLabelText } = renderContent({}, { onEdit });
+
+    fireEvent.press(getByLabelText('Edit plan'));
+
+    expect(onEdit).toHaveBeenCalledTimes(1);
+  });
+
+  it('names the whole miss when two scheduled days went by', () => {
+    // The week strip is drawing two dashed circles; "Yesterday" would be a lie
+    // the reader can see.
+    const { getByText, queryByText } = renderContent({
+      createdAt: createdOn(-2),
+    });
+
+    expect(getByText('Two days got away. Today doesn’t have to.')).toBeTruthy();
+    expect(queryByText(/Yesterday got away/)).toBeNull();
   });
 });

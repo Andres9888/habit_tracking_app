@@ -72,6 +72,7 @@ export function HabitDetailSections({
         loggedToday={isCompletedToday}
       />
       <RecordDoors
+        daysOfData={insights.daysOfData}
         onOpenAnalytics={onOpenAnalytics}
         onOpenHistory={onOpenHistory}
       />

@@ -9,6 +9,8 @@ export interface HabitDetailContentProps {
   pendingToggleDate?: string | null;
   visible?: boolean;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
+  /** The plan line under the hero title opens Edit. */
+  onEdit?: () => void;
   onOpenAnalytics?: () => void;
   onOpenDay?: (date: string) => void;
   onOpenHistory?: () => void;
