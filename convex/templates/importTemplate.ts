@@ -206,6 +206,39 @@ export const importTemplate = mutation({
 });
 
 /**
+ * Populate imported habits created before template why propagation shipped.
+ * User-authored values are never overwritten.
+ */
+export const backfillImportedHabitWhy = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const usages = await ctx.db.query('templateUsage').collect();
+    let patchedCount = 0;
+    const patchedHabitIds: string[] = [];
+
+    for (const usage of usages) {
+      if (!usage.habitId) continue;
+      const habit = await ctx.db.get(usage.habitId);
+      const template = await ctx.db.get(usage.templateId);
+      if (!habit || !template || habit.why?.trim()) continue;
+
+      const why = resolveImportedWhy(template);
+      if (!why) continue;
+
+      await ctx.db.patch(usage.habitId, { why });
+      patchedCount++;
+      patchedHabitIds.push(usage.habitId);
+    }
+
+    return {
+      success: true,
+      patchedCount,
+      patchedHabitIds,
+    };
+  },
+});
+
+/**
  * Backfill existing imported habits with their source template growth type.
  * Run after `templatesDataSeed:backfillGrowthType` so templates are populated.
  */

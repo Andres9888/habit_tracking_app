@@ -1,5 +1,5 @@
 import type { Id } from '../_generated/dataModel';
-import { importTemplate } from './importTemplate';
+import { backfillImportedHabitWhy, importTemplate } from './importTemplate';
 
 type TemplateId = Id<'templates'>;
 
@@ -59,6 +59,45 @@ function createCtx(templateOverrides: Record<string, unknown> = {}) {
   };
 }
 
+function createBackfillCtx(why?: string) {
+  const habitId = 'habit_existing' as Id<'habits'>;
+  const templateId = 'template_existing' as TemplateId;
+  const habit = { _id: habitId, why };
+  const template = {
+    _id: templateId,
+    description: 'Writing regularly creates room to think clearly.',
+    suggestedWhy: undefined,
+    tagline: 'Make room for ideas worth keeping.',
+  };
+  const db = {
+    get: jest.fn(async (id: string) => {
+      if (id === habitId) return habit;
+      if (id === templateId) return template;
+      return null;
+    }),
+    patch: jest.fn(async () => undefined),
+    query: jest.fn(() => ({
+      collect: jest.fn(async () => [{ habitId, templateId }]),
+    })),
+  };
+  return { db, habitId };
+}
+
+function getBackfillHandler() {
+  return (
+    backfillImportedHabitWhy as unknown as {
+      _handler: (
+        ctx: ReturnType<typeof createBackfillCtx>,
+        args: Record<string, never>
+      ) => Promise<{
+        patchedCount: number;
+        patchedHabitIds: string[];
+        success: true;
+      }>;
+    }
+  )._handler;
+}
+
 describe('template import motivation', () => {
   it('imports the template tagline as the habit why', async () => {
     const ctx = createCtx();
@@ -100,5 +139,31 @@ describe('template import motivation', () => {
 
     const habit = ctx.inserted.find(({ table }) => table === 'habits');
     expect(habit?.record.why).toBe(`${'A'.repeat(139)}…`);
+  });
+});
+
+describe('template import motivation backfill', () => {
+  it('adds the source template why to an existing import with no why', async () => {
+    const ctx = createBackfillCtx();
+
+    await expect(getBackfillHandler()(ctx, {})).resolves.toEqual({
+      patchedCount: 1,
+      patchedHabitIds: [ctx.habitId],
+      success: true,
+    });
+    expect(ctx.db.patch).toHaveBeenCalledWith(ctx.habitId, {
+      why: 'Make room for ideas worth keeping.',
+    });
+  });
+
+  it('preserves an existing user-authored why', async () => {
+    const ctx = createBackfillCtx('My own reason.');
+
+    await expect(getBackfillHandler()(ctx, {})).resolves.toEqual({
+      patchedCount: 0,
+      patchedHabitIds: [],
+      success: true,
+    });
+    expect(ctx.db.patch).not.toHaveBeenCalled();
   });
 });
