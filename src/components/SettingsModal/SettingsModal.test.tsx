@@ -46,6 +46,14 @@ jest.mock('expo-linear-gradient', () => ({
 
 jest.mock('@react-native-community/datetimepicker', () => 'DateTimePicker');
 
+// The permission probe behind the reminder row lazily `import()`s its
+// implementation, which Jest's CJS VM cannot resolve. Grant permission so the
+// warning banner stays out of the way of the structural assertions.
+jest.mock('@/utils/notifications', () => ({
+  ...jest.requireActual('@/utils/notifications'),
+  hasNotificationPermissions: jest.fn(async () => true),
+}));
+
 // Free-tier premium state so conversion surfaces WOULD render if any leaked
 // onto the main Settings screen; the no-promo tests below hold the line.
 jest.mock('@/hooks/usePremium', () => ({
@@ -114,8 +122,8 @@ describe('SettingsModal', () => {
     return utils;
   }
 
-  it('orders sections per the Quiet Configuration Index', async () => {
-    const { toJSON } = await renderSettings();
+  it('collapses five section headers into three', async () => {
+    const { toJSON, queryByText } = await renderSettings();
     const texts = getFlattenedTexts(toJSON());
     const idx = (label: string) => {
       const at = texts.indexOf(label);
@@ -126,13 +134,17 @@ describe('SettingsModal', () => {
     // The account entry point is the profile hero card, which renders the
     // user's name rather than a section header.
     expect(idx('Test User')).toBeLessThan(idx('Appearance'));
-    expect(idx('Appearance')).toBeLessThan(idx('Behavior'));
-    expect(idx('Behavior')).toBeLessThan(idx('Notifications'));
-    expect(idx('Notifications')).toBeLessThan(idx('Data & Privacy'));
-    expect(idx('Data & Privacy')).toBeLessThan(idx('Help & About'));
+    expect(idx('Appearance')).toBeLessThan(idx('Habits'));
+    expect(idx('Habits')).toBeLessThan(idx('Data & about'));
+
+    // The headers this restructure merged away.
+    expect(queryByText('Behavior')).toBeNull();
+    expect(queryByText('Notifications')).toBeNull();
+    expect(queryByText('Data & Privacy')).toBeNull();
+    expect(queryByText('Help & About')).toBeNull();
   });
 
-  it('groups completion sound under Behavior and reminders under Notifications', async () => {
+  it('gathers ordering, sound, reminder and archive under Habits', async () => {
     const { toJSON } = await renderSettings({ completionSoundEnabled: true });
     const texts = getFlattenedTexts(toJSON());
     const idx = (label: string) => {
@@ -141,15 +153,15 @@ describe('SettingsModal', () => {
       return at;
     };
 
-    // Completion sound moved out of Reminders into Behavior.
-    expect(idx('Completion sound')).toBeGreaterThan(idx('Behavior'));
-    expect(idx('Completion sound')).toBeLessThan(idx('Notifications'));
-    // Streak reminders live in their own Notifications section.
-    expect(idx('Streak reminders')).toBeGreaterThan(idx('Notifications'));
-    expect(idx('Streak reminders')).toBeLessThan(idx('Data & Privacy'));
+    expect(idx('Sort order')).toBeLessThan(idx('Completion sound'));
+    expect(idx('Completion sound')).toBeLessThan(idx('Streak reminder'));
+    expect(idx('Streak reminder')).toBeLessThan(idx('Archived habits'));
+
+    expect(idx('Sort order')).toBeGreaterThan(idx('Habits'));
+    expect(idx('Archived habits')).toBeLessThan(idx('Data & about'));
   });
 
-  it('keeps archive and export under Data & Privacy', async () => {
+  it('keeps export in the closing Data & about card', async () => {
     const { toJSON } = await renderSettings();
     const texts = getFlattenedTexts(toJSON());
     const idx = (label: string) => {
@@ -158,9 +170,16 @@ describe('SettingsModal', () => {
       return at;
     };
 
-    expect(idx('Archived habits')).toBeGreaterThan(idx('Data & Privacy'));
-    expect(idx('Export my data')).toBeGreaterThan(idx('Data & Privacy'));
-    expect(idx('Export my data')).toBeLessThan(idx('Help & About'));
+    expect(idx('Export my data')).toBeGreaterThan(idx('Data & about'));
+  });
+
+  it('drops the subtitles the density pass removed', async () => {
+    const { queryByText } = await renderSettings();
+
+    expect(queryByText('Fit more on screen')).toBeNull();
+    expect(queryByText('How habits are ordered')).toBeNull();
+    expect(queryByText('View and restore hidden habits')).toBeNull();
+    expect(queryByText('Download habits as CSV or JSON')).toBeNull();
   });
 
   it('does not claim an export started before format selection completes', async () => {
@@ -203,7 +222,7 @@ describe('SettingsModal', () => {
     const { getByLabelText } = await renderSettings({ completionSoundEnabled: true });
 
     // Toggle rows announce their live value.
-    const streakRow = getByLabelText('Streak reminders');
+    const streakRow = getByLabelText('Streak reminder');
     expect(streakRow.props.accessibilityValue?.text).toBe('Off');
 
     const sortRow = getByLabelText('Sort order');
@@ -217,9 +236,23 @@ describe('SettingsModal', () => {
   it('shows the live reminder value instead of marketing copy', async () => {
     const { getByText, queryByText } = await renderSettings();
 
-    expect(getByText('Streak reminders')).toBeTruthy();
+    expect(getByText('Streak reminder')).toBeTruthy();
     expect(getByText('Off')).toBeTruthy();
     expect(queryByText('Nudge before an active streak slips')).toBeNull();
+  });
+
+  it('carries the reminder time in the row subtitle when reminders are on', async () => {
+    const { toJSON } = await renderSettings({
+      streakReminderTime: '20:00',
+      streakRemindersEnabled: true,
+    });
+
+    // The time is an emphasised span nested inside the subtitle, so the two
+    // halves are separate text nodes.
+    const texts = getFlattenedTexts(toJSON());
+    expect(texts).toContain('Every day at ');
+    expect(texts).toContain('8:00 PM');
+    expect(texts).not.toContain('Off');
   });
 
   // The switch and the tone picker are now SEPARATE rows. They used to share
@@ -250,7 +283,7 @@ describe('SettingsModal', () => {
   it('merges Support advocacy and moves What’s new to the footer', async () => {
     const { getByText, queryByText } = await renderSettings();
 
-    await waitFor(() => expect(getByText('Help & About')).toBeTruthy());
+    await waitFor(() => expect(getByText('Data & about')).toBeTruthy());
     expect(getByText('Love Chain Day?')).toBeTruthy();
     expect(getByText('Send feedback')).toBeTruthy();
     expect(queryByText('Rate Chain Day')).toBeNull();

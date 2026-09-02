@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { airy } from '@/theme/airyScale';
 import { RowAccessory } from './RowAccessory';
-import { RowLabel } from './RowLabel';
+import { RowBody } from './RowBody';
 import type { SettingsRowColors } from '../SettingsRow.colors';
 import type { SettingsRowProps } from '../SettingsRow.types';
 
@@ -20,14 +20,19 @@ interface SettingsRowContentProps {
   showChevron?: boolean;
   expanded?: boolean;
   subtitle?: SettingsRowProps['subtitle'];
+  subtitleStrong?: SettingsRowProps['subtitleStrong'];
   type: SettingsRowProps['type'];
   value: SettingsRowProps['value'];
   badge: SettingsRowProps['badge'];
   rightAccessory: SettingsRowProps['rightAccessory'];
+  /** Screen-reader guidance for the pressable body region of a toggle row. */
+  bodyAccessibilityHint?: string;
+  onBodyPress?: SettingsRowProps['onBodyPress'];
 }
 
 export function SettingsRowContent({
   badge,
+  bodyAccessibilityHint,
   colors,
   expanded,
   icon,
@@ -35,6 +40,7 @@ export function SettingsRowContent({
   isInteractiveInfo,
   label,
   labelColor,
+  onBodyPress,
   onToggle,
   pulseStyle,
   rightAccessory,
@@ -42,6 +48,7 @@ export function SettingsRowContent({
   showChevron,
   showTopBorder,
   subtitle,
+  subtitleStrong,
   type,
   value,
 }: SettingsRowContentProps) {
@@ -57,28 +64,19 @@ export function SettingsRowContent({
       }}
     >
       {type === 'toggle' ? <Animated.View style={pulseStyle} /> : null}
-      <View
-        accessible={isInteractiveInfo ? false : undefined}
-        className='mr-4 items-center justify-center'
-        importantForAccessibility={
-          isInteractiveInfo ? 'no-hide-descendants' : undefined
-        }
-        style={{
-          backgroundColor: iconBackgroundColor,
-          width: airy.tileSize,
-          height: airy.tileSize,
-          borderRadius: airy.tileRadius,
-        }}
-      >
-        {icon}
-      </View>
-      <RowLabel
+      <RowBody
+        bodyAccessibilityHint={bodyAccessibilityHint}
+        icon={icon}
+        iconBackgroundColor={iconBackgroundColor}
         isInteractiveInfo={isInteractiveInfo}
         label={label}
         labelColor={labelColor ?? colors.label}
+        primaryTextColor={colors.label}
         secondaryTextColor={secondaryTextColor}
         subtitle={subtitle}
+        subtitleStrong={subtitleStrong}
         type={type}
+        onBodyPress={onBodyPress}
       />
       {rightAccessory ?? (
         <RowAccessory

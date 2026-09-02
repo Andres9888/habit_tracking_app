@@ -6,8 +6,12 @@ import type { SettingsRowProps } from '../SettingsRow.types';
 interface RowLabelProps {
   label: SettingsRowProps['label'];
   subtitle?: SettingsRowProps['subtitle'];
+  /** Emphasised tail of the subtitle — "Every day at **8:00 PM**". */
+  subtitleStrong?: SettingsRowProps['subtitleStrong'];
   isInteractiveInfo: boolean;
   labelColor: string;
+  /** Primary text tint for the emphasised subtitle span. */
+  primaryTextColor: string;
   secondaryTextColor: string;
   type: SettingsRowProps['type'];
 }
@@ -15,8 +19,10 @@ interface RowLabelProps {
 export function RowLabel({
   label,
   subtitle,
+  subtitleStrong,
   isInteractiveInfo,
   labelColor,
+  primaryTextColor,
   secondaryTextColor,
   type,
 }: RowLabelProps) {
@@ -39,11 +45,24 @@ export function RowLabel({
       </View>
       {subtitle ? (
         <Text
-          className='mt-1'
           numberOfLines={2}
-          style={{ ...typography.caption, color: secondaryTextColor }}
+          style={{
+            ...typography.caption,
+            color: secondaryTextColor,
+            marginTop: 2,
+          }}
         >
           {subtitle}
+          {subtitleStrong ? (
+            <Text
+              style={{
+                color: primaryTextColor,
+                fontWeight: fontWeights.semibold,
+              }}
+            >
+              {subtitleStrong}
+            </Text>
+          ) : null}
         </Text>
       ) : null}
     </View>

@@ -53,8 +53,8 @@ export function SettingsSection({
   }
 
   return (
-    <View className='gap-2'>
-      <StaticSectionLabel icon={icon} subtitle={subtitle} title={title} />
+    <View style={{ gap: 10 }}>
+      <StaticSectionLabel subtitle={subtitle} title={title} />
       <View className='overflow-hidden rounded-2xl' style={cardStyle}>
         <SettingsRowDividerProvider>{children}</SettingsRowDividerProvider>
       </View>

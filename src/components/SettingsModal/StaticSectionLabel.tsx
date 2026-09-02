@@ -1,8 +1,7 @@
 /** StaticSectionLabel — editorial section heading: serif title, optional badge.
  *  The trailing green glyph was dropped: at heading scale it read as decoration
- *  competing with the row icon tiles below it. `icon` stays in the props so
- *  collapsible sections (which do use a glyph) share one call signature. */
-import { ReactNode } from 'react';
+ *  competing with the row icon tiles below it. There is no `icon` prop — only
+ *  collapsible sections still render a glyph, via CollapsibleSectionCard. */
 import { Text, View } from 'react-native';
 import { typography, fontWeights } from '@/theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
@@ -11,13 +10,11 @@ import { settingsSectionTitle } from './settingsSectionTitleStyle';
 interface StaticSectionLabelProps {
   title: string;
   subtitle?: string;
-  icon?: ReactNode;
 }
 
 export function StaticSectionLabel({
   title,
   subtitle,
-  icon,
 }: StaticSectionLabelProps) {
   const { colors: themeColors } = useThemeColors();
 

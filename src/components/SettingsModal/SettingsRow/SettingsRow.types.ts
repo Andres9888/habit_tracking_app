@@ -5,11 +5,18 @@ export interface SettingsRowProps {
   iconBackgroundColor: string;
   label: string;
   subtitle?: string;
+  /** Emphasised span rendered inline after `subtitle` — "Every day at **8:00 PM**". */
+  subtitleStrong?: string;
   type: 'toggle' | 'navigation' | 'selection' | 'info';
   value?: boolean | string;
   badge?: number;
   onPress?: () => void;
   onToggle?: (value: boolean) => void;
+  /** `type='toggle'` only: makes the icon+label region its own pressable so the
+   *  switch stays a separate accessibility node (a switch nested inside a button
+   *  is announced twice and traps VoiceOver). Row keeps its unwrapped early
+   *  return; `accessibilityHint` becomes the body's hint. Undefined = today. */
+  onBodyPress?: () => void;
   /** Custom right-side content — replaces the default type-based accessory */
   rightAccessory?: ReactNode;
   /** Adds a chevron beside string values for inline expandable info rows. */

@@ -1,24 +1,36 @@
-/** RowCount — plain trailing count on a navigation row.
- *  Deliberately not a pill: a pill reads as an unread badge, and this is just
- *  how many items sit behind the row (e.g. archived habits). */
-import { Text } from 'react-native';
+/** RowCount — trailing count on a navigation row, as a soft GOLD pill.
+ *  It reads as metadata, not an unread badge: the 1b mock pairs the gold
+ *  navigational tile at the row's head with a matching gold count at its tail,
+ *  so "45 archived habits" is scannable without shouting. */
+import { Text, View } from 'react-native';
 import { typography, fontWeights } from '@/theme/typography';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface RowCountProps {
   count: number;
-  color: string;
 }
 
-export function RowCount({ count, color }: RowCountProps) {
+export function RowCount({ count }: RowCountProps) {
+  const { settings, isDark } = useThemeColors();
+
   return (
-    <Text
+    <View
       style={{
-        ...typography.bodySmall,
-        fontWeight: fontWeights.bold,
-        color,
+        backgroundColor: settings.neutral.bg,
+        borderRadius: 999,
+        paddingHorizontal: 10,
+        paddingVertical: 3,
       }}
     >
-      {count}
-    </Text>
+      <Text
+        style={{
+          ...typography.label,
+          color: isDark ? settings.neutral.icon : '#7D5907',
+          fontWeight: fontWeights.bold,
+        }}
+      >
+        {count}
+      </Text>
+    </View>
   );
 }
