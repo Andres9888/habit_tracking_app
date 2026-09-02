@@ -13,6 +13,22 @@ import {
 import { progressEmojisValidator } from '../lib/progressEmojisValidator';
 import { validateDaysOfWeek } from '../habits/validation';
 
+const MAX_IMPORTED_WHY_LENGTH = 140;
+
+const resolveImportedWhy = (template: {
+  description: string;
+  suggestedWhy?: string;
+  tagline?: string;
+}) => {
+  const why =
+    template.suggestedWhy?.trim() ||
+    template.tagline?.trim() ||
+    template.description.trim();
+  if (!why) return undefined;
+  if (why.length <= MAX_IMPORTED_WHY_LENGTH) return why;
+  return `${why.slice(0, MAX_IMPORTED_WHY_LENGTH - 1).trimEnd()}…`;
+};
+
 /**
  * Mutation: Import a template to create a new habit
  */
@@ -126,6 +142,7 @@ export const importTemplate = mutation({
     }
 
     // Create habit from template
+    const importedWhy = resolveImportedWhy(template);
     const habitId = await ctx.db.insert('habits', {
       accessibility: 1,
       accessibilityUpdatedAt: Date.now(),
@@ -164,13 +181,16 @@ export const importTemplate = mutation({
         if (typeof minutes !== 'number') return {};
         const derived =
           minutes <= 2 ? 'forgiving' : minutes <= 20 ? 'balanced' : 'strict';
-        return { strengthAlgorithm: derived as 'forgiving' | 'balanced' | 'strict' };
+        return {
+          strengthAlgorithm: derived as 'forgiving' | 'balanced' | 'strict',
+        };
       })(),
       strengthLevel: 'starting',
       strengthUpdatedAt: Date.now(),
       totalCompletions: 0,
       totalMisses: 0,
       userId,
+      ...(importedWhy ? { why: importedWhy } : {}),
     });
 
     // Track template usage analytics
