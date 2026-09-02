@@ -47,7 +47,16 @@ module.exports = {
   useScrollViewOffset: () => ({ value: 0 }),
   measure: () => null,
   scrollTo: () => {},
-  useSharedValue: (initial) => ({ value: initial }),
+  useSharedValue: (initial) => {
+    const shared = {
+      value: initial,
+      get: () => shared.value,
+      set: (next) => {
+        shared.value = typeof next === 'function' ? next(shared.value) : next;
+      },
+    };
+    return shared;
+  },
   useAnimatedStyle: (cb) => (typeof cb === 'function' ? cb() : {}) || {},
   useAnimatedProps: (cb) => (typeof cb === 'function' ? cb() : {}) || {},
   useFrameCallback: () => ({ setActive: () => {}, isActive: false }),
