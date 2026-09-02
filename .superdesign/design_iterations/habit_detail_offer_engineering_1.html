@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Habit Details — Offer Engineering pass · ChainDay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;0,7..72,700;1,7..72,400;1,7..72,500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --cream:#F5F2EC; --cream-2:#FAF8F5; --cream-deep:#EFEAE0;
+  --ink:#1E1B16; --ink2:#4C463C; --ink3:#7A7267; --ink4:#9C9486;
+  --green:#0C7C59; --green-band:#0B5D42; --green-wash:#E8F2EC; --green-tint:#CFE3D8; --tile:#EAF1EC;
+  --amber:#B0723A; --amber-ink:#8A5526; --amber-soft:#F4E4CE;
+  --wash-top:#F1E6D5;
+  --hair:#E9E2D5; --hair-2:#EFE9DE;
+  --cell-empty:#F0EDE4; --cell-future:#F7F5EF; --missed:#D6CFC3;
+  --card:#FFFFFF;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:
+    radial-gradient(1100px 620px at 12% -8%, #FBF7F0 0%, rgba(251,247,240,0) 62%),
+    radial-gradient(900px 520px at 92% 4%, #F2F5F1 0%, rgba(242,245,241,0) 58%),
+    var(--cream) !important;
+  color:var(--ink) !important;
+  font-family:'DM Sans', ui-sans-serif, system-ui, sans-serif !important;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:'Literata', ui-serif, Georgia, serif !important; font-weight:600 !important; margin:0 !important; letter-spacing:-0.012em !important;}
+.serif{font-family:'Literata', ui-serif, Georgia, serif !important;}
+.sans{font-family:'DM Sans', ui-sans-serif, system-ui, sans-serif !important;}
+.wrap{max-width:1360px;margin:0 auto;padding:56px 28px 96px}
+
+/* ---------- page header ---------- */
+.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink4);font-weight:600}
+.thesis{font-family:'Literata',serif !important;font-style:italic;font-size:19px;line-height:1.5;color:var(--ink2);max-width:720px}
+.pillars{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:8px 15px;font-size:12.5px;font-weight:600;border:1px solid var(--hair);background:#fff;color:var(--ink2)}
+.pill .dot{width:7px;height:7px;border-radius:50%}
+.pill.dfy .dot{background:var(--green)} .pill.sys .dot{background:var(--green-band)} .pill.sup .dot{background:var(--amber)}
+.pill small{font-weight:400;color:var(--ink4)}
+.rule{height:1px;background:linear-gradient(90deg,var(--hair),rgba(233,226,213,0));margin:34px 0 0}
+
+/* ---------- phones ---------- */
+.stage{display:flex;gap:56px;flex-wrap:wrap;justify-content:center;margin-top:44px}
+.col{display:flex;flex-direction:column;align-items:center;gap:16px}
+.frame-label{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--ink3)}
+.frame-label b{font-weight:700;color:var(--ink)}
+.frame-label .tag{font-size:10px;letter-spacing:.06em;text-transform:none;font-weight:500;color:var(--ink4);border:1px solid var(--hair);border-radius:999px;padding:3px 9px;background:#fff}
+.bezel{padding:11px;border-radius:55px;background:linear-gradient(160deg,#26221C,#12100D 60%,#211D18);box-shadow:0 40px 80px -30px rgba(50,38,22,.45), 0 2px 0 rgba(255,255,255,.25) inset;}
+.screen{width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;background:var(--cream);}
+.scroll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+.wash{background:linear-gradient(180deg,var(--wash-top) 0px,#F3EBDE 120px,#F5F1E9 250px,var(--cream) 340px)}
+.pad{padding:0 20px}
+
+/* status bar */
+.statusbar{height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:relative}
+.statusbar .time{font-size:15.5px;font-weight:700;letter-spacing:-.01em;color:#0F0D0A}
+.notch{position:absolute;left:50%;transform:translateX(-50%);top:9px;width:92px;height:31px;border-radius:20px;background:#0B0A08}
+.sb-right{display:flex;align-items:center;gap:6px;color:#0F0D0A}
+.batt{width:24px;height:12px;border-radius:3px;background:#0F0D0A;position:relative}
+.batt:after{content:"";position:absolute;right:-3px;top:3.5px;width:2px;height:5px;border-radius:0 2px 2px 0;background:#0F0D0A}
+
+/* nav */
+.navrow{display:flex;align-items:center;justify-content:space-between;height:44px;padding:0 20px}
+.nav-edit{display:flex;align-items:center;gap:7px;color:var(--green);font-size:16px;font-weight:600}
+.pinned{position:absolute;left:0;right:0;top:0;z-index:40;background:rgba(241,232,219,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(214,201,180,.55)}
+.pinned .bar{display:flex;align-items:center;justify-content:space-between;height:44px;padding:0 20px}
+.pinned .ttl{font-family:'Literata',serif !important;font-size:17px;font-weight:600;color:var(--ink)}
+
+/* hero */
+.h-title{font-family:'Literata',serif !important;font-size:26px;line-height:32px;font-weight:700;text-align:center;color:var(--ink);letter-spacing:-.02em;padding:6px 6px 0}
+.h-sub{text-align:center;font-size:14.5px;color:#5D6B62;margin-top:7px}
+.planline{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:8px;font-size:13.5px;color:#4F5C54;font-weight:500}
+.planline .ic{opacity:.55;display:flex}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--hair);border-radius:20px;box-shadow:0 1px 2px rgba(80,60,30,.045),0 8px 20px -12px rgba(80,60,30,.10)}
+.card.amberline{border-color:#EFE0C9}
+.recov-h{font-family:'Literata',serif !important;font-size:20.5px;line-height:27px;font-weight:700;letter-spacing:-.02em;color:var(--ink)}
+.recov-b{font-size:14px;line-height:20px;color:#6E6559;margin-top:9px}
+.whyline{font-family:'Literata',serif !important;font-style:italic;font-size:13px;line-height:18px;color:var(--amber-ink);margin-top:11px;padding-left:11px;border-left:2px solid var(--amber-soft)}
+
+/* CTA */
+.cta{height:56px;border-radius:19px;background:var(--green);display:flex;align-items:center;padding:0 18px;gap:14px;box-shadow:0 12px 26px -14px rgba(12,124,89,.85),0 2px 6px rgba(12,124,89,.20)}
+.cta .ring{width:26px;height:26px;border-radius:50%;border:2.4px solid rgba(255,255,255,.62)}
+.cta .lbl{font-family:'Literata',serif !important;font-size:19px;font-weight:600;color:#fff;letter-spacing:-.01em}
+.cta .tap{margin-left:auto;font-size:13.5px;font-weight:700;color:rgba(255,255,255,.92)}
+.hint{text-align:center;margin-top:16px}
+.hint .k{font-size:13px;font-weight:600;color:var(--green)}
+.hint .t{font-size:13.5px;line-height:19px;color:#6E6559;margin-top:3px}
+
+/* week */
+.wk-h{display:flex;align-items:flex-start;justify-content:space-between}
+.wk-t{font-size:16.5px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+.wk-d{font-size:12.5px;color:var(--ink3);margin-top:2px}
+.wk-r{font-size:13px;color:var(--ink3)}
+.wk-r.fwd{color:var(--green);font-weight:600}
+.days{display:flex;justify-content:space-between;margin-top:14px}
+.day{display:flex;flex-direction:column;align-items:center;gap:7px;width:38px}
+.day .dn{font-size:12px;font-weight:600;color:var(--ink4)}
+.day .cell{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.day .num{font-size:12.5px;color:var(--ink3)}
+.cell.miss{border:1.6px dashed var(--missed);background:transparent}
+.cell.today{border:2px solid var(--green);background:#fff}
+.cell.today i{width:7px;height:7px;border-radius:50%;background:var(--green);display:block}
+.cell.future{background:var(--cell-future)}
+.day.is-today .dn,.day.is-today .num{color:var(--green);font-weight:700}
+
+/* strength */
+.dial{width:50px;height:50px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:conic-gradient(var(--green) 0 8%, #DCE7DF 8% 100%);position:relative;flex:none}
+.dial:before{content:"";position:absolute;inset:5px;border-radius:50%;background:#fff}
+.dial .v{position:relative;font-size:15px;font-weight:700;color:var(--ink);line-height:1}
+.dial .u{position:relative;font-size:8.5px;font-weight:600;color:var(--ink4);letter-spacing:.02em;margin-top:2px;line-height:1}
+.ov{font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;color:var(--ink4)}
+.st-l{font-size:13.5px;font-weight:700;color:var(--ink)}
+.st-c{font-size:11.5px;line-height:16px;color:var(--ink3);margin-top:2px}
+
+/* goal */
+.goal-unset{border:1.5px dashed #D9D1C1;border-radius:20px;background:rgba(255,255,255,.35)}
+.g-eyebrow{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:var(--ink3)}
+.g-h{font-family:'Literata',serif !important;font-size:19px;line-height:25px;font-weight:700;color:var(--ink);margin-top:9px;letter-spacing:-.015em}
+.g-b{font-size:13.5px;line-height:20px;color:#6E6559;margin-top:8px}
+.presets{display:flex;gap:9px;margin-top:15px}
+.preset{flex:1;height:48px;border-radius:13px;background:var(--cell-empty);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:var(--ink2)}
+.preset.sel{background:var(--green-wash);border:1.5px solid var(--green-tint);color:var(--green);font-weight:700}
+.g-s{font-size:13px;color:var(--ink3);margin-top:14px}
+.track{position:relative;height:46px;margin-top:16px;padding:0 8px}
+.track .bar{position:absolute;left:8px;right:8px;top:11px;height:5px;border-radius:3px;background:var(--cell-empty)}
+.track .fill{position:absolute;left:8px;top:11px;height:5px;border-radius:3px;background:var(--green)}
+.mark{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:5px}
+.mark .d{width:13px;height:13px;border-radius:50%;background:#fff;border:2.5px solid var(--green-tint);margin-top:5px}
+.mark.now .d{background:var(--green);border-color:var(--green)}
+.mark.record .d{background:#fff;border-color:var(--amber)}
+.mark.goal .d{background:#fff;border-color:var(--green)}
+.mark .lb{font-size:10.5px;font-weight:600;color:var(--ink3);white-space:nowrap}
+.mark.now .lb{color:var(--green)} .mark.record .lb{color:var(--amber-ink)}
+.g-plan{font-size:12.5px;line-height:19px;color:#6E6559;margin-top:8px;padding-top:11px;border-top:1px solid var(--hair-2)}
+.chg{font-size:12.5px;font-weight:600;color:var(--green)}
+
+/* doors */
+.seclabel{font-size:10.5px;letter-spacing:.19em;text-transform:uppercase;font-weight:700;color:var(--ink3);margin:26px 0 10px;padding:0 4px}
+.door{display:flex;align-items:center;gap:13px;padding:14px 15px}
+.door .tile{width:42px;height:42px;border-radius:13px;background:var(--tile);display:flex;align-items:center;justify-content:center;flex:none;color:var(--green)}
+.door .tt{font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+.door .ss{font-size:12.5px;color:var(--ink3);margin-top:2px}
+.door .chev{margin-left:auto;color:#B9B0A2}
+.divider{height:1px;background:var(--hair-2);margin-left:70px}
+.lockbar{display:block;height:3px;border-radius:2px;background:var(--cell-empty);margin-top:7px;width:150px;position:relative;overflow:hidden}
+.lockbar i{position:absolute;left:0;top:0;bottom:0;width:35.7%;background:var(--green-tint);display:block}
+
+/* sticky cta */
+.stickybar{position:absolute !important;left:0;right:0;bottom:0;z-index:45;padding:16px 20px 28px;
+  background:linear-gradient(180deg,rgba(245,242,236,0) 0%,rgba(245,242,236,.86) 34%,rgba(245,242,236,1) 68%)}
+.homebar{position:absolute;left:50%;transform:translateX(-50%);bottom:9px;width:134px;height:5px;border-radius:3px;background:rgba(30,27,22,.28);z-index:60}
+
+/* insets — the same screen at other scroll positions */
+.inset{width:412px;max-width:100%}
+.inset-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--ink4);margin:2px 0 7px}
+.inset-b{border:1px solid var(--hair);border-radius:18px;overflow:hidden;box-shadow:0 10px 26px -20px rgba(80,60,30,.35);background:var(--cream)}
+.inset-s{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ink4);padding:11px 20px 0}
+
+/* change markers */
+.mk{position:absolute;width:19px;height:19px;border-radius:50%;background:var(--amber);color:#fff;font-size:10.5px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 3px rgba(245,242,236,.95),0 2px 6px rgba(120,80,30,.35);z-index:30}
+.rel{position:relative}
+
+/* ---------- annotations ---------- */
+.sechead{margin-top:82px;display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap}
+.sechead h2{font-size:28px}
+.sechead p{margin:0;font-size:14px;color:var(--ink3);max-width:560px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(392px,1fr));gap:18px;margin-top:26px}
+.acard{background:#fff;border:1px solid var(--hair);border-radius:22px;padding:22px 22px 20px;box-shadow:0 1px 2px rgba(80,60,30,.04),0 14px 30px -22px rgba(80,60,30,.22);display:flex;flex-direction:column}
+.acard.bug{background:linear-gradient(180deg,#FFFDF9,#FFF);border-color:#EFE0C9}
+.ahead{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.badge{width:28px;height:28px;border-radius:9px;background:var(--ink);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+.badge.amberb{background:var(--amber)}
+.acard h3{font-size:17.5px;line-height:23px;flex:1 1 220px;letter-spacing:-.015em}
+.chips{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.chip{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;padding:4px 9px;border-radius:999px;border:1px solid var(--hair);color:var(--ink3);background:var(--cream-2)}
+.chip.dfy{color:var(--green);border-color:var(--green-tint);background:var(--green-wash)}
+.chip.sys{color:var(--green-band);border-color:#CFDFD6;background:#EDF3EF}
+.chip.sup{color:var(--amber-ink);border-color:#EFDFC8;background:#FBF3E7}
+.chip.trust{color:#6B5B44;border-color:#E5DCCB;background:#F6F1E7}
+.chip.eff{margin-left:auto;color:var(--ink2)}
+.rows{margin-top:15px;display:flex;flex-direction:column;gap:9px}
+.row{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:start}
+.row .k{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ink4);padding-top:3px}
+.row .v{font-size:13.2px;line-height:19px;color:var(--ink2)}
+.row .v code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.8px;background:var(--cream-2);border:1px solid var(--hair-2);border-radius:5px;padding:1px 5px;color:#5C5346}
+.row.rev .v{color:#3F4A43}
+.row.rev .k{color:var(--green-band)}
+.cite{color:var(--amber-ink);font-weight:600}
+
+/* stays + order */
+.stays{margin-top:70px;background:linear-gradient(180deg,#FBF9F5,#FFF);border:1px solid var(--hair);border-radius:22px;padding:24px 26px}
+.stays ul{list-style:none;margin:16px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px 30px}
+.stays li{display:flex;gap:11px;font-size:13.4px;line-height:19px;color:var(--ink2);align-items:flex-start}
+.stays li .ck{color:var(--green);flex:none;margin-top:1px}
+.stays li b{font-weight:700;color:var(--ink)}
+.order{margin-top:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.ocard{border:1px solid var(--hair);border-radius:18px;padding:18px 20px;background:#fff}
+.ocard.first{border-color:#EFE0C9;background:#FFFCF7}
+.ocard .p{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--ink4)}
+.ocard h4{font-size:16px;margin-top:6px !important}
+.ocard p{margin:7px 0 0;font-size:13px;line-height:19px;color:var(--ink3)}
+.foot{margin-top:34px;font-size:12.8px;line-height:20px;color:var(--ink3);border-top:1px solid var(--hair);padding-top:18px;max-width:900px}
+.foot b{color:var(--ink2)}
+@media (max-width:900px){ .wrap{padding:34px 16px 60px} .stage{gap:34px} .sechead h2{font-size:23px} }
+@media (max-width:460px){ .bezel{padding:8px;border-radius:44px} .screen{width:340px;height:740px} .grid{grid-template-columns:1fr} .row{grid-template-columns:80px 1fr} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="eyebrow">ChainDay · Design review · 2026-09-02</div>
+    <h1 style="font-size:42px;line-height:48px;margin-top:14px !important;max-width:900px">Habit Details — Offer Engineering pass</h1>
+    <p class="thesis" style="margin-top:16px">“20% on the result, 80% on removing the pain of getting there.”</p>
+    <div class="pillars">
+      <span class="pill dfy"><span class="dot"></span>Done-for-you <small>· removes action</small></span>
+      <span class="pill sys"><span class="dot"></span>Systems <small>· removes thinking</small></span>
+      <span class="pill sup"><span class="dot"></span>Support <small>· removes fear</small></span>
+      <span class="pill" style="color:var(--ink4)"><small>Source: docs/DESIGN_HABIT_DETAIL_OFFER_ENGINEERING_REVIEW_2026-09-02.md</small></span>
+    </div>
+    <div class="rule"></div>
+  </header>
+
+  <!-- ================= PHONES ================= -->
+  <section class="stage">
+
+    <!-- ---------------- BEFORE ---------------- -->
+    <div class="col">
+      <div class="frame-label"><b>Before</b> <span class="tag">shipped · settings-lighter-1b</span></div>
+      <div class="bezel">
+        <div class="screen">
+          <div class="scroll wash">
+
+            <div class="statusbar">
+              <span class="time">10:04</span>
+              <div class="notch"></div>
+              <div class="sb-right">
+                <span style="font-size:11px;letter-spacing:1px;color:#B7AE9E">••••</span>
+                <i data-lucide="wifi" style="width:16px;height:16px"></i>
+                <span class="batt"></span>
+              </div>
+            </div>
+
+            <div class="navrow">
+              <i data-lucide="chevron-left" style="width:26px;height:26px;color:var(--green);stroke-width:2.4"></i>
+              <span class="nav-edit"><i data-lucide="pencil" style="width:17px;height:17px"></i>Edit</span>
+            </div>
+
+            <div class="h-title">24-Hour Purchase Rule</div>
+            <div class="h-sub">Daily</div>
+
+            <div class="pad" style="margin-top:20px">
+              <div class="card amberline" style="padding:20px 19px">
+                <div class="recov-h">Yesterday got away. Today doesn’t have to.</div>
+                <div class="recov-b">Your 2-day record still stands.</div>
+              </div>
+            </div>
+
+            <div class="pad" style="margin-top:19px">
+              <div class="cta">
+                <span class="ring"></span>
+                <span class="lbl">Complete today</span>
+                <span class="tap">Tap</span>
+              </div>
+              <div class="hint">
+                <div class="k">Two-minute version</div>
+                <div class="t">Try two minutes of 24-Hour Purchase Rule. Stopping early still counts.</div>
+              </div>
+            </div>
+
+            <div class="pad" style="margin-top:26px">
+              <div class="card" style="padding:17px 17px 16px">
+                <div class="wk-h">
+                  <div>
+                    <div class="wk-t">This week</div>
+                    <div class="wk-d">Aug 31 – Sep 6</div>
+                  </div>
+                  <div class="wk-r">0 days logged</div>
+                </div>
+                <div class="days">
+                  <div class="day"><span class="dn">M</span><span class="cell miss"></span><span class="num">31</span></div>
+                  <div class="day"><span class="dn">T</span><span class="cell miss"></span><span class="num">1</span></div>
+                  <div class="day is-today"><span class="dn">W</span><span class="cell today"><i></i></span><span class="num">2</span></div>
+                  <div class="day"><span class="dn">T</span><span class="cell future"></span><span class="num">3</span></div>
+                  <div class="day"><span class="dn">F</span><span class="cell future"></span><span class="num">4</span></div>
+                  <div class="day"><span class="dn">S</span><span class="cell future"></span><span class="num">5</span></div>
+                  <div class="day"><span class="dn">S</span><span class="cell future"></span><span class="num">6</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pad" style="margin-top:15px">
+              <div class="card" style="padding:12px 15px;display:flex;align-items:center;gap:13px">
+                <div class="dial"><span class="v">8</span></div>
+                <div style="flex:1">
+                  <div class="st-l">Starting Out</div>
+                  <div class="st-c">Dipped, not reset. Recent days still count most.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pad" style="margin-top:15px">
+              <div class="goal-unset" style="padding:19px 18px 20px">
+                <div class="g-eyebrow">Streak goal</div>
+                <div class="g-h">Give this run a finish line.</div>
+                <div class="g-b">Your record is 2 days. Pick a target and the ladder tracks it from your next check-in.</div>
+                <div class="presets">
+                  <span class="preset sel">7</span>
+                  <span class="preset">21</span>
+                  <span class="preset">30</span>
+                  <span class="preset" style="font-size:14px">Custom</span>
+                </div>
+                <div class="g-s">Suggested: 7 — it clears your record by 5 days.</div>
+              </div>
+            </div>
+
+            <div class="pad">
+              <div class="seclabel">The record</div>
+              <div class="card" style="padding:0;overflow:hidden">
+                <div class="door">
+                  <span class="tile"><i data-lucide="calendar-days" style="width:20px;height:20px"></i></span>
+                  <div><div class="tt">Calendar &amp; notes</div><div class="ss">View or correct past days</div></div>
+                  <i data-lucide="chevron-right" class="chev" style="width:19px;height:19px"></i>
+                </div>
+                <div class="divider"></div>
+                <div class="door">
+                  <span class="tile"><i data-lucide="bar-chart-3" style="width:20px;height:20px"></i></span>
+                  <div><div class="tt">Patterns &amp; trends</div><div class="ss">See what helps you stay consistent</div></div>
+                  <i data-lucide="chevron-right" class="chev" style="width:19px;height:19px"></i>
+                </div>
+              </div>
+              <div style="height:64px"></div>
+            </div>
+
+          </div>
+          <div class="homebar"></div>
+        </div>
+      </div>
+      <!-- inset: the rest of the Before screen -->
+      <div class="inset">
+        <div class="inset-l">Same screen, scrolled to the end</div>
+        <div class="inset-b">
+          <div class="inset-s">Below the fold</div>
+          <div class="pad" style="padding-top:12px;padding-bottom:18px">
+            <div class="goal-unset" style="padding:19px 18px 20px">
+              <div class="g-eyebrow">Streak goal</div>
+              <div class="g-h">Give this run a finish line.</div>
+              <div class="g-b">Your record is 2 days. Pick a target and the ladder tracks it from your next check-in.</div>
+              <div class="presets">
+                <span class="preset sel">7</span>
+                <span class="preset">21</span>
+                <span class="preset">30</span>
+                <span class="preset" style="font-size:14px">Custom</span>
+              </div>
+              <div class="g-s">Suggested: 7 — it clears your record by 5 days.</div>
+            </div>
+            <div class="seclabel">The record</div>
+            <div class="card" style="padding:0;overflow:hidden">
+              <div class="door">
+                <span class="tile"><i data-lucide="calendar-days" style="width:20px;height:20px"></i></span>
+                <div><div class="tt">Calendar &amp; notes</div><div class="ss">View or correct past days</div></div>
+                <i data-lucide="chevron-right" class="chev" style="width:19px;height:19px"></i>
+              </div>
+              <div class="divider"></div>
+              <div class="door">
+                <span class="tile"><i data-lucide="bar-chart-3" style="width:20px;height:20px"></i></span>
+                <div><div class="tt">Patterns &amp; trends</div><div class="ss">See what helps you stay consistent</div></div>
+                <i data-lucide="chevron-right" class="chev" style="width:19px;height:19px"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:12.5px;color:var(--ink3);max-width:412px;text-align:center;line-height:18px">
+        Three grades before one instruction: miss → 0 days logged → strength 8 → record 2 days.
+      </div>
+    </div>
+
+    <!-- ---------------- AFTER ---------------- -->
+    <div class="col">
+      <div class="frame-label"><b>After</b> <span class="tag">proposed · pre-scrolled ~120px</span></div>
+      <div class="bezel">
+        <div class="screen">
+
+          <!-- pinned compact header (visible because the page is scrolled) -->
+          <div class="pinned">
+            <div class="statusbar">
+              <span class="time">10:04</span>
+              <div class="notch"></div>
+              <div class="sb-right">
+                <span style="font-size:11px;letter-spacing:1px;color:#B7AE9E">••••</span>
+                <i data-lucide="wifi" style="width:16px;height:16px"></i>
+                <span class="batt"></span>
+              </div>
+            </div>
+            <div class="bar">
+              <i data-lucide="chevron-left" style="width:26px;height:26px;color:var(--green);stroke-width:2.4"></i>
+              <span class="ttl">24-Hour Purchase Rule</span>
+              <i data-lucide="pencil" style="width:19px;height:19px;color:var(--green)"></i>
+            </div>
+          </div>
+
+          <div class="scroll wash" id="afterScroll">
+
+            <div class="statusbar" style="opacity:0">
+              <span class="time">10:04</span>
+            </div>
+
+            <div class="navrow">
+              <i data-lucide="chevron-left" style="width:26px;height:26px;color:var(--green);stroke-width:2.4"></i>
+              <span class="nav-edit"><i data-lucide="pencil" style="width:17px;height:17px"></i>Edit</span>
+            </div>
+
+            <div class="h-title">24-Hour Purchase Rule</div>
+
+            <!-- (7) if-then plan line -->
+            <div class="rel" style="display:flex;justify-content:center">
+              <div class="planline">
+                After morning coffee · 7:30 reminder
+                <span class="ic"><i data-lucide="pencil" style="width:12px;height:12px"></i></span>
+                <span class="mk" style="right:-4px;top:-9px">7</span>
+              </div>
+            </div>
+
+            <!-- (1)(6) recovery card + why line -->
+            <div class="pad" style="margin-top:18px">
+              <div class="card amberline rel" style="padding:20px 19px">
+                <span class="mk" style="left:-8px;top:-8px">1</span>
+                <div class="recov-h">Two days got away. Today doesn’t have to.</div>
+                <div class="recov-b">Today starts the next one.</div>
+              </div>
+              <div class="rel">
+                <div class="whyline">Your why · Fewer regret purchases, more money for Japan.</div>
+                <span class="mk" style="left:-8px;top:6px">6</span>
+              </div>
+            </div>
+
+            <!-- CTA + (2) habit-aware hint -->
+            <div class="pad" style="margin-top:17px">
+              <div class="cta">
+                <span class="ring"></span>
+                <span class="lbl">Complete today</span>
+                <span class="tap">Tap</span>
+              </div>
+              <div class="hint rel">
+                <span class="mk" style="left:2px;top:0">2</span>
+                <div class="k">Smallest version</div>
+                <div class="t">Wait 24 hours on one purchase today. That counts.</div>
+              </div>
+            </div>
+
+            <!-- (4) week -->
+            <div class="pad" style="margin-top:26px">
+              <div class="card rel" style="padding:17px 17px 16px">
+                <span class="mk" style="right:-8px;top:-8px">4</span>
+                <div class="wk-h">
+                  <div>
+                    <div class="wk-t">This week</div>
+                    <div class="wk-d">Aug 31 – Sep 6</div>
+                  </div>
+                  <div class="wk-r fwd">5 days left</div>
+                </div>
+                <div class="days">
+                  <div class="day"><span class="dn">M</span><span class="cell miss"></span><span class="num">31</span></div>
+                  <div class="day"><span class="dn">T</span><span class="cell miss"></span><span class="num">1</span></div>
+                  <div class="day is-today"><span class="dn">W</span><span class="cell today"><i></i></span><span class="num">2</span></div>
+                  <div class="day"><span class="dn">T</span><span class="cell future"></span><span class="num">3</span></div>
+                  <div class="day"><span class="dn">F</span><span class="cell future"></span><span class="num">4</span></div>
+                  <div class="day"><span class="dn">S</span><span class="cell future"></span><span class="num">5</span></div>
+                  <div class="day"><span class="dn">S</span><span class="cell future"></span><span class="num">6</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- (5) strength -->
+            <div class="pad" style="margin-top:15px">
+              <div class="card rel" style="padding:12px 15px;display:flex;align-items:center;gap:13px">
+                <span class="mk" style="right:-8px;top:-8px">5</span>
+                <div class="dial"><span class="v">8</span><span class="u">/100</span></div>
+                <div style="flex:1">
+                  <div class="ov">Strength</div>
+                  <div class="st-l" style="margin-top:2px">Starting Out</div>
+                  <div class="st-c">Dipped, not reset. Recent days still count most.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- (8) goal ladder applied -->
+            <div class="pad" style="margin-top:15px">
+              <div class="card rel" style="padding:17px 18px 16px">
+                <span class="mk" style="right:-8px;top:-8px">8</span>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div class="g-eyebrow">Streak goal · suggested</div>
+                  <span class="chg">Change</span>
+                </div>
+                <div class="g-h" style="font-size:18px;line-height:24px">7 days — day 1 starts today.</div>
+                <div class="track">
+                  <div class="bar"></div>
+                  <div class="fill" style="width:0%"></div>
+                  <div class="mark now" style="left:5%"><span class="d"></span><span class="lb">today</span></div>
+                  <div class="mark record" style="left:30%"><span class="d"></span><span class="lb">2★ record</span></div>
+                  <div class="mark goal" style="left:95%"><span class="d"></span><span class="lb">7</span></div>
+                </div>
+                <div class="g-plan">Pass your record on Friday, then reach 7 days on Sep 8.</div>
+              </div>
+            </div>
+
+            <!-- (3) doors -->
+            <div class="pad">
+              <div class="seclabel">The record</div>
+              <div class="card rel" style="padding:0;overflow:visible">
+                <span class="mk" style="right:-8px;top:44px">3</span>
+                <div class="door">
+                  <span class="tile"><i data-lucide="calendar-days" style="width:20px;height:20px"></i></span>
+                  <div><div class="tt">Calendar &amp; notes</div><div class="ss">View or correct past days</div></div>
+                  <i data-lucide="chevron-right" class="chev" style="width:19px;height:19px"></i>
+                </div>
+                <div class="divider"></div>
+                <div class="door">
+                  <span class="tile"><i data-lucide="bar-chart-3" style="width:20px;height:20px"></i></span>
+                  <div>
+                    <div class="tt">Patterns &amp; trends</div>
+                    <div class="ss">Unlocks after 14 days of check-ins · 9 to go</div>
+                    <span class="lockbar"><i></i></span>
+                  </div>
+                  <i data-lucide="chevron-right" class="chev" style="width:19px;height:19px"></i>
+                </div>
+              </div>
+              <div style="height:150px"></div>
+            </div>
+
+          </div>
+
+          <!-- (9) sticky bottom CTA -->
+          <div class="stickybar">
+            <span class="mk" style="left:8px;top:6px">9</span>
+            <div class="cta">
+              <span class="ring"></span>
+              <span class="lbl">Complete today</span>
+              <span class="tap">Tap</span>
+            </div>
+          </div>
+          <div class="homebar"></div>
+        </div>
+      </div>
+      <!-- inset: the same screen above and below the fold, so 7, 8 and 3 stay readable -->
+      <div class="inset">
+        <div class="inset-l">Same screen, above and below the fold</div>
+        <div class="inset-b">
+          <div class="inset-s">At scroll 0 — top of page</div>
+          <div style="background:linear-gradient(180deg,var(--wash-top),#F3EBDE);padding:2px 0 18px;margin-top:8px">
+            <div class="navrow">
+              <i data-lucide="chevron-left" style="width:26px;height:26px;color:var(--green);stroke-width:2.4"></i>
+              <span class="nav-edit"><i data-lucide="pencil" style="width:17px;height:17px"></i>Edit</span>
+            </div>
+            <div class="h-title">24-Hour Purchase Rule</div>
+            <div class="rel" style="display:flex;justify-content:center">
+              <div class="planline">
+                After morning coffee · 7:30 reminder
+                <span class="ic"><i data-lucide="pencil" style="width:12px;height:12px"></i></span>
+                <span class="mk" style="right:-26px;top:3px">7</span>
+              </div>
+            </div>
+          </div>
+          <div class="inset-s" style="border-top:1px solid var(--hair);padding-top:13px">Scrolled to the end — below the fold</div>
+          <div class="pad" style="padding-top:12px;padding-bottom:18px">
+            <div class="card rel" style="padding:17px 18px 16px">
+              <span class="mk" style="right:-8px;top:-8px">8</span>
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div class="g-eyebrow">Streak goal · suggested</div>
+                <span class="chg">Change</span>
+              </div>
+              <div class="g-h" style="font-size:18px;line-height:24px">7 days — day 1 starts today.</div>
+              <div class="track">
+                <div class="bar"></div>
+                <div class="fill" style="width:0%"></div>
+                <div class="mark now" style="left:5%"><span class="d"></span><span class="lb">today</span></div>
+                <div class="mark record" style="left:30%"><span class="d"></span><span class="lb">2★ record</span></div>
+                <div class="mark goal" style="left:95%"><span class="d"></span><span class="lb">7</span></div>
+              </div>
+              <div class="g-plan">Pass your record on Friday, then reach 7 days on Sep 8.</div>
+            </div>
+            <div class="seclabel">The record</div>
+            <div class="card rel" style="padding:0">
+              <span class="mk" style="right:-8px;top:44px">3</span>
+              <div class="door">
+                <span class="tile"><i data-lucide="calendar-days" style="width:20px;height:20px"></i></span>
+                <div><div class="tt">Calendar &amp; notes</div><div class="ss">View or correct past days</div></div>
+                <i data-lucide="chevron-right" class="chev" style="width:19px;height:19px"></i>
+              </div>
+              <div class="divider"></div>
+              <div class="door">
+                <span class="tile"><i data-lucide="bar-chart-3" style="width:20px;height:20px"></i></span>
+                <div>
+                  <div class="tt">Patterns &amp; trends</div>
+                  <div class="ss">Unlocks after 14 days of check-ins · 9 to go</div>
+                  <span class="lockbar"><i></i></span>
+                </div>
+                <i data-lucide="chevron-right" class="chev" style="width:19px;height:19px"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:12.5px;color:var(--ink3);max-width:412px;text-align:center;line-height:18px">
+        One state line, one action with the smallest version pre-made, then the numbers.
+        <b style="color:var(--ink2)">Only one CTA is ever visible in the real app</b> — the sticky bar fades in exactly as the hero toggle scrolls out. Both are drawn here so the static mock shows the handoff.
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ================= ANNOTATIONS ================= -->
+  <div class="sechead">
+    <h2>The changes</h2>
+    <p>Numbers match §4 of the review. Effort chips are the review’s own S / M / L. Every revenue line is a retention claim — ChainDay is single-tier with no feature gating, so the only money lever on this screen is keeping the user long enough to convert and renew.</p>
+  </div>
+
+  <div class="grid">
+
+    <!-- 0 -->
+    <div class="acard bug">
+      <div class="ahead">
+        <span class="badge amberb">0</span>
+        <h3>Fix the home / detail <code style="font-size:14px">today</code> mismatch</h3>
+      </div>
+      <div class="chips"><span class="chip trust">Trust</span><span class="chip eff">Effort S–M</span></div>
+      <div class="rows">
+        <div class="row"><span class="k">Why</span><span class="v">Observed live at 10:04 on Sep 2: the home strip said “Today · Sep 1” while Detail’s week strip marked Wed Sep 2 as today. Two <code>today</code> computations on different cadences, a known midnight-rollover gap.</span></div>
+        <div class="row"><span class="k">How</span><span class="v">Single source of truth for the current date across the date hooks; re-derive on app foreground, not only on mount.</span></div>
+        <div class="row"><span class="k">Solves</span><span class="v">The app contradicts itself about what day it is, which quietly voids every other date sentence on the page.</span></div>
+        <div class="row rev"><span class="k">Retention</span><span class="v">Ship this before any copy work: changes 1, 4 and 8 all assert dates, and none of them are worth writing on top of a date the app gets wrong.</span></div>
+      </div>
+    </div>
+
+    <!-- 1 -->
+    <div class="acard">
+      <div class="ahead"><span class="badge">1</span><h3>Recovery headline counts the actual misses</h3></div>
+      <div class="chips"><span class="chip sup">Support</span><span class="chip eff">Effort S</span></div>
+      <div class="rows">
+        <div class="row"><span class="k">Why</span><span class="v"><span class="cite">Streak guilt is the #1 named churn trigger</span> in habit apps — “streak resets to zero, red X, guilt spiral.” The card is the strongest fear-removal on the page, so it has to be exactly true: it said “Yesterday got away” under two dashed circles. And “Your 2-day record still stands” is not reassurance at n=2, it is a reminder of how little there is.</span></div>
+        <div class="row"><span class="k">How</span><span class="v">Count misses since the last completion in <code>useHabitDetailDayState.ts</code>; <code>recoveryHeadlineCopy</code> spells it (“Two days got away.”). Floor the record clause in <code>recoveryBodyCopy</code> at <code>bestStreak &lt; 3</code> → “Today starts the next one.”</span></div>
+        <div class="row"><span class="k">Solves</span><span class="v">The sentence about my miss now matches what I can see, and it points forward instead of pricing my tiny record.</span></div>
+        <div class="row rev"><span class="k">Retention</span><span class="v">Recovery state is the leak: 43% of habit-app users quit inside 30 days and the broken streak is the top named trigger. Every user kept through a miss is a renewal kept.</span></div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="acard">
+      <div class="ahead"><span class="badge">2</span><h3>Habit-aware smallest version, not the habit name pasted in</h3></div>
+      <div class="chips"><span class="chip dfy">Done-for-you</span><span class="chip eff">Effort S</span></div>
+      <div class="rows">
+        <div class="row"><span class="k">Why</span><span class="v">“Try two minutes of 24-Hour Purchase Rule” is nonsense for a rule / abstinence / decision habit. <code>twoMinuteHint</code> knows nothing about habit type, while templates already carry <code>startSmallVersion</code> that nothing on this screen reads.</span></div>
+        <div class="row"><span class="k">How</span><span class="v"><code>DetailHeroBanner.utils.ts</code>: hint = template <code>startSmallVersion</code> when the habit came from a template; otherwise a type-neutral fallback (“Do the smallest version you’d still call done. It counts.”). Label becomes “Smallest version”.</span></div>
+        <div class="row"><span class="k">Solves</span><span class="v">The pre-made tiny version is the whole done-for-you promise; a nonsense hint burns it and teaches me the app doesn’t know my habit.</span></div>
+        <div class="row rev"><span class="k">Retention</span><span class="v">The smallest version is the cheapest way to convert a would-be miss into a check-in — and check-ins on miss-days are exactly the days that decide whether the trial ends in a subscription.</span></div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="acard">
+      <div class="ahead"><span class="badge">3</span><h3>Analytics door counts down instead of promising a dead end</h3></div>
+      <div class="chips"><span class="chip sys">Systems</span><span class="chip eff">Effort S</span></div>
+      <div class="rows">
+        <div class="row"><span class="k">Why</span><span class="v">“See what helps you stay consistent” promises support that does not exist until <code>MIN_DAYS_OF_DATA = 14</code> plus per-insight thresholds. For a new habit the door opens onto a page with no verdict and no rows — a dead end dressed as a promise.</span></div>
+        <div class="row"><span class="k">How</span><span class="v"><code>RecordDoors.tsx</code>: while locked, subtitle = “Unlocks after 14 days of check-ins · N to go” with a hairline progress rail; swap to the current copy once <code>MIN_DAYS_OF_DATA</code> is met.</span></div>
+        <div class="row"><span class="k">Solves</span><span class="v">I stop tapping into an empty room, and the wait becomes visible progress instead of a broken promise.</span></div>
+        <div class="row rev"><span class="k">Retention</span><span class="v">Turns the app’s best support surface into a reason to reach day 14 — the same window where most churn happens. Progressive disclosure also cuts task time 20–40% (NN/g).</span></div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="acard">
+      <div class="ahead"><span class="badge">4</span><h3>“0 days logged” → “5 days left”</h3></div>
+      <div class="chips"><span class="chip sup">Support</span><span class="chip eff">Effort S</span></div>
+      <div class="rows">
+        <div class="row"><span class="k">Why</span><span class="v">A zero above two dashed misses is the red-X pattern in softer clothes, and it is the second grade on the page before the user has done anything. The dots are already gentle — the count is the problem.</span></div>
+        <div class="row"><span class="k">How</span><span class="v"><code>ThisWeekCard/WeekCardHeader.tsx</code>: when <code>doneCount === 0</code> and scheduled days remain, show “N days left” (or nothing). Keep “N days logged” the moment the number means something.</span></div>
+        <div class="row"><span class="k">Solves</span><span class="v">The week reads as runway, not as a scorecard I am already losing.</span></div>
+        <div class="row rev"><span class="k">Retention</span><span class="v">Removes one of the three grades the recovery user meets before any instruction. Fewer verdicts on the miss-day screen is the cheapest churn-trigger removal available.</span></div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="acard">
+      <div class="ahead"><span class="badge">5</span><h3>Strength gets its unit and a human caption</h3></div>
+      <div class="chips"><span class="chip sys">Systems</span><span class="chip eff">Effort S</span></div>
+      <div class="rows">
+        <div class="row"><span class="k">Why</span><span class="v">The dial shows a bare “8” with no visible unit; the word “Strength” only exists in the a11y label, so the level name does the labelling the number should. The default caption describes the algorithm, not the person.</span></div>
+        <div class="row"><span class="k">How</span><span class="v"><code>StrengthSnapshot.tsx</code>: “STRENGTH” overline above the level name and “/100” under the dial value. Default caption → “Grows with every check-in. A miss dips it, never resets it.” Recovery caption stays “Dipped, not reset. Recent days still count most.”</span></div>
+        <div class="row"><span class="k">Solves</span><span class="v">I can tell what 8 is a number <em>of</em>, and the sentence talks to me instead of documenting the decay model.</span></div>
+        <div class="row rev"><span class="k">Retention</span><span class="v">Strength is the only number that survives a miss. Making it legible on the miss-day is what stops “my streak is gone” from meaning “I have nothing left here”.</span></div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="acard">
+      <div class="ahead"><span class="badge">6</span><h3>The why line stays visible in recovery</h3></div>
+      <div class="chips"><span class="chip sup">Support</span><span class="chip eff">Effort S</span></div>
+      <div class="rows">
+        <div class="row"><span class="k">Why</span><span class="v"><code>resolveWhy</code> output renders only in the neutral ready state — so the why is hidden in recovery and after completion, the two moments it is most useful. The reason I started is the strongest counterweight to a miss.</span></div>
+        <div class="row"><span class="k">How</span><span class="v"><code>DetailHeroBanner.tsx</code>: compact <code>HeroWhyPill</code> variant — one italic serif line under the recovery card and the completed card. One line, truncated, never a block.</span></div>
+        <div class="row"><span class="k">Solves</span><span class="v">On the day I want to quit, the page reminds me what I was buying with this habit.</span></div>
+        <div class="row rev"><span class="k">Retention</span><span class="v">Reconnects the miss-day to the outcome the subscription is actually for. Cheapest possible re-motivation: data the user already typed, shown at the one moment it pays.</span></div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="acard">
+      <div class="ahead"><span class="badge">7</span><h3>If-then plan under the title, not buried in Edit</h3></div>
+      <div class="chips"><span class="chip sys">Systems</span><span class="chip eff">Effort M</span></div>
+      <div class="rows">
+        <div class="row"><span class="k">Why</span><span class="v">The line prints “Daily” while the habit already stores <code>reminderTime</code>, <code>cueAfterBehavior</code>, <code>cueTime</code> and <code>cueLocation</code> — none of which reach the screen. <span class="cite">Implementation intentions run d = 0.65 across 94 studies</span>; the contingent “after X, I do Y” format is the effect. Making the user remember their own plan is the exact thinking cost the framework says to remove.</span></div>
+        <div class="row"><span class="k">How</span><span class="v"><code>HeroTitleRow.tsx</code> + <code>scheduleLabel</code>: render “After morning coffee · 7:30 reminder” when cue/reminder data exists; fall back to today’s “Daily”. Tap opens Edit (pencil glyph signals it).</span></div>
+        <div class="row"><span class="k">Solves</span><span class="v">The plan is on the page at the moment of action, so I don’t have to reconstruct when and after what.</span></div>
+        <div class="row rev"><span class="k">Retention</span><span class="v">The largest documented effect size available on this screen, using data already in the record. Better follow-through is more check-ins, and check-in frequency is the renewal predictor.</span></div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="acard">
+      <div class="ahead"><span class="badge">8</span><h3>Goal arrives already set — ladder, not picker</h3></div>
+      <div class="chips"><span class="chip dfy">Done-for-you</span><span class="chip eff">Effort M</span></div>
+      <div class="rows">
+        <div class="row"><span class="k">Why</span><span class="v">At streak 0, in recovery, strength 8, the card asks the user to <em>choose</em> a commitment and re-states the record the recovery card just named. Thinking + fear + a duplicate number on one screen — and “Give this run a finish line” when there is no run.</span></div>
+        <div class="row"><span class="k">How</span><span class="v">Apply <code>suggestedGoal(bestStreak)</code> at habit creation / first open and render <code>GoalSetCard</code> immediately with a quiet “Change”. Ladder marks come straight from <code>buildLadder(0, 2, 7)</code> → today · 2★ · 7; plan sentence from <code>goalPlanSentence</code>. Adjust sheet remains the only place to remove or customise.</span></div>
+        <div class="row"><span class="k">Solves</span><span class="v">The default is already chosen and stated in dates — a plan I can act on, not a decision I have to make on a bad day.</span></div>
+        <div class="row rev"><span class="k">Retention</span><span class="v">A set goal gives the run a visible finish line with two dated milestones inside the coming week. Near-term, dated targets are what pull a user back tomorrow rather than “sometime”.</span></div>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="acard">
+      <div class="ahead"><span class="badge">9</span><h3>Sticky bottom CTA once the hero toggle scrolls off</h3></div>
+      <div class="chips"><span class="chip dfy">Done-for-you</span><span class="chip eff">Effort M</span></div>
+      <div class="rows">
+        <div class="row"><span class="k">Why</span><span class="v">The only action on the page sits in the top third — the stretch zone — and disappears after any scroll. <span class="cite">Thumb-zone data: 96% tap accuracy in the bottom third vs 61% in the stretch zone</span>, and bottom CTAs are ~2.7× faster. A sticky bar shipped once before and was removed.</span></div>
+        <div class="row"><span class="k">How</span><span class="v"><code>HabitDetailContent.tsx</code>: same toggle component, same state, same undo, pinned above a soft cream gradient; it fades in only when the hero toggle leaves the viewport, so there is never a second affordance on screen at once.</span></div>
+        <div class="row"><span class="k">Solves</span><span class="v">Wherever I am on the page, the one thing I came to do is under my thumb.</span></div>
+        <div class="row rev"><span class="k">Retention</span><span class="v">Shortest path from opening the screen to logging the day. This is the metric to instrument first — detail_open → complete_today in recovery state.</span></div>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="acard">
+      <div class="ahead"><span class="badge">10</span><h3>Rest-day mark — a declared skip that isn’t a miss</h3></div>
+      <div class="chips"><span class="chip sup">Support</span><span class="chip eff">Effort L</span></div>
+      <div class="rows">
+        <div class="row"><span class="k">Why</span><span class="v">Every scheduled day is complete or missed; there is no “not today”. The strength model already absorbs misses, but the calendar still draws a dashed miss on a planned rest day. <span class="cite">Duolingo’s streak freeze cut churn 21% among at-risk users</span>, and separating the streak from the daily goal lifted D14 retention 3.3%.</span></div>
+        <div class="row"><span class="k">How</span><span class="v">Day screen + tracking: a rest-day mark needs either a tracking kind or a separate table, plus rules for how it reads on the week strip and in Analytics. Product decision first, then data.</span></div>
+        <div class="row"><span class="k">Solves</span><span class="v">A day I deliberately took off stops being recorded as a failure I have to recover from.</span></div>
+        <div class="row rev"><span class="k">Retention</span><span class="v">The one change here with an external retention number attached — but it is a schema and product commitment, so it belongs after 1–9 have proved the copy layer.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ================= WHAT STAYS ================= -->
+  <div class="stays">
+    <h2 style="font-size:22px">What stays</h2>
+    <p style="margin:8px 0 0;font-size:13.5px;color:var(--ink3);max-width:760px">These already do the job the framework asks for. Nothing below is on the table.</p>
+    <ul>
+      <li><i data-lucide="check" class="ck" style="width:16px;height:16px"></i><span><b>The toggle + undo on one control.</b> The 20%: one tap, both states, no second affordance. Best element on the page — only its position moves.</span></li>
+      <li><i data-lucide="check" class="ck" style="width:16px;height:16px"></i><span><b>Amber wash, never red.</b> A miss is a state, not a verdict. The whole page leans on this and it is already right.</span></li>
+      <li><i data-lucide="check" class="ck" style="width:16px;height:16px"></i><span><b>Strength survives a miss.</b> Proportional decay, never zero — the only number that keeps the user attached after a break.</span></li>
+      <li><i data-lucide="check" class="ck" style="width:16px;height:16px"></i><span><b>Verdict-first Analytics.</b> “Covering Fridays would have put August at 93%” is the best support element in the app; only its door subtitle changes.</span></li>
+      <li><i data-lucide="check" class="ck" style="width:16px;height:16px"></i><span><b>Day &amp; History screens.</b> Honest, correctable, one interactive month, a stepper between days. No change.</span></li>
+      <li><i data-lucide="check" class="ck" style="width:16px;height:16px"></i><span><b>InsightLine hidden below 14 days.</b> Correct progressive disclosure — one grounded sentence with evidence behind it, or nothing.</span></li>
+    </ul>
+  </div>
+
+  <!-- ================= ORDER OF WORK ================= -->
+  <h2 style="font-size:22px;margin-top:62px !important">Order of work</h2>
+  <div class="order">
+    <div class="ocard first">
+      <div class="p">Do first</div>
+      <h4>Bug 0 — the <code style="font-size:14px">today</code> mismatch</h4>
+      <p>Every dated sentence in P1 and P2 sits on top of this. Fix the date before writing copy about it.</p>
+    </div>
+    <div class="ocard">
+      <div class="p">P1 · one PR</div>
+      <h4>1, 2, 3, 4, 5, 6</h4>
+      <p>Copy and conditionals only. No new components, no schema, no layout. This mock is the spec.</p>
+    </div>
+    <div class="ocard">
+      <div class="p">P2 · structure</div>
+      <h4>7, 8, 9</h4>
+      <p>Plan line, auto-applied goal ladder, sticky CTA. Layout changes — build against the After frame above.</p>
+    </div>
+    <div class="ocard">
+      <div class="p">P3 · product decision</div>
+      <h4>10 — rest-day mark</h4>
+      <p>Needs a call on what a declared skip means for streak, strength, calendar and Analytics, then data.</p>
+    </div>
+  </div>
+
+  <div class="foot">
+    Benefits are directional; no in-app measurement yet. <b>Instrument:</b> detail_open → complete_today rate in recovery state, D7/D30 retention after first miss.
+    External figures cited above (43% 30-day quit rate, d = 0.65 implementation intentions, 96% vs 61% thumb-zone accuracy, 21% Duolingo churn reduction, 20–40% progressive-disclosure task-time reduction) are from the sources listed in §1 of the review — none of them are ChainDay numbers.
+  </div>
+
+</div>
+
+<script>
+  if (window.lucide) { lucide.createIcons(); }
+  (function () {
+    var el = document.getElementById('afterScroll');
+    if (el) { el.scrollTop = 120; }
+    window.addEventListener('load', function () { if (el) el.scrollTop = 120; });
+  })();
+</script>
+</body>
+</html>

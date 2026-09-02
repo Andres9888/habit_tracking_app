@@ -6,6 +6,8 @@ import { useInsightPalette } from '../insightPalette';
 
 interface FlowRowProps {
   accessibilityHint?: string;
+  /** Decorative content under the subtitle (e.g. the Analytics unlock rail). */
+  footer?: ReactNode;
   icon?: ReactNode;
   /** Unwrapped leading mark (History entries). Prefer `icon` for sage tiles. */
   leading?: ReactNode;
@@ -16,6 +18,7 @@ interface FlowRowProps {
 }
 export function FlowRow({
   accessibilityHint,
+  footer,
   icon,
   leading,
   onPress,
@@ -78,6 +81,7 @@ export function FlowRow({
         >
           {subtitle}
         </Text>
+        {footer}
       </View>
       <ChevronRight color={palette.textTertiary} size={18} strokeWidth={2.1} />
     </Pressable>

@@ -1,10 +1,10 @@
 import { Text, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
-import { fontFamilies } from '../../../theme/typography';
+import { fontFamilies, fontWeights } from '../../../theme/typography';
 
-const SIZE = 44;
+const SIZE = 50;
 const CENTER = SIZE / 2;
-const RADIUS = 17;
+const RADIUS = 20;
 const STROKE = 5;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
@@ -13,6 +13,8 @@ interface StrengthDialProps {
   progressColor: string;
   textColor: string;
   trackColor: string;
+  /** Ink for the "/100" caption; the number keeps `textColor`. */
+  unitColor: string;
 }
 
 export function StrengthDial({
@@ -20,6 +22,7 @@ export function StrengthDial({
   progressColor,
   textColor,
   trackColor,
+  unitColor,
 }: StrengthDialProps) {
   return (
     <View style={{ height: SIZE, justifyContent: 'center', width: SIZE }}>
@@ -46,19 +49,43 @@ export function StrengthDial({
           origin={`${CENTER}, ${CENTER}`}
         />
       </Svg>
-      <Text
+      {/* The bare numeral read as a rank with no unit. "/100" is the cheapest
+          way to say what scale it is on, and it fits inside the ring. */}
+      <View
         style={{
-          color: textColor,
-          fontFamily: fontFamilies.primary.display,
-          fontSize: 13,
+          alignItems: 'center',
+          bottom: 0,
+          justifyContent: 'center',
           left: 0,
           position: 'absolute',
           right: 0,
-          textAlign: 'center',
+          top: 0,
         }}
       >
-        {percent}
-      </Text>
+        <Text
+          style={{
+            color: textColor,
+            fontFamily: fontFamilies.primary.display,
+            fontSize: 13,
+            lineHeight: 16,
+            textAlign: 'center',
+          }}
+        >
+          {percent}
+        </Text>
+        <Text
+          style={{
+            color: unitColor,
+            fontFamily: fontFamilies.primary.text,
+            fontSize: 8.5,
+            fontWeight: fontWeights.semibold,
+            lineHeight: 10,
+            textAlign: 'center',
+          }}
+        >
+          /100
+        </Text>
+      </View>
     </View>
   );
 }

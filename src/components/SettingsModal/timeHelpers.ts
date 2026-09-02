@@ -30,9 +30,12 @@ export function formatDisplayTime(time: string): string {
   return `${hour12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
 }
 
+/** Subtitle for the streak-reminder row, split so the time can render as an
+ *  emphasised inline span: "Every day at **8:00 PM**". */
 export function formatStreakReminderSubtitle(
   enabled: boolean,
   time: string
-): string {
-  return enabled ? `On · ${formatDisplayTime(time)}` : 'Off';
+): { subtitle: string; strong?: string } {
+  if (!enabled) return { subtitle: 'Off' };
+  return { subtitle: 'Every day at ', strong: formatDisplayTime(time) };
 }

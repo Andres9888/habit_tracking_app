@@ -16,6 +16,8 @@ interface HeroRecoveryCardProps {
   bestStreak: number;
   /** Length of the run this miss ended. */
   brokenRun: number;
+  /** Consecutive missed scheduled days ending yesterday; 1 for a single miss. */
+  missedDays?: number;
   missedDayLabel: string;
   palette: InsightPalette;
 }
@@ -23,16 +25,18 @@ interface HeroRecoveryCardProps {
 export function HeroRecoveryCard({
   bestStreak,
   brokenRun,
+  missedDays = 1,
   missedDayLabel,
   palette,
 }: HeroRecoveryCardProps) {
-  const headline = recoveryHeadlineCopy(missedDayLabel, brokenRun);
+  const headline = recoveryHeadlineCopy(missedDayLabel, brokenRun, missedDays);
   const body = recoveryBodyCopy(brokenRun, bestStreak);
 
   return (
     <View
       accessibilityLabel={`${headline} ${body}`}
       accessibilityRole='summary'
+      accessible
       style={{
         backgroundColor: palette.card,
         borderColor: palette.amberBorder,

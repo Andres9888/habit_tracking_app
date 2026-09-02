@@ -82,9 +82,15 @@ export function scheduleLabel(habit: Habit): string {
 }
 
 /**
- * Honest, habit-specific recovery guidance sized for the fixed action slot.
+ * The smallest version of THIS habit, sized for the fixed action slot.
+ *
+ * The old line pasted the habit name into "Try two minutes of {name}", which
+ * reads as nonsense for a rule or abstinence habit ("Try two minutes of 24-Hour
+ * Purchase Rule"). Templates already carry an authored `startSmallVersion`;
+ * when the habit has none, the fallback is type-neutral and never names it.
  */
-export function twoMinuteHint(habit: Habit): string {
-  const name = habit.name.trim() || 'this habit';
-  return `Try two minutes of ${name}. Stopping early still counts.`;
+export function smallVersionHint(habit: Habit): string {
+  const authored = habit.startSmallVersion?.trim();
+  if (authored) return authored;
+  return 'Do the smallest version you’d still call done. It counts.';
 }

@@ -22,9 +22,11 @@ export function SettingsRow({
   label,
   labelColor,
   subtitle,
+  subtitleStrong,
   type,
   value,
   badge,
+  onBodyPress,
   onPress,
   onToggle,
   rightAccessory,
@@ -40,10 +42,11 @@ export function SettingsRow({
   const colors = getSettingsRowColors(isDark);
   const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
   const { pulseStyle, triggerPulse } = useSettingsRowPulse(isDark);
-  const { handleNavPress, handleToggle } = useSettingsRowHandlers(
-    { hapticStyle, onPress, onToggle },
-    triggerPulse
-  );
+  const { handleBodyPress, handleNavPress, handleToggle } =
+    useSettingsRowHandlers(
+      { hapticStyle, onBodyPress, onPress, onToggle },
+      triggerPulse
+    );
   const showTopBorder = useSettingsRowDivider(true, label);
 
   const isInteractiveInfo =
@@ -51,6 +54,7 @@ export function SettingsRow({
   const content = (
     <SettingsRowContent
       badge={badge}
+      bodyAccessibilityHint={accessibilityHint}
       colors={colors}
       expanded={expanded}
       icon={icon}
@@ -58,6 +62,7 @@ export function SettingsRow({
       isInteractiveInfo={isInteractiveInfo}
       label={label}
       labelColor={labelColor}
+      onBodyPress={handleBodyPress}
       onToggle={handleToggle}
       pulseStyle={pulseStyle}
       rightAccessory={rightAccessory}
@@ -65,6 +70,7 @@ export function SettingsRow({
       showChevron={showChevron}
       showTopBorder={showTopBorder}
       subtitle={subtitle}
+      subtitleStrong={subtitleStrong}
       type={type}
       value={value}
     />
@@ -85,7 +91,10 @@ export function SettingsRow({
   // their full announcement from the inner AnimatedToggle switch — label,
   // role, checked state, On/Off value — so the wrapper stays transparent to
   // avoid duplicate accessibility nodes.
-  if ((type === 'toggle' || type === 'info') && !onPress) {
+  if (
+    (type === 'toggle' && onBodyPress) ||
+    ((type === 'toggle' || type === 'info') && !onPress)
+  ) {
     return content;
   }
 

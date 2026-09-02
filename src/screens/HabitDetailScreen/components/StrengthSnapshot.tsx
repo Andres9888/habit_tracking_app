@@ -27,8 +27,13 @@ import { StrengthDial } from './StrengthDial';
 export const RECOVERY_STRENGTH_CAPTION =
   'Dipped, not reset. Recent days still count most.';
 
-const DEFAULT_STRENGTH_CAPTION =
-  'Momentum from every check-in, weighted toward recent days. A miss dips it — it never resets.';
+/**
+ * Default caption. The old line described the algorithm ("weighted toward
+ * recent days"); this one is addressed to the person and says the same true
+ * thing in half the words.
+ */
+export const DEFAULT_STRENGTH_CAPTION =
+  'Grows with every check-in. A miss dips it, never resets it.';
 
 interface StrengthSnapshotProps {
   habit: Habit;
@@ -43,12 +48,16 @@ export function StrengthSnapshot({
   const palette = useInsightPalette();
   const percent = strengthPercent(habit);
   const label = strengthLabel(percent);
+  const caption = isRecovery
+    ? RECOVERY_STRENGTH_CAPTION
+    : DEFAULT_STRENGTH_CAPTION;
 
   return (
     <View
-      accessibilityLabel={`Habit strength ${percent} percent, ${label}`}
+      accessibilityLabel={`Habit strength ${percent} percent, ${label}. ${caption}`}
       accessibilityRole='progressbar'
       accessibilityValue={{ max: 100, min: 0, now: percent }}
+      accessible
       style={{
         alignItems: 'center',
         backgroundColor: palette.card,
@@ -67,13 +76,28 @@ export function StrengthSnapshot({
         progressColor={palette.green}
         textColor={palette.textPrimary}
         trackColor={palette.dialTrack}
+        unitColor={palette.textTertiary}
       />
       <View style={{ flex: 1 }}>
+        {/* The word "Strength" only existed in the a11y label; sighted readers
+            got a bare numeral and a level name doing the labelling. */}
+        <Text
+          style={{
+            color: palette.textTertiary,
+            fontSize: 11,
+            fontWeight: fontWeights.bold,
+            letterSpacing: 1.2,
+            textTransform: 'uppercase',
+          }}
+        >
+          Strength
+        </Text>
         <Text
           style={{
             color: palette.textPrimary,
             fontSize: 13,
             fontWeight: fontWeights.semibold,
+            marginTop: 2,
           }}
         >
           {label}
@@ -86,7 +110,7 @@ export function StrengthSnapshot({
             marginTop: 2,
           }}
         >
-          {isRecovery ? RECOVERY_STRENGTH_CAPTION : DEFAULT_STRENGTH_CAPTION}
+          {caption}
         </Text>
       </View>
     </View>

@@ -21,6 +21,8 @@ interface GoalAdjustSheetProps {
   currentGoal: number;
   currentStreak: number;
   habitColor: string;
+  /** Preset to open on when it differs from the stored goal (the suggested ladder). */
+  initialGoal?: number;
   visible: boolean;
   onClose: () => void;
 }

@@ -14,6 +14,7 @@ import { borderRadius, shadows } from '../../../../theme/spacing';
 import { useInsightPalette } from '../../insightPalette';
 import { useThisWeek } from './useThisWeek';
 import { WeekCardHeader } from './WeekCardHeader';
+import { weekProgressLabel } from './weekProgressLabel';
 import { WeekDayDot } from './WeekDayDot';
 import type { HabitDayContext } from '../../../../features/habits/habitDayState';
 
@@ -30,10 +31,11 @@ export function ThisWeekCard({
 }: ThisWeekCardProps) {
   const palette = useInsightPalette();
   const reduceMotion = useReduceMotion();
-  const { days, doneCount, rangeLabel } = useThisWeek({
+  const { days, doneCount, rangeLabel, remainingScheduled } = useThisWeek({
     completedDates,
     ...dayContext,
   });
+  const progress = weekProgressLabel(doneCount, remainingScheduled);
 
   return (
     <Animated.View
@@ -53,9 +55,10 @@ export function ThisWeekCard({
       }}
     >
       <WeekCardHeader
-        loggedLabel={`${doneCount} ${doneCount === 1 ? 'day' : 'days'} logged`}
+        loggedLabel={progress.label}
         palette={palette}
         rangeLabel={rangeLabel}
+        tone={progress.tone}
       />
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         {days.map((day) => (

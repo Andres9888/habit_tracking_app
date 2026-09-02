@@ -33,12 +33,14 @@ const darkTint: IconColor = { icon: '#34D399', bg: 'rgba(52,211,153,0.14)' };
 const darkDestructive: IconColor = { icon: '#FCA5A5', bg: '#4B1F1F' };
 
 /**
- * Two-tone scannability: green = a row that CHANGES app state, warm AMBER =
- * a purely NAVIGATIONAL row (Support links). Amber matches the Habit Browser's
+ * Two-tone scannability: green = a row that CHANGES app state, warm GOLD =
+ * a purely NAVIGATIONAL row (Support links). Gold matches the Habit Browser's
  * icon tile, and unlike the previous stone grey it actually looks like a chosen
- * colour rather than a desaturated version of the card behind it.
+ * colour rather than a desaturated version of the card behind it. The light
+ * pair is the 1b gold family (#8B6208 on #FEF3CD) — brighter and cleaner than
+ * the old muted amber, which muddied against the warm paper surface.
  */
-const lightNeutral: IconColor = { icon: '#8A6A33', bg: '#F4E7D2' };
+const lightNeutral: IconColor = { icon: '#8B6208', bg: '#FEF3CD' };
 const darkNeutral: IconColor = {
   icon: '#E8C88A',
   bg: 'rgba(232,200,138,0.14)',

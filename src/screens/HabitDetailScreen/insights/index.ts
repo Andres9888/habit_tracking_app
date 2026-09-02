@@ -15,6 +15,8 @@ export {
 } from './missedYesterday';
 export { brokenRunLength } from './brokenRunLength';
 export type { BrokenRunOptions } from './brokenRunLength';
+export { missedRunLength } from './missedRunLength';
+export type { MissedRunOptions } from './missedRunLength';
 export { effectiveDayDiff, type PauseWindow } from './effectiveDayDiff';
 export {
   recoveryBodyCopy,

@@ -16,6 +16,8 @@ interface GoalSetCardProps {
   goal: number;
   loggedToday: boolean;
   palette: InsightPalette;
+  /** Rendered from `suggestedGoal`; nothing is persisted until Change. */
+  suggested?: boolean;
   onChange: () => void;
 }
 
@@ -25,6 +27,7 @@ export function GoalSetCard({
   goal,
   loggedToday,
   palette,
+  suggested = false,
   onChange,
 }: GoalSetCardProps) {
   const marks = buildLadder(currentStreak, bestStreak, goal);
@@ -47,7 +50,11 @@ export function GoalSetCard({
         ...shadows.subtle,
       }}
     >
-      <GoalCardHeader palette={palette} onChange={onChange} />
+      <GoalCardHeader
+        palette={palette}
+        suggested={suggested}
+        onChange={onChange}
+      />
       <Text
         style={{
           color: palette.textPrimary,

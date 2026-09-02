@@ -28,7 +28,10 @@ export function useSettingsRowPulse(isDark: boolean) {
 }
 
 export function useSettingsRowHandlers(
-  props: Pick<SettingsRowProps, 'hapticStyle' | 'onPress' | 'onToggle'>,
+  props: Pick<
+    SettingsRowProps,
+    'hapticStyle' | 'onBodyPress' | 'onPress' | 'onToggle'
+  >,
   triggerPulse: () => void
 ) {
   const handleToggle = (v: boolean) => {
@@ -49,5 +52,15 @@ export function useSettingsRowHandlers(
     props.onPress?.();
   };
 
-  return { handleNavPress, handleToggle };
+  // Toggle rows whose body opens a detail sheet: the body is its own pressable
+  // beside the switch, never a button wrapping it.
+  const onBodyPress = props.onBodyPress;
+  const handleBodyPress = onBodyPress
+    ? () => {
+        void triggerHaptic('selection');
+        onBodyPress();
+      }
+    : undefined;
+
+  return { handleBodyPress, handleNavPress, handleToggle };
 }

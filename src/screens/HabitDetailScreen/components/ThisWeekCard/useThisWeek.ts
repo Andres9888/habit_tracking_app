@@ -76,6 +76,14 @@ export function useThisWeek({
       days,
       doneCount: days.filter((day) => day.state === 'completed').length,
       rangeLabel: `${format(monday, 'MMM d')} – ${endStamp}`,
+      // Chances still on the table this week: today if it is still open, plus
+      // every scheduled day after it. Misses are already behind you and are
+      // not "left".
+      remainingScheduled: days.filter(
+        (day) =>
+          day.scheduled &&
+          (day.state === 'open-today' || day.state === 'upcoming')
+      ).length,
       scheduledCount: days.filter((day) => day.scheduled).length,
     };
   }, [completedDates, createdAt, daysOfWeek, pausedAt, resumedAt, today]);

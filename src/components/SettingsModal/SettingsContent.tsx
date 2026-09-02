@@ -1,5 +1,4 @@
-/** SettingsContent - Quiet Configuration Index layout:
- *  Account → Appearance → Behavior → Notifications → Data & Privacy → Help & About */
+/** SettingsContent — Account → Appearance → Habits → Data & about */
 import { View } from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
@@ -12,18 +11,11 @@ import { airy } from '../../theme/airyScale';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsContentProps } from './types';
 import { SCROLL_STYLES } from './SettingsContent.constants';
-import { SettingsSectionList } from './components/SettingsSectionList';
+import { SettingsSections } from './components/SettingsSections';
 import { SettingsToastProvider } from './SettingsToast';
-
-const useSectionIconColor = () => {
-  const { settings } = useThemeColors();
-  // Uniform soft-green brand tint for every section glyph (#047857 / #34D399).
-  return settings.user.icon;
-};
 
 export function SettingsContent(p: SettingsContentProps) {
   const { colors: themeColors } = useThemeColors();
-  const sectionIconColor = useSectionIconColor();
   const bottomPadding = Math.max((p.bottomInset ?? 0) + 16, 24);
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
@@ -65,11 +57,8 @@ export function SettingsContent(p: SettingsContentProps) {
           onScroll={scrollHandler}
         >
           <View style={{ gap: airy.sectionGap }}>
-            <SettingsSectionList
+            <SettingsSections
               {...p}
-              sectionIconColor={sectionIconColor}
-              isDeletingAccount={actions.isDeletingAccount}
-              onDeleteAccount={actions.handleDeleteAccount}
               onFeedback={actions.handleFeedback}
               onLoveChainDay={actions.handleLoveChainDay}
               onPrivacy={actions.openPrivacy}

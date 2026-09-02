@@ -36,4 +36,44 @@ describe('useThisWeek', () => {
       result.current.days.find((day) => day.date === '2026-08-19')?.state
     ).toBe('paused');
   });
+
+  // Week of Mon 2026-08-17 – Sun 2026-08-23; "today" is Thursday the 20th.
+  describe('remainingScheduled', () => {
+    it('counts today while it is still open, plus the days after it', () => {
+      const { result } = renderHook(() =>
+        useThisWeek({
+          completedDates: new Set(),
+          daysOfWeek: [1, 2, 3, 4, 5],
+          today: '2026-08-20',
+        })
+      );
+
+      // Mon–Wed are already missed and Sat/Sun are not scheduled, so only
+      // Thursday (open) and Friday (upcoming) are still on the table.
+      expect(result.current.remainingScheduled).toBe(2);
+    });
+
+    it('drops today from the count once it is logged', () => {
+      const { result } = renderHook(() =>
+        useThisWeek({
+          completedDates: new Set(['2026-08-20']),
+          daysOfWeek: [1, 2, 3, 4, 5],
+          today: '2026-08-20',
+        })
+      );
+
+      expect(result.current.remainingScheduled).toBe(1);
+    });
+
+    it('includes the weekend only when the weekend is scheduled', () => {
+      const { result } = renderHook(() =>
+        useThisWeek({
+          completedDates: new Set(),
+          today: '2026-08-20',
+        })
+      );
+
+      expect(result.current.remainingScheduled).toBe(4);
+    });
+  });
 });

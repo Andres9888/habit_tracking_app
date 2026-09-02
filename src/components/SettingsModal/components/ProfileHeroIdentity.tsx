@@ -38,7 +38,7 @@ export function ProfileHeroIdentity({
             // Serif name, like the Habit Browser card title.
             fontFamily: fontFamilies.serif,
             flexShrink: 1,
-            fontSize: 19,
+            fontSize: 20,
             fontWeight: fontWeights.bold,
             letterSpacing: -0.2,
             color: themeColors.text.primary,

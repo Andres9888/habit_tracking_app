@@ -1,5 +1,4 @@
 /** AppearanceSection prop contract */
-import type { ReactNode } from 'react';
 import type { DarkModePreference } from '../../../../convex/settings/types';
 
 export interface AppearanceSectionProps {
@@ -10,5 +9,4 @@ export interface AppearanceSectionProps {
   compactView: boolean;
   onChangeCompactView: (value: boolean) => void | Promise<void>;
   onOpenCalendarLook: () => void;
-  icon?: ReactNode;
 }

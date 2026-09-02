@@ -1,7 +1,8 @@
 export { DetailHeroBanner } from './DetailHeroBanner';
 export {
   scheduleLabel,
+  smallVersionHint,
   strengthLabel,
   strengthPercent,
-  twoMinuteHint,
 } from './DetailHeroBanner.utils';
+export { planLabel, reminderClock } from './DetailHeroBanner.plan';

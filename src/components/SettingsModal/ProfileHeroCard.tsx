@@ -38,7 +38,10 @@ export function ProfileHeroCard({ isPremium, onPress }: ProfileHeroCardProps) {
           { borderRadius: airy.cardRadius },
         ]}
       >
-        <View className='flex-row items-center px-4 py-4' style={{ gap: 13 }}>
+        <View
+          className='flex-row items-center px-4'
+          style={{ gap: 14, paddingVertical: 14 }}
+        >
           <ProfileHeroAvatar
             imageUrl={imageUrl}
             initial={initial}

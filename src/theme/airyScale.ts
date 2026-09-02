@@ -1,11 +1,12 @@
 /**
  * Airy design scale — SHIP TARGET: "full airy, dense home".
  *
- * Full airy proportions everywhere (softer radii, roomier rows, bigger titles/
- * buttons) — it fits the calm-premium brand. The ONE exception is the home habit
- * list: it stays at canonical height because that's the surface scanned every day,
- * where seeing more habits at a glance beats extra padding. (Home cards still take
- * the airy 24px radius via cardRadius — only their height/padding stay tight.)
+ * Full airy proportions everywhere (softer radii, bigger titles/buttons) — it
+ * fits the calm-premium brand. Two surfaces stay dense: the home habit list,
+ * because it's scanned every day and seeing more habits beats extra padding,
+ * and settings rows, which went to option-1b density (36px tiles, 14px padding)
+ * so a section reads as one compact block. (Both still take the airy 24px
+ * radius via cardRadius — only their height/padding stay tight.)
  *
  * `AIRY_SCALE = false` (or git checkout + tailwind.config.js) restores canonical.
  * cardRadius is mirrored in tailwind.config.js (rounded-2xl/card) — that lever
@@ -19,10 +20,12 @@ export const airy = {
   buttonRadius: AIRY_SCALE ? 14 : 12,
   modalRadius: AIRY_SCALE ? 28 : 24,
   chipRadius: AIRY_SCALE ? 10 : 8,
-  // Settings rows.
-  tileSize: AIRY_SCALE ? 42 : 40,
-  tileRadius: AIRY_SCALE ? 13 : 12,
-  rowPaddingV: AIRY_SCALE ? 20 : 16,
+  // Settings rows — option 1b "tiles, lighter": smaller tiles and tighter rows
+  // so a whole section fits on one screen. Airiness now comes from the gaps
+  // BETWEEN cards, not from padding inside every row.
+  tileSize: AIRY_SCALE ? 36 : 40,
+  tileRadius: AIRY_SCALE ? 10 : 12,
+  rowPaddingV: AIRY_SCALE ? 14 : 16,
   // Home list stays DENSE (height/padding) — the daily glanceable surface.
   habitCardMinHeight: 88,
   habitCardPadding: 16,

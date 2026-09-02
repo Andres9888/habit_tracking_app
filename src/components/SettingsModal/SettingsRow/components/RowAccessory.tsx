@@ -43,7 +43,7 @@ export function RowAccessory({
 
   if (type === 'selection') {
     return (
-      <View className='flex-row items-center gap-1'>
+      <View className='flex-row items-center gap-2'>
         <ValuePill colors={colors} value={value as string} />
         <RowChevron color={colors.chevron} expanded={expanded} />
       </View>
@@ -73,7 +73,7 @@ export function RowAccessory({
     return (
       <View className='flex-row items-center gap-2'>
         {badge != null && badge > 0 ? (
-          <RowCount color={colors.valueText} count={badge} />
+          <RowCount count={badge} />
         ) : null}
         <RowChevron color={colors.chevron} />
       </View>
