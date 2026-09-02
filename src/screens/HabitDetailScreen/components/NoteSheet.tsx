@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Modal, Pressable } from 'react-native';
+import { Modal, Pressable, StyleSheet, View } from 'react-native';
+import { GestureDetector } from 'react-native-gesture-handler';
+import Animated, { useReducedMotion } from 'react-native-reanimated';
 import { NoteSheetBody } from './NoteSheetBody';
+import { useNoteSheetGesture } from './useNoteSheetGesture';
+import { useNoteSheetStyles } from './useNoteSheetStyles';
+import { useNoteSheetTransition } from './useNoteSheetTransition';
 
 interface NoteSheetProps {
   date: string | null;
@@ -10,14 +15,17 @@ interface NoteSheetProps {
   onSave: (note: string) => void;
 }
 
-export function NoteSheet({
-  date,
-  existing,
-  hint,
-  onClose,
-  onSave,
-}: NoteSheetProps) {
+export function NoteSheet(props: NoteSheetProps) {
+  const { date, existing, hint, onClose, onSave } = props;
   const [draft, setDraft] = useState(existing);
+  const reduceMotion = useReducedMotion();
+  const transition = useNoteSheetTransition({ date, onClose, reduceMotion });
+  const panGesture = useNoteSheetGesture({
+    finishClose: transition.finishClose,
+    reduceMotion,
+    values: transition.values,
+  });
+  const motion = useNoteSheetStyles(transition.values);
 
   useEffect(() => {
     if (date) setDraft(existing);
@@ -26,30 +34,59 @@ export function NoteSheet({
   if (!date) return null;
 
   return (
-    <Modal transparent animationType='fade' visible onRequestClose={onClose}>
-      <Pressable
-        accessibilityLabel='Dismiss note sheet'
-        style={{
-          backgroundColor: 'rgba(28,32,27,0.34)',
-          flex: 1,
-          justifyContent: 'flex-end',
-        }}
-        onPress={onClose}
-      >
-        <Pressable onPress={(event) => event.stopPropagation()}>
-          <NoteSheetBody
-            draft={draft}
-            existing={existing}
-            hint={hint}
-            onCancel={onClose}
-            onChange={setDraft}
-            onSave={() => {
-              onSave(draft.trim());
-              onClose();
-            }}
-          />
+    <Modal
+      accessibilityViewIsModal
+      statusBarTranslucent
+      transparent
+      animationType='none'
+      visible
+      onRequestClose={transition.animateOut}
+    >
+      <View style={styles.root}>
+        <Pressable
+          accessibilityLabel='Dismiss note sheet'
+          style={StyleSheet.absoluteFill}
+          onPress={transition.animateOut}
+        >
+          <Animated.View style={[styles.backdrop, motion.backdropStyle]} />
         </Pressable>
-      </Pressable>
+        <GestureDetector gesture={panGesture}>
+          <Animated.View
+            style={[styles.sheet, motion.sheetStyle]}
+            onLayout={(event) => {
+              transition.values.measuredHeight.set(
+                event.nativeEvent.layout.height
+              );
+            }}
+          >
+            <NoteSheetBody
+              draft={draft}
+              existing={existing}
+              hint={hint}
+              onCancel={transition.animateOut}
+              onChange={setDraft}
+              onSave={() => {
+                onSave(draft.trim());
+                transition.animateOut();
+              }}
+            />
+          </Animated.View>
+        </GestureDetector>
+      </View>
     </Modal>
   );
 }
+
+const styles = StyleSheet.create({
+  backdrop: {
+    backgroundColor: 'rgba(28,32,27,1)',
+    flex: 1,
+  },
+  root: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  sheet: {
+    width: '100%',
+  },
+});
