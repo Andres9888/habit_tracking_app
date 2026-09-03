@@ -173,6 +173,16 @@ describe('HabitHistoryScreen', () => {
     expect(queryByText('Not scheduled')).toBeNull();
   });
 
+  it('jumps the month calendar when a year-grid week is pressed', () => {
+    const { getByLabelText, getByTestId, getByText } = renderScreen();
+    // The grid only draws once it has been measured.
+    fireEvent(getByTestId('year-grid'), 'layout', {
+      nativeEvent: { layout: { width: 320 } },
+    });
+    fireEvent.press(getByLabelText('Week of Jun 1'));
+    expect(getByText('June')).toBeTruthy();
+  });
+
   it('caps the daily record at seven rows until expanded', () => {
     // August 1–15 for the mocked today → 15 entries.
     const { getByText, queryByLabelText, getByLabelText } = renderScreen();
