@@ -173,6 +173,25 @@ describe('HabitHistoryScreen', () => {
     expect(queryByText('Not scheduled')).toBeNull();
   });
 
+  it('disables next at the current month and previous at creation', () => {
+    const { getByLabelText } = renderScreen({ focusDate: '2026-08-15' });
+    expect(getByLabelText('Next month').props.accessibilityState).toEqual({
+      disabled: true,
+    });
+    fireEvent.press(getByLabelText('Previous month'));
+    fireEvent.press(getByLabelText('Previous month'));
+    // June is the creation month.
+    expect(getByLabelText('Previous month').props.accessibilityState).toEqual({
+      disabled: true,
+    });
+  });
+
+  it('no longer renders the standalone month bar', () => {
+    const { queryByText } = renderScreen();
+    expect(queryByText('Calendar')).toBeNull();
+    expect(queryByText('August 2026')).toBeNull();
+  });
+
   it('jumps the month calendar when a year-grid week is pressed', () => {
     const { getByLabelText, getByTestId, getByText } = renderScreen();
     // The grid only draws once it has been measured.

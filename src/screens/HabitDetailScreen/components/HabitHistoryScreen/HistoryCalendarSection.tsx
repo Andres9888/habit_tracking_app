@@ -11,12 +11,11 @@
  */
 import { useMemo } from 'react';
 import { addMonths, startOfMonth } from 'date-fns';
-import { MonthNavigation } from '../../../../components/BinaryHeatmap/MonthlyCalendarGrid';
 import type { HabitDayContext } from '../../../../features/habits/habitDayState';
 import type { Habit } from '../../../../features/habits/types';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import { triggerHaptic } from '../../../../utils/haptics';
-import { useHabitTrackingRange } from '../../insights';
+import { parseLocalDate, useHabitTrackingRange } from '../../insights';
 import { useInsightPalette } from '../../insightPalette';
 import { MonthGridCard } from '../HabitDetailHistory/MonthGridCard';
 import { FlowSectionLabel } from '../FlowSectionLabel';
@@ -82,20 +81,28 @@ export function HistoryCalendarSection({
     onMonthChange(startOfMonth(addMonths(month, delta)));
   };
 
+  // The window the card can page over: creation (or this January) to this
+  // month. Beyond either end there is nothing to show, so the chevron says so.
+  const floor = startOfMonth(
+    habit.createdAt
+      ? new Date(habit.createdAt)
+      : parseLocalDate(`${today.slice(0, 4)}-01-01`)
+  );
+  const navigation = {
+    canGoNext: month < startOfMonth(parseLocalDate(today)),
+    canGoPrev: month > floor,
+    onNext: () => shiftMonth(1),
+    onPrev: () => shiftMonth(-1),
+  };
+
   return (
     <>
-      <FlowSectionLabel>Calendar</FlowSectionLabel>
-      <MonthNavigation
-        standalone
-        currentMonth={month}
-        onNextMonth={() => shiftMonth(1)}
-        onPreviousMonth={() => shiftMonth(-1)}
-      />
       <MonthGridCard
         completedDates={doneDates}
         footer={(present) => <HistoryLegend states={present} />}
         isBest={isBest}
         month={month}
+        navigation={navigation}
         notes={notes}
         palette={palette}
         rate={rate}

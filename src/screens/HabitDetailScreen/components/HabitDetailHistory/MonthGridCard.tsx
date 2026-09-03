@@ -19,6 +19,7 @@ import type { InsightPalette } from '../../insightPalette';
 import { InsightCard } from '../InsightCard';
 import { buildMonthCells } from './monthCells';
 import { MonthGridCardHeader } from './MonthGridCardHeader';
+import type { MonthNavigation } from './MonthNavButtons';
 import { MonthGridCell } from './MonthGridCell';
 import { MonthGridHeader } from './MonthGridHeader';
 
@@ -32,6 +33,8 @@ interface MonthGridCardProps {
   isBest?: boolean;
   /** Any day inside the month to render. */
   month: Date;
+  /** Chevrons in the header; omitted where the card cannot be paged. */
+  navigation?: MonthNavigation;
   notes?: Record<string, string>;
   palette: InsightPalette;
   /** Omitted for months with no settled rate — no rate is fabricated. */
@@ -45,6 +48,7 @@ export function MonthGridCard({
   footer,
   isBest = false,
   month,
+  navigation,
   notes,
   palette,
   rate,
@@ -67,6 +71,7 @@ export function MonthGridCard({
       <MonthGridCardHeader
         isBest={isBest}
         label={label}
+        navigation={navigation}
         palette={palette}
         rate={rate}
       />
