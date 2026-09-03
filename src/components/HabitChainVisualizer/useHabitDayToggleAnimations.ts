@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   cancelAnimation,
   useAnimatedStyle,
@@ -7,7 +13,6 @@ import {
 
 import { useReduceMotion } from '@/hooks/useReduceMotion';
 import {
-  runBreathingTransition,
   runCompletionTransition,
   snapDayToggleAnimations,
 } from './useHabitDayToggleAnimations.helpers';
@@ -16,12 +21,13 @@ import type { UseHabitDayToggleAnimationsParams } from './useHabitDayToggleAnima
 export function useHabitDayToggleAnimations({
   completed,
   dateString,
-  isToday,
+  reduceMotionPreference,
 }: UseHabitDayToggleAnimationsParams) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReduceMotion({
+    preference: reduceMotionPreference || undefined,
+  });
   const completion = useSharedValue(completed ? 1 : 0);
   const buttonScale = useSharedValue(1);
-  const breathingScale = useSharedValue(1);
   const prevCompletedRef = useRef<boolean | null>(null);
   const prevDateRef = useRef<string | null>(null);
   const completedRef = useRef(completed);
@@ -36,20 +42,19 @@ export function useHabitDayToggleAnimations({
 
   useLayoutEffect(() => {
     if (prevDateRef.current === dateString) return;
-    snapDayToggleAnimations(
-      { breathingScale, buttonScale, completion },
-      completed
-    );
+    snapDayToggleAnimations({ buttonScale, completion }, completed);
     setCompletionIconMounted(completed);
     prevCompletedRef.current = completed;
     prevDateRef.current = dateString;
-  }, [breathingScale, buttonScale, completed, completion, dateString]);
+  }, [buttonScale, completed, completion, dateString]);
 
   useLayoutEffect(() => {
     if (prevDateRef.current === dateString && completed) {
+      cancelAnimation(completion);
+      completion.value = 1;
       setCompletionIconMounted(true);
     }
-  }, [completed, dateString]);
+  }, [completed, completion, dateString]);
 
   useEffect(() => {
     const previous = prevCompletedRef.current;
@@ -65,15 +70,6 @@ export function useHabitDayToggleAnimations({
   }, [completed, completion, hideCompletionIcon, reduceMotion]);
 
   useEffect(() => {
-    runBreathingTransition({
-      breathingScale,
-      reduceMotion,
-      shouldBreathe: isToday && !completed && !reduceMotion,
-    });
-    return () => cancelAnimation(breathingScale);
-  }, [breathingScale, completed, isToday, reduceMotion]);
-
-  useEffect(() => {
     if (!reduceMotion) return;
     cancelAnimation(buttonScale);
     buttonScale.value = 1;
@@ -85,12 +81,7 @@ export function useHabitDayToggleAnimations({
   const cellScaleStyle = useAnimatedStyle(() => ({
     transform: [{ scale: reduceMotion ? 1 : buttonScale.value }],
   }));
-  const breathingStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: reduceMotion ? 1 : breathingScale.value }],
-  }));
-
   return {
-    breathingStyle,
     buttonScale,
     cellScaleStyle,
     completion,

@@ -21,20 +21,15 @@ interface ChainDayListProps {
   accentColor?: string;
   celebrationsEnabled: boolean;
   completionIcon: CompletionIcon;
+  reduceMotionPreference: boolean;
   strengthPercent: number;
   shape: DayShape;
   shouldReduceMotion: boolean;
   showConnectors: boolean;
 }
 
-function getAccessibilityLabel(
-  dateLabel: string,
-  todayLabel: string,
-  completed: boolean
-) {
-  return dateLabel === todayLabel
-    ? `Today, ${completed ? 'Completed' : 'Not completed'}`
-    : `${dateLabel}: ${completed ? 'Completed' : 'Not completed'}`;
+function getAccessibilityLabel(dateLabel: string, todayLabel: string) {
+  return dateLabel === todayLabel ? 'Today' : dateLabel;
 }
 
 function ChainDayListComponent(props: ChainDayListProps) {
@@ -61,8 +56,7 @@ function ChainDayListComponent(props: ChainDayListProps) {
             }
             accessibilityLabel={getAccessibilityLabel(
               props.dateLabels[index],
-              props.todayLabel,
-              completed
+              props.todayLabel
             )}
             burstActive={
               props.activeBurst === dateString
@@ -77,6 +71,7 @@ function ChainDayListComponent(props: ChainDayListProps) {
             index={index}
             isToday={props.isToday(index)}
             missed={props.isStreakBreak(index)}
+            reduceMotionPreference={props.reduceMotionPreference}
             shape={props.shape}
             shouldReduceMotion={props.shouldReduceMotion}
             showConnector={showConnector}

@@ -20,6 +20,7 @@ export const baseProps: HabitDayToggleProps = {
   isToday: false,
   missed: false,
   onPress: () => {},
+  reduceMotionPreference: false,
   shape: 'square',
   strengthPercent: 30,
 };

@@ -3,16 +3,13 @@ import {
   cancelAnimation,
   Easing,
   type SharedValue,
-  withSequence,
-  withSpring,
   withTiming,
 } from 'react-native-reanimated';
 
-import { durations, springs } from '@/theme/animations';
+import { durations } from '@/theme/animations';
 
 export const DAY_TOGGLE_SCALE = {
-  pressed: 0.94,
-  releasePeak: 1.06,
+  pressed: 0.97,
   rest: 1,
 } as const;
 
@@ -22,7 +19,7 @@ interface Params {
   reduceMotion: boolean;
 }
 
-const pressEasing = Easing.out(Easing.cubic);
+const pressEasing = Easing.bezier(0.23, 1, 0.32, 1);
 
 function stopAt(buttonScale: SharedValue<number>, target: number) {
   cancelAnimation(buttonScale);
@@ -34,34 +31,28 @@ export function runPressIn(scale: SharedValue<number>, reduceMotion: boolean) {
   scale.value = reduceMotion
     ? DAY_TOGGLE_SCALE.rest
     : withTiming(DAY_TOGGLE_SCALE.pressed, {
-        duration: durations.stagger,
+        duration: durations.instant,
         easing: pressEasing,
       });
+}
+
+function runPressRelease(scale: SharedValue<number>, reduceMotion: boolean) {
+  if (reduceMotion) {
+    stopAt(scale, DAY_TOGGLE_SCALE.rest);
+    return;
+  }
+  cancelAnimation(scale);
+  scale.value = withTiming(DAY_TOGGLE_SCALE.rest, {
+    duration: durations.instant,
+    easing: pressEasing,
+  });
 }
 
 export function runPressCancel(
   scale: SharedValue<number>,
   reduceMotion: boolean
 ) {
-  cancelAnimation(scale);
-  scale.value = reduceMotion
-    ? DAY_TOGGLE_SCALE.rest
-    : withSpring(DAY_TOGGLE_SCALE.rest, springs.responsive);
-}
-
-export function runPressPop(scale: SharedValue<number>, reduceMotion: boolean) {
-  if (reduceMotion) {
-    stopAt(scale, DAY_TOGGLE_SCALE.rest);
-    return;
-  }
-  cancelAnimation(scale);
-  scale.value = withSequence(
-    withTiming(DAY_TOGGLE_SCALE.releasePeak, {
-      duration: durations.stagger,
-      easing: pressEasing,
-    }),
-    withSpring(DAY_TOGGLE_SCALE.rest, springs.responsive)
-  );
+  runPressRelease(scale, reduceMotion);
 }
 
 export function useHabitDayToggleHandlers({
@@ -71,21 +62,17 @@ export function useHabitDayToggleHandlers({
 }: Params) {
   const pressInCountRef = useRef(0);
   const pressOutCountRef = useRef(0);
-  const committedPressesRef = useRef(new Set<number>());
   const handlePressIn = useCallback(() => {
     pressInCountRef.current += 1;
     runPressIn(buttonScale, reduceMotion);
   }, [buttonScale, reduceMotion]);
   const handlePressOut = useCallback(() => {
     const pressId = ++pressOutCountRef.current;
-    if (committedPressesRef.current.delete(pressId)) return;
     if (pressInCountRef.current > pressId) return;
     runPressCancel(buttonScale, reduceMotion);
   }, [buttonScale, reduceMotion]);
   const handlePress = useCallback(() => {
-    committedPressesRef.current.add(pressInCountRef.current);
-    runPressPop(buttonScale, reduceMotion);
     onPress();
-  }, [buttonScale, onPress, reduceMotion]);
+  }, [onPress]);
   return { handlePress, handlePressIn, handlePressOut };
 }

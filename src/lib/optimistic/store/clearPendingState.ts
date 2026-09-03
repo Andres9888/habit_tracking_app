@@ -9,12 +9,16 @@ import { getToggleKey } from './helpers';
 
 export function clearPendingState(
   state: OptimisticStore,
-  operation: OptimisticOperation
+  operation: OptimisticOperation,
+  latestToggleOperationIds: Map<string, string>
 ): void {
   switch (operation.type) {
     case 'toggle': {
       const payload = operation.payload as ToggleOperationPayload;
-      state.pendingToggles.delete(getToggleKey(payload.habitId, payload.date));
+      const key = getToggleKey(payload.habitId, payload.date);
+      if (latestToggleOperationIds.get(key) !== operation.id) break;
+      state.pendingToggles.delete(key);
+      latestToggleOperationIds.delete(key);
       break;
     }
     case 'archive': {

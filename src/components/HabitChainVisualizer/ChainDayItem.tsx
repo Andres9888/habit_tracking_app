@@ -34,6 +34,7 @@ const ChainDayItemComponent: React.FC<ChainDayItemProps> = ({
   missed,
   onBurstComplete,
   onToggle,
+  reduceMotionPreference,
   shape,
   shouldReduceMotion,
   showConnector,
@@ -60,6 +61,7 @@ const ChainDayItemComponent: React.FC<ChainDayItemProps> = ({
         disabled={disabled}
         isToday={isToday}
         missed={missed}
+        reduceMotionPreference={reduceMotionPreference}
         shape={shape}
         onPress={handlePress}
       />

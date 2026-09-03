@@ -54,4 +54,17 @@ describe('HabitDayToggle completion frame', () => {
       countStyleMatches(view.toJSON() as JsonNode, { backgroundColor: AMBER })
     ).toBe(0);
   });
+
+  it('exposes completion as checkbox state', () => {
+    const view = render(<HabitDayToggle {...baseProps} />);
+    expect(view.getByRole('checkbox').props.accessibilityState).toEqual({
+      checked: false,
+      disabled: false,
+    });
+
+    view.rerender(<HabitDayToggle {...baseProps} completed />);
+    expect(view.getByRole('checkbox').props.accessibilityState.checked).toBe(
+      true
+    );
+  });
 });

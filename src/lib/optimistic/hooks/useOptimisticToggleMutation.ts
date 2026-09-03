@@ -26,6 +26,12 @@ export interface ToggleMutationResult {
   offlineOperationId?: string;
 }
 
+export type ToggleMutationArgs = {
+  completed?: boolean;
+  date: string;
+  habitId: Id<'habits'>;
+};
+
 /**
  * Creates an optimistic toggle mutation wrapper with offline queue support
  *
@@ -39,22 +45,19 @@ export interface ToggleMutationResult {
  * @see docs/offline-habit-sync.md US1 - Complete Habits While Offline
  */
 export function useOptimisticToggleMutation(
-  serverMutation: (args: {
-    habitId: Id<'habits'>;
-    date: string;
-  }) => Promise<unknown>,
+  serverMutation: (args: ToggleMutationArgs) => Promise<unknown>,
   getCurrentStatus: (habitId: Id<'habits'>, date: string) => boolean,
   options?: OptimisticToggleOptions
 ) {
   const isOnline = options?.isOnline ?? true;
 
   return useCallback(
-    async (args: {
-      habitId: Id<'habits'>;
-      date: string;
-    }): Promise<ToggleMutationResult> => {
-      const currentlyCompleted = getCurrentStatus(args.habitId, args.date);
-      const toCompleted = !currentlyCompleted;
+    async (args: ToggleMutationArgs): Promise<ToggleMutationResult> => {
+      const toCompleted =
+        args.completed ?? !getCurrentStatus(args.habitId, args.date);
+      // Never ask the server to flip blindly: its state can be newer than the
+      // cached checkbox that produced this intent.
+      const mutationArgs = { ...args, completed: toCompleted };
 
       const payload: ToggleOperationPayload = {
         date: args.date,
@@ -84,7 +87,7 @@ export function useOptimisticToggleMutation(
 
       // Online path: try server mutation
       try {
-        await serverMutation(args);
+        await serverMutation(mutationArgs);
         optimisticStore.confirm(operationId);
         return { queued: false };
       } catch (error) {

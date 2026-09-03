@@ -59,6 +59,7 @@ const HabitChainVisualizerComponent: React.FC<HabitChainVisualizerProps> = ({
         isFutureDate={state.isFutureDate}
         isStreakBreak={state.isStreakBreak}
         isToday={state.isToday}
+        reduceMotionPreference={reduceMotionPreference}
         shape={shape}
         shouldReduceMotion={state.shouldReduceMotion}
         showConnectors={showConnectors}

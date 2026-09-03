@@ -28,10 +28,15 @@ const HabitDayToggleComponent: React.FC<HabitDayToggleProps> = ({
   isToday,
   missed = false,
   onPress,
+  reduceMotionPreference,
   shape,
   strengthPercent,
 }) => {
-  const animation = useHabitDayToggleAnimations({ completed, dateString, isToday });
+  const animation = useHabitDayToggleAnimations({
+    completed,
+    dateString,
+    reduceMotionPreference,
+  });
   const handlers = useHabitDayToggleHandlers({
     buttonScale: animation.buttonScale,
     onPress,
@@ -72,14 +77,13 @@ const HabitDayToggleComponent: React.FC<HabitDayToggleProps> = ({
               missed,
             }),
             cellStyle,
-            animation.breathingStyle,
           ]}
         />
         <Pressable
           accessibilityHint={accessibilityHint}
           accessibilityLabel={accessibilityLabel}
-          accessibilityRole='button'
-          accessibilityState={{ disabled }}
+          accessibilityRole='checkbox'
+          accessibilityState={{ checked: completed, disabled }}
           className='items-center justify-center'
           disabled={disabled}
           style={getPressableStyle(borderRadius, disabled)}

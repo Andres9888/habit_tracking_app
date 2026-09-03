@@ -18,6 +18,7 @@ export interface ChainDayItemProps {
     disabled: boolean,
     index: number
   ) => void;
+  reduceMotionPreference: boolean;
   shape: DayShape;
   shouldReduceMotion: boolean;
   showConnector: boolean;

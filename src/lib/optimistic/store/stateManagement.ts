@@ -10,12 +10,13 @@ import { createOperationTimers } from './operationTimers';
 
 export function createStateManagement(
   state: OptimisticStore,
+  latestToggleOperationIds: Map<string, string>,
   notify: () => void
 ) {
   const timers = createOperationTimers();
 
   const clearPendingState = (operation: OptimisticOperation): void => {
-    clearOperationPendingState(state, operation);
+    clearOperationPendingState(state, operation, latestToggleOperationIds);
   };
 
   return {
@@ -86,6 +87,16 @@ export function createStateManagement(
       if (!operation) return;
       state.operations.delete(oldId);
       state.operations.set(newId, { ...operation, id: newId });
+      if (operation.type === 'toggle') {
+        const payload = operation.payload as {
+          habitId: Id<'habits'>;
+          date: string;
+        };
+        const key = getToggleKey(payload.habitId, payload.date);
+        if (latestToggleOperationIds.get(key) === oldId) {
+          latestToggleOperationIds.set(key, newId);
+        }
+      }
       notify();
     },
 
@@ -96,6 +107,7 @@ export function createStateManagement(
       state.pendingPauses.clear();
       state.pendingReorder = null;
       state.pendingToggles.clear();
+      latestToggleOperationIds.clear();
       notify();
     },
 

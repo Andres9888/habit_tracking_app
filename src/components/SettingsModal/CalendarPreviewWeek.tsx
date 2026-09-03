@@ -52,6 +52,7 @@ export function CalendarPreviewWeek(p: Props) {
           index={i}
           isToday={false}
           missed={false}
+          reduceMotionPreference={reduceMotion}
           shape={p.dayShape}
           shouldReduceMotion={reduceMotion}
           showConnector={Boolean(
