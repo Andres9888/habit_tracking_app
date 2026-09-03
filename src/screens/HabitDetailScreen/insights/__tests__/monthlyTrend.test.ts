@@ -53,6 +53,20 @@ describe('buildMonthlyRates', () => {
     expect(rates[0]?.ratePct).toBe(100);
     expect(rates[1]?.ratePct).toBe(0);
   });
+
+  it('does not schedule days before the habit was created', () => {
+    // Created 24 July 2026; today 25 July → only 24–25 count.
+    const rates = buildMonthlyRates({
+      completedDates: completions({ 6: 25 }),
+      createdAt: Date.parse('2026-07-24T12:00:00'),
+      today: TODAY,
+    });
+    expect(rates[6]?.scheduled).toBe(2);
+    expect(rates[6]?.done).toBe(2);
+    expect(rates[6]?.ratePct).toBe(100);
+    // June never had the habit: zero scheduled, not a failing score.
+    expect(rates[5]?.scheduled).toBe(0);
+  });
 });
 
 describe('turningPoint', () => {

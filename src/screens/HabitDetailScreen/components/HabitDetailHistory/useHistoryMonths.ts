@@ -13,6 +13,8 @@ import {
 
 interface UseHistoryMonthsArgs {
   completedDates: Set<string>;
+  /** Clamps the rates so months before the habit existed score nothing. */
+  createdAt?: number;
   daysOfWeek?: number[];
   /** Today as YYYY-MM-DD; injectable for tests. */
   today?: string;
@@ -30,11 +32,17 @@ export interface HistoryMonths {
 
 export function useHistoryMonths({
   completedDates,
+  createdAt,
   daysOfWeek,
   today = getLocalDateString(),
 }: UseHistoryMonthsArgs): HistoryMonths {
   return useMemo(() => {
-    const rates = buildMonthlyRates({ completedDates, daysOfWeek, today });
+    const rates = buildMonthlyRates({
+      completedDates,
+      createdAt,
+      daysOfWeek,
+      today,
+    });
     return {
       best: bestMonth(rates),
       caption: trendCaption(rates),
@@ -43,5 +51,5 @@ export function useHistoryMonths({
       rates,
       year: parseLocalDate(today).getFullYear(),
     };
-  }, [completedDates, daysOfWeek, today]);
+  }, [completedDates, createdAt, daysOfWeek, today]);
 }

@@ -91,6 +91,22 @@ describe('HabitHistoryScreen', () => {
     expect(getByLabelText('May 28, completed')).toBeTruthy();
   });
 
+  it('withholds the best-month star until two months have settled', () => {
+    // Habit created June 1, viewing July (settled) — June is the only other
+    // settled month, so July can be starred only if June also counts.
+    trackingRows = [{ completed: true, date: '2026-07-02' }];
+    const { queryByText } = renderScreen({
+      focusDate: '2026-07-10',
+      habit: { ...habit, createdAt: Date.parse('2026-07-01T09:00:00Z') },
+    });
+    expect(queryByText(/★/)).toBeNull();
+  });
+
+  it('labels the rail rate "Since start" for a habit created this year', () => {
+    const { getByLabelText } = renderScreen();
+    expect(getByLabelText(/^Since start: /)).toBeTruthy();
+  });
+
   it('bounds the range to the current year when the habit has no createdAt', () => {
     renderScreen({
       focusDate: undefined,

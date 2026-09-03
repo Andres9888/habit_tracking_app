@@ -47,6 +47,8 @@ export interface MonthRate {
 
 interface MonthlyRatesInput {
   completedDates: Set<string>;
+  /** Days before the creation date are not scheduled — the user wasn't playing. */
+  createdAt?: number;
   daysOfWeek?: number[];
   /** Today as YYYY-MM-DD; injectable for tests. */
   today?: string;
@@ -55,19 +57,24 @@ interface MonthlyRatesInput {
 /** Elapsed months of the current year, oldest first. Partial months included. */
 export function buildMonthlyRates({
   completedDates,
+  createdAt,
   daysOfWeek,
   today = getLocalDateString(),
 }: MonthlyRatesInput): MonthRate[] {
   const cursor = parseLocalDate(today);
   const year = cursor.getFullYear();
   const scheduled = scheduledWeekdays({ daysOfWeek });
+  const created =
+    createdAt === undefined ? null : getLocalDateString(new Date(createdAt));
 
   return Array.from({ length: cursor.getMonth() + 1 }, (_, month) => {
     const start = new Date(year, month, 1);
     const monthEnd = endOfMonth(start);
     const end = monthEnd > cursor ? cursor : monthEnd;
-    const days = eachDayOfInterval({ end, start }).filter((date) =>
-      isScheduledWeekday(scheduled, date.getDay())
+    const days = eachDayOfInterval({ end, start }).filter(
+      (date) =>
+        isScheduledWeekday(scheduled, date.getDay()) &&
+        (created === null || getLocalDateString(date) >= created)
     );
     const done = days.filter((date) =>
       completedDates.has(getLocalDateString(date))

@@ -17,6 +17,7 @@
  * over. It comes from the same runs instead.
  */
 import type { Habit } from '../../../../features/habits/types';
+import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import { streakStats, useStreakRuns } from '../../insights';
 import type { InsightPalette } from '../../insightPalette';
 import { HistoryStatsCard } from './HistoryStatsCard';
@@ -44,8 +45,15 @@ export function HistoryFrame({
 }: HistoryFrameProps) {
   const months = useHistoryMonths({
     completedDates: doneDates,
+    createdAt: habit.createdAt,
     daysOfWeek: habit.daysOfWeek,
   });
+  // A habit that started this year has no "year" to speak of — the rail's rate
+  // covers its whole life, so it says so.
+  const sinceStart =
+    habit.createdAt !== undefined &&
+    getLocalDateString(new Date(habit.createdAt)).slice(0, 4) ===
+      getLocalDateString().slice(0, 4);
   const runs = useStreakRuns(doneDates, {
     pausedAt: habit.pausedAt,
     resumedAt: habit.resumedAt,
@@ -57,6 +65,7 @@ export function HistoryFrame({
         bestStreak={habit.bestStreak ?? 0}
         currentStreak={streakStats(runs).current}
         palette={palette}
+        sinceStart={sinceStart}
         yearCompletions={yearCompletions}
         yearRatePct={yearRatePct}
       />
