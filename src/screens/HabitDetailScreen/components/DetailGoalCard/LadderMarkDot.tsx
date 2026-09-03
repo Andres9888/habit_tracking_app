@@ -7,8 +7,11 @@ import { borderRadius } from '../../../../theme/spacing';
 import { fontFamilies, fontWeights } from '../../../../theme/typography';
 import type { InsightPalette } from '../../insightPalette';
 import type { LadderMark } from './goalLadder';
-
-const MARK_WIDTH = 40;
+import {
+  DOT_SIZE,
+  ladderLabelStyle,
+  ladderMarkContainerStyle,
+} from './ladderMarkLayout';
 
 export function LadderMarkDot({
   mark,
@@ -22,17 +25,7 @@ export function LadderMarkDot({
   const record = mark.kind === 'record';
 
   return (
-    <View
-      style={{
-        alignItems: 'center',
-        gap: 5,
-        left: `${mark.leftPct}%`,
-        marginLeft: -MARK_WIDTH / 2,
-        position: 'absolute',
-        top: 0,
-        width: MARK_WIDTH,
-      }}
-    >
+    <View style={ladderMarkContainerStyle(mark.leftPct)}>
       <View
         style={{
           alignItems: 'center',
@@ -49,9 +42,9 @@ export function LadderMarkDot({
           borderRadius: borderRadius.full,
           borderStyle: mark.kind === 'goal' ? 'dashed' : 'solid',
           borderWidth: now ? 2.5 : done ? 0 : 1.5,
-          height: 18,
+          height: DOT_SIZE,
           justifyContent: 'center',
-          width: 18,
+          width: DOT_SIZE,
         }}
       >
         {done ? (
@@ -69,6 +62,7 @@ export function LadderMarkDot({
       <Text
         numberOfLines={1}
         style={{
+          ...ladderLabelStyle(mark.leftPct),
           color: now
             ? palette.textPrimary
             : record
