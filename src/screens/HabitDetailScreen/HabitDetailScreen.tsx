@@ -200,7 +200,6 @@ function HabitDetailScreenContent({
             }}
           />
           <HabitDetailModals
-            habitId={displayHabit._id}
             habitName={displayHabit.name}
             {...buildModalsProps(screenState, calendarHandlers)}
           />

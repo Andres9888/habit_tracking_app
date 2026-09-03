@@ -26,6 +26,7 @@ export interface HabitDayToggleProps {
   isToday: boolean;
   missed?: boolean;
   onPress: () => void;
+  reduceMotionPreference: boolean;
   shape: DayShape;
 }
 

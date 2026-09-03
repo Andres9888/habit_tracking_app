@@ -38,6 +38,7 @@ function createOptimisticStore(): OptimisticStoreAPI {
   };
 
   const listeners = new Set<StoreListener>();
+  const latestToggleOperationIds = new Map<string, string>();
 
   const buildSnapshot = (): OptimisticStore => ({
     operations: new Map(state.operations),
@@ -63,8 +64,12 @@ function createOptimisticStore(): OptimisticStoreAPI {
     for (const listener of listeners) listener();
   };
 
-  const operations = createOperations(state, notify);
-  const stateManagement = createStateManagement(state, notify);
+  const operations = createOperations(state, latestToggleOperationIds, notify);
+  const stateManagement = createStateManagement(
+    state,
+    latestToggleOperationIds,
+    notify
+  );
   snapshot = buildSnapshot();
   togglesSnapshot = new Map(state.pendingToggles);
 

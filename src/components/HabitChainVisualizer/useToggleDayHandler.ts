@@ -8,6 +8,7 @@ interface UseToggleDayHandlerParams {
   habitId: Id<'habits'>;
   onToggle: (args: { habitId: Id<'habits'>; date: string }) => void;
   onWeekComplete?: (args: { completedDate: string }) => void;
+  triggerLightImpact: () => void;
   triggerSelection: () => void;
   triggerSuccess: () => void;
   setActiveBurst: (dateString: string | null) => void;
@@ -19,6 +20,7 @@ export const useToggleDayHandler = ({
   habitId,
   onToggle,
   onWeekComplete,
+  triggerLightImpact,
   triggerSelection,
   triggerSuccess,
   setActiveBurst,
@@ -46,12 +48,16 @@ export const useToggleDayHandler = ({
           i === index ? true : status === 'done'
         );
 
-      if (completed || !celebrationsEnabled) {
-        triggerSelection();
-      } else {
+      // Daily check-ins are frequent: keep them to one light haptic and the
+      // state transition. Reserve the shadowed particle burst and success
+      // notification for the rarer perfect-week milestone.
+      if (willCompleteWeek && celebrationsEnabled) {
         triggerSuccess();
-        // Forge spark burst fires on every completion, not just week-complete.
         setActiveBurst(dateString);
+      } else if (isTogglingToComplete) {
+        triggerLightImpact();
+      } else {
+        triggerSelection();
       }
 
       onToggle({ date: dateString, habitId });
@@ -65,6 +71,7 @@ export const useToggleDayHandler = ({
       habitId,
       onToggle,
       onWeekComplete,
+      triggerLightImpact,
       triggerSelection,
       triggerSuccess,
       setActiveBurst,

@@ -35,10 +35,11 @@ export const useChainVisualizerState = ({
     );
   const [activeBurst, setActiveBurst] = useState<string | null>(null);
 
-  const { triggerSelection, triggerSuccess } = useHapticFeedback({
-    isEnabled: celebrationsEnabled,
-    preference: reduceMotionPreference,
-  });
+  const { triggerLightImpact, triggerSelection, triggerSuccess } =
+    useHapticFeedback({
+      isEnabled: celebrationsEnabled,
+      preference: reduceMotionPreference,
+    });
 
   const shouldReduceMotion = useMemo(
     () => reduceMotionPreference || !celebrationsEnabled,
@@ -65,6 +66,7 @@ export const useChainVisualizerState = ({
     onToggle,
     onWeekComplete,
     setActiveBurst,
+    triggerLightImpact,
     triggerSelection,
     triggerSuccess,
     weekStatus,

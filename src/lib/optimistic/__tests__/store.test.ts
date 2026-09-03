@@ -63,6 +63,50 @@ describe('OptimisticStore', () => {
       expect(optimisticStore.getPendingToggle(habitId, date)).toBeUndefined();
     });
 
+    it('keeps a newer toggle visible when an older operation confirms', () => {
+      jest.useFakeTimers();
+      const habitId = mockHabitId('habit_rapid_toggle');
+      const date = '2026-01-22';
+
+      const firstOperationId = optimisticStore.addToggle({
+        habitId,
+        date,
+        toCompleted: true,
+      });
+      const secondOperationId = optimisticStore.addToggle({
+        habitId,
+        date,
+        toCompleted: false,
+      });
+
+      optimisticStore.confirm(firstOperationId);
+      jest.advanceTimersByTime(300);
+
+      expect(optimisticStore.getPendingToggle(habitId, date)).toBe(false);
+
+      optimisticStore.confirm(secondOperationId);
+      jest.advanceTimersByTime(300);
+
+      expect(optimisticStore.getPendingToggle(habitId, date)).toBeUndefined();
+    });
+
+    it('clears a toggle after replacing its operation ID', () => {
+      jest.useFakeTimers();
+      const habitId = mockHabitId('habit_replaced_operation');
+      const date = '2026-01-22';
+
+      optimisticStore.addToggleWithId('local-operation', {
+        habitId,
+        date,
+        toCompleted: true,
+      });
+      optimisticStore.replaceOperationId('local-operation', 'queued-operation');
+      optimisticStore.confirm('queued-operation');
+      jest.advanceTimersByTime(300);
+
+      expect(optimisticStore.getPendingToggle(habitId, date)).toBeUndefined();
+    });
+
     it('should clear pending state on failure (rollback)', () => {
       const habitId = mockHabitId('habit_abc');
       const date = '2026-01-19';

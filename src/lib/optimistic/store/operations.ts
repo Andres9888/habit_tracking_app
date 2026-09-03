@@ -14,14 +14,19 @@ import type {
 import { generateId, getToggleKey } from './helpers';
 import { clearPendingState } from './clearPendingState';
 
-export function createOperations(state: OptimisticStore, notify: () => void) {
+export function createOperations(
+  state: OptimisticStore,
+  latestToggleOperationIds: Map<string, string>,
+  notify: () => void
+) {
   const clearExisting = (id: string): void => {
     const existing = state.operations.get(id);
     if (!existing) return;
-    clearPendingState(state, existing);
+    clearPendingState(state, existing, latestToggleOperationIds);
   };
 
   const applyPendingState = (
+    operationId: string,
     type: OperationType,
     payload: OperationPayload
   ): void => {
@@ -43,10 +48,9 @@ export function createOperations(state: OptimisticStore, notify: () => void) {
       }
       case 'toggle': {
         const toggle = payload as ToggleOperationPayload;
-        state.pendingToggles.set(
-          getToggleKey(toggle.habitId, toggle.date),
-          toggle.toCompleted
-        );
+        const key = getToggleKey(toggle.habitId, toggle.date);
+        state.pendingToggles.set(key, toggle.toCompleted);
+        latestToggleOperationIds.set(key, operationId);
         break;
       }
     }
@@ -65,7 +69,7 @@ export function createOperations(state: OptimisticStore, notify: () => void) {
       state: 'pending',
       type,
     });
-    applyPendingState(type, payload);
+    applyPendingState(id, type, payload);
     notify();
     return id;
   };

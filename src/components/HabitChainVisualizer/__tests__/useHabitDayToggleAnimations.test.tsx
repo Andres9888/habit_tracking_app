@@ -7,12 +7,16 @@ import { useHabitDayToggleAnimations } from '../useHabitDayToggleAnimations';
 
 jest.mock('@/hooks/useReduceMotion');
 const mockReduceMotion = jest.mocked(useReduceMotion);
-const initial = { completed: false, dateString: '2026-08-28', isToday: false };
+const initial = {
+  completed: false,
+  dateString: '2026-08-28',
+  reduceMotionPreference: false,
+};
 
 describe('useHabitDayToggleAnimations', () => {
   afterEach(() => jest.restoreAllMocks());
 
-  it('uses the reveal clock for completion and the short fade when reduced', () => {
+  it('snaps completion immediately and uses the short fade when reduced', () => {
     const timing = jest.spyOn(Reanimated, 'withTiming');
     mockReduceMotion.mockReturnValue(false);
     const view = renderHook((props) => useHabitDayToggleAnimations(props), {
@@ -20,11 +24,8 @@ describe('useHabitDayToggleAnimations', () => {
     });
     timing.mockClear();
     act(() => view.rerender({ ...initial, completed: true }));
-    expect(timing).toHaveBeenCalledWith(
-      1,
-      expect.objectContaining({ duration: durations.reveal }),
-      expect.any(Function)
-    );
+    expect(view.result.current.completion.value).toBe(1);
+    expect(timing).not.toHaveBeenCalled();
 
     mockReduceMotion.mockReturnValue(true);
     act(() => view.rerender(initial));
@@ -43,7 +44,10 @@ describe('useHabitDayToggleAnimations', () => {
     });
     timing.mockClear();
     act(() =>
-      view.rerender({ completed: true, dateString: '2026-09-04', isToday: false })
+      view.rerender({
+        completed: true,
+        dateString: '2026-09-04',
+      })
     );
     expect(timing).not.toHaveBeenCalled();
     expect(view.result.current.completion.value).toBe(1);
@@ -60,5 +64,25 @@ describe('useHabitDayToggleAnimations', () => {
     act(() => view.rerender({ ...initial, completed: true }));
     expect(view.result.current.completion.value).toBe(1);
     expect(view.result.current.completionIconMounted).toBe(true);
+  });
+
+  it('does not run a decorative idle animation for check-in cells', () => {
+    const repeat = jest.spyOn(Reanimated, 'withRepeat');
+    mockReduceMotion.mockReturnValue(false);
+
+    renderHook(() => useHabitDayToggleAnimations(initial));
+
+    expect(repeat).not.toHaveBeenCalled();
+  });
+
+  it('passes the app reduce-motion preference to the animation hook', () => {
+    renderHook(() =>
+      useHabitDayToggleAnimations({
+        ...initial,
+        reduceMotionPreference: true,
+      })
+    );
+
+    expect(mockReduceMotion).toHaveBeenCalledWith({ preference: true });
   });
 });

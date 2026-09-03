@@ -10,7 +10,11 @@ jest.mock('@/hooks/useReduceMotion');
 jest.mock('react-native-worklets', () => ({ scheduleOnRN: jest.fn() }));
 const mockReduceMotion = jest.mocked(useReduceMotion);
 const mockScheduleOnRN = jest.mocked(scheduleOnRN);
-const initial = { completed: true, dateString: '2026-08-28', isToday: false };
+const initial = {
+  completed: true,
+  dateString: '2026-08-28',
+  reduceMotionPreference: false,
+};
 
 describe('useHabitDayToggleAnimations interruptions', () => {
   afterEach(() => {
@@ -21,12 +25,12 @@ describe('useHabitDayToggleAnimations interruptions', () => {
   it('ignores a queued stale hide after the day is completed again', () => {
     const timingCallbacks: Array<(finished?: boolean) => void> = [];
     const scheduledJobs: Array<() => void> = [];
-    jest.spyOn(Reanimated, 'withTiming').mockImplementation(
-      (value, _config, callback) => {
+    jest
+      .spyOn(Reanimated, 'withTiming')
+      .mockImplementation((value, _config, callback) => {
         if (callback) timingCallbacks.push(callback);
         return value;
-      }
-    );
+      });
     mockScheduleOnRN.mockImplementation((fn, ...args) => {
       scheduledJobs.push(() => fn(...args));
     });
@@ -52,9 +56,14 @@ describe('useHabitDayToggleAnimations interruptions', () => {
       { value: 1 },
     ] as SharedValue<number>[];
     let sharedValueCall = 0;
-    jest.spyOn(Reanimated, 'useSharedValue').mockImplementation(
-      (() => values[sharedValueCall++ % values.length]) as typeof Reanimated.useSharedValue
-    );
+    jest
+      .spyOn(Reanimated, 'useSharedValue')
+      .mockImplementation(
+        (() =>
+          values[
+            sharedValueCall++ % values.length
+          ]) as typeof Reanimated.useSharedValue
+      );
     const timing = jest.spyOn(Reanimated, 'withTiming');
     mockReduceMotion.mockReturnValue(false);
     const view = renderHook((props) => useHabitDayToggleAnimations(props), {

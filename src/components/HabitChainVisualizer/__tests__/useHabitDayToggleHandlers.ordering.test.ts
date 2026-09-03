@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react-native';
 import * as Reanimated from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
 
-import { springs } from '@/theme/animations';
+import { durations } from '@/theme/animations';
 import {
   DAY_TOGGLE_SCALE,
   useHabitDayToggleHandlers,
@@ -16,7 +16,7 @@ describe('useHabitDayToggleHandlers press ordering', () => {
   });
 
   it('does not let a delayed prior press-out cancel the current hold', () => {
-    const spring = jest.spyOn(Reanimated, 'withSpring');
+    const timing = jest.spyOn(Reanimated, 'withTiming');
     const scale = { value: 1 } as SharedValue<number>;
     const { result } = renderHook(() =>
       useHabitDayToggleHandlers({
@@ -28,21 +28,19 @@ describe('useHabitDayToggleHandlers press ordering', () => {
 
     act(() => {
       result.current.handlePressIn();
-      result.current.handlePress();
       result.current.handlePressIn();
-      setTimeout(result.current.handlePressOut, 130);
-      jest.advanceTimersByTime(130);
+      result.current.handlePressOut();
     });
 
     expect(scale.value).toBe(DAY_TOGGLE_SCALE.pressed);
-    expect(spring).toHaveBeenCalledTimes(1);
+    expect(timing).toHaveBeenCalledTimes(2);
 
     act(() => result.current.handlePressOut());
 
-    expect(spring).toHaveBeenCalledTimes(2);
-    expect(spring).toHaveBeenLastCalledWith(
+    expect(timing).toHaveBeenCalledTimes(3);
+    expect(timing).toHaveBeenLastCalledWith(
       DAY_TOGGLE_SCALE.rest,
-      springs.responsive
+      expect.objectContaining({ duration: durations.instant })
     );
     expect(scale.value).toBe(DAY_TOGGLE_SCALE.rest);
   });
