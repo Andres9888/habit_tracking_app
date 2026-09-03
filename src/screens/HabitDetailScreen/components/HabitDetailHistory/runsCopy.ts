@@ -8,12 +8,16 @@ export function runsNote(total: number, goal: number): string {
   return goal > 0 ? `${runs} · axis ${goal}-day goal` : runs;
 }
 
-/** Footnote under the rail: how much is shown, then the trend if there is one. */
+/**
+ * Footnote under the rail: how much is shown, then the trend if there is one.
+ * Empty for a single run — the row already says it all.
+ */
 export function runsFootnote(
   shown: number,
   total: number,
   trend: RunTrend | null
 ): string {
+  if (total <= 1) return '';
   const rest = total - shown;
   const lead =
     rest > 0

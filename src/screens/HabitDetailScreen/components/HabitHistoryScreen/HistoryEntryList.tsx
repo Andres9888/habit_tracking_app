@@ -1,9 +1,13 @@
+import { useState } from 'react';
 import { Text } from 'react-native';
 import { useInsightPalette } from '../../insightPalette';
 import { FlowDivider, FlowRow, FlowRowGroup } from '../FlowRow';
 import { EntryMark } from './EntryMark';
 import type { HistoryEntry } from './historyEntries';
+import { ShowAllRow } from './ShowAllRow';
 import { habitDayStateLabel } from '../../../../features/habits/habitDayState';
+
+const VISIBLE_ENTRIES = 7;
 
 interface HistoryEntryListProps {
   entries: HistoryEntry[];
@@ -15,6 +19,7 @@ export function HistoryEntryList({
   onOpenDay,
 }: HistoryEntryListProps) {
   const palette = useInsightPalette();
+  const [expanded, setExpanded] = useState(false);
 
   if (entries.length === 0) {
     return (
@@ -30,9 +35,12 @@ export function HistoryEntryList({
     );
   }
 
+  const visible = expanded ? entries : entries.slice(0, VISIBLE_ENTRIES);
+  const hidden = entries.length - visible.length;
+
   return (
     <FlowRowGroup>
-      {entries.map((entry, index) => (
+      {visible.map((entry, index) => (
         <FragmentRow
           key={entry.date}
           entry={entry}
@@ -40,6 +48,9 @@ export function HistoryEntryList({
           onOpenDay={onOpenDay}
         />
       ))}
+      {hidden > 0 ? (
+        <ShowAllRow count={entries.length} onPress={() => setExpanded(true)} />
+      ) : null}
     </FlowRowGroup>
   );
 }

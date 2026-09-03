@@ -16,6 +16,10 @@ describe('runsNote', () => {
 });
 
 describe('runsFootnote', () => {
+  it('says nothing about a single run', () => {
+    expect(runsFootnote(1, 1, null)).toBe('');
+  });
+
   it('says how many runs are hidden', () => {
     expect(runsFootnote(4, 37, null)).toBe(
       'Your 4 longest runs, then 33 shorter ones.'
