@@ -12,6 +12,7 @@ export function EntryMark({ state }: { state: HabitDayState }) {
   // "not scheduled" cell the legend lists beside it.
   const isNeutral = state === 'unscheduled' || isPaused;
   const isToday = state === 'open-today';
+  const isFuture = state === 'upcoming' || state === 'before-creation';
   return (
     <View
       style={{
@@ -24,16 +25,17 @@ export function EntryMark({ state }: { state: HabitDayState }) {
               ? palette.cellFuture
               : undefined,
         borderColor: done || isToday ? palette.green : palette.missedRing,
-        borderRadius: 15,
+        borderRadius: 7,
         borderStyle: done || isNeutral || isToday ? 'solid' : 'dashed',
         borderWidth: isNeutral ? 0 : 1.5,
-        height: 30,
+        height: 26,
         justifyContent: 'center',
-        width: 30,
+        opacity: isFuture ? 0.55 : 1,
+        width: 26,
       }}
     >
       {done ? (
-        <Check color={palette.onGreen} size={16} strokeWidth={2.4} />
+        <Check color={palette.onGreen} size={14} strokeWidth={2.4} />
       ) : null}
     </View>
   );

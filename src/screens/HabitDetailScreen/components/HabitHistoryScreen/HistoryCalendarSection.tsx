@@ -101,7 +101,7 @@ export function HistoryCalendarSection({
       />
       <MonthGridCard
         completedDates={doneDates}
-        footer={<HistoryLegend />}
+        footer={(present) => <HistoryLegend states={present} />}
         isBest={isBest}
         month={month}
         notes={notes}
@@ -111,7 +111,11 @@ export function HistoryCalendarSection({
         onOpenDay={(date) => (date <= today ? onOpenDay(date) : undefined)}
       />
       <FlowSectionLabel>Daily record</FlowSectionLabel>
-      <HistoryEntryList entries={entries} onOpenDay={onOpenDay} />
+      <HistoryEntryList
+        key={month.toISOString()}
+        entries={entries}
+        onOpenDay={onOpenDay}
+      />
     </>
   );
 }

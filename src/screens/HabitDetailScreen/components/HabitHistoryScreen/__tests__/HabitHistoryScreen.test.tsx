@@ -164,4 +164,22 @@ describe('HabitHistoryScreen', () => {
 
     expect(getByLabelText('August 12, completed, has note')).toBeTruthy();
   });
+
+  it('lists only the legend states present in the month', () => {
+    // Stock August: completed (12th), missed, open-today (15th), upcoming.
+    const { queryByText, getAllByText } = renderScreen();
+    expect(getAllByText('Completed').length).toBeGreaterThan(0);
+    expect(queryByText('Paused')).toBeNull();
+    expect(queryByText('Not scheduled')).toBeNull();
+  });
+
+  it('caps the daily record at seven rows until expanded', () => {
+    // August 1–15 for the mocked today → 15 entries.
+    const { getByText, queryByLabelText, getByLabelText } = renderScreen();
+    expect(getByLabelText('Sat 15')).toBeTruthy();
+    expect(getByLabelText('Sun 9')).toBeTruthy();
+    expect(queryByLabelText('Sat 8')).toBeNull();
+    fireEvent.press(getByText('Show all 15 days'));
+    expect(getByLabelText('Sat 1')).toBeTruthy();
+  });
 });

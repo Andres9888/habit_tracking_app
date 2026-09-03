@@ -1,19 +1,23 @@
 /**
- * HistoryLegend — completed, missed, rest, today and upcoming states.
+ * HistoryLegend — square swatches for the day states the current month
+ * actually shows. A month with no paused days does not explain "Paused".
  */
 import type { ReactNode } from 'react';
 import { Text, View } from 'react-native';
-import { useInsightPalette } from '../../insightPalette';
+import type { HabitDayState } from '../../../../features/habits/habitDayState';
+import { type InsightPalette, useInsightPalette } from '../../insightPalette';
 
 const SWATCH = 14;
 
 function Swatch({
   borderColor,
   borderStyle,
+  faded,
   fill,
 }: {
   borderColor?: string;
   borderStyle?: 'solid' | 'dashed';
+  faded?: boolean;
   fill?: string;
 }) {
   return (
@@ -21,10 +25,11 @@ function Swatch({
       style={{
         backgroundColor: fill,
         borderColor: borderColor ?? 'transparent',
-        borderRadius: SWATCH / 2,
+        borderRadius: 4,
         borderStyle: borderStyle ?? 'solid',
         borderWidth: borderColor ? 1.5 : 0,
         height: SWATCH,
+        opacity: faded ? 0.55 : 1,
         width: SWATCH,
       }}
     />
@@ -43,9 +48,38 @@ function Item({ children, swatch }: { children: string; swatch: ReactNode }) {
   );
 }
 
-export function HistoryLegend() {
-  const palette = useInsightPalette();
+interface LegendItem {
+  label: string;
+  state: HabitDayState;
+  swatch: (palette: InsightPalette) => ReactNode;
+}
 
+const ITEMS: readonly LegendItem[] = [
+  { label: 'Completed', state: 'completed', swatch: (p) => <Swatch fill={p.green} /> },
+  {
+    label: 'Missed',
+    state: 'missed',
+    swatch: (p) => <Swatch borderColor={p.missedRing} borderStyle='dashed' />,
+  },
+  { label: 'Today', state: 'open-today', swatch: (p) => <Swatch borderColor={p.green} /> },
+  { label: 'Paused', state: 'paused', swatch: (p) => <Swatch fill={p.greenSoft} /> },
+  { label: 'Not scheduled', state: 'unscheduled', swatch: (p) => <Swatch fill={p.cellFuture} /> },
+  { label: 'Upcoming', state: 'upcoming', swatch: (p) => <Swatch faded fill={p.cellFuture} /> },
+  {
+    label: 'Before start',
+    state: 'before-creation',
+    swatch: (p) => <Swatch faded fill={p.cellFuture} />,
+  },
+];
+
+export function HistoryLegend({
+  states,
+}: {
+  states: ReadonlySet<HabitDayState>;
+}) {
+  const palette = useInsightPalette();
+  const shown = ITEMS.filter((item) => states.has(item.state));
+  if (shown.length === 0) return null;
   return (
     <View
       style={{
@@ -58,26 +92,11 @@ export function HistoryLegend() {
         paddingTop: 14,
       }}
     >
-      <Item swatch={<Swatch fill={palette.green} />}>Completed</Item>
-      <Item
-        swatch={
-          <Swatch borderColor={palette.missedRing} borderStyle='dashed' />
-        }
-      >
-        Missed
-      </Item>
-      <Item swatch={<Swatch fill={palette.cellFuture} />}>Not scheduled</Item>
-      <Item swatch={<Swatch fill={palette.greenSoft} />}>Paused</Item>
-      <Item swatch={<Swatch borderColor={palette.green} borderStyle='solid' />}>
-        Today
-      </Item>
-      <Item
-        swatch={
-          <Swatch borderColor={palette.cardBorder} fill={palette.cellFuture} />
-        }
-      >
-        Upcoming
-      </Item>
+      {shown.map((item) => (
+        <Item key={item.state} swatch={item.swatch(palette)}>
+          {item.label}
+        </Item>
+      ))}
     </View>
   );
 }
