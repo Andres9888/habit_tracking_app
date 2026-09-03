@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useInsightPalette } from '../insightPalette';
 import { FlowBack } from './FlowBack';
@@ -22,11 +22,25 @@ export function FlowHeader({
     <View style={{ backgroundColor: palette.bandGradient[2] }}>
       <ScreenHeader
         leftAction={<FlowBack label={backLabel} onPress={onBack} />}
-        subtitle={subtitle}
         title={title}
         titleStyle={{ color: palette.textPrimary }}
         variant='transparent'
       />
+      {subtitle ? (
+        <Text
+          accessibilityRole='text'
+          numberOfLines={1}
+          style={{
+            color: palette.textTertiary,
+            fontSize: 13,
+            marginTop: -6,
+            paddingBottom: 10,
+            textAlign: 'center',
+          }}
+        >
+          {subtitle}
+        </Text>
+      ) : null}
     </View>
   );
 }
