@@ -96,4 +96,20 @@ describe('HabitCardGridRow', () => {
     );
     expect(flexOnes).toHaveLength(2);
   });
+
+  it('renders no trailing column and middle flex 4 when col5 is omitted', () => {
+    const { UNSAFE_getAllByType, queryByText } = render(
+      <HabitCardGridRow col1={<Text>icon</Text>} middle={<Text>title</Text>} />
+    );
+
+    expect(queryByText('chevron')).toBeNull();
+    const middleCol = UNSAFE_getAllByType(View).find(
+      (node) => node.props.style?.flex === 4
+    );
+    expect(middleCol).toBeTruthy();
+    const flexOnes = UNSAFE_getAllByType(View).filter((node) =>
+      node.props.className?.includes('flex-1')
+    );
+    expect(flexOnes).toHaveLength(1);
+  });
 });

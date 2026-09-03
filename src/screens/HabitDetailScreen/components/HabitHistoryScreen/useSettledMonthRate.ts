@@ -29,7 +29,12 @@ export function useSettledMonthRate({
   month,
   today = getLocalDateString(),
 }: SettledMonthRateArgs): { isBest: boolean; rate?: MonthRate } {
-  const months = useHistoryMonths({ completedDates, daysOfWeek, today });
+  const months = useHistoryMonths({
+    completedDates,
+    createdAt,
+    daysOfWeek,
+    today,
+  });
   const elapsed =
     month.getFullYear() === months.year &&
     month.getMonth() < parseLocalDate(today).getMonth();
@@ -39,8 +44,16 @@ export function useSettledMonthRate({
       getLocalDateString(endOfMonth(month));
   const rate = elapsed && existed ? months.rates[month.getMonth()] : undefined;
 
+  // One settled month is trivially its own best, which reads as a boast about
+  // nothing. The star only means something once there is a field to lead.
+  const settled = months.rates.filter(
+    (entry, index) =>
+      index < parseLocalDate(today).getMonth() && entry.scheduled > 0
+  ).length;
+
   return {
-    isBest: rate !== undefined && rate.month === months.best?.month,
+    isBest:
+      settled >= 2 && rate !== undefined && rate.month === months.best?.month,
     rate,
   };
 }

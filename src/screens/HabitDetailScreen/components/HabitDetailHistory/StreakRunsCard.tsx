@@ -48,6 +48,7 @@ export function StreakRunsCard({
   const isRecord = longest >= bestStreak;
   const axis = Math.max(longest, goalDuration, 1);
   const current = runs.find((run) => run.isCurrent);
+  const footnote = runsFootnote(ranked.length, runs.length, runTrend(runs));
 
   return (
     <InsightCard palette={palette}>
@@ -80,9 +81,9 @@ export function StreakRunsCard({
           />
         ) : null}
       </View>
-      <CardFootnote palette={palette}>
-        {runsFootnote(ranked.length, runs.length, runTrend(runs))}
-      </CardFootnote>
+      {footnote ? (
+        <CardFootnote palette={palette}>{footnote}</CardFootnote>
+      ) : null}
     </InsightCard>
   );
 }

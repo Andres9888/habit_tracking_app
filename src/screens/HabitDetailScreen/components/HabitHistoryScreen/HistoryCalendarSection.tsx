@@ -5,10 +5,13 @@
  * It reads the wider creation-to-today tracking window rather than the frame's
  * year-to-date set, because a calendar you can page back through must be able
  * to show days that fall outside this year.
+ *
+ * The month itself is owned by HabitHistoryScreen so the year grid above can
+ * drive it; this section only asks for the next one.
  */
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { addMonths, startOfMonth } from 'date-fns';
-import { MonthNavigation } from '../../../../components/BinaryHeatmap/MonthlyCalendarGrid';
+import type { HabitDayContext } from '../../../../features/habits/habitDayState';
 import type { Habit } from '../../../../features/habits/types';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import { triggerHaptic } from '../../../../utils/haptics';
@@ -17,26 +20,32 @@ import { useInsightPalette } from '../../insightPalette';
 import { MonthGridCard } from '../HabitDetailHistory/MonthGridCard';
 import { FlowSectionLabel } from '../FlowSectionLabel';
 import { buildHistoryEntries } from './historyEntries';
+import { historyRangeStart } from './historyRangeStart';
 import { HistoryEntryList } from './HistoryEntryList';
 import { HistoryLegend } from './HistoryLegend';
 import { useSettledMonthRate } from './useSettledMonthRate';
 
 interface HistoryCalendarSectionProps {
-  focusDate?: string;
   habit: Habit;
+  /** The month on show; owned by HabitHistoryScreen. */
+  month: Date;
   notes: Record<string, string>;
   /**
    * Accepted so DetailFlowSwitch keeps compiling; the squares read the fetched
    * tracking rows directly, so there is no optimistic cell to paint here.
    */
   pendingToggleDate?: string | null;
+  schedule: HabitDayContext;
+  onMonthChange: (next: Date) => void;
   onOpenDay: (date: string) => void;
 }
 
 export function HistoryCalendarSection({
-  focusDate,
   habit,
+  month,
   notes,
+  schedule,
+  onMonthChange,
   onOpenDay,
 }: HistoryCalendarSectionProps) {
   const palette = useInsightPalette();
@@ -44,11 +53,7 @@ export function HistoryCalendarSection({
   const rows = useHabitTrackingRange({
     endDate: today,
     habitId: habit._id,
-    // Same fallback as DayDetailScreen: an unknown creation date must not turn
-    // into a decades-wide range that we then fetch and persist every open.
-    startDate: habit.createdAt
-      ? getLocalDateString(new Date(habit.createdAt))
-      : `${today.slice(0, 4)}-01-01`,
+    startDate: historyRangeStart(habit.createdAt, today),
   });
   const doneDates = useMemo(
     () =>
@@ -56,23 +61,6 @@ export function HistoryCalendarSection({
         (rows ?? []).filter((row) => row.completed).map((row) => row.date)
       ),
     [rows]
-  );
-  const [month, setMonth] = useState(() =>
-    startOfMonth(focusDate ? parseLocalDate(focusDate) : new Date())
-  );
-
-  useEffect(() => {
-    if (focusDate) setMonth(startOfMonth(parseLocalDate(focusDate)));
-  }, [focusDate]);
-
-  const schedule = useMemo(
-    () => ({
-      createdAt: habit.createdAt,
-      daysOfWeek: habit.daysOfWeek,
-      pausedAt: habit.pausedAt,
-      resumedAt: habit.resumedAt,
-    }),
-    [habit.createdAt, habit.daysOfWeek, habit.pausedAt, habit.resumedAt]
   );
 
   const entries = useMemo(
@@ -90,23 +78,31 @@ export function HistoryCalendarSection({
 
   const shiftMonth = (delta: number) => {
     void triggerHaptic('selection');
-    setMonth((current) => startOfMonth(addMonths(current, delta)));
+    onMonthChange(startOfMonth(addMonths(month, delta)));
+  };
+
+  // The window the card can page over: creation (or this January) to this
+  // month. Beyond either end there is nothing to show, so the chevron says so.
+  const floor = startOfMonth(
+    habit.createdAt
+      ? new Date(habit.createdAt)
+      : parseLocalDate(`${today.slice(0, 4)}-01-01`)
+  );
+  const navigation = {
+    canGoNext: month < startOfMonth(parseLocalDate(today)),
+    canGoPrev: month > floor,
+    onNext: () => shiftMonth(1),
+    onPrev: () => shiftMonth(-1),
   };
 
   return (
     <>
-      <FlowSectionLabel>Calendar</FlowSectionLabel>
-      <MonthNavigation
-        standalone
-        currentMonth={month}
-        onNextMonth={() => shiftMonth(1)}
-        onPreviousMonth={() => shiftMonth(-1)}
-      />
       <MonthGridCard
         completedDates={doneDates}
-        footer={<HistoryLegend />}
+        footer={(present) => <HistoryLegend states={present} />}
         isBest={isBest}
         month={month}
+        navigation={navigation}
         notes={notes}
         palette={palette}
         rate={rate}
@@ -114,7 +110,11 @@ export function HistoryCalendarSection({
         onOpenDay={(date) => (date <= today ? onOpenDay(date) : undefined)}
       />
       <FlowSectionLabel>Daily record</FlowSectionLabel>
-      <HistoryEntryList entries={entries} onOpenDay={onOpenDay} />
+      <HistoryEntryList
+        key={month.toISOString()}
+        entries={entries}
+        onOpenDay={onOpenDay}
+      />
     </>
   );
 }

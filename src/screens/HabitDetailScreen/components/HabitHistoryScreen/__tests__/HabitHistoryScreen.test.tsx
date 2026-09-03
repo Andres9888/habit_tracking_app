@@ -61,8 +61,50 @@ describe('HabitHistoryScreen', () => {
     expect(mockUseHabitTrackingRange).toHaveBeenCalledWith({
       endDate: '2026-08-15',
       habitId: 'habit_1',
-      startDate: '2026-06-01',
+      startDate: '2026-01-01',
     });
+  });
+
+  it('fetches from January 1 when the habit was created this year', () => {
+    renderScreen();
+    expect(mockUseHabitTrackingRange).toHaveBeenCalledWith({
+      endDate: '2026-08-15',
+      habitId: 'habit_1',
+      startDate: '2026-01-01',
+    });
+  });
+
+  it('fetches from creation when the habit predates this year', () => {
+    renderScreen({
+      habit: { ...habit, createdAt: Date.parse('2025-11-03T09:00:00Z') },
+    });
+    expect(mockUseHabitTrackingRange).toHaveBeenCalledWith({
+      endDate: '2026-08-15',
+      habitId: 'habit_1',
+      startDate: '2025-11-03',
+    });
+  });
+
+  it('paints a completion logged before the creation date', () => {
+    trackingRows = [{ completed: true, date: '2026-05-28' }];
+    const { getByLabelText } = renderScreen({ focusDate: '2026-05-28' });
+    expect(getByLabelText('May 28, completed')).toBeTruthy();
+  });
+
+  it('withholds the best-month star until two months have settled', () => {
+    // Habit created June 1, viewing July (settled) — June is the only other
+    // settled month, so July can be starred only if June also counts.
+    trackingRows = [{ completed: true, date: '2026-07-02' }];
+    const { queryByText } = renderScreen({
+      focusDate: '2026-07-10',
+      habit: { ...habit, createdAt: Date.parse('2026-07-01T09:00:00Z') },
+    });
+    expect(queryByText(/★/)).toBeNull();
+  });
+
+  it('labels the rail rate "Since start" for a habit created this year', () => {
+    const { getByLabelText } = renderScreen();
+    expect(getByLabelText(/^Since start: /)).toBeTruthy();
   });
 
   it('bounds the range to the current year when the habit has no createdAt', () => {
@@ -121,5 +163,52 @@ describe('HabitHistoryScreen', () => {
     });
 
     expect(getByLabelText('August 12, completed, has note')).toBeTruthy();
+  });
+
+  it('lists only the legend states present in the month', () => {
+    // Stock August: completed (12th), missed, open-today (15th), upcoming.
+    const { queryByText, getAllByText } = renderScreen();
+    expect(getAllByText('Completed').length).toBeGreaterThan(0);
+    expect(queryByText('Paused')).toBeNull();
+    expect(queryByText('Not scheduled')).toBeNull();
+  });
+
+  it('disables next at the current month and previous at creation', () => {
+    const { getByLabelText } = renderScreen({ focusDate: '2026-08-15' });
+    expect(getByLabelText('Next month').props.accessibilityState).toEqual({
+      disabled: true,
+    });
+    fireEvent.press(getByLabelText('Previous month'));
+    fireEvent.press(getByLabelText('Previous month'));
+    // June is the creation month.
+    expect(getByLabelText('Previous month').props.accessibilityState).toEqual({
+      disabled: true,
+    });
+  });
+
+  it('no longer renders the standalone month bar', () => {
+    const { queryByText } = renderScreen();
+    expect(queryByText('Calendar')).toBeNull();
+    expect(queryByText('August 2026')).toBeNull();
+  });
+
+  it('jumps the month calendar when a year-grid week is pressed', () => {
+    const { getByLabelText, getByTestId, getByText } = renderScreen();
+    // The grid only draws once it has been measured.
+    fireEvent(getByTestId('year-grid'), 'layout', {
+      nativeEvent: { layout: { width: 320 } },
+    });
+    fireEvent.press(getByLabelText('Week of Jun 1'));
+    expect(getByText('June')).toBeTruthy();
+  });
+
+  it('caps the daily record at seven rows until expanded', () => {
+    // August 1–15 for the mocked today → 15 entries.
+    const { getByText, queryByLabelText, getByLabelText } = renderScreen();
+    expect(getByLabelText('Sat 15')).toBeTruthy();
+    expect(getByLabelText('Sun 9')).toBeTruthy();
+    expect(queryByLabelText('Sat 8')).toBeNull();
+    fireEvent.press(getByText('Show all 15 days'));
+    expect(getByLabelText('Sat 1')).toBeTruthy();
   });
 });

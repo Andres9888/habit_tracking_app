@@ -19,7 +19,7 @@ export interface HabitCardGridRowProps {
   col3?: React.ReactNode;
   col4?: React.ReactNode;
   col5?: React.ReactNode;
-  /** Inline middle slot (cols 2–4). Use for header title so row height follows content. */
+  /** Inline middle slot (cols 2–4); row height follows content. Flex 4 (to right edge) when col5 omitted, else flex 3. */
   middle?: React.ReactNode;
   /** Absolute middle overlay (cols 2–4). Use for strength bar track bounds. */
   middleOverlay?: React.ReactNode;
@@ -54,13 +54,15 @@ export function HabitCardGridRow({
         </View>
         <View
           className='justify-center'
-          style={{ flex: 3, paddingLeft: CARD_TITLE_GAP }}
+          style={{ flex: col5 ? 3 : 4, paddingLeft: CARD_TITLE_GAP }}
         >
           {middle}
         </View>
-        <View className={`${COL_CLASS} items-center justify-center`}>
-          {col5}
-        </View>
+        {col5 ? (
+          <View className={`${COL_CLASS} items-center justify-center`}>
+            {col5}
+          </View>
+        ) : null}
         {overlay}
       </View>
     );

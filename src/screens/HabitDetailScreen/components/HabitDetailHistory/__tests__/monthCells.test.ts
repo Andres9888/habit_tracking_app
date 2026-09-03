@@ -1,4 +1,4 @@
-import { buildMonthCells } from '../monthCells';
+import { buildMonthCells, monthCellBorder, monthCellOpacity } from '../monthCells';
 
 const TODAY = '2026-07-25';
 
@@ -104,5 +104,21 @@ describe('buildMonthCells', () => {
     expect(byDate.get('2026-07-02')?.hasNote).toBe(true);
     expect(byDate.get('2026-07-03')?.hasNote).toBe(false);
     expect(byDate.get('2026-07-04')?.hasNote).toBe(false);
+  });
+});
+
+describe('monthCellOpacity', () => {
+  it('fades the days that carry no record', () => {
+    expect(monthCellOpacity('upcoming')).toBe(0.55);
+    expect(monthCellOpacity('before-creation')).toBe(0.35);
+    expect(monthCellOpacity('completed')).toBe(1);
+    expect(monthCellOpacity('missed')).toBe(1);
+  });
+});
+
+describe('monthCellBorder', () => {
+  it('draws no ring on upcoming days', () => {
+    const palette = { cardBorder: '#eee', green: '#0c7', missedRing: '#ccc' } as never;
+    expect(monthCellBorder('upcoming', palette)).toEqual({ borderWidth: 0 });
   });
 });

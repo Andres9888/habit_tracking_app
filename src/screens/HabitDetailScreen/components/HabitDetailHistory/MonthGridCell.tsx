@@ -16,6 +16,7 @@ import type { InsightPalette } from '../../insightPalette';
 import {
   monthCellBorder,
   monthCellColor,
+  monthCellOpacity,
   monthCellTextColor,
   type MonthCell,
 } from './monthCells';
@@ -50,7 +51,7 @@ export function MonthGridCell({ cell, palette, onPress }: MonthGridCellProps) {
           : 'transparent',
         borderRadius: borderRadius.small,
         justifyContent: 'center',
-        opacity: pressed ? 0.6 : 1,
+        opacity: (pressed ? 0.6 : 1) * (cell ? monthCellOpacity(cell.state) : 1),
         ...(cell ? monthCellBorder(cell.state, palette) : null),
       }}
     >

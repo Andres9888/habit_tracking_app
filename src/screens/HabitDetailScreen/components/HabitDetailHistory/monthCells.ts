@@ -103,7 +103,7 @@ export function monthCellTextColor(
   return palette.textTertiary;
 }
 
-/** Ring around a cell: dashed for a miss, solid for today, hairline upcoming. */
+/** Ring around a cell: dashed for a miss, solid for today. */
 function ring(
   borderColor: string,
   borderStyle: 'dashed' | 'solid',
@@ -118,6 +118,12 @@ export function monthCellBorder(
 ): ViewStyle {
   if (state === 'missed') return ring(palette.missedRing, 'dashed', 1.5);
   if (state === 'open-today') return ring(palette.green, 'solid', 1.5);
-  if (state === 'upcoming') return ring(palette.cardBorder, 'solid', 1);
   return { borderWidth: 0 };
+}
+
+/** Days with no record recede so the real past — done or missed — leads. */
+export function monthCellOpacity(state: HabitDayState): number {
+  if (state === 'upcoming') return 0.55;
+  if (state === 'before-creation') return 0.35;
+  return 1;
 }

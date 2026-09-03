@@ -1,14 +1,15 @@
 import React, { memo } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import { useAnimatedTier } from '@/hooks/useAnimatedTier';
 import { HabitDayToggleContent } from './HabitDayToggleContent';
+import { HabitDayToggleFrame } from './HabitDayToggleFrame';
 import {
   getCellContainerStyle,
-  getFrameStyle,
   getPressableStyle,
   getStaticFrameColors,
+  getTierFrameColors,
   getTodayGlowStyle,
 } from './habitDayToggleStyles';
 import { getMaterialTier } from './materialTier';
@@ -33,7 +34,6 @@ const HabitDayToggleComponent: React.FC<HabitDayToggleProps> = ({
   strengthPercent,
 }) => {
   const animation = useHabitDayToggleAnimations({
-    completed,
     dateString,
     reduceMotionPreference,
   });
@@ -45,15 +45,12 @@ const HabitDayToggleComponent: React.FC<HabitDayToggleProps> = ({
   const tier = getMaterialTier(strengthPercent ?? 0);
   const tierAnim = useAnimatedTier(strengthPercent ?? 0);
   const borderRadius = shape === 'circle' ? 22 : 10;
-  const frameColors = getStaticFrameColors(isToday, missed);
+  const showCompletion = completed && !missed;
+  const tierColors = getTierFrameColors(tier, accentColor);
   const { cellStyle, shadowStyle } = useHabitDayToggleTierStyles({
     accentColor,
-    completion: animation.completion,
     isToday,
-    missed,
-    showCompletedShadow: completed && !missed,
-    staticBackground: frameColors.background,
-    staticBorder: frameColors.border,
+    showCompletedShadow: showCompletion,
     tierAnim,
   });
 
@@ -66,18 +63,16 @@ const HabitDayToggleComponent: React.FC<HabitDayToggleProps> = ({
           shadowStyle,
         ]}
       >
-        <Animated.View
-          pointerEvents='none'
-          style={[
-            StyleSheet.absoluteFill,
-            getFrameStyle({
-              backgroundColor: frameColors.background,
-              borderColor: frameColors.border,
-              borderRadius,
-              missed,
-            }),
-            cellStyle,
-          ]}
+        <HabitDayToggleFrame
+          borderRadius={borderRadius}
+          cellStyle={cellStyle}
+          completed={showCompletion}
+          missed={missed}
+          reduceMotion={animation.reduceMotion}
+          restingColors={
+            showCompletion ? tierColors : getStaticFrameColors(isToday, missed)
+          }
+          tierColors={tierColors}
         />
         <Pressable
           accessibilityHint={accessibilityHint}
@@ -92,11 +87,11 @@ const HabitDayToggleComponent: React.FC<HabitDayToggleProps> = ({
           onPressOut={handlers.handlePressOut}
         >
           <HabitDayToggleContent
-            completion={animation.completion}
+            completed={showCompletion}
             completionIcon={completionIcon}
-            completionIconMounted={animation.completionIconMounted}
             iconColor={tier.iconColor}
             missed={missed}
+            reduceMotion={animation.reduceMotion}
           />
         </Pressable>
       </Animated.View>

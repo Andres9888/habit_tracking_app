@@ -16,7 +16,11 @@ export interface HistoryEntry {
   state: HabitDayState;
 }
 
-/** Chronological entries for one month, newest first, stopping at today. */
+/**
+ * Chronological entries for one month, newest first, stopping at today.
+ * Days before the habit existed are dropped, except when they carry a
+ * completion (backfilled logs stay in the record).
+ */
 export function buildHistoryEntries(
   month: Date,
   doneDates: Set<string>,
@@ -24,12 +28,8 @@ export function buildHistoryEntries(
   notes: Record<string, string> = {},
   schedule: HabitDayContext = {}
 ): HistoryEntry[] {
-  const monthStart = startOfMonth(month);
-  const created = schedule.createdAt
-    ? parseLocalDate(getLocalDateString(new Date(schedule.createdAt)))
-    : undefined;
-  const start = created && created > monthStart ? created : monthStart;
-  const monthEnd = endOfMonth(monthStart);
+  const start = startOfMonth(month);
+  const monthEnd = endOfMonth(start);
   const cursor = parseLocalDate(today);
   const end = new Date(Math.min(monthEnd.getTime(), cursor.getTime()));
   if (end.getTime() < start.getTime()) return [];
@@ -55,5 +55,6 @@ export function buildHistoryEntries(
         }),
       };
     })
+    .filter((entry) => entry.state !== 'before-creation')
     .reverse();
 }

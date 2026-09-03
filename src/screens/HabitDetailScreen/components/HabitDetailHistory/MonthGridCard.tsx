@@ -9,23 +9,32 @@
 import type { ReactNode } from 'react';
 import { format } from 'date-fns';
 import { View } from 'react-native';
-import type { HabitDayContext } from '../../../../features/habits/habitDayState';
+import type {
+  HabitDayContext,
+  HabitDayState,
+} from '../../../../features/habits/habitDayState';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import type { MonthRate } from '../../insights';
 import type { InsightPalette } from '../../insightPalette';
 import { InsightCard } from '../InsightCard';
 import { buildMonthCells } from './monthCells';
 import { MonthGridCardHeader } from './MonthGridCardHeader';
+import type { MonthNavigation } from './MonthNavButtons';
 import { MonthGridCell } from './MonthGridCell';
 import { MonthGridHeader } from './MonthGridHeader';
 
 interface MonthGridCardProps {
   completedDates: Set<string>;
-  /** Rendered inside the card under the grid — History passes the legend. */
-  footer?: ReactNode;
+  /**
+   * Rendered inside the card under the grid — History passes the legend,
+   * given the set of states this month actually shows so it only lists those.
+   */
+  footer?: (present: ReadonlySet<HabitDayState>) => ReactNode;
   isBest?: boolean;
   /** Any day inside the month to render. */
   month: Date;
+  /** Chevrons in the header; omitted where the card cannot be paged. */
+  navigation?: MonthNavigation;
   notes?: Record<string, string>;
   palette: InsightPalette;
   /** Omitted for months with no settled rate — no rate is fabricated. */
@@ -39,6 +48,7 @@ export function MonthGridCard({
   footer,
   isBest = false,
   month,
+  navigation,
   notes,
   palette,
   rate,
@@ -61,6 +71,7 @@ export function MonthGridCard({
       <MonthGridCardHeader
         isBest={isBest}
         label={label}
+        navigation={navigation}
         palette={palette}
         rate={rate}
       />
@@ -91,7 +102,16 @@ export function MonthGridCard({
           />
         ))}
       </View>
-      {footer}
+      {footer ? footer(presentStates(cells)) : null}
     </InsightCard>
   );
+}
+
+/** States actually shown by this month's cells, in cell order. */
+function presentStates(
+  cells: ReturnType<typeof buildMonthCells>
+): ReadonlySet<HabitDayState> {
+  const present = new Set<HabitDayState>();
+  for (const cell of cells) if (cell) present.add(cell.state);
+  return present;
 }

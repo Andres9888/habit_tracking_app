@@ -4,6 +4,10 @@
  * Current leads: the page used to open on history without ever saying where you
  * stand today, which is the one number people quote about themselves. Current is
  * the run you can lose (amber), Longest the one to beat, then what's banked.
+ *
+ * The last stat is year-to-date, so for a habit born this year it is the whole
+ * record and reads "Since start" — "This year" would imply a longer history the
+ * numbers don't have.
  */
 import { View } from 'react-native';
 import { borderRadius, shadows } from '../../../../theme/spacing';
@@ -14,6 +18,8 @@ interface HistoryStatsCardProps {
   bestStreak: number;
   currentStreak: number;
   palette: InsightPalette;
+  /** True when the habit was created this year — relabels the last stat. */
+  sinceStart: boolean;
   yearCompletions: number;
   yearRatePct: number;
 }
@@ -22,6 +28,7 @@ export function HistoryStatsCard({
   bestStreak,
   currentStreak,
   palette,
+  sinceStart,
   yearCompletions,
   yearRatePct,
 }: HistoryStatsCardProps) {
@@ -29,7 +36,11 @@ export function HistoryStatsCard({
     { label: 'Current', tint: palette.amberBar, value: currentStreak },
     { label: 'Longest', tint: palette.ctaGreen, value: bestStreak },
     { label: 'Days done', value: yearCompletions },
-    { label: 'This year', suffix: '%', value: yearRatePct },
+    {
+      label: sinceStart ? 'Since start' : 'This year',
+      suffix: '%',
+      value: yearRatePct,
+    },
   ];
 
   return (

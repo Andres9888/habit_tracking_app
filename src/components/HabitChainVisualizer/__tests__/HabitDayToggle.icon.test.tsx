@@ -1,7 +1,7 @@
 import React from 'react';
-import { act, render } from '@testing-library/react-native';
+import { render } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import * as Reanimated from 'react-native-reanimated';
+import type { ReactTestInstance } from 'react-test-renderer';
 
 import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { HabitDayToggle } from '../HabitDayToggle';
@@ -9,6 +9,15 @@ import { baseProps } from './HabitDayToggle.testUtils';
 
 jest.mock('@/hooks/useReduceMotion');
 const mockReduceMotion = jest.mocked(useReduceMotion);
+
+function findAncestor(
+  node: ReactTestInstance | null,
+  match: (candidate: ReactTestInstance) => boolean
+): ReactTestInstance | null {
+  let current = node;
+  while (current && !match(current)) current = current.parent;
+  return current;
+}
 
 describe('HabitDayToggle completion icon', () => {
   beforeEach(() => mockReduceMotion.mockReturnValue(false));
@@ -30,31 +39,37 @@ describe('HabitDayToggle completion icon', () => {
 
   it('keeps the icon layer opacity-only', () => {
     const { getByTestId } = render(<HabitDayToggle {...baseProps} completed />);
-    let parent = getByTestId('lucide-icon-Link2').parent;
-    while (parent && StyleSheet.flatten(parent.props.style)?.opacity === undefined) {
-      parent = parent.parent;
-    }
-    const style = StyleSheet.flatten(parent?.props.style);
+    const layer = findAncestor(
+      getByTestId('lucide-icon-Link2').parent,
+      (node) => StyleSheet.flatten(node.props.style)?.opacity !== undefined
+    );
+    const style = StyleSheet.flatten(layer?.props.style);
     expect(style?.opacity).toBe(1);
     expect(style?.transform).toBeUndefined();
   });
 
-  it('keeps the icon through exit and unmounts after the timing callback', async () => {
-    let exitFinished: ((finished?: boolean) => void) | undefined;
-    jest.spyOn(Reanimated, 'withTiming').mockImplementation(
-      (value, _config, callback) => {
-        exitFinished = callback;
-        return value;
-      }
+  it('leaves the icon through an exiting animation, not a shared value', () => {
+    const { getByTestId } = render(<HabitDayToggle {...baseProps} completed />);
+    const layer = findAncestor(
+      getByTestId('lucide-icon-Link2').parent,
+      (node) => node.props.exiting !== undefined
     );
+    expect(layer?.props.exiting).toBeDefined();
+  });
+
+  it('unmounts the icon as soon as the day is unchecked', () => {
     const view = render(<HabitDayToggle {...baseProps} completed />);
     expect(view.getAllByTestId('lucide-icon-Link2')).toHaveLength(1);
-    act(() => view.rerender(<HabitDayToggle {...baseProps} completed={false} />));
-    expect(view.getAllByTestId('lucide-icon-Link2')).toHaveLength(1);
-    await act(async () => {
-      await Promise.resolve();
-      exitFinished?.(true);
-    });
+
+    view.rerender(<HabitDayToggle {...baseProps} completed={false} />);
     expect(view.queryAllByTestId('lucide-icon-Link2')).toHaveLength(0);
+  });
+
+  it('remounts the icon when the day is completed again', () => {
+    const view = render(<HabitDayToggle {...baseProps} />);
+    expect(view.queryAllByTestId('lucide-icon-Link2')).toHaveLength(0);
+
+    view.rerender(<HabitDayToggle {...baseProps} completed />);
+    expect(view.getAllByTestId('lucide-icon-Link2')).toHaveLength(1);
   });
 });

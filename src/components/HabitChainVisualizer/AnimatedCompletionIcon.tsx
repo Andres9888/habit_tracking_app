@@ -1,30 +1,29 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Check } from 'lucide-react-native';
-import Animated, {
-  type SharedValue,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 
 import { iconSizes } from '@/theme/iconSizes';
 import { colors } from '@/theme/colors';
 import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
+import { buildDayToggleFadeOut } from './dayToggleFadeOut';
 
 interface Props {
-  completion: SharedValue<number>;
   completionIcon: 'checkbox' | 'chain';
   iconColor?: string;
-  mounted: boolean;
+  reduceMotion: boolean;
 }
 
+/**
+ * Rendered only while the day is completed. Opacity is a plain style so the
+ * icon can never be erased by a stale animated-props commit; the fade on
+ * uncheck comes from the exiting layout animation instead.
+ */
 export function AnimatedCompletionIcon({
-  completion,
   completionIcon,
   iconColor,
-  mounted,
+  reduceMotion,
 }: Props) {
-  const iconStyle = useAnimatedStyle(() => ({ opacity: completion.value }));
-  if (!mounted) return null;
   const resolvedColor = iconColor ?? colors.text.inverse;
   const icon =
     completionIcon === 'checkbox' ? (
@@ -38,8 +37,9 @@ export function AnimatedCompletionIcon({
     );
   return (
     <Animated.View
+      exiting={buildDayToggleFadeOut(reduceMotion)}
       pointerEvents='none'
-      style={[StyleSheet.absoluteFill, styles.center, iconStyle]}
+      style={[StyleSheet.absoluteFill, styles.center, styles.opaque]}
     >
       {icon}
     </Animated.View>
@@ -48,4 +48,5 @@ export function AnimatedCompletionIcon({
 
 const styles = StyleSheet.create({
   center: { alignItems: 'center', justifyContent: 'center' },
+  opaque: { opacity: 1 },
 });

@@ -1,54 +1,56 @@
 /**
  * YearGlanceCard — the "Year at a glance" card from the design's History frame:
- * eyebrow + elapsed-month range, the year grid with its month labels, and the
- * trend caption when the months actually support one.
+ * eyebrow + elapsed-month range, the fitted year grid, and the trend caption
+ * when the months actually support one.
  *
- * This is the frame's own card. The interactive month calendar it used to sit
- * inside belongs to the pre-redesign screen and now lives behind the "Calendar,
- * strength and goal" disclosure, so History reads as the design draws it.
- *
- * Cells INSPECT only here — there is no calendar above them to jump, and a ~6px
- * cell is too small to safely write a completion.
+ * The grid never scrolls and never toggles: a ~5pt cell is too small to safely
+ * write a completion, so pressing a week jumps the month calendar below to it.
+ * The old "N days logged" caption is gone on purpose — the rail owns the count.
  */
 import { View } from 'react-native';
+import type { HabitDayContext } from '../../../../features/habits/habitDayState';
 import type { InsightPalette } from '../../insightPalette';
-import { CalendarYearSection } from '../CalendarYearSection';
+import { CardEyebrow } from '../CardEyebrow';
+import { CardFootnote } from '../CardFootnote';
 import { InsightCard } from '../InsightCard';
-
-const NOOP_MONTH = (_dateString: string) => {};
+import { YearGrid } from './YearGrid';
 
 interface YearGlanceCardProps {
   caption?: string | null;
   completedDates: Set<string>;
-  habitColor: string;
-  habitCreatedAt?: number;
   palette: InsightPalette;
   /** "Jan – Jul", derived from the elapsed months. */
   rangeLabel?: string;
-  onNavigateToMonth?: (dateString: string) => void;
+  schedule: HabitDayContext;
+  onSelectMonth: (dateString: string) => void;
 }
 
 export function YearGlanceCard({
   caption,
   completedDates,
-  habitColor,
-  habitCreatedAt,
   palette,
   rangeLabel,
-  onNavigateToMonth,
+  schedule,
+  onSelectMonth,
 }: YearGlanceCardProps) {
   return (
     <InsightCard palette={palette}>
-      <View>
-        <CalendarYearSection
-          caption={caption}
+      <CardEyebrow
+        label='Year at a glance'
+        note={rangeLabel}
+        palette={palette}
+      />
+      <View style={{ marginTop: 14 }}>
+        <YearGrid
           completedDates={completedDates}
-          habitColor={habitColor}
-          habitCreatedAt={habitCreatedAt}
-          rangeLabel={rangeLabel}
-          onNavigateToMonth={onNavigateToMonth ?? NOOP_MONTH}
+          palette={palette}
+          schedule={schedule}
+          onSelectMonth={onSelectMonth}
         />
       </View>
+      {caption ? (
+        <CardFootnote palette={palette}>{caption}</CardFootnote>
+      ) : null}
     </InsightCard>
   );
 }

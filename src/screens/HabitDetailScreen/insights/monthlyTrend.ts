@@ -47,27 +47,54 @@ export interface MonthRate {
 
 interface MonthlyRatesInput {
   completedDates: Set<string>;
+  /**
+   * Days before the habit existed are not scheduled — the user wasn't playing.
+   * Backfilled completions predate creation, so they move the start earlier.
+   */
+  createdAt?: number;
   daysOfWeek?: number[];
   /** Today as YYYY-MM-DD; injectable for tests. */
   today?: string;
 }
 
+/**
+ * Earliest day the habit counts as scheduled: the creation date, or an earlier
+ * backfilled completion when one exists. Null when neither is known.
+ */
+export function rateWindowStart(
+  created: string | null,
+  completedDates: Set<string>
+): string | null {
+  let earliest = created;
+  for (const date of completedDates) {
+    if (earliest === null || date < earliest) earliest = date;
+  }
+  return earliest;
+}
+
 /** Elapsed months of the current year, oldest first. Partial months included. */
 export function buildMonthlyRates({
   completedDates,
+  createdAt,
   daysOfWeek,
   today = getLocalDateString(),
 }: MonthlyRatesInput): MonthRate[] {
   const cursor = parseLocalDate(today);
   const year = cursor.getFullYear();
   const scheduled = scheduledWeekdays({ daysOfWeek });
+  const created =
+    createdAt === undefined ? null : getLocalDateString(new Date(createdAt));
+  const windowStart =
+    created === null ? null : rateWindowStart(created, completedDates);
 
   return Array.from({ length: cursor.getMonth() + 1 }, (_, month) => {
     const start = new Date(year, month, 1);
     const monthEnd = endOfMonth(start);
     const end = monthEnd > cursor ? cursor : monthEnd;
-    const days = eachDayOfInterval({ end, start }).filter((date) =>
-      isScheduledWeekday(scheduled, date.getDay())
+    const days = eachDayOfInterval({ end, start }).filter(
+      (date) =>
+        isScheduledWeekday(scheduled, date.getDay()) &&
+        (windowStart === null || getLocalDateString(date) >= windowStart)
     );
     const done = days.filter((date) =>
       completedDates.has(getLocalDateString(date))

@@ -55,5 +55,5 @@ export function getTitleTextStyle(isCompactMode?: boolean): TextStyle {
 }
 
 export function getChevronColor(): string {
-  return colors.gray[300];
+  return colors.gray[400]; // AA contrast; gray[300] is the disabled token
 }

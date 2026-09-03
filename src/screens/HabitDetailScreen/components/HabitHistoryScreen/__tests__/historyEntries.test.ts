@@ -74,4 +74,29 @@ describe('buildHistoryEntries', () => {
       state: 'open-today',
     });
   });
+
+  it('keeps completions logged before the creation date and drops the rest', () => {
+    const entries = buildHistoryEntries(
+      new Date(2026, 7, 1),
+      new Set(['2026-08-24', '2026-08-25', '2026-08-26']),
+      '2026-08-28',
+      {},
+      { createdAt: new Date(2026, 7, 26, 12).getTime() }
+    );
+
+    expect(entries.map((entry) => entry.label)).toEqual([
+      'Fri 28',
+      'Thu 27',
+      'Wed 26',
+      'Tue 25',
+      'Mon 24',
+    ]);
+    expect(entries.find((entry) => entry.date === '2026-08-24')?.state).toBe(
+      'completed'
+    );
+    expect(entries.find((entry) => entry.date === '2026-08-25')?.state).toBe(
+      'completed'
+    );
+    expect(entries.some((entry) => entry.date < '2026-08-24')).toBe(false);
+  });
 });
