@@ -68,6 +68,7 @@ export function HistoryFrame({
     <>
       <HistoryStatsCard
         bestStreak={habit.bestStreak ?? 0}
+        createdAt={habit.createdAt}
         currentStreak={streakStats(runs).current}
         palette={palette}
         sinceStart={sinceStart}

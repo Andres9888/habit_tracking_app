@@ -7,7 +7,7 @@ import { Text, View } from 'react-native';
 import type { HabitDayState } from '../../../../features/habits/habitDayState';
 import { type InsightPalette, useInsightPalette } from '../../insightPalette';
 
-const SWATCH = 14;
+const SWATCH = 13;
 
 function Swatch({
   borderColor,
@@ -41,7 +41,7 @@ function Item({ children, swatch }: { children: string; swatch: ReactNode }) {
   return (
     <View style={{ alignItems: 'center', flexDirection: 'row', gap: 6 }}>
       {swatch}
-      <Text style={{ color: palette.textTertiary, fontSize: 11 }}>
+      <Text style={{ color: palette.textSecondary, fontSize: 12.5 }}>
         {children}
       </Text>
     </View>

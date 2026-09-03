@@ -159,7 +159,7 @@ function HabitDetailScreenContent({
                 ) : (
                   <FlowHeader
                     backLabel={flow.backLabel}
-                    subtitle={getHabitDisplayName(displayHabit)}
+                    eyebrow={getHabitDisplayName(displayHabit)}
                     title={flow.title}
                     onBack={flow.back}
                   />

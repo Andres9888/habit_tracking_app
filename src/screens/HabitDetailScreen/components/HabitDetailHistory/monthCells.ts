@@ -100,6 +100,7 @@ export function monthCellTextColor(
 ): string {
   if (state === 'completed') return palette.onGreen;
   if (state === 'open-today') return palette.green;
+  if (state === 'missed') return palette.amber;
   return palette.textTertiary;
 }
 
