@@ -7,6 +7,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   'Deep Work Session': {
+    suggestedWhy: 'One uninterrupted block spares you the climb back into context, so busy days turn into visible progress.',
     tagline: 'One protected block for the work that actually matters.',
     lead: 'Demanding work needs uninterrupted runway — every interruption costs you the climb back into context. Blocking a single distraction-free stretch is what converts a day of being busy into a day of visible progress.',
     cadenceLabel: 'Daily · 90 min · one protected block',
@@ -61,6 +62,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Single-Tasking': {
+    suggestedWhy: 'Finishing one thing before starting the next removes switching residue, so work gets done with fewer errors.',
     tagline: 'One thing at a time, finished.',
     lead: 'What feels like multitasking is rapid switching, and each switch leaves residue — part of your attention stays on the previous task. The cost is invisible from the inside, which is why people who do it most rate themselves best at it.',
     evidence:
@@ -117,6 +119,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'If-Then Planning': {
+    suggestedWhy: 'Deciding the exact cue in advance lets the moment trigger the action, so follow-through stops needing willpower.',
     tagline: 'Decide in advance exactly when and where.',
     lead: 'Vague intentions fail at the moment of action. An if-then plan pre-loads the decision — "if it is 9am, then I start X" — so the cue triggers the behaviour without requiring you to deliberate. This is one of the most reliably replicated effects in behaviour change.',
     evidence:
@@ -174,6 +177,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Top 3 Priorities': {
+    suggestedWhy: 'Writing down three specific things stops unfinished goals intruding, so the day is quieter and finishable.',
     tagline: 'Write down three things, not thirteen.',
     lead: 'Unfinished goals keep intruding on attention until they are either done or planned. Writing a specific plan releases that grip — the point is not the list itself but that your mind stops rehearsing it.',
     evidence:
@@ -231,6 +235,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Batch Check Messages': {
+    suggestedWhy: 'Checking messages in a few windows cuts the switching cost, so stress drops and focus blocks stay intact.',
     tagline: 'Two or three inbox windows a day, not constant checking.',
     lead: 'Constant checking keeps you in a low-grade state of readiness that never resolves. Batching does not reduce the volume of email — it reduces the number of times per day you pay the switching cost.',
     evidence:
@@ -288,6 +293,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Pomodoro Technique': {
+    suggestedWhy: 'Short timed sprints make starting cheap and give breaks a place, so more real work actually gets finished.',
     tagline: 'Twenty-five minutes on, five off.',
     lead: 'The value is less about the specific numbers than about making starting cheap: twenty-five minutes is short enough that you cannot really justify avoiding it. The timer also gives you permission to ignore everything else while it runs.',
     cadenceLabel: 'Daily · 25/5 intervals',
@@ -342,6 +348,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Time Blocking': {
+    suggestedWhy: 'Giving each hour a job turns intentions into appointments, so the time gets defended and capacity stays honest.',
     tagline: 'Give every hour a job in advance.',
     lead: 'An open calendar defaults to whatever arrives. Assigning blocks converts intentions into appointments, which both protects the time and forces you to confront how much of it you actually have.',
     cadenceLabel: 'Daily · 5-10 min planning',
@@ -388,6 +395,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Work Breaks': {
+    suggestedWhy: 'Short breaks that genuinely detach let attention recover, so the afternoon holds up instead of collapsing.',
     tagline: 'Five minutes off, every hour.',
     lead: 'Attention is a depleting resource across a working day, and breaks are how it recovers. Breaks that actually detach — away from the screen, not scrolling on it — restore more than breaks that merely change task.',
     evidence:
@@ -445,6 +453,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Social Media Limit': {
+    suggestedWhy: 'Capping daily scrolling cuts volume and comparison, so loneliness eases and hours come back to your week.',
     tagline: 'Half an hour a day, deliberately.',
     lead: 'The harm is less about the content than the volume and the comparison. Capping time — rather than trying to use it more wisely — is the intervention that has actually been tested, and it moved loneliness and mood.',
     evidence:
@@ -502,6 +511,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Grayscale Phone Mode': {
+    suggestedWhy: 'Stripping colour removes the salience your apps rely on, so you reach for the phone far less by reflex.',
     tagline: 'Take the colour out of your phone.',
     lead: 'App icons and notification badges are engineered to exploit colour-based salience. Removing colour strips out a layer of that pull without removing any function — the phone still works, it just stops advertising.',
     cadenceLabel: 'Always on · one-time setup',
@@ -557,6 +567,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Temptation Bundling': {
+    suggestedWhy: 'Pairing a reward with the thing you avoid moves the pull to where you need it, so starting stops being a fight.',
     tagline: 'Only let yourself have the good thing during the hard thing.',
     lead: 'Pairing something you want with something you avoid makes the avoided thing carry the reward. The constraint is what makes it work — if the podcast is available any time, the gym stops being the price of admission.',
     evidence:
@@ -614,6 +625,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Weekly Review': {
+    suggestedWhy: 'A fixed weekly checkpoint catches drift early and counts the wins, so the next week starts already decided.',
     tagline: 'Twenty minutes to close the week and open the next.',
     lead: 'Without a review, weeks blur and the same things slip repeatedly. A fixed checkpoint turns scattered activity into something you can actually steer — and it is the point where planning intentions get set for the week ahead.',
     cadenceLabel: 'Weekly · 15-20 min',
@@ -668,6 +680,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Quarterly Quest Setting': {
+    suggestedWhy: 'A ninety-day horizon stays vivid enough to feel urgent, so goals get finished instead of drifting for a year.',
     tagline: 'Ninety-day goals instead of annual resolutions.',
     lead: 'A year is long enough that nothing feels urgent until it is too late. Ninety days is short enough to stay vivid and long enough for real work — and the shorter feedback loop is what keeps persistence up.',
     cadenceLabel: 'Quarterly · 30 min',
@@ -723,6 +736,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Ultradian Work Cycles': {
+    suggestedWhy: 'Matching effort to natural alertness and resting between waves tends to give more output for less grind.',
     tagline: 'Work in 90-minute waves, then rest properly.',
     lead: 'Alertness rises and falls in cycles through the day rather than holding steady. Working with that rhythm — a sustained push followed by a genuine break — tends to beat grinding through the trough and getting less for more effort.',
     cadenceLabel: 'Daily · 90 min on, 20 min off',
@@ -769,6 +783,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Inbox Zero': {
+    suggestedWhy: 'Deciding once per message instead of re-reading it closes the loop, so the inbox stops running in the background.',
     tagline: 'Empty the inbox once a day.',
     lead: 'An inbox is a list of other people’s requests in arrival order — a poor to-do list. Processing to empty is not about speed of reply; it is about deciding once per message so nothing sits there being re-read.',
     cadenceLabel: 'Daily · one pass',
@@ -815,6 +830,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Two-Minute Tidy': {
+    suggestedWhy: 'Two minutes on one surface removes clutter that quietly competes for attention, so rooms hold their shape.',
     tagline: 'Two minutes on one small surface.',
     lead: 'Visual clutter competes for attention whether or not you are looking at it. A two-minute reset on one surface is small enough to actually do daily, which is what makes it accumulate.',
     evidence:
@@ -872,6 +888,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Declutter': {
+    suggestedWhy: 'Removing one item a day is small enough to keep doing, so space gets calmer without a demoralising project.',
     tagline: 'Remove one item a day.',
     lead: 'Decluttering fails when it is a weekend project — the scale is demoralising and the result reverts. One item a day is slow enough to be sustainable and fast enough to be visible within a month.',
     cadenceLabel: 'Daily · one item',
@@ -918,6 +935,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Weekly Desk Cleanup': {
+    suggestedWhy: 'Clearing the desk removes objects that bid for your attention, so focus is easier and starting costs less.',
     tagline: 'Reset the workspace once a week.',
     lead: 'Attention is drawn by salient objects whether or not they are relevant — a cluttered desk is a set of competing bids. Clearing it weekly resets the visual field your focus has to work against.',
     cadenceLabel: 'Weekly · 5-10 min',
@@ -973,6 +991,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Digital File Organization': {
+    suggestedWhy: 'Consistent folders and names make files findable months later, so every future search costs you less time.',
     tagline: 'Fifteen minutes on folders and naming.',
     lead: 'Search only works if you remember what you called things. A shallow, consistent folder structure plus predictable names is what makes files findable months later — and the time saved compounds every time you look for something.',
     cadenceLabel: 'Weekly · 15 min',
@@ -1028,6 +1047,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Energy Level Tracking': {
+    suggestedWhy: 'A few ratings a day reveal where your real peaks are, so demanding work lands when you can actually do it.',
     tagline: 'Note your energy a few times a day.',
     lead: 'Most people schedule by availability rather than capability, and then wonder why hard work goes badly at 3pm. A week of simple ratings shows you where your real peaks are so you can put demanding work inside them.',
     cadenceLabel: 'Daily · 3 ratings',
@@ -1083,6 +1103,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Work Insights Journal': {
+    suggestedWhy: 'Writing one lesson a day forces the reflection that turns experience into skill, so you stop re-learning things.',
     tagline: 'One lesson written down each day.',
     lead: 'Experience alone does not produce expertise — reflected-on experience does. Writing one concrete lesson forces the reflection step that otherwise gets skipped, and it accumulates into a record you can actually reread.',
     evidence:
@@ -1140,6 +1161,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Phone-Free Meals': {
+    suggestedWhy: 'Taking phones off the table restores undivided attention, so meals and the people at them are more enjoyable.',
     tagline: 'Phones off the table.',
     lead: 'Even a phone present but unused reduces how much people enjoy time with others. Meals are the easiest place to enforce a boundary because they are bounded, recurring, and usually social.',
     evidence:
@@ -1197,6 +1219,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'House Plant Care': {
+    suggestedWhy: 'Tending something alive gives a small completable task and a greener room, so the space may feel a little better.',
     tagline: 'Two minutes tending something alive.',
     lead: 'Indoor plants are associated with modest improvements in mood and perceived air quality, and the care routine itself provides a small, reliably completable task. Neither effect is large; together they are worth two minutes.',
     cadenceLabel: 'Daily · 2-5 min',
@@ -1252,6 +1275,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Career Documentation': {
+    suggestedWhy: 'Recording wins while they are fresh keeps the detail accurate, so opportunities never wait on a panic rewrite.',
     tagline: 'Keep the record current before you need it.',
     lead: 'Achievements are vivid the week they happen and vague six months later. Updating as you go means the evidence exists when an opportunity appears — and it removes the panic rewrite that otherwise gates applying.',
     cadenceLabel: 'Weekly · 30 min',
@@ -1306,6 +1330,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Professional Networking': {
+    suggestedWhy: 'A short weekly message keeps weak ties alive, so the bridges that carry most opportunities stay open.',
     tagline: 'One message a week to someone you barely know.',
     lead: 'Opportunities travel disproportionately through weak ties — people outside your immediate circle, who know different things and different people. Maintaining those links costs one short message a week.',
     evidence:
@@ -1362,6 +1387,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Public Speaking Practice': {
+    suggestedWhy: 'Repeated low-stakes exposure is what shrinks speaking anxiety, so speaking up stops requiring a decision.',
     tagline: 'Ten minutes talking out loud, daily.',
     lead: 'Speaking anxiety maintains itself through avoidance — every skipped opportunity confirms the threat. Graded, repeated exposure is the mechanism that reduces it, and recording yourself is the lowest-stakes rung on that ladder.',
     evidence:
@@ -1419,6 +1445,7 @@ export const PRODUCTIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Fresh Air Ventilation': {
+    suggestedWhy: 'Airing the room clears built-up CO2, so the afternoon fog lifts and thinking stays noticeably sharper.',
     tagline: 'Air the room out daily.',
     lead: 'CO2 builds quickly in an occupied closed room and cognitive performance falls as it climbs. Ten minutes of proper cross-ventilation resets it — the cheapest focus intervention available.',
     evidence:

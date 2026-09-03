@@ -49,6 +49,7 @@ import { SLEEP_ENRICHMENT } from './scienceEnrichment/sleep.data';
 import { FINANCIAL_ENRICHMENT } from './scienceEnrichment/financial.data';
 import { HUBERMAN_ENRICHMENT } from './scienceEnrichment/huberman.data';
 import { PRODUCTIVITY_ENRICHMENT } from './scienceEnrichment/productivity.data';
+import { UNCOVERED_ENRICHMENT } from './scienceEnrichment/uncovered.data';
 
 export const SCIENCE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   ...BEHAVIOR_DESIGN_ENRICHMENT,
@@ -69,4 +70,5 @@ export const SCIENCE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   ...FINANCIAL_ENRICHMENT,
   ...HUBERMAN_ENRICHMENT,
   ...PRODUCTIVITY_ENRICHMENT,
+  ...UNCOVERED_ENRICHMENT,
 };

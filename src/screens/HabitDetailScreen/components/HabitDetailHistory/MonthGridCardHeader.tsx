@@ -49,7 +49,7 @@ export function MonthGridCardHeader({
           <Text
             style={{
               color: palette.ctaGreen,
-              fontSize: 12,
+              fontSize: 13,
               fontWeight: fontWeights.semibold,
             }}
           >

@@ -6,9 +6,10 @@
  * the run you can lose (amber), Longest the one to beat, then what's banked.
  *
  * The last stat is year-to-date, so for a habit born this year it is the whole
- * record and reads "Since start" — "This year" would imply a longer history the
- * numbers don't have.
+ * record and is dated from creation ("Since Aug 24") — "This year" would imply
+ * a longer history the numbers don't have.
  */
+import { format } from 'date-fns';
 import { View } from 'react-native';
 import { borderRadius, shadows } from '../../../../theme/spacing';
 import type { InsightPalette } from '../../insightPalette';
@@ -16,6 +17,8 @@ import { WeekStatsRow, type WeekStat } from '../ThisWeekCard';
 
 interface HistoryStatsCardProps {
   bestStreak: number;
+  /** Habit creation timestamp — dates the "since" label. */
+  createdAt?: number;
   currentStreak: number;
   palette: InsightPalette;
   /** True when the habit was created this year — relabels the last stat. */
@@ -24,8 +27,16 @@ interface HistoryStatsCardProps {
   yearRatePct: number;
 }
 
+/** "Since Aug 24" names the day the record starts; "Since start" is the fallback. */
+function sinceLabel(createdAt: number | undefined, sinceStart: boolean): string {
+  if (!sinceStart) return 'This year';
+  if (createdAt === undefined) return 'Since start';
+  return `Since ${format(new Date(createdAt), 'MMM d')}`;
+}
+
 export function HistoryStatsCard({
   bestStreak,
+  createdAt,
   currentStreak,
   palette,
   sinceStart,
@@ -37,7 +48,7 @@ export function HistoryStatsCard({
     { label: 'Longest', tint: palette.ctaGreen, value: bestStreak },
     { label: 'Days done', value: yearCompletions },
     {
-      label: sinceStart ? 'Since start' : 'This year',
+      label: sinceLabel(createdAt, sinceStart),
       suffix: '%',
       value: yearRatePct,
     },

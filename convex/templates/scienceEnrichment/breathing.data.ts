@@ -7,6 +7,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const BREATHING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   'Box Breathing (4-4-4-4)': {
+    suggestedWhy: 'Slow, even breathing engages the parasympathetic brake on stress, so tension drops within a minute under pressure.',
     tagline: 'A four-count breath cycle that turns down stress on demand.',
     lead: 'Slowing your breath to roughly six cycles a minute, with an extended exhale, increases vagal tone — the parasympathetic brake on your stress response. It is one of the few levers that shifts your physiology in under a minute, deliberately.',
     evidence:
@@ -65,6 +66,7 @@ export const BREATHING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Resonant Breathing': {
+    suggestedWhy: 'Breathing at your body’s resonant pace puts heart and breath in phase, so calm becomes something you can train.',
     tagline: 'Five and a half seconds in, five and a half out.',
     lead: 'At roughly 5.5 breaths a minute your heart rate and breathing fall into phase, and heart rate variability peaks. This is the resonant frequency of the cardiovascular system — the same rate HRV biofeedback training aims for.',
     cadenceLabel: 'Daily · 5-10 min',
@@ -119,6 +121,7 @@ export const BREATHING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   '4-7-8 Relaxing Breath': {
+    suggestedWhy: 'A long exhale tips the nervous system toward rest, so the body winds down and sleep arrives more easily.',
     tagline: 'A long exhale to tip you toward sleep.',
     lead: 'The exhale is where parasympathetic activation lives, so making it roughly twice the inhale biases your nervous system toward rest. That makes this less of a workout than a wind-down — best used lying in bed.',
     cadenceLabel: 'Nightly · 4 cycles',
@@ -165,6 +168,7 @@ export const BREATHING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Energizing Breath (Kapalabhati)': {
+    suggestedWhy: 'Short forceful exhales raise sympathetic drive, so you get a clean lift of alertness without caffeine.',
     tagline: 'Rapid breathing for alertness without caffeine.',
     lead: 'Short, forceful exhales with passive inhales raise sympathetic activity — the opposite of a calming practice. Used deliberately in the morning or before focused work, it is a stimulant you already own.',
     cadenceLabel: 'Daily · 1-3 min · morning',
@@ -211,6 +215,7 @@ export const BREATHING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'CO2 Tolerance Training': {
+    suggestedWhy: 'Training tolerance to the urge to breathe slows your resting breath, so exertion stops feeling like alarm.',
     tagline: 'Short breath holds to stop over-breathing.',
     lead: 'The urge to breathe is driven by rising carbon dioxide, not falling oxygen. Training tolerance to that signal means you breathe less, more slowly, and panic less when breathing feels restricted.',
     cadenceLabel: 'Daily · 2-5 min',
@@ -257,6 +262,7 @@ export const BREATHING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Wim Hof Breathing': {
+    suggestedWhy: 'Breath rounds and retentions drive a sharp adrenaline rise, so mornings start alert and discomfort eases.',
     tagline: 'Cycles of deep breathing and retention.',
     lead: 'Rounds of rapid deep breaths followed by a long retention drive large swings in blood chemistry and adrenaline. The effects are real and measurable — which is also why the technique demands respect rather than enthusiasm.',
     evidence:
@@ -314,6 +320,7 @@ export const BREATHING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Humming': {
+    suggestedWhy: 'Humming raises nitric oxide in the nose and forces a long even exhale, so breathing feels easier and the mind settles.',
     tagline: 'Hum for a few minutes — your sinuses do the rest.',
     lead: 'Humming makes the air in your nasal passages oscillate, which sharply increases the nitric oxide released there. Nitric oxide is a vasodilator and antimicrobial, so it is doing useful work on the way into your lungs.',
     evidence:
@@ -370,6 +377,7 @@ export const BREATHING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Mouth Taping Sleep': {
+    suggestedWhy: 'Nudging yourself toward nasal breathing overnight may mean less dry mouth and quieter, better-feeling nights.',
     tagline: 'Encourages nasal breathing overnight.',
     lead: 'Nasal breathing filters and humidifies air and supports better overnight oxygenation than mouth breathing. Taping is one way people nudge themselves toward it — but the evidence base here is thin, and it is only appropriate if you can breathe freely through your nose.',
     cadenceLabel: 'Nightly',

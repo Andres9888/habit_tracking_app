@@ -1,5 +1,6 @@
 import type { Id } from '../_generated/dataModel';
 import { backfillImportedHabitWhy, importTemplate } from './importTemplate';
+import { deriveWhyFromBenefits } from './importedWhy';
 
 type TemplateId = Id<'templates'>;
 
@@ -59,7 +60,14 @@ function createCtx(templateOverrides: Record<string, unknown> = {}) {
   };
 }
 
-function createBackfillCtx(why?: string) {
+function importedWhy(ctx: ReturnType<typeof createCtx>) {
+  return ctx.inserted.find(({ table }) => table === 'habits')?.record.why;
+}
+
+function createBackfillCtx(
+  why?: string,
+  templateOverrides: Record<string, unknown> = {}
+) {
   const habitId = 'habit_existing' as Id<'habits'>;
   const templateId = 'template_existing' as TemplateId;
   const habit = { _id: habitId, why };
@@ -68,6 +76,7 @@ function createBackfillCtx(why?: string) {
     description: 'Writing regularly creates room to think clearly.',
     suggestedWhy: undefined,
     tagline: 'Make room for ideas worth keeping.',
+    ...templateOverrides,
   };
   const db = {
     get: jest.fn(async (id: string) => {
@@ -92,15 +101,41 @@ function getBackfillHandler() {
       ) => Promise<{
         patchedCount: number;
         patchedHabitIds: string[];
+        replacedCount: number;
         success: true;
       }>;
     }
   )._handler;
 }
 
+describe('deriveWhyFromBenefits', () => {
+  it('joins up to three benefit titles into one reason sentence', () => {
+    expect(
+      deriveWhyFromBenefits([
+        { title: 'Calmer mind' },
+        { title: 'Sharper focus' },
+        { title: 'Steadier mood' },
+        { title: 'Better sleep' },
+      ])
+    ).toBe('Calmer mind, sharper focus and steadier mood.');
+  });
+
+  it('handles a single benefit and ignores blank titles', () => {
+    expect(deriveWhyFromBenefits([{ title: ' Calmer mind ' }])).toBe(
+      'Calmer mind.'
+    );
+    expect(deriveWhyFromBenefits([{ title: '   ' }])).toBeUndefined();
+    expect(deriveWhyFromBenefits([])).toBeUndefined();
+    expect(deriveWhyFromBenefits(undefined)).toBeUndefined();
+  });
+});
+
 describe('template import motivation', () => {
-  it('imports the template tagline as the habit why', async () => {
-    const ctx = createCtx();
+  it('imports the authored suggestedWhy ahead of everything else', async () => {
+    const ctx = createCtx({
+      benefitDetails: [{ title: 'Calmer mind' }],
+      suggestedWhy: 'Because thinking on paper keeps me honest.',
+    });
 
     await expect(
       getHandler()(ctx, { templateId: ctx.templateId })
@@ -110,22 +145,38 @@ describe('template import motivation', () => {
       table: 'habits',
       record: expect.objectContaining({
         name: 'Creative Writing',
-        why: 'Make room for ideas worth keeping.',
+        why: 'Because thinking on paper keeps me honest.',
       }),
     });
   });
 
-  it('falls back to the template description when no short why is authored', async () => {
-    const ctx = createCtx({ suggestedWhy: '   ', tagline: undefined });
+  it('derives the why from benefit titles when no suggestedWhy is authored', async () => {
+    const ctx = createCtx({
+      benefitDetails: [
+        { title: 'Calmer mind' },
+        { title: 'Sharper focus' },
+        { title: 'Steadier mood' },
+      ],
+    });
 
     await getHandler()(ctx, { templateId: ctx.templateId });
 
-    expect(ctx.inserted).toContainEqual({
-      table: 'habits',
-      record: expect.objectContaining({
-        why: 'Writing regularly creates room to think clearly and explore new ideas.',
-      }),
+    expect(importedWhy(ctx)).toBe(
+      'Calmer mind, sharper focus and steadier mood.'
+    );
+  });
+
+  it('never uses the marketing tagline as the why', async () => {
+    const ctx = createCtx({
+      suggestedWhy: '   ',
+      tagline: 'Twenty-five minutes on, five off.',
     });
+
+    await getHandler()(ctx, { templateId: ctx.templateId });
+
+    expect(importedWhy(ctx)).toBe(
+      'Writing regularly creates room to think clearly and explore new ideas.'
+    );
   });
 
   it('keeps imported fallback copy within the 140-character why contract', async () => {
@@ -137,8 +188,7 @@ describe('template import motivation', () => {
 
     await getHandler()(ctx, { templateId: ctx.templateId });
 
-    const habit = ctx.inserted.find(({ table }) => table === 'habits');
-    expect(habit?.record.why).toBe(`${'A'.repeat(139)}…`);
+    expect(importedWhy(ctx)).toBe(`${'A'.repeat(139)}…`);
   });
 });
 
@@ -147,21 +197,78 @@ describe('template import motivation backfill', () => {
     const ctx = createBackfillCtx();
 
     await expect(getBackfillHandler()(ctx, {})).resolves.toEqual({
+      dryRun: false,
       patchedCount: 1,
       patchedHabitIds: [ctx.habitId],
+      replacedCount: 0,
       success: true,
     });
     expect(ctx.db.patch).toHaveBeenCalledWith(ctx.habitId, {
-      why: 'Make room for ideas worth keeping.',
+      why: 'Writing regularly creates room to think clearly.',
+    });
+  });
+
+  it('replaces a legacy tagline why with the new resolved why', async () => {
+    const ctx = createBackfillCtx('Make room for ideas worth keeping.', {
+      suggestedWhy: 'Because thinking on paper keeps me honest.',
+    });
+
+    await expect(getBackfillHandler()(ctx, {})).resolves.toEqual({
+      dryRun: false,
+      patchedCount: 0,
+      patchedHabitIds: [ctx.habitId],
+      replacedCount: 1,
+      success: true,
+    });
+    expect(ctx.db.patch).toHaveBeenCalledWith(ctx.habitId, {
+      why: 'Because thinking on paper keeps me honest.',
+    });
+  });
+
+  it('replaces a legacy truncated-description why', async () => {
+    const description = 'A'.repeat(160);
+    const ctx = createBackfillCtx(`${'A'.repeat(139)}…`, {
+      description,
+      suggestedWhy: 'Because it keeps my head clear.',
+    });
+
+    await expect(getBackfillHandler()(ctx, {})).resolves.toEqual({
+      dryRun: false,
+      patchedCount: 0,
+      patchedHabitIds: [ctx.habitId],
+      replacedCount: 1,
+      success: true,
+    });
+    expect(ctx.db.patch).toHaveBeenCalledWith(ctx.habitId, {
+      why: 'Because it keeps my head clear.',
     });
   });
 
   it('preserves an existing user-authored why', async () => {
-    const ctx = createBackfillCtx('My own reason.');
+    const ctx = createBackfillCtx('My own reason.', {
+      suggestedWhy: 'Because thinking on paper keeps me honest.',
+    });
 
     await expect(getBackfillHandler()(ctx, {})).resolves.toEqual({
+      dryRun: false,
       patchedCount: 0,
       patchedHabitIds: [],
+      replacedCount: 0,
+      success: true,
+    });
+    expect(ctx.db.patch).not.toHaveBeenCalled();
+  });
+
+  it('no-ops when the resolved why already matches the stored one', async () => {
+    const ctx = createBackfillCtx(
+      'Writing regularly creates room to think clearly.'
+    );
+
+    await expect(getBackfillHandler()(ctx, {})).resolves.toEqual({
+      dryRun: false,
+      patchedCount: 0,
+      patchedHabitIds: [],
+      replacedCount: 0,
       success: true,
     });
     expect(ctx.db.patch).not.toHaveBeenCalled();

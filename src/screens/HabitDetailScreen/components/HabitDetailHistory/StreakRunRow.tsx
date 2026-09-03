@@ -68,12 +68,12 @@ export function StreakRunRow({
         style={{
           backgroundColor: dashed ? 'transparent' : track,
           borderColor: dashed ? palette.amberBorder : 'transparent',
-          borderRadius: 7,
+          borderRadius: 8,
           borderStyle: dashed ? 'dashed' : 'solid',
           borderWidth: dashed ? 1.5 : 0,
           flex: 1,
           flexDirection: 'row',
-          height: 22,
+          height: 14,
           overflow: 'hidden',
         }}
       >

@@ -13,6 +13,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const HEALTH_FITNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   '7,000 Steps': {
+    suggestedWhy: 'A daily walking floor tracks with living longer and steadier energy, so health improves without a gym or hard sessions.',
     tagline: 'A daily step floor — lower than the famous number.',
     lead: 'Walking volume tracks closely with long-term health, but the dose-response curve bends early: most of the benefit arrives well before the marketing-friendly ten thousand. What matters is having a floor you actually clear every day.',
     cadenceLabel: 'Daily · roughly 20 min of walking',
@@ -69,6 +70,7 @@ export const HEALTH_FITNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Post-Meal Walk (10 Minutes)': {
+    suggestedWhy: 'Walking after eating puts muscles to work clearing glucose, so the spike flattens and the afternoon crash never lands.',
     tagline: 'A short walk after eating to blunt the glucose spike.',
     lead: 'Walking after a meal puts your muscles to work clearing glucose from your blood while it is still arriving. That flattens the post-meal spike — and it is the spikes, more than the average, that drive the afternoon energy crash.',
     evidence:

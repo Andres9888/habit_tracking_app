@@ -102,9 +102,10 @@ describe('HabitHistoryScreen', () => {
     expect(queryByText(/★/)).toBeNull();
   });
 
-  it('labels the rail rate "Since start" for a habit created this year', () => {
+  it('dates the rail rate from creation for a habit created this year', () => {
+    // Fixture habit was created 2026-06-01.
     const { getByLabelText } = renderScreen();
-    expect(getByLabelText(/^Since start: /)).toBeTruthy();
+    expect(getByLabelText(/^Since Jun 1: /)).toBeTruthy();
   });
 
   it('bounds the range to the current year when the habit has no createdAt', () => {

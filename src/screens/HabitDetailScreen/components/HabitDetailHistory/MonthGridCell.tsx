@@ -60,9 +60,12 @@ export function MonthGridCell({ cell, palette, onPress }: MonthGridCellProps) {
           style={{
             color: monthCellTextColor(cell.state, palette),
             fontFamily: fontFamilies.primary.text,
-            fontSize: 11,
+            fontSize: 14,
             fontVariant: ['tabular-nums'],
-            fontWeight: fontWeights.semibold,
+            fontWeight:
+              cell.state === 'completed'
+                ? fontWeights.bold
+                : fontWeights.semibold,
           }}
         >
           {Number(cell.date.slice(8, 10))}

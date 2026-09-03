@@ -19,6 +19,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   '66-Day Habit Commitment': {
+    suggestedWhy: 'Automaticity takes about two months to build, so holding on past the dip is what turns effort into routine.',
     tagline: 'Give it about two months, not three weeks.',
     lead: 'The "21 days" figure is folklore with no evidence behind it. When automaticity was actually measured, the median was around 66 days with enormous variation between people and behaviours — which means quitting at week three is quitting before the experiment finished.',
     evidence:
@@ -75,6 +76,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Habit Anchoring Practice': {
+    suggestedWhy: 'Attaching a new behaviour to a routine you never skip borrows its reliability, so you stop relying on memory.',
     tagline: 'Bolt the new habit onto an existing one.',
     lead: 'New behaviours need a trigger, and the most reliable trigger is something you already do without fail. Anchoring borrows the existing routine’s consistency instead of asking you to remember something new.',
     cadenceLabel: 'Daily · after an existing routine',
@@ -129,6 +131,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Habit Tracking': {
+    suggestedWhy: 'Recording each day makes invisible progress visible and builds a chain worth protecting, so consistency holds.',
     tagline: 'Mark it done.',
     lead: 'Self-monitoring is one of the better-supported behaviour-change techniques — the act of recording creates accountability and makes progress visible when it is otherwise invisible. The chain of marks becomes its own reason to continue.',
     cadenceLabel: 'Daily · mark it',
@@ -175,6 +178,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Morning Habit Initiation': {
+    suggestedWhy: 'Running it before the day starts making demands means nothing can displace it, so it actually gets done.',
     tagline: 'Put new habits early in the day.',
     lead: 'Later in the day, habits compete with fatigue and everything that has gone wrong since morning. Front-loading a new behaviour means it runs before the day has a chance to consume it — this is scheduling logic more than neuroscience.',
     cadenceLabel: 'Daily · morning',
@@ -221,6 +225,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Self-Compassion After Setbacks': {
+    suggestedWhy: 'Dropping the shame after a lapse keeps the habit from becoming something you dread, so you resume the next day.',
     tagline: 'A missed day is not a failed habit.',
     lead: 'Self-criticism after a lapse predicts giving up, not trying harder — shame makes the whole habit aversive, so you avoid it rather than resume it. Self-compassion is the intervention that gets people back the next day.',
     cadenceLabel: 'After any lapse',
@@ -275,6 +280,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Prep Workout Clothes Night Before': {
+    suggestedWhy: 'Laying kit out puts the cue in sight and the decision behind you, so the morning session stops being negotiable.',
     tagline: 'Lay the kit out where you will trip over it.',
     lead: 'A visible cue plus removed friction is the whole mechanism of habit design in one action. The decision that would otherwise happen at 6am — sleepy, negotiable — gets made the night before, when you had capacity for it.',
     cadenceLabel: 'Nightly · 2 min',
@@ -329,6 +335,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Water Bottle Always Visible': {
+    suggestedWhy: 'A bottle in sight fixes the forgetting that quietly costs attention and mood, so thinking stays clearer all day.',
     tagline: 'Keep water in your line of sight.',
     lead: 'Hydration fails through forgetting rather than unwillingness, and a visible bottle solves forgetting without requiring any discipline. Mild dehydration measurably degrades concentration and mood, so the fix is worth the shelf space.',
     evidence:
@@ -386,6 +393,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Healthy Food at Eye Level': {
+    suggestedWhy: 'Putting good options within easy reach shifts what you eat without a decision, so better meals need no willpower.',
     tagline: 'Rearrange the shelf, not your willpower.',
     lead: 'What you eat is heavily determined by what is easiest to see and reach. Moving good options to eye level and burying the rest is choice architecture — it changes behaviour without requiring a decision each time.',
     evidence:
@@ -443,6 +451,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Phone in Another Room': {
+    suggestedWhy: 'Distance removes a contest your attention would otherwise keep losing, so focus blocks tend to stay whole.',
     tagline: 'Distance, not self-control.',
     lead: 'A phone within reach occupies attention even face-down and untouched — resisting it costs something. Physical distance removes the contest entirely. Worth noting the effect size here is debated, but the intervention is free.',
     cadenceLabel: 'Per focus block',
@@ -497,6 +506,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Bedroom for Sleep Only': {
+    suggestedWhy: 'Reserving the bed for sleep rebuilds the link between lying down and drifting off, so sleep arrives faster.',
     tagline: 'Bed is for sleep and sex, nothing else.',
     lead: 'If you work, scroll and worry in bed, your brain learns that bed means wakefulness. Reserving it rebuilds the association — this is stimulus control, a core component of the most effective insomnia treatment there is.',
     cadenceLabel: 'Always · ongoing',
@@ -551,6 +561,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'No Phone in Bedroom': {
+    suggestedWhy: 'Removing the phone cuts the light, the stimulation and the 3am scroll, so sleep runs longer and mornings start better.',
     tagline: 'Charge it somewhere else.',
     lead: 'Phone access at bedtime is associated with shorter sleep and worse sleep quality — through light, through stimulation, and through the simple fact that it is there when you wake at 3am. Removing it removes all three at once.',
     evidence:
@@ -608,6 +619,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'No Snooze Button': {
+    suggestedWhy: 'Snoozing chops the last stretch of sleep into fragments that deepen grogginess, so getting up once leaves you clearer.',
     tagline: 'Get up on the first alarm.',
     lead: 'Snoozing fragments the last stretch of sleep into short, low-quality pieces and can deepen sleep inertia rather than easing it. The extra nine minutes cost more than they give.',
     evidence:
@@ -665,6 +677,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'No News Before Noon': {
+    suggestedWhy: 'Delaying high-arousal coverage avoids an early stress spike, so the morning stays calm and spent on your own priorities.',
     tagline: 'Keep the feed out of your morning.',
     lead: 'High-arousal media early in the day sets a reactive tone and consumes the attention you were going to spend on your own priorities. Repeated exposure to distressing coverage is also associated with stress responses of its own.',
     evidence:
@@ -722,6 +735,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Alcohol-Free Weekdays': {
+    suggestedWhy: 'Weeknights without alcohol protect the sleep it fragments, so weekday energy and focus hold up.',
     tagline: 'Drink at weekends, if at all.',
     lead: 'A weekday rule cuts cumulative intake without requiring abstinence, and it protects the sleep quality that weekday performance depends on. The evidence on alcohol has moved steadily toward "less is better" with no protective threshold.',
     cadenceLabel: 'Mon-Thu · alcohol-free',
@@ -777,6 +791,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Stop at 80% Full': {
+    suggestedWhy: 'Leaving a margin lets delayed fullness signals land, so meals end comfortably instead of overshooting.',
     tagline: 'Stop at satisfied, not stuffed.',
     lead: 'Satiety signals arrive on a delay, so eating to "full" reliably overshoots. Eating attentively and leaving a margin lets those signals land — attentiveness itself is associated with eating less, independent of what is on the plate.',
     evidence:
@@ -834,6 +849,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'One Less Meeting': {
+    suggestedWhy: 'Cutting one recurring meeting returns unbroken time and lowers the fatigue that meeting load brings.',
     tagline: 'Decline or shorten one meeting a week.',
     lead: 'Meeting load is associated with fatigue and reduced wellbeing, and most calendars contain at least one recurring item nobody would defend. Removing one a week compounds into real reclaimed time.',
     evidence:
@@ -891,6 +907,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Circadian Anchor Times': {
+    suggestedWhy: 'Steady sleep and wake times stop the mild jet lag of an irregular schedule, so the rest of the day steadies too.',
     tagline: 'Sleep and wake within the same half hour daily.',
     lead: 'Regularity is a distinct sleep variable from duration, and an irregular schedule produces something like permanent mild jet lag. Holding both ends steady — weekends included — is the highest-leverage sleep change most people can make.',
     cadenceLabel: 'Daily · ±30 min, 7 days',
@@ -946,6 +963,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Evening Screen Curfew': {
+    suggestedWhy: 'Cutting evening light lets melatonin arrive on time, so sleep comes faster and the evening becomes yours again.',
     tagline: 'Screens off two hours before bed.',
     lead: 'Evening light suppresses melatonin and pushes your body clock later, and the content keeps you alert on top of that. A curfew is easier to keep than per-app rules because there is nothing to adjudicate.',
     evidence:
@@ -1003,6 +1021,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Sunset Viewing Ritual': {
+    suggestedWhy: 'Evening light gives your body clock its closing cue, so the day gets a clear end and the clock stays anchored.',
     tagline: 'Catch the evening light.',
     lead: 'Your circadian system reads the shift toward longer wavelengths at dusk as a time signal. Bookending the day with morning and evening light gives the clock both edges to anchor to, rather than only one.',
     cadenceLabel: 'Daily · 10 min at sunset',
@@ -1049,6 +1068,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Optimal Vagal Breathing (6/min)': {
+    suggestedWhy: 'Breathing near six a minute peaks heart rate variability and tips you parasympathetic, so stress settles faster.',
     tagline: 'Six breaths a minute, longer out than in.',
     lead: 'Around six breaths a minute your heart rate and breathing fall into phase and heart rate variability peaks — this is the resonant frequency that HRV biofeedback training targets. The extended exhale is what tips it toward the parasympathetic side.',
     evidence:
@@ -1105,6 +1125,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Vagal Humming Practice': {
+    suggestedWhy: 'Humming raises nasal nitric oxide and enforces a long exhale, so you downshift without needing any technique.',
     tagline: 'Hum for five minutes.',
     lead: 'Humming makes nasal airflow oscillate, which sharply increases the nitric oxide released there, and it enforces a long controlled exhale at the same time. Two mechanisms from an activity requiring no skill whatsoever.',
     evidence:
@@ -1161,6 +1182,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Cold Face Diving Reflex': {
+    suggestedWhy: 'Cold on the face drops heart rate within seconds, so panic can be interrupted at moments when thinking cannot.',
     tagline: 'Cold water on the face when stressed.',
     lead: 'Cold on the face and around the nostrils triggers the mammalian diving reflex — heart rate drops within seconds via vagal activation. It is the fastest physiological intervention on this list and it needs a tap.',
     cadenceLabel: 'As needed · 30 sec',
@@ -1207,6 +1229,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Vagus Reset Ritual': {
+    suggestedWhy: 'Practising the parasympathetic downshift daily makes it available on demand, so calm is a skill you can reach for.',
     tagline: 'Five minutes of deliberate downshifting.',
     lead: 'Slow breathing, cold exposure and humming all engage the parasympathetic system through different doors. Doing one daily is less about any single session and more about practising the shift so it is available when you need it.',
     cadenceLabel: 'Daily · 5 min',
@@ -1261,6 +1284,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   '2-Minute Emotional Pause': {
+    suggestedWhy: 'A short pause lets the physiological peak pass, so you get a gap to choose in rather than simply reacting.',
     tagline: 'Two minutes with your breath when feeling rises.',
     lead: 'A deliberate pause puts a gap between the emotion and whatever you were about to do about it. Two minutes is long enough for the physiological peak to pass and short enough that you will actually take it.',
     cadenceLabel: 'As needed · 2 min',
@@ -1307,6 +1331,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Power Posture Practice': {
+    suggestedWhy: 'Upright posture lowers neck and back load and frees the diaphragm, so you breathe more fully and may feel steadier.',
     tagline: 'Stand tall — for the mechanics, not the hormones.',
     lead: 'Be careful with this one. The famous "power posing" finding — that posture changes testosterone and cortisol — failed to replicate, and the original author has since distanced herself from the hormonal claims. What survives is smaller and still worth having: upright posture reduces neck and back load and lets you breathe fully.',
     cadenceLabel: 'Before key moments · 2 min',
@@ -1353,6 +1378,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   '30-Minute Brain-Boosting Cardio': {
+    suggestedWhy: 'A single aerobic session lifts mood and executive function the same day, so thinking and temper both improve.',
     tagline: 'Aerobic exercise, for your head.',
     lead: 'Acute aerobic exercise produces measurable short-term improvements in mood and executive function, and regular training is associated with longer-term cognitive benefit. Of everything marketed for brain health, this has the best evidence behind it.',
     evidence:
@@ -1410,6 +1436,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Resistance Training for Brain': {
+    suggestedWhy: 'Lifting improves cognition through different routes than cardio, so doing both protects the mind as well as the body.',
     tagline: 'Lift, for cognition.',
     lead: 'Resistance training shows cognitive benefits in trial data, not just cardiovascular ones — and it does so through partly different mechanisms than aerobic work. Doing both beats doing either.',
     evidence:
@@ -1467,6 +1494,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Cognitive Blood Pressure Target': {
+    suggestedWhy: 'Controlling blood pressure lowers the risk of mild cognitive impairment, so one number protects heart and mind together.',
     tagline: 'Aim below 120 systolic.',
     lead: 'Intensive blood pressure control reduced the incidence of mild cognitive impairment in a large randomised trial — one of the few interventions with trial-level evidence for protecting cognition. Blood pressure is a brain variable, not only a heart one.',
     evidence:
@@ -1524,6 +1552,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Cognitive Reserve Building': {
+    suggestedWhy: 'Being a beginner again builds reserve that tends to mask age-related decline, so the mind stays sharper for longer.',
     tagline: 'Learn something new every month.',
     lead: 'Cognitive reserve is the idea that mentally demanding activity across life builds capacity that masks age-related decline for years. Novelty appears to be the ingredient — getting better at something familiar does less than being a beginner again.',
     cadenceLabel: 'Monthly · one new skill',
@@ -1578,6 +1607,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Longevity Big 4 Habits': {
+    suggestedWhy: 'Not smoking, moving, sleeping and eating well compound into years of life, and each one makes the others easier.',
     tagline: 'Four things, most of the benefit.',
     lead: 'Large cohort analyses keep converging on the same short list — not smoking, regular activity, adequate sleep, and a decent diet. It is unglamorous precisely because it is well established, and it outperforms anything you can buy.',
     cadenceLabel: 'Ongoing · all four',
@@ -1624,6 +1654,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Healthspan Tracking': {
+    suggestedWhy: 'Watching the few lifestyle factors you control keeps attention on the inputs linked to more disease-free years.',
     tagline: 'Track the habits, not just the years.',
     lead: 'Adherence to a handful of low-risk lifestyle factors is associated with substantially more disease-free years, not merely more years. Tracking adherence keeps attention on the inputs, which are the part you control.',
     cadenceLabel: 'Weekly · review adherence',
@@ -1670,6 +1701,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Lifelong Weight Maintenance': {
+    suggestedWhy: 'Holding a steady weight avoids the losing-and-regaining cycle, so the decades ahead go better than any short plan.',
     tagline: 'Stability beats cycling.',
     lead: 'Maintaining a steady weight across decades is associated with better outcomes than repeatedly losing and regaining it. The framing matters: this is about avoiding the cycle, not about pursuing a number.',
     cadenceLabel: 'Ongoing',
@@ -1716,6 +1748,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Mediterranean + Time-Restricted Eating': {
+    suggestedWhy: 'Pairing a Mediterranean pattern with a set window covers what and when, so late eating stops without counting anything.',
     tagline: 'A Mediterranean pattern inside a set window.',
     lead: 'Both halves have independent evidence — the Mediterranean pattern from randomised cardiovascular trials, time-restricted eating from smaller metabolic ones. Combining them is reasonable extrapolation rather than something directly trialled; treat it that way.',
     cadenceLabel: 'Daily · 10-12 hour window',
@@ -1771,6 +1804,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Choose Whole Foods': {
+    suggestedWhy: 'Adding good food rather than banning bad survives a rough week, so better eating holds without any deprivation.',
     tagline: 'Add something good rather than banning something bad.',
     lead: 'Approach-framed goals hold up better than avoidance ones — "add a vegetable" survives a bad week in a way "no sugar" does not. Same direction of travel, much lower failure rate.',
     cadenceLabel: 'Every meal · add one',
@@ -1817,6 +1851,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Psychobiotic Foods': {
+    suggestedWhy: 'Fermented foods raise gut diversity and lower inflammatory markers, so gut health improves and mood may follow.',
     tagline: 'Fermented foods, for the gut-brain axis.',
     lead: 'The gut-brain axis is real and actively researched, and a controlled trial found fermented foods shift microbiome diversity and immune markers. The mood claims are more preliminary than the marketing suggests — worth doing, worth calibrating.',
     evidence:
@@ -1873,6 +1908,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Longevity Probiotics': {
+    suggestedWhy: 'Specific strains help specific conditions, so this may help a little — though fermented food is better evidenced.',
     tagline: 'A probiotic supplement, with modest expectations.',
     lead: 'Specific strains do show effects in specific conditions, but the general anti-ageing probiotic story is not established — most supplements are poorly characterised and the transient colonisation is real. Fermented food is the better-evidenced route to the same goal.',
     cadenceLabel: 'Daily · if you choose to',
@@ -1919,6 +1955,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Oral Microbiome Care': {
+    suggestedWhy: 'Two minutes of brushing and flossing keeps gums healthy, which is also linked to cardiovascular and cognitive outcomes.',
     tagline: 'Look after your mouth.',
     lead: 'Gum disease is associated with cardiovascular and cognitive outcomes, and the association is robust — though whether it is causal remains open. Either way the oral health benefit alone justifies two minutes. One caution: routine antiseptic mouthwash is not obviously good, and oil pulling has little support.',
     cadenceLabel: 'Daily · 2 min',
@@ -1965,6 +2002,7 @@ export const BEHAVIOR_DESIGN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   '40 Hz Binaural Beats': {
+    suggestedWhy: 'Putting the track on marks the start of work and masks noise, so focus may improve even if the frequency does not.',
     tagline: 'An audio focus experiment.',
     lead: 'Gamma-frequency stimulation is a genuinely active research area, mostly in Alzheimer’s models and mostly using light and sound flicker rather than binaural beats. For focus in healthy adults the evidence is thin and mixed — try it as a personal experiment, not an established tool.',
     cadenceLabel: 'Before focus blocks · 5 min',

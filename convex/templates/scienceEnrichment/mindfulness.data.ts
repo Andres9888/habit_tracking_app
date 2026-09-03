@@ -7,6 +7,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   'Gratitude Journaling': {
+    suggestedWhy: 'Naming specific good things pulls attention toward what went right, so your baseline read on life steadies.',
     tagline: 'Write down a few good things — briefly, but regularly.',
     lead: 'Naming specific good things forces your attention off what went wrong and onto what went right. Done regularly it shifts your baseline read of your own life, which is why the effect shows up in wellbeing measures rather than just mood in the moment.',
     evidence:
@@ -64,6 +65,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Body Scan Meditation': {
+    suggestedWhy: 'Attending to the body part by part trains interoception, so tension gets caught early and pain lands differently.',
     tagline: 'Move attention through the body, part by part.',
     lead: 'A body scan trains interoception — the ability to notice internal signals accurately. That is why it shows up in chronic pain programmes: you are not trying to remove sensation, you are changing how you relate to it.',
     cadenceLabel: 'Daily · 10-20 min',
@@ -118,6 +120,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Loving-Kindness Meditation': {
+    suggestedWhy: 'Practising goodwill trains warmth as a skill, so positive emotion turns up more often and self-criticism eases.',
     tagline: 'Deliberately wish people well — including yourself.',
     lead: 'Loving-kindness practice trains warmth as a skill rather than waiting for it to arrive. Over weeks it appears to raise the frequency of positive emotion in daily life, which in turn builds durable personal resources.',
     evidence:
@@ -175,6 +178,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   '13-Minute Focus Meditation': {
+    suggestedWhy: 'A short daily dose of breath anchoring trains attention and memory, so weeks of it leave your thinking sharper.',
     tagline: 'Thirteen minutes of breath anchoring, daily.',
     lead: 'This is a specific, tested dose rather than an open-ended practice. Eight weeks of short daily meditation improved attention, memory and mood in people who had never meditated before — the point is that the effective dose is small.',
     evidence:
@@ -232,6 +236,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Progressive Muscle Relaxation': {
+    suggestedWhy: 'Tensing then releasing makes held tension obvious and lets it go, so anxiety eases and the body settles.',
     tagline: 'Tense each muscle group, then let go.',
     lead: 'Deliberately tensing before releasing makes the relaxation obvious — you cannot notice letting go of tension you did not know you were holding. It is one of the oldest and best-established anxiety-reduction techniques.',
     cadenceLabel: 'Daily · 10-15 min',
@@ -286,6 +291,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Scheduled Worry Time': {
+    suggestedWhy: 'Giving worry a fixed appointment contains it instead of suppressing it, so the rest of the day stays quieter.',
     tagline: 'Give worry an appointment instead of the whole day.',
     lead: 'Worry expands to fill available time, and trying to suppress it makes it rebound. Containing it to a fixed window gives you something to say to an intruding worry — not "stop", which fails, but "later, at six", which works.',
     evidence:
@@ -342,6 +348,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Walking in Nature': {
+    suggestedWhy: 'Green surroundings restore attention and lower stress markers, so twenty minutes leaves you calmer and clearer.',
     tagline: 'Twenty minutes among trees.',
     lead: 'Natural environments appear to restore attention in a way urban ones do not — the effect shows up in cortisol and blood pressure as well as self-report. Twenty minutes is enough to register; the greenery is doing work the walking alone would not.',
     cadenceLabel: 'Daily · 20 min',
@@ -398,6 +405,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Unstimulated Walk': {
+    suggestedWhy: 'Time with no audio input gives attention slack, so unfinished thinking resolves and focus recovers.',
     tagline: 'Walk with nothing in your ears.',
     lead: 'Constant audio input means your attention never has slack. A walk with no podcast is where unresolved thinking surfaces and finishes — it is boring on purpose, and the boredom is the mechanism.',
     cadenceLabel: 'Daily · 30 min · no audio',
@@ -453,6 +461,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Blue Space Time': {
+    suggestedWhy: 'Moving water holds attention without demanding it, so time near it tends to leave you less distressed.',
     tagline: 'Time near moving water.',
     lead: 'Water environments show up in the wellbeing literature as at least as restorative as green ones. The mechanism is probably a combination of soft fascination, open sightlines and steady sound — none of which requires a coastline.',
     cadenceLabel: '2-3x weekly · 20 min',
@@ -508,6 +517,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Bird Watching': {
+    suggestedWhy: 'Watching birds rests attention while keeping it engaged, so mood tends to lift and ordinary streets get interesting.',
     tagline: 'Fifteen quiet minutes watching birds.',
     lead: 'Neighbourhood bird abundance is associated with lower depression and anxiety, and the watching itself is a form of undemanding attention that recovers focus. It also makes an ordinary street interesting, which is its own benefit.',
     evidence:
@@ -565,6 +575,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   Stargazing: {
+    suggestedWhy: 'Awe at something vast shrinks self-focus, so today’s problems resize and generosity comes more easily.',
     tagline: 'Ten minutes looking up.',
     lead: 'Awe — the response to something vast that does not fit your current frame — reliably shrinks the sense of self-importance and increases prosocial behaviour. A clear night sky is the most accessible source of it there is.',
     evidence:
@@ -621,6 +632,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Mindful Eating': {
+    suggestedWhy: 'Slowing down lets delayed fullness signals land, so meals satisfy more and autopilot eating fades.',
     tagline: 'Eat slowly and actually taste it.',
     lead: 'Satiety signals arrive on a delay, so eating fast means you finish before your body reports. Slowing down and paying attention lets those signals land — and food eaten with attention is more satisfying at smaller volume.',
     cadenceLabel: 'Every meal · start with one',
@@ -676,6 +688,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Evening Reflection': {
+    suggestedWhy: 'Reflection turns experience into something usable, so progress becomes visible and repeated friction gets fixed.',
     tagline: 'What went well, what to change.',
     lead: 'Experience does not teach on its own — reflection is the step that converts it into something usable. Two questions at the end of the day is the smallest version of that loop that still works.',
     cadenceLabel: 'Nightly · 5 min',
@@ -731,6 +744,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Single-Sentence Journal': {
+    suggestedWhy: 'One sentence is too small to skip and still forces you to decide what mattered, so a real record builds up.',
     tagline: 'One sentence about today.',
     lead: 'The barrier is the whole design. A single sentence is small enough that you cannot reasonably skip it, and it still forces the brief act of summarising a day — which is most of what journalling does.',
     cadenceLabel: 'Nightly · 1 sentence',
@@ -777,6 +791,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Identity Journaling': {
+    suggestedWhy: 'Tying actions to who you want to be makes habits survive setbacks, so a missed week stops feeling like failure.',
     tagline: 'What did I do that matches who I want to be?',
     lead: 'Habits that attach to an identity persist longer than habits attached to an outcome — "I am someone who trains" survives a missed week better than "I want to lose weight". Weekly reflection is how that identity gets reinforced.',
     cadenceLabel: 'Weekly · 5 min',
@@ -823,6 +838,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Post-Behavior Celebration': {
+    suggestedWhy: 'Immediate emotion is what wires a behaviour in, so a two-second celebration makes the habit stick faster.',
     tagline: 'Celebrate the instant you finish.',
     lead: 'Emotion is what wires a habit in, and it has to arrive immediately — a reward tomorrow does nothing for a behaviour today. A two-second fist pump feels ridiculous and works anyway.',
     cadenceLabel: 'Every repetition · 2 sec',
@@ -877,6 +893,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Digital Detox Hour': {
+    suggestedWhy: 'Dropping screens before bed removes light and stimulation, so sleep arrives sooner and evenings feel calmer.',
     tagline: 'One screen-free hour before bed.',
     lead: 'Bedtime screen use delays sleep both by light exposure and by keeping you cognitively engaged. An hour is enough to matter, and it is easier to defend as a block than to police app by app.',
     evidence:
@@ -934,6 +951,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Dopamine Reset': {
+    suggestedWhy: 'Breaks from constant novelty lower your tolerance for it, so ordinary activities start feeling worthwhile again.',
     tagline: 'Periodic breaks from high-stimulation activities.',
     lead: 'The popular framing is overstated — you cannot "reset dopamine" in a day, and the term is not a clinical one. What the practice does do is reduce tolerance to constant novelty, so ordinary activities start feeling worthwhile again.',
     cadenceLabel: 'Weekly · a few hours',
@@ -980,6 +998,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Laughter': {
+    suggestedWhy: 'Laughing briefly lowers circulating stress hormones, so mood lifts fast — which is why it works best daily.',
     tagline: 'Find something genuinely funny.',
     lead: 'Laughter reduces circulating stress hormones and briefly improves mood and pain tolerance. The effect is modest and short-lived, which is exactly why doing it daily rather than occasionally is the sensible framing.',
     cadenceLabel: 'Daily · 5 min',
@@ -1034,6 +1053,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Tension Release Shaking': {
+    suggestedWhy: 'Shaking may discharge muscular tension you were holding, so the body loosens quickly after a stressful moment.',
     tagline: 'Shake it out for a few minutes.',
     lead: 'Shaking is what many animals do after a threat passes, and the practice borrows that idea to discharge held muscular tension. The clinical evidence base is thin; the immediate physical relief is easy to verify yourself.',
     cadenceLabel: 'Daily · 3-5 min',
@@ -1080,6 +1100,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Self-Massage Ritual': {
+    suggestedWhy: 'Touch is associated with lower cortisol and a shift toward rest, so a few minutes on hands or feet settles you.',
     tagline: 'Five minutes on hands, feet or face.',
     lead: 'Massage is associated with reduced cortisol and increased serotonin and dopamine, and self-massage gets a meaningful share of that without an appointment. Hands and feet are dense in receptors, which is why they respond well.',
     evidence:
@@ -1137,6 +1158,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Foot Grounding': {
+    suggestedWhy: 'Attending closely to sensation in your feet trains interoception, so you drop out of spiralling thought faster.',
     tagline: 'Bare feet on the ground, paying attention.',
     lead: 'This is an interoception exercise, not an electrical one — ignore the "earthing" claims about ground charge. Attending closely to physical sensation is a trainable skill that supports emotional regulation, and feet are a convenient place to practise it.',
     cadenceLabel: 'Daily · 2 min',
@@ -1191,6 +1213,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Purpose Statement Review': {
+    suggestedWhy: 'Revisiting what you are for keeps purpose concrete, so decisions get easier and setbacks land differently.',
     tagline: 'Re-read what you are for.',
     lead: 'Having a clear sense of purpose is associated with longer life and better health, independent of mood. A written statement you actually revisit is what keeps that sense concrete rather than vaguely assumed.',
     evidence:
@@ -1247,6 +1270,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Future Self Visualization': {
+    suggestedWhy: 'Feeling connected to your future self closes the psychological distance, so long-term choices get easier to make.',
     tagline: 'Spend time with the person you will become.',
     lead: 'People who feel connected to their future self make better long-term decisions — they save more and discount the future less. Vividly imagining that person is what closes the psychological distance.',
     evidence:
@@ -1304,6 +1328,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Letter to Future Self': {
+    suggestedWhy: 'Writing to yourself a year out records what you actually wanted, so progress is measured against fact, not memory.',
     tagline: 'Write to yourself, one year out.',
     lead: 'A sealed letter does two things: it forces you to articulate where you currently are, and it gives your future self an honest record rather than a reconstructed memory. Most people badly misremember what they wanted a year ago.',
     cadenceLabel: 'Yearly · 20 min to write',
@@ -1350,6 +1375,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Mortality Reflection': {
+    suggestedWhy: 'Brief reflection on finitude shifts values toward meaning over status, so priorities resize and gratitude grows.',
     tagline: 'Memento mori — briefly, deliberately.',
     lead: 'Reflecting on mortality in a considered way tends to shift values toward the intrinsic: relationships and meaning over status and acquisition. Done briefly it clarifies; dwelt on, it does the opposite, so keep it short.',
     cadenceLabel: 'Weekly · 5 min',
@@ -1404,6 +1430,7 @@ export const MINDFULNESS_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Legacy Action': {
+    suggestedWhy: 'Investing in things that outlast you turns attention outward, so life feels more meaningful, not just successful.',
     tagline: 'Do one thing whose impact outlasts you.',
     lead: 'Generativity — investing in things and people that continue after you — is associated with higher wellbeing in adulthood. It does not need to be grand: teaching someone, planting something, writing something down all qualify.',
     cadenceLabel: 'Weekly · one action',

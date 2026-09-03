@@ -14,6 +14,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   'Active Recall': {
+    suggestedWhy: 'Pulling information out of memory consolidates it and exposes gaps, so the same study time yields more learning.',
     tagline: 'Close the book and try to remember.',
     lead: 'Retrieving information strengthens memory far more than reviewing it does — the effort of pulling something out is what consolidates it. Rereading feels productive and mostly is not, which is why most people study inefficiently for years.',
     evidence:
@@ -71,6 +72,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Spaced Repetition': {
+    suggestedWhy: 'Reviewing just before you forget builds durable memory, so knowledge lasts for months on fewer total reviews.',
     tagline: 'Review at widening intervals.',
     lead: 'Reviewing just as you are about to forget produces far more durable memory than massing the same reviews together. It is the single most efficient learning technique available, and it has been replicated for over a century.',
     evidence:
@@ -128,6 +130,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Same-Day Review': {
+    suggestedWhy: 'A quick review catches material while forgetting is steepest, so less of what you learned today slips away.',
     tagline: 'Revisit today’s material today.',
     lead: 'Forgetting is steepest immediately after learning, so a single review inside the first day catches material before most of it has gone. The specific retention percentages people quote are folklore, but the shape of the curve is real and old.',
     cadenceLabel: 'Daily · within 24 hours',
@@ -182,6 +185,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Interleaved Practice': {
+    suggestedWhy: 'Mixing topics forces you to spot which method applies, so what you learn holds up when it is actually needed.',
     tagline: 'Mix the topics instead of blocking them.',
     lead: 'Practising one thing until it clicks feels better and works worse. Mixing related material forces you to identify which approach applies — which is the skill you actually need, and the reason interleaving beats blocking on later tests.',
     evidence:
@@ -239,6 +243,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Feynman Technique': {
+    suggestedWhy: 'Explaining in plain words shows exactly where understanding stops, so confusion gets found instead of hidden.',
     tagline: 'Explain it simply and find the gaps.',
     lead: 'Explaining something in plain language forces you to generate the connections rather than recognise them — and the exact point where your explanation stumbles is the exact point you did not understand. That diagnostic is the whole value.',
     evidence:
@@ -296,6 +301,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Weekly Teaching': {
+    suggestedWhy: 'Preparing to teach makes you organise the material, so gaps surface and what you learned holds together.',
     tagline: 'Teach someone what you learned.',
     lead: 'Preparing to teach changes how you encode material — you organise it for someone else, which forces structure you would otherwise skip. Treat the specific retention percentages floating around online with suspicion; the effect is real, the numbers are invented.',
     cadenceLabel: 'Weekly · one explanation',
@@ -350,6 +356,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Pre-Sleep Review': {
+    suggestedWhy: 'A light review just before sleep hands the material to overnight consolidation, so more of it may survive the night.',
     tagline: 'Read it over just before bed.',
     lead: 'Sleep consolidates what you learned that day, and material reviewed shortly before sleeping appears to benefit from that process. Keep it light — this is a gentle review, not a study session that costs you sleep.',
     cadenceLabel: 'Nightly · 5-10 min',
@@ -396,6 +403,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Reading': {
+    suggestedWhy: 'Reading builds vocabulary and background knowledge in context, and trains sustained attention little else touches.',
     tagline: 'Thirty minutes with a book.',
     lead: 'Extended reading builds vocabulary and background knowledge in a way no other activity matches, largely because it is the only place most people meet complex sentences and unfamiliar words in context. Volume matters more than difficulty.',
     cadenceLabel: 'Daily · 30 min',
@@ -450,6 +458,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Handwritten Notes': {
+    suggestedWhy: 'Handwriting is too slow to transcribe, so you summarise instead — and the summarising is where understanding forms.',
     tagline: 'Take notes by hand.',
     lead: 'Writing by hand is slower than typing, which forces you to summarise rather than transcribe — and that summarising is where the understanding happens. The mechanism is processing, not the pen.',
     evidence:
@@ -507,6 +516,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Deliberate Skill Practice': {
+    suggestedWhy: 'Working past your current level with immediate feedback breaks plateaus, so skill improves instead of stalling.',
     tagline: 'Work at the edge of what you can do.',
     lead: 'Ordinary repetition plateaus quickly. Deliberate practice is specifically effortful — targeting what you cannot yet do, with immediate feedback, at a level that is uncomfortable. That discomfort is the difference between practising and improving.',
     evidence:
@@ -564,6 +574,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Novel Learning Session': {
+    suggestedWhy: 'An unfamiliar skill makes the brain build new representations, so beginner discomfort turns into flexibility.',
     tagline: 'Learn something genuinely new.',
     lead: 'Learning an unfamiliar skill demands more of the brain than getting better at a familiar one — new representations rather than refined ones. Novelty is the active ingredient, which means the subject matters less than its unfamiliarity.',
     cadenceLabel: 'Daily · 15-30 min',
@@ -610,6 +621,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Language Practice': {
+    suggestedWhy: 'Vocabulary is what limits a new language, and one word a day accumulates into hundreds without feeling heavy.',
     tagline: 'One new word a day.',
     lead: 'Vocabulary is the rate-limiting factor in language learning, and it accumulates rather than arriving. A word a day is unglamorous and adds up to a few hundred a year — which is a meaningful fraction of conversational fluency.',
     cadenceLabel: 'Daily · one word',
@@ -664,6 +676,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Language Word Learning': {
+    suggestedWhy: 'Managing a second language is thought to build cognitive reserve, associated with dementia symptoms arriving later.',
     tagline: 'Three words a day in another language.',
     lead: 'Bilingualism is associated with a later onset of dementia symptoms — the leading interpretation being cognitive reserve, where managing two languages builds capacity that masks decline for years. You do not need fluency to be building it.',
     evidence:
@@ -720,6 +733,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Music Practice': {
+    suggestedWhy: 'Playing loads motor control, listening, memory and timing at once, and reshapes the brain in measurable ways.',
     tagline: 'Twenty minutes on an instrument.',
     lead: 'Musical training produces some of the clearest structural and functional brain changes documented in adults, because it demands motor control, listening, memory and timing simultaneously. Few activities load that many systems at once.',
     evidence:
@@ -777,6 +791,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Logic Puzzle': {
+    suggestedWhy: 'Cognitively demanding leisure is associated with lower dementia risk, so a daily puzzle keeps the mind engaged.',
     tagline: 'One puzzle a day.',
     lead: 'Frequent participation in cognitively demanding leisure activities is associated with lower dementia risk in large cohorts. Note the honest limit: this is association, and puzzles mainly make you better at puzzles — the general transfer claims are weak.',
     evidence:
@@ -833,6 +848,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Memory Challenges': {
+    suggestedWhy: 'Memory improves with deliberate use, so choosing to memorise trains a capacity most people never test.',
     tagline: 'Memorise something on purpose.',
     lead: 'Deliberate memorisation has largely disappeared from modern life because we outsource it — and the capacity is trainable in a way most people never discover. A poem a month is a small, satisfying way to find out.',
     cadenceLabel: 'Monthly · one piece',
@@ -887,6 +903,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Navigation Novelty': {
+    suggestedWhy: 'Finding your own way engages the hippocampus that directions do the work for, so the skill stays yours.',
     tagline: 'Take a different route.',
     lead: 'Spatial navigation engages the hippocampus, and the well-known study of London taxi drivers found structural differences associated with years of navigating. Following turn-by-turn directions outsources exactly that work.',
     evidence:
@@ -944,6 +961,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Documentary Learning': {
+    suggestedWhy: 'Curiosity improves what you retain, so an unfamiliar topic makes even surrounding details easier to remember.',
     tagline: 'Watch something about a topic you know nothing about.',
     lead: 'Curiosity itself improves memory — when you are in a curious state, you retain incidental information better, not just the thing you were curious about. Unfamiliar topics are the cheapest way to induce it.',
     evidence:
@@ -1001,6 +1019,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Audio Learning': {
+    suggestedWhy: 'Audio turns commutes and chores into exposure, so breadth grows in hours that could never have been read in.',
     tagline: 'Learn during time you cannot read.',
     lead: 'Commutes, chores and walks are hours that cannot be spent reading, and audio converts them. Two honest caveats: retention from listening is lower than from active study, and "learning styles" as a theory has not held up — this is about reclaiming time, not matching a style.',
     cadenceLabel: 'Daily · during commute or chores',
@@ -1047,6 +1066,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Educational Videos': {
+    suggestedWhy: 'Video carries processes and spatial relationships that words struggle with, so difficult ideas land more easily.',
     tagline: 'One short explainer a day.',
     lead: 'Video handles things text struggles with — processes, spatial relationships, anything that moves. It works best when it complements words rather than replacing them, which is the core finding of the multimedia learning literature.',
     cadenceLabel: 'Daily · one video',
@@ -1101,6 +1121,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Study Groups': {
+    suggestedWhy: 'Explaining consolidates the material and other people expect you there, so learning survives the weeks you would skip.',
     tagline: 'Learn with other people.',
     lead: 'Cooperative learning outperforms solo study in a large body of educational research, partly through explanation and partly through accountability. The second mechanism is often the bigger one — you turn up because someone expects you.',
     cadenceLabel: 'Weekly · one session',
@@ -1155,6 +1176,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Dual N-Back Training': {
+    suggestedWhy: 'Holding shifting information in mind demands focus, so concentration gets trained, though broader gains are doubtful.',
     tagline: 'A working-memory training task.',
     lead: 'Be sceptical here. The original study reported transfer from n-back training to fluid intelligence, but replication attempts have largely failed and the consensus now is that brain training mostly makes you better at the trained task. Included because you may want it; framed honestly because the claim did not hold.',
     cadenceLabel: 'Daily · 20 min',
@@ -1209,6 +1231,7 @@ export const LEARNING_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Non-Dominant Hand Training': {
+    suggestedWhy: 'Using the other hand recruits motor pathways that normally sit idle, so routine tasks stop running on autopilot.',
     tagline: 'Use your other hand for routine tasks.',
     lead: 'Using the non-dominant hand recruits motor pathways that ordinarily sit idle, and motor learning does show cross-education effects between limbs. Keep expectations modest — this is a small, pleasant novelty exercise, not a cognitive intervention.',
     cadenceLabel: 'Daily · routine tasks',
