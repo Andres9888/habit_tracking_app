@@ -13,6 +13,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   'Daily Meaningful Interaction': {
+    suggestedWhy: 'Real conversation buffers stress and tracks with living longer, so a day with one in it holds up better.',
     tagline: 'One real conversation a day — not a text.',
     lead: 'Social connection predicts mortality about as strongly as smoking does, and the effect tracks real interaction rather than contact counts. A phone call clears the bar; scrolling past someone’s update does not.',
     evidence:
@@ -69,6 +70,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Reach Out Daily': {
+    suggestedWhy: 'One small message interrupts the quiet decay of a friendship, so the people you care about stay in your life.',
     tagline: 'Send one message to someone you care about.',
     lead: 'Relationships decay quietly through absence rather than conflict. A message costs almost nothing and interrupts that decay — and people consistently underestimate how much a small unprompted contact means to the person receiving it.',
     cadenceLabel: 'Daily · 5 min',
@@ -124,6 +126,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Active Constructive Responding': {
+    suggestedWhy: 'Celebrating someone’s good news is what builds the bond, so people keep bringing you more of their life.',
     tagline: 'When someone shares good news, actually celebrate.',
     lead: 'How you respond to someone’s good news predicts relationship quality better than how you respond to their problems. Enthusiasm plus curious questions — rather than a flat "nice" or a caveat — is the response that builds the bond.',
     evidence:
@@ -180,6 +183,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Deep Questions': {
+    suggestedWhy: 'A real question invites a real answer, and that mutual disclosure builds closeness with new and old friends alike.',
     tagline: 'Ask something that is not small talk.',
     lead: 'Escalating self-disclosure generates closeness reliably enough that it has been produced experimentally between strangers. The mechanism is mutual and gradual — a real question invites a real answer, which invites another.',
     evidence:
@@ -237,6 +241,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Deep Listening': {
+    suggestedWhy: 'Listening without rehearsing a reply lets you actually hear people, so conversations go deeper and tire you less.',
     tagline: 'Listen without planning your reply.',
     lead: 'Most listening is really rehearsal — waiting for a gap while assembling your response. Genuine attention, without that parallel process running, is rare enough that people notice immediately when they get it.',
     cadenceLabel: 'Daily · one conversation',
@@ -291,6 +296,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Reflective Listening': {
+    suggestedWhy: 'Saying back what you heard catches misunderstandings early, so people feel understood and conflict cools down.',
     tagline: 'Say back what you heard.',
     lead: 'Reflecting content back does two things at once: it proves you were listening, and it lets the other person correct you before a misunderstanding compounds. It feels mechanical to do and lands as care.',
     cadenceLabel: 'Daily · one conversation',
@@ -345,6 +351,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Express Gratitude': {
+    suggestedWhy: 'Naming exactly what someone did strengthens the relationship on both sides, so the people around you stay close.',
     tagline: 'Tell someone specifically what they did.',
     lead: 'Expressed gratitude strengthens the relationship on both sides, and specificity is what carries it — "thank you for covering for me on Tuesday" does work that "thanks for everything" cannot. Senders reliably underestimate the impact.',
     evidence:
@@ -402,6 +409,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Compliment': {
+    suggestedWhy: 'Saying the good thing you noticed rewards you as much as them, so you start looking for what is going right.',
     tagline: 'Say the good thing you noticed.',
     lead: 'Most compliments go unsaid because we assume the person already knows. They usually do not — and giving praise activates reward circuitry in the giver too, which is why this is one of the cheapest mood levers available.',
     cadenceLabel: 'Daily · one compliment',
@@ -457,6 +465,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Random Act of Kindness': {
+    suggestedWhy: 'Deliberate kindness lifts your own mood as reliably as the other person’s, so two people gain from one minute.',
     tagline: 'Do one unprompted good thing.',
     lead: 'Kindness toward others raises the actor’s own wellbeing — it is one of the better-replicated findings in positive psychology, and among the few interventions where the benefit flows in both directions at once.',
     evidence:
@@ -513,6 +522,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Acts of Service': {
+    suggestedWhy: 'Helping tends to lift the helper too, and repeated shared effort is how adult friendships actually get built.',
     tagline: 'Help someone, deliberately.',
     lead: 'Helping others is associated with better wellbeing and health in the helper, and volunteering adds a second ingredient — it puts you in a room with people repeatedly, which is how adult friendships actually form.',
     cadenceLabel: 'Weekly · one act',
@@ -567,6 +577,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Face-to-Face Time': {
+    suggestedWhy: 'A face, a voice and shared space carry what a screen cannot, so even brief in-person contact lifts wellbeing more.',
     tagline: 'See someone in person.',
     lead: 'In-person contact carries wellbeing benefits that online interaction does not fully replicate — the bandwidth of a face, a voice and shared physical space is doing work a screen cannot. Frequency matters more than duration.',
     evidence:
@@ -624,6 +635,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Group Activities': {
+    suggestedWhy: 'A recurring commitment produces contact without you organising it, so loneliness and its health costs get less room.',
     tagline: 'Join something that meets regularly.',
     lead: 'Loneliness has measurable health consequences, and the fix is structural rather than motivational — a recurring commitment produces contact without requiring you to organise it each time. Regularity is the active ingredient.',
     cadenceLabel: 'Weekly · one group',
@@ -679,6 +691,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Standing Social Events': {
+    suggestedWhy: 'A fixed slot removes the arranging that quietly kills plans, so seeing people actually happens week after week.',
     tagline: 'One recurring commitment in the diary.',
     lead: 'Adult friendships die of scheduling, not of feeling. A standing slot — the same night, the same people — removes the coordination cost that quietly kills most good intentions to see people more.',
     cadenceLabel: 'Weekly · one standing event',
@@ -733,6 +746,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Friend Check-Ins': {
+    suggestedWhy: 'Asking how someone really is keeps closeness from eroding, so your closest friendships stay close over years.',
     tagline: 'Ask three close friends how they really are.',
     lead: 'Close friendships take sustained hours to build and sustained contact to keep. A monthly deliberate check-in — with the real question, not the pleasantry — is the minimum maintenance that stops closeness quietly eroding.',
     cadenceLabel: 'Monthly · 3 friends',
@@ -787,6 +801,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Handwritten Letters': {
+    suggestedWhy: 'A letter signals time and attention in a way a message cannot, so it lands far harder than the sender expects.',
     tagline: 'Post something you wrote by hand.',
     lead: 'A letter signals cost — time, attention, a stamp — in a way a message cannot, which is most of why it lands harder. People routinely underestimate how much a written expression of appreciation affects the person who receives it.',
     evidence:
@@ -844,6 +859,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Vulnerability Practice': {
+    suggestedWhy: 'Saying the honest thing invites the same back, so trust deepens and you spend less energy performing.',
     tagline: 'Say the honest thing.',
     lead: 'Trust is built by disclosure that could have been withheld — closeness needs someone to go first. The caveat matters though: vulnerability is for relationships that have earned it, not a technique to apply indiscriminately.',
     cadenceLabel: 'Weekly · one honest disclosure',
@@ -898,6 +914,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Eye Contact Practice': {
+    suggestedWhy: 'Holding a gaze a beat longer reads as warmth and attention, so people find you easier to trust and talk to.',
     tagline: 'Hold eye contact a beat longer.',
     lead: 'Sustained mutual gaze increases perceived warmth and trustworthiness and is part of how social bonding is signalled. Culture and neurotype vary a lot here, so calibrate to the person rather than to a rule.',
     cadenceLabel: 'Daily · in conversation',
@@ -953,6 +970,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Receive Feedback Gracefully': {
+    suggestedWhy: 'Hearing criticism without defending keeps the feedback coming, so you improve faster and people relax around you.',
     tagline: 'Say thank you before you say anything else.',
     lead: 'Defensiveness is the default response to criticism and it teaches people to stop telling you things. Receiving well is a separate skill from giving well — and the person who can hear feedback gets far more of it.',
     cadenceLabel: 'Every time · ongoing',
@@ -1007,6 +1025,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Boundary Practice': {
+    suggestedWhy: 'The pause before agreeing is where the real decision happens, so you take on less and resent it far less.',
     tagline: 'Buy yourself time before agreeing.',
     lead: 'Most overcommitment happens in the two seconds where saying yes is easier than pausing. "Let me get back to you" is not a boundary in itself — it is the space in which you can actually set one.',
     cadenceLabel: 'Daily · as needed',
@@ -1061,6 +1080,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Pet Time': {
+    suggestedWhy: 'Time with a familiar animal raises oxytocin and lowers cortisol, so a stressful day eases without needing words.',
     tagline: 'Deliberate time with an animal.',
     lead: 'Interacting with a familiar animal is associated with oxytocin release and reductions in cortisol and blood pressure. Petting a dog is not a substitute for human contact, but it is a genuine and unusually reliable stress lever.',
     evidence:
@@ -1118,6 +1138,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Quality Partner Time': {
+    suggestedWhy: 'Small undistracted moments accumulate into a stable relationship, so you drift apart less as life gets busier.',
     tagline: 'Undistracted time with your partner.',
     lead: 'Gottman’s long-running observational work points at the accumulation of small positive moments rather than grand gestures as what distinguishes stable couples. Undistracted is the operative word — a phone on the table halves the value.',
     cadenceLabel: 'Daily · 20 min undistracted',
@@ -1172,6 +1193,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Stress-Reducing Conversation': {
+    suggestedWhy: 'Being heard about outside stress, with no advice offered, offloads the day and leaves you allied instead of arguing.',
     tagline: 'Twenty minutes on the day, no problem-solving.',
     lead: 'The Gottman version of this has a specific rule that makes it work: you are supporting each other about stress from outside the relationship, and you are not solving anything. Advice is what turns a debrief into an argument.',
     cadenceLabel: 'Daily · 20 min',
@@ -1226,6 +1248,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Express Daily Appreciation': {
+    suggestedWhy: 'Daily appreciation keeps positive moments outweighing negative ones, so goodwill is banked before conflict arrives.',
     tagline: 'Tell your partner one thing, daily.',
     lead: 'Gottman’s observational work describes a lopsided ratio of positive to negative interactions in stable couples — roughly five to one. Daily appreciation is the cheapest way to keep the numerator moving.',
     cadenceLabel: 'Daily · one appreciation',
@@ -1280,6 +1303,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Love Maps Question': {
+    suggestedWhy: 'Asking about your partner’s inner world keeps you current with who they are, so distance never gets a start.',
     tagline: 'Ask about their inner world.',
     lead: 'Gottman uses "love maps" for how well you know your partner’s internal life — worries, hopes, the current state of their world. It drifts without maintenance, because you stop asking once you assume you already know.',
     cadenceLabel: 'Daily · one question',
@@ -1334,6 +1358,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   '6-Second Hug': {
+    suggestedWhy: 'Touch held long enough to engage oxytocin lowers cortisol, so connection happens even when words are not available.',
     tagline: 'Hug for long enough to mean it.',
     lead: 'Brief social touch is associated with oxytocin release and lower cortisol, and the "six seconds" framing exists because a normal hug is over before any of that engages. The duration is the intervention.',
     cadenceLabel: 'Daily · one 6-second hug',
@@ -1388,6 +1413,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Six-Second Kiss': {
+    suggestedWhy: 'A kiss held long enough to register engages the bonding chemistry, so affection stops running on autopilot.',
     tagline: 'A kiss long enough to register.',
     lead: 'Same mechanism as the extended hug, and the same reason for the specific number — a passing kiss is too brief to do anything. Gottman treats it as a ritual of connection, which is to say a small reliable moment rather than a romantic gesture.',
     cadenceLabel: 'Daily · one 6-second kiss',
@@ -1442,6 +1468,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Weekly Date Night': {
+    suggestedWhy: 'A protected evening defends couple time from everything else, so the relationship keeps getting real attention.',
     tagline: 'A protected evening, phones away.',
     lead: 'A recurring date is mostly a scheduling device — it defends couple time from everything else that expands to fill it. Novelty helps, but reliability matters more: the same night every week beats an ambitious plan that keeps slipping.',
     cadenceLabel: 'Weekly · one evening',
@@ -1496,6 +1523,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Highs and Lows Ritual': {
+    suggestedWhy: 'A structured question gives everyone a way in, so the hard parts get said and the family stays close.',
     tagline: 'Everyone shares a high and a low.',
     lead: 'Family rituals are associated with better wellbeing and stronger bonds, and this one works because it is structured — the question gives people, especially children, a way in that "how was your day?" does not.',
     evidence:
@@ -1553,6 +1581,7 @@ export const SOCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Weekly Networking Outreach': {
+    suggestedWhy: 'Keeping weak ties warm gives opportunities a route to you, so career luck stops depending on cold asks.',
     tagline: 'Two to five professional messages a week.',
     lead: 'Networking behaviour predicts career outcomes over time — not through any single conversation, but through maintaining a wide enough set of weak ties that opportunities have a route to you. It is maintenance, not hustle.',
     evidence:

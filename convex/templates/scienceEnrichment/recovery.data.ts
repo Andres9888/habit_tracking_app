@@ -7,6 +7,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const RECOVERY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   'Consistent Wake Time': {
+    suggestedWhy: 'A fixed wake time anchors your body clock, so falling asleep gets easier and Mondays stop feeling like jet lag.',
     tagline: 'Same wake time every day — including weekends.',
     lead: 'Your body clock is set by when light first hits your eyes, so a wandering wake time keeps rewriting your internal schedule. Holding it steady — weekends included — is what stops the Monday-morning feeling of jet lag you never travelled for.',
     cadenceLabel: 'Daily · same time, 7 days a week',
@@ -62,6 +63,7 @@ export const RECOVERY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Power Nap': {
+    suggestedWhy: 'A short nap clears sleep pressure without dropping into deep sleep, so alertness and mood recover for the afternoon.',
     tagline: 'Ten to twenty minutes, early afternoon.',
     lead: 'A short nap clears accumulated adenosine without letting you descend into deep sleep, which is what causes the groggy, worse-than-before feeling. Keeping it under about 25 minutes and before mid-afternoon is what separates a useful nap from a wrecked night.',
     evidence:
@@ -119,6 +121,7 @@ export const RECOVERY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Contrast Shower': {
+    suggestedWhy: 'A cold finish is sharply activating and trial evidence links it to fewer sick days, so mornings start with a real jolt.',
     tagline: 'End hot showers with cold.',
     lead: 'Alternating hot and cold drives blood vessels to dilate then constrict, which is the mechanism behind the recovery claims. The alertness effect is immediate and reliable; the recovery effects are more modest than the internet suggests.',
     evidence:
@@ -176,6 +179,7 @@ export const RECOVERY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Self-Massage/Foam Rolling': {
+    suggestedWhy: 'Ten minutes of rolling improves short-term range of motion and eases soreness, so moving feels looser after training.',
     tagline: 'Ten minutes on a roller.',
     lead: 'Foam rolling reliably increases short-term range of motion and reduces the perception of soreness. It is not breaking up scar tissue or realigning anything — the effect is largely neural, which is fine, because the outcome is what you wanted.',
     evidence:
@@ -233,6 +237,7 @@ export const RECOVERY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Epsom Salt Bath': {
+    suggestedWhy: 'Warm water relaxes muscle and the cooldown afterwards helps sleep arrive, so evenings end with genuine stillness.',
     tagline: 'A long soak with magnesium salts.',
     lead: 'The warm water does most of the work here — it relaxes muscle and drives the post-bath temperature drop that helps sleep. Whether meaningful magnesium crosses the skin is genuinely unsettled, so value this as a bath with a good ritual attached.',
     cadenceLabel: '2-3x weekly · 20 min',
@@ -279,6 +284,7 @@ export const RECOVERY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Red Light Therapy': {
+    suggestedWhy: 'Mitochondria absorb red and near-infrared light, so skin and recovery may benefit without disturbing your melatonin.',
     tagline: 'Red and near-infrared light exposure.',
     lead: 'Red and near-infrared wavelengths are absorbed by mitochondria and appear to modulate cellular energy production. The mechanism is real and actively researched; the strength of the practical effects is still being established, so keep expectations calibrated.',
     cadenceLabel: '3-5x weekly · 10-20 min',

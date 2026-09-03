@@ -47,6 +47,7 @@ type TemplateInsert = {
   tips?: string[];
   youtubeLink?: string;
   // Science drill-down (all optional)
+  suggestedWhy?: string;
   tagline?: string;
   lead?: string;
   evidence?: string;

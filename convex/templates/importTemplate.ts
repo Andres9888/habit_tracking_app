@@ -12,22 +12,7 @@ import {
 } from '../lib/inputValidation';
 import { progressEmojisValidator } from '../lib/progressEmojisValidator';
 import { validateDaysOfWeek } from '../habits/validation';
-
-const MAX_IMPORTED_WHY_LENGTH = 140;
-
-const resolveImportedWhy = (template: {
-  description: string;
-  suggestedWhy?: string;
-  tagline?: string;
-}) => {
-  const why =
-    template.suggestedWhy?.trim() ||
-    template.tagline?.trim() ||
-    template.description.trim();
-  if (!why) return undefined;
-  if (why.length <= MAX_IMPORTED_WHY_LENGTH) return why;
-  return `${why.slice(0, MAX_IMPORTED_WHY_LENGTH - 1).trimEnd()}…`;
-};
+import { isLegacyImportedWhy, resolveImportedWhy } from './importedWhy';
 
 /**
  * Mutation: Import a template to create a new habit
@@ -206,34 +191,48 @@ export const importTemplate = mutation({
 });
 
 /**
- * Populate imported habits created before template why propagation shipped.
- * User-authored values are never overwritten.
+ * Populate imported habits created before template why propagation shipped,
+ * and upgrade whys this code auto-derived under the old (tagline-first) rules.
+ *
+ * User-authored values are never overwritten: a non-empty why is only replaced
+ * when it still matches the template tagline or description we would have
+ * written ourselves. `patchedCount` counts empty whys filled, `replacedCount`
+ * counts legacy auto-derived whys upgraded; `patchedHabitIds` covers both.
  */
 export const backfillImportedHabitWhy = internalMutation({
-  args: {},
-  handler: async (ctx) => {
+  args: { dryRun: v.optional(v.boolean()) },
+  handler: async (ctx, args) => {
+    const dryRun = args.dryRun ?? false;
     const usages = await ctx.db.query('templateUsage').collect();
     let patchedCount = 0;
+    let replacedCount = 0;
     const patchedHabitIds: string[] = [];
 
     for (const usage of usages) {
       if (!usage.habitId) continue;
       const habit = await ctx.db.get(usage.habitId);
       const template = await ctx.db.get(usage.templateId);
-      if (!habit || !template || habit.why?.trim()) continue;
+      if (!habit || !template) continue;
 
       const why = resolveImportedWhy(template);
       if (!why) continue;
 
-      await ctx.db.patch(usage.habitId, { why });
-      patchedCount++;
+      const existing = habit.why?.trim();
+      if (existing === why) continue;
+      if (existing && !isLegacyImportedWhy(existing, template)) continue;
+
+      if (!dryRun) await ctx.db.patch(usage.habitId, { why });
+      if (existing) replacedCount++;
+      else patchedCount++;
       patchedHabitIds.push(usage.habitId);
     }
 
     return {
+      dryRun,
       success: true,
       patchedCount,
       patchedHabitIds,
+      replacedCount,
     };
   },
 });

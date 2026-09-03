@@ -13,6 +13,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   'Morning Freewriting': {
+    suggestedWhy: 'Writing fast separates generating from judging, so the obvious thoughts clear out and real thinking surfaces.',
     tagline: 'Write fast, without stopping to judge.',
     lead: 'Freewriting separates generating from editing, which is the whole trick — the internal critic cannot operate at speed. What comes out is mostly unusable, and the point is that the unusable material had to move before anything better could.',
     cadenceLabel: 'Daily · 10 min',
@@ -67,6 +68,7 @@ export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Idea Generation': {
+    suggestedWhy: 'Producing ten ideas at a time trains fluency, so good ideas turn up more often inside the bad batches.',
     tagline: 'Ten ideas, quality irrelevant.',
     lead: 'Fluency — the sheer number of ideas you can produce — is trainable, and quantity is what makes quality possible. Insisting on good ideas immediately is the most reliable way to produce none.',
     cadenceLabel: 'Daily · 10 ideas',
@@ -121,6 +123,7 @@ export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Divergent Thinking': {
+    suggestedWhy: 'Hunting several answers instead of one breaks fixed thinking, so you spot options well past the obvious ones.',
     tagline: 'Find several answers, not the answer.',
     lead: 'Divergent thinking — generating many possible solutions — is a distinct capacity from the convergent kind schooling trains, and it responds to practice. The classic exercise is deliberately absurd: how many uses can you find for a brick.',
     cadenceLabel: 'Daily · 5 min',
@@ -175,6 +178,7 @@ export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Idea Mashup': {
+    suggestedWhy: 'Colliding unrelated ideas manufactures the recombinations most invention comes from, so useful parallels appear.',
     tagline: 'Force two unrelated things together.',
     lead: 'Most innovation is recombination rather than invention — an existing idea moved into a field that had not seen it. Deliberately colliding unrelated concepts manufactures the conditions for that, instead of waiting for it.',
     cadenceLabel: 'Daily · one mashup',
@@ -229,6 +233,7 @@ export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Sketching': {
+    suggestedWhy: 'Drawing forces you to look rather than recognise, so attention sharpens and some problems get easier to think through.',
     tagline: 'Draw badly, on purpose.',
     lead: 'Sketching forces you to actually look at something rather than recognise it, which is a different and more demanding kind of attention. The drawing is a by-product; the looking is the practice.',
     cadenceLabel: 'Daily · 15 min',
@@ -283,6 +288,7 @@ export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Creative Writing': {
+    suggestedWhy: 'Inventing scenes makes you inhabit other minds and choose words deliberately, so perspective and language both sharpen.',
     tagline: 'Write something invented.',
     lead: 'Fiction requires you to model minds other than your own, hold an imagined world consistent, and choose words for effect. It is demanding in a way that is also genuinely enjoyable, which is a rare combination in a daily habit.',
     cadenceLabel: 'Daily · 5-15 min',
@@ -337,6 +343,7 @@ export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Photography': {
+    suggestedWhy: 'Carrying an intention to photograph changes what you notice, so familiar places start offering something again.',
     tagline: 'Take one photograph a day.',
     lead: 'Carrying an intention to photograph changes how you move through a familiar place — you start noticing light, shape and detail that were always there. The habit is really an attention habit wearing a camera.',
     cadenceLabel: 'Daily · one photo',
@@ -391,6 +398,7 @@ export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Art Appreciation': {
+    suggestedWhy: 'Slow looking turns viewing into active interpretation, so attention settles and visual vocabulary builds.',
     tagline: 'Look at art, properly.',
     lead: 'Aesthetic experience involves genuine cognitive work — you are resolving ambiguity and building interpretation, not passively receiving. The main obstacle is speed: most gallery visits move too fast to let any of that happen.',
     cadenceLabel: 'Weekly · 5-20 min',
@@ -445,6 +453,7 @@ export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Unstructured Play Time': {
+    suggestedWhy: 'Time with no outcome attached is restorative in a way rest is not, so stress eases and the day loosens.',
     tagline: 'Do something with no point.',
     lead: 'Play is activity without an outcome, which makes it almost impossible for adults to permit. That is the reason to schedule it — the absence of purpose is the active ingredient, and productivity framing destroys it.',
     cadenceLabel: 'Daily · 20 min',
@@ -499,6 +508,7 @@ export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Hands-On Building': {
+    suggestedWhy: 'Working with your hands absorbs attention and quiets rumination, so anxiety eases and you finish something real.',
     tagline: 'Make something physical.',
     lead: 'Physical making has a property screens lack — immediate, honest feedback, and a result you can hold. That combination makes it unusually good at producing absorption, which is most of why it reduces anxiety.',
     cadenceLabel: 'Daily · 15-30 min',
@@ -553,6 +563,7 @@ export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Experimental Cooking': {
+    suggestedWhy: 'Cooking engages every sense and gives immediate feedback, so attention absorbs and diet quality tends to improve.',
     tagline: 'Cook something new, phone away.',
     lead: 'Cooking engages every sense and gives immediate feedback, which makes it one of the most reliably absorbing everyday activities. Cooking frequency also tracks with better diet quality — you get the creative benefit and the nutritional one together.',
     cadenceLabel: 'Weekly · one new recipe',
@@ -608,6 +619,7 @@ export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Gardening Therapy': {
+    suggestedWhy: 'Tending plants outdoors lowers cortisol and speeds mood recovery after stress, so a hard day settles faster.',
     tagline: 'Fifteen minutes with plants.',
     lead: 'Gardening combines light physical activity, time outdoors and a slow feedback loop, and a controlled study found it produced greater cortisol reduction and mood recovery after stress than indoor reading did.',
     evidence:
@@ -664,6 +676,7 @@ export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Singing': {
+    suggestedWhy: 'Singing enforces long controlled exhales and expression, so mood tends to lift and stress markers ease.',
     tagline: 'Sing, badly, for ten minutes.',
     lead: 'Singing combines controlled breathing with vocal and social engagement, and studies find changes in mood and stress markers afterwards. Skill is irrelevant — the mechanism is breath and expression, not performance.',
     evidence:
@@ -721,6 +734,7 @@ export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Free Dance Session': {
+    suggestedWhy: 'Moving freely to music combines exercise with expression, so mood tends to lift and anxiety eases.',
     tagline: 'Move to music with no steps.',
     lead: 'Dance movement interventions show effects on depressive symptoms in trial data, combining physical activity, music and non-verbal expression. Choreography is not required and mostly gets in the way.',
     evidence:
@@ -778,6 +792,7 @@ export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Coloring Practice': {
+    suggestedWhy: 'Filling a structured pattern occupies attention just enough to crowd out rumination, so anxiety drops.',
     tagline: 'Colour inside the lines.',
     lead: 'Structured colouring reduces anxiety in trial conditions — the constraint appears to matter, with mandala-style patterns outperforming free drawing. It occupies attention just enough to crowd out rumination without demanding decisions.',
     evidence:
@@ -834,6 +849,7 @@ export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Skill Exploration': {
+    suggestedWhy: 'Restarting as a beginner keeps your tolerance for being bad at things intact, so learning stays possible later.',
     tagline: 'Pick up something new each month.',
     lead: 'Being a beginner is a specific, uncomfortable state that adults get very little practice at — and tolerating it is what makes learning anything possible later. A monthly rotation keeps that tolerance in working order.',
     cadenceLabel: 'Monthly · one new skill',
@@ -888,6 +904,7 @@ export const CREATIVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Break Routines': {
+    suggestedWhy: 'Changing a habitual route interrupts autopilot, so attention returns to parts of the day that had gone invisible.',
     tagline: 'Go a different way.',
     lead: 'Habitual routes are run on autopilot, and autopilot means you stop noticing. Deliberately breaking one small pattern restores attention to a stretch of your day that had gone invisible — a very cheap intervention.',
     cadenceLabel: 'Daily · one small change',

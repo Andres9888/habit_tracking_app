@@ -61,6 +61,7 @@ export type ScienceSource = {
  * a citation).
  */
 export type ScienceEnrichment = {
+  suggestedWhy?: string;
   tagline?: string;
   lead?: string;
   evidence?: string;
@@ -89,6 +90,7 @@ export type TemplateInsert = {
   tips?: string[];
   youtubeLink?: string;
   // Science drill-down (all optional)
+  suggestedWhy?: string;
   tagline?: string;
   lead?: string;
   evidence?: string;

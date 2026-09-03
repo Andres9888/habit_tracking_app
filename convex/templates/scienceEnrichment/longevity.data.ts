@@ -7,6 +7,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const LONGEVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   'Brisk Walking Pace': {
+    suggestedWhy: 'Walking faster trains heart, muscle and balance at once, so the number that tracks with survival keeps improving.',
     tagline: 'Walk faster, not just further.',
     lead: 'Walking speed is one of the strongest simple predictors of how long people live — partly because it summarises cardiovascular fitness, muscle, balance and neurological function in a single number. Training the pace trains all of them.',
     evidence:
@@ -63,6 +64,7 @@ export const LONGEVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Muscle Preservation': {
+    suggestedWhy: 'Loading muscle reverses the decline that starts in midlife, so strength, glucose control and independence hold up.',
     tagline: 'Resistance training two or three times a week.',
     lead: 'Muscle mass declines steadily from midlife unless it is loaded, and that decline tracks closely with loss of independence and higher mortality. Resistance training is the only intervention that reliably reverses it — and two sessions a week is enough to matter.',
     evidence:
@@ -120,6 +122,7 @@ export const LONGEVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Always Take Stairs': {
+    suggestedWhy: 'Short vigorous climbs accumulate with no scheduling, so leg strength and heart fitness build inside your normal day.',
     tagline: 'Skip the lift, every time.',
     lead: 'Stair climbing is short-burst vigorous activity that accumulates without any scheduling. Because the decision is binary and repeated daily, it is one of the few fitness habits that needs no willpower once the rule is fixed.',
     cadenceLabel: 'Daily · every opportunity',
@@ -175,6 +178,7 @@ export const LONGEVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Floor Sitting Practice': {
+    suggestedWhy: 'Getting down and up keeps strength, balance and mobility together, so you stay able to do it decades from now.',
     tagline: 'Get down to the floor and back up again.',
     lead: 'The ability to lower yourself to the floor and rise without support integrates strength, balance, mobility and coordination — which is why it predicts mortality better than most single fitness tests. Practising it maintains the whole bundle.',
     evidence:
@@ -232,6 +236,7 @@ export const LONGEVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Ground Transitions': {
+    suggestedWhy: 'Varied routes to the floor load hips, knees and shoulders through different ranges, so the option stays available.',
     tagline: 'Practise different ways up and down.',
     lead: 'Most adults have exactly one route to the floor and one route back. Training several patterns keeps hips, knees and shoulders loaded through varied ranges, which is what preserves the option later when a single stiff joint would otherwise remove it.',
     cadenceLabel: 'Daily · 5-10 min',
@@ -278,6 +283,7 @@ export const LONGEVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Single-Leg Balance Test': {
+    suggestedWhy: 'Balance degrades quietly but responds fast to practice, so a weekly check catches decline and reduces falls.',
     tagline: 'Stand on one leg for ten seconds.',
     lead: 'Balance is a composite of vestibular, visual and proprioceptive function plus ankle and hip strength, so it degrades early and quietly. Testing it weekly gives you an honest, repeatable number — and practising it improves that number quickly.',
     evidence:
@@ -335,6 +341,7 @@ export const LONGEVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Resting Heart Rate Check': {
+    suggestedWhy: 'Your resting pulse tracks fitness and recovery, so watching the trend shows training working and illness coming.',
     tagline: 'Track your resting heart rate weekly.',
     lead: 'Resting heart rate is a cheap window onto cardiovascular fitness and recovery, and elevated values predict worse outcomes independent of other risk factors. Its real value is as a trend line: your own number moving is more informative than any population range.',
     evidence:
@@ -392,6 +399,7 @@ export const LONGEVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Evening Environment Reset': {
+    suggestedWhy: 'Setting tomorrow’s cues out tonight removes the decision, so the habits you want start without any willpower.',
     tagline: 'Two minutes setting tomorrow up.',
     lead: 'Habits are cued far more by environment than by intention. Laying out the kit the night before means tomorrow’s version of you does not have to decide anything — the cue is already in place and the friction is already gone.',
     cadenceLabel: 'Nightly · 2 min',
@@ -446,6 +454,7 @@ export const LONGEVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Visual Cue Placement': {
+    suggestedWhy: 'A cue you physically bump into does the remembering for you, so the habit keeps running after motivation stops.',
     tagline: 'Put the habit where you will see it.',
     lead: 'A cue you physically encounter beats a reminder you have to receive. Book on the pillow, bottle on the desk, shoes by the door — the environment does the remembering, which is why it keeps working after motivation stops.',
     evidence:
@@ -503,6 +512,7 @@ export const LONGEVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Friction Addition': {
+    suggestedWhy: 'Adding a step you must repeat every time taxes the unwanted habit, so it thins out without needing resolve.',
     tagline: 'Make the unwanted thing harder to do.',
     lead: 'Adding steps to a behaviour reduces it about as reliably as removing steps increases the one you want. Logging out, moving the charger, deleting the app — each is a small tax that has to be paid every single time.',
     cadenceLabel: 'Weekly · add one friction step',
@@ -558,6 +568,7 @@ export const LONGEVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Phone-Free First Hour': {
+    suggestedWhy: 'Protecting the first hour keeps attention undefended by a feed, so the day opens on your terms, not reactively.',
     tagline: 'No screens for the first hour awake.',
     lead: 'Attention is most restorable and least defended right after waking. Handing that window to a feed sets a reactive tone that is hard to undo later — protecting it is less about discipline than about not starting from behind.',
     cadenceLabel: 'Daily · first 60 min',
@@ -613,6 +624,7 @@ export const LONGEVITY_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Caffeine Cutoff': {
+    suggestedWhy: 'Caffeine clears slowly and costs you sleep depth, so an early cutoff means waking rested rather than only asleep.',
     tagline: 'Nothing caffeinated within six hours of bed.',
     lead: 'Caffeine blocks adenosine, the signal that makes you sleepy, and it clears slowly — half of a dose is still circulating five to six hours later. The damage happens to sleep depth, which is why you can fall asleep fine and still wake unrested.',
     evidence:

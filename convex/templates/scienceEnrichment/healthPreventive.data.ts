@@ -13,6 +13,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const HEALTH_PREVENTIVE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   'Preventive Health Checkups': {
+    suggestedWhy: 'Screening catches the silent problems early, so they stay treatable and you stop quietly wondering.',
     tagline: 'Book the screenings for your age, and go.',
     lead: 'Screening finds the things that are silent until they are not — blood pressure, cholesterol, glucose, and the cancers with good outcomes when caught early. Nothing in a habit app competes with catching something early.',
     cadenceLabel: 'Annually · per age guidance',
@@ -67,6 +68,7 @@ export const HEALTH_PREVENTIVE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Blood Pressure Check': {
+    suggestedWhy: 'Home readings give a real average instead of one anxious clinic sample, so pressure gets controlled sooner.',
     tagline: 'Take your own reading and log it.',
     lead: 'High blood pressure has no symptoms until it causes damage, and clinic readings are a poor sample — one measurement, on an unusual day, often elevated by the appointment itself. Home monitoring gives you the real number, and it improves control.',
     evidence:
@@ -124,6 +126,7 @@ export const HEALTH_PREVENTIVE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Flossing': {
+    suggestedWhy: 'Cleaning between the teeth reaches where gum disease starts, so inflammation and bleeding settle down.',
     tagline: 'Clean between the teeth, not just across them.',
     lead: 'A brush cannot reach the surfaces between teeth, which is exactly where gum disease starts. Interdental cleaning measurably reduces inflammation and bleeding — and gum health tracks with cardiovascular and metabolic health more closely than most people expect.',
     cadenceLabel: 'Daily · 2 min',
@@ -178,6 +181,7 @@ export const HEALTH_PREVENTIVE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Regular Dental Checkups': {
+    suggestedWhy: 'Checkups catch decay and gum disease while the fix is still small, so problems stay cheap and painless.',
     tagline: 'A dental visit roughly twice a year.',
     lead: 'Dental problems are progressive and almost entirely painless until they are expensive. A checkup catches decay and gum disease at the stage where the fix is small — this is a habit that protects your money as much as your teeth.',
     cadenceLabel: 'Every 6 months',
@@ -232,6 +236,7 @@ export const HEALTH_PREVENTIVE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Hand Hygiene (Key Times)': {
+    suggestedWhy: 'Washing at the few moments that matter blocks most transmission, so you catch fewer stomach and chest bugs.',
     tagline: 'Wash at the moments that matter.',
     lead: 'Hand hygiene is among the most cost-effective health interventions ever measured, and the timing matters more than the frequency — before eating, after the bathroom, after public transport. Those three cover most of the transmission risk.',
     evidence:
@@ -289,6 +294,7 @@ export const HEALTH_PREVENTIVE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Sunscreen': {
+    suggestedWhy: 'A morning layer of sunscreen lowers melanoma risk and slows photoageing, so your skin ages far more slowly.',
     tagline: 'Face and neck, every morning.',
     lead: 'Regular sunscreen use lowers melanoma incidence — one of the few cosmetic-adjacent habits with hard randomised-trial evidence behind it. It also does more for visible skin ageing than any product marketed for that purpose.',
     evidence:
@@ -346,6 +352,7 @@ export const HEALTH_PREVENTIVE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Hearing Protection': {
+    suggestedWhy: 'Earplugs prevent damage that never heals, so the hearing you have now is the hearing you keep.',
     tagline: 'Carry earplugs and actually use them.',
     lead: 'Noise-induced hearing loss is permanent, cumulative, and almost entirely preventable — hair cells in the inner ear do not regenerate. The tinnitus after a loud night is not a hangover; it is a warning.',
     cadenceLabel: 'Every loud environment',
@@ -400,6 +407,7 @@ export const HEALTH_PREVENTIVE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Safe Listening Volume': {
+    suggestedWhy: 'Lower headphone volume cuts the dose your ears absorb, so hearing lasts and long listening tires you less.',
     tagline: 'Keep headphones at or below sixty percent.',
     lead: 'Personal audio is the most common avoidable source of hearing damage, and the risk is a product of volume and duration — loud for a short time or moderate all day both add up. Sixty percent is the widely used rule of thumb.',
     cadenceLabel: 'Daily · ongoing',

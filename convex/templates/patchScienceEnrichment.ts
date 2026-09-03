@@ -19,6 +19,7 @@ import type { ScienceEnrichment } from './types';
 /** Only overwrite a field when we have content for it — never blank one out. */
 function buildPatch(entry: ScienceEnrichment): Partial<ScienceEnrichment> {
   const patch: Partial<ScienceEnrichment> = {};
+  if (entry.suggestedWhy) patch.suggestedWhy = entry.suggestedWhy;
   if (entry.tagline) patch.tagline = entry.tagline;
   if (entry.lead) patch.lead = entry.lead;
   if (entry.evidence) patch.evidence = entry.evidence;

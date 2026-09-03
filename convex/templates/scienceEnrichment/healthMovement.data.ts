@@ -13,6 +13,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   '7-Minute Workout': {
+    suggestedWhy: 'A short high-intensity circuit trains strength and cardio at once, so real fitness fits into a day with no time in it.',
     tagline: 'Twelve bodyweight exercises, thirty seconds each.',
     lead: 'High-intensity circuit training stacks resistance and cardio into one short block by cutting the rest. You get a real training stimulus in the time it takes to make coffee — which is the entire point, because the workout you actually do beats the one you plan.',
     evidence:
@@ -70,6 +71,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Strength Training': {
+    suggestedWhy: 'Loading muscle is the only signal that keeps it, so metabolic health, bone density and everyday tasks all hold up.',
     tagline: 'Resistance work two or three times a week.',
     lead: 'Muscle is the tissue you lose fastest without a reason to keep it, and it carries your metabolic health, bone density and independence with it. Two sessions a week is the point where the decline stops being the default.',
     cadenceLabel: '2-3x weekly · 25-45 min',
@@ -125,6 +127,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Stretching Routine': {
+    suggestedWhy: 'Regular stretching keeps the range of motion you would otherwise slowly lose, so stiffness eases and moving stays easy.',
     tagline: 'Ten minutes to keep your range.',
     lead: 'Stretching reliably increases range of motion, and range you do not use is range you slowly lose. Worth knowing what it does not do: it is not a warm-up and the evidence for injury prevention is weaker than the folklore suggests.',
     cadenceLabel: 'Daily · 10 min',
@@ -180,6 +183,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Yoga Practice': {
+    suggestedWhy: 'Breath-linked movement trains mobility, strength and attention together, so the body loosens and the mind steadies.',
     tagline: 'Twenty minutes of movement and breath together.',
     lead: 'Yoga is unusual in doing three jobs at once — mobility, load-bearing strength, and attention training — which is why it shows up in both the physical and the mental-health literature. The breath component is what separates it from stretching.',
     cadenceLabel: 'Daily · 20-30 min',
@@ -234,6 +238,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Standing Every Hour': {
+    suggestedWhy: 'Breaking up long sitting removes a cost a single workout does not cancel, so hips loosen and afternoons stay sharp.',
     tagline: 'Get up and move for two minutes each hour.',
     lead: 'Prolonged sitting carries risk that a single daily workout does not fully offset — the damage is in the uninterrupted hours, not the total. Breaking them up is a separate intervention from exercising, and you need both.',
     evidence:
@@ -291,6 +296,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'VO2 Max Training': {
+    suggestedWhy: 'Hard intervals raise the ceiling on how much oxygen you can use, one of the strongest markers of how long you live.',
     tagline: 'Hard intervals, once or twice a week.',
     lead: 'VO2 max — the ceiling on how much oxygen you can use — is among the strongest single predictors of how long you live. It is also trainable at any age, and the training that moves it is short, hard, and unpleasant by design.',
     cadenceLabel: '1-2x weekly · 20-30 min',
@@ -345,6 +351,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Balance Training': {
+    suggestedWhy: 'Balance is trainable at any age and practising it lowers fall risk, so you stay steady on your feet for longer.',
     tagline: 'Practise standing on one leg.',
     lead: 'Balance quietly degrades from midlife and nobody notices until a fall makes it obvious. It is also one of the most trainable capacities there is — exercise programmes that include balance work measurably reduce falls.',
     evidence:
@@ -402,6 +409,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Grip Strength Training': {
+    suggestedWhy: 'Grip tracks whole-body strength and predicts mortality, so training it protects your pulling power and your health.',
     tagline: 'Hang, carry, squeeze.',
     lead: 'Grip strength is a proxy for whole-body strength and neuromuscular health, which is why it predicts cardiovascular events and mortality across populations. Training it is unusually simple: hold heavy things for longer.',
     evidence:
@@ -459,6 +467,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Hanging': {
+    suggestedWhy: 'Hanging restores overhead shoulder range, decompresses the spine and trains grip, all from one position.',
     tagline: 'Hang from a bar for thirty seconds.',
     lead: 'Hanging puts your shoulders through a range that modern life never asks for, decompresses the spine, and trains grip at the same time. Three benefits from one position you can hold in a doorway.',
     cadenceLabel: 'Daily · 30-60 sec',
@@ -513,6 +522,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Exercise Snacks (Stair Climbs)': {
+    suggestedWhy: 'Brief vigorous stair bursts improve cardiorespiratory fitness without needing a workout slot in your day.',
     tagline: 'Three short stair bursts through the day.',
     lead: 'Very short bursts of vigorous effort, scattered across a day, improve fitness without any of the scheduling overhead of a workout. Stairs are ideal because the intensity is built in and you were walking past them anyway.',
     evidence:
@@ -570,6 +580,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Movement Snacks': {
+    suggestedWhy: 'Short hard bursts inside an ordinary day carry much of the mortality benefit of exercise, with nothing to schedule.',
     tagline: 'Brief hard bursts, several times a day.',
     lead: 'You do not need a gym to get the mortality benefit of vigorous activity — short bouts embedded in ordinary life appear to carry much of it. Carrying shopping fast, taking stairs hard, a sharp walk uphill all count.',
     evidence:
@@ -627,6 +638,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Bone-Strengthening Exercise': {
+    suggestedWhy: 'Bone strengthens where it is loaded, so weight-bearing work preserves density and lowers your risk of fractures later.',
     tagline: 'Weight-bearing work, three or four times a week.',
     lead: 'Bone responds to load the way muscle does — it strengthens where it is stressed and thins where it is not. Weight-bearing and resistance work is the only lifestyle lever that meaningfully signals bone to hold its density.',
     cadenceLabel: '3-4x weekly · 30 min',
@@ -681,6 +693,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Joint Mobility Routine': {
+    suggestedWhy: 'Joints keep the range you regularly ask for, so a few minutes of circles keeps stiffness and injury at bay.',
     tagline: 'Take every joint through its range.',
     lead: 'Joints keep the range you regularly ask for and quietly surrender the rest. A few minutes of deliberate circles and rotations is maintenance — cheap now, expensive to recover once it is gone.',
     cadenceLabel: 'Daily · 5-10 min',
@@ -735,6 +748,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Isometric Wall Sit': {
+    suggestedWhy: 'Sustained holds lower resting blood pressure and build leg endurance, from two minutes against a wall.',
     tagline: 'Hold a wall sit a few times a week.',
     lead: 'Isometric holds — sustained contraction without movement — appear unusually effective at lowering resting blood pressure, more so than the same time spent on cardio in some analyses. Two minutes of holding is the whole exercise.',
     evidence:
@@ -792,6 +806,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   '5-Minute Mobility Snack': {
+    suggestedWhy: 'A short mobility break undoes what sitting compresses and interrupts the stillness itself, so you end the day looser.',
     tagline: 'Five minutes of hips, shoulders and ankles.',
     lead: 'A short mobility break does two jobs at once — it restores range that sitting compresses, and it interrupts the prolonged stillness that carries its own metabolic cost. Both benefits come from standing up and moving.',
     cadenceLabel: 'Daily · 5 min',
@@ -847,6 +862,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Posture Check': {
+    suggestedWhy: 'Resetting a slump takes load off your neck and back and frees the diaphragm, so you sit easier and breathe fuller.',
     tagline: 'Reset your posture a few times a day.',
     lead: 'The useful claim is mechanical: sustained slumping loads your neck and lower back and restricts breathing depth, and a periodic reset interrupts that. Treat the confidence and hormone claims about posture with caution — that literature has not replicated well.',
     cadenceLabel: 'Daily · 3 checks',
@@ -893,6 +909,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Nasal Breathing': {
+    suggestedWhy: 'Nasal breathing filters air and releases nitric oxide that aids oxygen uptake, so breathing slows and settles.',
     tagline: 'Breathe through your nose by default.',
     lead: 'Nasal breathing filters and humidifies air and releases nitric oxide, which supports oxygen uptake in the lungs. Switching your default is mostly a matter of noticing — most mouth breathing is habit rather than obstruction.',
     cadenceLabel: 'Daily · ongoing',
@@ -947,6 +964,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   '20-20-20 Eye Rule': {
+    suggestedWhy: 'Looking far away releases the eye’s focusing muscle and resets your blink rate, so strain and dryness ease.',
     tagline: 'Every twenty minutes, look twenty feet away.',
     lead: 'Sustained near-focus keeps the eye’s focusing muscle contracted and cuts your blink rate roughly in half, which is what produces the ache and dryness of a screen day. Looking far away releases both.',
     cadenceLabel: 'Every 20 min · 20 sec',
@@ -1001,6 +1019,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Heat Therapy Bath': {
+    suggestedWhy: 'Passive heat dilates blood vessels much as exercise does, so vascular function, muscle tension and sleep all benefit.',
     tagline: 'A hot bath, fifteen to twenty minutes.',
     lead: 'Passive heat raises heart rate and dilates blood vessels in a way that partially mimics moderate exercise, and repeated exposure is associated with cardiovascular benefit. It is not a replacement for training — it is a supplement that happens to be pleasant.',
     evidence:
@@ -1058,6 +1077,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Barefoot Grounding': {
+    suggestedWhy: 'Walking barefoot on uneven ground works your feet and ankles while getting you outdoors, which tends to lift mood.',
     tagline: 'Time barefoot on grass or earth.',
     lead: 'Be straight about this one: the "earthing" theory — that contact with the ground transfers electrons and lowers inflammation — is not well supported, and the studies behind it are small and weak. What does hold up is that walking barefoot on uneven ground works your feet and ankles, and that time outdoors improves mood.',
     cadenceLabel: 'Daily · 10-20 min',
@@ -1104,6 +1124,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Hydration Tracking': {
+    suggestedWhy: 'Even mild dehydration drags on concentration and mood, so logging your real intake tends to lift both.',
     tagline: 'Log what you actually drink.',
     lead: 'Even mild dehydration measurably degrades concentration and mood, and most people underestimate their intake badly. Tracking is not about hitting a magic number — it is about discovering your real baseline, which is usually lower than you think.',
     cadenceLabel: 'Daily · log through the day',
@@ -1158,6 +1179,7 @@ export const HEALTH_MOVEMENT_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Pre-Meal Water': {
+    suggestedWhy: 'Water before eating fills some stomach volume and catches thirst misread as hunger, so meals land smaller.',
     tagline: 'A glass of water before you eat.',
     lead: 'Water before a meal occupies stomach volume and blunts intake slightly — a small effect, reliably measured. It also catches the thirst that people routinely misread as hunger, which is arguably the more useful part.',
     evidence:

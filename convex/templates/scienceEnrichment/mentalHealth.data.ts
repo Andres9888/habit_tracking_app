@@ -11,6 +11,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const MENTAL_HEALTH_ENRICHMENT: Record<string, ScienceEnrichment> = {
   'Self-Compassion Break': {
+    suggestedWhy: 'Acknowledging that this is hard interrupts the pile-on after a setback, so you get back to the problem sooner.',
     tagline: 'Three sentences to say when you are struggling.',
     lead: 'Self-compassion works on a different mechanism from self-esteem: instead of arguing that you are doing fine, it acknowledges that this is hard and that struggling is ordinary. That distinction is why it holds up when things are genuinely going badly.',
     cadenceLabel: 'As needed · 1-2 min',
@@ -66,6 +67,7 @@ export const MENTAL_HEALTH_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Expressive Writing': {
+    suggestedWhy: 'Writing a difficult experience into a coherent account stops it looping, so it takes up less of your day.',
     tagline: 'Twenty minutes on what is actually bothering you.',
     lead: 'Writing continuously about a difficult experience — including how you felt about it, not just what happened — appears to help by forcing a coherent narrative onto something that was previously a loop. The effect shows up in health measures, not only mood.',
     evidence:
@@ -122,6 +124,7 @@ export const MENTAL_HEALTH_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Emotion Granularity': {
+    suggestedWhy: 'Naming a feeling precisely dampens the reaction and points to a next step, so hard moments stay workable.',
     tagline: 'Name the feeling precisely, not just "bad".',
     lead: 'Putting a specific label on an emotion reduces activity in the amygdala and increases it in regulatory prefrontal regions — naming appears to be part of regulating. "Disappointed" gives you somewhere to go in a way "bad" does not.',
     evidence:
@@ -179,6 +182,7 @@ export const MENTAL_HEALTH_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Self-Distancing': {
+    suggestedWhy: 'Viewing your situation from the outside lowers the emotional intensity, so you spiral less and think clearly.',
     tagline: 'Ask what you would tell a friend.',
     lead: 'Shifting from an immersed first-person view to a distanced one reliably lowers emotional intensity and reduces catastrophising. The trick is not pretending to be calm — it is changing the vantage point you are reasoning from.',
     cadenceLabel: 'As needed · 1-2 min',
@@ -234,6 +238,7 @@ export const MENTAL_HEALTH_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Cognitive Defusion': {
+    suggestedWhy: 'Observing a thought instead of living inside it loosens its grip, so it pulls you around far less.',
     tagline: 'Put "I notice I am having the thought that…" in front of it.',
     lead: 'Defusion does not argue with a thought or try to replace it. It changes your relationship to it — from something you are inside of to something you are observing. That distinction is the core move of acceptance-based therapy.',
     cadenceLabel: 'As needed · seconds',
@@ -289,6 +294,7 @@ export const MENTAL_HEALTH_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Behavioral Activation': {
+    suggestedWhy: 'Acting before you feel like it breaks the low-mood loop, so momentum returns instead of draining away.',
     tagline: 'Do the small thing you have been avoiding.',
     lead: 'Low mood shrinks activity, and shrinking activity lowers mood further. Behavioural activation attacks that loop from the behaviour side — you act first and let motivation follow, rather than waiting for motivation that low mood is suppressing.',
     evidence:
@@ -346,6 +352,7 @@ export const MENTAL_HEALTH_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Values Clarification': {
+    suggestedWhy: 'Reconnecting with what you care about lowers defensiveness, so criticism lands better and trade-offs get easier.',
     tagline: 'Re-read what you actually care about.',
     lead: 'Reflecting on a core value before or during stress reduces the defensive response to threatening information — you become better able to take in something difficult without needing to protect yourself from it.',
     cadenceLabel: 'Weekly · 5 min',
@@ -401,6 +408,7 @@ export const MENTAL_HEALTH_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Pleasant Activity Scheduling': {
+    suggestedWhy: 'Putting enjoyment in the day on purpose refills what low mood empties, so good moments stop depending on mood.',
     tagline: 'Put one thing you enjoy in the day, on purpose.',
     lead: 'When mood drops, enjoyable activity is usually the first thing to go — and its absence deepens the drop. Scheduling it deliberately, rather than waiting to feel like it, is a core component of behavioural depression treatment.',
     cadenceLabel: 'Daily · one scheduled activity',
@@ -455,6 +463,7 @@ export const MENTAL_HEALTH_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Opposite Action': {
+    suggestedWhy: 'Acting against an urge that does not fit the facts changes the emotion, so fear and avoidance lose their hold.',
     tagline: 'When the urge does not serve you, do the reverse.',
     lead: 'Emotions come with action urges — withdraw when sad, attack when angry, avoid when afraid. When the emotion does not fit the facts, acting opposite to the urge changes the emotion. It is a core DBT skill and it is genuinely difficult.',
     cadenceLabel: 'As needed',

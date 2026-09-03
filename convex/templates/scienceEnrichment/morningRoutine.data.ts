@@ -11,6 +11,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const MORNING_ROUTINE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   'Wake-Up Movement': {
+    suggestedWhy: 'Easy movement clears the grogginess chemistry faster than sitting still, so mornings start alert instead of foggy.',
     tagline: 'Five minutes of easy movement before anything else.',
     lead: 'Light movement on waking raises core body temperature and speeds the clearance of adenosine — the molecule behind that groggy, still-half-asleep feeling. It shifts you into an alert state faster than sitting still and waiting does.',
     cadenceLabel: 'Daily · 5 min · on waking',
@@ -57,6 +58,7 @@ export const MORNING_ROUTINE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Hydration First': {
+    suggestedWhy: 'You wake mildly dehydrated, and even small fluid deficits drag on attention, so a glass first clears your head.',
     tagline: 'A glass of water before anything else.',
     lead: 'You lose water steadily overnight through breathing and sweat, so you wake mildly dehydrated. Even small fluid deficits measurably affect alertness and concentration — and the fix takes ten seconds.',
     cadenceLabel: 'Daily · 1 glass on waking',
@@ -111,6 +113,7 @@ export const MORNING_ROUTINE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Make Your Bed': {
+    suggestedWhy: 'Finishing one small thing before the day can go wrong makes the next task cheaper to start, and the room calmer.',
     tagline: 'One finished task before the day starts.',
     lead: 'This is not really about the bed. It is a two-minute action you can complete before anything has a chance to go wrong, which makes the next small task marginally easier to start. Treat the tidiness as a side effect.',
     cadenceLabel: 'Daily · 2 min',
@@ -165,6 +168,7 @@ export const MORNING_ROUTINE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Morning Pages': {
+    suggestedWhy: 'Writing out half-formed thoughts empties them onto paper, so they stop occupying the rest of your day.',
     tagline: 'Three pages, unedited, first thing.',
     lead: 'Writing without stopping or editing empties the loop of half-formed thoughts before they can occupy your day. The output is not meant to be good — it is meant to be gone, which is why nobody, including you, should reread it.',
     cadenceLabel: 'Daily · 15-20 min · on waking',
@@ -211,6 +215,7 @@ export const MORNING_ROUTINE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Sun Salutation Flow': {
+    suggestedWhy: 'One sequence takes spine, hips and shoulders through full range, so the body wakes up loose without needing a plan.',
     tagline: 'A few rounds to move every joint.',
     lead: 'A sun salutation runs your spine, hips and shoulders through their full range in one continuous sequence. As a morning practice its value is coverage — you touch most of the body in five minutes without needing a plan.',
     cadenceLabel: 'Daily · 5-10 min · morning',
@@ -257,6 +262,7 @@ export const MORNING_ROUTINE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Airplane Mode Morning': {
+    suggestedWhy: 'Staying offline stops the day beginning in a reactive posture, so the first hour goes to your priorities instead.',
     tagline: 'Keep the phone offline for the first hour.',
     lead: 'Opening your phone hands the first hour of your attention to whatever is loudest in it. Staying offline is not about discipline — it is about not starting the day in a reactive posture you then have to climb out of.',
     cadenceLabel: 'Daily · first 60 min',
@@ -311,6 +317,7 @@ export const MORNING_ROUTINE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Morning Mirror Smile': {
+    suggestedWhy: 'Expression feeds back into how you feel, so a held smile nudges mood upward and speeds recovery from stress.',
     tagline: 'Smile at yourself for a minute.',
     lead: 'Facial expression feeds back into emotional state, not only the other way round — holding a genuine smile measurably affects stress recovery. It feels ridiculous, which is part of why it works.',
     evidence:
@@ -368,6 +375,7 @@ export const MORNING_ROUTINE_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Bilateral Eye Movements': {
+    suggestedWhy: 'Deliberate side-to-side eye movement engages attention, which may help shake off sleep inertia in the first minute.',
     tagline: 'Look left and right to shake off sleep inertia.',
     lead: 'Deliberate horizontal eye movements engage attentional and oculomotor systems and are used clinically as bilateral stimulation. As a morning habit the evidence is thin — treat it as a cheap experiment rather than an established protocol.',
     cadenceLabel: 'Daily · 1 min · on waking',

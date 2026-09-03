@@ -13,6 +13,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const HUBERMAN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   'Morning Sunlight Viewing': {
+    suggestedWhy: 'Early bright light shuts down melatonin and starts the sleep timer, so you wake faster and get sleepy on time.',
     tagline: 'Two minutes of outdoor light to set your body clock.',
     lead: 'Bright light in the first hour after waking is the strongest signal your circadian clock receives. It shuts down melatonin, triggers the morning cortisol rise that drives alertness, and starts the ~16-hour timer that decides when you get sleepy tonight.',
     cadenceLabel: 'Daily · 2-10 min · within an hour of waking',
@@ -59,6 +60,7 @@ export const HUBERMAN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Delay Caffeine 90 Minutes': {
+    suggestedWhy: 'Letting adenosine clear before caffeine blocks it, so the same cup lifts you more and the afternoon crash fades.',
     tagline: 'Wait a little before the first coffee.',
     lead: 'Caffeine works by blocking adenosine, the molecule that makes you feel tired. Drinking it before your natural cortisol rise has done its job means the adenosine is still waiting for you later — which is the afternoon crash people blame on lunch.',
     cadenceLabel: 'Daily · delay 60-120 min after waking',
@@ -105,6 +107,7 @@ export const HUBERMAN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Physiological Sigh': {
+    suggestedWhy: 'Two inhales and a long exhale offload carbon dioxide and slow the heart, so stress drops in seconds, not minutes.',
     tagline: 'Two inhales and a long exhale — the fastest way down.',
     lead: 'A double inhale reinflates collapsed air sacs in your lungs, and the long exhale offloads carbon dioxide while slowing your heart. It is the body’s own built-in reset, which is why it works in seconds rather than minutes.',
     evidence:
@@ -163,6 +166,7 @@ export const HUBERMAN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Zone 2 Cardio Training': {
+    suggestedWhy: 'Easy sustained effort builds mitochondrial capacity, so daily life taxes you less and harder work has a base.',
     tagline: 'Easy-paced cardio you can hold a conversation through.',
     lead: 'Zone 2 is the intensity where you are still burning fat and can talk in full sentences. It is dull on purpose: the adaptations are mitochondrial, and they come from accumulated time at low intensity rather than from suffering.',
     cadenceLabel: '3x weekly · 45 min',
@@ -209,6 +213,7 @@ export const HUBERMAN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Deliberate Cold Exposure': {
+    suggestedWhy: 'Cold drives a long rise in noradrenaline and dopamine, so mood and alertness lift and stress feels easier to hold.',
     tagline: 'A short weekly total of genuinely cold water.',
     lead: 'Cold exposure produces a large, sustained rise in noradrenaline and dopamine, which is the mechanism behind the mood and alertness effects people report. The metabolic claims are weaker than the marketing; the alertness effect is not.',
     cadenceLabel: '~11 min total per week, split across sessions',
@@ -255,6 +260,7 @@ export const HUBERMAN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'NSDR Practice': {
+    suggestedWhy: 'Guided deep rest restores focus without sleep inertia, so a flat afternoon becomes usable without costing tonight.',
     tagline: 'Guided deep rest without sleeping.',
     lead: 'A guided body-scan drops you into a state between waking and sleep. It restores focus without the sleep inertia a nap can cause, which makes it usable in the middle of a working day.',
     cadenceLabel: 'Daily · 10-20 min',
@@ -301,6 +307,7 @@ export const HUBERMAN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Evening Light Dimming': {
+    suggestedWhy: 'Dim, low light lets melatonin arrive on schedule, so evenings wind down and sleep comes without a fight.',
     tagline: 'Dim the lights for the last hours of the day.',
     lead: 'Your circadian system reads both intensity and the angle light arrives from. Bright overhead light late in the evening reads as daytime; low, warm lamps do not. Dimming is the cheapest evening sleep intervention there is.',
     evidence:
@@ -358,6 +365,7 @@ export const HUBERMAN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Cool Sleep Temperature': {
+    suggestedWhy: 'A cool room helps your core temperature fall, so you fall asleep faster and wake less through the night.',
     tagline: 'Keep the bedroom cool — around 18-20°C.',
     lead: 'Sleep onset depends on your core temperature falling, and a cool room makes that drop easier to achieve and hold. This is why an overheated bedroom fragments sleep even when nothing else is wrong.',
     cadenceLabel: 'Nightly · 18-20°C',
@@ -404,6 +412,7 @@ export const HUBERMAN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Morning Protein Protocol': {
+    suggestedWhy: 'Spreading protein across the day uses it better for muscle, so lean mass holds and mornings run without crashes.',
     tagline: 'Get real protein in early.',
     lead: 'Protein at breakfast is where most people fall shortest, and muscle protein synthesis responds to per-meal dose rather than daily total. It also blunts the mid-morning hunger that drives snacking.',
     evidence:
@@ -461,6 +470,7 @@ export const HUBERMAN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Time-Restricted Eating': {
+    suggestedWhy: 'Eating inside a consistent daytime window aligns food with your body clock, so metabolic markers and sleep improve.',
     tagline: 'Keep eating inside a consistent 10-12 hour window.',
     lead: 'Your gut, liver and pancreas run on circadian schedules of their own, and eating late in the evening asks them to work off-shift. Compressing intake into a consistent daytime window aligns fuel with the clock — the consistency matters as much as the length.',
     evidence:
@@ -518,6 +528,7 @@ export const HUBERMAN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Sauna Therapy': {
+    suggestedWhy: 'Regular heat loads the heart much like moderate exercise, so tension drops now and long-term health tends to follow.',
     tagline: 'Heat exposure, two or three times a week.',
     lead: 'Sauna use raises heart rate and core temperature in a way that resembles moderate exercise, and long-running Finnish cohort data links frequent use with better cardiovascular outcomes. Frequency matters more than heroics in any single session.',
     evidence:
@@ -575,6 +586,7 @@ export const HUBERMAN_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Darkness Before Sleep': {
+    suggestedWhy: 'Real dimness before bed lets melatonin build, so you arrive at bed already sleepy instead of wired.',
     tagline: 'An hour or two of genuine dimness before bed.',
     lead: 'Melatonin release is gated by light, and the threshold is lower than most people assume — ordinary indoor lighting is enough to hold it back. Giving yourself a properly dim run-in lets the sleep signal build before you are in bed.',
     cadenceLabel: 'Nightly · 1-2 hours',

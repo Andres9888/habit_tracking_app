@@ -13,6 +13,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   'No Added Sugar': {
+    suggestedWhy: 'Sugar without fibre spikes and drops fast, so cutting it steadies your energy and lowers cardiovascular risk.',
     tagline: 'Cut the sugar that was added, not the sugar in fruit.',
     lead: 'Added sugar arrives without fibre, so it hits fast and leaves you hungrier than the calories justify. Cutting it is one of the few dietary changes where you can feel the difference in energy stability within a week.',
     evidence:
@@ -70,6 +71,7 @@ export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Mediterranean Plate': {
+    suggestedWhy: 'A mostly-plant plate with olive oil is the eating pattern with the strongest trial evidence for fewer heart events.',
     tagline: 'Vegetables, legumes, whole grains, olive oil.',
     lead: 'This is the dietary pattern with the strongest randomised-trial evidence behind it, rather than another elimination diet. It works as a shape for a plate — most of it plants, fat from olive oil and nuts — which makes it durable in a way rules-based diets are not.',
     evidence:
@@ -127,6 +129,7 @@ export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'High Fiber Diet': {
+    suggestedWhy: 'Fibre feeds gut bacteria and slows glucose absorption, so meals hold you longer and long-term risk falls.',
     tagline: 'Twenty-five to thirty-five grams a day.',
     lead: 'Fibre feeds your gut bacteria, slows glucose absorption, and is the single nutrient most people are most short of. Higher intake is consistently associated with lower mortality across large cohorts.',
     cadenceLabel: 'Daily · 25-35g',
@@ -181,6 +184,7 @@ export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   '30 Plants Per Week': {
+    suggestedWhy: 'Gut microbes thrive on variety more than volume, so counting distinct plants builds a more diverse microbiome.',
     tagline: 'Count distinct plants, not portions.',
     lead: 'Microbiome diversity tracks with plant diversity more than plant volume — thirty different plants beats the same three vegetables thirty times. Herbs, spices, nuts and seeds all count, which makes the target far easier than it sounds.',
     evidence:
@@ -237,6 +241,7 @@ export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Fermented Foods': {
+    suggestedWhy: 'A daily spoonful of fermented food raises gut microbial diversity and lowers inflammatory markers.',
     tagline: 'Something fermented, every day.',
     lead: 'Fermented foods introduce live microbes and their by-products, and a controlled trial found they shift microbiome diversity and immune markers in ways a high-fibre diet alone did not. Small servings, done daily, are what the studies use.',
     evidence:
@@ -293,6 +298,7 @@ export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Omega-3 Rich Foods': {
+    suggestedWhy: 'DHA from oily fish is built into neuronal membranes and shifts inflammation, and your body cannot make enough itself.',
     tagline: 'Fatty fish a couple of times a week.',
     lead: 'DHA is a structural component of neuronal membranes, and your body cannot make enough of it from scratch. Food sources are better studied than pills, and oily fish gets you there without a supplement decision.',
     cadenceLabel: '2-3x weekly',
@@ -348,6 +354,7 @@ export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Protein Per Meal (25–30g)': {
+    suggestedWhy: 'Muscle responds to the size of each protein dose, so spreading it across meals preserves more muscle and fills you up.',
     tagline: 'Twenty-five to thirty grams, each meal.',
     lead: 'Muscle protein synthesis responds to the size of a single dose, so protein spread evenly across meals builds more than the same total concentrated at dinner. Breakfast is almost always where the gap is.',
     evidence:
@@ -405,6 +412,7 @@ export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Veggies First': {
+    suggestedWhy: 'Fibre and protein eaten first slow the carbohydrate behind them, so the same meal gives a flatter glucose curve.',
     tagline: 'Eat the vegetables before the starch.',
     lead: 'Meal order changes the glucose response to identical food — fibre and protein arriving first slow the absorption of the carbohydrate that follows. Same plate, same calories, flatter curve.',
     evidence:
@@ -462,6 +470,7 @@ export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Legume Serving': {
+    suggestedWhy: 'Pulses deliver fibre and plant protein in one cheap package, so glycaemic control improves without much cost.',
     tagline: 'Beans, lentils or chickpeas a few times a week.',
     lead: 'Pulses deliver fibre and plant protein in the same package, and they are among the cheapest foods with genuine trial evidence behind them. The glycaemic effect is well documented in reviews.',
     cadenceLabel: '3-4x weekly',
@@ -517,6 +526,7 @@ export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Daily Nuts Serving': {
+    suggestedWhy: 'A daily handful of nuts is filling and linked to lower cardiovascular risk, and it displaces worse snacks.',
     tagline: 'A small handful most days.',
     lead: 'Nut intake is associated with lower cardiovascular risk across large meta-analyses, and — counter-intuitively for a calorie-dense food — is not associated with weight gain, probably because they are filling and not fully absorbed.',
     evidence:
@@ -574,6 +584,7 @@ export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Whole Grain Swap': {
+    suggestedWhy: 'Whole grains keep the bran and germ, so fibre slows absorption and cardiovascular and diabetes risk fall.',
     tagline: 'Swap one refined grain for a whole one.',
     lead: 'Whole grains keep the bran and germ, which is where the fibre and most micronutrients live. Higher intake is associated with lower cardiovascular disease and type 2 diabetes risk — and a swap is easier to sustain than an elimination.',
     evidence:
@@ -631,6 +642,7 @@ export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Meal Prepping': {
+    suggestedWhy: 'Prepping moves the cooking decision away from 7pm, so home cooking wins more often and diet quality improves.',
     tagline: 'Cook once, eat several times.',
     lead: 'Cooking at home is associated with better diet quality, and the barrier is almost never knowledge — it is the decision fatigue of doing it at 7pm. Prepping moves that decision to a moment when you have capacity.',
     evidence:
@@ -688,6 +700,7 @@ export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'No Late Night Eating': {
+    suggestedWhy: 'Closing the kitchen before bed keeps digestion out of your sleep window, so reflux eases and sleep improves.',
     tagline: 'Kitchen closes three hours before bed.',
     lead: 'Lying down with a full stomach raises reflux risk, and late eating asks your digestion to work during the window it is least equipped for. The sleep-quality effect is usually noticed within a week.',
     evidence:
@@ -745,6 +758,7 @@ export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Pre-Meal Vinegar': {
+    suggestedWhy: 'Acetic acid appears to slow gastric emptying, so the glucose rise after a carbohydrate meal tends to be gentler.',
     tagline: 'Diluted vinegar before a meal.',
     lead: 'Acetic acid appears to slow gastric emptying and blunt the glucose response to a carbohydrate meal. Worth calibrating expectations: the studies are small and short, and the effect is a modest smoothing rather than anything dramatic.',
     cadenceLabel: 'Before meals · 1 tbsp diluted',
@@ -800,6 +814,7 @@ export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Resistant Starch': {
+    suggestedWhy: 'Cooling cooked starch makes part of it indigestible, so it reaches your colon and feeds gut bacteria instead.',
     tagline: 'Cook starches, cool them, then reheat.',
     lead: 'Cooling cooked starch causes some of it to recrystallise into a form your small intestine cannot digest, so it reaches the colon and feeds bacteria there instead. A genuine effect, though the size of it in practice is modest.',
     cadenceLabel: 'Ongoing · when you cook starches',
@@ -855,6 +870,7 @@ export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Calcium Intake Tracking': {
+    suggestedWhy: 'Bone is a calcium bank you draw on for life, so a short log shows whether your intake is protecting it.',
     tagline: 'Know roughly how much calcium you get.',
     lead: 'Bone is a calcium bank you make deposits into for the first few decades and draw on afterwards. Tracking briefly is diagnostic rather than permanent — most people find they are either comfortably fine or clearly short, and act accordingly.',
     cadenceLabel: 'Daily log · 1000-1200mg target',
@@ -909,6 +925,7 @@ export const HEALTH_NUTRITION_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Vitamin D Supplementation': {
+    suggestedWhy: 'Vitamin D is hard to get from food or winter sun, and correcting a real deficiency supports bone and immune function.',
     tagline: 'Check your level; supplement if you are short.',
     lead: 'Vitamin D is genuinely hard to get from food and, at northern latitudes, impossible to make from winter sun. The honest framing: correcting a deficiency clearly matters, while supplementing when you are already sufficient shows little benefit in trials.',
     cadenceLabel: 'Daily · 600-800 IU if deficient',

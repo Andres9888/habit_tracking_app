@@ -7,6 +7,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const SLEEP_ENRICHMENT: Record<string, ScienceEnrichment> = {
   '7-9 Hours Sleep': {
+    suggestedWhy: 'Sleep consolidates memory, rebalances hormones and clears brain waste, so thinking is sharper and mood steadier.',
     tagline: 'Give sleep the window it actually needs.',
     lead: 'Sleep is when memory gets consolidated, hormones get rebalanced, and the brain clears metabolic waste. Most of that work is back-loaded into the later hours, so cutting the window short cuts the restoration, not the filler.',
     evidence:
@@ -64,6 +65,7 @@ export const SLEEP_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Consistent Bedtime': {
+    suggestedWhy: 'A steady bedtime lets melatonin and body temperature shift on schedule, so you fall asleep faster and wake up less.',
     tagline: 'Same bedtime, so sleep stops being a negotiation.',
     lead: 'A stable bedtime lets your body start the wind-down before you do — melatonin release and core temperature drop begin on schedule rather than on demand. Irregularity, not just short sleep, is independently linked to worse outcomes.',
     cadenceLabel: 'Nightly · same time',
@@ -118,6 +120,7 @@ export const SLEEP_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'No Screens Before Bed': {
+    suggestedWhy: 'Cutting evening light stops melatonin being held back, so sleep arrives sooner and mornings start less groggy.',
     tagline: 'Put the screens down an hour before bed.',
     lead: 'Evening light — especially the short-wavelength light screens are rich in — suppresses melatonin and pushes your body clock later. The content keeps you alert too, but the light alone is enough to move your sleep.',
     evidence:
@@ -175,6 +178,7 @@ export const SLEEP_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'No Afternoon Caffeine': {
+    suggestedWhy: 'Caffeine lingers for hours and blocks the sleepy signal, so an early cutoff leaves sleep deeper and less fragmented.',
     tagline: 'Cut caffeine after early afternoon.',
     lead: 'Caffeine has a half-life of roughly five to six hours, so an afternoon coffee still has meaningful levels in your blood at bedtime. It blocks adenosine — the signal that makes you sleepy — so sleep gets lighter even when you fall asleep fine.',
     evidence:
@@ -232,6 +236,7 @@ export const SLEEP_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Pre-Sleep Warm Bath': {
+    suggestedWhy: 'Warming the skin speeds the core-temperature drop that triggers sleep, so you settle faster and the day gets an ending.',
     tagline: 'A warm bath about 90 minutes before bed.',
     lead: 'Warming your skin pulls blood to the surface, and the heat you shed afterwards accelerates the core-temperature drop that triggers sleep. The counter-intuitive part is that getting warm helps by making you cool faster.',
     evidence:
@@ -289,6 +294,7 @@ export const SLEEP_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'No Evening Alcohol': {
+    suggestedWhy: 'Without alcohol fragmenting the night, REM returns and the 3am wake-ups fade, so mornings feel genuinely rested.',
     tagline: 'Leave a few hours between the last drink and bed.',
     lead: 'Alcohol is sedating, which is why it feels like it helps. But as your body metabolises it, sleep rebounds into fragmentation and REM gets suppressed — you fall asleep faster and sleep worse.',
     cadenceLabel: 'Nightly · none within 3-4 hours',
@@ -343,6 +349,7 @@ export const SLEEP_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Stimulus Control (CBT-I)': {
+    suggestedWhy: 'Keeping bed for sleep alone rebuilds the association insomnia erodes, so bedtime stops being something you dread.',
     tagline: 'Bed is for sleeping — retrain the association.',
     lead: 'If you spend hours awake and frustrated in bed, your brain learns that bed means wakefulness. Stimulus control breaks that link by only allowing you in bed when sleepy, and out of it when you are not. It is one of the most effective components of insomnia treatment.',
     cadenceLabel: 'Nightly · ongoing practice',
@@ -397,6 +404,7 @@ export const SLEEP_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Evening Brain Dump': {
+    suggestedWhy: 'Writing tomorrow down hands the tracking job to paper, so the mind stops looping and sleep comes faster.',
     tagline: 'Write tomorrow down so you can stop rehearsing it.',
     lead: 'Unfinished tasks stay active in working memory, and lying still in the dark is when they surface. Writing them out hands the tracking job to paper — the point is offloading, not planning.',
     evidence:
@@ -454,6 +462,7 @@ export const SLEEP_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Blue Light Blocking': {
+    suggestedWhy: 'Filtering the wavelengths that suppress melatonin protects your sleep signal, so sleepiness still arrives on time.',
     tagline: 'Amber glasses for the last hours of the evening.',
     lead: 'The receptors that set your body clock are most sensitive to blue wavelengths. Filtering those in the evening lets you keep using screens while cutting most of their effect on melatonin — a workaround, not a substitute for dimming.',
     evidence:
@@ -511,6 +520,7 @@ export const SLEEP_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Evening Magnesium': {
+    suggestedWhy: 'Magnesium supports the signalling that quiets the nervous system, so winding down may come a little easier at night.',
     tagline: 'A magnesium dose in the evening.',
     lead: 'Magnesium is a cofactor in hundreds of reactions, including the GABA signalling that quiets the nervous system. Trial evidence is modest and mostly in older or deficient adults, so treat it as a small nudge rather than a sleep fix.',
     cadenceLabel: 'Nightly · 30-60 min before bed',
@@ -566,6 +576,7 @@ export const SLEEP_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Weighted Blanket Sleep': {
+    suggestedWhy: 'Broad, even pressure appears to lower arousal, so a wired body settles sooner and moves around less through the night.',
     tagline: 'Deep pressure that settles the nervous system.',
     lead: 'Broad, even pressure across the body appears to reduce arousal — the same principle behind swaddling and firm hugs. For people whose sleep is disrupted by anxiety rather than schedule, it is a low-effort intervention.',
     cadenceLabel: 'Nightly · one-time purchase',
@@ -621,6 +632,7 @@ export const SLEEP_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Sleep Sound Machine': {
+    suggestedWhy: 'Steady background sound hides sudden noises, so fewer things cut through and sleep comes more easily.',
     tagline: 'Steady background sound to mask disruptions.',
     lead: 'What wakes you is usually not absolute noise but sudden change in it — a door, a car, a voice. A constant broadband sound raises the floor so those spikes stop standing out.',
     cadenceLabel: 'Nightly · all night',
@@ -676,6 +688,7 @@ export const SLEEP_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Next-Day Prep': {
+    suggestedWhy: 'Deciding tomorrow’s basics tonight clears the morning of choices, so days start smoothly and evenings close cleanly.',
     tagline: 'Set tomorrow out before you go to bed.',
     lead: 'Every decision you make in the morning draws on the same limited pool of attention as your actual work. Making those choices the night before — clothes, bag, breakfast — removes them from the moment you are least equipped to handle them.',
     cadenceLabel: 'Nightly · 5 min',

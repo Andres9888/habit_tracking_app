@@ -15,6 +15,7 @@ import type { ScienceEnrichment } from '../types';
 
 export const FINANCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   'Automatic Savings': {
+    suggestedWhy: 'Moving money on payday takes willpower out of the loop, so savings build while your spending quietly adapts.',
     tagline: 'Move money before you can spend it.',
     lead: 'Saving fails as a monthly decision and succeeds as a default. Automating the transfer on payday removes willpower from the loop entirely — you are not resisting spending, the money simply is not there to spend.',
     evidence:
@@ -71,6 +72,7 @@ export const FINANCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Retirement Contributions': {
+    suggestedWhy: 'Claiming the full match and letting it compound turns part of your salary into wealth you would otherwise forfeit.',
     tagline: 'Contribute enough to get the full match.',
     lead: 'An employer match is the one place you get an immediate, guaranteed return on your own money — leaving it unclaimed is declining part of your salary. Tax-advantaged accounts then compound that decision for decades.',
     cadenceLabel: 'Monthly · at least to the match',
@@ -125,6 +127,7 @@ export const FINANCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Regular Investing': {
+    suggestedWhy: 'A fixed schedule removes timing calls and the emotion behind them, so you keep investing through highs and lows.',
     tagline: 'Invest a fixed amount on a fixed schedule.',
     lead: 'Investing the same amount regularly removes the two hardest questions — when to buy and whether now is a good time. It is not a way to beat the market; it is a way to keep participating without needing to be right about timing.',
     cadenceLabel: 'Monthly · fixed amount',
@@ -179,6 +182,7 @@ export const FINANCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Expense Tracking': {
+    suggestedWhy: 'Writing spending down replaces guesswork with measurement, and the awareness alone starts closing the leaks.',
     tagline: 'Write down what you spent.',
     lead: 'People underestimate their discretionary spending consistently and substantially. Tracking is not a budget — it is measurement, and measurement alone changes behaviour before you have decided to change anything.',
     cadenceLabel: 'Daily · 5 min',
@@ -233,6 +237,7 @@ export const FINANCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Weekly Budget Review': {
+    suggestedWhy: 'A weekly look keeps overspending small enough to correct, so money stops being a source of quiet anxiety.',
     tagline: 'Look at the numbers once a week.',
     lead: 'A monthly review is too late to correct anything — by the time you see the overspend, it has happened. Weekly is short enough a loop that a bad Tuesday is still recoverable by Sunday.',
     cadenceLabel: 'Weekly · 5-10 min',
@@ -287,6 +292,7 @@ export const FINANCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Net Worth Check': {
+    suggestedWhy: 'One monthly number holds assets and debts together, so attention shifts from income to actual progress.',
     tagline: 'Total it up monthly — even when it is negative.',
     lead: 'Net worth is the only number that captures the whole picture, and watching it monthly shifts your attention from income to accumulation. A negative figure is still information, and it is the trend that matters, not the level.',
     cadenceLabel: 'Monthly · 5 min',
@@ -342,6 +348,7 @@ export const FINANCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   '24-Hour Purchase Rule': {
+    suggestedWhy: 'Waiting a day lets the spike of wanting decay, so you buy what you actually wanted and skip the rest.',
     tagline: 'Sleep on anything over fifty.',
     lead: 'Impulse purchases are driven by a spike of wanting that decays fast — waiting does not require more discipline, it just lets the spike pass. Most of what survives a day was worth buying; most of what does not, was not.',
     cadenceLabel: 'Every purchase over $50',
@@ -396,6 +403,7 @@ export const FINANCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Subscription Audit': {
+    suggestedWhy: 'A monthly cancellation counters the inertia subscriptions rely on, so recurring costs stop quietly stacking up.',
     tagline: 'Cancel one subscription a month.',
     lead: 'Subscriptions exploit inertia — they are designed so that not deciding means continuing to pay. A recurring cancellation habit is the counter-default, and one a month is enough to keep the drift in check.',
     cadenceLabel: 'Monthly · cancel one',
@@ -450,6 +458,7 @@ export const FINANCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Round-Up Savings': {
+    suggestedWhy: 'Spare change moves across without registering as a loss, so a first cushion builds with no felt sacrifice.',
     tagline: 'Save the spare change automatically.',
     lead: 'Rounding each purchase up to the nearest pound or dollar saves money you never perceive leaving, which is precisely why it works. It will not fund a retirement, but it builds a balance without any felt sacrifice.',
     cadenceLabel: 'Ongoing · automated',
@@ -504,6 +513,7 @@ export const FINANCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Bring Lunch': {
+    suggestedWhy: 'Cutting the most frequent discretionary spend compounds into a large annual saving, with better food alongside.',
     tagline: 'Pack it instead of buying it.',
     lead: 'This is the highest-frequency discretionary spend most people have, which is what makes it worth attacking — five days a week compounds into a genuinely large annual number. The health effect comes along free.',
     cadenceLabel: 'Weekdays',
@@ -550,6 +560,7 @@ export const FINANCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Negotiate Bills': {
+    suggestedWhy: 'One uncomfortable ask can unlock a retention discount, so twenty minutes lowers every bill that follows.',
     tagline: 'Ask for a better rate on one bill.',
     lead: 'Retention discounts exist and are routinely given to people who ask, because acquiring you costs more than keeping you. The reason most people pay more is not that the discount is unavailable — it is that asking is uncomfortable.',
     cadenceLabel: 'Monthly · one bill',
@@ -596,6 +607,7 @@ export const FINANCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Pre-Purchase Gratitude': {
+    suggestedWhy: 'Noticing what you already own competes with the urge to acquire, so fewer purchases happen on impulse.',
     tagline: 'Name three things you already own.',
     lead: 'Materialism and gratitude pull in opposite directions — deliberately noticing what you already have measurably reduces the urge to acquire more. Done at the point of purchase, it competes directly with the wanting.',
     evidence:
@@ -652,6 +664,7 @@ export const FINANCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Loud Budgeting': {
+    suggestedWhy: 'Saying a limit out loud turns it into a social commitment, so declining things gets easier and less awkward.',
     tagline: 'Say out loud what you are not buying.',
     lead: 'Announcing an intention to someone turns a private plan into a small social commitment, and commitments made publicly are kept more often. It also removes the awkwardness of declining things — you have already declared the reason.',
     cadenceLabel: 'Ongoing · before purchases',
@@ -698,6 +711,7 @@ export const FINANCIAL_ENRICHMENT: Record<string, ScienceEnrichment> = {
   },
 
   'Financial Education': {
+    suggestedWhy: 'Understanding how money works makes fees and traps visible, and tends to show up in saving and debt over time.',
     tagline: 'Fifteen minutes learning about money.',
     lead: 'Financial literacy predicts real outcomes — saving, debt, retirement planning. The honest caveat is that education alone shifts behaviour less than people assume, so pair the reading with one automated change and you get both.',
     evidence:
