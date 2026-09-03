@@ -17,6 +17,7 @@ import { useInsightPalette } from '../../insightPalette';
 import { MonthGridCard } from '../HabitDetailHistory/MonthGridCard';
 import { FlowSectionLabel } from '../FlowSectionLabel';
 import { buildHistoryEntries } from './historyEntries';
+import { historyRangeStart } from './historyRangeStart';
 import { HistoryEntryList } from './HistoryEntryList';
 import { HistoryLegend } from './HistoryLegend';
 import { useSettledMonthRate } from './useSettledMonthRate';
@@ -44,11 +45,7 @@ export function HistoryCalendarSection({
   const rows = useHabitTrackingRange({
     endDate: today,
     habitId: habit._id,
-    // Same fallback as DayDetailScreen: an unknown creation date must not turn
-    // into a decades-wide range that we then fetch and persist every open.
-    startDate: habit.createdAt
-      ? getLocalDateString(new Date(habit.createdAt))
-      : `${today.slice(0, 4)}-01-01`,
+    startDate: historyRangeStart(habit.createdAt, today),
   });
   const doneDates = useMemo(
     () =>

@@ -61,8 +61,34 @@ describe('HabitHistoryScreen', () => {
     expect(mockUseHabitTrackingRange).toHaveBeenCalledWith({
       endDate: '2026-08-15',
       habitId: 'habit_1',
-      startDate: '2026-06-01',
+      startDate: '2026-01-01',
     });
+  });
+
+  it('fetches from January 1 when the habit was created this year', () => {
+    renderScreen();
+    expect(mockUseHabitTrackingRange).toHaveBeenCalledWith({
+      endDate: '2026-08-15',
+      habitId: 'habit_1',
+      startDate: '2026-01-01',
+    });
+  });
+
+  it('fetches from creation when the habit predates this year', () => {
+    renderScreen({
+      habit: { ...habit, createdAt: Date.parse('2025-11-03T09:00:00Z') },
+    });
+    expect(mockUseHabitTrackingRange).toHaveBeenCalledWith({
+      endDate: '2026-08-15',
+      habitId: 'habit_1',
+      startDate: '2025-11-03',
+    });
+  });
+
+  it('paints a completion logged before the creation date', () => {
+    trackingRows = [{ completed: true, date: '2026-05-28' }];
+    const { getByLabelText } = renderScreen({ focusDate: '2026-05-28' });
+    expect(getByLabelText('May 28, completed')).toBeTruthy();
   });
 
   it('bounds the range to the current year when the habit has no createdAt', () => {
