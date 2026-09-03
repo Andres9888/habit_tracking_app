@@ -1,10 +1,9 @@
 import { Archive, Trash2 } from 'lucide-react-native';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { ActionItem } from '../../components/QuickActionsSheet/ActionItem';
 import { iconSizes } from '../../theme/iconSizes';
 import { spacing } from '../../theme/spacing';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { fontWeights } from '../../theme/typography';
 
 interface EditLifecycleActionsProps {
   onArchive: () => void;
@@ -26,18 +25,6 @@ export function EditLifecycleActions({
         paddingHorizontal: spacing.lg,
       }}
     >
-      <Text
-        accessibilityRole='header'
-        style={{
-          color: colors.text.secondary,
-          fontSize: 13,
-          fontWeight: fontWeights.semibold,
-          letterSpacing: 0.3,
-          marginBottom: spacing.xs,
-        }}
-      >
-        Manage habit
-      </Text>
       <ActionItem
         icon={
           <Archive
