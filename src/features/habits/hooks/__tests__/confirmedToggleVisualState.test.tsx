@@ -1,11 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import { act, cleanup, fireEvent, render } from '@testing-library/react-native';
 import * as Reanimated from 'react-native-reanimated';
-import type { SharedValue } from 'react-native-reanimated';
 
 import type { Id } from '../../../../../convex/_generated/dataModel';
 import { HabitChainVisualizer } from '../../../../components/HabitChainVisualizer';
-import { runCompletionTransition } from '../../../../components/HabitChainVisualizer/useHabitDayToggleAnimations.helpers';
+import {
+  countStyleMatches,
+  type JsonNode,
+} from '../../../../components/HabitChainVisualizer/__tests__/HabitDayToggle.testUtils';
 import {
   optimisticStore,
   useOptimisticToggleMutation,
@@ -86,17 +88,15 @@ describe('confirmed checkbox visual state', () => {
   });
 
   it('commits completed visuals atomically when an animation frame stalls', () => {
-    const completion = { value: 0 } as SharedValue<number>;
+    // A stalled timing value must not reach the frame: the completed fill is a
+    // plain React style, not an interpolation of an animated progress value.
     jest.spyOn(Reanimated, 'withTiming').mockReturnValue(0.15);
+    const tree = render(<CheckboxHarness />).toJSON() as JsonNode;
 
-    runCompletionTransition({
-      completed: true,
-      completion,
-      hideIcon: jest.fn(),
-      reduceMotion: false,
-    });
-
-    expect(completion.value).toBe(1);
+    // '#B87333' is the copper tier fill of a completed day cell.
+    expect(
+      countStyleMatches(tree, { backgroundColor: '#B87333' })
+    ).toBeGreaterThan(0);
   });
 
   it('keeps the second checkbox checked when its cached status was stale', async () => {

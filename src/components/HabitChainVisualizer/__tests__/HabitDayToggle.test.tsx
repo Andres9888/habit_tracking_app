@@ -29,6 +29,32 @@ describe('HabitDayToggle completion frame', () => {
     );
   });
 
+  it('keeps the completed fill through an unrelated re-render', () => {
+    const view = render(<HabitDayToggle {...baseProps} completed />);
+    view.rerender(
+      <HabitDayToggle {...baseProps} completed strengthPercent={35} />
+    );
+    expect(findFrameStyle(view.toJSON() as JsonNode).backgroundColor).toBe(
+      baseProps.accentColor
+    );
+  });
+
+  it('drops the completed overlay when the day is unchecked', () => {
+    const view = render(<HabitDayToggle {...baseProps} completed />);
+    expect(
+      countStyleMatches(view.toJSON() as JsonNode, {
+        backgroundColor: baseProps.accentColor,
+      })
+    ).toBeGreaterThan(0);
+
+    view.rerender(<HabitDayToggle {...baseProps} completed={false} />);
+    expect(
+      countStyleMatches(view.toJSON() as JsonNode, {
+        backgroundColor: baseProps.accentColor,
+      })
+    ).toBe(0);
+  });
+
   it('keeps the border at two pixels in both directions', () => {
     const view = render(<HabitDayToggle {...baseProps} completed />);
     expect(findFrameStyle(view.toJSON() as JsonNode).borderWidth).toBe(2);
@@ -38,7 +64,9 @@ describe('HabitDayToggle completion frame', () => {
   });
 
   it('preserves the missed frame without an amber intermediate', () => {
-    const { toJSON } = render(<HabitDayToggle {...baseProps} missed />);
+    const { toJSON } = render(
+      <HabitDayToggle {...baseProps} missed completed />
+    );
     const tree = toJSON() as JsonNode;
     expect(findFrameStyle(tree)).toMatchObject({
       backgroundColor: '#FEF2F2',

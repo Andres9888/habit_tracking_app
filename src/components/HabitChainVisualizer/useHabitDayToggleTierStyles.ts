@@ -1,11 +1,14 @@
 import {
   interpolate,
   interpolateColor,
-  type SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
-import { type AnimatedTier, resolveTierColor, resolveTierShadowColor } from '@/hooks/useAnimatedTier';
+import {
+  type AnimatedTier,
+  resolveTierColor,
+  resolveTierShadowColor,
+} from '@/hooks/useAnimatedTier';
 import { LEGENDARY_CELL_BACKGROUND } from './materialTier';
 
 const TODAY_GLOW_COLOR = '#FBBF24';
@@ -13,12 +16,8 @@ const RGB_OPTIONS = { gamma: 1 } as const;
 
 interface Params {
   accentColor: string;
-  completion: SharedValue<number>;
   isToday: boolean;
-  missed: boolean;
   showCompletedShadow: boolean;
-  staticBackground: string;
-  staticBorder: string;
   tierAnim: AnimatedTier;
 }
 
@@ -29,21 +28,19 @@ const tierBackground = (tier: AnimatedTier['from'], accentColor: string) => {
     : resolveTierColor(tier, accentColor);
 };
 
+/**
+ * Tier crossfade only. Completion no longer drives these styles — the resting
+ * completed color is a plain React style on the frame, so a dropped registry
+ * entry can at worst lag a tier change instead of erasing the fill.
+ */
 export function useHabitDayToggleTierStyles({
   accentColor,
-  completion,
   isToday,
-  missed,
   showCompletedShadow,
-  staticBackground,
-  staticBorder,
   tierAnim,
 }: Params) {
-  const cellStyle = useAnimatedStyle(() => {
-    if (missed) {
-      return { backgroundColor: staticBackground, borderColor: staticBorder };
-    }
-    const completedBackground = interpolateColor(
+  const cellStyle = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(
       tierAnim.progress.value,
       [0, 1],
       [
@@ -52,8 +49,8 @@ export function useHabitDayToggleTierStyles({
       ],
       'RGB',
       RGB_OPTIONS
-    );
-    const completedBorder = interpolateColor(
+    ),
+    borderColor: interpolateColor(
       tierAnim.progress.value,
       [0, 1],
       [
@@ -62,24 +59,8 @@ export function useHabitDayToggleTierStyles({
       ],
       'RGB',
       RGB_OPTIONS
-    );
-    return {
-      backgroundColor: interpolateColor(
-        completion.value,
-        [0, 1],
-        [staticBackground, completedBackground],
-        'RGB',
-        RGB_OPTIONS
-      ),
-      borderColor: interpolateColor(
-        completion.value,
-        [0, 1],
-        [staticBorder, completedBorder],
-        'RGB',
-        RGB_OPTIONS
-      ),
-    };
-  });
+    ),
+  }));
 
   const shadowStyle = useAnimatedStyle(() => {
     const from = isToday
@@ -90,13 +71,25 @@ export function useHabitDayToggleTierStyles({
       : resolveTierShadowColor(tierAnim.to, accentColor);
     return {
       elevation: showCompletedShadow ? 2 : 0,
-      shadowColor: interpolateColor(tierAnim.progress.value, [0, 1], [from, to]),
+      shadowColor: interpolateColor(
+        tierAnim.progress.value,
+        [0, 1],
+        [from, to]
+      ),
       shadowOffset: { width: 0, height: 0 },
       shadowOpacity: showCompletedShadow
-        ? interpolate(tierAnim.progress.value, [0, 1], [tierAnim.from.cellShadowOpacity, tierAnim.to.cellShadowOpacity])
+        ? interpolate(
+            tierAnim.progress.value,
+            [0, 1],
+            [tierAnim.from.cellShadowOpacity, tierAnim.to.cellShadowOpacity]
+          )
         : 0,
       shadowRadius: showCompletedShadow
-        ? interpolate(tierAnim.progress.value, [0, 1], [tierAnim.from.cellShadowRadius, tierAnim.to.cellShadowRadius])
+        ? interpolate(
+            tierAnim.progress.value,
+            [0, 1],
+            [tierAnim.from.cellShadowRadius, tierAnim.to.cellShadowRadius]
+          )
         : 0,
     };
   });
