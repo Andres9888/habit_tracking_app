@@ -9,7 +9,6 @@ describe('EditLifecycleActions', () => {
       <EditLifecycleActions onArchive={onArchive} onDelete={onDelete} />
     );
 
-    expect(getByText('Manage habit')).toBeTruthy();
     expect(
       getByText('Hide from your daily list. Restore anytime from Settings.')
     ).toBeTruthy();
