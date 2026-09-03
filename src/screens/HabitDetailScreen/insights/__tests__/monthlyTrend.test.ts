@@ -57,7 +57,7 @@ describe('buildMonthlyRates', () => {
   it('does not schedule days before the habit was created', () => {
     // Created 24 July 2026; today 25 July → only 24–25 count.
     const rates = buildMonthlyRates({
-      completedDates: completions({ 6: 25 }),
+      completedDates: new Set(['2026-07-24', '2026-07-25']),
       createdAt: Date.parse('2026-07-24T12:00:00'),
       today: TODAY,
     });
@@ -66,6 +66,19 @@ describe('buildMonthlyRates', () => {
     expect(rates[6]?.ratePct).toBe(100);
     // June never had the habit: zero scheduled, not a failing score.
     expect(rates[5]?.scheduled).toBe(0);
+  });
+
+  it('counts backfilled completions logged before the creation date', () => {
+    // Created 26 June 2026; 24–25 June backfilled, 26–28 done.
+    const done = new Set(['2026-06-24', '2026-06-25', '2026-06-26', '2026-06-27', '2026-06-28']);
+    const rates = buildMonthlyRates({
+      completedDates: done,
+      createdAt: Date.parse('2026-06-26T12:00:00'),
+      today: TODAY,
+    });
+    expect(rates[5]?.scheduled).toBe(7); // 24–30 June
+    expect(rates[5]?.done).toBe(5);
+    expect(rates[5]?.ratePct).toBe(71);
   });
 });
 
