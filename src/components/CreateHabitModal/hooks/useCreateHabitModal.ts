@@ -8,9 +8,11 @@ import { showCreateError } from '../../../utils/errorAlerts';
 import { useHabitData, useModalCleanup } from './useCreateHabitModalEffects';
 import { EXIT_DURATIONS } from '../../Modal/Modal.constants';
 import { createOptimisticHabitId } from '../../../features/habits/hooks/optimisticHabitCreationStore';
+import type { Id } from '../../../../convex/_generated/dataModel';
 
 export const useCreateHabitModal = (props: CreateHabitModalProps) => {
-  const { visible, onClose, habitToEdit } = props;
+  const { visible, onClose, habitToEdit, onHabitCreated, onHabitCreateSynced } =
+    props;
   const isEditMode = !!habitToEdit;
   const form = useHabitForm({ habitToEdit });
   const { triggerSuccess } = useHapticFeedback();
@@ -54,14 +56,25 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
         cleanup();
       } else {
         const clientRequestId = createOptimisticHabitId();
+        const tempId = clientRequestId as Id<'habits'>;
         cleanup();
+        // The optimistic row already exists under tempId, so Home can name
+        // the habit back and offer "Go to" before the server answers.
+        onHabitCreated?.({
+          color: form.selectedColor,
+          habitId: tempId,
+          icon: form.selectedEmoji ?? '✓',
+          name: form.habitName.trim(),
+        });
         setTimeout(form.resetForm, EXIT_DURATIONS.fullScreen);
         // On failure the optimistic habit rolls back, so tell the user why
         // and offer a retry instead of letting it vanish silently.
         const runCreate = () => {
-          void createNewHabit({ ...data, clientRequestId }).catch(() =>
-            showCreateError(runCreate)
-          );
+          void createNewHabit({ ...data, clientRequestId })
+            .then((habitId) => {
+              if (habitId) onHabitCreateSynced?.(tempId, habitId);
+            })
+            .catch(() => showCreateError(runCreate));
         };
         runCreate();
       }
@@ -81,6 +94,10 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
     createNewHabit,
     cleanup,
     form.resetForm,
+    form.selectedColor,
+    form.selectedEmoji,
+    onHabitCreated,
+    onHabitCreateSynced,
   ]);
 
   return { form, handleCreate, isEditMode };

@@ -24,6 +24,8 @@ export interface CreateHabitModalSectionProps {
   showCreateHabit: boolean;
   habitToEdit: HabitsModalsState['habitToEdit'];
   closeCreateHabit: () => void;
+  onHabitCreated?: HabitsModalsState['showCreatedHabitFeedback'];
+  onHabitCreateSynced?: HabitsModalsState['rekeyCreatedHabitFeedback'];
 }
 
 /** Props for the HapticTestModalSection component */

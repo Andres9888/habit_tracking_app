@@ -118,6 +118,13 @@ export function buildModalsStateReturnValue(
 
     clearPendingFocusHabit: visibility.clearPendingFocusHabit,
 
+    // Post-create toast for the regular add-habit form.
+    createdHabitFeedback: visibility.createdHabitFeedback,
+    createdHabitCount: visibility.createdHabitCount,
+    showCreatedHabitFeedback: visibility.showCreatedHabitFeedback,
+    rekeyCreatedHabitFeedback: visibility.rekeyCreatedHabitFeedback,
+    dismissCreatedHabitFeedback: visibility.dismissCreatedHabitFeedback,
+
     showHabitDetail: visibility.isHabitDetailOpen,
 
     onShareMilestone: handlers.onShareMilestone,

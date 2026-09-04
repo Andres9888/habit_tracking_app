@@ -6,7 +6,8 @@ import { HabitAddedPanel, useHabitAddedPalette } from '../HabitAddedPanel';
 import type { TemplateAddedToastProps } from './types';
 import { DEFAULT_DURATION } from './constants';
 import { styles } from './styles';
-import { buildToastCopy } from './copy';
+import { buildToastCopy, TOAST_ACTION_COPY } from './copy';
+import { buildToastActions } from './toastActions';
 import { useTemplateAddedToastAnimations } from './useTemplateAddedToastAnimations';
 import { useToastKeyboardPosition } from './useToastKeyboardPosition';
 
@@ -21,6 +22,9 @@ export function TemplateAddedToast({
   onViewHabit,
   onViewHabits,
   onAddAnother,
+  primaryHint = TOAST_ACTION_COPY.primaryHint,
+  secondaryHint = TOAST_ACTION_COPY.secondaryHint,
+  secondaryLabel = TOAST_ACTION_COPY.secondaryLabel,
   style,
 }: TemplateAddedToastProps) {
   const theme = useAppTheme();
@@ -65,38 +69,16 @@ export function TemplateAddedToast({
             palette={palette}
             style={[styles.toast, theme.custom.shadows.card, toastStyle, style]}
             testID='templates-toast'
-            primary={
-              viewHabit
-                  ? {
-                    disabled: !actionReady,
-                    hint: 'Closes the habit library and scrolls to this habit on Today',
-                    label: copy.primaryLabel,
-                    onPress: () => {
-                      // The toast fade runs in parallel with the focus
-                    // request; the library stays open for at least one
-                    // settle poll (see useFocusHabitRequest) so press
-                    // feedback still registers.
-                      viewHabit();
-                      handleDismiss();
-                    },
-                  }
-                : {
-                    label: 'Keep exploring habits',
-                    onPress: () => handleDismiss(),
-                  }
-            }
-            secondary={
-              onAddAnother && viewHabit
-                ? {
-                    hint: 'Returns to the habit library, which stays open',
-                    label: 'Keep exploring habits',
-                    onPress: () => {
-                      handleDismiss();
-                      onAddAnother();
-                    },
-                  }
-                : undefined
-            }
+            {...buildToastActions({
+              actionReady,
+              handleDismiss,
+              primaryHint,
+              primaryLabel: copy.primaryLabel,
+              secondaryHint,
+              secondaryLabel,
+              viewHabit,
+              onAddAnother,
+            })}
           />
         </View>
       </GestureDetector>

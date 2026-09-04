@@ -53,6 +53,7 @@ describe('useCreateHabitHandler', () => {
         selectedEmoji: '📚',
         strengthAlgorithm: 'balanced',
         streakGoal: 7,
+        why: '',
       });
     });
 

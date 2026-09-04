@@ -1,10 +1,16 @@
 import { useState } from 'react';
 import {
+  useCreatedHabitFeedback,
+  type CreatedHabitFeedbackState,
+} from './useCreatedHabitFeedback';
+import {
   usePendingFocusHabit,
   type PendingFocusHabitState,
 } from './usePendingFocusHabit';
 
-export interface ModalVisibilityState extends PendingFocusHabitState {
+export interface ModalVisibilityState
+  extends PendingFocusHabitState,
+    CreatedHabitFeedbackState {
   isSettingsOpen: boolean;
   setIsSettingsOpen: (v: boolean) => void;
   isCreateHabitOpen: boolean;
@@ -51,9 +57,13 @@ export function useModalVisibilityState(): ModalVisibilityState {
   const pendingFocus = usePendingFocusHabit(() =>
     setShowTemplatesScreen(false)
   );
+  // Post-create toast for the regular add-habit form. Lives here, next to the
+  // focus request it commits, so both survive the create modal unmounting.
+  const createdHabitFeedback = useCreatedHabitFeedback();
 
   return {
     ...pendingFocus,
+    ...createdHabitFeedback,
     isCreateHabitOpen,
     isHabitCalendarOpen,
     isHabitDetailOpen,

@@ -21,6 +21,11 @@ export interface TemplateAddedToastProps {
   onDismiss?: () => void;
   onViewHabit?: () => void;
   onAddAnother?: () => void;
+  /** Accessibility hint for the primary "Go to <name>" action. */
+  primaryHint?: string;
+  /** Secondary action copy; defaults to the Habit Library's "Keep exploring". */
+  secondaryLabel?: string;
+  secondaryHint?: string;
   /** @deprecated use onViewHabit */
   onViewHabits?: () => void;
   style?: ViewStyle;

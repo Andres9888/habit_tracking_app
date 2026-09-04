@@ -7,6 +7,7 @@
 
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { ToggleMutationResult } from '../../../lib/optimistic';
+import type { CreatedHabitFeedback } from './useCreatedHabitFeedback';
 import type {
   Habit,
   HabitSettings,
@@ -56,6 +57,22 @@ export interface HabitsModalsState {
   /** Marks the current id ready; mismatched stale ids are ignored. */
   markFocusHabitReady: (habitId: Id<'habits'>) => void;
   clearPendingFocusHabit: () => void;
+  /**
+   * Post-create toast for the regular add-habit form. Same surface and exits
+   * as the Habit Library's toast; see useCreatedHabitFeedback.
+   */
+  createdHabitFeedback: CreatedHabitFeedback | null;
+  createdHabitCount: number;
+  showCreatedHabitFeedback: (
+    feedback: CreatedHabitFeedback,
+    delayMs?: number
+  ) => void;
+  /** Optimistic create synced: point the toast at the server habit id. */
+  rekeyCreatedHabitFeedback: (
+    fromId: Id<'habits'>,
+    toId: Id<'habits'>
+  ) => void;
+  dismissCreatedHabitFeedback: () => void;
   closeSettings: () => void;
   openSettings: () => void;
   openCreateHabitScreen: () => void;

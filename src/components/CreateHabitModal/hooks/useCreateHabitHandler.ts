@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import type { Id } from '../../../../convex/_generated/dataModel';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
 import { useUserDefaultProgressEmojis } from '../../../hooks/useProgressEmojis';
 import { markFirstHabitCreated } from '../../../hooks/useStreakReminders/useStreakReminderSettings';
@@ -45,8 +46,9 @@ export function useCreateHabitHandler() {
     { applyOptimistic, confirmOptimistic, failOptimistic, isOnline }
   );
 
+  /** Resolves with the server habit id, or null when the create was queued offline. */
   return useCallback(
-    async (data: CreateHabitData): Promise<void> => {
+    async (data: CreateHabitData): Promise<Id<'habits'> | null> => {
       const validation = validateHabitName(data.fullHabitName);
       if (!validation.isValid) {
         throw new Error(validation.error ?? 'Invalid habit name');
@@ -67,6 +69,7 @@ export function useCreateHabitHandler() {
             reminderTime: data.reminderTime,
           });
         }
+        return result.kind === 'synced' ? result.value : null;
       } catch (error) {
         if (__DEV__) console.error('Failed to create habit:', error);
         throw error;
