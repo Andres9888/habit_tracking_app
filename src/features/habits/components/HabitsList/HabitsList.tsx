@@ -30,6 +30,7 @@ import { useHabitsListState } from './useHabitsListState';
 import { useHabitsListHandlers } from './useHabitsListHandlers';
 import { HabitsListContent } from './HabitsListContent';
 import { useFocusHabitRequest } from './useFocusHabitRequest';
+import { useRevealHabitRequest } from './useRevealHabitRequest';
 import { shouldHoldFocusHighlight } from './focusHighlight';
 import { isFocusNeighborhoodLaidOut } from './focusNeighborhood';
 import { ENTRANCE_STAGGER_DELAY } from './constants';
@@ -137,6 +138,15 @@ export function HabitsList(props: HabitsListProps) {
     pendingFocusHabitId: modals.pendingFocusHabitId,
     onFocusReady: modals.markFocusHabitReady,
     reduceMotion: list.reduceMotionPreference,
+    setJustCreatedHabitId: state.setJustCreatedHabitId,
+  });
+  // Post-create toast's "Go to": Home is visible, so scroll in view.
+  useRevealHabitRequest({
+    clearRevealHabit: modals.clearRevealHabit,
+    habits: list.habits,
+    listRef,
+    reduceMotion: list.reduceMotionPreference,
+    revealHabitId: modals.revealHabitId,
     setJustCreatedHabitId: state.setJustCreatedHabitId,
   });
 

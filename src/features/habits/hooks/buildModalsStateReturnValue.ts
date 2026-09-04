@@ -1,5 +1,6 @@
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { HabitsModalsState } from './types';
+import { pickHomeFeedbackState } from './pickHomeFeedbackState';
 import type { ModalVisibilityState } from './useModalVisibilityState';
 import type { HabitSelectionState } from './useHabitSelectionState';
 import type {
@@ -118,12 +119,8 @@ export function buildModalsStateReturnValue(
 
     clearPendingFocusHabit: visibility.clearPendingFocusHabit,
 
-    // Post-create toast for the regular add-habit form.
-    createdHabitFeedback: visibility.createdHabitFeedback,
-    createdHabitCount: visibility.createdHabitCount,
-    showCreatedHabitFeedback: visibility.showCreatedHabitFeedback,
-    rekeyCreatedHabitFeedback: visibility.rekeyCreatedHabitFeedback,
-    dismissCreatedHabitFeedback: visibility.dismissCreatedHabitFeedback,
+    // Post-create toast for the regular add-habit form + its Home reveal.
+    ...pickHomeFeedbackState(visibility),
 
     showHabitDetail: visibility.isHabitDetailOpen,
 

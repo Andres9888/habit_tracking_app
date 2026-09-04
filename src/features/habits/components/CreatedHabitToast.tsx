@@ -2,8 +2,9 @@
  * Post-create feedback on Home for the regular add-habit form.
  *
  * Same surface and exits as the Habit Library's post-add toast:
- * "Go to <name>" scrolls to and highlights the new row via the shared focus
- * request; "Add another habit" reopens the form.
+ * "Go to <name>" scrolls to and highlights the new row (in view — Home is
+ * already on screen, so no hidden remount); "Add another habit" reopens the
+ * form.
  */
 
 import { useCallback } from 'react';
@@ -18,22 +19,21 @@ interface CreatedHabitToastProps {
 export function CreatedHabitToast({ modals }: CreatedHabitToastProps) {
   const { trigger } = useHaptics();
   const {
-    commitFocusHabitOnHome,
     createdHabitCount,
     createdHabitFeedback,
     dismissCreatedHabitFeedback,
     openCreateHabitScreen,
+    revealHabitOnHome,
   } = modals;
   const habitId = createdHabitFeedback?.habitId ?? null;
 
-  // Mirrors the library's handleGoToHabit: tap haptic, then the cold
-  // converge-then-highlight path. The toast's own exit runs alongside and
-  // clears the feedback through onDismiss.
+  // Mirrors the library's handleGoToHabit: tap haptic, then reveal. The
+  // toast's own exit runs alongside and clears the feedback via onDismiss.
   const handleGoToHabit = useCallback(() => {
     if (!habitId) return;
     trigger('tap');
-    commitFocusHabitOnHome(habitId);
-  }, [commitFocusHabitOnHome, habitId, trigger]);
+    revealHabitOnHome(habitId);
+  }, [habitId, revealHabitOnHome, trigger]);
 
   const handleAddAnother = useCallback(() => {
     trigger('tap');

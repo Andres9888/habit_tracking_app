@@ -73,6 +73,13 @@ export interface HabitsModalsState {
     toId: Id<'habits'>
   ) => void;
   dismissCreatedHabitFeedback: () => void;
+  /**
+   * Habit the post-create toast asked Home to scroll to and highlight in
+   * view. Consumed by HabitsList; expires after REVEAL_GIVE_UP_MS.
+   */
+  revealHabitId: Id<'habits'> | null;
+  revealHabitOnHome: (habitId: Id<'habits'>) => void;
+  clearRevealHabit: () => void;
   closeSettings: () => void;
   openSettings: () => void;
   openCreateHabitScreen: () => void;
