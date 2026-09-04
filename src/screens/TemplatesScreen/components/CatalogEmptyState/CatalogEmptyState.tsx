@@ -4,7 +4,7 @@
  * Three shapes, because "no results" means three different things:
  *  - matches exist, just not in the selected category → point at them
  *  - nothing matches anywhere                        → offer to clear
- *  - no query at all, category emptied by adds       → offer to browse
+ *  - no query at all, the shelf is genuinely empty   → offer to browse
  *
  * The first case is the one that matters: without it the user sits on a blank
  * list while the habit they searched for is one chip away.
@@ -79,19 +79,20 @@ export function CatalogEmptyState({
     );
   }
 
-  // No query — the selected category emptied out because everything in it is
-  // already added. Nothing to clear, so send them back to the full catalog.
+  // No query — the catalog itself has nothing to show here (a category with no
+  // templates, or an empty catalog). Nothing to clear, so send them back.
+  // Adds can no longer cause this: added habits stay in their category shelf.
   return (
     <View style={s.wrap}>
       <EmptyState
         hideCTA
         description={
           isFiltered
-            ? `You've added every habit in ${categoryLabel}.`
+            ? `There are no ${categoryLabel} habits in the library yet.`
             : 'Nothing to show here yet.'
         }
-        headline='All caught up'
-        icon='✅'
+        headline='Nothing here'
+        icon='📭'
         variant='noResults'
       />
       {isFiltered ? (
