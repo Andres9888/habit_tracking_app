@@ -25,11 +25,12 @@ export type FullHabit = Doc<'habits'>;
 
 /**
  * A habit may be the slim list projection or a full on-demand document.
- * `startSmallVersion` is joined from the source template by `habits.get`; it is
- * authored copy for the smallest version of the habit, never stored on the doc.
+ * `startSmallVersion` and `templateWhy` are joined from the source template by
+ * `habits.get`: authored copy for the smallest version of the habit, and the
+ * science why the import seeded. Neither is stored on the doc.
  */
 export type Habit = (ListHabit | FullHabit) &
-  Partial<FullHabit> & { startSmallVersion?: string };
+  Partial<FullHabit> & { startSmallVersion?: string; templateWhy?: string };
 
 /** Typed Convex ID for a habit. */
 export type HabitId = Id<'habits'>;

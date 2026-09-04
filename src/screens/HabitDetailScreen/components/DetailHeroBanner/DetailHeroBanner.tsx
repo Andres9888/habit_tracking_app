@@ -3,8 +3,8 @@
  * today's action. Strength lives below this hero so it never grades the user
  * before recovery or action.
  *
- * The why is never hidden by state: the ready state shows the full pill, and
- * recovery / completed show it as one line under their state card.
+ * The why is never hidden by state: the ready state shows the full why card,
+ * and recovery / completed show the compact variant under their state card.
  */
 import { LinearGradient } from 'expo-linear-gradient';
 import { View } from 'react-native';
@@ -16,7 +16,6 @@ import { HeroTitleRow } from './HeroTitleRow';
 import { HeroTodayActions } from './HeroTodayActions';
 import { HeroRecoveryCard } from './HeroRecoveryCard';
 import { HeroStateCard } from './HeroStateCard';
-import { HeroWhyLine } from './HeroWhyLine';
 import { HeroWhyPill } from './HeroWhyPill';
 import { heroWash, smallVersionHint } from './DetailHeroBanner.utils';
 
@@ -52,7 +51,7 @@ export function DetailHeroBanner({
   const isCompletedToday = todayState === 'completed';
   const isRecovery = todayState === 'open-today' && Boolean(recoveryDayLabel);
   const wash = heroWash(palette, todayState, isRecovery);
-  const showWhyLine = isRecovery || isCompletedToday;
+  const showCompactWhy = isRecovery || isCompletedToday;
 
   return (
     <View>
@@ -81,8 +80,13 @@ export function DetailHeroBanner({
         ) : (
           <HeroWhyPill habit={habit} palette={palette} />
         )}
-        {showWhyLine ? (
-          <HeroWhyLine habit={habit} isRecovery={isRecovery} palette={palette} />
+        {showCompactWhy ? (
+          <HeroWhyPill
+            habit={habit}
+            isRecovery={isRecovery}
+            palette={palette}
+            variant='compact'
+          />
         ) : null}
         <HeroTodayActions
           isToggling={isToggling}

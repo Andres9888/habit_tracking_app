@@ -9,10 +9,30 @@ describe('resolveWhy', () => {
     });
     expect(resolved).toEqual({
       icon: '💭',
+      isTemplateWhy: false,
       label: 'Your why',
       source: 'why',
       value: 'Start the day with energy, not pressure.',
     });
+  });
+
+  it('labels a why that still equals the template sentence "Why it works"', () => {
+    const resolved = resolveWhy({
+      templateWhy: 'Sunlight early anchors the circadian clock.  ',
+      why: 'Sunlight early anchors the circadian clock.',
+    });
+    expect(resolved?.isTemplateWhy).toBe(true);
+    expect(resolved?.label).toBe('Why it works');
+    expect(resolved?.source).toBe('why');
+  });
+
+  it('labels an edited why "Your why" even when a template why exists', () => {
+    const resolved = resolveWhy({
+      templateWhy: 'Sunlight early anchors the circadian clock.',
+      why: 'I want mornings that do not feel like fog.',
+    });
+    expect(resolved?.isTemplateWhy).toBe(false);
+    expect(resolved?.label).toBe('Your why');
   });
 
   it('falls back to identity when why is empty', () => {

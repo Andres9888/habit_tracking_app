@@ -6,10 +6,9 @@
  *   optimistically on import. Drives pill/disabled/animation state.
  * - `frozenImportedIds` (snapshot): captured once from the first *defined*
  *   server response and never grown. Grouping/ordering uses this so a habit
- *   added this session holds its place in its category section (it isn't in
- *   the snapshot) instead of sinking to the shelf's tail under the user's
- *   thumb; it joins the mirrored "Added" section on the next mount, when the
- *   snapshot re-seeds from the server.
+ *   added this session stays in its category section (it isn't in the
+ *   snapshot); it only moves to the "Added" section on the next mount, when
+ *   the snapshot re-seeds from the server.
  */
 
 import { useEffect, useRef, useState } from 'react';

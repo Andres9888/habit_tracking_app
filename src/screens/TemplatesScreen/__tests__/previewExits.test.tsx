@@ -85,9 +85,7 @@ function openPreview(onGoToHabit?: jest.Mock) {
       onGoToHabit={onGoToHabit}
     />
   );
-  // An added habit renders twice — once on its category shelf, once mirrored
-  // under "Added" — so take the first card rather than asserting uniqueness.
-  fireEvent.press(screen.getAllByLabelText('Daily walk habit')[0]!);
+  fireEvent.press(screen.getByLabelText('Daily walk habit'));
   return onCloseLibrary;
 }
 

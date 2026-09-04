@@ -6,10 +6,10 @@
  * (kept up-to-date by recalculateStreakAndStrength on toggle)
  * instead of loading the full tracking history to recompute.
  *
- * `startSmallVersion` is joined from the template the habit was imported from
- * (via `templateUsage`). It is authored copy for the smallest version of the
- * habit and is read by the Detail recovery hint; it is never stored on the
- * habit document.
+ * `startSmallVersion` and `templateWhy` are joined from the template the habit
+ * was imported from (via `templateUsage`). They are authored copy — the
+ * smallest version of the habit, and the science why the import seeded — read
+ * by the Detail hero; neither is stored on the habit document.
  */
 import { v } from 'convex/values';
 import { query } from '../_generated/server';
@@ -31,14 +31,20 @@ export const get = query({
       .first();
     const template = usage ? await ctx.db.get(usage.templateId) : null;
     const startSmallVersion = template?.startSmallVersion?.trim();
+    const templateWhy = template?.suggestedWhy?.trim();
 
-    return startSmallVersion ? { ...habit, startSmallVersion } : habit;
+    return {
+      ...habit,
+      ...(startSmallVersion ? { startSmallVersion } : {}),
+      ...(templateWhy ? { templateWhy } : {}),
+    };
   },
   returns: v.union(
     v.null(),
     v.object({
       ...fullHabitValidator.fields,
       startSmallVersion: v.optional(v.string()),
+      templateWhy: v.optional(v.string()),
     })
   ),
 });

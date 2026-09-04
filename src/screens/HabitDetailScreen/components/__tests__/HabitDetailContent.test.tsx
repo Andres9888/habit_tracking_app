@@ -253,14 +253,12 @@ describe('HabitDetailContent', () => {
     ).toBeTruthy();
     expect(queryByText(/Showing up is the streak/)).toBeNull();
     expect(getByLabelText(weekLabel(-1, 'missed'))).toBeTruthy();
-    // The why pill loses its slot to the recovery card, but the why itself
-    // survives as the compressed line underneath it.
-    expect(queryByText('Your why')).toBeNull();
+    // The why card loses its slot to the recovery card, but the why itself
+    // survives as the compact card underneath it — three lines, never one.
     expect(
-      getByText(
-        'Your why · Have energy for the kids before the day takes over.'
-      )
-    ).toBeTruthy();
+      getByText('Have energy for the kids before the day takes over.').props
+        .numberOfLines
+    ).toBe(3);
     // Neither Strength nor the Analytics door is suppressed after a miss.
     // Recovery is the ordinary state for anyone who did not log the last
     // scheduled day, and these rows are the only route to Analytics in the app.
@@ -469,20 +467,19 @@ describe('HabitDetailContent', () => {
     expect(getByText("30 days — you're 1 in.")).toBeTruthy();
   });
 
-  it('keeps the full why pill — not the line — in the neutral ready state', () => {
+  it('keeps the full why card — unclamped — in the neutral ready state', () => {
     completeYesterday();
-    const { getByText, queryByText } = renderContent();
+    const { getByText } = renderContent();
 
     expect(getByText('Your why')).toBeTruthy();
     expect(
-      queryByText(
-        'Your why · Have energy for the kids before the day takes over.'
-      )
-    ).toBeNull();
+      getByText('Have energy for the kids before the day takes over.').props
+        .numberOfLines
+    ).toBeUndefined();
   });
 
-  it('keeps the why on screen as one line after today is logged', () => {
-    const { getByText, queryByText } = render(
+  it('keeps the why on screen as the compact card after today is logged', () => {
+    const { getByText } = render(
       <HabitDetailContent
         isCompletedToday
         completedDates={new Set<string>()}
@@ -491,12 +488,11 @@ describe('HabitDetailContent', () => {
       />
     );
 
-    expect(queryByText('Your why')).toBeNull();
+    expect(getByText('Your why')).toBeTruthy();
     expect(
-      getByText(
-        'Your why · Have energy for the kids before the day takes over.'
-      )
-    ).toBeTruthy();
+      getByText('Have energy for the kids before the day takes over.').props
+        .numberOfLines
+    ).toBe(3);
   });
 
   it('opens Edit from the plan line under the habit name', () => {
