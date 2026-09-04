@@ -7,9 +7,6 @@
  * as a dashboard. The week is the week.
  */
 import { View } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
-import { useReduceMotion } from '../../../../hooks/useReduceMotion';
-import { durations, enterEasing } from '../../../../theme/animations';
 import { borderRadius, shadows } from '../../../../theme/spacing';
 import { useInsightPalette } from '../../insightPalette';
 import { useThisWeek } from './useThisWeek';
@@ -30,7 +27,6 @@ export function ThisWeekCard({
   onDayPress,
 }: ThisWeekCardProps) {
   const palette = useInsightPalette();
-  const reduceMotion = useReduceMotion();
   const { days, doneCount, rangeLabel, remainingScheduled } = useThisWeek({
     completedDates,
     ...dayContext,
@@ -38,12 +34,7 @@ export function ThisWeekCard({
   const progress = weekProgressLabel(doneCount, remainingScheduled);
 
   return (
-    <Animated.View
-      entering={
-        reduceMotion
-          ? undefined
-          : FadeIn.duration(durations.standard).easing(enterEasing)
-      }
+    <View
       style={{
         backgroundColor: palette.card,
         borderColor: palette.cardBorder,
@@ -70,6 +61,6 @@ export function ThisWeekCard({
           />
         ))}
       </View>
-    </Animated.View>
+    </View>
   );
 }

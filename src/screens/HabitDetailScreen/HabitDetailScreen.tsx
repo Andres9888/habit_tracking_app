@@ -1,7 +1,13 @@
 /* eslint-disable max-lines */
 /** HabitDetailScreen - Optimized for 9+ scores across all dimensions */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { KeyboardAvoidingView, Modal, Platform } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import Animated from 'react-native-reanimated';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme';
@@ -122,7 +128,8 @@ function HabitDetailScreenContent({
     if (flow.route === 'detail') onClose();
     else flow.back();
   };
-  const { mounted, pageStyle, scrimStyle } = useDetailPushTransition(visible);
+  const { mounted, onShow, pageStyle, scrimStyle } =
+    useDetailPushTransition(visible);
 
   return (
     <Modal
@@ -133,6 +140,7 @@ function HabitDetailScreenContent({
       presentationStyle='overFullScreen'
       visible={mounted}
       onRequestClose={handleRequestClose}
+      onShow={onShow}
     >
       {displayHabit && habitWithStreaks ? (
         <>
@@ -140,10 +148,19 @@ function HabitDetailScreenContent({
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             className='flex-1'
           >
-            <Animated.View
-              style={[{ flex: 1, backgroundColor: overlays.scrim }, scrimStyle]}
+            <View
+              style={{ flex: 1 }}
               onAccessibilityEscape={handleRequestClose}
             >
+              {/* Sibling scrim: a parent opacity would fade the page too. */}
+              <Animated.View
+                pointerEvents='none'
+                style={[
+                  StyleSheet.absoluteFill,
+                  { backgroundColor: overlays.scrim },
+                  scrimStyle,
+                ]}
+              />
               <Animated.View
                 style={[
                   {
@@ -198,7 +215,7 @@ function HabitDetailScreenContent({
                   onRecoveryChange={handleRecoveryChange}
                 />
               </Animated.View>
-            </Animated.View>
+            </View>
           </KeyboardAvoidingView>
           <NoteSheet
             date={noteDate}
