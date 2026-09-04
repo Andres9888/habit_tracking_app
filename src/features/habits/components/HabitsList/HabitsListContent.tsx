@@ -31,6 +31,25 @@ import type { HabitsListContentProps } from './HabitsList.types';
  * part, so keep the window small — it is measured in viewports — and mount the
  * target region in one batch.
  */
+/**
+ * Normal-scroll render budget. A fast fling outruns a small window: rows past
+ * the mounted region stay unmounted until the next batch lands, which reads as
+ * blank space under the last card (sim-verified, ~500ms holes at
+ * windowSize 5 / batch 6 / 32ms). The window is measured in viewports, so 11
+ * keeps ~5 viewports mounted ahead — for a typical list that is most rows,
+ * and a tap no longer re-renders every mounted card (toggles are memoised per
+ * row), so the wider window is affordable again. Cold start still mounts only
+ * `initialNumToRender` rows; the rest fill in low-priority batches.
+ *
+ * No `removeClippedSubviews`: DraggableFlatList forces it to false after
+ * spreading props, so setting it here does nothing.
+ */
+const SCROLL_LIST_PERF = {
+  maxToRenderPerBatch: 8,
+  updateCellsBatchingPeriod: 16,
+  windowSize: 11,
+} as const;
+
 const FOCUS_LIST_PERF = {
   initialNumToRender: 4,
   maxToRenderPerBatch: 16,
@@ -209,13 +228,10 @@ export function HabitsListContent({
             initialScrollIndex={focusAnchor?.index}
             initialNumToRender={6}
             keyExtractor={handlers.keyExtractor}
-            maxToRenderPerBatch={6}
-            removeClippedSubviews
+            {...SCROLL_LIST_PERF}
             renderItem={renderHabitItem}
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={false}
-            updateCellsBatchingPeriod={32}
-            windowSize={5}
             {...focusPerf}
             onDragBegin={handlers.handleDragBegin}
             onDragEnd={(params) => {

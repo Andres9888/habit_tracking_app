@@ -15,11 +15,13 @@ describe('HabitsListContent virtualization', () => {
 
     expect(lastListProps()).toMatchObject({
       initialNumToRender: 6,
-      maxToRenderPerBatch: 6,
-      removeClippedSubviews: true,
-      updateCellsBatchingPeriod: 32,
-      windowSize: 5,
+      maxToRenderPerBatch: 8,
+      updateCellsBatchingPeriod: 16,
+      windowSize: 11,
     });
+    // DraggableFlatList forces removeClippedSubviews={false} after spreading
+    // props, so passing it here would be a lie.
+    expect(lastListProps()).not.toHaveProperty('removeClippedSubviews');
   });
 
   it('uses the small focus window without retuning normal behavior', () => {
@@ -33,7 +35,6 @@ describe('HabitsListContent virtualization', () => {
       initialNumToRender: 4,
       initialScrollIndex: 0,
       maxToRenderPerBatch: 16,
-      removeClippedSubviews: true,
       updateCellsBatchingPeriod: 8,
       windowSize: 3,
     });
@@ -54,9 +55,9 @@ describe('HabitsListContent virtualization', () => {
 
     expect(lastListProps()).toMatchObject({
       initialNumToRender: 6,
-      maxToRenderPerBatch: 6,
-      updateCellsBatchingPeriod: 32,
-      windowSize: 5,
+      maxToRenderPerBatch: 8,
+      updateCellsBatchingPeriod: 16,
+      windowSize: 11,
     });
     expect(lastListProps().getItemLayout).toEqual(expect.any(Function));
   });
