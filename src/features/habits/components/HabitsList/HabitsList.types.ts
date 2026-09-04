@@ -75,5 +75,6 @@ export interface UseHabitsListHandlersOptions {
     shouldTriggerHabitEntrance: boolean;
     setShouldTriggerHabitEntrance: (value: boolean) => void;
     initialEntranceDoneRef: MutableRefObject<boolean>;
+    seenHabitIdsRef: MutableRefObject<Set<string>>;
   };
 }

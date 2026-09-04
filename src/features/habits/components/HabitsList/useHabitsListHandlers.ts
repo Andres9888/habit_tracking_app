@@ -25,10 +25,11 @@ export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
   });
 
   useHabitsListEffects({
-    habitsLength: habits.length,
+    habits,
     holdJustCreatedHighlight: state.holdJustCreatedHighlight,
     initialEntranceDoneRef: state.initialEntranceDoneRef,
     justCreatedHabitId: state.justCreatedHabitId,
+    seenHabitIdsRef: state.seenHabitIdsRef,
     setJustCreatedHabitId: state.setJustCreatedHabitId,
     setShouldTriggerHabitEntrance: state.setShouldTriggerHabitEntrance,
     shouldTriggerHabitEntrance: state.shouldTriggerHabitEntrance,

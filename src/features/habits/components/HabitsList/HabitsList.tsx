@@ -148,6 +148,7 @@ export function HabitsList(props: HabitsListProps) {
       initialEntranceDoneRef: state.initialEntranceDoneRef,
       holdJustCreatedHighlight,
       justCreatedHabitId: state.justCreatedHabitId,
+      seenHabitIdsRef,
       setJustCreatedHabitId: state.setJustCreatedHabitId,
       setShouldTriggerHabitEntrance: state.setShouldTriggerHabitEntrance,
       shouldTriggerHabitEntrance: state.shouldTriggerHabitEntrance,

@@ -4,6 +4,7 @@
 
 import { useEffect, type MutableRefObject } from 'react';
 import type { Id } from '../../../../../convex/_generated/dataModel';
+import type { Habit } from '../../types';
 import {
   ENTRANCE_ANIMATION_DELAY_MS,
   NEW_HABIT_HIGHLIGHT_MS,
@@ -18,8 +19,9 @@ interface UseHabitsListEffectsOptions {
   setJustCreatedHabitId: (id: Id<'habits'> | null) => void;
   shouldTriggerHabitEntrance: boolean;
   setShouldTriggerHabitEntrance: (value: boolean) => void;
-  habitsLength: number;
+  habits: readonly Pick<Habit, '_id'>[];
   initialEntranceDoneRef: MutableRefObject<boolean>;
+  seenHabitIdsRef: MutableRefObject<Set<string>>;
 }
 
 /**
@@ -34,9 +36,11 @@ export function useHabitsListEffects(options: UseHabitsListEffectsOptions) {
     setJustCreatedHabitId,
     shouldTriggerHabitEntrance,
     setShouldTriggerHabitEntrance,
-    habitsLength,
+    habits,
     initialEntranceDoneRef,
+    seenHabitIdsRef,
   } = options;
+  const habitsLength = habits.length;
 
   // Clear "just created" highlight after a delay
   useEffect(() => {
@@ -56,8 +60,14 @@ export function useHabitsListEffects(options: UseHabitsListEffectsOptions) {
     setShouldTriggerHabitEntrance,
   ]);
 
-  // After the first commit with rows, later virtualization mounts skip entering
+  // After the first commit with rows, later virtualization mounts skip entering.
+  // Every habit present at that commit also counts as seen: a row FlatList
+  // mounts later while scrolling must paint on its first frame, not start at
+  // opacity 0 and play the card entrance (that was the blank cards during a
+  // fast fling). Habits added afterwards stay unseen and keep their entrance.
   useEffect(() => {
-    if (habitsLength > 0) initialEntranceDoneRef.current = true;
-  }, [habitsLength, initialEntranceDoneRef]);
+    if (habitsLength === 0 || initialEntranceDoneRef.current) return;
+    for (const habit of habits) seenHabitIdsRef.current.add(habit._id);
+    initialEntranceDoneRef.current = true;
+  }, [habits, habitsLength, initialEntranceDoneRef, seenHabitIdsRef]);
 }
