@@ -143,6 +143,7 @@ export function HabitsList(props: HabitsListProps) {
   // Post-create toast's "Go to": Home is visible, so scroll in view.
   useRevealHabitRequest({
     clearRevealHabit: modals.clearRevealHabit,
+    estimatedRowLength: focusEstimatedRowLength,
     habits: list.habits,
     listRef,
     reduceMotion: list.reduceMotionPreference,
