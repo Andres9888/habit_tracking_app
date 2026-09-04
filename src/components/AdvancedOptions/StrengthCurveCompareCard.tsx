@@ -1,8 +1,8 @@
 /** One Simple / Average / Complex option — % badge, spark, meta, desc. */
 import { Text, View } from 'react-native';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
-import { triggerHaptic } from '@/utils/haptics';
 import { fontWeights, typography } from '@/theme/typography';
+import { triggerHaptic } from '@/utils/haptics';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { CheckCircle, PctBadge, SuggestedPill } from './StrengthCurveCardBits';
 import { CURVE_MOCK_COPY } from './mockTokens';
@@ -28,6 +28,7 @@ export function StrengthCurveCompareCard({
 
   return (
     <AnimatedPressable
+      animationConfig={{ enableHaptics: false }}
       accessibilityRole='radio'
       accessibilityState={{ checked: active }}
       style={{
@@ -41,7 +42,7 @@ export function StrengthCurveCompareCard({
         minHeight: 44,
       }}
       onPress={() => {
-        void triggerHaptic('selection');
+        if (!active) void triggerHaptic('selection');
         onSelect(mode);
       }}
     >

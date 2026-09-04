@@ -3,7 +3,6 @@ import { useCallback, useState } from 'react';
 import { Text, View, type LayoutChangeEvent } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { ChevronDown, SlidersHorizontal } from 'lucide-react-native';
-import { triggerHaptic } from '@/utils/haptics';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
@@ -46,7 +45,6 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
   const subtitle = `Using ${ALGORITHM_COPY[activeMode].name}`;
 
   const toggle = () => {
-    void triggerHaptic('selection');
     setExpanded((prev) => !prev);
   };
 
@@ -60,6 +58,7 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
       }}
     >
       <AnimatedPressable
+        animationConfig={{ hapticStyle: 'selection' }}
         accessibilityRole='button'
         accessibilityState={{ expanded }}
         className='flex-row items-center justify-between p-4'

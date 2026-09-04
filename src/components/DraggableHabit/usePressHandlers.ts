@@ -31,16 +31,20 @@ export function usePressHandlers({
     if (!onLongPress) return;
     triggerHeavyImpact();
     // Reset scale so the card isn't stuck at CARD_PRESS_SCALE during drag
-    cardScale.value = withSpring(1, springs.bouncy);
+    cardScale.value = withSpring(1, springs.button);
     onLongPress(habit);
   };
 
   const handlePressIn = () => {
     cardScale.value = withSpring(CARD_PRESS_SCALE, springs.button);
+    triggerSelection();
   };
 
+  // Releases on the same spring it pressed with. Previously sprang back on
+  // springs.bouncy, overshooting past 1.0 while every other pressable in the
+  // app settles critically damped.
   const handlePressOut = () => {
-    cardScale.value = withSpring(1, springs.bouncy);
+    cardScale.value = withSpring(1, springs.button);
   };
 
   return {

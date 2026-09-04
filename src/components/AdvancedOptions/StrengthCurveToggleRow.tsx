@@ -3,7 +3,6 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { ChevronDown } from 'lucide-react-native';
-import { triggerHaptic } from '@/utils/haptics';
 import { iconSizes } from '@/theme/iconSizes';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { StrengthCurveToggleText } from './StrengthCurveToggleText';
@@ -30,6 +29,7 @@ export function StrengthCurveToggleRow({
   const t = useAdvancedTokens();
   return (
     <AnimatedPressable
+      animationConfig={{ hapticStyle: 'selection' }}
       accessibilityHint={
         expanded
           ? 'Collapses strength curve options'
@@ -48,7 +48,6 @@ export function StrengthCurveToggleRow({
         paddingVertical: 10,
       }}
       onPress={() => {
-        void triggerHaptic('selection');
         onToggle();
       }}
     >

@@ -54,7 +54,7 @@ export function RetryButton({ onRetry }: RetryButtonProps) {
       accessibilityRole='button'
       style={[
         {
-          backgroundColor: colors.primary[500],
+          backgroundColor: colors.primary[700],
           borderRadius: borderRadius.small,
           paddingHorizontal: 24,
           paddingVertical: 12,

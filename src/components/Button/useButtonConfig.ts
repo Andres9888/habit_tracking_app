@@ -78,9 +78,9 @@ export function useButtonConfig(
       '#3D3833',
     inverseText: mergedTheme.colors?.text?.inverse ?? '#ffffff',
     primary:
-      mergedTheme.colors?.primary?.[500] ??
-      fallbackColors?.primary?.[500] ??
-      '#10B981',
+      mergedTheme.colors?.primary?.[700] ??
+      fallbackColors?.primary?.[700] ??
+      '#047857',
     primaryText:
       mergedTheme.colors?.primary?.[700] ??
       fallbackColors?.primary?.[700] ??

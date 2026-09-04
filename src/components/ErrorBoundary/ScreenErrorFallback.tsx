@@ -60,7 +60,7 @@ export function ScreenErrorFallback({
     },
     primaryButton: {
       alignItems: 'center',
-      backgroundColor: colors.primary[500],
+      backgroundColor: colors.primary[700],
       borderRadius: borderRadius.button,
       marginTop: 24,
       paddingHorizontal: 32,

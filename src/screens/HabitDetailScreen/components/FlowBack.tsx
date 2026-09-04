@@ -4,7 +4,6 @@
  */
 import { I18nManager, StyleSheet, Text } from 'react-native';
 import { ChevronLeft } from 'lucide-react-native';
-import { triggerHaptic } from '@/utils/haptics';
 import { AnimatedPressable } from '../../../components/ui';
 import { useInsightPalette } from '../insightPalette';
 
@@ -15,18 +14,13 @@ interface FlowBackProps {
 
 export function FlowBack({ label, onPress }: FlowBackProps) {
   const palette = useInsightPalette();
-  const handlePress = () => {
-    void triggerHaptic('tap');
-    onPress();
-  };
-
   return (
     <AnimatedPressable
       accessibilityLabel={`Back to ${label}`}
       accessibilityRole='button'
       animationConfig={{ pressScale: 0.94 }}
       style={styles.control}
-      onPress={handlePress}
+      onPress={onPress}
     >
       <ChevronLeft
         color={palette.green}

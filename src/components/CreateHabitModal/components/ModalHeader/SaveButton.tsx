@@ -35,7 +35,7 @@ export const SaveButton = ({
     () => ({
       disabledBg: colors.border,
       disabledLabel: colors.text.tertiary,
-      enabledBg: colors.primary[600],
+      enabledBg: colors.primary[700],
       enabledLabel: colors.text.inverse,
     }),
     [colors]

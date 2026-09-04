@@ -8,7 +8,6 @@
  */
 
 import { X } from 'lucide-react-native';
-import { triggerHaptic } from '@/utils/haptics';
 import { borderRadius } from '@/theme/spacing';
 import { AnimatedPressable } from './AnimatedPressable';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -51,15 +50,9 @@ export function ModalCloseButton({
   const resolvedIconSize = iconSize ?? (isSubtle ? 20 : 24);
   const subtleBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
 
-  const handlePress = () => {
-    if (haptic) {
-      triggerHaptic('tap');
-    }
-    onClose();
-  };
-
   return (
     <AnimatedPressable
+      animationConfig={{ enableHaptics: haptic }}
       accessibilityHint={hint}
       accessibilityLabel={label}
       accessibilityRole="button"
@@ -73,7 +66,7 @@ export function ModalCloseButton({
         borderRadius: borderRadius.full,
         backgroundColor: isSubtle ? subtleBg : colors.surface,
       }}
-      onPress={handlePress}
+      onPress={onClose}
     >
       <X
         color={isSubtle ? colors.text.tertiary : colors.text.secondary}

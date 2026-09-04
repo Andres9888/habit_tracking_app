@@ -7,7 +7,6 @@
  */
 import React from 'react';
 import { Text, View } from 'react-native';
-import { triggerHaptic } from '@/utils/haptics';
 import { AnimatedPressable } from '../../../components/ui';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontWeights } from '../../../theme/typography';
@@ -37,11 +36,6 @@ export function HeaderButton({
   const { bg, border, fg } = toneColors(tone, isDark, colors);
   const showText = Boolean(text) && !compact;
 
-  const handlePress = () => {
-    void triggerHaptic('tap');
-    onPress();
-  };
-
   return (
     <AnimatedPressable
       accessibilityLabel={label}
@@ -51,7 +45,7 @@ export function HeaderButton({
         showText ? s.textButton : s.compactButton,
         showText ? { backgroundColor: bg, borderColor: border } : undefined,
       ]}
-      onPress={handlePress}
+      onPress={onPress}
     >
       {compact ? (
         <View

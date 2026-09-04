@@ -26,7 +26,7 @@ const SPRING_CONFIG = springs.standard;
 const PADDING = 4;
 
 export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const containerWidth = useSharedValue(0);
   const indicatorX = useSharedValue(activeView === 'month' ? 0 : 1);
 
@@ -62,12 +62,13 @@ export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
       onLayout={handleLayout}
     >
       <Animated.View
-        className='absolute bottom-1 top-1 rounded-md bg-white'
+        className='absolute bottom-1 top-1 rounded-md'
         style={[
           indicatorStyle,
           {
+            backgroundColor: isDark ? colors.card : '#FFFFFF',
             elevation: 3,
-            shadowColor: '#059669',
+            shadowColor: colors.primary[600],
             shadowOffset: { height: 3, width: 0 },
             shadowOpacity: 0.12,
             shadowRadius: 8,

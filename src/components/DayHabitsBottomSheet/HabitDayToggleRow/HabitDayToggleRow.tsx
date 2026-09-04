@@ -26,7 +26,7 @@ function HabitDayToggleRowComponent({
   isLoading = false,
   reduceMotion = false,
 }: HabitDayToggleRowProps) {
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
   const [isToggling, setIsToggling] = useState(false);
 
   const { scaleAnim, checkScaleAnim, animateCheckbox, animatePressEffect } =
@@ -76,7 +76,16 @@ function HabitDayToggleRowComponent({
           void handlePress();
         }}
       >
-        <View className='h-10 w-10 items-center justify-center rounded-xl bg-white' style={shadows.card}>
+        <View
+          className='h-10 w-10 items-center justify-center rounded-xl border'
+          style={[
+            shadows.card,
+            {
+              backgroundColor: isDark ? themeColors.card : '#FFFFFF',
+              borderColor: themeColors.cardBorder,
+            },
+          ]}
+        >
           <Text className='text-xl'>{habit.icon || '🎯'}</Text>
         </View>
 

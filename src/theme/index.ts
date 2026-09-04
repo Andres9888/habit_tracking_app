@@ -188,12 +188,16 @@
  *
  * ## WCAG Accessibility
  *
- * All text colors meet WCAG 2.1 Level AA:
+ * Target for all text colors is WCAG 2.1 Level AA:
  * - Normal text: 4.5:1 minimum contrast
  * - Large text (22pt+): 3:1 minimum contrast
  * - UI components: 3:1 minimum contrast
  *
- * Verified in both light and dark modes.
+ * Semantic colors (`error`, `warning`, `info`, `success`, `streak`, `premium`)
+ * all clear AA on white. The `primary` scale does NOT: `primary[500]` is
+ * 2.54:1 and `primary[600]` is 3.77:1 against white, so neither is safe behind
+ * white label text. Filled CTAs use `primary[700]` (5.48:1 light / 13.83:1
+ * dark). See `colors/index.ts` for the per-token table.
  *
  * ## File Organization
  *

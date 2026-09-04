@@ -2,7 +2,8 @@
  * Spring-based press animations for BottomActionBar icon buttons and FAB.
  *
  * All elements share one press signature to feel like a single system:
- *   scale 0.94 + lift -2px. The FAB additionally ring-pulses on release.
+ *   scale 0.97 + lift -1px (the app-wide AnimatedPressable signature).
+ *   The FAB additionally ring-pulses on release.
  */
 
 import {
@@ -14,12 +15,13 @@ import {
   runOnJS,
 } from 'react-native-reanimated';
 import { SPRING_CONFIGS } from '../../../../utils/animations/helpers';
+import { CARD_PRESS_SCALE } from '../../../../utils/animations/cardPressAnimation';
 import { HapticPatterns } from '../../../../utils/haptics';
 
 export type { CelebrationAnimStyles } from './useCelebrationAnimations';
 
-const FAB_SCALE = 0.94;
-const FAB_LIFT = -2;
+const FAB_SCALE = CARD_PRESS_SCALE;
+const FAB_LIFT = -1;
 const SPRING = SPRING_CONFIGS.snappy;
 const RING_PULSE_MIN = 0.97;
 

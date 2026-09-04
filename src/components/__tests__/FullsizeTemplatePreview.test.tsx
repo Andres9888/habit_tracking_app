@@ -28,6 +28,7 @@ jest.mock('react-native-safe-area-context', () => ({
 }));
 
 // Mock react-native-reanimated
+var mockReducedMotion = false;
 jest.mock('react-native-reanimated', () => {
   const React = require('react');
   const { View, Pressable, Text } = require('react-native');
@@ -78,6 +79,10 @@ jest.mock('react-native-reanimated', () => {
     interpolate: () => 0,
     interpolateColor: () => '#000',
     runOnJS: (fn: Function) => fn,
+    // usePressAnimation (via the shared AnimatedPressable) calls this on
+    // every render; a file-local mock overrides jest.setup.js, so it has
+    // to be provided here too.
+    useReducedMotion: () => mockReducedMotion,
   };
 });
 
@@ -407,11 +412,17 @@ describe('FullsizeTemplatePreview', () => {
       // Relabelled from 'Close preview': the header now carries two exits, and
       // "Close" alone did not say which destination this one leads to.
       const closeButton = getByLabelText('Close and go to my habits');
+      // The haptic now fires on press-in via AnimatedPressable's shared press
+      // behaviour (previously ModalCloseButton fired its own on activation,
+      // which double-buzzed against the built-in). fireEvent.press only calls
+      // onPress, so press-in has to be fired explicitly.
+      fireEvent(closeButton, 'pressIn');
       fireEvent.press(closeButton);
 
       expect(Haptics.impactAsync).toHaveBeenCalledWith(
         Haptics.ImpactFeedbackStyle.Light
       );
+      expect(Haptics.impactAsync).toHaveBeenCalledTimes(1);
       expect(mockOnClose).toHaveBeenCalled();
     });
 
@@ -457,8 +468,11 @@ describe('FullsizeTemplatePreview', () => {
       expect(mockOnCustomize).toHaveBeenCalledWith(template);
     });
 
-    it('does not trigger haptic when reduced motion is enabled', () => {
-      // Re-mock useReduceMotion to return true
+    it('still triggers haptic when reduced motion is enabled', () => {
+      // usePressAnimation reads Reanimated's useReducedMotion, not the local
+      // hooks/useReduceMotion — flip the one the code path actually consults,
+      // otherwise this asserts nothing about reduce motion.
+      mockReducedMotion = true;
       const useReduceMotionMock = require('../../hooks/useReduceMotion');
       useReduceMotionMock.useReduceMotion.mockReturnValue(true);
 
@@ -476,15 +490,20 @@ describe('FullsizeTemplatePreview', () => {
       // Relabelled from 'Close preview': the header now carries two exits, and
       // "Close" alone did not say which destination this one leads to.
       const closeButton = getByLabelText('Close and go to my habits');
+      fireEvent(closeButton, 'pressIn');
       fireEvent.press(closeButton);
 
-      // ModalCloseButton fires its own tap haptic before onClose
+      // Reduce Motion suppresses the press *animation*, not the haptic: the
+      // tactile channel is what compensates for the removed visual feedback.
+      // (This case has always asserted the haptic fires — the old test name
+      // said otherwise and was wrong.)
       expect(Haptics.impactAsync).toHaveBeenCalledWith(
         Haptics.ImpactFeedbackStyle.Light
       );
       expect(mockOnClose).toHaveBeenCalled();
 
-      // Reset mock
+      // Reset mocks
+      mockReducedMotion = false;
       useReduceMotionMock.useReduceMotion.mockReturnValue(false);
     });
   });

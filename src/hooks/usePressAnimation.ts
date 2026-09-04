@@ -33,6 +33,7 @@ import { useCallback } from 'react';
 import {
   useSharedValue,
   useAnimatedStyle,
+  useReducedMotion,
   withSpring,
 } from 'react-native-reanimated';
 import { Platform } from 'react-native';
@@ -103,13 +104,20 @@ export function usePressAnimation(
 ): UsePressAnimationReturn {
   const {
     pressScale = CARD_PRESS_SCALE,
-    respectReducedMotion: _respectReducedMotion = true,
+    respectReducedMotion = true,
     springConfig = Springs.button,
     enableHaptics = true,
     hapticStyle = 'light',
   } = config;
 
   const scale = useSharedValue(1);
+  // Reanimated's hook rather than the local `useReduceMotion`: this runs at 80+
+  // call sites, and the local hook registers one AccessibilityInfo listener per
+  // instance. Reanimated keeps a single shared subscription.
+  // Reduce Motion suppresses the spring, not the haptic — the tactile channel is
+  // what compensates for the removed visual feedback.
+  const systemReduceMotion = useReducedMotion();
+  const motionOff = respectReducedMotion && Boolean(systemReduceMotion);
 
   const triggerHaptic = useCallback(() => {
     if (enableHaptics && isHapticsSupported) {
@@ -127,14 +135,16 @@ export function usePressAnimation(
   const pressHandlers = useCallback(
     (): PressAnimationHandlers => ({
       onPressIn: () => {
-        scale.value = withSpring(pressScale, springConfig);
+        scale.value = motionOff
+          ? pressScale
+          : withSpring(pressScale, springConfig);
         triggerHaptic();
       },
       onPressOut: () => {
-        scale.value = withSpring(1, springConfig);
+        scale.value = motionOff ? 1 : withSpring(1, springConfig);
       },
     }),
-    [pressScale, springConfig, scale, triggerHaptic]
+    [pressScale, springConfig, scale, triggerHaptic, motionOff]
   )();
 
   const animatedStyle = useAnimatedStyle(() => {

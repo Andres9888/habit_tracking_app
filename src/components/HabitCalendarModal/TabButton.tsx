@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { Pressable, Text } from 'react-native';
 import { typography, fontFamilies, fontWeights } from '@/theme/typography';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { triggerHaptic } from '@/utils/haptics';
 
 type CalendarView = 'month' | 'year';
@@ -18,6 +19,7 @@ export function TabButton({
   activeView,
   onPress,
 }: TabButtonProps) {
+  const { colors } = useThemeColors();
   const isActive = activeView === view;
 
   const handlePress = useCallback(() => {
@@ -37,7 +39,7 @@ export function TabButton({
     >
       <Text
         style={{
-          color: isActive ? '#059669' : '#78716c',
+          color: isActive ? colors.primary[700] : colors.text.secondary,
           fontFamily: fontFamilies.primary.text,
           fontSize: typography.caption.fontSize,
           fontWeight: fontWeights.semibold,

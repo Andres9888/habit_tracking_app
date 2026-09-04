@@ -55,6 +55,9 @@ jest.mock('react-native-reanimated', () => {
       cubic: () => 0,
       ease: () => 0,
     },
+    // Required by usePressAnimation via the shared AnimatedPressable; this
+    // file-local mock overrides the one in jest.setup.js.
+    useReducedMotion: () => false,
   };
 });
 

@@ -18,24 +18,22 @@ export function Checkbox({
   isLoading,
   checkScaleAnim,
 }: CheckboxProps) {
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
 
   if (isLoading) {
     return (
       <View className='h-6 w-6 items-center justify-center'>
-        <ActivityIndicator color='#78716c' size='small' />
+        <ActivityIndicator color={themeColors.text.secondary} size='small' />
       </View>
     );
   }
 
-  const checkboxStyle = isCompleted
-    ? ''
-    : 'border-2 bg-white';
+  const checkboxStyle = isCompleted ? '' : 'border-2';
 
   const shadowStyle = isCompleted
     ? {
         elevation: 2,
-        shadowColor: '#10b981',
+        shadowColor: themeColors.status.success,
         shadowOffset: { height: 1, width: 0 },
         shadowOpacity: 0.3,
         shadowRadius: 2,
@@ -45,7 +43,15 @@ export function Checkbox({
   return (
     <View
       className={`h-6 w-6 items-center justify-center rounded-lg ${checkboxStyle}`}
-      style={[shadowStyle, isCompleted ? { backgroundColor: themeColors.status.success } : { borderColor: themeColors.border }]}
+      style={[
+        shadowStyle,
+        isCompleted
+          ? { backgroundColor: themeColors.status.success }
+          : {
+              backgroundColor: isDark ? themeColors.card : '#FFFFFF',
+              borderColor: themeColors.border,
+            },
+      ]}
     >
       <Animated.View
         style={{

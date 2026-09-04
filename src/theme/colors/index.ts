@@ -107,8 +107,9 @@
  * - ✅ `warning` (#9A5504) on `background`: **5.08:1**
  *
  * ### Contrast Warnings
- * - ⚠️ `warning.500` (#F59E0B) on white: **2.3:1** — Use `warning.700` for text
- * - ⚠️ `primary.500` (#10B981) on white: **2.9:1** — Use `primary.700` for text
+ * - ⚠️ `warning.500` (#F59E0B) on white: **2.15:1** — Use `warning.700` for text
+ * - ⚠️ `primary.500` (#10B981) on white: **2.54:1** — fails even the 3:1
+ *   non-text threshold. Use `primary.700` (5.48:1) for text AND for filled CTAs.
  * - ⚠️ Disabled elements (`gray.300`) are WCAG-exempt per 1.4.3
  *
  * ## Color Token Review (Dead Code Check)

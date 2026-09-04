@@ -7,7 +7,6 @@ import React, { useCallback } from 'react';
 import { Text, View, ViewStyle } from 'react-native';
 import { clsx } from 'clsx';
 
-import { useHapticFeedback } from '../hooks/useHapticFeedback';
 import { useThemeColors } from '../theme/ThemeContext';
 import { shadows } from '../theme/spacing';
 import { AnimatedPressable } from './ui';
@@ -58,15 +57,13 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
   },
   ref
 ) {
-  const { triggerLightImpact } = useHapticFeedback();
   const { colors } = useThemeColors();
   const isIndeterminate = indeterminate && !checked;
   const isActive = checked || isIndeterminate;
 
   const handlePress = useCallback(() => {
-    triggerLightImpact();
     onPress?.();
-  }, [onPress, triggerLightImpact]);
+  }, [onPress]);
 
   return (
     <AnimatedPressable
