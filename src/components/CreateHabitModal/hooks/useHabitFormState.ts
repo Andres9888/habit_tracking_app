@@ -4,6 +4,7 @@
 
 import { useMemo, useState } from 'react';
 import { DEFAULT_COLOR } from '../constants';
+import { pickUsableAccent } from '@/theme/iconTokens/usableAccent';
 import type { HabitDoc } from '../types';
 import { parseHabitName, parseReminderTime } from '../utils';
 import {
@@ -31,7 +32,8 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     parsed.emoji
   );
   const [selectedColor, setSelectedColor] = useState(
-    habitToEdit?.color ?? habitToEdit?.iconColor ?? DEFAULT_COLOR
+    pickUsableAccent(habitToEdit?.color, habitToEdit?.iconColor) ??
+      DEFAULT_COLOR
   );
   const [isColorPickerVisible, setColorPickerVisible] = useState(false);
   const [remindersEnabled, setRemindersEnabled] = useState(

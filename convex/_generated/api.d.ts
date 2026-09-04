@@ -107,6 +107,7 @@ import type * as subscriptions_helpers from "../subscriptions/helpers.js";
 import type * as subscriptions_premiumCheck from "../subscriptions/premiumCheck.js";
 import type * as subscriptions from "../subscriptions.js";
 import type * as templateCategories from "../templateCategories.js";
+import type * as templates_backfillAccentColors from "../templates/backfillAccentColors.js";
 import type * as templates_backfillEstimatedMinutes from "../templates/backfillEstimatedMinutes.js";
 import type * as templates_clearAndDedupe from "../templates/clearAndDedupe.js";
 import type * as templates_curateTemplates from "../templates/curateTemplates.js";
@@ -241,6 +242,7 @@ declare const fullApi: ApiFromModules<{
   "subscriptions/premiumCheck": typeof subscriptions_premiumCheck;
   subscriptions: typeof subscriptions;
   templateCategories: typeof templateCategories;
+  "templates/backfillAccentColors": typeof templates_backfillAccentColors;
   "templates/backfillEstimatedMinutes": typeof templates_backfillEstimatedMinutes;
   "templates/clearAndDedupe": typeof templates_clearAndDedupe;
   "templates/curateTemplates": typeof templates_curateTemplates;

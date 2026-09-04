@@ -13,6 +13,7 @@ import type { ProgressEmojiSet } from '../../utils/progressEmojis';
 import { useHabitSaveHandler } from './useHabitSaveHandler';
 import { useHabitActions } from './useHabitActions';
 import { parseHabitName } from '../../components/CreateHabitModal/utils';
+import { pickUsableAccent } from '../../theme/iconTokens/usableAccent';
 
 interface UseHabitEditScreenProps {
   habitId: Id<'habits'> | null;
@@ -37,7 +38,8 @@ function getEditFormValues(habit?: Habit | null) {
       getDefaultReminderTime()
     ),
     remindersEnabled: habit?.remindersEnabled ?? false,
-    selectedColor: habit?.color || habit?.iconColor || DEFAULT_COLOR,
+    selectedColor:
+      pickUsableAccent(habit?.color, habit?.iconColor) ?? DEFAULT_COLOR,
     selectedEmoji: habit?.icon ?? parsedName.emoji ?? DEFAULT_EMOJI,
     streakGoal: habit?.goalDuration ?? 0,
     strengthAlgorithm:

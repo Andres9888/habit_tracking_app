@@ -13,6 +13,7 @@ import { durations, enterEasing } from '../../../theme/animations';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { withAlpha } from '../../../theme';
+import { pickUsableAccent } from '../../../theme/iconTokens/usableAccent';
 import { typography, fontWeights } from '../../../theme/typography';
 import { GoalAdjustSheet } from './GoalAdjustSheet';
 import { GoalTabEmptyState } from './GoalTabEmptyState';
@@ -56,7 +57,8 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
     );
   }
 
-  const habitColor = habit.color ?? habit.iconColor ?? colors.primary[700];
+  const habitColor =
+    pickUsableAccent(habit.color, habit.iconColor) ?? colors.primary[700];
   const controlAccent = readableHabitAccent(
     habitColor,
     colors.card,

@@ -10,6 +10,8 @@ import {
   validateUrl,
   validateTimeFormat,
   validateColor,
+  validateAccentColor,
+  isUsableAccentColor,
   validateEmoji,
   validateIdentifier,
   containsDangerousPatterns,
@@ -295,5 +297,41 @@ describe('requireValid', () => {
   it('should throw on validation failure', () => {
     const result = { isValid: false, error: 'Test error' } as const;
     expect(() => requireValid(result, 'value')).toThrow('Test error');
+  });
+});
+
+describe('isUsableAccentColor', () => {
+  it('rejects near-white and named colours', () => {
+    expect(isUsableAccentColor('#FFFFFF')).toBe(false);
+    expect(isUsableAccentColor('#fff')).toBe(false);
+    expect(isUsableAccentColor('#F3F4F6')).toBe(false);
+    expect(isUsableAccentColor('white')).toBe(false);
+    expect(isUsableAccentColor(undefined)).toBe(false);
+  });
+
+  it('accepts readable hex accents', () => {
+    expect(isUsableAccentColor('#10B981')).toBe(true);
+    expect(isUsableAccentColor('#78716c')).toBe(true);
+    expect(isUsableAccentColor('#0EA5E9')).toBe(true);
+  });
+});
+
+describe('validateAccentColor', () => {
+  it('passes undefined and readable hex', () => {
+    expect(validateAccentColor(undefined)).toEqual({ isValid: true });
+    expect(validateAccentColor('#10B981')).toEqual({
+      isValid: true,
+      sanitized: '#10b981',
+    });
+  });
+
+  it('rejects white with a readable error', () => {
+    const result = validateAccentColor('#FFFFFF', 'Icon color');
+    expect(result.isValid).toBe(false);
+    expect(result.error).toMatch(/too light/);
+  });
+
+  it('still rejects malformed input via validateColor', () => {
+    expect(validateAccentColor('javascript:alert(1)').isValid).toBe(false);
   });
 });

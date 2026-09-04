@@ -9,7 +9,7 @@ import {
   validateLongText,
   validateShortText,
   validateTimeFormat,
-  validateColor,
+  validateAccentColor,
   validateEmoji,
   validateIdentifier,
   requireValid,
@@ -109,10 +109,10 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
   const iconResult = validateEmoji(args.icon, 'Icon');
   const icon = requireValid(iconResult, args.icon);
 
-  const colorResult = validateColor(args.color, 'Habit color');
+  const colorResult = validateAccentColor(args.color, 'Habit color');
   const color = requireValid(colorResult, args.color);
 
-  const iconColorResult = validateColor(args.iconColor, 'Icon color');
+  const iconColorResult = validateAccentColor(args.iconColor, 'Icon color');
   const iconColor = requireValid(iconColorResult, args.iconColor);
 
   // Optional: preferredTime is a phase identifier (e.g. "phase1_push", "morning"), not a time string
@@ -236,12 +236,12 @@ export function validateHabitUpdateFields(
   }
 
   if (args.color !== undefined) {
-    const colorResult = validateColor(args.color, 'Habit color');
+    const colorResult = validateAccentColor(args.color, 'Habit color');
     result.color = requireValid(colorResult, args.color);
   }
 
   if (args.iconColor !== undefined) {
-    const iconColorResult = validateColor(args.iconColor, 'Icon color');
+    const iconColorResult = validateAccentColor(args.iconColor, 'Icon color');
     result.iconColor = requireValid(iconColorResult, args.iconColor);
   }
 

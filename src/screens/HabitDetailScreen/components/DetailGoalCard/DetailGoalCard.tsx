@@ -12,6 +12,7 @@
 import { useState } from 'react';
 import type { Habit } from '../../../../features/habits/types';
 import { useThemeColors } from '../../../../theme';
+import { pickUsableAccent } from '../../../../theme/iconTokens/usableAccent';
 import { useInsightPalette } from '../../insightPalette';
 import { GoalAdjustSheet } from '../GoalAdjustSheet';
 import { GoalSetCard } from './GoalSetCard';
@@ -52,7 +53,9 @@ export function DetailGoalCard({
       <GoalAdjustSheet
         currentGoal={storedGoal}
         currentStreak={currentStreak}
-        habitColor={habit.color ?? habit.iconColor ?? colors.primary[700]}
+        habitColor={
+          pickUsableAccent(habit.color, habit.iconColor) ?? colors.primary[700]
+        }
         habitId={habit._id}
         initialGoal={goal}
         visible={sheetOpen}

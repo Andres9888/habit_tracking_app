@@ -2,6 +2,7 @@ import { Pressable, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useAnimatedHabitCard } from './AnimatedHabitCard.hooks';
 import { pickAccentColor } from '../../DraggableHabit/DraggableHabit.hooks';
+import { pickUsableAccent } from '@/theme/iconTokens/usableAccent';
 import { HabitCardHeader } from './HabitCardHeader';
 import { HabitStatsBadges } from './HabitStatsBadges';
 import { ActionButtons } from './ActionButtons';
@@ -20,7 +21,8 @@ export function AnimatedHabitCard({
   } = useAnimatedHabitCard({ habitId: habit._id, habitName: habit.name, index, onRestore, reducedMotion });
 
   const strength = (habit.strength ?? 0) * 100;
-  const accentBarColor = habit.color || habit.iconColor || pickAccentColor(habit.name);
+  const accentBarColor =
+    pickUsableAccent(habit.color, habit.iconColor) ?? pickAccentColor(habit.name);
   const archiveDate = habit.archivedAt || habit._creationTime;
   const selected = isSelected && selectionMode;
 

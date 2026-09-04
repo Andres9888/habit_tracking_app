@@ -7,6 +7,7 @@ import { shadows } from '../../../theme/spacing';
 import { typography, fontWeights } from '../../../theme/typography';
 import { getRelativeTime } from '../utils';
 import { pickAccentColor } from '../../DraggableHabit/DraggableHabit.hooks';
+import { pickUsableAccent } from '@/theme/iconTokens/usableAccent';
 import type { ArchivedHabit } from '../types';
 import type { Id } from '../../../../convex/_generated/dataModel';
 
@@ -25,7 +26,8 @@ export function CompactHabitRow({
 }: CompactHabitRowProps) {
   const { colors, isDark } = useThemeColors();
   const [isRestoring, setIsRestoring] = useState(false);
-  const accentColor = habit.color || habit.iconColor || pickAccentColor(habit.name);
+  const accentColor =
+    pickUsableAccent(habit.color, habit.iconColor) ?? pickAccentColor(habit.name);
   const archiveDate = habit.archivedAt || habit._creationTime;
   const cardBg = colors.card;
 

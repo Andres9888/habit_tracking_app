@@ -25,6 +25,7 @@ export const getEmojiAndName = (
 };
 
 import type { Habit } from './types';
+import { pickUsableAccent } from '@/theme/iconTokens/usableAccent';
 
 /** Premium accent color palette — deterministically assigned per habit name. */
 const ACCENT_COLORS = [
@@ -54,12 +55,15 @@ export const pickAccentColor = (input: string): string => {
 /**
  * Derives display properties for a habit: resolved emoji, cleaned name, and accent color.
  * Color priority: explicit `habit.color` > legacy `iconColor` > deterministic from name.
+ * Near-white hexes (e.g. a template's `#FFFFFF`) are skipped so the accent bar and
+ * check-in cells never render invisible.
  */
 export const useDraggableHabitLogic = (habit: Habit) => {
   const { emoji: extractedEmoji, name } = getEmojiAndName(habit.name);
   const emoji = habit.icon || extractedEmoji;
   const accentColor =
-    habit.color || habit.iconColor || pickAccentColor(name || habit.name);
+    pickUsableAccent(habit.color, habit.iconColor) ??
+    pickAccentColor(name || habit.name);
 
   return {
     accentColor,

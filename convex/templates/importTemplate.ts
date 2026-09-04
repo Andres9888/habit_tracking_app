@@ -5,7 +5,8 @@ import { v } from 'convex/values';
 import { internalMutation, mutation } from '../_generated/server';
 import {
   validateHabitName,
-  validateColor,
+  validateAccentColor,
+  isUsableAccentColor,
   validateTimeFormat,
   requireValid,
   MAX_HABIT_NAME_LENGTH,
@@ -13,6 +14,9 @@ import {
 import { progressEmojisValidator } from '../lib/progressEmojisValidator';
 import { validateDaysOfWeek } from '../habits/validation';
 import { isLegacyImportedWhy, resolveImportedWhy } from './importedWhy';
+
+/** Emerald — matches `DEFAULT_COLOR` in the client picker. */
+const DEFAULT_ACCENT_COLOR = '#10B981';
 
 /**
  * Mutation: Import a template to create a new habit
@@ -89,16 +93,20 @@ export const importTemplate = mutation({
       }
     }
 
-    // SEC-003: Input validation - iconColor customization
-    let validatedIconColor = template.iconColor;
+    // SEC-003: Input validation - iconColor customization.
+    // Legacy seed rows carry near-white accents (#FFFFFF) that render an
+    // invisible bar on the card; those fall back to the default accent.
+    let validatedIconColor = isUsableAccentColor(template.iconColor)
+      ? template.iconColor
+      : DEFAULT_ACCENT_COLOR;
     if (args.customizations?.iconColor !== undefined) {
-      const iconColorResult = validateColor(
+      const iconColorResult = validateAccentColor(
         args.customizations.iconColor,
         'Icon color'
       );
       validatedIconColor =
         requireValid(iconColorResult, args.customizations.iconColor) ??
-        template.iconColor;
+        validatedIconColor;
     }
 
     // SEC-003: Input validation - reminderTime customization

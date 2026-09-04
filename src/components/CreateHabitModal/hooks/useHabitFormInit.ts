@@ -3,6 +3,7 @@
  */
 
 import { useEffect } from 'react';
+import { pickUsableAccent } from '@/theme/iconTokens/usableAccent';
 import { DEFAULT_COLOR } from '../constants';
 import type { HabitDoc } from '../types';
 import { parseReminderTime } from '../utils';
@@ -59,7 +60,10 @@ export const useHabitFormInit = ({
     if (!habitToEdit) return;
     setHabitName(parsed.name);
     setSelectedEmoji(parsed.emoji);
-    setSelectedColor(habitToEdit.iconColor ?? DEFAULT_COLOR);
+    setSelectedColor(
+      pickUsableAccent(habitToEdit.color, habitToEdit.iconColor) ??
+        DEFAULT_COLOR
+    );
     setRemindersEnabled(habitToEdit.remindersEnabled ?? false);
     setReminderTime(parseReminderTime(habitToEdit.reminderTime));
     setReminderSound(habitToEdit.reminderSound ?? DEFAULT_SOUND);

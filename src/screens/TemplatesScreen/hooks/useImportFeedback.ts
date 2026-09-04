@@ -3,6 +3,7 @@
  */
 
 import { useCallback, useRef } from 'react';
+import { pickUsableAccent } from '@/theme/iconTokens/usableAccent';
 import { colors } from '@/theme/colors';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandlers.types';
@@ -33,7 +34,7 @@ export function useImportFeedback(o: FeedbackOptions) {
       o.setFeedbackVariant('success');
       o.setToastOnAction(null);
       o.setToastTemplateData({
-        color: template.iconColor ?? colors.primary[500],
+        color: pickUsableAccent(template.iconColor) ?? colors.primary[500],
         icon: template.icon ?? '✓',
         name: template.name,
       });
@@ -59,7 +60,11 @@ export function useImportFeedback(o: FeedbackOptions) {
     ) => {
       const t = templateOverride ?? previewRef.current;
       const data = t
-        ? { color: t.iconColor ?? colors.primary[500], icon: t.icon ?? '✓', name: t.name }
+        ? {
+            color: pickUsableAccent(t.iconColor) ?? colors.primary[500],
+            icon: t.icon ?? '✓',
+            name: t.name,
+          }
         : null;
 
       o.setFeedbackHabitId(habitId);

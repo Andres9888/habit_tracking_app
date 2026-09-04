@@ -431,6 +431,56 @@ export function validateIdentifier(
  * Throws a validation error if result is invalid.
  * Returns the sanitized value if valid.
  */
+/**
+ * HSL lightness (0-100) above which a habit accent stops reading on the card.
+ * Mirrors `MAX_ACCENT_LIGHTNESS` in `src/theme/iconTokens/usableAccent.ts`.
+ */
+export const MAX_ACCENT_LIGHTNESS = 85;
+
+const ACCENT_HEX_PATTERN = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i;
+
+function accentLightness(hex: string): number | null {
+  const match = ACCENT_HEX_PATTERN.exec(hex.trim());
+  if (!match) return null;
+  let body = match[1];
+  if (body.length === 3) body = [...body].map((c) => c + c).join('');
+  const r = Number.parseInt(body.slice(0, 2), 16) / 255;
+  const g = Number.parseInt(body.slice(2, 4), 16) / 255;
+  const b = Number.parseInt(body.slice(4, 6), 16) / 255;
+  return ((Math.max(r, g, b) + Math.min(r, g, b)) / 2) * 100;
+}
+
+/**
+ * True when a colour can serve as a habit accent (bar, check-in cells).
+ * Near-white hex such as `#FFFFFF` / `#F3F4F6` is rejected; so are named
+ * colours, which the picker never emits and which have no defined lightness.
+ */
+export function isUsableAccentColor(color: string | undefined): boolean {
+  if (color === undefined) return false;
+  const lightness = accentLightness(color);
+  return lightness !== null && lightness <= MAX_ACCENT_LIGHTNESS;
+}
+
+/**
+ * Validate a habit accent colour: format check plus the readability guard.
+ * Undefined passes through (optional field). Named colours are rejected here
+ * even though `validateColor` accepts them, because accents must be hex.
+ */
+export function validateAccentColor(
+  color: string | undefined,
+  fieldName: string = 'Color'
+): ValidationResult {
+  const base = validateColor(color, fieldName);
+  if (!base.isValid || color === undefined) return base;
+  if (!isUsableAccentColor(base.sanitized ?? color)) {
+    return {
+      isValid: false,
+      error: `${fieldName} is too light to read; pick a darker colour`,
+    };
+  }
+  return base;
+}
+
 export function requireValid<T extends string | undefined>(
   result: ValidationResult,
   originalValue: T
