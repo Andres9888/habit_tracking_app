@@ -1,9 +1,13 @@
 /**
  * Builds category groups for the catalog page shelves (reuses CategoryGroup).
  *
- * Templates the user has already added (per the frozen snapshot) are pulled
- * out of their category sections into a single "Added" group appended at the
- * bottom, so everything above it is addable.
+ * Templates the user has already added (per the frozen snapshot) stay in their
+ * own category section and are *also* mirrored into an "Added" group appended
+ * at the bottom. An earlier version moved them, which quietly deleted a chip
+ * once its last habit was added — a heavy user with 290 of 293 templates added
+ * saw the rail collapse to "All | Huberman | Added" and read it as lost data.
+ * Within a section the un-added ones sort first, so every shelf still opens on
+ * something the user can act on.
  */
 
 import type { Doc } from '../../../../convex/_generated/dataModel';
@@ -33,14 +37,25 @@ function matchesSearch(template: Doc<'templates'>, query: string): boolean {
 const byPopularity = (a: Doc<'templates'>, b: Doc<'templates'>) =>
   (b.popularityScore ?? 0) - (a.popularityScore ?? 0);
 
-function toGroup(category: string, templates: Doc<'templates'>[]): CategoryGroup {
+/** Un-added first, then popularity — added habits sink to the shelf's tail. */
+const byAddableThenPopularity =
+  (addedIds: Set<string>) => (a: Doc<'templates'>, b: Doc<'templates'>) => {
+    const rank = Number(addedIds.has(a._id)) - Number(addedIds.has(b._id));
+    return rank === 0 ? byPopularity(a, b) : rank;
+  };
+
+function toGroup(
+  category: string,
+  templates: Doc<'templates'>[],
+  sort: (a: Doc<'templates'>, b: Doc<'templates'>) => number = byPopularity
+): CategoryGroup {
   const meta = getCategoryMeta(category);
   return {
     category,
     icon: meta.icon,
     label: meta.label,
     subtitle: meta.subtitle,
-    templates: [...templates].sort(byPopularity),
+    templates: [...templates].sort(sort),
   };
 }
 
@@ -66,15 +81,16 @@ export function buildCatalogGroups(
   const query = searchQuery.trim().toLowerCase();
   const map = new Map<string, Doc<'templates'>[]>();
   const added: Doc<'templates'>[] = [];
+  const sortShelf = byAddableThenPopularity(frozenImportedIds);
 
   for (const template of allTemplates) {
     if (query && !matchesSearch(template, query)) continue;
     if (frozenImportedIds.has(template._id)) added.push(template);
-    else addToCategory(map, template);
+    addToCategory(map, template);
   }
 
   const groups = [...map]
-    .map(([category, templates]) => toGroup(category, templates))
+    .map(([category, templates]) => toGroup(category, templates, sortShelf))
     .sort((a, b) => getCategoryPriority(a.category) - getCategoryPriority(b.category));
 
   if (added.length > 0) groups.push(toGroup(ADDED_CATEGORY_ID, added));

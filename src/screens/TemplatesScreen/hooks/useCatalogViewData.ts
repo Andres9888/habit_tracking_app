@@ -5,7 +5,8 @@
  * the rail is built from the UNFILTERED catalog so it never collapses while
  * the user types — previously it was derived from the search-filtered groups,
  * which deleted every chip mid-search including the one the user was standing
- * on, stranding them on an empty list with no way back.
+ * on, stranding them on an empty list with no way back. Adds can't shrink the
+ * rail either: buildCatalogGroups keeps added habits in their own category.
  */
 
 import { useMemo } from 'react';
@@ -48,19 +49,18 @@ export function useCatalogViewData({
     [allTemplates, chipGroups, frozenImportedIds, isSearching, query]
   );
 
-  // Counts come from the post-split groups, so already-added habits (which
-  // buildCatalogGroups moves into the "Added" bucket) are never counted as
-  // addable matches — otherwise a chip could promise 3 results that turn out
-  // to be three habits the user already tracks.
+  // A chip's count is exactly the rows behind it, added ones included, because
+  // added habits now stay in their category shelf. A count that excluded them
+  // would undersell the chip and disagree with the section header beside it.
   const matchCounts = useMemo(() => {
     const counts = new Map<string, number>();
     for (const group of groups) counts.set(group.category, group.templates.length);
     return counts;
   }, [groups]);
 
-  // Drives the "Show N matches" CTA, so it must count only habits the user can
-  // actually add. The trailing "Added" group is matches they already track —
-  // counting it would send them somewhere with nothing to do.
+  // Drives the "All" chip and the "Show N matches" CTA, so it counts each match
+  // once. The trailing "Added" group mirrors habits that are already counted in
+  // their own category, so summing it too would inflate the promise.
   const totalMatches = useMemo(
     () =>
       groups.reduce(

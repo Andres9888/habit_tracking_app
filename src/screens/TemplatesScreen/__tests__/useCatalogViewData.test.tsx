@@ -66,17 +66,40 @@ describe('useCatalogViewData', () => {
     expect(counts.find((c) => c.categoryId === 'sleep')?.count).toBe(0);
   });
 
-  it('excludes already-added habits from match counts', () => {
-    // Otherwise a chip promises matches that turn out to be habits the user
-    // already tracks — a second flavour of dead end.
+  it('counts already-added habits in their category, but only once overall', () => {
+    // Added habits stay on their shelf, so the chip count has to include them
+    // or it disagrees with the rows behind it. The mirrored "Added" group is
+    // the same two habits again, so the total must not double-count them.
     const { totalMatches, chipCategories } = render(
       'morning',
       'all',
       new Set(['m1'])
     );
 
-    expect(chipCategories.find((c) => c.categoryId === 'morning_routine')?.count).toBe(1);
-    expect(totalMatches).toBe(1);
+    expect(chipCategories.find((c) => c.categoryId === 'morning_routine')?.count).toBe(2);
+    expect(chipCategories.find((c) => c.categoryId === 'added')?.count).toBe(1);
+    expect(totalMatches).toBe(2);
+  });
+
+  it('keeps a chip for a category whose every habit is already added', () => {
+    // The reported bug: with 290 of 293 templates added the rail collapsed to
+    // "All | Huberman | Added" and looked like the catalog had been wiped.
+    const { chipCategories } = render(
+      '',
+      'all',
+      new Set(['m1', 'm2', 's1'])
+    );
+
+    expect(chipCategories.map((c) => c.categoryId)).toEqual([
+      'morning_routine',
+      'sleep',
+      'added',
+    ]);
+  });
+
+  it('shows added habits in their own category shelf, not only under Added', () => {
+    const { filteredTemplates } = render('', 'sleep', new Set(['s1']));
+    expect(filteredTemplates.map((t) => t._id)).toEqual(['s1']);
   });
 
   it('exposes the selected category label for empty-state copy', () => {
