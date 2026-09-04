@@ -7,7 +7,7 @@
 
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { ToggleMutationResult } from '../../../lib/optimistic';
-import type { CreatedHabitDetailRequestState } from './useCreatedHabitDetailRequest';
+import type { FocusRekey } from './usePendingFocusHabit';
 import type {
   Habit,
   HabitSettings,
@@ -16,7 +16,7 @@ import type {
   ShareCardData,
 } from '../types';
 
-export interface HabitsModalsState extends CreatedHabitDetailRequestState {
+export interface HabitsModalsState {
   archivedHabitsCount: number;
   celebrationsEnabled: boolean;
   habits: Habit[];
@@ -50,6 +50,14 @@ export interface HabitsModalsState extends CreatedHabitDetailRequestState {
   focusReady: boolean;
   /** True after the user commits to leaving the library for Home. */
   focusRequestAutoClose: boolean;
+  /** Stable across an optimistic→server id swap; the list remounts on this. */
+  focusRequestKey: string | null;
+  /** Last id swap, so the list can move its ring to the server row. */
+  focusRekey: FocusRekey | null;
+  /** Add-habit form: prepare + auto-commit once the row is placed. */
+  prepareCreatedHabitFocus: (habitId: Id<'habits'>) => void;
+  /** Optimistic create synced: point the focus request at the server id. */
+  rekeyPendingFocusHabit: (fromId: Id<'habits'>, toId: Id<'habits'>) => void;
   /** Pre-positions Home while the post-import toast remains visible. */
   prepareFocusHabitOnHome: (habitId: Id<'habits'>) => void;
   /** Reveals a prepared target, or runs the cold converge-then-close path. */

@@ -113,6 +113,55 @@ describe('usePendingFocusHabit', () => {
     expect(result.current.focusRequestAutoClose).toBe(false);
   });
 
+  it('the form variant commits itself once the row is placed', () => {
+    const { result } = renderHook(() => usePendingFocusHabit());
+    act(() => result.current.prepareCreatedHabitFocus('temp-1' as never));
+    expect(result.current.focusRequestAutoClose).toBe(false);
+    act(() => result.current.markPendingFocusReady('temp-1' as never));
+    expect(result.current.focusReady).toBe(true);
+    expect(result.current.focusRequestAutoClose).toBe(true);
+  });
+
+  it('a rekey keeps readiness and the request key, and records the swap', () => {
+    const { result } = renderHook(() => usePendingFocusHabit());
+    act(() => result.current.prepareCreatedHabitFocus('temp-1' as never));
+    act(() => result.current.markPendingFocusReady('temp-1' as never));
+    act(() =>
+      result.current.rekeyPendingFocusHabit('temp-1' as never, 'srv-1' as never)
+    );
+    expect(result.current.pendingFocusHabitId).toBe('srv-1');
+    expect(result.current.focusRequestKey).toBe('temp-1');
+    expect(result.current.focusReady).toBe(true);
+    expect(result.current.focusRekey).toEqual({ from: 'temp-1', to: 'srv-1' });
+  });
+
+  it('a rekey for a different habit leaves the request alone', () => {
+    const { result } = renderHook(() => usePendingFocusHabit());
+    act(() => result.current.preparePendingFocusHabit('habit-1' as never));
+    act(() =>
+      result.current.rekeyPendingFocusHabit('temp-9' as never, 'srv-9' as never)
+    );
+    expect(result.current.pendingFocusHabitId).toBe('habit-1');
+  });
+
+  it('exposes the form variant through the builder cast', () => {
+    const { result } = renderHook(() => usePendingFocusHabit());
+    const state = buildModalsStateReturnValue(
+      result.current as never,
+      {} as never,
+      {} as never,
+      {} as never
+    );
+    expect(state.prepareCreatedHabitFocus).toBe(
+      result.current.prepareCreatedHabitFocus
+    );
+    expect(state.rekeyPendingFocusHabit).toBe(
+      result.current.rekeyPendingFocusHabit
+    );
+    expect(state.focusRequestKey).toBeNull();
+    expect(state.focusRekey).toBeNull();
+  });
+
   it('does not arm a timer while idle', () => {
     const { result } = renderHook(() => usePendingFocusHabit());
     act(() => jest.advanceTimersByTime(FOCUS_GIVE_UP_MS * 2));

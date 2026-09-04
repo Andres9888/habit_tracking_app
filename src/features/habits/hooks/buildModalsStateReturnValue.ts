@@ -118,11 +118,11 @@ export function buildModalsStateReturnValue(
 
     clearPendingFocusHabit: visibility.clearPendingFocusHabit,
 
-    // "Open the detail screen" request from the regular add-habit form.
-    createdHabitDetailRequest: visibility.createdHabitDetailRequest,
-    requestCreatedHabitDetail: visibility.requestCreatedHabitDetail,
-    rekeyCreatedHabitDetail: visibility.rekeyCreatedHabitDetail,
-    clearCreatedHabitDetail: visibility.clearCreatedHabitDetail,
+    // The add-habit form's variant: same request, commits itself when ready.
+    focusRekey: visibility.focusRekey,
+    focusRequestKey: visibility.focusRequestKey,
+    prepareCreatedHabitFocus: visibility.prepareCreatedHabitFocus,
+    rekeyPendingFocusHabit: visibility.rekeyPendingFocusHabit,
 
     showHabitDetail: visibility.isHabitDetailOpen,
 

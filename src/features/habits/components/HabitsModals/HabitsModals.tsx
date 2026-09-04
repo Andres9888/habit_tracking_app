@@ -28,8 +28,8 @@ export function HabitsModals({ state, onPremiumUpsell }: HabitsModalsProps) {
           closeCreateHabit={state.closeCreateHabit}
           habitToEdit={state.habitToEdit}
           showCreateHabit={state.showCreateHabit}
-          onHabitCreateSynced={state.rekeyCreatedHabitDetail}
-          onHabitCreated={state.requestCreatedHabitDetail}
+          onHabitCreateSynced={state.rekeyPendingFocusHabit}
+          onHabitCreated={state.prepareCreatedHabitFocus}
         />
       </ErrorBoundary>
       {__DEV__ ? (

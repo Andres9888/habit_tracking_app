@@ -58,7 +58,15 @@ export function HabitsList(props: HabitsListProps) {
   // that is the "blank card next to the target" symptom. Mark everything
   // currently in the list as seen before the remount happens.
   const { seenHabitIdsRef } = state;
-  const { pendingFocusHabitId } = modals;
+  const { focusRekey, focusRequestKey, pendingFocusHabitId } = modals;
+  // Optimistic create synced: the ring was armed on the temp row, which the
+  // server row now replaces at the same index. Move the ring with it.
+  const { justCreatedHabitId, setJustCreatedHabitId } = state;
+  useEffect(() => {
+    if (focusRekey && justCreatedHabitId === focusRekey.from) {
+      setJustCreatedHabitId(focusRekey.to);
+    }
+  }, [focusRekey, justCreatedHabitId, setJustCreatedHabitId]);
   const [focusContentReadyId, setFocusContentReadyId] = useState<string | null>(
     null
   );
@@ -85,10 +93,12 @@ export function HabitsList(props: HabitsListProps) {
   }>({ focusId: null, laidOutIds: new Set() });
   const measuredRowHeightsRef = useRef(new Map<string, number>());
   // Reset synchronously with the focus-keyed list remount. Old row layouts
-  // must never make a newly mounted target region look ready.
-  if (focusLayoutRef.current.focusId !== pendingFocusHabitId) {
+  // must never make a newly mounted target region look ready. Keyed by the
+  // request so an id swap mid-request keeps what has already been measured.
+  const focusLayoutKey = focusRequestKey ?? pendingFocusHabitId;
+  if (focusLayoutRef.current.focusId !== focusLayoutKey) {
     focusLayoutRef.current = {
-      focusId: pendingFocusHabitId,
+      focusId: focusLayoutKey,
       laidOutIds: new Set(),
     };
   }

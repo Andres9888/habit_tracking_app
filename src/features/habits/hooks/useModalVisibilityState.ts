@@ -1,16 +1,10 @@
 import { useState } from 'react';
 import {
-  useCreatedHabitDetailRequest,
-  type CreatedHabitDetailRequestState,
-} from './useCreatedHabitDetailRequest';
-import {
   usePendingFocusHabit,
   type PendingFocusHabitState,
 } from './usePendingFocusHabit';
 
-export interface ModalVisibilityState
-  extends PendingFocusHabitState,
-    CreatedHabitDetailRequestState {
+export interface ModalVisibilityState extends PendingFocusHabitState {
   isSettingsOpen: boolean;
   setIsSettingsOpen: (v: boolean) => void;
   isCreateHabitOpen: boolean;
@@ -57,13 +51,9 @@ export function useModalVisibilityState(): ModalVisibilityState {
   const pendingFocus = usePendingFocusHabit(() =>
     setShowTemplatesScreen(false)
   );
-  // "Open the detail screen" request from the regular add-habit form. Lives
-  // here so it survives the create modal unmounting.
-  const createdHabitDetail = useCreatedHabitDetailRequest();
 
   return {
     ...pendingFocus,
-    ...createdHabitDetail,
     isCreateHabitOpen,
     isHabitCalendarOpen,
     isHabitDetailOpen,

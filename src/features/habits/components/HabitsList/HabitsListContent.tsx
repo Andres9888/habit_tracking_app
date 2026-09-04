@@ -103,6 +103,7 @@ export function HabitsListContent({
 
   const stickyEnabled = props.modals.settings?.stickyCalendarHeader ?? false;
   const focusAnchor = useFocusAnchor(
+    props.modals.focusRequestKey,
     props.modals.pendingFocusHabitId,
     list.habits,
     focusEstimatedRowLength
@@ -259,22 +260,25 @@ export function HabitsListContent({
 
 /**
  * One anchor per focus request, fixed the moment the target row exists in
- * `habits`. It never changes afterwards (so later reorders or the request
- * clearing do not remount the list again) until the next request arrives.
+ * `habits`. It never changes afterwards (so later reorders, the request
+ * clearing, or an optimistic→server id swap do not remount the list again)
+ * until the next request arrives. Keyed by the request, not the habit id.
  */
 function useFocusAnchor(
+  focusRequestKey: string | null,
   pendingFocusHabitId: string | null,
   habits: Habit[],
   focusEstimatedRowLength: number
 ): FocusAnchor | null {
   const anchorRef = useRef<FocusAnchor | null>(null);
-  if (pendingFocusHabitId && anchorRef.current?.key !== pendingFocusHabitId) {
+  const key = focusRequestKey ?? pendingFocusHabitId;
+  if (key && pendingFocusHabitId && anchorRef.current?.key !== key) {
     const index = habits.findIndex((h) => h._id === pendingFocusHabitId);
     if (index >= 0) {
       anchorRef.current = {
         estimatedRowLength: focusEstimatedRowLength,
         index,
-        key: pendingFocusHabitId,
+        key,
       };
     }
   }
