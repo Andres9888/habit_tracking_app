@@ -1,15 +1,24 @@
 /**
  * Post-create feedback on Home for the regular add-habit form.
  *
- * Same surface and exits as the Habit Library's post-add toast:
- * "Go to <name>" scrolls to and highlights the new row (in view — Home is
- * already on screen, so no hidden remount); "Add another habit" reopens the
- * form.
+ * Same surface as the Habit Library's post-add toast. "Go to <name>" opens
+ * the habit's detail screen; "Add another habit" reopens the form.
+ *
+ * Why detail and not scroll-to-row: creation is optimistic and Home is a
+ * visible, variable-height virtualized list that can run to hundreds of
+ * rows. The library's scroll-and-highlight only works because it converges
+ * hidden behind a modal; done in view it is a blank frame plus a ladder of
+ * jumps, and an animated scroll to an unmeasured far row lands short. The
+ * detail modal is deterministic and its entrance is the redirect animation.
+ *
+ * The action stays disabled ("Adding…") until the server habit exists: the
+ * optimistic row's temp id is not a valid document id for habits.get.
  */
 
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { TemplateAddedToast } from '../../../components/TemplateAddedToast';
 import { useHaptics } from '../../../utils/haptics/useHaptics';
+import { isOptimisticHabitId } from '../hooks/optimisticHabitCreationStore';
 import type { HabitsModalsState } from '../hooks/types';
 
 interface CreatedHabitToastProps {
@@ -22,18 +31,25 @@ export function CreatedHabitToast({ modals }: CreatedHabitToastProps) {
     createdHabitCount,
     createdHabitFeedback,
     dismissCreatedHabitFeedback,
+    habits,
     openCreateHabitScreen,
-    revealHabitOnHome,
+    openHabitDetail,
   } = modals;
   const habitId = createdHabitFeedback?.habitId ?? null;
 
-  // Mirrors the library's handleGoToHabit: tap haptic, then reveal. The
-  // toast's own exit runs alongside and clears the feedback via onDismiss.
+  const habit = useMemo(() => {
+    if (!habitId || isOptimisticHabitId(habitId)) return null;
+    return habits.find((item) => item._id === habitId) ?? null;
+  }, [habitId, habits]);
+
+  // Mirrors the library's handleViewHabit: tap haptic, then the detail
+  // screen. The toast's own exit runs alongside and clears the feedback via
+  // onDismiss.
   const handleGoToHabit = useCallback(() => {
-    if (!habitId) return;
+    if (!habit) return;
     trigger('tap');
-    revealHabitOnHome(habitId);
-  }, [habitId, revealHabitOnHome, trigger]);
+    openHabitDetail(habit);
+  }, [habit, openHabitDetail, trigger]);
 
   const handleAddAnother = useCallback(() => {
     trigger('tap');
@@ -42,7 +58,8 @@ export function CreatedHabitToast({ modals }: CreatedHabitToastProps) {
 
   return (
     <TemplateAddedToast
-      primaryHint='Scrolls to this habit on Today'
+      actionReady={habit != null}
+      primaryHint='Opens this habit'
       secondaryHint='Opens the new habit form again'
       secondaryLabel='Add another habit'
       sessionImportCount={createdHabitCount}

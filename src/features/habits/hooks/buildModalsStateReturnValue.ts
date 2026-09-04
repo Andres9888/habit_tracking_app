@@ -119,7 +119,7 @@ export function buildModalsStateReturnValue(
 
     clearPendingFocusHabit: visibility.clearPendingFocusHabit,
 
-    // Post-create toast for the regular add-habit form + its Home reveal.
+    // Post-create toast for the regular add-habit form.
     ...pickHomeFeedbackState(visibility),
 
     showHabitDetail: visibility.isHabitDetailOpen,
