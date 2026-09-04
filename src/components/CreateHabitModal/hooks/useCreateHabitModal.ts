@@ -58,18 +58,13 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
         const clientRequestId = createOptimisticHabitId();
         const tempId = clientRequestId as Id<'habits'>;
         cleanup();
-        // The optimistic row already exists under tempId, so Home can name
-        // the habit back and offer "Go to" before the server answers.
-        onHabitCreated?.({
-          color: form.selectedColor,
-          habitId: tempId,
-          icon: form.selectedEmoji ?? '✓',
-          name: form.habitName.trim(),
-        });
         setTimeout(form.resetForm, EXIT_DURATIONS.fullScreen);
         // On failure the optimistic habit rolls back, so tell the user why
         // and offer a retry instead of letting it vanish silently.
         const runCreate = () => {
+          // An explicit retry renews a request that may have expired while
+          // the error alert was open. Reuse the id for an idempotent save.
+          onHabitCreated?.(tempId);
           void createNewHabit({ ...data, clientRequestId })
             .then((habitId) => {
               if (habitId) onHabitCreateSynced?.(tempId, habitId);
@@ -94,8 +89,6 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
     createNewHabit,
     cleanup,
     form.resetForm,
-    form.selectedColor,
-    form.selectedEmoji,
     onHabitCreated,
     onHabitCreateSynced,
   ]);

@@ -6,7 +6,7 @@
 import { lazy, Suspense } from 'react';
 import { ArchiveUndoToast } from '../../../components/ArchiveUndoToast';
 import { BatchDeleteConfirmModal } from './BatchDeleteConfirmModal';
-import { CreatedHabitToast } from './CreatedHabitToast';
+import { CreatedHabitDetailOpener } from './CreatedHabitDetailOpener';
 import { HabitsModals } from './HabitsModals';
 import WebToaster from './WebToaster';
 import { TOAST_DURATION_MS } from '@/constants';
@@ -55,7 +55,7 @@ export function HabitsAppOverlays({
     <>
       <WebToaster />
       <HabitsModals onPremiumUpsell={onPremiumUpsell} state={modals} />
-      <CreatedHabitToast modals={modals} />
+      <CreatedHabitDetailOpener modals={modals} />
 
       <ArchiveUndoToast
         duration={TOAST_DURATION_MS}
