@@ -1,14 +1,9 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { ChevronRight } from 'lucide-react-native';
 import { colors as palette } from '@/theme';
 import { PhaseTag } from '../PhaseTag';
 import type { CardColors, Habit } from './types';
-import {
-  getChevronColor,
-  getTitleColumnStyle,
-  getTitleTextStyle,
-} from './CardHeader.styles';
+import { getTitleColumnStyle, getTitleTextStyle } from './CardHeader.styles';
 
 interface CardHeaderTitleBlockProps {
   colors: CardColors;
@@ -57,12 +52,6 @@ export function CardHeaderTitleBlock({
               <Text className='text-xs font-semibold text-white'>Paused</Text>
             </View>
           ) : null}
-          <ChevronRight
-            color={getChevronColor()}
-            size={isCompactMode ? 14 : 16}
-            strokeWidth={2.2}
-            style={{ flexShrink: 0 }}
-          />
         </View>
       </View>
       {showBestStreak ? (

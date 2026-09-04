@@ -1,5 +1,5 @@
 /**
- * CardHeader — Top row of a habit card: icon (with pulse), title (+ inline chevron), phase tag.
+ * CardHeader — Top row of a habit card: icon (with pulse), title, phase tag, chevron.
  *
  * Uses {@link HabitCardGridRow} (5-column grid). Title centerline aligns with emoji center.
  */
@@ -8,13 +8,19 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import ReAnimated, { useAnimatedStyle } from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
+import { ChevronRight } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { getIconBackground } from './colorUtils';
 import type { CardColors, Habit } from './types';
 import { HabitCardGridRow } from './HabitCardGridRow';
 import { CardHeaderTitleBlock } from './CardHeaderTitleBlock';
 import { getCardIconSize } from './cardLayout.constants';
-import { getEmojiTextStyle, getIconContainerStyle } from './CardHeader.styles';
+import {
+  getChevronColor,
+  getEmojiTextStyle,
+  getIconContainerStyle,
+} from './CardHeader.styles';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface CardHeaderProps {
   accentColor: string;
@@ -81,6 +87,13 @@ function CardHeaderComponent({
           name={name}
           showBestStreak={showBestStreak}
           tertiaryTextColor={themeColors.text.tertiary}
+        />
+      }
+      col5={
+        <ChevronRight
+          color={getChevronColor()}
+          size={isCompactMode ? iconSizes.small : iconSizes.medium}
+          strokeWidth={2}
         />
       }
     />

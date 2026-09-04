@@ -1,11 +1,11 @@
 /* eslint-disable max-lines */
 /** HabitDetailScreen - Optimized for 9+ scores across all dimensions */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { KeyboardAvoidingView, Modal, Platform, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme';
 import { overlays } from '../../theme/colors';
-import { shadows } from '../../theme/spacing';
 import { api } from '../../../convex/_generated/api';
 import { useCachedQuery } from '../../lib/queryCache';
 import {
@@ -23,6 +23,7 @@ import { useCalendarHandlers } from './useCalendarHandlers';
 import { useDayNotes } from './useDayNotes';
 import { useDetailFlow } from './useDetailFlow';
 import { useDetailFlowActions } from './useDetailFlowActions';
+import { useDetailPushTransition } from './useDetailPushTransition';
 import { useHabitDetailScreenState } from './useHabitDetailScreenState';
 import { useResetDetailFlow } from './useResetDetailFlow';
 import { getLocalDateString } from '../../utils/getLocalDateString';
@@ -121,15 +122,16 @@ function HabitDetailScreenContent({
     if (flow.route === 'detail') onClose();
     else flow.back();
   };
+  const { mounted, pageStyle, scrimStyle } = useDetailPushTransition(visible);
 
   return (
     <Modal
       accessibilityViewIsModal
       statusBarTranslucent
       transparent
-      animationType='slide'
+      animationType='none'
       presentationStyle='overFullScreen'
-      visible={visible}
+      visible={mounted}
       onRequestClose={handleRequestClose}
     >
       {displayHabit && habitWithStreaks ? (
@@ -138,14 +140,25 @@ function HabitDetailScreenContent({
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             className='flex-1'
           >
-            <View
-              className='flex-1'
-              style={{ backgroundColor: overlays.scrim }}
+            <Animated.View
+              style={[{ flex: 1, backgroundColor: overlays.scrim }, scrimStyle]}
               onAccessibilityEscape={handleRequestClose}
             >
-              <View
-                className='flex-1 overflow-hidden rounded-t-3xl'
-                style={{ backgroundColor: colors.background, ...shadows.modal }}
+              <Animated.View
+                style={[
+                  {
+                    flex: 1,
+                    // No overflow clip: masksToBounds would eat the
+                    // leading-edge shadow that separates the pushed page.
+                    backgroundColor: colors.background,
+                    shadowColor: '#000',
+                    shadowOffset: { width: -6, height: 0 },
+                    shadowOpacity: 0.12,
+                    shadowRadius: 14,
+                    elevation: 8,
+                  },
+                  pageStyle,
+                ]}
               >
                 {flow.route === 'detail' ? (
                   <DetailBandHeader
@@ -184,8 +197,8 @@ function HabitDetailScreenContent({
                   onPinnedChange={handlePinnedChange}
                   onRecoveryChange={handleRecoveryChange}
                 />
-              </View>
-            </View>
+              </Animated.View>
+            </Animated.View>
           </KeyboardAvoidingView>
           <NoteSheet
             date={noteDate}
