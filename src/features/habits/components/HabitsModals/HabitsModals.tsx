@@ -26,6 +26,7 @@ export function HabitsModals({ state, onPremiumUpsell }: HabitsModalsProps) {
       <ErrorBoundary fallback={null}>
         <CreateHabitModalSection
           closeCreateHabit={state.closeCreateHabit}
+          createdFocusPending={state.createdFocusPending}
           habitToEdit={state.habitToEdit}
           showCreateHabit={state.showCreateHabit}
           onHabitCreateSynced={state.rekeyPendingFocusHabit}

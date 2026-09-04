@@ -56,6 +56,8 @@ export interface HabitsModalsState {
   focusRekey: FocusRekey | null;
   /** Add-habit form: prepare + auto-commit once the row is placed. */
   prepareCreatedHabitFocus: (habitId: Id<'habits'>) => void;
+  /** True while the form's request is still converging; the form holds its exit. */
+  createdFocusPending: boolean;
   /** Optimistic create synced: point the focus request at the server id. */
   rekeyPendingFocusHabit: (fromId: Id<'habits'>, toId: Id<'habits'>) => void;
   /** Pre-positions Home while the post-import toast remains visible. */

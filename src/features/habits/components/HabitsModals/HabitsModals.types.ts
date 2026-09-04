@@ -24,6 +24,7 @@ export interface CreateHabitModalSectionProps {
   showCreateHabit: boolean;
   habitToEdit: HabitsModalsState['habitToEdit'];
   closeCreateHabit: () => void;
+  createdFocusPending?: HabitsModalsState['createdFocusPending'];
   onHabitCreated?: HabitsModalsState['prepareCreatedHabitFocus'];
   onHabitCreateSynced?: HabitsModalsState['rekeyPendingFocusHabit'];
 }

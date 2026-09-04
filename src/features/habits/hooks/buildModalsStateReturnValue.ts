@@ -122,6 +122,7 @@ export function buildModalsStateReturnValue(
     focusRekey: visibility.focusRekey,
     focusRequestKey: visibility.focusRequestKey,
     prepareCreatedHabitFocus: visibility.prepareCreatedHabitFocus,
+    createdFocusPending: visibility.createdFocusPending,
     rekeyPendingFocusHabit: visibility.rekeyPendingFocusHabit,
 
     showHabitDetail: visibility.isHabitDetailOpen,

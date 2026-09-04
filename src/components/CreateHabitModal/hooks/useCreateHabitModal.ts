@@ -57,19 +57,22 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
       } else {
         const clientRequestId = createOptimisticHabitId();
         const tempId = clientRequestId as Id<'habits'>;
+        // Raise the Home focus request before closing: the section holds the
+        // form's exit until the list has converged behind it.
+        onHabitCreated?.(tempId);
         cleanup();
         setTimeout(form.resetForm, EXIT_DURATIONS.fullScreen);
         // On failure the optimistic habit rolls back, so tell the user why
         // and offer a retry instead of letting it vanish silently.
-        const runCreate = () => {
+        const runCreate = (isRetry = false) => {
           // An explicit retry renews a request that may have expired while
           // the error alert was open. Reuse the id for an idempotent save.
-          onHabitCreated?.(tempId);
+          if (isRetry) onHabitCreated?.(tempId);
           void createNewHabit({ ...data, clientRequestId })
             .then((habitId) => {
               if (habitId) onHabitCreateSynced?.(tempId, habitId);
             })
-            .catch(() => showCreateError(runCreate));
+            .catch(() => showCreateError(() => runCreate(true)));
         };
         runCreate();
       }

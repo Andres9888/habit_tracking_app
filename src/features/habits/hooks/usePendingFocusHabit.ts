@@ -41,8 +41,15 @@ export interface PendingFocusHabitState {
   /**
    * The add-habit form's variant of prepare: commits itself the moment the
    * list has converged, so the new row is revealed and ringed with no tap.
+   * Idempotent for the same id, so a retry renews without restarting.
    */
   prepareCreatedHabitFocus: (id: Id<'habits'>) => void;
+  /**
+   * True while the form's request is still converging. The form holds its
+   * exit on this so, like the library modal, it covers the list until the
+   * row is placed and ringed.
+   */
+  createdFocusPending: boolean;
   /** Optimistic create synced: point the request at the server habit id. */
   rekeyPendingFocusHabit: (from: Id<'habits'>, to: Id<'habits'>) => void;
 }
@@ -83,7 +90,11 @@ export function usePendingFocusHabit(
     setRequest({ autoClose: false, autoCommit: false, id, key: id, ready: false });
   }, []);
   const prepareCreatedHabitFocus = useCallback((id: Id<'habits'>) => {
-    setRequest({ autoClose: false, autoCommit: true, id, key: id, ready: false });
+    setRequest((current) =>
+      current.autoCommit && current.id === id
+        ? current
+        : { autoClose: false, autoCommit: true, id, key: id, ready: false }
+    );
   }, []);
   const commitPendingFocusHabit = useCallback((id: Id<'habits'>) => {
     setRequest((current) => {
@@ -144,6 +155,8 @@ export function usePendingFocusHabit(
   return {
     clearPendingFocusHabit,
     commitPendingFocusHabit,
+    createdFocusPending:
+      request.autoCommit && request.id !== null && !request.ready,
     focusReady: request.ready,
     focusRekey: rekey,
     focusRequestAutoClose: request.autoClose,

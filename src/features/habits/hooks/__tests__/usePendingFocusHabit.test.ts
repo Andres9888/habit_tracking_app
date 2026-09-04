@@ -117,9 +117,26 @@ describe('usePendingFocusHabit', () => {
     const { result } = renderHook(() => usePendingFocusHabit());
     act(() => result.current.prepareCreatedHabitFocus('temp-1' as never));
     expect(result.current.focusRequestAutoClose).toBe(false);
+    expect(result.current.createdFocusPending).toBe(true);
     act(() => result.current.markPendingFocusReady('temp-1' as never));
     expect(result.current.focusReady).toBe(true);
     expect(result.current.focusRequestAutoClose).toBe(true);
+    expect(result.current.createdFocusPending).toBe(false);
+  });
+
+  it('re-preparing the same form request does not restart it', () => {
+    const { result } = renderHook(() => usePendingFocusHabit());
+    act(() => result.current.prepareCreatedHabitFocus('temp-1' as never));
+    act(() => result.current.markPendingFocusReady('temp-1' as never));
+    act(() => result.current.prepareCreatedHabitFocus('temp-1' as never));
+    expect(result.current.focusReady).toBe(true);
+    expect(result.current.createdFocusPending).toBe(false);
+  });
+
+  it('a library request never holds the form', () => {
+    const { result } = renderHook(() => usePendingFocusHabit());
+    act(() => result.current.preparePendingFocusHabit('habit-1' as never));
+    expect(result.current.createdFocusPending).toBe(false);
   });
 
   it('a rekey keeps readiness and the request key, and records the swap', () => {
@@ -160,6 +177,7 @@ describe('usePendingFocusHabit', () => {
     );
     expect(state.focusRequestKey).toBeNull();
     expect(state.focusRekey).toBeNull();
+    expect(state.createdFocusPending).toBe(false);
   });
 
   it('does not arm a timer while idle', () => {
