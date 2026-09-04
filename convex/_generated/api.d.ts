@@ -118,6 +118,7 @@ import type * as templates_enrichTemplates from "../templates/enrichTemplates.js
 import type * as templates_helpers from "../templates/helpers.js";
 import type * as templates_importTemplate from "../templates/importTemplate.js";
 import type * as templates_importedHabitIds from "../templates/importedHabitIds.js";
+import type * as templates_importedWhy from "../templates/importedWhy.js";
 import type * as templates_patchScienceEnrichment from "../templates/patchScienceEnrichment.js";
 import type * as templates_popularity from "../templates/popularity.js";
 import type * as templates_queries from "../templates/queries.js";
@@ -251,6 +252,7 @@ declare const fullApi: ApiFromModules<{
   "templates/helpers": typeof templates_helpers;
   "templates/importTemplate": typeof templates_importTemplate;
   "templates/importedHabitIds": typeof templates_importedHabitIds;
+  "templates/importedWhy": typeof templates_importedWhy;
   "templates/patchScienceEnrichment": typeof templates_patchScienceEnrichment;
   "templates/popularity": typeof templates_popularity;
   "templates/queries": typeof templates_queries;
