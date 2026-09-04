@@ -29,6 +29,7 @@ import { useBottomBarProps } from './useBottomBarProps';
 import { schedulePostLaunchAppPreload } from './postLaunchPreload';
 import { useWarmTemplatesCache } from '../../screens/TemplatesScreen/useWarmTemplatesCache';
 import { enterEasing } from '../../theme/animations';
+import { useHomePushParallax } from '../../screens/HabitDetailScreen/detailPushProgress';
 
 const ENTERING = FadeInDown.duration(280).easing(enterEasing);
 const styles = StyleSheet.create({ flex1: { flex: 1 } });
@@ -47,6 +48,9 @@ function HabitsAppContent() {
   }, []);
 
   const { colors } = useThemeColors();
+  // Home slides left under the detail push. The modals below are native
+  // windows, so the transform only moves what is visibly behind the page.
+  const pushParallax = useHomePushParallax();
   const { list, modals } = useHabitsApp();
   const { triggerLightImpact, triggerSelection } = useHapticFeedback({
     isEnabled: list.celebrationsEnabled,
@@ -93,52 +97,54 @@ function HabitsAppContent() {
   return (
     <GestureHandlerRootView style={styles.flex1}>
       <View style={[styles.flex1, { backgroundColor: colors.background }]}>
-        <SyncStatusOverlays />
-        {showSkeleton ? (
-          <HabitsPageSkeleton reduceMotion={list.reduceMotionPreference} />
-        ) : showEmptyState ? (
-          <Animated.View entering={ENTERING} style={styles.flex1}>
-            <EmptyState
-              variant='noHabits'
-              onCTA={handlers.handleCreateHabitRequest}
-              onQuickStart={handlers.handleCreateHabitRequest}
-            />
-          </Animated.View>
-        ) : (
-          <Animated.View entering={ENTERING} style={styles.flex1}>
-            <HabitsList
-              canNavigateForward={list.canNavigateForward}
-              isAllSelected={selection.isAllSelected}
-              isSelectionMode={selection.isSelectionMode}
-              list={list}
-              modals={modals}
-              onDeselectAll={selection.deselectAll}
-              onSelectAll={selection.selectAll}
-              onToggleSelection={selection.toggleSelection}
+        <Animated.View style={[styles.flex1, pushParallax]}>
+          <SyncStatusOverlays />
+          {showSkeleton ? (
+            <HabitsPageSkeleton reduceMotion={list.reduceMotionPreference} />
+          ) : showEmptyState ? (
+            <Animated.View entering={ENTERING} style={styles.flex1}>
+              <EmptyState
+                variant='noHabits'
+                onCTA={handlers.handleCreateHabitRequest}
+                onQuickStart={handlers.handleCreateHabitRequest}
+              />
+            </Animated.View>
+          ) : (
+            <Animated.View entering={ENTERING} style={styles.flex1}>
+              <HabitsList
+                canNavigateForward={list.canNavigateForward}
+                isAllSelected={selection.isAllSelected}
+                isSelectionMode={selection.isSelectionMode}
+                list={list}
+                modals={modals}
+                onDeselectAll={selection.deselectAll}
+                onSelectAll={selection.selectAll}
+                onToggleSelection={selection.toggleSelection}
+                selectedCount={selection.selectedCount}
+                selectedIds={selection.selectedIds}
+                upgradePromptVisible={handlers.upgradePromptVisible}
+                weekDates={list.weekDates}
+                onCreateHabitRequest={handlers.handleCreateHabitRequest}
+                onJumpToToday={list.handleJumpToToday}
+                onNextWeek={list.handleNextWeek}
+                onPreviousWeek={list.handlePreviousWeek}
+                onUpgradeConfirm={handlers.handleUpgradeConfirm}
+                onUpgradeDismiss={handlers.handleUpgradeDismiss}
+                onUpgradeIntent={handlers.handleUpgradeIntent}
+              />
+            </Animated.View>
+          )}
+          {selection.isSelectionMode ? (
+            <SelectionActionBar
               selectedCount={selection.selectedCount}
-              selectedIds={selection.selectedIds}
-              upgradePromptVisible={handlers.upgradePromptVisible}
-              weekDates={list.weekDates}
-              onCreateHabitRequest={handlers.handleCreateHabitRequest}
-              onJumpToToday={list.handleJumpToToday}
-              onNextWeek={list.handleNextWeek}
-              onPreviousWeek={list.handlePreviousWeek}
-              onUpgradeConfirm={handlers.handleUpgradeConfirm}
-              onUpgradeDismiss={handlers.handleUpgradeDismiss}
-              onUpgradeIntent={handlers.handleUpgradeIntent}
+              onArchive={handleBatchArchivePress}
+              onCancel={handleExitSelectionMode}
+              onDelete={selectionActions.showDeleteConfirmation}
             />
-          </Animated.View>
-        )}
-        {selection.isSelectionMode ? (
-          <SelectionActionBar
-            selectedCount={selection.selectedCount}
-            onArchive={handleBatchArchivePress}
-            onCancel={handleExitSelectionMode}
-            onDelete={selectionActions.showDeleteConfirmation}
-          />
-        ) : (
-          <BottomActionBar {...bottomBar} />
-        )}
+          ) : (
+            <BottomActionBar {...bottomBar} />
+          )}
+        </Animated.View>
 
         {overlaysMounted ? (
           <HabitsAppOverlays

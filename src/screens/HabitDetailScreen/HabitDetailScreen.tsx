@@ -52,9 +52,15 @@ function HabitDetailScreenContent({
   visible,
 }: HabitDetailScreenProps) {
   const { colors } = useThemeColors();
+  const { mounted, onShow, pageStyle, scrimStyle } =
+    useDetailPushTransition(visible);
+  // Data stays live for the whole exit slide. Gating on `visible` alone
+  // skipped the query and disabled insights the moment close was tapped, so
+  // the page recolored and lost rows while still on screen.
+  const live = visible || mounted;
   const fetchedHabit = useCachedQuery(
     api.habits.get,
-    visible && habit ? { habitId: habit._id } : 'skip',
+    live && habit ? { habitId: habit._id } : 'skip',
     { entryName: 'habits.get' }
   );
   // The detail modal stays mounted across habit switches; never let a payload
@@ -69,7 +75,7 @@ function HabitDetailScreenContent({
     pausedAt: displayHabit?.pausedAt,
     resumedAt: displayHabit?.resumedAt,
     tracking,
-    visible,
+    visible: live,
   });
   const calendarHandlers = useCalendarHandlers({
     completedDates: screenState.completedDates,
@@ -128,8 +134,6 @@ function HabitDetailScreenContent({
     if (flow.route === 'detail') onClose();
     else flow.back();
   };
-  const { mounted, onShow, pageStyle, scrimStyle } =
-    useDetailPushTransition(visible);
 
   return (
     <Modal
@@ -169,10 +173,10 @@ function HabitDetailScreenContent({
                     // leading-edge shadow that separates the pushed page.
                     backgroundColor: colors.background,
                     shadowColor: '#000',
-                    shadowOffset: { width: -6, height: 0 },
-                    shadowOpacity: 0.12,
-                    shadowRadius: 14,
-                    elevation: 8,
+                    shadowOffset: { width: -4, height: 0 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 8,
+                    elevation: 6,
                   },
                   pageStyle,
                 ]}
@@ -203,7 +207,7 @@ function HabitDetailScreenContent({
                   pendingToggleDate={screenState.pendingToggleDate}
                   route={flow.route}
                   todayNote={dayNotes.noteFor(today)}
-                  visible={visible}
+                  visible={live}
                   onDayPress={calendarHandlers.handleCalendarDayPress}
                   onEdit={handleEdit}
                   onOpenAnalytics={actions.openAnalytics}

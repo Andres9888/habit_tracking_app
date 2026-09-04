@@ -151,7 +151,11 @@ type EasingFn = (t: number) => number;
 type EasingWrap = (easing: EasingFn) => EasingFn;
 const identity: EasingFn = (t) => t;
 const passthrough: EasingWrap = (easing) => easing;
-const easingApi = Easing ?? { cubic: identity, in: passthrough, out: passthrough };
+const easingApi = Easing ?? {
+  cubic: identity,
+  in: passthrough,
+  out: passthrough,
+};
 
 export const enterEasing = (easingApi.out ?? passthrough)(
   easingApi.cubic ?? identity
@@ -159,6 +163,14 @@ export const enterEasing = (easingApi.out ?? passthrough)(
 
 /** Canonical exit easing — cubic ease-in for collapses and dismissals. */
 export const exitEasing = (easingApi.in ?? passthrough)(
+  easingApi.cubic ?? identity
+);
+
+/**
+ * Symmetric cubic for full-width slides (push/pop). Ease-in ends at 3× the
+ * average speed, which strobes when a whole screen crosses the display.
+ */
+export const moveEasing = (easingApi.inOut ?? passthrough)(
   easingApi.cubic ?? identity
 );
 

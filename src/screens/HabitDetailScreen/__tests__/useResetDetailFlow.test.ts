@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react-native';
 import { useResetDetailFlow } from '../useResetDetailFlow';
 
 describe('useResetDetailFlow', () => {
-  it('resets when the modal hides', () => {
+  it('resets on reopen, not while the modal is still sliding out', () => {
     const reset = jest.fn();
     const { rerender } = renderHook(
       ({ visible }: { visible: boolean }) =>
@@ -11,7 +11,9 @@ describe('useResetDetailFlow', () => {
     );
     reset.mockClear();
     rerender({ visible: false });
-    expect(reset).toHaveBeenCalled();
+    expect(reset).not.toHaveBeenCalled();
+    rerender({ visible: true });
+    expect(reset).toHaveBeenCalledTimes(1);
   });
 
   it('resets when the habit changes', () => {
