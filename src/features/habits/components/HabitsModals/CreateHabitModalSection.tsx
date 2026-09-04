@@ -1,9 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
 import ErrorBoundary from '../../../../components/ErrorBoundary';
 import CreateHabitModal from '../../../../components/CreateHabitModal';
-import type { CreatedHabitInfo } from '../../../../components/CreateHabitModal/types';
+import type { Id } from '../../../../../convex/_generated/dataModel';
 import { EXIT_DURATIONS } from '../../../../components/Modal/Modal.constants';
 import type { CreateHabitModalSectionProps } from './HabitsModals.types';
+
+/**
+ * Time for the dismissed RNModal to leave the native stack after the JS exit
+ * timer flips it invisible. (RNModal's onDismiss never fires on this build, so
+ * this is a margin, not a signal.) In practice the gate is moot: the server
+ * habit the opener also waits for takes ~2s to reach habits.list.
+ */
+const NATIVE_MODAL_HANDOFF_MS = 800;
 
 /**
  * Create habit modal section - handles habit creation/editing
@@ -18,11 +26,15 @@ export function CreateHabitModalSection({
   const [shouldRender, setShouldRender] = useState(showCreateHabit);
   const [renderedHabitToEdit, setRenderedHabitToEdit] = useState(habitToEdit);
 
-  // Let the form finish its exit first so the toast slides up onto Home
-  // instead of appearing over a modal that is still closing.
+  // The detail screen must not open before this form's native modal is gone:
+  // iOS drops a presentation attempted while another modal is still
+  // dismissing.
   const handleHabitCreated = useCallback(
-    (habit: CreatedHabitInfo) =>
-      onHabitCreated?.(habit, EXIT_DURATIONS.fullScreen),
+    (tempId: Id<'habits'>) =>
+      onHabitCreated?.(
+        tempId,
+        Date.now() + EXIT_DURATIONS.fullScreen + NATIVE_MODAL_HANDOFF_MS
+      ),
     [onHabitCreated]
   );
 

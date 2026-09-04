@@ -1,10 +1,3 @@
-/** Defaults for the two actions; the Habit Library is the original surface. */
-export const TOAST_ACTION_COPY = {
-  primaryHint: 'Closes the habit library and scrolls to this habit on Today',
-  secondaryHint: 'Returns to the habit library, which stays open',
-  secondaryLabel: 'Keep exploring habits',
-} as const;
-
 interface ToastCopyInput {
   name: string;
   pending?: boolean;

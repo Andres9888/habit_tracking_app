@@ -27,21 +27,15 @@ export interface CategoryFilter {
   icon: string;
 }
 
-/** What the post-create toast needs to name the habit back to the user. */
-export interface CreatedHabitInfo {
-  color: string;
-  /** The optimistic (client request) id until the mutation syncs. */
-  habitId: Id<'habits'>;
-  icon: string;
-  name: string;
-}
-
 export interface CreateHabitModalProps {
   visible: boolean;
   onClose: () => void;
   habitToEdit?: HabitDoc | null;
-  /** Fires as the form closes on a new habit (never on edit). */
-  onHabitCreated?: (habit: CreatedHabitInfo) => void;
+  /**
+   * Fires for each new-habit attempt, including explicit retries (never on
+   * edit), with the optimistic id the row carries until the mutation syncs.
+   */
+  onHabitCreated?: (tempId: Id<'habits'>) => void;
   /** Fires once the optimistic create has a server id. */
   onHabitCreateSynced?: (tempId: Id<'habits'>, habitId: Id<'habits'>) => void;
 }
