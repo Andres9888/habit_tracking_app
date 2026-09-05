@@ -6,8 +6,8 @@
  * existed), so the future never advertises a button that does nothing.
  */
 import { format } from 'date-fns';
-import { Pressable, Text, View } from 'react-native';
-import { usePressed } from '../../../../components/AdvancedOptions/usePressed';
+import { Text, View } from 'react-native';
+import { AnimatedPressable } from '../../../../components/ui/AnimatedPressable';
 import { habitDayStateLabel } from '../../../../features/habits/habitDayState';
 import { borderRadius } from '../../../../theme/spacing';
 import { fontFamilies, fontWeights } from '../../../../theme/typography';
@@ -39,8 +39,6 @@ function cellLabel(cell: MonthCell): string {
 const SLOT = { flexBasis: '14.2857%' as const, padding: 3 };
 
 export function MonthGridCell({ cell, palette, onPress }: MonthGridCellProps) {
-  const { pressProps, pressed } = usePressed();
-
   const square = (
     <View
       style={{
@@ -51,7 +49,7 @@ export function MonthGridCell({ cell, palette, onPress }: MonthGridCellProps) {
           : 'transparent',
         borderRadius: borderRadius.small,
         justifyContent: 'center',
-        opacity: (pressed ? 0.6 : 1) * (cell ? monthCellOpacity(cell.state) : 1),
+        opacity: cell ? monthCellOpacity(cell.state) : 1,
         ...(cell ? monthCellBorder(cell.state, palette) : null),
       }}
     >
@@ -90,15 +88,17 @@ export function MonthGridCell({ cell, palette, onPress }: MonthGridCellProps) {
   if (!cell || !onPress) return <View style={SLOT}>{square}</View>;
 
   return (
-    <Pressable
-      {...pressProps}
+    <AnimatedPressable
       accessibilityHint='Opens this day so you can correct it'
       accessibilityLabel={cellLabel(cell)}
       accessibilityRole='button'
+      // Seven cells per row: the default 10pt slop would overlap neighbours
+      // and steal their taps.
+      hitSlop={0}
       style={SLOT}
       onPress={() => onPress(cell.date)}
     >
       {square}
-    </Pressable>
+    </AnimatedPressable>
   );
 }

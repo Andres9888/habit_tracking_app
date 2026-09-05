@@ -2,8 +2,8 @@
 import type { ReactNode } from 'react';
 import { Keyboard, Pressable, View } from 'react-native';
 import { triggerHaptic } from '@/utils/haptics';
+import { usePressAnimation } from '@/hooks/usePressAnimation';
 import { OptionChipBody } from './OptionChipBody';
-import { useChipPressScale } from './useChipPressScale';
 
 export interface OptionChipProps {
   label: string;
@@ -33,7 +33,7 @@ export function OptionChip({
   readOnly = false,
   testID,
 }: OptionChipProps) {
-  const { animatedStyle, pressProps } = useChipPressScale();
+  const { animatedStyle, pressHandlers } = usePressAnimation();
   const body = (
     <OptionChipBody
       animatedStyle={readOnly ? null : animatedStyle}
@@ -68,7 +68,7 @@ export function OptionChip({
         void triggerHaptic('selection');
         onPress?.();
       }}
-      {...pressProps}
+      {...pressHandlers}
     >
       {body}
     </Pressable>

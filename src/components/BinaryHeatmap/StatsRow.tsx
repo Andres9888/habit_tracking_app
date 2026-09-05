@@ -4,26 +4,19 @@
  * Displays habit statistics in a row format below the heatmap.
  */
 
-import React, { memo, useCallback } from 'react';
+import React, { memo } from 'react';
 import { View, Text, Pressable, Platform } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  useReducedMotion,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { Settings } from 'lucide-react-native';
 
-import { springs } from '@/theme/animations';
+import { usePressAnimation } from '@/hooks/usePressAnimation';
 import type { StatsRowProps } from './types';
 import { COLORS } from './constants';
 import { useThemedStatsStyles } from './StatsRow.styles';
 import { StreakBadge } from './StreakBadge';
 
-const PRESS_SCALE = 0.95;
 const SETTINGS_ICON_SIZE = 18;
-const SPRING_CONFIG = springs.standard;
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const PressableBase = Animated.createAnimatedComponent(Pressable);
 
 export const StatsRow = memo(function StatsRow({
   frequency,
@@ -32,27 +25,10 @@ export const StatsRow = memo(function StatsRow({
   onSettingsPress,
 }: StatsRowProps) {
   const styles = useThemedStatsStyles();
-  const shouldReduceMotion = useReducedMotion();
-  const settingsScale = useSharedValue(1);
-
-  const handleSettingsPressIn = useCallback(() => {
-    if (!shouldReduceMotion) {
-      settingsScale.value = withSpring(PRESS_SCALE, SPRING_CONFIG);
-    }
-  }, [settingsScale, shouldReduceMotion]);
-
-  const handleSettingsPressOut = useCallback(() => {
-    if (!shouldReduceMotion) {
-      settingsScale.value = withSpring(1, SPRING_CONFIG);
-    }
-  }, [settingsScale, shouldReduceMotion]);
-
-  const settingsAnimatedStyle = useAnimatedStyle(() => {
-    'worklet';
-    return {
-      transform: [{ scale: settingsScale.value ?? 1 }],
-    };
-  });
+  const {
+    animatedStyle: settingsAnimatedStyle,
+    pressHandlers: settingsPressHandlers,
+  } = usePressAnimation();
 
   return (
     <View
@@ -72,7 +48,7 @@ export const StatsRow = memo(function StatsRow({
         </View>
         {currentStreak > 0 ? <StreakBadge currentStreak={currentStreak} habitColor={habitColor} /> : null}
       </View>
-      {onSettingsPress ? <AnimatedPressable
+      {onSettingsPress ? <PressableBase
           accessible
           accessibilityHint='Opens habit settings and options'
           accessibilityLabel='Habit settings'
@@ -85,8 +61,7 @@ export const StatsRow = memo(function StatsRow({
           ]}
           testID='stats-row-settings-button'
           onPress={onSettingsPress}
-          onPressIn={handleSettingsPressIn}
-          onPressOut={handleSettingsPressOut}
+          {...settingsPressHandlers}
         >
           <Settings
             color={COLORS.TEXT_SECONDARY}
@@ -94,7 +69,7 @@ export const StatsRow = memo(function StatsRow({
             strokeWidth={2}
             testID='settings-icon'
           />
-        </AnimatedPressable> : null}
+        </PressableBase> : null}
     </View>
   );
 });

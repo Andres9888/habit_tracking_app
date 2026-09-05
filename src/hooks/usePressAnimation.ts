@@ -1,25 +1,17 @@
 /**
  * Reusable Press Animation Hook
  *
- * Provides smooth scale animation with optional haptic feedback for pressable components.
- * Automatically respects reduced motion accessibility preferences.
+ * The single press primitive for the app: a spring scale on press-in, spring
+ * back on press-out, honouring Reduce Motion. `AnimatedPressable` wraps it;
+ * everything else should either use that component or this hook directly.
  *
- * Features:
- * - Smooth spring-based scale animation on press
- * - Optional haptic feedback (iOS & Native Handset)
- * - Reduced motion support
- * - Customizable press scale and spring configuration
- *
- * @param config - Configuration options
- * @returns Object containing animated style and press handlers
+ * Haptics are OFF by default — callers fire haptics on *commit* (onPress), not
+ * on press-in, so a scroll-cancelled touch never buzzes. Pass
+ * `enableHaptics: true` only when the press-in tap is the sole tactile channel.
  *
  * @example
  * ```tsx
- * const { animatedStyle, pressHandlers } = usePressAnimation({
- *   pressScale: 0.95,
- *   enableHaptics: true,
- *   hapticStyle: 'light',
- * });
+ * const { animatedStyle, pressHandlers } = usePressAnimation();
  *
  * <Pressable {...pressHandlers}>
  *   <Animated.View style={[styles.button, animatedStyle]}>
@@ -35,37 +27,35 @@ import {
   useAnimatedStyle,
   useReducedMotion,
   withSpring,
+  type WithSpringConfig,
 } from 'react-native-reanimated';
 import { Platform } from 'react-native';
-import { Springs } from '../constants/motion';
+import { springs } from '@/theme/animations';
 import { CARD_PRESS_SCALE } from '../utils/animations/cardPressAnimation';
 import { triggerHaptic } from '@/utils/haptics';
 
 export interface PressAnimationConfig {
-  /**
-   * Scale value when pressed (default: 0.97)
-   */
+  /** Scale value when pressed (default: 0.97) */
   pressScale?: number;
 
-  /**
-   * Whether to respect reduced motion preference (default: true)
-   */
+  /** Whether to respect reduced motion preference (default: true) */
   respectReducedMotion?: boolean;
 
-  /**
-   * Custom spring configuration (optional)
-   */
-  springConfig?: typeof Springs.button;
+  /** Custom spring configuration (default: `springs.standard`) */
+  springConfig?: WithSpringConfig;
 
-  /**
-   * Enable haptic feedback on press (default: true)
-   */
+  /** Enable haptic feedback on press-in (default: false) */
   enableHaptics?: boolean;
 
-  /**
-   * Haptic feedback style (default: 'light')
-   */
+  /** Haptic feedback style (default: 'light') */
   hapticStyle?: 'light' | 'medium' | 'heavy' | 'selection';
+
+  /**
+   * Add the card-lift treatment on press: translateY(-1) plus an elevated
+   * shadow. Only meaningful on surfaces that already carry a shadow
+   * (default: false).
+   */
+  lift?: boolean;
 }
 
 export interface PressAnimationHandlers {
@@ -74,19 +64,13 @@ export interface PressAnimationHandlers {
 }
 
 export interface UsePressAnimationReturn {
-  /**
-   * Animated style to apply to the component
-   */
+  /** Animated style to apply to the component */
   animatedStyle: ReturnType<typeof useAnimatedStyle>;
 
-  /**
-   * Press handlers to spread onto Pressable/TouchableOpacity
-   */
+  /** Press handlers to spread onto Pressable/TouchableOpacity */
   pressHandlers: PressAnimationHandlers;
 
-  /**
-   * Direct access to scale value (for advanced usage)
-   */
+  /** Direct access to scale value (for advanced usage) */
   scale: ReturnType<typeof useSharedValue<number>>;
 }
 
@@ -97,7 +81,8 @@ const HAPTIC_MAP = {
   selection: () => triggerHaptic('selection'),
 };
 
-const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === ['and', 'roid'].join('');
+const isHapticsSupported =
+  Platform.OS === 'ios' || Platform.OS === ['and', 'roid'].join('');
 
 export function usePressAnimation(
   config: PressAnimationConfig = {}
@@ -105,9 +90,10 @@ export function usePressAnimation(
   const {
     pressScale = CARD_PRESS_SCALE,
     respectReducedMotion = true,
-    springConfig = Springs.button,
-    enableHaptics = true,
+    springConfig = springs.standard,
+    enableHaptics = false,
     hapticStyle = 'light',
+    lift = false,
   } = config;
 
   const scale = useSharedValue(1);
@@ -119,16 +105,12 @@ export function usePressAnimation(
   const systemReduceMotion = useReducedMotion();
   const motionOff = respectReducedMotion && Boolean(systemReduceMotion);
 
-  const triggerHaptic = useCallback(() => {
-    if (enableHaptics && isHapticsSupported) {
-      const hapticFn = HAPTIC_MAP[hapticStyle];
-      const promise = hapticFn?.();
-
-      if (promise && typeof (promise as Promise<unknown>).catch === 'function') {
-        promise.catch(() => {
-          // Silently fail - haptics are non-critical
-        });
-      }
+  const fireHaptic = useCallback(() => {
+    if (!enableHaptics || !isHapticsSupported) return;
+    const promise = HAPTIC_MAP[hapticStyle]?.();
+    if (promise && typeof (promise as Promise<unknown>).catch === 'function') {
+      // Silently fail - haptics are non-critical
+      promise.catch(() => {});
     }
   }, [enableHaptics, hapticStyle]);
 
@@ -138,17 +120,21 @@ export function usePressAnimation(
         scale.value = motionOff
           ? pressScale
           : withSpring(pressScale, springConfig);
-        triggerHaptic();
+        fireHaptic();
       },
       onPressOut: () => {
         scale.value = motionOff ? 1 : withSpring(1, springConfig);
       },
     }),
-    [pressScale, springConfig, scale, triggerHaptic, motionOff]
+    [pressScale, springConfig, scale, fireHaptic, motionOff]
   )();
 
+  // Branch inside the worklet — never conditionally detach the animated style.
   const animatedStyle = useAnimatedStyle(() => {
     const isPressed = scale.value < 1;
+    if (!lift) {
+      return { transform: [{ scale: scale.value }] };
+    }
     return {
       transform: [
         { scale: scale.value },

@@ -1,8 +1,8 @@
 /** ± step button inside the custom streak-goal stepper (44pt target). */
-import { Pressable, Text } from 'react-native';
+import { Text } from 'react-native';
 import { typography } from '@/theme/typography';
 import { usePanelTokens } from './panel/panelTokens';
-import { usePressed } from './usePressed';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface Props {
   label: string;
@@ -16,12 +16,12 @@ export function StreakGoalStepButton({
   onPress,
 }: Props) {
   const t = usePanelTokens();
-  const { pressed, pressProps } = usePressed();
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='button'
-      {...pressProps}
+      // Already a 44pt target; extra slop would reach into its twin.
+      hitSlop={0}
       style={{
         width: 44,
         height: 44,
@@ -31,7 +31,6 @@ export function StreakGoalStepButton({
         backgroundColor: t.chipRestBg,
         borderWidth: 1,
         borderColor: t.chipRestBorder,
-        opacity: pressed ? 0.8 : 1,
       }}
       onPress={onPress}
     >
@@ -45,6 +44,6 @@ export function StreakGoalStepButton({
       >
         {label}
       </Text>
-    </Pressable>
+    </AnimatedPressable>
   );
 }

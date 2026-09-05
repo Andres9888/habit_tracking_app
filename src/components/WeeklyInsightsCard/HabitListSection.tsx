@@ -45,6 +45,8 @@ export function HabitListSection({
 
   return (
     <AnimatedPressable
+      // Expand/collapse toggle; no haptic anywhere else in the chain.
+      animationConfig={{ enableHaptics: true }}
       accessibilityLabel={`${title}, ${habits.length} habits, ${isExpanded ? 'expanded' : 'collapsed'}`}
       accessibilityRole='button'
       accessibilityState={{ expanded: isExpanded }}

@@ -67,6 +67,9 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
 
   return (
     <AnimatedPressable
+      // A checkbox is a selection control: the tap is the confirmation, and no
+      // consumer of this component fires a haptic of its own.
+      animationConfig={{ enableHaptics: true }}
       accessibilityHint='Double tap to toggle this checkbox'
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='checkbox'

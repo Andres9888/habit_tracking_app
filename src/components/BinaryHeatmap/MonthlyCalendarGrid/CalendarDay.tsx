@@ -10,7 +10,7 @@ import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import type { DayData } from './types';
 import { styles } from './styles';
-import { useDetailPressAnimation } from '@/hooks/useDetailPressAnimation';
+import { usePressAnimation } from '@/hooks/usePressAnimation';
 import type { CalendarDayColors } from './CalendarDay.helpers';
 import { CalendarDayBody } from './CalendarDayBody';
 import { ChainDayBody } from './ChainDayBody';
@@ -47,8 +47,7 @@ export const CalendarDay = memo(function CalendarDay({
   joinRight = false,
   onPress,
 }: CalendarDayProps) {
-  const { animatedStyle: pressStyle, pressHandlers } =
-    useDetailPressAnimation();
+  const { animatedStyle: pressStyle, pressHandlers } = usePressAnimation();
   const cell = useCalendarDayCellState({
     completedBg,
     day,

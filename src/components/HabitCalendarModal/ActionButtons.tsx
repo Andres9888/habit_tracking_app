@@ -15,6 +15,8 @@ export function ActionButtons({ isTodayCompleted, onMarkToday, onEdit }: ActionB
   return (
     <View className='mt-4 flex-row gap-3'>
       <AnimatedPressable
+        // Primary "mark done" CTA — the toggle mutation fires no haptic.
+        animationConfig={{ enableHaptics: true }}
         accessibilityLabel={
           isTodayCompleted ? 'Today already completed' : 'Mark this habit as done today'
         }

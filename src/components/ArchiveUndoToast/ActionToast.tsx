@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { usePressed } from '../AdvancedOptions/usePressed';
+import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useToastStyles } from './styles';
 import { useArchiveUndoToast } from './useArchiveUndoToast';
 
@@ -40,7 +40,6 @@ export function ActionToast({
 }: ActionToastProps) {
   const styles = useToastStyles();
   const insets = useSafeAreaInsets();
-  const { pressed, pressProps } = usePressed();
   const { panGesture, containerStyle, progressStyle, handleUndo } =
     useArchiveUndoToast({
       duration,
@@ -71,22 +70,17 @@ export function ActionToast({
               <Text numberOfLines={2} style={styles.message}>
                 {message}
               </Text>
-              <Pressable
+              <AnimatedPressable
                 accessibilityLabel={actionLabel}
                 accessibilityRole='button'
-                style={[
-                  styles.undoButton,
-                  tint,
-                  pressed && styles.undoButtonPressed,
-                ]}
+                style={[styles.undoButton, tint]}
                 onPress={handleUndo}
-                {...pressProps}
               >
                 {actionIcon}
                 <Text style={[styles.undoText, { color: actionTextColor }]}>
                   {actionLabel.toUpperCase()}
                 </Text>
-              </Pressable>
+              </AnimatedPressable>
             </View>
             <View style={[styles.progressContainer, tint]}>
               <Animated.View

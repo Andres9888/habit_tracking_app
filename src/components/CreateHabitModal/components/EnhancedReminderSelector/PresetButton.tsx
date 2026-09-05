@@ -3,51 +3,19 @@
  * Per spec: 48px height, Morning/Midday/Evening with time labels
  */
 
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
-import { durations, springs } from '@/theme/animations';
+import Animated from 'react-native-reanimated';
+import { usePressAnimation } from '@/hooks/usePressAnimation';
 import { useThemeColors } from '@/theme/ThemeContext';
 import type { PresetButtonProps } from './types';
-
-const useButtonAnimation = (reduceMotion: boolean) => {
-  const scale = useSharedValue(1);
-
-  const handlePressIn = useCallback(() => {
-    'worklet';
-    if (reduceMotion) return;
-    scale.value = withTiming(0.97, { duration: durations.instant });
-  }, [scale, reduceMotion]);
-
-  const handlePressOut = useCallback(() => {
-    'worklet';
-    if (reduceMotion) {
-      scale.value = 1;
-      return;
-    }
-    scale.value = withSpring(1, springs.standard);
-  }, [scale, reduceMotion]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  return { animatedStyle, handlePressIn, handlePressOut };
-};
 
 function PresetButtonComponent({
   preset,
   isSelected,
   onPress,
-  reduceMotion,
 }: PresetButtonProps) {
-  const { animatedStyle, handlePressIn, handlePressOut } =
-    useButtonAnimation(reduceMotion);
+  const { animatedStyle, pressHandlers } = usePressAnimation();
   const { colors } = useThemeColors();
 
   return (
@@ -58,8 +26,7 @@ function PresetButtonComponent({
       className='flex-1'
       testID={`preset-${preset.id}`}
       onPress={onPress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
+      {...pressHandlers}
     >
       <Animated.View
         className='items-center justify-center rounded-2xl px-3'

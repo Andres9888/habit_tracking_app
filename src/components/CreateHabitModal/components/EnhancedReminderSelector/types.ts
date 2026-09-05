@@ -37,5 +37,4 @@ export interface PresetButtonProps {
   preset: ReminderPreset;
   isSelected: boolean;
   onPress: () => void;
-  reduceMotion: boolean;
 }

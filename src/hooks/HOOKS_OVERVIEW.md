@@ -17,30 +17,30 @@ Comprehensive documentation of all custom React hooks in the Chain Day habit tra
 
 #### `usePressAnimation`
 
-**Purpose**: Provides smooth scale animation with optional haptic feedback for pressable components.
+**Purpose**: The single press primitive — spring scale on press-in, spring back
+on press-out. `ui/AnimatedPressable` wraps it; use that component unless you need
+the raw shared value.
 
-**Location**: `usePressAnimation.ts` (130 lines)
+**Location**: `usePressAnimation.ts`
 
 **Key Features**:
 
-- Spring-based scale animation
-- Configurable haptic feedback (iOS & Native Handset)
-- Reduced motion support
-- Customizable press scale
+- Spring-based scale animation (`springs.standard`, `pressScale` 0.97)
+- Haptics **off by default** — callers fire haptics on commit, not press-in.
+  Pass `enableHaptics: true` only where the press tap is the sole tactile channel.
+- Optional `lift` for the translateY(-1) + elevated-shadow card treatment
+- Reduced motion support via Reanimated's `useReducedMotion`
 
 **Dependencies**:
 
-- `react-native-reanimated` (animation)
-- `expo-haptics` (haptic feedback)
-- `useReduceMotion` (accessibility)
+- `react-native-reanimated` (animation + reduced motion)
+- `@/utils/haptics` (haptic feedback)
+- `@/theme/animations` (spring token)
 
 **Usage**:
 
 ```tsx
-const { animatedStyle, pressHandlers } = usePressAnimation({
-  pressScale: 0.95,
-  enableHaptics: true,
-});
+const { animatedStyle, pressHandlers } = usePressAnimation();
 ```
 
 #### `useReduceMotion`
@@ -63,7 +63,6 @@ const { animatedStyle, pressHandlers } = usePressAnimation({
 
 - `useCelebrationHaptics`
 - `useHapticFeedback`
-- `usePressAnimation`
 
 ---
 
@@ -506,8 +505,7 @@ const { animatedStyle, pressHandlers } = usePressAnimation({
 ```
 useReduceMotion (base utility)
     ├── useCelebrationHaptics
-    ├── useHapticFeedback
-    └── usePressAnimation
+    └── useHapticFeedback
 
 HapticPatterns library
     ├── useCelebrationHaptics
@@ -571,7 +569,7 @@ These hooks exceed 100 lines and could benefit from decomposition:
    - **Status**: OK - complexity is inherent to the feature
    - **Note**: Already uses external utilities for calculations
 
-5. **usePressAnimation.ts** (130 lines)
+5. **usePressAnimation.ts**
    - **Current**: Well-structured with clear sections
    - **Status**: OK - mostly type definitions and config
 

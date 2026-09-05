@@ -1,18 +1,13 @@
 import { Platform, Pressable, Text, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useReducedMotion,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import Animated from 'react-native-reanimated';
+import { usePressAnimation } from '@/hooks/usePressAnimation';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { AppleLogo } from '../../../../components/auth/logos/AppleLogo';
 import { GoogleLogo } from '../../../../components/auth/logos/GoogleLogo';
 import { LoadingSpinner } from './LoadingSpinner';
 import { SocialSignInButtonProps } from './types';
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const PressableBase = Animated.createAnimatedComponent(Pressable);
 
 const PROVIDER_CONFIG = {
   apple: {
@@ -36,24 +31,7 @@ export function SocialSignInButton({
 }: SocialSignInButtonProps) {
   const config = PROVIDER_CONFIG[provider];
   const { colors } = useThemeColors();
-  const reduceMotion = useReducedMotion();
-  const scale = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  const handlePressIn = () => {
-    if (!reduceMotion) {
-      scale.value = withSpring(0.97, springs.button);
-    }
-  };
-
-  const handlePressOut = () => {
-    if (!reduceMotion) {
-      scale.value = withSpring(1, springs.button);
-    }
-  };
+  const { animatedStyle, pressHandlers } = usePressAnimation();
 
   // Hide Apple button on Native Handset
   if (provider === 'apple' && Platform.OS === ['and', 'roid'].join('')) {
@@ -63,7 +41,7 @@ export function SocialSignInButton({
   const isDisabled = isLoading || disabled;
 
   return (
-    <AnimatedPressable
+    <PressableBase
       accessibilityHint={`Sign in using your ${provider === 'apple' ? 'Apple' : 'Google'} account`}
       accessibilityLabel={config.label}
       accessibilityRole='button'
@@ -80,8 +58,7 @@ export function SocialSignInButton({
           : { borderColor: '#000000', backgroundColor: '#000000' },
       ]}
       onPress={onPress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
+      {...pressHandlers}
     >
       <View
         className='mr-2 h-5 w-5 items-center justify-center'
@@ -101,6 +78,6 @@ export function SocialSignInButton({
       >
         {isLoading ? 'Signing in...' : config.label}
       </Text>
-    </AnimatedPressable>
+    </PressableBase>
   );
 }

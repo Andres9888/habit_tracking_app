@@ -18,6 +18,8 @@ export const ExportButton: React.FC<ExportButtonProps> = ({ onPress }) => {
   return (
     <AnimatedPressable
       accessible
+      // Primary CTA; nothing downstream fires a haptic.
+      animationConfig={{ enableHaptics: true }}
       accessibilityHint='Double tap to export your habit data as CSV or JSON'
       accessibilityLabel='Export Data'
       accessibilityRole='button'

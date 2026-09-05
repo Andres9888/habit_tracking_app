@@ -6,9 +6,10 @@
 
 import { useCallback, useState, useEffect } from 'react';
 import { Alert } from 'react-native';
-import { useSharedValue, useAnimatedStyle, withTiming, type AnimatedStyle } from 'react-native-reanimated';
+import { type AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { usePressAnimation } from '../../hooks/usePressAnimation';
 import { usePremium } from '../../hooks/usePremium';
 import { useRestorePurchases } from './useRestorePurchases';
 import type { PaywallVariant } from './PremiumPaywall.types';
@@ -45,23 +46,17 @@ export function usePremiumPaywall({ variant, onClose, onStartTrial, onRestorePur
   const annualPackage = packages?.find((p) => p.packageType === 'ANNUAL') ?? null;
   const [selectedPackage, setSelectedPackage] = useState<PurchasesPackage | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const buttonScale = useSharedValue(1);
+  const {
+    animatedStyle: buttonAnimatedStyle,
+    pressHandlers: {
+      onPressIn: handleButtonPressIn,
+      onPressOut: handleButtonPressOut,
+    },
+  } = usePressAnimation();
 
   useEffect(() => {
     if (!selectedPackage && annualPackage) setSelectedPackage(annualPackage);
   }, [annualPackage, selectedPackage]);
-
-  const buttonAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: buttonScale.value }],
-  }));
-
-  const handleButtonPressIn = useCallback(() => {
-    buttonScale.value = withTiming(0.97, { duration: 100 });
-  }, [buttonScale]);
-
-  const handleButtonPressOut = useCallback(() => {
-    buttonScale.value = withTiming(1, { duration: 100 });
-  }, [buttonScale]);
 
   const handleClose = useCallback(() => {
     triggerLightImpact();

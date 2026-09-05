@@ -38,9 +38,12 @@ export function ScreenHeader({
 }: ScreenHeaderProps) {
   const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
+  // Explicit `enableHaptics`: the back/close control has no commit-side haptic,
+  // and the `hapticStyle` here was always deliberate.
   const { animatedStyle, pressHandlers } = usePressAnimation({
-    pressScale: 0.92,
+    enableHaptics: true,
     hapticStyle: 'light',
+    pressScale: 0.92,
   });
   const titleOpacity = useSharedValue(titleVisible ? 1 : 0);
   useEffect(() => {

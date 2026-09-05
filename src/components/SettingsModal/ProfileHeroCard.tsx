@@ -28,7 +28,7 @@ export function ProfileHeroCard({ isPremium, onPress }: ProfileHeroCardProps) {
       accessibilityHint='Opens your profile and account settings'
       accessibilityLabel='Account settings'
       accessibilityRole='button'
-      animationConfig={{ hapticStyle: 'light' }}
+      animationConfig={{ enableHaptics: true, hapticStyle: 'light' }}
       onPress={onPress}
     >
       <View

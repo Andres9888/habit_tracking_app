@@ -3,9 +3,12 @@ import { durations, exitEasing } from '../../../theme/animations';
 import { borderRadius } from '../../../theme/spacing';
 import { SCALE } from '../../../constants/ui-values';
 
+// `enableHaptics` is explicit here: both pills are selection controls whose
+// handlers fire no haptic of their own, and the shared press primitive now
+// defaults haptics off.
 export const PRESS = {
-  date: { pressScale: SCALE.pressLarge },
-  today: { pressScale: SCALE.pressMedium },
+  date: { enableHaptics: true, pressScale: SCALE.pressLarge },
+  today: { enableHaptics: true, pressScale: SCALE.pressMedium },
 } as const;
 export const ENTRANCE_DURATION = durations.enter;
 export const EXIT_TIMING = {

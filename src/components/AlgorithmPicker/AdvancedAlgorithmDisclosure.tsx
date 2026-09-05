@@ -58,7 +58,7 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
       }}
     >
       <AnimatedPressable
-        animationConfig={{ hapticStyle: 'selection' }}
+        animationConfig={{ enableHaptics: true, hapticStyle: 'selection' }}
         accessibilityRole='button'
         accessibilityState={{ expanded }}
         className='flex-row items-center justify-between p-4'

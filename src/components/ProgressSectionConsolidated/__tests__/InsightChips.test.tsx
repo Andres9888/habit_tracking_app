@@ -61,6 +61,7 @@ jest.mock('react-native-reanimated', () => {
     withRepeat: (value: number) => value,
     withSequence: (...args: number[]) => args[0],
     cancelAnimation: jest.fn(),
+    useReducedMotion: () => false,
     Easing: {
       out: () => () => 0,
       cubic: () => 0,

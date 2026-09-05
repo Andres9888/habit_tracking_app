@@ -1,14 +1,9 @@
 /** TierPickerTile — single tier tile with spring press scale. */
 import { Pressable, Text, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
 import { triggerHaptic } from '@/utils/haptics';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
-import { springs } from '@/theme/animations';
+import { usePressAnimation } from '@/hooks/usePressAnimation';
 import { useThemeColors } from '@/theme/ThemeContext';
 import type { TierCopy } from './StrengthCurvePicker.copy';
 import type { ModeStyle } from './strengthCurveModeStyles';
@@ -24,9 +19,7 @@ interface Props {
 
 export function TierPickerTile({ mode, tier, style, isSelected, onSelect, scale = 1 }: Props) {
   const { colors } = useThemeColors();
-  const reduceMotion = useReduceMotion();
-  const pressScale = useSharedValue(1);
-  const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: pressScale.value }] }));
+  const { animatedStyle, pressHandlers } = usePressAnimation();
 
   return (
     <Pressable
@@ -38,12 +31,7 @@ export function TierPickerTile({ mode, tier, style, isSelected, onSelect, scale 
         if (!isSelected) void triggerHaptic('selection');
         onSelect(mode);
       }}
-      onPressIn={() => {
-        if (!reduceMotion) pressScale.value = withSpring(0.96, springs.standard);
-      }}
-      onPressOut={() => {
-        if (!reduceMotion) pressScale.value = withSpring(1, springs.standard);
-      }}
+      {...pressHandlers}
     >
       <Animated.View
         className='items-center rounded-2xl'

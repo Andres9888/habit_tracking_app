@@ -6,9 +6,9 @@
  * Role is `checkbox`, not `button`: RN only forwards `accessibilityState`'s
  * `checked` for checkbox/switch/radio, so on `button` VoiceOver dropped it.
  */
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { Check } from 'lucide-react-native';
-import { usePressed } from '../../../../components/AdvancedOptions/usePressed';
+import { AnimatedPressable } from '../../../../components/ui/AnimatedPressable';
 import { withAlpha } from '../../../../theme/colors';
 import { BAND_FG, useInsightPalette } from '../../insightPalette';
 
@@ -24,11 +24,10 @@ export function HeroCheckInToggle({
   onPress,
 }: HeroCheckInToggleProps) {
   const palette = useInsightPalette();
-  const { pressed, pressProps } = usePressed();
   const ink = checked ? palette.ctaGreen : BAND_FG;
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityHint={
         checked ? 'Tap the button again to unlog today.' : undefined
       }
@@ -40,6 +39,8 @@ export function HeroCheckInToggle({
       accessibilityRole='checkbox'
       accessibilityState={{ checked, disabled }}
       disabled={disabled}
+      // Full-width CTA in a packed hero; no extra slop.
+      hitSlop={0}
       style={{
         alignItems: 'center',
         backgroundColor: checked ? palette.greenWash : palette.green,
@@ -59,10 +60,8 @@ export function HeroCheckInToggle({
               shadowOpacity: 0.38,
               shadowRadius: 12,
             }),
-        ...(pressed ? { transform: [{ scale: 0.985 }] } : null),
       }}
       onPress={onPress}
-      {...pressProps}
     >
       <View
         style={{
@@ -102,6 +101,6 @@ export function HeroCheckInToggle({
       >
         {checked ? 'Undo' : 'Tap'}
       </Text>
-    </Pressable>
+    </AnimatedPressable>
   );
 }

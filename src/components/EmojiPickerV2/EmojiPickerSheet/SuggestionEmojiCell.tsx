@@ -3,19 +3,15 @@
  * Memoized emoji cell with press animation for AI suggestions
  */
 
-import React, { memo, useCallback } from 'react';
+import React, { memo } from 'react';
 import { Text, Pressable, StyleSheet } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  withSequence,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 
+import { usePressAnimation } from '@/hooks/usePressAnimation';
 import { colors } from '../../../theme/colors';
 import { borderRadius } from '../../../theme/spacing';
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const PressableBase = Animated.createAnimatedComponent(Pressable);
 
 interface SuggestionEmojiCellProps {
   emoji: string;
@@ -25,25 +21,14 @@ interface SuggestionEmojiCellProps {
 
 export const SuggestionEmojiCell = memo(
   ({ emoji, isSelected, onPress }: SuggestionEmojiCellProps) => {
-    const scale = useSharedValue(1);
-
-    const handlePressIn = useCallback(() => {
-      scale.value = withTiming(0.92, { duration: 50 });
-    }, [scale]);
-
-    const handlePressOut = useCallback(() => {
-      scale.value = withSequence(
-        withTiming(1.05, { duration: 80 }),
-        withTiming(1, { duration: 100 })
-      );
-    }, [scale]);
-
-    const animatedStyle = useAnimatedStyle(() => ({
-      transform: [{ scale: scale.value }],
-    }));
+    // 0.92 rather than the app default 0.97: a 56pt tile makes a 3% shrink
+    // invisible.
+    const { animatedStyle, pressHandlers } = usePressAnimation({
+      pressScale: 0.92,
+    });
 
     return (
-      <AnimatedPressable
+      <PressableBase
         accessibilityLabel={`Suggested emoji ${emoji}`}
         accessibilityRole='button'
         accessibilityState={{ selected: isSelected }}
@@ -53,11 +38,10 @@ export const SuggestionEmojiCell = memo(
           animatedStyle,
         ]}
         onPress={onPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
+        {...pressHandlers}
       >
         <Text style={suggestionCellStyles.emojiText}>{emoji}</Text>
-      </AnimatedPressable>
+      </PressableBase>
     );
   }
 );
