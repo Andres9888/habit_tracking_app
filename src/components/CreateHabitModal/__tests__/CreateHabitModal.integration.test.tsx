@@ -152,7 +152,7 @@ describe('CreateHabitModal Integration', () => {
     );
 
     expect(getByLabelText('Select emoji 🎯')).toBeDefined();
-    expect(getByLabelText('Browse more emojis')).toBeDefined();
+    expect(getByLabelText('Browse all emojis')).toBeDefined();
     expect(getByTestId('color-swatch-14B8A6')).toBeDefined();
   });
 
@@ -199,8 +199,9 @@ describe('CreateHabitModal Integration', () => {
   it('renders customize section copy', () => {
     const { getByText } = render(<CreateHabitModal {...defaultProps} />);
 
-    expect(getByText('Choose an icon')).toBeDefined();
-    expect(getByText('Pick a color')).toBeDefined();
+    expect(getByText('ICON')).toBeDefined();
+    expect(getByText('BROWSE ALL')).toBeDefined();
+    expect(getByText('COLOR')).toBeDefined();
     expect(getByText('Daily Reminder')).toBeDefined();
   });
 

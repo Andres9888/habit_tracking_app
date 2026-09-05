@@ -1,18 +1,23 @@
-/** AdvancedOptionsSection — consolidated per-habit Advanced controls. */
+/** "More to customize" panel — closed rows that open one at a time. */
 import { useState } from 'react';
 import { View } from 'react-native';
-import Animated from 'react-native-reanimated';
 import { triggerHaptic } from '@/utils/haptics';
-import { useThemeColors } from '@/theme/ThemeContext';
-import { shadows } from '@/theme/spacing';
-import { MODE_STYLES } from '@/screens/StrengthCurvePicker/strengthCurveModeStyles';
-import { useAdvancedOptionsAccordion } from './useAdvancedOptionsAccordion';
+import { useReduceMotion } from '@/hooks/useReduceMotion';
+import { GrowthIconsRow } from './GrowthIconsRow';
+import { PanelCard } from './panel/PanelCard';
+import { SectionLabel } from './panel/SectionLabel';
+import { ReminderRow } from './reminder/ReminderRow';
+import { StreakGoalRow } from './StreakGoalRow';
+import { StrengthCurveRow } from './StrengthCurveRow';
 import { useAdvancedOptionsSummary } from './useAdvancedOptionsSummary';
 import { useScrollOnExpand } from './useScrollOnExpand';
-import { AdvancedOptionsExpanded } from './AdvancedOptionsExpanded';
-import { AdvancedOptionsSummaryHeader } from './AdvancedOptionsSummaryHeader';
-import type { AdvancedOptionsSectionProps } from './AdvancedOptions.types';
+import { WhyRow } from './WhyRow';
+import type {
+  AdvancedOptionsSectionProps,
+  PanelRowKey,
+} from './AdvancedOptions.types';
 
+// eslint-disable-next-line max-lines-per-function
 export function AdvancedOptionsSection({
   growthType,
   isNewHabit,
@@ -25,72 +30,69 @@ export function AdvancedOptionsSection({
   onExpand,
   why,
   onWhyChange,
+  habitIcon,
+  reminder,
 }: AdvancedOptionsSectionProps) {
-  const { colors } = useThemeColors();
-  const [expanded, setExpanded] = useState(false);
-  const {
-    chevronAnimatedStyle,
-    contentAnimatedStyle,
-    handleContentLayout,
-    reduceMotion,
-  } = useAdvancedOptionsAccordion({ isExpanded: expanded });
-  useScrollOnExpand(expanded, reduceMotion, onExpand);
-
-  const { userDefaultEmojis, savedCustomEmojis, resolvedEmojis, presetLabel } =
+  const [openRow, setOpenRow] = useState<PanelRowKey | null>(null);
+  const reduceMotion = useReduceMotion();
+  useScrollOnExpand(openRow !== null, reduceMotion, onExpand);
+  const { userDefaultEmojis, savedCustomEmojis } =
     useAdvancedOptionsSummary(progressEmojis);
-  const AlgoIcon = MODE_STYLES[strengthAlgorithm].Icon;
+
+  const toggle = (key: PanelRowKey) => () => {
+    void triggerHaptic('selection');
+    setOpenRow((current) => (current === key ? null : key));
+  };
+  const whyEnabled = Boolean(onWhyChange);
 
   return (
     <View className='mt-6 px-6'>
-      <View
-        style={{
-          backgroundColor: colors.card,
-          borderWidth: 1,
-          borderColor: colors.cardBorder,
-          borderRadius: 16,
-          ...shadows.subtle,
-        }}
-      >
-        <AdvancedOptionsSummaryHeader
-          chevronAnimatedStyle={chevronAnimatedStyle}
-          expanded={expanded}
-          presetLabel={presetLabel}
-          resolvedStarting={resolvedEmojis.starting}
+      <SectionLabel action={{ text: 'Optional' }} label='More to customize' />
+      <PanelCard>
+        {reminder ? (
+          <ReminderRow
+            divided={false}
+            open={openRow === 'reminder'}
+            reminder={reminder}
+            onToggleOpen={toggle('reminder')}
+          />
+        ) : null}
+        {onWhyChange ? (
+          <WhyRow
+            divided={Boolean(reminder)}
+            open={openRow === 'why'}
+            why={why ?? ''}
+            onToggle={toggle('why')}
+            onWhyChange={onWhyChange}
+          />
+        ) : null}
+        <StreakGoalRow
+          divided={Boolean(reminder) || whyEnabled}
+          open={openRow === 'streak'}
           streakGoal={streakGoal}
-          strengthAlgorithm={strengthAlgorithm}
-          why={why}
-          whyEnabled={Boolean(onWhyChange)}
-          onToggle={() => {
-            void triggerHaptic('selection');
-            setExpanded((v) => !v);
-          }}
+          onStreakGoalChange={onStreakGoalChange}
+          onToggle={toggle('streak')}
         />
-        <Animated.View
-          accessibilityElementsHidden={!expanded}
-          importantForAccessibility={expanded ? 'auto' : 'no-hide-descendants'}
-          pointerEvents={expanded ? 'auto' : 'none'}
-          style={contentAnimatedStyle}
-        >
-          <View className='px-4 pb-3 pt-1' onLayout={handleContentLayout}>
-            <AdvancedOptionsExpanded
-              AlgoIcon={AlgoIcon}
-              growthType={growthType}
-              isNewHabit={isNewHabit}
-              progressEmojis={progressEmojis}
-              savedCustomEmojis={savedCustomEmojis}
-              strengthAlgorithm={strengthAlgorithm}
-              streakGoal={streakGoal}
-              userDefaultEmojis={userDefaultEmojis}
-              why={why}
-              onProgressEmojisChange={onProgressEmojisChange}
-              onSectionExpand={onExpand}
-              onStreakGoalChange={onStreakGoalChange}
-              onStrengthAlgorithmChange={onStrengthAlgorithmChange}
-              onWhyChange={onWhyChange}
-            />
-          </View>
-        </Animated.View>
-      </View>
+        <StrengthCurveRow
+          divided
+          growthType={growthType}
+          isNewHabit={isNewHabit}
+          open={openRow === 'curve'}
+          strengthAlgorithm={strengthAlgorithm}
+          onSelect={onStrengthAlgorithmChange}
+          onToggle={toggle('curve')}
+        />
+        <GrowthIconsRow
+          divided
+          fallback={userDefaultEmojis}
+          habitIcon={habitIcon}
+          open={openRow === 'growth'}
+          savedCustom={savedCustomEmojis}
+          value={progressEmojis}
+          onChange={onProgressEmojisChange}
+          onToggle={toggle('growth')}
+        />
+      </PanelCard>
     </View>
   );
 }

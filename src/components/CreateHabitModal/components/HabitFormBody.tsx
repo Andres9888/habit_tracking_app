@@ -96,6 +96,7 @@ const HabitFormBodyComponent = ({
 
       <AdvancedOptionsSection
         growthType={growthType}
+        habitIcon={selectedEmoji}
         isNewHabit={isNewHabit}
         progressEmojis={progressEmojis}
         streakGoal={streakGoal}

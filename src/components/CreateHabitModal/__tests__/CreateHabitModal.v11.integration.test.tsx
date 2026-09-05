@@ -185,8 +185,8 @@ describe('CreateHabitModal V11 Integration Tests', () => {
       <CreateHabitModal {...defaultProps} />
     );
 
-    expect(getByText('Choose an icon')).toBeDefined();
-    expect(getByText('Pick a color')).toBeDefined();
+    expect(getByText('ICON')).toBeDefined();
+    expect(getByText('COLOR')).toBeDefined();
     expect(getByText('Daily Reminder')).toBeDefined();
     expect(getByLabelText(STRINGS.CREATE_HABIT.createAction)).toBeDefined();
     expect(queryByLabelText(/Preview:/)).toBeNull();

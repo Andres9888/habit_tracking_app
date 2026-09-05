@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Literata:ital,opsz,wght@1,7..72,400;1,7..72,500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#D9D4CE;font-family:'DM Sans',-apple-system,sans-serif;color:#2D2A26;-webkit-font-smoothing:antialiased}
+a{color:#047857}a:hover{color:#065F46}
+*{box-sizing:border-box}
+</style>
+</helmet>
+
+<section style="display:flex;gap:64px;align-items:flex-start;padding:56px 56px 0;min-width:max-content">
+
+<!-- ===================== 2a: one system, rows at rest ===================== -->
+<div id="2a" style="display:flex;flex-direction:column;gap:14px;flex:none">
+<div style="display:flex;align-items:center;gap:10px"><span style="font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px;background:#2D2A26;color:#fff">2a</span><span style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#6B6560">One system · rows at rest, one open</span></div>
+<div data-screen-label="2a One system" style="width:393px;background:#EDEAE5;border-radius:44px;overflow:hidden;box-shadow:0 12px 32px rgba(45,42,38,.14);border:1px solid #DDD8D2">
+  <div style="height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 28px 0 40px">
+    <span style="font-size:17px;font-weight:600">12:56</span>
+    <div style="display:flex;align-items:center;gap:6px">
+      <svg width="18" height="12" viewBox="0 0 18 12"><path d="M9 3.2a8.5 8.5 0 0 1 6 2.4l-1.3 1.3A6.7 6.7 0 0 0 9 5a6.7 6.7 0 0 0-4.7 1.9L3 5.6A8.5 8.5 0 0 1 9 3.2zm0 3.6a5 5 0 0 1 3.4 1.4L11 9.6a2.5 2.5 0 0 0-4 0L5.6 8.2A5 5 0 0 1 9 6.8zM9 10.4l1.7 1.6H7.3z" fill="#2D2A26"/></svg>
+      <div style="width:27px;height:13px;border:1.5px solid #2D2A26;border-radius:4px;padding:1.5px"><div style="width:100%;height:100%;background:#2D2A26;border-radius:2px"></div></div>
+    </div>
+  </div>
+  <div style="padding:13px 16px 8px;display:flex;align-items:center;justify-content:space-between">
+    <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><div style="width:40px;height:40px;border-radius:20px;background:#E1DDD9;display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2D2A26" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></div></div>
+    <div style="height:44px;padding:0 24px;border-radius:999px;background:#DDD8D2;display:flex;align-items:center"><span style="font-size:16px;font-weight:600;color:#6E6660">Create Habit</span></div>
+  </div>
+  <div style="padding:32px 24px 0;display:flex;flex-direction:column;align-items:center;margin-bottom:40px">
+    <div style="font-size:22px;font-weight:600;letter-spacing:-.35px;line-height:28px;margin-bottom:24px;text-align:center">Name your new habit</div>
+    <div style="width:100%;background:#fff;border-radius:16px;border:2px solid #10B981;padding:16px 16px;display:flex;align-items:center"><span style="width:2px;height:26px;background:#059669;border-radius:1px;margin-right:2px"></span><span style="font-size:24px;font-weight:600;line-height:28px;color:#C4BFB7">e.g. Drink water</span></div>
+  </div>
+  <!-- Icon + color: left-aligned labels in the panel's header style -->
+  <div style="padding:0 24px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 2px"><span style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#6B6560">Icon</span><span style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#047857">Browse all</span></div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:24px">
+      <div style="aspect-ratio:1;border-radius:16px;border:2px solid #059669;background:#D1FAE5;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 2px 4px rgba(5,150,105,.25)">💪</div>
+      <div style="aspect-ratio:1;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">🧘</div>
+      <div style="aspect-ratio:1;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">📖</div>
+      <div style="aspect-ratio:1;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">💧</div>
+      <div style="aspect-ratio:1;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">🎨</div>
+      <div style="aspect-ratio:1;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">🏃</div>
+      <div style="aspect-ratio:1;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">🍎</div>
+      <div style="aspect-ratio:1;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">☕</div>
+      <div style="aspect-ratio:1;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">🎯</div>
+      <div style="aspect-ratio:1;border-radius:16px;border:1px dashed #C4BFB7;background:transparent;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6E6660" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 2px"><span style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#6B6560">Color</span></div>
+    <div style="display:grid;grid-template-columns:repeat(10,1fr);gap:0;margin-bottom:24px">
+      <div style="display:flex;align-items:center;justify-content:center"><div style="width:26px;height:26px;border-radius:999px;background:#EF4444"></div></div>
+      <div style="display:flex;align-items:center;justify-content:center"><div style="width:26px;height:26px;border-radius:999px;background:#F97316"></div></div>
+      <div style="display:flex;align-items:center;justify-content:center"><div style="width:26px;height:26px;border-radius:999px;background:#FBBF24"></div></div>
+      <div style="display:flex;align-items:center;justify-content:center"><div style="padding:2px;border-radius:999px;border:2px solid #10B981"><div style="width:26px;height:26px;border-radius:999px;background:#10B981"></div></div></div>
+      <div style="display:flex;align-items:center;justify-content:center"><div style="width:26px;height:26px;border-radius:999px;background:#14B8A6"></div></div>
+      <div style="display:flex;align-items:center;justify-content:center"><div style="width:26px;height:26px;border-radius:999px;background:#06B6D4"></div></div>
+      <div style="display:flex;align-items:center;justify-content:center"><div style="width:26px;height:26px;border-radius:999px;background:#3B82F6"></div></div>
+      <div style="display:flex;align-items:center;justify-content:center"><div style="width:26px;height:26px;border-radius:999px;background:#8B5CF6"></div></div>
+      <div style="display:flex;align-items:center;justify-content:center"><div style="width:26px;height:26px;border-radius:999px;background:#EC4899"></div></div>
+      <div style="display:flex;align-items:center;justify-content:center"><div style="width:26px;height:26px;border-radius:999px;background:#78716C"></div></div>
+    </div>
+  </div>
+
+  <!-- Panel: reminder is row one; every row is a compact head; Streak Goal is open -->
+  <div style="padding:0 24px 32px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 2px"><span style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#6B6560">More to customize</span><span style="font-size:12px;font-weight:600;color:#6E6660">Optional</span></div>
+    <div style="background:#F0EDE8;border:1px solid #DDD8D2;border-radius:16px;box-shadow:0 1px 3px rgba(45,42,38,.04);padding:0 16px">
+      <!-- Reminder -->
+      <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0">
+        <div style="width:32px;height:32px;border-radius:9px;background:#DCF1E7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+        <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Daily reminder</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">Off</div></div>
+        <div style="width:51px;height:31px;border-radius:16px;background:#DDD8D2;padding:2px"><div style="width:27px;height:27px;border-radius:14px;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.15)"></div></div>
+      </div>
+      <!-- Why (at rest) -->
+      <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+        <div style="width:32px;height:32px;border-radius:9px;background:#FBEBD9;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg></div>
+        <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Your why</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">One line you’ll see each time you check in</div></div>
+        <span style="border-radius:999px;padding:4px 10px;border:1.5px solid #E8C9A6;font-size:12px;font-weight:600;color:#B45309;white-space:nowrap">Add</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+      <!-- Streak Goal (open) -->
+      <div style="padding:12px 0 16px;border-top:1px solid #DDD8D2">
+        <div style="min-height:36px;display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:9px;background:#FBF0CC;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B6208" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+          <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Streak goal</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">A target to aim for. Missing it costs nothing.</div></div>
+          <span style="border-radius:999px;padding:4px 10px;background:#FBF0CC;font-size:12px;font-weight:600;color:#8B6208;white-space:nowrap">7 days</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:12px">
+          <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px">—</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#6E6660;white-space:nowrap">NONE</span></div>
+          <div style="flex:1;min-height:66px;border-radius:14px;background:#D1FAE5;border:2px solid #10B981;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px;color:#047857;font-variant-numeric:tabular-nums">7</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#047857;white-space:nowrap">DAYS</span></div>
+          <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px;font-variant-numeric:tabular-nums">30</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#6E6660;white-space:nowrap">DAYS</span></div>
+          <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px;font-variant-numeric:tabular-nums">100</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#6E6660;white-space:nowrap">DAYS</span></div>
+          <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px">···</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#6E6660;white-space:nowrap">CUSTOM</span></div>
+        </div>
+        <div style="margin-top:8px;display:flex;align-items:flex-start;gap:5px;font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660"><span style="width:5px;height:5px;border-radius:999px;background:#059669;flex:none;margin-top:3px"></span>SUGGESTED · MOST NEW HABITS STICK AFTER A WEEK</div>
+      </div>
+      <!-- Strength Curve (at rest) -->
+      <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+        <div style="width:32px;height:32px;border-radius:9px;background:#DCF1E7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></svg></div>
+        <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Strength curve</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">How hard is this habit?</div></div>
+        <span style="border-radius:999px;padding:4px 10px;background:#DCF1E7;font-size:12px;font-weight:600;color:#047857;white-space:nowrap">Average</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+      <!-- Growth Icons (at rest) -->
+      <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+        <div style="width:32px;height:32px;border-radius:9px;background:#EBE4F7;display:flex;align-items:center;justify-content:center;font-size:16px">🌱</div>
+        <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Growth icons</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">The icon changes as your habit gets stronger</div></div>
+        <span style="border-radius:999px;padding:4px 10px;background:#EBE4F7;font-size:12px;font-weight:600;color:#6D3AC7;white-space:nowrap">Plants</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- 2a open states: the panel only, one row open each -->
+<div id="2b" style="display:flex;flex-direction:column;gap:14px;flex:none">
+<div style="display:flex;align-items:center;gap:10px"><span style="font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px;background:#2D2A26;color:#fff">2b</span><span style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#6B6560">2a · each row open</span></div>
+<div style="display:grid;grid-template-columns:345px 345px;gap:20px">
+
+  <!-- Why open -->
+  <div style="background:#F0EDE8;border:1px solid #DDD8D2;border-radius:16px;box-shadow:0 1px 3px rgba(45,42,38,.04);padding:0 16px;align-self:start">
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0">
+      <div style="width:32px;height:32px;border-radius:9px;background:#DCF1E7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Daily reminder</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">Off</div></div>
+      <div style="width:51px;height:31px;border-radius:16px;background:#DDD8D2;padding:2px"><div style="width:27px;height:27px;border-radius:14px;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.15)"></div></div>
+    </div>
+    <div style="padding:12px 0 16px;border-top:1px solid #DDD8D2">
+      <div style="min-height:36px;display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:9px;background:#FBEBD9;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg></div>
+        <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Your why</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">One line you’ll see each time you check in</div></div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+      </div>
+      <div style="margin-top:12px;background:#fff;border:1.5px solid #E8C9A6;border-radius:14px;min-height:56px;padding:14px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px"><span style="display:flex;align-items:center;gap:2px;font-size:15px;font-weight:500;line-height:22px"><span style="width:2px;height:20px;background:#B45309;border-radius:1px"></span><span style="color:#A39D95">I want to feel…</span></span><span style="font-size:11px;font-weight:600;letter-spacing:.3px;line-height:22px;color:#A39D95;font-variant-numeric:tabular-nums">140</span></div>
+      <div style="margin-top:8px;display:flex;align-items:flex-start;gap:5px;font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660"><span style="width:5px;height:5px;border-radius:999px;background:#059669;flex:none;margin-top:3px"></span>SHOWN ABOVE COMPLETE TODAY</div>
+    </div>
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+      <div style="width:32px;height:32px;border-radius:9px;background:#FBF0CC;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B6208" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Streak goal</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">A target to aim for. Missing it costs nothing.</div></div>
+      <span style="border-radius:999px;padding:4px 10px;border:1.5px solid #E9D89A;font-size:12px;font-weight:600;color:#8B6208;white-space:nowrap">Set</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+      <div style="width:32px;height:32px;border-radius:9px;background:#DCF1E7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Strength curve</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">How hard is this habit?</div></div>
+      <span style="border-radius:999px;padding:4px 10px;background:#DCF1E7;font-size:12px;font-weight:600;color:#047857;white-space:nowrap">Average</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+      <div style="width:32px;height:32px;border-radius:9px;background:#EBE4F7;display:flex;align-items:center;justify-content:center;font-size:16px">🌱</div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Growth icons</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">The icon changes as your habit gets stronger</div></div>
+      <span style="border-radius:999px;padding:4px 10px;background:#EBE4F7;font-size:12px;font-weight:600;color:#6D3AC7;white-space:nowrap">Plants</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+  </div>
+
+  <!-- Strength curve open -->
+  <div style="background:#F0EDE8;border:1px solid #DDD8D2;border-radius:16px;box-shadow:0 1px 3px rgba(45,42,38,.04);padding:0 16px;align-self:start">
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0">
+      <div style="width:32px;height:32px;border-radius:9px;background:#DCF1E7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Daily reminder</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">Off</div></div>
+      <div style="width:51px;height:31px;border-radius:16px;background:#DDD8D2;padding:2px"><div style="width:27px;height:27px;border-radius:14px;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.15)"></div></div>
+    </div>
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+      <div style="width:32px;height:32px;border-radius:9px;background:#FBEBD9;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Your why</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">One line you’ll see each time you check in</div></div>
+      <span style="border-radius:999px;padding:4px 10px;border:1.5px solid #E8C9A6;font-size:12px;font-weight:600;color:#B45309;white-space:nowrap">Add</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+      <div style="width:32px;height:32px;border-radius:9px;background:#FBF0CC;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B6208" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Streak goal</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">A target to aim for. Missing it costs nothing.</div></div>
+      <span style="border-radius:999px;padding:4px 10px;background:#FBF0CC;font-size:12px;font-weight:600;color:#8B6208;white-space:nowrap">7 days</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+    <div style="padding:12px 0 16px;border-top:1px solid #DDD8D2">
+      <div style="min-height:36px;display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:9px;background:#DCF1E7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></svg></div>
+        <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Strength curve</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">How hard is this habit? Easier habits build faster.</div></div>
+        <span style="border-radius:999px;padding:4px 10px;background:#DCF1E7;font-size:12px;font-weight:600;color:#047857;white-space:nowrap">Average</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:12px">
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B0723A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/></svg><span style="font-size:15px;font-weight:700;line-height:18px">Simple</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660;font-variant-numeric:tabular-nums;white-space:nowrap">+10%/DAY</span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#D1FAE5;border:2px solid #10B981;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></svg><span style="font-size:15px;font-weight:700;line-height:18px;color:#047857">Average</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#047857;font-variant-numeric:tabular-nums;white-space:nowrap">+3%/DAY</span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6D3AC7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg><span style="font-size:15px;font-weight:700;line-height:18px">Complex</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660;font-variant-numeric:tabular-nums;white-space:nowrap">+1%/DAY</span></div>
+      </div>
+      <div style="margin-top:8px;display:flex;align-items:flex-start;gap:5px;font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660"><span style="width:5px;height:5px;border-radius:999px;background:#059669;flex:none;margin-top:3px"></span>SUGGESTED · MISSES COST LESS ON SLOWER CURVES</div>
+      <div style="margin-top:8px;display:inline-flex;align-items:center;gap:4px;min-height:36px;padding:0 4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg><span style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#047857;white-space:nowrap">See the difference</span></div>
+    </div>
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+      <div style="width:32px;height:32px;border-radius:9px;background:#EBE4F7;display:flex;align-items:center;justify-content:center;font-size:16px">🌱</div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Growth icons</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">The icon changes as your habit gets stronger</div></div>
+      <span style="border-radius:999px;padding:4px 10px;background:#EBE4F7;font-size:12px;font-weight:600;color:#6D3AC7;white-space:nowrap">Plants</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+  </div>
+
+  <!-- Growth icons open -->
+  <div style="background:#F0EDE8;border:1px solid #DDD8D2;border-radius:16px;box-shadow:0 1px 3px rgba(45,42,38,.04);padding:0 16px;align-self:start">
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0">
+      <div style="width:32px;height:32px;border-radius:9px;background:#DCF1E7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Daily reminder</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">Off</div></div>
+      <div style="width:51px;height:31px;border-radius:16px;background:#DDD8D2;padding:2px"><div style="width:27px;height:27px;border-radius:14px;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.15)"></div></div>
+    </div>
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+      <div style="width:32px;height:32px;border-radius:9px;background:#FBEBD9;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Your why</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">One line you’ll see each time you check in</div></div>
+      <span style="border-radius:999px;padding:4px 10px;border:1.5px solid #E8C9A6;font-size:12px;font-weight:600;color:#B45309;white-space:nowrap">Add</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+      <div style="width:32px;height:32px;border-radius:9px;background:#FBF0CC;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B6208" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Streak goal</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">A target to aim for. Missing it costs nothing.</div></div>
+      <span style="border-radius:999px;padding:4px 10px;background:#FBF0CC;font-size:12px;font-weight:600;color:#8B6208;white-space:nowrap">7 days</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+      <div style="width:32px;height:32px;border-radius:9px;background:#DCF1E7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Strength curve</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">How hard is this habit?</div></div>
+      <span style="border-radius:999px;padding:4px 10px;background:#DCF1E7;font-size:12px;font-weight:600;color:#047857;white-space:nowrap">Average</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+    <div style="padding:12px 0 16px;border-top:1px solid #DDD8D2">
+      <div style="min-height:36px;display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:9px;background:#EBE4F7;display:flex;align-items:center;justify-content:center;font-size:16px">🌱</div>
+        <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Growth icons</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">The icon changes as your habit gets stronger</div></div>
+        <span style="border-radius:999px;padding:4px 10px;background:#EBE4F7;font-size:12px;font-weight:600;color:#6D3AC7;white-space:nowrap">Plants</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:12px">
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 2px"><span style="font-size:20px;line-height:24px">🌱</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660">NEW</span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 2px"><span style="font-size:20px;line-height:24px">🌿</span><span style="height:12px"></span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 2px"><span style="font-size:20px;line-height:24px">🌳</span><span style="height:12px"></span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#D1FAE5;border:2px solid #10B981;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 2px"><span style="font-size:20px;line-height:24px">💪</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#047857">YOURS</span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 2px"><span style="font-size:20px;line-height:24px">⚡</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660">STRONG</span></div>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:12px">
+        <div style="flex:1;min-height:44px;border-radius:12px;background:#EBE4F7;border:2px solid #6D3AC7;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 6px"><span style="font-size:14px">🌱</span><span style="font-size:12px;font-weight:700;color:#6D3AC7">Plants</span></div>
+        <div style="flex:1;min-height:44px;border-radius:12px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 6px"><span style="font-size:14px">🌑</span><span style="font-size:12px;font-weight:600">Moon</span></div>
+        <div style="flex:1;min-height:44px;border-radius:12px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 6px"><span style="font-size:14px">🥚</span><span style="font-size:12px;font-weight:600">Hatch</span></div>
+        <div style="flex:1;min-height:44px;border-radius:12px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 6px"><span style="font-size:14px">🔥</span><span style="font-size:12px;font-weight:600">Fire</span></div>
+      </div>
+      <div style="margin-top:8px;display:flex;align-items:flex-start;gap:5px;font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660"><span style="width:5px;height:5px;border-radius:999px;background:#059669;flex:none;margin-top:3px"></span>YOUR HABIT ICON STANDS IN FOR THE FOURTH STAGE</div>
+    </div>
+  </div>
+
+  <!-- Streak goal · custom open -->
+  <div style="background:#F0EDE8;border:1px solid #DDD8D2;border-radius:16px;box-shadow:0 1px 3px rgba(45,42,38,.04);padding:0 16px;align-self:start">
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0">
+      <div style="width:32px;height:32px;border-radius:9px;background:#DCF1E7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Daily reminder</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">8:00 AM</div></div>
+      <div style="width:51px;height:31px;border-radius:16px;background:#059669;padding:2px;display:flex;justify-content:flex-end"><div style="width:27px;height:27px;border-radius:14px;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.15)"></div></div>
+    </div>
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+      <div style="width:32px;height:32px;border-radius:9px;background:#FBEBD9;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Your why</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">I want to feel strong enough to carry my kids</div></div>
+      <span style="border-radius:999px;padding:4px 10px;background:#FBEBD9;font-size:12px;font-weight:600;color:#B45309;white-space:nowrap">Set</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+    <div style="padding:12px 0 16px;border-top:1px solid #DDD8D2">
+      <div style="min-height:36px;display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:9px;background:#FBF0CC;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B6208" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Streak goal</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">A target to aim for. Missing it costs nothing.</div></div>
+        <span style="border-radius:999px;padding:4px 10px;background:#FBF0CC;font-size:12px;font-weight:600;color:#8B6208;white-space:nowrap">21 days</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:12px">
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px">—</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#6E6660;white-space:nowrap">NONE</span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px;font-variant-numeric:tabular-nums">7</span><span style="display:flex;align-items:center;gap:3px;margin-top:2px"><span style="width:5px;height:5px;border-radius:999px;background:#059669"></span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#047857">DAYS</span></span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px;font-variant-numeric:tabular-nums">30</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#6E6660;white-space:nowrap">DAYS</span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px;font-variant-numeric:tabular-nums">100</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#6E6660;white-space:nowrap">DAYS</span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#D1FAE5;border:2px solid #10B981;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px;color:#047857;font-variant-numeric:tabular-nums">21</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#047857;white-space:nowrap">CUSTOM</span></div>
+      </div>
+      <div style="margin-top:10px;display:flex;align-items:center;gap:10px;background:#F8F5F1;border:1px solid #DDD8D2;border-radius:14px;padding:6px 6px 6px 14px">
+        <span style="flex:1;font-size:13px;font-weight:500;color:#6E6660">Custom target</span>
+        <div style="display:flex;align-items:center;gap:2px">
+          <div style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D2A26" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14"/></svg></div>
+          <div style="min-width:64px;text-align:center;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums">21<span style="font-size:12px;font-weight:600;color:#6E6660;margin-left:3px">days</span></div>
+          <div style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D2A26" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
+        </div>
+      </div>
+    </div>
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+      <div style="width:32px;height:32px;border-radius:9px;background:#DCF1E7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Strength curve</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">How hard is this habit?</div></div>
+      <span style="border-radius:999px;padding:4px 10px;background:#DCF1E7;font-size:12px;font-weight:600;color:#047857;white-space:nowrap">Simple</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+      <div style="width:32px;height:32px;border-radius:9px;background:#EBE4F7;display:flex;align-items:center;justify-content:center;font-size:16px">🔥</div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Growth icons</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">The icon changes as your habit gets stronger</div></div>
+      <span style="border-radius:999px;padding:4px 10px;background:#EBE4F7;font-size:12px;font-weight:600;color:#6D3AC7;white-space:nowrap">Fire</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+  </div>
+
+</div>
+<div style="display:flex;align-items:center;gap:10px;margin-top:12px"><span style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#6B6560">Daily reminder · toggle on → presets → custom time</span></div>
+<div style="display:grid;grid-template-columns:345px 345px;gap:20px">
+
+  <!-- Reminder: just switched on, Morning preset auto-selected -->
+  <div style="background:#F0EDE8;border:1px solid #DDD8D2;border-radius:16px;box-shadow:0 1px 3px rgba(45,42,38,.04);padding:0 16px;align-self:start">
+    <div style="padding:12px 0 16px">
+      <div style="min-height:36px;display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:9px;background:#DCF1E7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+        <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Daily reminder</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">Tomorrow at 7:00 AM</div></div>
+        <div style="width:51px;height:31px;border-radius:16px;background:#059669;padding:2px;display:flex;justify-content:flex-end"><div style="width:27px;height:27px;border-radius:14px;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.15)"></div></div>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:12px">
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#D1FAE5;border:2px solid #10B981;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><span style="font-size:18px;line-height:20px">🌅</span><span style="font-size:15px;font-weight:700;line-height:18px;color:#047857">Morning</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#047857;font-variant-numeric:tabular-nums;white-space:nowrap">7:00 AM</span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><span style="font-size:18px;line-height:20px">☀️</span><span style="font-size:15px;font-weight:700;line-height:18px">Midday</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660;font-variant-numeric:tabular-nums;white-space:nowrap">12:00 PM</span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><span style="font-size:18px;line-height:20px">🌙</span><span style="font-size:15px;font-weight:700;line-height:18px">Evening</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660;font-variant-numeric:tabular-nums;white-space:nowrap">8:00 PM</span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D2A26" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span style="font-size:15px;font-weight:700;line-height:18px">Custom</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660;white-space:nowrap">PICK</span></div>
+      </div>
+      <div style="margin-top:8px;display:flex;align-items:flex-start;gap:5px;font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660"><span style="width:5px;height:5px;border-radius:999px;background:#059669;flex:none;margin-top:3px"></span>ONE NOTIFICATION A DAY. CHANGE OR TURN OFF ANYTIME.</div>
+    </div>
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+      <div style="width:32px;height:32px;border-radius:9px;background:#FBEBD9;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Your why</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">One line you’ll see each time you check in</div></div>
+      <span style="border-radius:999px;padding:4px 10px;border:1.5px solid #E8C9A6;font-size:12px;font-weight:600;color:#B45309;white-space:nowrap">Add</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+      <div style="width:32px;height:32px;border-radius:9px;background:#FBF0CC;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B6208" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Streak goal</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">A target to aim for. Missing it costs nothing.</div></div>
+      <span style="border-radius:999px;padding:4px 10px;background:#FBF0CC;font-size:12px;font-weight:600;color:#8B6208;white-space:nowrap">7 days</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+  </div>
+
+  <!-- Reminder: custom time picked, wheel shown inline -->
+  <div style="background:#F0EDE8;border:1px solid #DDD8D2;border-radius:16px;box-shadow:0 1px 3px rgba(45,42,38,.04);padding:0 16px;align-self:start">
+    <div style="padding:12px 0 16px">
+      <div style="min-height:36px;display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:9px;background:#DCF1E7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+        <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Daily reminder</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">Today at 6:45 PM (in 5h 49m)</div></div>
+        <div style="width:51px;height:31px;border-radius:16px;background:#059669;padding:2px;display:flex;justify-content:flex-end"><div style="width:27px;height:27px;border-radius:14px;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.15)"></div></div>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:12px">
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><span style="font-size:18px;line-height:20px">🌅</span><span style="font-size:15px;font-weight:700;line-height:18px">Morning</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660;font-variant-numeric:tabular-nums;white-space:nowrap">7:00 AM</span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><span style="font-size:18px;line-height:20px">☀️</span><span style="font-size:15px;font-weight:700;line-height:18px">Midday</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660;font-variant-numeric:tabular-nums;white-space:nowrap">12:00 PM</span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><span style="font-size:18px;line-height:20px">🌙</span><span style="font-size:15px;font-weight:700;line-height:18px">Evening</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660;font-variant-numeric:tabular-nums;white-space:nowrap">8:00 PM</span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#D1FAE5;border:2px solid #10B981;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span style="font-size:15px;font-weight:700;line-height:18px;color:#047857">Custom</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#047857;font-variant-numeric:tabular-nums;white-space:nowrap">6:45 PM</span></div>
+      </div>
+      <!-- inline time wheel -->
+      <div style="margin-top:10px;background:#F8F5F1;border:1px solid #DDD8D2;border-radius:14px;padding:8px 12px;display:flex;align-items:center;justify-content:center;gap:18px;position:relative;overflow:hidden">
+        <div style="position:absolute;left:12px;right:12px;top:50%;height:36px;transform:translateY(-50%);border-radius:10px;background:#EDEAE5"></div>
+        <div style="position:relative;display:flex;flex-direction:column;align-items:center;font-variant-numeric:tabular-nums;width:44px"><span style="font-size:15px;color:#C4BFB7;line-height:32px">5</span><span style="font-size:20px;font-weight:600;line-height:36px">6</span><span style="font-size:15px;color:#C4BFB7;line-height:32px">7</span></div>
+        <div style="position:relative;display:flex;flex-direction:column;align-items:center;font-variant-numeric:tabular-nums;width:44px"><span style="font-size:15px;color:#C4BFB7;line-height:32px">40</span><span style="font-size:20px;font-weight:600;line-height:36px">45</span><span style="font-size:15px;color:#C4BFB7;line-height:32px">50</span></div>
+        <div style="position:relative;display:flex;flex-direction:column;align-items:center;width:44px"><span style="font-size:15px;color:#C4BFB7;line-height:32px">AM</span><span style="font-size:20px;font-weight:600;line-height:36px">PM</span><span style="font-size:15px;color:transparent;line-height:32px">—</span></div>
+      </div>
+      <div style="margin-top:8px;display:flex;align-items:flex-start;gap:5px;font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660"><span style="width:5px;height:5px;border-radius:999px;background:#059669;flex:none;margin-top:3px"></span>SAVES AS YOU SCROLL. NO CONFIRM STEP.</div>
+    </div>
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+      <div style="width:32px;height:32px;border-radius:9px;background:#FBEBD9;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Your why</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">One line you’ll see each time you check in</div></div>
+      <span style="border-radius:999px;padding:4px 10px;border:1.5px solid #E8C9A6;font-size:12px;font-weight:600;color:#B45309;white-space:nowrap">Add</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+  </div>
+
+  <!-- Reminder: permission denied banner -->
+  <div style="background:#F0EDE8;border:1px solid #DDD8D2;border-radius:16px;box-shadow:0 1px 3px rgba(45,42,38,.04);padding:0 16px;align-self:start">
+    <div style="padding:12px 0 16px">
+      <div style="min-height:36px;display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:9px;background:#DCF1E7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+        <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Daily reminder</div><div style="font-size:12px;font-weight:500;color:#B45309;margin-top:1px">Notifications are off for this app</div></div>
+        <div style="width:51px;height:31px;border-radius:16px;background:#059669;padding:2px;display:flex;justify-content:flex-end"><div style="width:27px;height:27px;border-radius:14px;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.15)"></div></div>
+      </div>
+      <div style="margin-top:12px;display:flex;align-items:center;gap:10px;background:#FBEBD9;border-radius:14px;padding:12px 14px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M17 17H3s3-2 3-9a6 6 0 0 1 9.3-5"/><path d="m2 2 20 20"/><path d="M21 17c-.6-.8-1.2-2-1.6-3.6"/></svg>
+        <span style="flex:1;font-size:13px;font-weight:500;line-height:18px;color:#7C3A0B">Your time is saved. Allow notifications in Settings to receive it.</span>
+        <span style="border-radius:999px;padding:6px 12px;background:#B45309;font-size:12px;font-weight:700;color:#fff;white-space:nowrap">Open Settings</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:10px;opacity:.55">
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><span style="font-size:18px;line-height:20px">🌅</span><span style="font-size:15px;font-weight:700;line-height:18px">Morning</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660;white-space:nowrap">7:00 AM</span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#D1FAE5;border:2px solid #10B981;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><span style="font-size:18px;line-height:20px">☀️</span><span style="font-size:15px;font-weight:700;line-height:18px;color:#047857">Midday</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#047857;white-space:nowrap">12:00 PM</span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><span style="font-size:18px;line-height:20px">🌙</span><span style="font-size:15px;font-weight:700;line-height:18px">Evening</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660;white-space:nowrap">8:00 PM</span></div>
+        <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D2A26" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span style="font-size:15px;font-weight:700;line-height:18px">Custom</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660;white-space:nowrap">PICK</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reminder: closed again after setting -->
+  <div style="background:#F0EDE8;border:1px solid #DDD8D2;border-radius:16px;box-shadow:0 1px 3px rgba(45,42,38,.04);padding:0 16px;align-self:start">
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0">
+      <div style="width:32px;height:32px;border-radius:9px;background:#DCF1E7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Daily reminder</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">Today at 6:45 PM (in 5h 49m)</div></div>
+      <span style="border-radius:999px;padding:4px 10px;background:#DCF1E7;font-size:12px;font-weight:600;color:#047857;white-space:nowrap;font-variant-numeric:tabular-nums">6:45 PM</span>
+      <div style="width:51px;height:31px;border-radius:16px;background:#059669;padding:2px;display:flex;justify-content:flex-end"><div style="width:27px;height:27px;border-radius:14px;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.15)"></div></div>
+    </div>
+    <div style="min-height:60px;display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #DDD8D2">
+      <div style="width:32px;height:32px;border-radius:9px;background:#FBEBD9;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">Your why</div><div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:1px">One line you’ll see each time you check in</div></div>
+      <span style="border-radius:999px;padding:4px 10px;border:1.5px solid #E8C9A6;font-size:12px;font-weight:600;color:#B45309;white-space:nowrap">Add</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A39D95" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+    <div style="padding:14px 4px 4px;font-size:12px;line-height:17px;color:#6E6660">Tap the row (not the switch) to reopen presets. The switch alone turns it off; the chosen time is remembered so turning it back on restores 6:45 PM.</div>
+  </div>
+
+</div>
+<div style="width:710px;font-size:13px;line-height:19px;color:#524D47;display:flex;flex-direction:column;gap:8px">
+  <div><strong style="color:#2D2A26">Reminder flow, left to right:</strong> switch on → row expands, Morning auto-selected, hint reads the next fire time · tap Custom → inline wheel appears under the chips, chip label becomes the picked time, saves on scroll · notifications denied → amber banner with Open Settings, chips dim but the time is kept · switch off or tap the head → row closes, time chip persists in the head. Presets, times and emoji are the existing DEFAULT_PRESETS; "Next" text is the existing getNextReminderText().</div>
+  <div><strong style="color:#2D2A26">Rows, left to right, top to bottom:</strong> Why open (focused field, amber ring, counter inside) · Strength curve open (3 mode chips + "See the difference") · Growth icons open (5 stage chips, then the theme row, "Plants" selected in violet) · Streak goal on Custom (stepper appears below the chips; the value chip in the head updates live to "21 days"). The last card also shows the fully-filled state: reminder on, why written and truncated in the hint line, "Set" chip filled.</div>
+  <div>Only one row is open at a time; opening another closes the previous. The head row stays put so the chevron flips in place and the value chip keeps its position.</div>
+</div>
+</div>
+
+<div style="width:300px;padding-top:34px;display:flex;flex-direction:column;gap:18px;font-size:13px;line-height:19px;color:#524D47">
+  <div style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#6B6560"><a href="#2a">2a</a> vs <a href="#1a">1a</a></div>
+  <div><strong style="color:#2D2A26">Rows rest closed.</strong> Every row is one 60px line: tile, title, one-line hint, value chip, chevron. Tap a row to open its picker in place (Streak goal shown open). The screen drops from ~4 pickers on screen to one.</div>
+  <div><strong style="color:#2D2A26">Set vs. unset reads at a glance.</strong> Filled chip = chosen ("7 days", "Average", "Plants"); outlined chip = nothing yet ("Add"). Same row hue either way.</div>
+  <div><strong style="color:#2D2A26">Reminder joins the panel.</strong> "Daily reminder" becomes row one with the same tile + title anatomy instead of a separate card with its own header treatment.</div>
+  <div><strong style="color:#2D2A26">Whole screen on one grid.</strong> Icon and Color labels move left in the panel's caps style, with the action ("Browse all") on the right — same line the panel header uses. Icons sit on a true 5-col grid with a "+" tile; colors compress to a single row so the screen shortens without losing options.</div>
+  <div><strong style="color:#2D2A26">No collapse button at all.</strong> With rows at rest the panel is already short, so the header no longer needs a Hide/Customize toggle. "Optional" on the right tells the user they can skip it.</div>
+</div>
+
+</section>
+
+<section style="display:flex;gap:64px;align-items:flex-start;padding:56px;min-width:max-content">
+
+<!-- ===================== CURRENT (recreated from source) ===================== -->
+<div style="display:flex;flex-direction:column;gap:14px;flex:none">
+<div style="display:flex;align-items:center;gap:10px"><span style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#6B6560">Current · from main</span></div>
+<div data-screen-label="Current" style="width:393px;background:#EDEAE5;border-radius:44px;overflow:hidden;box-shadow:0 12px 32px rgba(45,42,38,.14);border:1px solid #DDD8D2">
+  <!-- status bar -->
+  <div style="height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 28px 0 40px">
+    <span style="font-size:17px;font-weight:600">12:56</span>
+    <div style="display:flex;align-items:center;gap:6px">
+      <svg width="18" height="12" viewBox="0 0 18 12"><path d="M9 3.2a8.5 8.5 0 0 1 6 2.4l-1.3 1.3A6.7 6.7 0 0 0 9 5a6.7 6.7 0 0 0-4.7 1.9L3 5.6A8.5 8.5 0 0 1 9 3.2zm0 3.6a5 5 0 0 1 3.4 1.4L11 9.6a2.5 2.5 0 0 0-4 0L5.6 8.2A5 5 0 0 1 9 6.8zM9 10.4l1.7 1.6H7.3z" fill="#2D2A26"/></svg>
+      <div style="width:27px;height:13px;border:1.5px solid #2D2A26;border-radius:4px;padding:1.5px"><div style="width:100%;height:100%;background:#2D2A26;border-radius:2px"></div></div>
+    </div>
+  </div>
+  <!-- ScreenHeader: leftAction close, rightAction SaveButton -->
+  <div style="padding:13px 16px 8px;display:flex;align-items:center;justify-content:space-between">
+    <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><div style="width:40px;height:40px;border-radius:20px;background:#E1DDD9;display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2D2A26" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></div></div>
+    <div style="height:44px;padding:0 24px;border-radius:999px;background:#DDD8D2;display:flex;align-items:center"><span style="font-size:16px;font-weight:600;color:#6E6660">Create Habit</span></div>
+  </div>
+  <!-- NameInputSection -->
+  <div style="padding:32px 24px 0;display:flex;flex-direction:column;align-items:center;margin-bottom:48px">
+    <div style="font-size:22px;font-weight:600;letter-spacing:-.35px;line-height:28px;margin-bottom:24px;text-align:center">Name your new habit</div>
+    <div style="width:100%;background:#fff;border-radius:16px;border:2px solid #10B981;padding:16px 16px;display:flex;align-items:center"><span style="width:2px;height:26px;background:#059669;border-radius:1px;margin-right:2px"></span><span style="font-size:24px;font-weight:600;line-height:28px;color:#C4BFB7">e.g. Drink water</span></div>
+  </div>
+  <!-- CustomizeFields -->
+  <div style="padding:0 24px">
+    <div style="text-align:center;font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#6E6660;margin-bottom:12px">Choose an icon</div>
+    <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px">
+      <div style="display:flex;justify-content:center">
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:2px solid #059669;background:#D1FAE5;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 2px 4px rgba(5,150,105,.25)">💪</div></div>
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">🧘</div></div>
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">📖</div></div>
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">💧</div></div>
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">🎨</div></div>
+      </div>
+      <div style="display:flex;justify-content:center">
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">🏃</div></div>
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">🍎</div></div>
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">☕</div></div>
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">🎯</div></div>
+      </div>
+      <div style="margin-top:12px;min-height:44px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:#059669">Browse more emojis →</div>
+    </div>
+    <div style="text-align:center;font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#6E6660;margin:16px 0 12px">Pick a color</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px">
+      <div style="display:flex;gap:4px;justify-content:center">
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#EF4444"></div></div>
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#F97316"></div></div>
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#FBBF24"></div></div>
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="padding:3px;border-radius:999px;background:#10B981"><div style="padding:5px;border-radius:999px;background:#fff"><div style="width:36px;height:36px;border-radius:999px;background:#10B981"></div></div></div></div>
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#14B8A6"></div></div>
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#06B6D4"></div></div>
+      </div>
+      <div style="display:flex;gap:4px;justify-content:center">
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#3B82F6"></div></div>
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#8B5CF6"></div></div>
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#EC4899"></div></div>
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#78716C"></div></div>
+      </div>
+    </div>
+    <!-- ToggleRow -->
+    <div style="display:flex;align-items:center;justify-content:space-between;border-radius:16px;border:1px solid #DDD8D2;background:#EDEAE5;padding:16px;margin-bottom:24px;box-shadow:0 1px 3px rgba(45,42,38,.04)">
+      <div style="display:flex;align-items:center;gap:12px"><div style="width:36px;height:36px;border-radius:12px;background:#EDEAE5;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div><span style="font-size:16px;font-weight:500">Daily Reminder</span></div>
+      <div style="width:51px;height:31px;border-radius:16px;background:#DDD8D2;padding:2px"><div style="width:27px;height:27px;border-radius:14px;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.15)"></div></div>
+    </div>
+  </div>
+  <!-- AdvancedOptionsSection (current) -->
+  <div style="padding:0 24px 32px">
+    <div style="background:#F0EDE8;border:1px solid #DDD8D2;border-radius:16px;box-shadow:0 1px 3px rgba(45,42,38,.04)">
+      <!-- SummaryHeader -->
+      <div style="padding:14px 16px">
+        <div style="text-align:center;font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#6B6560">More to customize</div>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;justify-content:center;gap:8px">
+          <div style="display:flex;align-items:center;gap:4px;border-radius:999px;padding:4px 10px;background:#FFF5E8"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg><span style="font-size:11px;font-weight:600;color:#B45309">Add a why</span></div>
+          <div style="display:flex;align-items:center;gap:4px;border-radius:999px;padding:4px 10px;background:#FEF3C7"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#92400E" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span style="font-size:11px;font-weight:600;color:#92400E">No goal set</span></div>
+          <div style="display:flex;align-items:center;gap:4px;border-radius:999px;padding:4px 10px;background:#D1FAE5"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></svg><span style="font-size:11px;font-weight:600;color:#047857">Average</span></div>
+          <div style="display:flex;align-items:center;gap:4px;border-radius:999px;padding:4px 10px;background:#D1FAE5"><span style="font-size:12px">🌱</span><span style="font-size:11px;font-weight:600;color:#047857">Plants</span></div>
+        </div>
+        <div style="margin-top:16px;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:12px;padding:12px;background:#059669"><span style="font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#fff">Hide options</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></div>
+      </div>
+      <!-- Expanded -->
+      <div style="padding:4px 16px 12px">
+        <!-- Why -->
+        <div style="padding:16px 0">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+            <div style="width:32px;height:32px;border-radius:9px;background:#FFF5E8;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg></div>
+            <span style="flex:1;font-size:15px;font-weight:600">Your why</span>
+            <span style="border-radius:999px;padding:4px 10px;background:#FFF5E8;font-size:12px;font-weight:600;color:#B45309">Not set</span>
+          </div>
+          <div style="font-size:13px;font-weight:500;letter-spacing:.12px;line-height:18px;color:#6E6660;margin:0 0 12px 42px">One line, shown above Complete today.</div>
+          <div style="background:#fff;border:1.5px solid #DDD8D2;border-radius:12px;min-height:56px;padding:12px 14px;font-family:Literata,serif;font-style:italic;font-size:15px;line-height:22px;color:#C4BFB7">Why this one matters to you</div>
+          <div style="text-align:right;font-size:13px;font-weight:500;color:#6E6660;margin-top:8px">0/140</div>
+        </div>
+        <!-- Streak Goal -->
+        <div style="padding:16px 0;border-top:1px solid #DDD8D2">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+            <div style="width:32px;height:32px;border-radius:9px;background:#FEF3CD;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B6208" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+            <span style="flex:1;font-size:15px;font-weight:600">Streak Goal</span>
+            <span style="border-radius:999px;padding:4px 10px;background:#FEF3CD;font-size:12px;font-weight:600;color:#6B6560">No goal</span>
+          </div>
+          <div style="font-size:13px;font-weight:500;letter-spacing:.12px;line-height:18px;color:#6E6660;margin:0 0 12px 42px">A visual target with no penalty if you miss it.</div>
+          <div style="display:flex;gap:6px">
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#FEF3C7;border:2px solid #D97706;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px;color:#92400E">Off</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#92400E">NO GOAL</span></div>
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#EDEAE5;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 2px 6px;position:relative"><div style="position:absolute;top:-8px;left:0;right:0;display:flex;justify-content:center"><span style="padding:2px 6px;border-radius:999px;background:#059669;font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#fff">START</span></div><span style="font-size:17px;font-weight:700;line-height:20px">7</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#6E6660;white-space:nowrap">STARTER</span></div>
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#EDEAE5;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px">30</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#6E6660;white-space:nowrap">STEADY</span></div>
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#EDEAE5;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px">100</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#6E6660;white-space:nowrap">CHAMP</span></div>
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#EDEAE5;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px">···</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#6E6660;white-space:nowrap">CUSTOM</span></div>
+          </div>
+        </div>
+        <!-- Strength Curve (collapsed trigger) -->
+        <div style="padding:16px 0;border-top:1px solid #DDD8D2">
+          <div style="min-height:44px;display:flex;align-items:center;gap:12px;padding:10px 0">
+            <div style="width:32px;height:32px;border-radius:9px;background:#E2F1EA;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></svg></div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:8px"><span style="flex:1;font-size:15px;font-weight:600">Strength Curve</span><span style="border-radius:999px;padding:4px 10px;background:#FEF3CD;font-size:12px;font-weight:600;color:#6B6560">Average · +3%</span></div>
+              <div style="font-size:12px;font-weight:500;color:#6E6660;margin-top:2px">How fast strength rises each check-in</div>
+            </div>
+            <div style="width:28px;height:28px;border-radius:14px;border:1px solid #DDD8D2;background:#FAF8F5;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B6560" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+          </div>
+        </div>
+        <!-- Growth Icons -->
+        <div style="padding:16px 0;border-top:1px solid #DDD8D2">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+            <div style="width:32px;height:32px;border-radius:9px;background:#E2F1EA;display:flex;align-items:center;justify-content:center;font-size:16px">🌱</div>
+            <span style="flex:1;font-size:15px;font-weight:600">Growth Icons</span>
+            <span style="border-radius:999px;padding:4px 10px;background:#FEF3CD;font-size:12px;font-weight:600;color:#6B6560">Plants</span>
+          </div>
+          <div style="font-size:13px;font-weight:500;letter-spacing:.12px;line-height:18px;color:#6E6660;margin:0 0 12px 42px">How your habit’s strength looks as it grows.</div>
+          <div style="display:flex;gap:6px;margin-bottom:24px">
+            <div style="flex:1;aspect-ratio:1;border-radius:14px;background:#EDEAE5;border:1px solid #DDD8D2;display:flex;align-items:center;justify-content:center;font-size:20px;position:relative">🌱<span style="position:absolute;bottom:-16px;left:0;font-size:10px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;color:#6E6660">New</span></div>
+            <div style="flex:1;aspect-ratio:1;border-radius:14px;background:#EDEAE5;border:1px solid #DDD8D2;display:flex;align-items:center;justify-content:center;font-size:20px">🌿</div>
+            <div style="flex:1;aspect-ratio:1;border-radius:14px;background:#EDEAE5;border:1px solid #DDD8D2;display:flex;align-items:center;justify-content:center;font-size:20px">🌳</div>
+            <div style="flex:1;aspect-ratio:1;border-radius:14px;background:#D1FAE5;border:2px solid #10B981;display:flex;align-items:center;justify-content:center;font-size:20px">💪</div>
+            <div style="flex:1;aspect-ratio:1;border-radius:14px;background:#EDEAE5;border:1px solid #DDD8D2;display:flex;align-items:center;justify-content:center;font-size:20px;position:relative">⚡<span style="position:absolute;bottom:-16px;right:0;font-size:10px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;color:#047857">Strong</span></div>
+          </div>
+          <div style="margin-top:8px;display:inline-flex;align-items:center;gap:4px;min-height:36px;padding:0 4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg><span style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#047857">Themes</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===================== 1a PROPOSED ===================== -->
+<div id="1a" style="display:flex;flex-direction:column;gap:14px;flex:none">
+<div style="display:flex;align-items:center;gap:10px"><span style="font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px;background:#2D2A26;color:#fff">1a</span><span style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#6B6560">Proposed · one chip, one tone, one voice</span></div>
+<div data-screen-label="1a Proposed" style="width:393px;background:#EDEAE5;border-radius:44px;overflow:hidden;box-shadow:0 12px 32px rgba(45,42,38,.14);border:1px solid #DDD8D2">
+  <div style="height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 28px 0 40px">
+    <span style="font-size:17px;font-weight:600">12:56</span>
+    <div style="display:flex;align-items:center;gap:6px">
+      <svg width="18" height="12" viewBox="0 0 18 12"><path d="M9 3.2a8.5 8.5 0 0 1 6 2.4l-1.3 1.3A6.7 6.7 0 0 0 9 5a6.7 6.7 0 0 0-4.7 1.9L3 5.6A8.5 8.5 0 0 1 9 3.2zm0 3.6a5 5 0 0 1 3.4 1.4L11 9.6a2.5 2.5 0 0 0-4 0L5.6 8.2A5 5 0 0 1 9 6.8zM9 10.4l1.7 1.6H7.3z" fill="#2D2A26"/></svg>
+      <div style="width:27px;height:13px;border:1.5px solid #2D2A26;border-radius:4px;padding:1.5px"><div style="width:100%;height:100%;background:#2D2A26;border-radius:2px"></div></div>
+    </div>
+  </div>
+  <div style="padding:13px 16px 8px;display:flex;align-items:center;justify-content:space-between">
+    <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><div style="width:40px;height:40px;border-radius:20px;background:#E1DDD9;display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2D2A26" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></div></div>
+    <div style="height:44px;padding:0 24px;border-radius:999px;background:#DDD8D2;display:flex;align-items:center"><span style="font-size:16px;font-weight:600;color:#6E6660">Create Habit</span></div>
+  </div>
+  <div style="padding:32px 24px 0;display:flex;flex-direction:column;align-items:center;margin-bottom:48px">
+    <div style="font-size:22px;font-weight:600;letter-spacing:-.35px;line-height:28px;margin-bottom:24px;text-align:center">Name your new habit</div>
+    <div style="width:100%;background:#fff;border-radius:16px;border:2px solid #10B981;padding:16px 16px;display:flex;align-items:center"><span style="width:2px;height:26px;background:#059669;border-radius:1px;margin-right:2px"></span><span style="font-size:24px;font-weight:600;line-height:28px;color:#C4BFB7">e.g. Drink water</span></div>
+  </div>
+  <div style="padding:0 24px">
+    <div style="text-align:center;font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#6E6660;margin-bottom:12px">Choose an icon</div>
+    <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px">
+      <div style="display:flex;justify-content:center">
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:2px solid #059669;background:#D1FAE5;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 2px 4px rgba(5,150,105,.25)">💪</div></div>
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">🧘</div></div>
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">📖</div></div>
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">💧</div></div>
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">🎨</div></div>
+      </div>
+      <div style="display:flex;justify-content:center">
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">🏃</div></div>
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">🍎</div></div>
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">☕</div></div>
+        <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:16px;border:1px solid #DDD8D2;background:#F5F1ED;display:flex;align-items:center;justify-content:center;font-size:30px">🎯</div></div>
+      </div>
+      <div style="margin-top:12px;min-height:44px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:#059669">Browse more emojis →</div>
+    </div>
+    <div style="text-align:center;font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#6E6660;margin:16px 0 12px">Pick a color</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px">
+      <div style="display:flex;gap:4px;justify-content:center">
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#EF4444"></div></div>
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#F97316"></div></div>
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#FBBF24"></div></div>
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="padding:3px;border-radius:999px;background:#10B981"><div style="padding:5px;border-radius:999px;background:#fff"><div style="width:36px;height:36px;border-radius:999px;background:#10B981"></div></div></div></div>
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#14B8A6"></div></div>
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#06B6D4"></div></div>
+      </div>
+      <div style="display:flex;gap:4px;justify-content:center">
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#3B82F6"></div></div>
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#8B5CF6"></div></div>
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#EC4899"></div></div>
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center"><div style="width:36px;height:36px;border-radius:999px;background:#78716C"></div></div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;border-radius:16px;border:1px solid #DDD8D2;background:#EDEAE5;padding:16px;margin-bottom:24px;box-shadow:0 1px 3px rgba(45,42,38,.04)">
+      <div style="display:flex;align-items:center;gap:12px"><div style="width:36px;height:36px;border-radius:12px;background:#EDEAE5;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div><span style="font-size:16px;font-weight:500">Daily Reminder</span></div>
+      <div style="width:51px;height:31px;border-radius:16px;background:#DDD8D2;padding:2px"><div style="width:27px;height:27px;border-radius:14px;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.15)"></div></div>
+    </div>
+  </div>
+
+  <!-- AdvancedOptionsSection (proposed) -->
+  <div style="padding:0 24px 32px">
+    <div style="background:#F0EDE8;border:1px solid #DDD8D2;border-radius:16px;box-shadow:0 1px 3px rgba(45,42,38,.04)">
+      <!-- Header row replaces summary chips + green pill -->
+      <div style="padding:14px 16px 8px;display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#6B6560">More to customize</span>
+        <div style="width:28px;height:28px;border-radius:14px;border:1px solid #DDD8D2;background:#F8F5F1;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B6560" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></div>
+      </div>
+      <div style="padding:0 16px 12px">
+        <!-- Why -->
+        <div style="padding:16px 0">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+            <div style="width:32px;height:32px;border-radius:9px;background:#FBEBD9;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg></div>
+            <span style="flex:1;font-size:15px;font-weight:600">Your why</span>
+            <span style="border-radius:999px;padding:4px 10px;background:#FBEBD9;font-size:12px;font-weight:600;color:#B45309">Not set</span>
+          </div>
+          <div style="font-size:13px;font-weight:500;letter-spacing:.12px;line-height:18px;color:#6E6660;margin:0 0 12px 42px">One line you’ll see each time you check in.</div>
+          <div style="background:#F8F5F1;border:1px solid #DDD8D2;border-radius:14px;min-height:56px;padding:14px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px"><span style="font-size:15px;font-weight:500;line-height:22px;color:#A39D95">I want to feel…</span><span style="font-size:11px;font-weight:600;letter-spacing:.3px;line-height:22px;color:#A39D95;font-variant-numeric:tabular-nums">140</span></div>
+        </div>
+        <!-- Streak Goal -->
+        <div style="padding:16px 0;border-top:1px solid #DDD8D2">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+            <div style="width:32px;height:32px;border-radius:9px;background:#FBF0CC;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B6208" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+            <span style="flex:1;font-size:15px;font-weight:600">Streak Goal</span>
+            <span style="border-radius:999px;padding:4px 10px;background:#FBF0CC;font-size:12px;font-weight:600;color:#8B6208">No goal</span>
+          </div>
+          <div style="font-size:13px;font-weight:500;letter-spacing:.12px;line-height:18px;color:#6E6660;margin:0 0 12px 42px">A target to aim for. Missing it costs nothing.</div>
+          <div style="display:flex;gap:6px">
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#D1FAE5;border:2px solid #10B981;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px;color:#047857">—</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#047857">NONE</span></div>
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px;font-variant-numeric:tabular-nums">7</span><span style="display:flex;align-items:center;gap:3px;margin-top:2px"><span style="width:5px;height:5px;border-radius:999px;background:#059669"></span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#047857">DAYS</span></span></div>
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px;font-variant-numeric:tabular-nums">30</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#6E6660;white-space:nowrap">DAYS</span></div>
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px;font-variant-numeric:tabular-nums">100</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#6E6660;white-space:nowrap">DAYS</span></div>
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px"><span style="font-size:17px;font-weight:700;line-height:20px">···</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;margin-top:2px;color:#6E6660;white-space:nowrap">CUSTOM</span></div>
+          </div>
+          <div style="margin-top:8px;display:flex;align-items:flex-start;gap:5px;font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660"><span style="width:5px;height:5px;border-radius:999px;background:#059669;flex:none;margin-top:3px"></span>SUGGESTED · MOST NEW HABITS STICK AFTER A WEEK</div>
+        </div>
+        <!-- Strength Curve — same head anatomy, inline chips -->
+        <div style="padding:16px 0;border-top:1px solid #DDD8D2">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+            <div style="width:32px;height:32px;border-radius:9px;background:#DCF1E7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></svg></div>
+            <span style="flex:1;font-size:15px;font-weight:600">Strength Curve</span>
+            <span style="border-radius:999px;padding:4px 10px;background:#DCF1E7;font-size:12px;font-weight:600;color:#047857">Average</span>
+          </div>
+          <div style="font-size:13px;font-weight:500;letter-spacing:.12px;line-height:18px;color:#6E6660;margin:0 0 12px 42px">How hard is this habit? Easier habits build strength faster.</div>
+          <sc-if value="{{ curveChips }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;gap:6px">
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B0723A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/></svg><span style="font-size:15px;font-weight:700;line-height:18px">Simple</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660;font-variant-numeric:tabular-nums;white-space:nowrap">+10%/DAY</span></div>
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#D1FAE5;border:2px solid #10B981;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></svg><span style="font-size:15px;font-weight:700;line-height:18px;color:#047857">Average</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#047857;font-variant-numeric:tabular-nums;white-space:nowrap">+3%/DAY</span></div>
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6D3AC7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg><span style="font-size:15px;font-weight:700;line-height:18px">Complex</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660;font-variant-numeric:tabular-nums;white-space:nowrap">+1%/DAY</span></div>
+          </div>
+          <div style="margin-top:8px;display:flex;align-items:flex-start;gap:5px;font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660"><span style="width:5px;height:5px;border-radius:999px;background:#059669;flex:none;margin-top:3px"></span>SUGGESTED · MISSES COST LESS ON SLOWER CURVES</div>
+          <div style="margin-top:8px;display:inline-flex;align-items:center;gap:4px;min-height:36px;padding:0 4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg><span style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#047857">See the difference</span></div>
+          </sc-if>
+          <sc-if value="{{ curveCollapsed }}" hint-placeholder-val="{{ false }}">
+          <div style="display:inline-flex;align-items:center;gap:4px;min-height:36px;padding:0 4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg><span style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#047857">Change curve</span></div>
+          </sc-if>
+        </div>
+        <!-- Growth Icons -->
+        <div style="padding:16px 0;border-top:1px solid #DDD8D2">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+            <div style="width:32px;height:32px;border-radius:9px;background:#EBE4F7;display:flex;align-items:center;justify-content:center;font-size:16px">🌱</div>
+            <span style="flex:1;font-size:15px;font-weight:600">Growth Icons</span>
+            <span style="border-radius:999px;padding:4px 10px;background:#EBE4F7;font-size:12px;font-weight:600;color:#6D3AC7">Plants</span>
+          </div>
+          <div style="font-size:13px;font-weight:500;letter-spacing:.12px;line-height:18px;color:#6E6660;margin:0 0 12px 42px">The icon changes as your habit gets stronger.</div>
+          <div style="display:flex;gap:6px">
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 2px"><span style="font-size:20px;line-height:24px">🌱</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660">NEW</span></div>
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 2px"><span style="font-size:20px;line-height:24px">🌿</span><span style="height:12px"></span></div>
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 2px"><span style="font-size:20px;line-height:24px">🌳</span><span style="height:12px"></span></div>
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#D1FAE5;border:2px solid #10B981;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 2px"><span style="font-size:20px;line-height:24px">💪</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#047857">YOURS</span></div>
+            <div style="flex:1;min-height:66px;border-radius:14px;background:#F8F5F1;border:1px solid #DDD8D2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 2px"><span style="font-size:20px;line-height:24px">⚡</span><span style="font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660">STRONG</span></div>
+          </div>
+          <div style="margin-top:8px;display:flex;align-items:flex-start;gap:5px;font-size:10px;font-weight:600;letter-spacing:.3px;line-height:12px;color:#6E6660"><span style="width:5px;height:5px;border-radius:999px;background:#059669;flex:none;margin-top:3px"></span>YOUR HABIT ICON STANDS IN FOR THE FOURTH STAGE</div>
+          <div style="margin-top:8px;display:inline-flex;align-items:center;gap:4px;min-height:36px;padding:0 4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg><span style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#047857;white-space:nowrap">Change theme</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Notes -->
+<div style="width:300px;padding-top:34px;display:flex;flex-direction:column;gap:18px;font-size:13px;line-height:19px;color:#524D47">
+  <div style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#6B6560">What changed in <a href="#1a">1a</a></div>
+  <div><strong style="color:#2D2A26">One hue per row, one tint level.</strong> Why = amber, Streak = gold, Curve = green, Growth = violet (the app's per-mode violet). All four tints sit at the same lightness so they read as a set, not four separate palettes.</div>
+  <div><strong style="color:#2D2A26">Value chip echoes its row.</strong> Each row's chip uses the same tint + ink as its icon tile, borderless. Green stays reserved for the selected option inside the pickers.</div>
+  <div><strong style="color:#2D2A26">One chip component.</strong> Streak, curve and growth stages all use the same 66px chip: stone at rest, primary-100 + primary-500 ring when selected. The amber "Off" chip and the floating START badge are gone; recommended options carry a small green dot.</div>
+  <div><strong style="color:#2D2A26">Strength Curve matches its siblings.</strong> Same head anatomy and an inline 3-chip picker. Copy now asks the question the user can answer ("How hard is this habit?"), chips lead with the difficulty word and demote the % to a micro label. Each chip keeps its mode icon in the app's per-mode color (sprout / trend / mountain) while surfaces stay stone; the deep-dive sits behind "See the difference", same pattern as "Themes".</div>
+  <div><strong style="color:#2D2A26">Quieter toggle.</strong> The full-width green "Hide options" pill becomes a header row with a chevron; summary chips only show when collapsed.</div>
+  <div><strong style="color:#2D2A26">Growth stages use the same chip.</strong> Each stage is now a 66px emoji + label chip like Streak and Curve, so all three pickers read as one component. "YOURS" marks the stage your habit icon fills in; NEW / STRONG live inside the chips.</div>
+  <div><strong style="color:#2D2A26">Why field matches the panel.</strong> Stone fill, 14px radius, no serif; the counter sits inside the field. Placeholder "I want to feel…" starts the sentence for them.</div>
+  <div><strong style="color:#2D2A26">Copy pass.</strong> Every row: one plain sentence, then a green-dot helper line only where it changes the decision. Streak chips say what the number is (DAYS) instead of tier names; "Off" becomes "—  NONE".</div>
+</div>
+
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;curveRow&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;chips&quot;,&quot;options&quot;:[&quot;chips&quot;,&quot;collapsed&quot;],&quot;tsType&quot;:&quot;'chips' | 'collapsed'&quot;,&quot;section&quot;:&quot;Proposed panel&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const curve = this.props.curveRow ?? 'chips';
+    return {
+      curveChips: curve === 'chips',
+      curveCollapsed: curve !== 'chips',
+    };
+  }
+}
+</script>
+</body>
+</html>

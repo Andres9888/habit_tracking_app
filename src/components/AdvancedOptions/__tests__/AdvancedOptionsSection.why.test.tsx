@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react-native';
+import { fireEvent, render } from '@testing-library/react-native';
 import { AdvancedOptionsSection } from '../AdvancedOptionsSection';
 
 jest.mock('convex/react', () => ({
@@ -17,46 +17,51 @@ const baseProps = {
 };
 
 describe('AdvancedOptionsSection why row', () => {
-  it('omits the row and keeps three options when onWhyChange is absent', () => {
-    const { getByLabelText, queryByLabelText, queryByText } = render(
+  it('omits the row when onWhyChange is absent', () => {
+    const { queryByLabelText, queryByText } = render(
       <AdvancedOptionsSection {...baseProps} />
     );
 
-    // The panel body stays mounted while collapsed, so look inside it.
     expect(queryByText('Your why', { includeHiddenElements: true })).toBeNull();
-    expect(
-      queryByLabelText('Your why', { includeHiddenElements: true })
-    ).toBeNull();
-    expect(queryByText('Add a why')).toBeNull();
-    expect(queryByText('Why set')).toBeNull();
-    expect(getByLabelText('More to customize, 3 options')).toBeTruthy();
+    expect(queryByLabelText(/^Your why/)).toBeNull();
+    expect(queryByText('Add')).toBeNull();
   });
 
-  it('renders the row and an Add a why chip when the why is blank', () => {
-    const { getByLabelText, getByText, queryByText } = render(
+  it('renders the row with an Add chip while the why is blank', () => {
+    const { getByRole, getByText, queryByText } = render(
+      <AdvancedOptionsSection {...baseProps} why='' onWhyChange={jest.fn()} />
+    );
+
+    expect(getByRole('button', { name: /^Your why/ })).toBeTruthy();
+    expect(getByText('Add')).toBeTruthy();
+    expect(queryByText('Set', { exact: true })).toBeTruthy();
+  });
+
+  it('flips the chip to Set once a why is written', () => {
+    const { getAllByText, queryByText } = render(
       <AdvancedOptionsSection
         {...baseProps}
-        why=''
+        why='To wake up clear-headed'
         onWhyChange={jest.fn()}
       />
     );
 
-    expect(getByText('Your why', { includeHiddenElements: true })).toBeTruthy();
-    expect(getByText('Add a why')).toBeTruthy();
-    expect(queryByText('Why set')).toBeNull();
-    expect(getByLabelText('More to customize, 4 options')).toBeTruthy();
+    expect(queryByText('Add')).toBeNull();
+    expect(getAllByText('Set').length).toBeGreaterThan(0);
   });
 
-  it('flips the chip to Why set once a why is written', () => {
-    const { getByText, queryByText } = render(
-      <AdvancedOptionsSection
-        {...baseProps}
-        why='x'
-        onWhyChange={jest.fn()}
-      />
+  it('opens one row at a time', () => {
+    const { getByRole } = render(
+      <AdvancedOptionsSection {...baseProps} why='' onWhyChange={jest.fn()} />
     );
+    const whyRow = () => getByRole('button', { name: /^Your why/ });
+    const streakRow = () => getByRole('button', { name: 'Streak goal' });
 
-    expect(getByText('Why set')).toBeTruthy();
-    expect(queryByText('Add a why')).toBeNull();
+    fireEvent.press(whyRow());
+    expect(whyRow().props.accessibilityState.expanded).toBe(true);
+
+    fireEvent.press(streakRow());
+    expect(whyRow().props.accessibilityState.expanded).toBe(false);
+    expect(streakRow().props.accessibilityState.expanded).toBe(true);
   });
 });

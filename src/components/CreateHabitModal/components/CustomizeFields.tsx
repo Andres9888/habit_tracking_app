@@ -1,22 +1,21 @@
 /**
  * CustomizeFields - icon, color and reminder controls shared by Add and Edit.
  * Rendered inside the shared habit form body, below the name input.
+ * Icon/colour follow spec 2a: left caps labels, 5-col icon grid, one colour row.
+ * (The reminder still lives here; a later phase folds it into the panel.)
  */
 
 import type { RefObject } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import type { View as ViewType } from 'react-native';
-import { fontWeights, typography } from '@/theme/typography';
-import { useThemeColors } from '../../../theme/ThemeContext';
+import { SectionLabel } from '@/components/AdvancedOptions/panel/SectionLabel';
 import { EmojiPicker } from './EmojiPicker';
+import { EmojiBrowseSheet } from './EmojiPicker/EmojiBrowseSheet';
+import { useEmojiBrowseSheet } from './EmojiPicker/useEmojiBrowseSheet';
 import { ColorPickerSection } from './ColorPickerSection';
 import { EnhancedReminderSelector } from './EnhancedReminderSelector';
 
-const labelStyle = {
-  ...typography.caption,
-  fontWeight: fontWeights.semibold,
-  letterSpacing: 0.5,
-};
+const SECTION_GAP = { marginTop: 24 };
 
 interface CustomizeFieldsProps {
   emojiQueryName: string;
@@ -51,35 +50,37 @@ export function CustomizeFields({
   snapReminderDefaultToPreset = false,
   reminderSectionRef,
 }: CustomizeFieldsProps) {
-  const { colors: themeColors } = useThemeColors();
-  const labelColor = { color: themeColors.text.tertiary };
+  const browse = useEmojiBrowseSheet();
 
   return (
     <View className='px-6'>
-      <Text className='mb-3 text-center uppercase' style={{ ...labelStyle, ...labelColor }}>
-        Choose an icon
-      </Text>
+      <SectionLabel
+        action={{ label: 'BROWSE ALL', onPress: browse.openSheet }}
+        label='ICON'
+      />
 
       <EmojiPicker
         hideLabel
         habitName={emojiQueryName}
         isLocked={isEmojiLocked}
+        layout='grid'
         selectedEmoji={selectedEmoji}
+        onBrowse={browse.openSheet}
         onSelect={onEmojiSelect}
       />
 
-      <Text className='mt-4 mb-3 text-center uppercase' style={{ ...labelStyle, ...labelColor }}>
-        Pick a color
-      </Text>
+      <View style={SECTION_GAP}>
+        <SectionLabel label='COLOR' />
+        <ColorPickerSection
+          hideLabel
+          colors={colors}
+          selectedColor={selectedColor}
+          variant='row'
+          onSelectColor={onColorSelect}
+        />
+      </View>
 
-      <ColorPickerSection
-        hideLabel
-        colors={colors}
-        selectedColor={selectedColor}
-        onSelectColor={onColorSelect}
-      />
-
-      <View ref={reminderSectionRef} collapsable={false}>
+      <View ref={reminderSectionRef} collapsable={false} style={SECTION_GAP}>
         <EnhancedReminderSelector
           enabled={reminderEnabled}
           reminderTime={reminderTime}
@@ -88,6 +89,14 @@ export function CustomizeFields({
           onToggle={onReminderToggle}
         />
       </View>
+
+      <EmojiBrowseSheet
+        habitName={emojiQueryName}
+        selectedEmoji={selectedEmoji}
+        visible={browse.visible}
+        onClose={browse.closeSheet}
+        onSelect={onEmojiSelect}
+      />
     </View>
   );
 }

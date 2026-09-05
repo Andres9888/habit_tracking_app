@@ -8,7 +8,7 @@ export function useInlineExpand(open: boolean) {
   const reduceMotion = useReduceMotion();
   const [contentHeight, setContentHeight] = useState(0);
   const [hasContentMeasured, setHasContentMeasured] = useState(false);
-  const { contentAnimatedStyle } = useExpandAnimation({
+  const { contentAnimatedStyle, chevronAnimatedStyle } = useExpandAnimation({
     contentHeight,
     defaultExpanded: open,
     hasContentMeasured,
@@ -27,5 +27,5 @@ export function useInlineExpand(open: boolean) {
     [hasContentMeasured, open]
   );
 
-  return { contentAnimatedStyle, onContentLayout };
+  return { chevronAnimatedStyle, contentAnimatedStyle, onContentLayout };
 }

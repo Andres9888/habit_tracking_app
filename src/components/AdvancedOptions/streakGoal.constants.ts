@@ -2,10 +2,10 @@
 import type { SemanticColors } from '@/theme/darkColors';
 
 export const STREAK_PRESETS = [
-  { days: 0, valueLabel: 'Off', chipLabel: 'NO GOAL', recommended: false },
-  { days: 7, valueLabel: '7', chipLabel: 'STARTER', recommended: true },
-  { days: 30, valueLabel: '30', chipLabel: 'STEADY', recommended: false },
-  { days: 100, valueLabel: '100', chipLabel: 'CHAMP', recommended: false },
+  { days: 0, valueLabel: '—', chipLabel: 'NONE', recommended: false },
+  { days: 7, valueLabel: '7', chipLabel: 'DAYS', recommended: true },
+  { days: 30, valueLabel: '30', chipLabel: 'DAYS', recommended: false },
+  { days: 100, valueLabel: '100', chipLabel: 'DAYS', recommended: false },
 ] as const;
 
 export const CUSTOM_STREAK_MIN = 2;

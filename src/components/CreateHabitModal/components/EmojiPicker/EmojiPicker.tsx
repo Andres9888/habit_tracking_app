@@ -1,22 +1,19 @@
 /**
  * EmojiPicker Component
- * Displays suggested emojis in 5-4 triangle layout with full picker modal
+ * Suggested emojis in the legacy 5-4 triangle layout, or (layout='grid') the
+ * 5-column square-tile grid with a dashed "+" tile.
  */
 
 import { memo, useCallback, useState } from 'react';
-import {
-  AccessibilityInfo,
-  Keyboard,
-  Pressable,
-  Text,
-  View,
-} from 'react-native';
+import { AccessibilityInfo, Keyboard, Text, View } from 'react-native';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import STRINGS from '../../../../constants/strings';
-import { EmojiPickerSheet } from '../../../EmojiPickerV2';
+import { BrowseMoreLink } from './BrowseMoreLink';
+import { EmojiBrowseSheet } from './EmojiBrowseSheet';
 import { EmojiGrid } from './EmojiGrid';
+import { EmojiTileGrid } from './EmojiTileGrid';
 import { useSuggestedEmojis } from './useSuggestedEmojis';
 import type { EmojiPickerProps } from './types';
 
@@ -26,6 +23,8 @@ function EmojiPickerComponent({
   habitName,
   hideLabel = false,
   isLocked = false,
+  layout = 'triangle',
+  onBrowse,
 }: EmojiPickerProps) {
   const { triggerSelection } = useHapticFeedback();
   const reduceMotion = useReduceMotion();
@@ -36,6 +35,7 @@ function EmojiPickerComponent({
     selectedEmoji,
     { isLocked }
   );
+  const isGrid = layout === 'grid';
 
   const handleEmojiSelect = useCallback(
     (emoji: string) => {
@@ -48,60 +48,54 @@ function EmojiPickerComponent({
   );
 
   const handleMorePress = useCallback(() => {
+    if (onBrowse) {
+      onBrowse();
+      return;
+    }
     Keyboard.dismiss();
     triggerSelection();
     setIsModalVisible(true);
-  }, [triggerSelection]);
-
-  const handleSheetSelect = useCallback(
-    (emoji: string | null) => {
-      onSelect(emoji);
-      triggerSelection();
-    },
-    [onSelect, triggerSelection]
-  );
+  }, [onBrowse, triggerSelection]);
 
   return (
-    <View className='mb-6'>
-      {hideLabel ? null : <Text
+    <View className={isGrid ? undefined : 'mb-6'}>
+      {hideLabel || isGrid ? null : (
+        <Text
           accessibilityLabel={`Suggested emojis for ${debouncedHabitName || 'your habit'}`}
           accessibilityRole='text'
           className='mb-3 text-sm font-semibold uppercase'
           style={{ letterSpacing: 0.5, color: themeColors.text.tertiary }}
         >
           {STRINGS.CREATE_HABIT.iconLabel}
-        </Text>}
-
-      <EmojiGrid
-        reduceMotion={reduceMotion}
-        selectedEmoji={selectedEmoji}
-        suggestedEmojis={suggestedEmojis}
-        onEmojiSelect={handleEmojiSelect}
-      />
-
-      <Pressable
-        accessibilityHint='Opens full emoji picker with hundreds of options'
-        accessibilityLabel='Browse more emojis'
-        accessibilityRole='button'
-        className='mt-3 flex-row items-center justify-center'
-        style={{ minHeight: 44 }}
-        onPress={handleMorePress}
-      >
-        <Text
-          className='text-sm font-medium'
-          style={{ color: themeColors.primary[600] }}
-        >
-          Browse more emojis →
         </Text>
-      </Pressable>
+      )}
 
-      {isModalVisible ? <EmojiPickerSheet
-          habitName={habitName || ''}
+      {isGrid ? (
+        <EmojiTileGrid
+          reduceMotion={reduceMotion}
           selectedEmoji={selectedEmoji}
-          visible={isModalVisible}
-          onClose={() => setIsModalVisible(false)}
-          onSelect={handleSheetSelect}
-        /> : null}
+          suggestedEmojis={suggestedEmojis}
+          onBrowse={handleMorePress}
+          onEmojiSelect={handleEmojiSelect}
+        />
+      ) : (
+        <EmojiGrid
+          reduceMotion={reduceMotion}
+          selectedEmoji={selectedEmoji}
+          suggestedEmojis={suggestedEmojis}
+          onEmojiSelect={handleEmojiSelect}
+        />
+      )}
+
+      {isGrid ? null : <BrowseMoreLink onPress={handleMorePress} />}
+
+      <EmojiBrowseSheet
+        habitName={habitName}
+        selectedEmoji={selectedEmoji}
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        onSelect={onSelect}
+      />
     </View>
   );
 }

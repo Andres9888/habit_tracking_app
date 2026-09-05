@@ -1,91 +1,72 @@
 /**
  * EmojiChip Component
  * Individual emoji chip with press animation and green ring when selected.
- * Press: scale 1.0 → 0.97 → 1.0 (scale-down-only; upscaling rasterized views blurs them).
- * V11 Task 8: Respects reduced motion preference
+ * Default (triangle layout) = fixed 56px chip in a 64px box. Pass `size` for the
+ * 5-column grid layout, where the tile fills its measured square.
  */
 
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import type { EmojiChipProps } from './types';
-import { springs } from '@/theme/animations';
+import { useEmojiPressScale } from './useEmojiPressScale';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+const SELECTED_SHADOW = {
+  elevation: 4,
+  shadowColor: '#059669',
+  shadowOffset: { height: 2, width: 0 },
+  shadowOpacity: 0.25,
+  shadowRadius: 4,
+};
 
 function EmojiChipComponent({
   emoji,
   isSelected,
   onPress,
   reduceMotion,
+  size,
 }: EmojiChipProps) {
-  const scale = useSharedValue(1);
+  const { animatedStyle, onPressIn, onPressOut } =
+    useEmojiPressScale(reduceMotion);
   const { colors: themeColors } = useThemeColors();
-
-  const handlePressIn = useCallback(() => {
-    'worklet';
-    if (reduceMotion) return;
-    // Quick press down to 97% scale
-    scale.value = withTiming(0.97, { duration: 50 });
-  }, [scale, reduceMotion]);
-
-  const handlePressOut = useCallback(() => {
-    'worklet';
-    if (reduceMotion) {
-      scale.value = 1;
-      return;
-    }
-    // Spring back to rest without crossing 1.0 — upscaling a rasterized view blurs it.
-    scale.value = withSpring(1, springs.standard);
-  }, [scale, reduceMotion]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  const box = size ?? 64;
+  const chipStyle = size
+    ? { borderRadius: 16, height: size, width: size }
+    : null;
 
   return (
-    // Fixed 64px container to prevent layout shift during scale animation
+    // Fixed-size container prevents layout shift during the scale animation
     <View
       style={{
         alignItems: 'center',
-        height: 64,
+        height: box,
         justifyContent: 'center',
-        width: 64,
+        width: box,
       }}
     >
       <AnimatedPressable
         accessibilityLabel={`Select emoji ${emoji}`}
         accessibilityRole='button'
         accessibilityState={{ selected: isSelected }}
-        className={`h-14 w-14 items-center justify-center rounded-2xl ${
-          isSelected
-            ? 'border-2 border-[#059669] bg-[#D1FAE5]'
-            : 'border'
+        className={`items-center justify-center ${size ? '' : 'h-14 w-14 rounded-2xl'} ${
+          isSelected ? 'border-2 border-[#059669] bg-[#D1FAE5]' : 'border'
         }`}
         style={[
           animatedStyle,
+          chipStyle,
           isSelected
-            ? {
-                elevation: 4,
-                shadowColor: '#059669',
-                shadowOffset: { height: 2, width: 0 },
-                shadowOpacity: 0.25,
-                shadowRadius: 4,
-              }
+            ? SELECTED_SHADOW
             : {
-                borderColor: themeColors.border,
                 backgroundColor: themeColors.background,
+                borderColor: themeColors.border,
               },
         ]}
         onPress={onPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
       >
         <Text className='text-3xl'>{emoji}</Text>
       </AnimatedPressable>
