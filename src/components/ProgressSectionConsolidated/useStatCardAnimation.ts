@@ -12,13 +12,14 @@ import {
   Easing,
 } from 'react-native-reanimated';
 import { Springs } from '../../constants/motion';
+import { durations } from '@/theme/animations';
 import {
   CARD_PRESS_SCALE,
   CARD_REST_SCALE,
 } from '../../utils/animations/cardPressAnimation';
 
-const CARD_STAGGER_DELAY = 50;
-const CARD_ENTRANCE_DURATION = 280;
+const CARD_STAGGER_DELAY = durations.stagger;
+const CARD_ENTRANCE_DURATION = durations.enter;
 
 interface UseStatCardAnimationOptions {
   index: number;

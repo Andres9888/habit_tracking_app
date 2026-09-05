@@ -1,5 +1,12 @@
-import { useCallback, useRef } from 'react';
-import { Animated, Easing } from 'react-native';
+import { useCallback } from 'react';
+import {
+  Easing,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
+import { durations, springs } from '@/theme/animations';
 
 interface UseToggleAnimationsOptions {
   isCompleted: boolean;
@@ -14,24 +21,15 @@ export function useToggleAnimations({
   isCompleted,
   reduceMotion,
 }: UseToggleAnimationsOptions) {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-  const checkScaleAnim = useRef(
-    new Animated.Value(isCompleted ? 1 : 0)
-  ).current;
+  const scaleAnim = useSharedValue(1);
+  const checkScaleAnim = useSharedValue(isCompleted ? 1 : 0);
 
   const animateCheckbox = useCallback(
     (toCompleted: boolean) => {
-      if (reduceMotion) {
-        checkScaleAnim.setValue(toCompleted ? 1 : 0);
-        return;
-      }
-
-      Animated.spring(checkScaleAnim, {
-        friction: 8,
-        tension: 200,
-        toValue: toCompleted ? 1 : 0,
-        useNativeDriver: true,
-      }).start();
+      const target = toCompleted ? 1 : 0;
+      checkScaleAnim.value = reduceMotion
+        ? target
+        : withSpring(target, springs.pop);
     },
     [checkScaleAnim, reduceMotion]
   );
@@ -39,20 +37,13 @@ export function useToggleAnimations({
   const animatePressEffect = useCallback(() => {
     if (reduceMotion) return;
 
-    Animated.sequence([
-      Animated.timing(scaleAnim, {
-        duration: 50,
+    scaleAnim.value = withSequence(
+      withTiming(0.95, {
+        duration: durations.micro,
         easing: Easing.out(Easing.quad),
-        toValue: 0.95,
-        useNativeDriver: true,
       }),
-      Animated.spring(scaleAnim, {
-        friction: 8,
-        tension: 200,
-        toValue: 1,
-        useNativeDriver: true,
-      }),
-    ]).start();
+      withSpring(1, springs.pop)
+    );
   }, [scaleAnim, reduceMotion]);
 
   return {

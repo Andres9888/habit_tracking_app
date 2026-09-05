@@ -5,9 +5,8 @@
  */
 import React from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut, useReducedMotion } from 'react-native-reanimated';
 import { durations, enterEasing, exitEasing } from '@/theme/animations';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 
 interface OverlayFadeViewProps {
   children?: React.ReactNode;
@@ -20,7 +19,7 @@ export function OverlayFadeView({
   style,
   testID,
 }: OverlayFadeViewProps) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   return (
     <Animated.View
       pointerEvents='none'

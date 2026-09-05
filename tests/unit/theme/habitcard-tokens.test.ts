@@ -4,19 +4,14 @@
 
 import { colors, milestoneColors } from '@/theme/colors';
 import { statusStyles } from '@/components/HabitCard/HabitCard.statusStyles';
-import { actionStyles } from '@/components/HabitCard/HabitCard.actionStyles';
-import { streakStyles } from '@/components/HabitCard/HabitCard.streakStyles';
 
 describe('HabitCard tokens', () => {
-  it('uses inverse text on checkmarks and swipe actions', () => {
+  it('uses inverse text on checkmarks', () => {
     expect(statusStyles.checkmarkText.color).toBe(colors.text.inverse);
-    expect(actionStyles.actionText.color).toBe(colors.text.inverse);
   });
 
-  it('uses burnished gold for the streak ripple', () => {
-    expect(streakStyles.rippleOverlay.backgroundColor).toBe(colors.streak[500]);
-    expect(streakStyles.rippleOverlay.backgroundColor).toBe('#8B6208');
-  });
+  // Dropped: swipe-action text + streak-ripple colour assertions — their only
+  // subjects (HabitCard.actionStyles/streakStyles) were deleted as dead code.
 
   it('keeps milestone amber text', () => {
     expect(milestoneColors.amberText).toBe('#A16207');

@@ -1,5 +1,5 @@
-import { useCallback, useRef } from 'react';
-import { Animated } from 'react-native';
+import { useCallback } from 'react';
+import { useSharedValue, withTiming } from 'react-native-reanimated';
 import { durations, enterEasing, exitEasing } from '@/theme/animations';
 
 interface UseColorButtonAnimationsParams {
@@ -9,50 +9,40 @@ interface UseColorButtonAnimationsParams {
 export const useColorButtonAnimations = ({
   reduceMotion,
 }: UseColorButtonAnimationsParams) => {
-  const scale = useRef(new Animated.Value(1)).current;
-  const rippleScale = useRef(new Animated.Value(0)).current;
-  const rippleOpacity = useRef(new Animated.Value(1)).current;
+  const scale = useSharedValue(1);
+  const rippleScale = useSharedValue(0);
+  const rippleOpacity = useSharedValue(1);
 
   const triggerRipple = useCallback(() => {
     if (reduceMotion) return;
 
-    rippleScale.setValue(0);
-    rippleOpacity.setValue(1);
+    rippleScale.value = 0;
+    rippleOpacity.value = 1;
 
-    Animated.parallel([
-      Animated.timing(rippleScale, {
-        duration: durations.moderate,
-        easing: enterEasing,
-        toValue: 2,
-        useNativeDriver: true,
-      }),
-      Animated.timing(rippleOpacity, {
-        duration: durations.moderate,
-        easing: enterEasing,
-        toValue: 0,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    rippleScale.value = withTiming(2, {
+      duration: durations.moderate,
+      easing: enterEasing,
+    });
+    rippleOpacity.value = withTiming(0, {
+      duration: durations.moderate,
+      easing: enterEasing,
+    });
   }, [rippleScale, rippleOpacity, reduceMotion]);
 
   const animatePressIn = useCallback(() => {
     if (reduceMotion) return;
-    Animated.timing(scale, {
+    scale.value = withTiming(0.96, {
       duration: durations.instant,
       easing: exitEasing,
-      toValue: 0.96,
-      useNativeDriver: true,
-    }).start();
+    });
   }, [scale, reduceMotion]);
 
   const animatePressOut = useCallback(() => {
     if (reduceMotion) return;
-    Animated.timing(scale, {
+    scale.value = withTiming(1, {
       duration: durations.quick,
       easing: enterEasing,
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
+    });
   }, [scale, reduceMotion]);
 
   return {

@@ -2,10 +2,10 @@
 import { useCallback, useState } from 'react';
 import type { LayoutChangeEvent } from 'react-native';
 import { useExpandAnimation } from '@/hooks/useExpandAnimation';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 
 export function useInlineExpand(open: boolean) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const [contentHeight, setContentHeight] = useState(0);
   const [hasContentMeasured, setHasContentMeasured] = useState(false);
   const { contentAnimatedStyle, chevronAnimatedStyle } = useExpandAnimation({

@@ -24,7 +24,7 @@ export function animateProgressWidth(
   } else if (isFirst) {
     progressWidth.value = 0;
     progressWidth.value = withDelay(
-      200,
+      durations.standard,
       withTiming(clampedStrength, {
         duration: durations.progress,
         easing: Easing.out(Easing.cubic),
@@ -57,25 +57,25 @@ export function animateEmoji(
     // cubic ease of the big tile so both emojis read as one event.
     const SOFT_EASE = Easing.bezier(0.4, 0, 0.2, 1);
     emojiOpacity.value = withTiming(0.55, {
-      duration: 140,
+      duration: durations.quick,
       easing: SOFT_EASE,
     });
     emojiScale.value = withTiming(0.85, {
-      duration: 140,
+      duration: durations.quick,
       easing: SOFT_EASE,
     });
     emojiRotation.value = withSequence(
-      withTiming(-4, { duration: 140, easing: SOFT_EASE }),
-      withTiming(0, { duration: 200, easing: SOFT_EASE })
+      withTiming(-4, { duration: durations.quick, easing: SOFT_EASE }),
+      withTiming(0, { duration: durations.standard, easing: SOFT_EASE })
     );
     emojiOpacity.value = withDelay(
-      120,
-      withTiming(1, { duration: 220, easing: SOFT_EASE })
+      durations.instant,
+      withTiming(1, { duration: durations.transition, easing: SOFT_EASE })
     );
     emojiScale.value = withDelay(
-      120,
+      durations.instant,
       withSequence(
-        withTiming(1.1, { duration: 140, easing: SOFT_EASE }),
+        withTiming(1.1, { duration: durations.quick, easing: SOFT_EASE }),
         withSpring(1, springs.gentle)
       )
     );

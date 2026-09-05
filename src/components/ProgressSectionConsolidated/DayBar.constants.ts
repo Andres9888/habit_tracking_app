@@ -1,3 +1,4 @@
+import { durations } from '@/theme/animations';
 /**
  * Constants for DayBar component
  */
@@ -6,7 +7,7 @@
 export const DAY_LABELS_SHORT = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 /** Delay between each bar's animation start (ms) */
-export const BAR_STAGGER_DELAY = 50;
+export const BAR_STAGGER_DELAY = durations.stagger;
 
 /** Bar dimensions per spec */
 export const BAR_WIDTH = 20;

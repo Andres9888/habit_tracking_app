@@ -45,8 +45,12 @@ export function runExitAnimation(
     }
     case 'centerAlert': {
       backdropOpacityValue.value = useReduced ? 0 : withTiming(0, fadeOut(200));
-      alertOpacity.value = useReduced ? 0 : withTiming(0, { duration: 150 });
-      scale.value = useReduced ? 0.92 : withTiming(0.92, { duration: 150 });
+      alertOpacity.value = useReduced
+        ? 0
+        : withTiming(0, { duration: durations.quick });
+      scale.value = useReduced
+        ? 0.92
+        : withTiming(0.92, { duration: durations.quick });
       break;
     }
   }

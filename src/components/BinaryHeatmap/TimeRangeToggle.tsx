@@ -7,15 +7,10 @@
 
 import React, { memo, useCallback } from 'react';
 import { View, Pressable, Text, Platform } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 
-import { springs } from '@/theme/animations';
+import { usePressAnimation } from '@/hooks/usePressAnimation';
 import type { TimeRange, TimeRangeToggleProps } from './types';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { useThemedToggleStyles } from './TimeRangeToggle.styles';
 import {
   TIME_RANGES,
@@ -23,40 +18,21 @@ import {
   getTimeRangeAccessibilityLabel,
 } from './TimeRangeToggle.helpers';
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const PressableBase = Animated.createAnimatedComponent(Pressable);
 
 interface TimeRangeButtonProps {
   range: TimeRange;
   isActive: boolean;
   onPress: (range: TimeRange) => void;
-  reduceMotion: boolean;
 }
 
 const TimeRangeButton = memo(function TimeRangeButton({
   range,
   isActive,
   onPress,
-  reduceMotion,
 }: TimeRangeButtonProps) {
   const styles = useThemedToggleStyles();
-  const scale = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => {
-    'worklet';
-    return {
-      transform: [{ scale: scale.value ?? 1 }],
-    };
-  });
-
-  const handlePressIn = useCallback(() => {
-    if (!reduceMotion)
-      scale.value = withSpring(0.95, springs.button);
-  }, [reduceMotion, scale]);
-
-  const handlePressOut = useCallback(() => {
-    if (!reduceMotion)
-      scale.value = withSpring(1, springs.button);
-  }, [reduceMotion, scale]);
+  const { animatedStyle, pressHandlers } = usePressAnimation();
 
   const handlePress = useCallback(() => {
     onPress(range);
@@ -70,15 +46,14 @@ const TimeRangeButton = memo(function TimeRangeButton({
   ];
 
   return (
-    <AnimatedPressable
+    <PressableBase
       accessible
       accessibilityLabel={getTimeRangeAccessibilityLabel(range)}
       accessibilityRole='tab'
       accessibilityState={{ selected: isActive }}
       style={getButtonStyle}
       onPress={handlePress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
+      {...pressHandlers}
     >
       <Text
         style={[
@@ -88,7 +63,7 @@ const TimeRangeButton = memo(function TimeRangeButton({
       >
         {getTimeRangeLabel(range)}
       </Text>
-    </AnimatedPressable>
+    </PressableBase>
   );
 });
 
@@ -97,7 +72,6 @@ export const TimeRangeToggle = memo(function TimeRangeToggle({
   onChange,
 }: TimeRangeToggleProps) {
   const styles = useThemedToggleStyles();
-  const reduceMotion = useReduceMotion();
 
   const handleRangePress = useCallback(
     (range: TimeRange) => {
@@ -117,7 +91,6 @@ export const TimeRangeToggle = memo(function TimeRangeToggle({
           key={range}
           isActive={value === range}
           range={range}
-          reduceMotion={reduceMotion}
           onPress={handleRangePress}
         />
       ))}

@@ -7,12 +7,11 @@
  *  as the premium badge taught people to skim past both. */
 import { AlertTriangle } from 'lucide-react-native';
 import { Linking, Platform, Pressable, Text, View } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated, { FadeIn, useReducedMotion } from 'react-native-reanimated';
 import { durations, enterEasing } from '@/theme/animations';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 import { triggerHaptic } from '@/utils/haptics';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 const SETTINGS_APP_NAME =
@@ -20,7 +19,7 @@ const SETTINGS_APP_NAME =
 
 export function NotificationPermissionWarning() {
   const { colors: themeColors } = useThemeColors();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
 
   const handleFix = () => {
     void triggerHaptic('tap');

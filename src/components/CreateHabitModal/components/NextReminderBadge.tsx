@@ -5,6 +5,7 @@ import { Clock } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { iconSizes } from '@/theme/iconSizes';
 import { formatReminderTime } from '../../../utils/notifications';
+import { durations } from '@/theme/animations';
 
 /**
  * Props for the NextReminderBadge component.
@@ -88,12 +89,20 @@ export const NextReminderBadge = ({
     <Animated.View
       accessibilityLabel={`Next reminder: ${text}`}
       accessibilityRole='text'
-      exiting={FadeOut.duration(150)}
+      exiting={FadeOut.duration(durations.quick)}
       testID='next-reminder-badge'
     >
-      <View className='flex-row items-center justify-center gap-1.5 rounded-full px-3 py-1.5' style={{ backgroundColor: colors.status.warningLight }}>
+      <View
+        className='flex-row items-center justify-center gap-1.5 rounded-full px-3 py-1.5'
+        style={{ backgroundColor: colors.status.warningLight }}
+      >
         <Clock color={colors.status.warningText} size={iconSizes.small} />
-        <Text className='text-xs font-medium' style={{ color: colors.status.warningText }}>Next: {text}</Text>
+        <Text
+          className='text-xs font-medium'
+          style={{ color: colors.status.warningText }}
+        >
+          Next: {text}
+        </Text>
       </View>
     </Animated.View>
   );

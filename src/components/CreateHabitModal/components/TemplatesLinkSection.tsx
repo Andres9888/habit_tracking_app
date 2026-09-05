@@ -1,15 +1,10 @@
-import { useRef } from 'react';
-import {
-  AccessibilityInfo,
-  Animated,
-  Pressable,
-  Text,
-  View,
-} from 'react-native';
+import { AccessibilityInfo, Pressable, Text, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { LayoutGrid, ChevronRight } from 'lucide-react-native';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { STRINGS } from '../../../constants';
 import { iconSizes } from '@/theme/iconSizes';
+import { usePressAnimation } from '@/hooks/usePressAnimation';
 
 interface TemplatesLinkSectionProps {
   onPress: () => void;
@@ -31,26 +26,10 @@ interface TemplatesLinkSectionProps {
 export const TemplatesLinkSection = ({
   onPress,
 }: TemplatesLinkSectionProps) => {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const { animatedStyle, pressHandlers } = usePressAnimation({
+    pressScale: 0.96,
+  });
   const { triggerSelection } = useHapticFeedback();
-
-  const handlePressIn = () => {
-    Animated.spring(scaleAnim, {
-      friction: 10,
-      tension: 300,
-      toValue: 0.96,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const handlePressOut = () => {
-    Animated.spring(scaleAnim, {
-      friction: 10,
-      tension: 300,
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
-  };
 
   const handlePress = () => {
     triggerSelection();
@@ -68,12 +47,11 @@ export const TemplatesLinkSection = ({
         accessibilityRole='button'
         testID='templates-link-button'
         onPress={handlePress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
+        {...pressHandlers}
       >
         <Animated.View
           className='flex-row items-center rounded-2xl border border-[#e7e5e4] bg-white px-4 py-4'
-          style={{ transform: [{ scale: scaleAnim }] }}
+          style={animatedStyle}
         >
           {/* Icon */}
           <View

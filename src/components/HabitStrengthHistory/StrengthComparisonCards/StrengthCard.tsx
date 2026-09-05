@@ -14,6 +14,7 @@ import { DeltaBadge } from './DeltaBadge';
 import { PerfectBadge } from './PerfectBadge';
 import { ProgressRing } from './ProgressRing';
 import type { StrengthCardProps } from './types';
+import { durations } from '@/theme/animations';
 
 export function StrengthCard({
   strength,
@@ -28,9 +29,7 @@ export function StrengthCard({
   const label = getStrengthLabel(strength);
   const labelText = getLabelText(label);
 
-  const containerClass = isHighlighted
-    ? 'border-2'
-    : '';
+  const containerClass = isHighlighted ? 'border-2' : '';
 
   return (
     <Animated.View
@@ -38,8 +37,16 @@ export function StrengthCard({
       accessibilityLabel={`${timeLabel}: ${Math.round(strength)}% strength, ${labelText}`}
       accessibilityRole='none'
       className={`flex-1 items-center rounded-xl p-3 ${containerClass}`}
-      entering={FadeIn.delay(animationDelay).duration(400)}
-      style={[{ backgroundColor: isHighlighted ? themeColors.card : themeColors.background, borderColor: isHighlighted ? themeColors.status.success : undefined }, isHighlighted ? shadows.card : undefined]}
+      entering={FadeIn.delay(animationDelay).duration(durations.emphasis)}
+      style={[
+        {
+          backgroundColor: isHighlighted
+            ? themeColors.card
+            : themeColors.background,
+          borderColor: isHighlighted ? themeColors.status.success : undefined,
+        },
+        isHighlighted ? shadows.card : undefined,
+      ]}
     >
       <ProgressRing
         ringColor={colors.ring}
@@ -48,7 +55,10 @@ export function StrengthCard({
         timeLabel={timeLabel}
       />
 
-      <Text className='mb-0.5 text-xs font-medium uppercase tracking-wide' style={{ color: themeColors.text.secondary }}>
+      <Text
+        className='mb-0.5 text-xs font-medium uppercase tracking-wide'
+        style={{ color: themeColors.text.secondary }}
+      >
         {timeLabel}
       </Text>
       <Text

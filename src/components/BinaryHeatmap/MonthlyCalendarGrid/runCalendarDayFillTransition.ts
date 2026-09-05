@@ -1,9 +1,9 @@
 import {
-  runOnJS,
   type SharedValue,
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import { durations, enterEasing, exitEasing } from '@/theme/animations';
 
 /** Soft press feedback — no bounce pop. */
@@ -61,7 +61,7 @@ export function runCalendarDayFillTransition({
       0,
       { duration: durations.quick, easing: exitEasing },
       (finished) => {
-        if (finished) runOnJS(hideFill)();
+        if (finished) scheduleOnRN(hideFill);
       }
     );
     cellPop.value = 1;

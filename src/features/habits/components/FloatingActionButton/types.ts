@@ -1,3 +1,5 @@
+import type { SharedValue } from 'react-native-reanimated';
+
 export interface FloatingActionButtonProps {
   openCreateHabitScreen: () => void;
   celebrationsEnabled?: boolean;
@@ -5,8 +7,8 @@ export interface FloatingActionButtonProps {
 }
 
 export interface UseFABAnimationsReturn {
-  bounce: import('react-native').Animated.Value;
-  pressScale: import('react-native').Animated.Value;
-  rippleOpacity: import('react-native').Animated.Value;
-  rippleScale: import('react-native').Animated.Value;
+  bounce: SharedValue<number>;
+  pressScale: SharedValue<number>;
+  rippleOpacity: SharedValue<number>;
+  rippleScale: SharedValue<number>;
 }

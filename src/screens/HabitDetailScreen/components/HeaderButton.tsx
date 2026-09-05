@@ -40,7 +40,8 @@ export function HeaderButton({
     <AnimatedPressable
       accessibilityLabel={label}
       accessibilityRole='button'
-      animationConfig={{ pressScale: 0.92 }}
+      // Close/Edit header actions have no commit-side haptic of their own.
+      animationConfig={{ enableHaptics: true, pressScale: 0.92 }}
       style={[
         showText ? s.textButton : s.compactButton,
         showText ? { backgroundColor: bg, borderColor: border } : undefined,

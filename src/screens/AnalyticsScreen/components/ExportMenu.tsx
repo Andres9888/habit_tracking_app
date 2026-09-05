@@ -38,6 +38,8 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
         <View style={styles.exportMenu}>
           <Text style={styles.exportMenuTitle}>Choose Export Format</Text>
           <AnimatedPressable
+            // Format selection; nothing downstream fires a haptic.
+            animationConfig={{ enableHaptics: true }}
             accessibilityHint='Exports data in spreadsheet format'
             accessibilityLabel='Export as CSV'
             accessibilityRole='button'
@@ -53,6 +55,7 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
             </View>
           </AnimatedPressable>
           <AnimatedPressable
+            animationConfig={{ enableHaptics: true }}
             accessibilityHint='Exports data in developer-friendly format'
             accessibilityLabel='Export as JSON'
             accessibilityRole='button'

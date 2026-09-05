@@ -1,8 +1,8 @@
 /** One Gentle/Balanced/Strict option row in the Strength Curve sheet. */
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { fontWeights, typography } from '@/theme/typography';
-import { usePressed } from './usePressed';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface Props {
   name: string;
@@ -13,12 +13,12 @@ interface Props {
 
 export function StrengthCurveOption({ name, desc, active, onPress }: Props) {
   const { colors } = useThemeColors();
-  const { pressed, pressProps } = usePressed();
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityRole='button'
       accessibilityState={{ selected: active }}
-      {...pressProps}
+      // Rows stack tightly; the default 10pt slop would overlap the next row.
+      hitSlop={0}
       style={{
         flexDirection: 'row',
         alignItems: 'center',
@@ -29,7 +29,6 @@ export function StrengthCurveOption({ name, desc, active, onPress }: Props) {
         backgroundColor: active ? colors.primary[100] : colors.card,
         borderWidth: active ? 2 : 1,
         borderColor: active ? colors.primary[500] : colors.cardBorder,
-        opacity: pressed ? 0.92 : 1,
       }}
       onPress={onPress}
     >
@@ -80,6 +79,6 @@ export function StrengthCurveOption({ name, desc, active, onPress }: Props) {
           </Text>
         ) : null}
       </View>
-    </Pressable>
+    </AnimatedPressable>
   );
 }

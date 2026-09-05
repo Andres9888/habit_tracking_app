@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { createHabitMotion } from '../createHabitMotion';
 
 const FOCUS_GREEN = '#10B981';
@@ -18,7 +18,7 @@ export function useFocusedGreenInputStyle(
   defaultBorderColor: string = DEFAULT_BORDER,
   borderWidth: number = 2
 ) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const focusProgress = useSharedValue(0);
 
   useEffect(() => {

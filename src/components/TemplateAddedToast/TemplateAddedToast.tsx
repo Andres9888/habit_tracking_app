@@ -1,5 +1,6 @@
 import React from 'react';
-import { Animated, View } from 'react-native';
+import { View } from 'react-native';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { GestureDetector } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../theme';
 import { HabitAddedPanel, useHabitAddedPalette } from '../HabitAddedPanel';
@@ -35,6 +36,11 @@ export function TemplateAddedToast({
       visible,
     });
 
+  const keyboardStyle = useAnimatedStyle(() => ({
+    bottom: keyboardPosition.bottom,
+    transform: [{ translateY: keyboardPosition.translateY.value }],
+  }));
+
   if (!visible || !templateData) return null;
   const copy = buildToastCopy({
     name: templateData.name,
@@ -47,13 +53,7 @@ export function TemplateAddedToast({
     <Animated.View
       pointerEvents='auto'
       testID='templates-toast-container'
-      style={[
-        styles.container,
-        {
-          bottom: keyboardPosition.bottom,
-          transform: [{ translateY: keyboardPosition.translateY }],
-        },
-      ]}
+      style={[styles.container, keyboardStyle]}
     >
       <GestureDetector gesture={panGesture}>
         <View collapsable={false} style={styles.gestureArea}>

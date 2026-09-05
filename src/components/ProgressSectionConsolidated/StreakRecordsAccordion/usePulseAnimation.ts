@@ -3,6 +3,7 @@
  */
 
 import { useEffect } from 'react';
+import { durations } from '@/theme/animations';
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -29,8 +30,14 @@ export function usePulseAnimation({
 
     pulseScale.value = withRepeat(
       withSequence(
-        withTiming(1.05, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
-        withTiming(1, { duration: 1000, easing: Easing.inOut(Easing.ease) })
+        withTiming(1.05, {
+          duration: durations.loop,
+          easing: Easing.inOut(Easing.ease),
+        }),
+        withTiming(1, {
+          duration: durations.loop,
+          easing: Easing.inOut(Easing.ease),
+        })
       ),
       -1,
       true
@@ -38,8 +45,14 @@ export function usePulseAnimation({
 
     pulseOpacity.value = withRepeat(
       withSequence(
-        withTiming(1, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
-        withTiming(0.6, { duration: 1000, easing: Easing.inOut(Easing.ease) })
+        withTiming(1, {
+          duration: durations.loop,
+          easing: Easing.inOut(Easing.ease),
+        }),
+        withTiming(0.6, {
+          duration: durations.loop,
+          easing: Easing.inOut(Easing.ease),
+        })
       ),
       -1,
       true

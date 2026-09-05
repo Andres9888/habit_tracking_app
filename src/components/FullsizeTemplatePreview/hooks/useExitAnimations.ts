@@ -7,6 +7,7 @@
 import { useEffect, useRef } from 'react';
 import { Easing, withTiming } from 'react-native-reanimated';
 import type { EntranceAnimationValues } from '../FullsizeTemplatePreview.types';
+import { durations } from '@/theme/animations';
 
 interface UseExitAnimationsProps extends EntranceAnimationValues {
   visible: boolean;
@@ -40,19 +41,19 @@ export const useExitAnimations = ({
     }
 
     backdropOpacity.value = withTiming(0, {
-      duration: 200,
+      duration: durations.standard,
       easing: Easing.in(Easing.cubic),
     });
     contentOpacity.value = withTiming(0, {
-      duration: 200,
+      duration: durations.standard,
       easing: Easing.in(Easing.cubic),
     });
     contentTranslateY.value = withTiming(EXIT_TRANSLATE_Y, {
-      duration: 260,
+      duration: durations.enter,
       easing: Easing.in(Easing.cubic),
     });
     closeButtonOpacity.value = withTiming(0, {
-      duration: 120,
+      duration: durations.instant,
       easing: Easing.in(Easing.cubic),
     });
   }, [visible, reducedMotion]);

@@ -17,6 +17,7 @@ import { ImportHeader } from './ImportHeader';
 import { PreviewSheetBody } from './components/PreviewSheetBody';
 import { localStyles } from './styles';
 import type { TemplatePreviewModalProps } from './types';
+import { durations } from '@/theme/animations';
 
 // eslint-disable-next-line max-lines-per-function
 export default function TemplatePreviewModal({
@@ -71,7 +72,7 @@ export default function TemplatePreviewModal({
               className='flex-1'
             >
               <Animated.View
-                entering={FadeIn.duration(300)}
+                entering={FadeIn.duration(durations.moderate)}
                 style={{ flex: 1 }}
               >
                 <View style={localStyles.dragHandleRow}>

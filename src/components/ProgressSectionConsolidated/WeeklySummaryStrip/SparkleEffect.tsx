@@ -17,6 +17,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { styles } from './WeeklySummaryStripStyles';
+import { durations } from '@/theme/animations';
 
 interface SparkleEffectProps {
   isActive: boolean;
@@ -24,7 +25,7 @@ interface SparkleEffectProps {
 }
 
 /** Animation timing constants */
-const SPARKLE_DURATION = 2000;
+const SPARKLE_DURATION = durations.drift;
 
 /**
  * SparkleEffect Component

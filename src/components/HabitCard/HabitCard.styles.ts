@@ -15,7 +15,6 @@ import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 import { REDESIGN_COLORS } from './HabitCard.colors';
 import { statusStyles } from './HabitCard.statusStyles';
 
-export { actionStyles } from './HabitCard.actionStyles';
 export { REDESIGN_COLORS } from './HabitCard.colors';
 
 const coreStyles = StyleSheet.create({

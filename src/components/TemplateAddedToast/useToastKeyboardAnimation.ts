@@ -1,9 +1,12 @@
-import { useEffect, useRef } from 'react';
-import { Animated, Easing, Keyboard } from 'react-native';
-import type { EasingFunction, KeyboardEvent } from 'react-native';
+import { useEffect } from 'react';
+import { Keyboard } from 'react-native';
+import type { KeyboardEvent } from 'react-native';
+import { Easing, type SharedValue, withTiming } from 'react-native-reanimated';
 import { computeKeyboardOverlap, computeToastKeyboardClearance } from './toastKeyboardGeometry';
 
-const KEYBOARD_EASINGS: Record<KeyboardEvent['easing'], EasingFunction> = {
+type ReanimatedEasingFn = (t: number) => number;
+
+const KEYBOARD_EASINGS: Record<KeyboardEvent['easing'], ReanimatedEasingFn> = {
   easeIn: Easing.in(Easing.ease),
   easeInEaseOut: Easing.inOut(Easing.ease),
   easeOut: Easing.out(Easing.ease),
@@ -12,7 +15,7 @@ const KEYBOARD_EASINGS: Record<KeyboardEvent['easing'], EasingFunction> = {
 };
 
 interface ToastKeyboardAnimationOptions {
-  clearance: Animated.Value;
+  clearance: SharedValue<number>;
   enabled: boolean;
   initialClearance: number;
   insetBottom: number;
@@ -26,18 +29,12 @@ export function useToastKeyboardAnimation({
   insetBottom,
   screenHeight,
 }: ToastKeyboardAnimationOptions): void {
-  const keyboardAnimation = useRef<Animated.CompositeAnimation | null>(null);
-  const targetClearance = useRef(initialClearance);
-
   useEffect(() => {
-    const stopKeyboardAnimation = () => {
-      keyboardAnimation.current?.stop();
-      keyboardAnimation.current = null;
-    };
+    const targetClearance = { current: initialClearance };
     if (!enabled) {
       // Android adjustResize already keeps the toast above the keyboard.
-      clearance.setValue(0);
-      return () => clearance.stopAnimation();
+      clearance.value = 0;
+      return;
     }
     const clearanceForEvent = (event: KeyboardEvent) =>
       computeToastKeyboardClearance(
@@ -46,14 +43,12 @@ export function useToastKeyboardAnimation({
         true
       );
     const correctToFrame = (event: KeyboardEvent) => {
-      stopKeyboardAnimation();
       targetClearance.current = clearanceForEvent(event);
-      clearance.setValue(targetClearance.current);
+      clearance.value = targetClearance.current;
     };
     const correctToHidden = () => {
-      stopKeyboardAnimation();
       targetClearance.current = 0;
-      clearance.setValue(0);
+      clearance.value = 0;
     };
     const animateToFrame = (event: KeyboardEvent) => {
       const nextClearance = clearanceForEvent(event);
@@ -61,15 +56,11 @@ export function useToastKeyboardAnimation({
         // iOS emits overlapping will-show/hide and frame-change notifications.
         return;
       }
-      stopKeyboardAnimation();
       targetClearance.current = nextClearance;
-      keyboardAnimation.current = Animated.timing(clearance, {
+      clearance.value = withTiming(nextClearance, {
         duration: event.duration,
         easing: KEYBOARD_EASINGS[event.easing],
-        toValue: nextClearance,
-        useNativeDriver: true,
       });
-      keyboardAnimation.current.start();
     };
     const subscriptions = [
       Keyboard.addListener('keyboardWillShow', animateToFrame),
@@ -87,8 +78,6 @@ export function useToastKeyboardAnimation({
     }
     return () => {
       for (const subscription of subscriptions) subscription.remove();
-      stopKeyboardAnimation();
-      clearance.stopAnimation();
     };
   }, [clearance, enabled, insetBottom, screenHeight]);
 }

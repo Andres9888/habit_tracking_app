@@ -17,10 +17,11 @@ import {
   Easing,
 } from 'react-native-reanimated';
 import type { StickyHeaderContextValue } from '../../../../components/CalendarTimeline/StickyHeaderContext';
+import { durations } from '@/theme/animations';
 
 /** Matches pt-12 (48px) — the point where the shelf reaches screen top */
 const STICKY_THRESHOLD = 48;
-const ANIM_DURATION = 180;
+const ANIM_DURATION = durations.reveal;
 
 export function useStickyHeader(
   enabled = false,

@@ -5,15 +5,14 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useAnimatedStyle, useReducedMotion, useSharedValue } from 'react-native-reanimated';
 import { animateProgressWidth, animateEmoji } from './strengthAnimationHelpers';
 
 export function useStrengthAnimation(
   clampedStrength: number,
   currentLevelLabel: string
 ) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const previousLevelRef = useRef<string>(currentLevelLabel);
   const previousStrengthRef = useRef<number>(clampedStrength);
   const isFirstRenderRef = useRef(true);

@@ -53,18 +53,21 @@ exports[`TimeOfDaySelector Snapshots should match snapshot with Pivot (Afternoon
     >
       <View
         className="items-center justify-center rounded-xl px-3 py-3"
-        collapsable={false}
         style={
-          {
-            "backgroundColor": "#fafaf9",
-            "borderColor": "#e7e5e4",
-            "borderWidth": 1.5,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          }
+          [
+            {
+              "backgroundColor": "#fafaf9",
+              "borderColor": "#e7e5e4",
+              "borderWidth": 1.5,
+            },
+            {
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
         }
       >
         <Text
@@ -120,18 +123,21 @@ exports[`TimeOfDaySelector Snapshots should match snapshot with Pivot (Afternoon
     >
       <View
         className="items-center justify-center rounded-xl px-3 py-3"
-        collapsable={false}
         style={
-          {
-            "backgroundColor": "#10B981",
-            "borderColor": "#059669",
-            "borderWidth": 1.5,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          }
+          [
+            {
+              "backgroundColor": "#10B981",
+              "borderColor": "#059669",
+              "borderWidth": 1.5,
+            },
+            {
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
         }
       >
         <Text
@@ -187,18 +193,21 @@ exports[`TimeOfDaySelector Snapshots should match snapshot with Pivot (Afternoon
     >
       <View
         className="items-center justify-center rounded-xl px-3 py-3"
-        collapsable={false}
         style={
-          {
-            "backgroundColor": "#fafaf9",
-            "borderColor": "#e7e5e4",
-            "borderWidth": 1.5,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          }
+          [
+            {
+              "backgroundColor": "#fafaf9",
+              "borderColor": "#e7e5e4",
+              "borderWidth": 1.5,
+            },
+            {
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
         }
       >
         <Text
@@ -275,18 +284,21 @@ exports[`TimeOfDaySelector Snapshots should match snapshot with Pull (Evening) s
     >
       <View
         className="items-center justify-center rounded-xl px-3 py-3"
-        collapsable={false}
         style={
-          {
-            "backgroundColor": "#fafaf9",
-            "borderColor": "#e7e5e4",
-            "borderWidth": 1.5,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          }
+          [
+            {
+              "backgroundColor": "#fafaf9",
+              "borderColor": "#e7e5e4",
+              "borderWidth": 1.5,
+            },
+            {
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
         }
       >
         <Text
@@ -342,18 +354,21 @@ exports[`TimeOfDaySelector Snapshots should match snapshot with Pull (Evening) s
     >
       <View
         className="items-center justify-center rounded-xl px-3 py-3"
-        collapsable={false}
         style={
-          {
-            "backgroundColor": "#fafaf9",
-            "borderColor": "#e7e5e4",
-            "borderWidth": 1.5,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          }
+          [
+            {
+              "backgroundColor": "#fafaf9",
+              "borderColor": "#e7e5e4",
+              "borderWidth": 1.5,
+            },
+            {
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
         }
       >
         <Text
@@ -409,18 +424,21 @@ exports[`TimeOfDaySelector Snapshots should match snapshot with Pull (Evening) s
     >
       <View
         className="items-center justify-center rounded-xl px-3 py-3"
-        collapsable={false}
         style={
-          {
-            "backgroundColor": "#10B981",
-            "borderColor": "#059669",
-            "borderWidth": 1.5,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          }
+          [
+            {
+              "backgroundColor": "#10B981",
+              "borderColor": "#059669",
+              "borderWidth": 1.5,
+            },
+            {
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
         }
       >
         <Text
@@ -497,18 +515,21 @@ exports[`TimeOfDaySelector Snapshots should match snapshot with Push (Morning) s
     >
       <View
         className="items-center justify-center rounded-xl px-3 py-3"
-        collapsable={false}
         style={
-          {
-            "backgroundColor": "#10B981",
-            "borderColor": "#059669",
-            "borderWidth": 1.5,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          }
+          [
+            {
+              "backgroundColor": "#10B981",
+              "borderColor": "#059669",
+              "borderWidth": 1.5,
+            },
+            {
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
         }
       >
         <Text
@@ -564,18 +585,21 @@ exports[`TimeOfDaySelector Snapshots should match snapshot with Push (Morning) s
     >
       <View
         className="items-center justify-center rounded-xl px-3 py-3"
-        collapsable={false}
         style={
-          {
-            "backgroundColor": "#fafaf9",
-            "borderColor": "#e7e5e4",
-            "borderWidth": 1.5,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          }
+          [
+            {
+              "backgroundColor": "#fafaf9",
+              "borderColor": "#e7e5e4",
+              "borderWidth": 1.5,
+            },
+            {
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
         }
       >
         <Text
@@ -631,18 +655,21 @@ exports[`TimeOfDaySelector Snapshots should match snapshot with Push (Morning) s
     >
       <View
         className="items-center justify-center rounded-xl px-3 py-3"
-        collapsable={false}
         style={
-          {
-            "backgroundColor": "#fafaf9",
-            "borderColor": "#e7e5e4",
-            "borderWidth": 1.5,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          }
+          [
+            {
+              "backgroundColor": "#fafaf9",
+              "borderColor": "#e7e5e4",
+              "borderWidth": 1.5,
+            },
+            {
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
         }
       >
         <Text
@@ -719,18 +746,21 @@ exports[`TimeOfDaySelector Snapshots should match snapshot with no selection 1`]
     >
       <View
         className="items-center justify-center rounded-xl px-3 py-3"
-        collapsable={false}
         style={
-          {
-            "backgroundColor": "#fafaf9",
-            "borderColor": "#e7e5e4",
-            "borderWidth": 1.5,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          }
+          [
+            {
+              "backgroundColor": "#fafaf9",
+              "borderColor": "#e7e5e4",
+              "borderWidth": 1.5,
+            },
+            {
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
         }
       >
         <Text
@@ -786,18 +816,21 @@ exports[`TimeOfDaySelector Snapshots should match snapshot with no selection 1`]
     >
       <View
         className="items-center justify-center rounded-xl px-3 py-3"
-        collapsable={false}
         style={
-          {
-            "backgroundColor": "#fafaf9",
-            "borderColor": "#e7e5e4",
-            "borderWidth": 1.5,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          }
+          [
+            {
+              "backgroundColor": "#fafaf9",
+              "borderColor": "#e7e5e4",
+              "borderWidth": 1.5,
+            },
+            {
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
         }
       >
         <Text
@@ -853,18 +886,21 @@ exports[`TimeOfDaySelector Snapshots should match snapshot with no selection 1`]
     >
       <View
         className="items-center justify-center rounded-xl px-3 py-3"
-        collapsable={false}
         style={
-          {
-            "backgroundColor": "#fafaf9",
-            "borderColor": "#e7e5e4",
-            "borderWidth": 1.5,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          }
+          [
+            {
+              "backgroundColor": "#fafaf9",
+              "borderColor": "#e7e5e4",
+              "borderWidth": 1.5,
+            },
+            {
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
         }
       >
         <Text

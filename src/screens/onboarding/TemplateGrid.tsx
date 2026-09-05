@@ -34,7 +34,7 @@ export function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
           entering={
             reduceMotion
               ? undefined
-              : FadeIn.delay(300 + i * 60)
+              : FadeIn.delay(durations.moderate + i * durations.stagger)
                   .duration(durations.enter)
                   .easing(enterEasing)
           }

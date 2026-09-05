@@ -4,8 +4,8 @@
  * Spec §4 · SectionLabel.
  */
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { usePressed } from '../usePressed';
+import { StyleSheet, Text, View } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { usePanelTokens } from './panelTokens';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { fontFamilies } from '@/theme/typography';
@@ -23,7 +23,6 @@ interface SectionLabelProps {
 function ActionText({ action }: { action: SectionLabelAction }) {
   const { colors } = useThemeColors();
   const tokens = usePanelTokens();
-  const { pressed, pressProps } = usePressed();
 
   if ('text' in action) {
     return (
@@ -35,12 +34,11 @@ function ActionText({ action }: { action: SectionLabelAction }) {
 
   const caps = action.caps !== false;
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityRole="button"
       hitSlop={12}
+      style={styles.actionHit}
       onPress={action.onPress}
-      style={[styles.actionHit, { opacity: pressed ? 0.6 : 1 }]}
-      {...pressProps}
     >
       <Text
         style={[
@@ -51,7 +49,7 @@ function ActionText({ action }: { action: SectionLabelAction }) {
       >
         {caps ? action.label.toUpperCase() : action.label}
       </Text>
-    </Pressable>
+    </AnimatedPressable>
   );
 }
 

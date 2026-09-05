@@ -7,13 +7,12 @@
 
 import React from 'react';
 import { Text, View } from 'react-native';
-import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
+import Animated, { Easing, FadeInDown, useReducedMotion } from 'react-native-reanimated';
 import { durations } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { colors as palette } from '@/theme/colors';
 import { fontWeights, typography } from '@/theme/typography';
 
-import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { shadows } from '../../theme/spacing';
 import { useHabitStrengthData } from './HabitStrengthSection.hooks';
 import { getStrengthJourney } from './journey';
@@ -30,7 +29,7 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   progressEmojis,
 }: HabitStrengthSectionProps) {
   const { colors: themeColors, isDark } = useThemeColors();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const { chartData, currentStrength, isCalculating, isEmpty, timeRange } =
     useHabitStrengthData({ completedDates, habitCreatedAt, habitStrength });
 
@@ -51,7 +50,7 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
         reduceMotion
           ? undefined
           : FadeInDown.duration(durations.enter)
-              .delay(100)
+              .delay(durations.instant)
               .easing(Easing.out(Easing.cubic))
       }
       style={{
@@ -63,7 +62,12 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
     >
       <View className='p-4'>
         <View className='mb-3 flex-row items-center justify-between'>
-          <Text style={{ ...typography.overline, color: themeColors.text.secondary }}>
+          <Text
+            style={{
+              ...typography.overline,
+              color: themeColors.text.secondary,
+            }}
+          >
             Strength
           </Text>
           <Text

@@ -1,9 +1,10 @@
+import { durations } from '@/theme/animations';
 /**
  * Constants for ActionableTipCard
  */
 
 /** Duration of entrance animation (ms) */
-export const ENTRANCE_DURATION = 400;
+export const ENTRANCE_DURATION = durations.emphasis;
 
 /** Card styling constants */
 export const COLORS = {

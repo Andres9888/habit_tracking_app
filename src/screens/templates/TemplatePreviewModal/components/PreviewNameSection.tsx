@@ -33,7 +33,7 @@ export function PreviewNameSection({
       <Animated.View
         className='mb-4'
         entering={FadeInDown.duration(durations.enter)
-          .delay(100)
+          .delay(durations.instant)
           .easing(enterEasing)}
       >
         <TemplatePreview

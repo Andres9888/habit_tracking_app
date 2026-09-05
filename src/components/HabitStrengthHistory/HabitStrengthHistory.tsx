@@ -21,10 +21,11 @@ import { StrengthComparisonCards } from './StrengthComparisonCards';
 import { StrengthTimelineChart } from './StrengthTimelineChart';
 import { StrengthInsightsRow } from './StrengthInsightsRow';
 import type { HabitStrengthHistoryProps } from './types';
+import { durations } from '@/theme/animations';
 
-const SECTION_FADE_DURATION = 400;
-const SECTION_SLIDE_DURATION = 400;
-const SECTION_SLIDE_DELAY = 200;
+const SECTION_FADE_DURATION = durations.emphasis;
+const SECTION_SLIDE_DURATION = durations.emphasis;
+const SECTION_SLIDE_DELAY = durations.standard;
 
 export function HabitStrengthHistory({
   habitId: _habitId,

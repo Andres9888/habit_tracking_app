@@ -2,12 +2,13 @@ import { useEffect } from 'react';
 import { View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { durations } from '@/theme/animations';
 
 interface MicroProgressBarProps {
   completed: number;
@@ -15,13 +16,13 @@ interface MicroProgressBarProps {
 }
 
 const BAR_HEIGHT = 3;
-const FILL_DURATION = 600;
+const FILL_DURATION = durations.complex;
 const BORDER_RADIUS = 1.5;
 
 /** Thin progress bar showing weekly completion ratio */
 export function MicroProgressBar({ completed, total }: MicroProgressBarProps) {
   const { colors, isDark } = useThemeColors();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const progress = useSharedValue(0);
 
   const targetPercent = total > 0 ? Math.min(completed / total, 1) * 100 : 0;

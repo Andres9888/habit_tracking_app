@@ -116,7 +116,7 @@ describe('TemplatesLinkSection - V8 Design', () => {
         <TemplatesLinkSection {...defaultProps} />
       );
       expect(
-        getByLabelText('Need inspiration? Browse science-backed templates')
+        getByLabelText('Browse the Habit library')
       ).toBeDefined();
     });
 
@@ -126,9 +126,7 @@ describe('TemplatesLinkSection - V8 Design', () => {
       );
 
       const button = getByTestId('templates-link-button');
-      expect(button.props.accessibilityHint).toBe(
-        'Opens the templates browser to browse pre-made habit templates'
-      );
+      expect(button.props.accessibilityHint).toBe('Opens the Habit library');
     });
 
     it('should announce for screen readers when pressed', () => {
@@ -140,7 +138,7 @@ describe('TemplatesLinkSection - V8 Design', () => {
       fireEvent.press(button);
 
       expect(AccessibilityInfo.announceForAccessibility).toHaveBeenCalledWith(
-        'Opening templates browser to browse science-backed habit templates'
+        'Opening Browse the Habit library'
       );
     });
   });

@@ -18,7 +18,7 @@ import {
 } from 'react-native-reanimated';
 
 import { springs } from '@/theme/animations';
-import { Springs } from '../../../constants/motion';
+import { usePressAnimation } from '@/hooks/usePressAnimation';
 import {
   CHIP_STAGGER_DELAY,
   CHIP_ENTRANCE_DURATION,
@@ -40,7 +40,12 @@ export function useInsightChipAnimations({
   const translateX = useSharedValue(reduceMotion ? 0 : 20);
   const pulseScale = useSharedValue(1);
   const pulseOpacity = useSharedValue(0);
-  const pressScale = useSharedValue(1);
+  // Press scale comes from the shared primitive; it is composed into
+  // `containerStyle` below rather than mounted as a second Animated.View.
+  const {
+    scale: pressScale,
+    pressHandlers: { onPressIn: handlePressIn, onPressOut: handlePressOut },
+  } = usePressAnimation();
 
   // Entrance animation
   useEffect(() => {
@@ -95,13 +100,6 @@ export function useInsightChipAnimations({
       cancelAnimation(pulseOpacity);
     };
   }, [hasPulse, reduceMotion, pulseScale, pulseOpacity]);
-
-  const handlePressIn = () => {
-    pressScale.value = withSpring(0.95, Springs.button);
-  };
-  const handlePressOut = () => {
-    pressScale.value = withSpring(1, Springs.button);
-  };
 
   const containerStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,

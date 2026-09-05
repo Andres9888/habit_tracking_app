@@ -9,10 +9,10 @@ import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import type { EmojiChipProps } from './types';
-import { useEmojiPressScale } from './useEmojiPressScale';
+import { usePressAnimation } from '@/hooks/usePressAnimation';
 import { useThemeColors } from '@/theme/ThemeContext';
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const PressableBase = Animated.createAnimatedComponent(Pressable);
 
 const SELECTED_SHADOW = {
   elevation: 4,
@@ -22,15 +22,9 @@ const SELECTED_SHADOW = {
   shadowRadius: 4,
 };
 
-function EmojiChipComponent({
-  emoji,
-  isSelected,
-  onPress,
-  reduceMotion,
-  size,
-}: EmojiChipProps) {
-  const { animatedStyle, onPressIn, onPressOut } =
-    useEmojiPressScale(reduceMotion);
+function EmojiChipComponent({ emoji, isSelected, onPress, size }: EmojiChipProps) {
+  // Scale-down only: upscaling a rasterized emoji tile blurs it.
+  const { animatedStyle, pressHandlers } = usePressAnimation();
   const { colors: themeColors } = useThemeColors();
   const box = size ?? 64;
   const chipStyle = size
@@ -47,7 +41,7 @@ function EmojiChipComponent({
         width: box,
       }}
     >
-      <AnimatedPressable
+      <PressableBase
         accessibilityLabel={`Select emoji ${emoji}`}
         accessibilityRole='button'
         accessibilityState={{ selected: isSelected }}
@@ -65,11 +59,10 @@ function EmojiChipComponent({
               },
         ]}
         onPress={onPress}
-        onPressIn={onPressIn}
-        onPressOut={onPressOut}
+        {...pressHandlers}
       >
         <Text className='text-3xl'>{emoji}</Text>
-      </AnimatedPressable>
+      </PressableBase>
     </View>
   );
 }

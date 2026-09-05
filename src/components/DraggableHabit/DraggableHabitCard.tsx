@@ -23,7 +23,7 @@
 
 import React, { memo, useCallback, useMemo } from 'react';
 import { Pressable } from 'react-native';
-import { Swipeable } from 'react-native-gesture-handler';
+import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import ReAnimated, { useAnimatedStyle } from 'react-native-reanimated';
 import { SwipeActions } from './SwipeActions';
 import { CardContent } from './CardContent';
@@ -183,9 +183,9 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
     <Swipeable
       friction={2}
       overshootRight={false}
-      renderRightActions={(_, dragX) => (
+      renderRightActions={(_progress, translation) => (
         <SwipeActions
-          dragX={dragX}
+          dragX={translation}
           onArchive={handleArchivePress}
           onDelete={handleDeletePress}
         />

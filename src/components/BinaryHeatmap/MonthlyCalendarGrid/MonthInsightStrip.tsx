@@ -8,11 +8,10 @@
 
 import React, { memo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, useReducedMotion } from 'react-native-reanimated';
 import { StatColumn, StatHairline } from '@/components/ui';
 import { useThemeColors } from '@/theme';
 import { durations, enterEasing } from '@/theme/animations';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 import type { MonthInsights } from './useMonthInsights';
 
 export const MonthInsightStrip = memo(function MonthInsightStrip({
@@ -24,7 +23,7 @@ export const MonthInsightStrip = memo(function MonthInsightStrip({
   showStreak = true,
 }: MonthInsights & { monthKey: string; showStreak?: boolean }) {
   const { colors } = useThemeColors();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
 
   const items = [
     ...(showStreak ? [{ label: 'streak', value: String(currentStreak) }] : []),

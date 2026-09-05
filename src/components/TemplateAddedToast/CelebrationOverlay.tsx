@@ -6,10 +6,9 @@
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated from 'react-native-reanimated';
+import Animated, { useReducedMotion } from 'react-native-reanimated';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
-import { useReduceMotion } from '../../hooks/useReduceMotion';
 import type { CelebrationOverlayProps } from './CelebrationOverlay.types';
 import { celebrationStyles as s } from './CelebrationOverlay.styles';
 import { FALLBACK_COLOR } from './constants';
@@ -23,7 +22,7 @@ export function CelebrationOverlay({
   onGoToHabits,
   onAddAnother,
 }: CelebrationOverlayProps) {
-  const reducedMotion = useReduceMotion();
+  const reducedMotion = useReducedMotion();
   const color = templateData?.color ?? FALLBACK_COLOR;
   const anim = useCelebrationAnimations({ reducedMotion, visible });
 

@@ -5,8 +5,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import type { LayoutChangeEvent } from 'react-native';
-import Animated from 'react-native-reanimated';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
+import Animated, { useReducedMotion } from 'react-native-reanimated';
 import { useExpandAnimation } from '@/hooks/useExpandAnimation';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { useSoundPreview } from './SoundPicker.hooks';
@@ -22,7 +21,7 @@ interface SoundPickerProps {
 export function SoundPicker({ visible, selected, onSelect }: SoundPickerProps) {
   const { colors, isDark } = useThemeColors();
   const handleSelect = useSoundPreview(onSelect);
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const [naturalHeight, setNaturalHeight] = useState(0);
   const [hasContentMeasured, setHasContentMeasured] = useState(false);
   const [everVisible, setEverVisible] = useState(visible);

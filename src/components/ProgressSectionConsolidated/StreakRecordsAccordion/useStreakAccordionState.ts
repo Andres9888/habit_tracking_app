@@ -4,7 +4,7 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import type { LayoutChangeEvent } from 'react-native';
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { usePulseAnimation } from './usePulseAnimation';
 import { useExpandAnimation } from '@/hooks/useExpandAnimation';
@@ -22,7 +22,7 @@ export function useStreakAccordionState({
   currentStreak,
   defaultExpanded,
 }: UseStreakAccordionStateArgs) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const { triggerSelection } = useHapticFeedback();
 
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);

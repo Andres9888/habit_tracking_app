@@ -24,6 +24,7 @@ jest.mock('react-native-reanimated', () => {
     __esModule: true,
     default: Animated,
     ...Animated,
+    useReducedMotion: jest.fn(() => false),
     useSharedValue: (initialValue: number) => ({ value: initialValue }),
     useAnimatedStyle: () => ({}),
     withTiming: (value: number) => value,
@@ -338,10 +339,10 @@ describe('WeeklyPatternChart', () => {
 
   describe('Reduced Motion', () => {
     it('respects reduced motion preference', () => {
-      const { useReduceMotion } = require('../../../hooks/useReduceMotion') as {
-        useReduceMotion: jest.Mock;
+      const { useReducedMotion } = require('react-native-reanimated') as {
+        useReducedMotion: jest.Mock;
       };
-      useReduceMotion.mockReturnValue(true);
+      useReducedMotion.mockReturnValue(true);
 
       const { getByText } = render(<WeeklyPatternChart {...defaultProps} />);
 

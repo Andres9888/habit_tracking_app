@@ -1,11 +1,10 @@
 /** AdvancedAlgorithmDisclosure — Collapsible card wrapping the algorithm picker for per-habit screens. */
 import { useCallback, useState } from 'react';
 import { Text, View, type LayoutChangeEvent } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { useReducedMotion } from 'react-native-reanimated';
 import { ChevronDown, SlidersHorizontal } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { useExpandAnimation } from '@/hooks/useExpandAnimation';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { AdvancedAlgorithmBody } from './AdvancedAlgorithmBody';
@@ -18,7 +17,7 @@ interface Props {
 
 export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
   const { colors } = useThemeColors();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const [expanded, setExpanded] = useState(false);
   const [contentHeight, setContentHeight] = useState(0);
   const [hasContentMeasured, setHasContentMeasured] = useState(false);
@@ -58,7 +57,7 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
       }}
     >
       <AnimatedPressable
-        animationConfig={{ hapticStyle: 'selection' }}
+        animationConfig={{ enableHaptics: true, hapticStyle: 'selection' }}
         accessibilityRole='button'
         accessibilityState={{ expanded }}
         className='flex-row items-center justify-between p-4'

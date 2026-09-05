@@ -41,7 +41,9 @@ export function ProgressSection({
   return (
     <Animated.View
       className='gap-4'
-      entering={FadeInDown.delay(100).duration(durations.enter).easing(enterEasing)}
+      entering={FadeInDown.delay(durations.instant)
+        .duration(durations.enter)
+        .easing(enterEasing)}
     >
       <YourProgressCard
         actionableTip={actionableTip}
@@ -50,22 +52,26 @@ export function ProgressSection({
         onInfoPress={onInfoPress}
       />
 
-      {hasEnoughData ? <PersonalBestsCard
+      {hasEnoughData ? (
+        <PersonalBestsCard
           bestDay={bestDay}
           currentStreak={currentStreak}
           streakRecords={streakRecords}
           worstDay={worstDay}
           onWorstDayPress={onWorstDayPress}
-        /> : null}
+        />
+      ) : null}
 
-      {hasEnoughData ? <ThisMonthCard
+      {hasEnoughData ? (
+        <ThisMonthCard
           completedDays={thisMonthStats.completedDays}
           dayStats={dayStats}
           lastMonthRate={trend.lastMonth}
           thisMonthRate={trend.thisMonth}
           totalDays={thisMonthStats.totalDays}
           onSeeAllPress={onSeeAllPress}
-        /> : null}
+        />
+      ) : null}
     </Animated.View>
   );
 }

@@ -4,14 +4,14 @@
 
 import { useEffect, useCallback } from 'react';
 import {
-  useSharedValue,
+  Easing,
   useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
   withSpring,
   withTiming,
-  Easing,
 } from 'react-native-reanimated';
 
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { Springs } from '../../../constants/motion';
 import { springs } from '@/theme/animations';
 import { ENTRANCE_DURATION } from './constants';
@@ -21,7 +21,7 @@ import {
 } from '../../../utils/animations/cardPressAnimation';
 
 export function useTipAnimations() {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const opacity = useSharedValue(reduceMotion ? 1 : 0);
   const translateY = useSharedValue(reduceMotion ? 0 : 10);
   const pressScale = useSharedValue(1);

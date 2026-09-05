@@ -1,3 +1,4 @@
+import { durations } from '@/theme/animations';
 /**
  * App-wide Constants
  *
@@ -49,10 +50,10 @@ export const FAB = {
 // ============================================================================
 
 /** Habit list header animation duration */
-export const LIST_HEADER_ANIMATION_DURATION_MS = 350;
+export const LIST_HEADER_ANIMATION_DURATION_MS = durations.sheet;
 
 /** Sort bottom sheet close animation duration */
-export const SORT_SHEET_CLOSE_DURATION_MS = 250;
+export const SORT_SHEET_CLOSE_DURATION_MS = durations.transition;
 
 // ============================================================================
 // GESTURE THRESHOLDS

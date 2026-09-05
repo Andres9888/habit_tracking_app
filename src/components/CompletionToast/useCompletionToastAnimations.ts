@@ -10,9 +10,9 @@ import {
   withSpring,
   withTiming,
   withSequence,
-  runOnJS,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { scheduleOnRN } from 'react-native-worklets';
+import { durations, springs } from '@/theme/animations';
 import { DISMISS_THRESHOLD } from './constants';
 
 interface UseCompletionToastAnimationsParams {
@@ -41,18 +41,21 @@ export function useCompletionToastAnimations(
 
   const handleDismiss = useCallback(() => {
     translateY.value = withSpring(100, springs.standard);
-    opacity.value = withTiming(0, { duration: 280 });
-    scale.value = withTiming(0.9, { duration: 280 });
+    opacity.value = withTiming(0, { duration: durations.enter });
+    scale.value = withTiming(0.9, { duration: durations.enter });
     if (onDismissRef.current) {
       if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
-      dismissTimerRef.current = setTimeout(() => onDismissRef.current?.(), 300);
+      dismissTimerRef.current = setTimeout(
+        () => onDismissRef.current?.(),
+        durations.moderate
+      );
     }
   }, [translateY, opacity, scale]);
 
   useEffect(() => {
     if (visible) {
       translateY.value = withSpring(0, springs.standard);
-      opacity.value = withTiming(1, { duration: 280 });
+      opacity.value = withTiming(1, { duration: durations.enter });
       scale.value = withSequence(
         withSpring(1.02, springs.standard),
         withSpring(1, springs.standard)
@@ -63,8 +66,8 @@ export function useCompletionToastAnimations(
       }
     } else {
       translateY.value = withSpring(100, springs.standard);
-      opacity.value = withTiming(0, { duration: 280 });
-      scale.value = withTiming(0.9, { duration: 280 });
+      opacity.value = withTiming(0, { duration: durations.enter });
+      scale.value = withTiming(0.9, { duration: durations.enter });
     }
   }, [visible, duration, translateY, opacity, scale, handleDismiss]);
 
@@ -77,10 +80,10 @@ export function useCompletionToastAnimations(
     })
     .onEnd((e) => {
       if (e.translationY > DISMISS_THRESHOLD || e.velocityY > 500) {
-        runOnJS(handleDismiss)();
+        scheduleOnRN(handleDismiss);
       } else {
         translateY.value = withSpring(0, springs.standard);
-        opacity.value = withTiming(1, { duration: 280 });
+        opacity.value = withTiming(1, { duration: durations.enter });
       }
     });
 

@@ -32,7 +32,9 @@ function ChainLink({
       entering={
         reduceMotion
           ? undefined
-          : FadeInDown.delay(delay).duration(durations.enter).easing(enterEasing)
+          : FadeInDown.delay(delay)
+              .duration(durations.enter)
+              .easing(enterEasing)
       }
       style={[
         styles.chainLink,
@@ -66,7 +68,7 @@ export function ChainVisualization({
       {[0, 1, 2, 3, 4, 5, 6].map((i) => (
         <ChainLink
           key={i}
-          delay={400 + i * 120}
+          delay={durations.emphasis + i * 2 * durations.stagger}
           index={i}
           reduceMotion={reduceMotion}
         />

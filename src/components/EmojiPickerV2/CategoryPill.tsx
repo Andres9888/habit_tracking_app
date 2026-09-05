@@ -1,11 +1,7 @@
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import { Pressable, Text } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  withSpring,
-  useSharedValue,
-} from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import Animated from 'react-native-reanimated';
+import { usePressAnimation } from '@/hooks/usePressAnimation';
 import { styles } from './CategoryPills.styles';
 
 interface CategoryPillProps {
@@ -17,19 +13,7 @@ interface CategoryPillProps {
 
 export const CategoryPill = memo(
   ({ icon, name, isSelected, onPress }: CategoryPillProps) => {
-    const scale = useSharedValue(1);
-
-    const animatedStyle = useAnimatedStyle(() => ({
-      transform: [{ scale: scale.value }],
-    }));
-
-    const handlePressIn = useCallback(() => {
-      scale.value = withSpring(0.95, springs.button);
-    }, [scale]);
-
-    const handlePressOut = useCallback(() => {
-      scale.value = withSpring(1, springs.button);
-    }, [scale]);
+    const { animatedStyle, pressHandlers } = usePressAnimation();
 
     return (
       <Pressable
@@ -37,8 +21,7 @@ export const CategoryPill = memo(
         accessibilityRole='tab'
         accessibilityState={{ selected: isSelected }}
         onPress={onPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
+        {...pressHandlers}
       >
         <Animated.View
           style={[

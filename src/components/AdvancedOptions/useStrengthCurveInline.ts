@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, type LayoutChangeEvent } from 'react-native';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
 import { useExpandAnimation } from '@/hooks/useExpandAnimation';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import type { GrowthType } from '@/utils/growthTypeMeta';
 import { CURVE_MOCK_COPY, GROWTH_TO_MODE } from './mockTokens';
 
@@ -21,7 +21,7 @@ export function useStrengthCurveInline({
   isNewHabit,
   onSelect,
 }: Args) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [contentHeight, setContentHeight] = useState(0);
   const [hasContentMeasured, setHasContentMeasured] = useState(false);

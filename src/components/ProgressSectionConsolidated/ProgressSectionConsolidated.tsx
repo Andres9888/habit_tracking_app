@@ -63,7 +63,9 @@ export function ProgressSectionConsolidated({
     <Animated.View
       accessibilityLabel='Progress section'
       accessibilityRole='summary'
-      entering={FadeInDown.delay(100).duration(durations.enter).easing(enterEasing)}
+      entering={FadeInDown.delay(durations.instant)
+        .duration(durations.enter)
+        .easing(enterEasing)}
     >
       {/* Unified Card Container */}
       <View

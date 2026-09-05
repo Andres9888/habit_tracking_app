@@ -8,7 +8,7 @@ import Animated, {
   withTiming,
   interpolate,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 import { styles } from './StrengthDistributionChart.styles';
 import {
   CHART_SIZE,
@@ -30,7 +30,7 @@ export default function StrengthDistributionChart({
 
   useEffect(() => {
     containerScale.value = withSpring(1, springs.gentle);
-    animationProgress.value = withTiming(1, { duration: 400 });
+    animationProgress.value = withTiming(1, { duration: durations.emphasis });
   }, [data, animationProgress, containerScale]);
 
   const containerAnimatedStyle = useAnimatedStyle(() => ({

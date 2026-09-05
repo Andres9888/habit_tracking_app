@@ -9,6 +9,7 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import { MAX_LENGTH, MAX_CHARS } from './HabitNameField.constants';
+import { durations } from '@/theme/animations';
 
 interface UseHabitNameFieldAnimationParams {
   charCount: number;
@@ -29,7 +30,9 @@ export function useHabitNameFieldAnimation({
 
   // Update focus animation
   useEffect(() => {
-    focusProgress.value = withTiming(isFocused ? 1 : 0, { duration: 200 });
+    focusProgress.value = withTiming(isFocused ? 1 : 0, {
+      duration: durations.standard,
+    });
   }, [isFocused, focusProgress]);
 
   // Trigger haptic and shake when exceeding limits
@@ -39,13 +42,27 @@ export function useHabitNameFieldAnimation({
     }
     if (charCount > MAX_CHARS && previousCount.current <= MAX_CHARS) {
       triggerWarning();
-      shakeTranslate.value = withTiming(10, { duration: 50 }, () => {
-        shakeTranslate.value = withTiming(-10, { duration: 50 }, () => {
-          shakeTranslate.value = withTiming(10, { duration: 50 }, () => {
-            shakeTranslate.value = withTiming(0, { duration: 50 });
-          });
-        });
-      });
+      shakeTranslate.value = withTiming(
+        10,
+        { duration: durations.micro },
+        () => {
+          shakeTranslate.value = withTiming(
+            -10,
+            { duration: durations.micro },
+            () => {
+              shakeTranslate.value = withTiming(
+                10,
+                { duration: durations.micro },
+                () => {
+                  shakeTranslate.value = withTiming(0, {
+                    duration: durations.micro,
+                  });
+                }
+              );
+            }
+          );
+        }
+      );
     }
     previousCount.current = charCount;
   }, [charCount, triggerWarning, shakeTranslate]);

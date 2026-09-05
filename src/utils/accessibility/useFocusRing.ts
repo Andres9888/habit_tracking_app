@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { ViewStyle } from 'react-native';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import { focusRingCompactStyle, focusRingStyle } from './focusRing';
 
 interface UseFocusRingOptions {
@@ -10,7 +10,7 @@ interface UseFocusRingOptions {
 
 export function useFocusRing(options: UseFocusRingOptions = {}) {
   const { compact = false, disabled = false } = options;
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const [isFocused, setIsFocused] = useState(false);
 
   const onFocus = useCallback(() => setIsFocused(true), []);

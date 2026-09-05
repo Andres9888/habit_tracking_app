@@ -12,6 +12,7 @@ import type { QuickAction } from './types';
 import { ICON_MAP, ACTION_COLORS } from './constants';
 import { useStyles } from './styles';
 import { iconSizes } from '@/theme/iconSizes';
+import { durations } from '@/theme/animations';
 
 interface QuickActionItemProps {
   action: QuickAction;
@@ -36,12 +37,14 @@ export const QuickActionItem = React.memo(function QuickActionItem({
     onPress(action);
   };
 
-  const animationDelay = reduceMotion ? 0 : 50 + index * 50;
+  const animationDelay = reduceMotion ? 0 : durations.stagger * (1 + index);
 
   return (
     <Animated.View
       entering={
-        reduceMotion ? undefined : FadeIn.delay(animationDelay).duration(200)
+        reduceMotion
+          ? undefined
+          : FadeIn.delay(animationDelay).duration(durations.standard)
       }
     >
       <Pressable
@@ -64,7 +67,9 @@ export const QuickActionItem = React.memo(function QuickActionItem({
         </View>
         <View style={styles.actionTextContainer}>
           <Text style={styles.actionLabel}>{action.label}</Text>
-          {action.subtitle ? <Text style={styles.actionSubtitle}>{action.subtitle}</Text> : null}
+          {action.subtitle ? (
+            <Text style={styles.actionSubtitle}>{action.subtitle}</Text>
+          ) : null}
         </View>
       </Pressable>
     </Animated.View>

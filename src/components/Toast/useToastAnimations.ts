@@ -9,11 +9,11 @@ import {
   useSharedValue,
   withSpring,
   withTiming,
-  runOnJS,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 import { DISMISS_THRESHOLD } from './constants';
 
 interface UseToastAnimationsParams {
@@ -51,13 +51,13 @@ export function useToastAnimations({
       }
 
       translateY.value = withSpring(100, springs.standard);
-      opacity.value = withTiming(0, { duration: 200 });
+      opacity.value = withTiming(0, { duration: durations.standard });
 
       if (onDismissRef.current) {
         if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
         dismissTimerRef.current = setTimeout(() => {
           onDismissRef.current?.();
-        }, 250);
+        }, durations.transition);
       }
     },
     [translateY, opacity, haptic]
@@ -66,7 +66,7 @@ export function useToastAnimations({
   useEffect(() => {
     if (visible) {
       translateY.value = withSpring(0, springs.standard);
-      opacity.value = withTiming(1, { duration: 200 });
+      opacity.value = withTiming(1, { duration: durations.standard });
 
       if (duration > 0 && onDismissRef.current) {
         const timer = setTimeout(() => {
@@ -76,7 +76,7 @@ export function useToastAnimations({
       }
     } else {
       translateY.value = withSpring(100, springs.standard);
-      opacity.value = withTiming(0, { duration: 200 });
+      opacity.value = withTiming(0, { duration: durations.standard });
     }
   }, [visible, duration, translateY, opacity, handleDismiss]);
 
@@ -94,10 +94,10 @@ export function useToastAnimations({
     .onEnd((event) => {
       const velocityY = Math.round(event.velocityY);
       if (event.translationY > DISMISS_THRESHOLD || velocityY > 500) {
-        runOnJS(handleSwipeDismiss)();
+        scheduleOnRN(handleSwipeDismiss);
       } else {
         translateY.value = withSpring(0, springs.standard);
-        opacity.value = withTiming(1, { duration: 150 });
+        opacity.value = withTiming(1, { duration: durations.quick });
       }
     });
 

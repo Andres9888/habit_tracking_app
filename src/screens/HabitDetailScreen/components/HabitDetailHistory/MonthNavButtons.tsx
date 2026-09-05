@@ -7,8 +7,8 @@
  */
 import type { ReactNode } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
-import { Pressable, View } from 'react-native';
-import { usePressed } from '../../../../components/AdvancedOptions/usePressed';
+import { View } from 'react-native';
+import { AnimatedPressable } from '../../../../components/ui/AnimatedPressable';
 import type { InsightPalette } from '../../insightPalette';
 
 export interface MonthNavigation {
@@ -37,10 +37,8 @@ function NavButton({
   palette,
   onPress,
 }: NavButtonProps) {
-  const { pressProps, pressed } = usePressed();
   return (
-    <Pressable
-      {...pressProps}
+    <AnimatedPressable
       accessibilityLabel={label}
       accessibilityRole='button'
       accessibilityState={{ disabled }}
@@ -53,13 +51,13 @@ function NavButton({
         borderWidth: 1,
         height: 28,
         justifyContent: 'center',
-        opacity: disabled ? 0.4 : pressed ? 0.6 : 1,
+        opacity: disabled ? 0.4 : 1,
         width: 28,
       }}
       onPress={onPress}
     >
       {children}
-    </Pressable>
+    </AnimatedPressable>
   );
 }
 

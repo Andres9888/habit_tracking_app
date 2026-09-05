@@ -1,5 +1,14 @@
-import React, { useEffect, useRef } from 'react';
-import { Animated, Easing } from 'react-native';
+import React, { useEffect } from 'react';
+import Animated, {
+  Easing,
+  cancelAnimation,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 
 import {
   getCompleteDotGlow,
@@ -8,6 +17,7 @@ import {
 } from '../CalendarTimeline.styles';
 import type { CompletionDotProps } from '../CalendarTimeline.types';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { durations, springs } from '@/theme/animations';
 
 /** Animated completion indicator dot */
 export const CompletionDot: React.FC<CompletionDotProps> = ({
@@ -16,43 +26,53 @@ export const CompletionDot: React.FC<CompletionDotProps> = ({
   isToday = false,
 }) => {
   const { isDark } = useThemeColors();
-  const scaleAnim = useRef(new Animated.Value(0)).current;
-  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const scale = useSharedValue(0);
+  const pulse = useSharedValue(1);
 
   useEffect(() => {
     if (reduceMotion) {
-      scaleAnim.setValue(1);
+      cancelAnimation(scale);
+      scale.value = 1;
+      cancelAnimation(pulse);
+      pulse.value = 1;
       return;
     }
 
-    const springAnim = Animated.spring(scaleAnim, {
-      friction: 5, tension: 200, toValue: 1, useNativeDriver: true,
-    });
-    springAnim.start();
+    scale.value = withSpring(1, springs.celebration);
 
-    let pulseAnimation: Animated.CompositeAnimation | null = null;
     if (isToday && status !== 'complete' && status !== 'future') {
-      pulseAnimation = Animated.loop(
-        Animated.sequence([
-          Animated.timing(pulseAnim, {
-            duration: 1000, easing: Easing.inOut(Easing.ease),
-            toValue: 1.15, useNativeDriver: true,
+      pulse.value = withRepeat(
+        withSequence(
+          withTiming(1.15, {
+            duration: durations.loop,
+            easing: Easing.inOut(Easing.ease),
           }),
-          Animated.timing(pulseAnim, {
-            duration: 1000, easing: Easing.inOut(Easing.ease),
-            toValue: 1, useNativeDriver: true,
-          }),
-        ])
+          withTiming(1, {
+            duration: durations.loop,
+            easing: Easing.inOut(Easing.ease),
+          })
+        ),
+        -1,
+        false
       );
-      pulseAnimation.start();
+    } else {
+      cancelAnimation(pulse);
+      pulse.value = 1;
     }
 
     return () => {
-      springAnim.stop();
-      if (pulseAnimation) pulseAnimation.stop();
-      pulseAnim.setValue(1);
+      cancelAnimation(scale);
+      cancelAnimation(pulse);
+      pulse.value = 1;
     };
-  }, [status, reduceMotion, isToday, scaleAnim, pulseAnim]);
+  }, [status, reduceMotion, isToday, scale, pulse]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { scale: scale.value },
+      { scale: isToday && status !== 'complete' ? pulse.value : 1 },
+    ],
+  }));
 
   const dotColors = getCompletionDotColors(isDark);
   const color = dotColors[status];
@@ -60,17 +80,16 @@ export const CompletionDot: React.FC<CompletionDotProps> = ({
 
   return (
     <Animated.View
-      style={{
-        backgroundColor: color,
-        borderRadius: size / 2,
-        height: size,
-        transform: [
-          { scale: scaleAnim },
-          { scale: isToday && status !== 'complete' ? pulseAnim : 1 },
-        ],
-        width: size,
-        ...(status === 'complete' && getCompleteDotGlow(isDark)),
-      }}
+      style={[
+        {
+          backgroundColor: color,
+          borderRadius: size / 2,
+          height: size,
+          width: size,
+          ...(status === 'complete' && getCompleteDotGlow(isDark)),
+        },
+        animatedStyle,
+      ]}
     />
   );
 };

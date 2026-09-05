@@ -8,10 +8,9 @@
 
 import React from 'react';
 import { View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { useReducedMotion } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 import { CompactStrengthRing } from './CompactStrengthRing';
 import { StatsRow } from './StatsRow';
@@ -34,7 +33,7 @@ export const StatsGrid = React.memo(function StatsGrid({
   progressEmojis,
   onFocusDayPress,
 }: StatsGridProps) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const { triggerSelection } = useHapticFeedback();
   const { containerStyle } = useStatsGridAnimations({ reduceMotion });
   const { topRowCards, bottomRowCards } = useStatCards({

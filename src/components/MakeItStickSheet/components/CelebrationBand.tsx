@@ -8,6 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../theme/spacing';
+import { durations } from '@/theme/animations';
 import {
   fontFamilies,
   fontWeights,
@@ -32,7 +33,10 @@ export function CelebrationBand({ topInset }: CelebrationBandProps) {
       colors={BAND_GRADIENT}
       style={{ paddingTop: topInset + 24 }}
     >
-      <Animated.View entering={FadeInDown.duration(280)} style={s.band}>
+      <Animated.View
+        entering={FadeInDown.duration(durations.enter)}
+        style={s.band}
+      >
         <View style={[s.checkRing, { backgroundColor: colors.primary[600] }]}>
           <Text style={[s.checkText, { color: colors.text.inverse }]}>✓</Text>
         </View>

@@ -11,7 +11,7 @@ import {
   withDelay,
 } from 'react-native-reanimated';
 import type { EmptyStateVariant } from './types';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
 const SPRING_CONFIG = springs.standard;
 
@@ -29,14 +29,26 @@ export function useEmptyStateAnimations(variant: EmptyStateVariant) {
     iconScale.value = withSpring(1, SPRING_CONFIG);
 
     // Headline: fade in with delay
-    headlineOpacity.value = withDelay(200, withSpring(1, SPRING_CONFIG));
+    headlineOpacity.value = withDelay(
+      durations.standard,
+      withSpring(1, SPRING_CONFIG)
+    );
 
     // Description: fade in with delay
-    descriptionOpacity.value = withDelay(300, withSpring(1, SPRING_CONFIG));
+    descriptionOpacity.value = withDelay(
+      durations.moderate,
+      withSpring(1, SPRING_CONFIG)
+    );
 
     // CTA: fade in and slide up with delay
-    ctaOpacity.value = withDelay(400, withSpring(1, SPRING_CONFIG));
-    ctaTranslateY.value = withDelay(400, withSpring(0, SPRING_CONFIG));
+    ctaOpacity.value = withDelay(
+      durations.emphasis,
+      withSpring(1, SPRING_CONFIG)
+    );
+    ctaTranslateY.value = withDelay(
+      durations.emphasis,
+      withSpring(0, SPRING_CONFIG)
+    );
   }, [variant]);
 
   const iconStyle = useAnimatedStyle(() => ({

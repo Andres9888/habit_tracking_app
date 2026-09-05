@@ -25,8 +25,9 @@ import {
   getSizeVars,
 } from './RankEmojiTile.styles';
 import type { RankEmojiTileProps } from './RankEmojiTile.types';
+import { durations } from '@/theme/animations';
 
-const TRANSITION_MS = 360;
+const TRANSITION_MS = durations.sheet;
 // Material-style symmetric bezier — softer perceived fade than Easing.out(cubic),
 // matched to the mini-emoji curve so the two land as one event.
 const TRANSITION_EASING = Easing.bezier(0.4, 0, 0.2, 1);
@@ -93,7 +94,11 @@ function RankEmojiTileInner({
   const shimmerStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateX: interpolate(shimmer.value, [0, 1], [-v.shimmerWidth, v.size + v.shimmerWidth / 2]),
+        translateX: interpolate(
+          shimmer.value,
+          [0, 1],
+          [-v.shimmerWidth, v.size + v.shimmerWidth / 2]
+        ),
       },
       { rotate: '18deg' },
     ],
@@ -108,7 +113,13 @@ function RankEmojiTileInner({
         ]}
       >
         <Gradient tier={from} radius={v.radius} />
-        <Animated.View style={[baseStyles.gradientLayer, { borderRadius: v.radius }, toStyle]}>
+        <Animated.View
+          style={[
+            baseStyles.gradientLayer,
+            { borderRadius: v.radius },
+            toStyle,
+          ]}
+        >
           <Gradient tier={to} radius={v.radius} />
         </Animated.View>
         <View

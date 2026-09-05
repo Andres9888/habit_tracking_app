@@ -33,6 +33,9 @@ export function SettingsSectionHeader({
 
   return (
     <AnimatedPressable
+      // Accordion toggle with no commit-side haptic — the press tap is the
+      // only tactile confirmation.
+      animationConfig={{ enableHaptics: true }}
       accessibilityHint={`Double tap to ${isExpanded ? 'collapse' : 'expand'} ${title} settings`}
       accessibilityRole='button'
       accessibilityState={{ expanded: isExpanded }}

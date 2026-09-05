@@ -1,8 +1,8 @@
 /** One theme pill in the Growth icons theme row. */
-import { Pressable, Text } from 'react-native';
+import { Text } from 'react-native';
 import { fontWeights, typography } from '@/theme/typography';
 import { usePanelTokens } from './panel/panelTokens';
-import { usePressed } from './usePressed';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface Props {
   emoji: string;
@@ -13,14 +13,15 @@ interface Props {
 
 export function GrowthThemePill({ emoji, label, selected, onPress }: Props) {
   const t = usePanelTokens();
-  const { pressed, pressProps } = usePressed();
   const hue = t.hues.growth;
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityLabel={`${label} theme`}
       accessibilityRole='button'
       accessibilityState={{ selected }}
-      {...pressProps}
+      // Pills sit edge-to-edge in a 3-up row; the default 10pt slop would
+      // overlap neighbours.
+      hitSlop={0}
       style={{
         flex: 1,
         minWidth: 0,
@@ -34,7 +35,6 @@ export function GrowthThemePill({ emoji, label, selected, onPress }: Props) {
         backgroundColor: selected ? hue.tile : t.chipRestBg,
         borderWidth: selected ? 2 : 1,
         borderColor: selected ? hue.ink : t.chipRestBorder,
-        opacity: pressed ? 0.9 : 1,
       }}
       onPress={onPress}
     >
@@ -53,6 +53,6 @@ export function GrowthThemePill({ emoji, label, selected, onPress }: Props) {
       >
         {label}
       </Text>
-    </Pressable>
+    </AnimatedPressable>
   );
 }

@@ -36,6 +36,8 @@ export function SummarySection({
 
   return (
     <AnimatedPressable
+      // Expand/collapse toggle; no haptic anywhere else in the chain.
+      animationConfig={{ enableHaptics: true }}
       accessibilityLabel={`This Week's Summary. Overall change: ${insights.weekOverWeekChange > 0 ? '+' : ''}${Math.round(insights.weekOverWeekChange)}%`}
       accessibilityRole='button'
       accessibilityState={{ expanded: isExpanded }}

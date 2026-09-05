@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { HabitCardSkeleton } from './HabitCardSkeleton';
 import { CalendarTimelineSkeleton } from './CalendarTimelineSkeleton';
 import type { ReduceMotionProps } from './types';
+import { durations } from '@/theme/animations';
 
 const CARD_INDICES = [0, 1, 2];
 
@@ -33,7 +34,7 @@ export function HabitsPageSkeleton({
             entering={
               reduceMotion
                 ? undefined
-                : FadeIn.duration(300).delay(index * 60)
+                : FadeIn.duration(durations.moderate).delay(index * 60)
             }
           >
             <HabitCardSkeleton reduceMotion={reduceMotion} />

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AccessibilityInfo } from 'react-native';
+import { durations } from '@/theme/animations';
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -18,7 +19,8 @@ export function usePulseAnimation(currentStreak: number) {
     void AccessibilityInfo.isReduceMotionEnabled()
       .then(setReduceMotion)
       .catch((error) => {
-        if (__DEV__) console.warn('Error checking reduce motion setting:', error);
+        if (__DEV__)
+          console.warn('Error checking reduce motion setting:', error);
         setReduceMotion(false);
       });
   }, []);
@@ -27,7 +29,10 @@ export function usePulseAnimation(currentStreak: number) {
     if (reduceMotion || currentStreak === 0) return;
 
     const timing = (to: number) =>
-      withTiming(to, { duration: 1000, easing: Easing.inOut(Easing.ease) });
+      withTiming(to, {
+        duration: durations.loop,
+        easing: Easing.inOut(Easing.ease),
+      });
 
     pulseScale.value = withRepeat(
       withSequence(timing(1.05), timing(1)),

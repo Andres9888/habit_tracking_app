@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react';
 import type { ComponentRef } from 'react';
 import { TextInput } from 'react-native';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import { createHabitMotion } from '../createHabitMotion';
 
 /** Focus after the full-screen modal enter animation — matches modal slide timing. */
 export function useHabitNameInputFocus(shouldFocus: boolean) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const inputRef = useRef<ComponentRef<typeof TextInput>>(null);
 
   useEffect(() => {

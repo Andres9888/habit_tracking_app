@@ -63,11 +63,20 @@ export const useEntranceAnimations = ({
           easing: enterEasing,
         });
         closeButtonOpacity.value = withDelay(
-          80,
-          withTiming(1, { duration: 180, easing: Easing.out(Easing.cubic) })
+          durations.tick,
+          withTiming(1, {
+            duration: durations.reveal,
+            easing: Easing.out(Easing.cubic),
+          })
         );
-        iconScale.value = withDelay(80, withSpring(1, Springs.standard));
-        iconGlowScale.value = withDelay(180, withSpring(1.12, Springs.celebration));
+        iconScale.value = withDelay(
+          durations.tick,
+          withSpring(1, Springs.standard)
+        );
+        iconGlowScale.value = withDelay(
+          durations.reveal,
+          withSpring(1.12, Springs.celebration)
+        );
       }
     }
   }, [visible, template, reducedMotion]);

@@ -1,5 +1,6 @@
+import { durations } from '@/theme/animations';
 /** Animation timing constants */
-export const ENTRANCE_DURATION = 300;
-export const PROGRESS_BAR_DURATION = 800;
-export const PULSE_DURATION = 2000;
-export const CELEBRATION_DURATION = 3000;
+export const ENTRANCE_DURATION = durations.moderate;
+export const PROGRESS_BAR_DURATION = durations.progress;
+export const PULSE_DURATION = durations.drift;
+export const CELEBRATION_DURATION = durations.celebration;

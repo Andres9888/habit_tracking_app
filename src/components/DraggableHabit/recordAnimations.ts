@@ -11,8 +11,8 @@
  */
 
 import type { SharedValue } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import {
-  runOnJS,
   withSequence,
   withSpring,
   withTiming,
@@ -53,7 +53,7 @@ export function hideNewRecordBadge(
     { duration: durations.standard },
     (finished) => {
       if (finished) {
-        runOnJS(setShowNewRecord)(false);
+        scheduleOnRN(setShowNewRecord, false);
       }
     }
   );

@@ -5,7 +5,7 @@ import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { shadows } from '@/theme/spacing';
-import { enterEasing } from '@/theme/animations';
+import { durations, enterEasing } from '@/theme/animations';
 import { AuthErrorProps } from './types';
 import { iconSizes } from '@/theme/iconSizes';
 
@@ -17,19 +17,29 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
       accessibilityLiveRegion='assertive'
       accessibilityRole='alert'
       className='mb-4 flex-row items-start gap-3 rounded-2xl border p-4'
-      entering={FadeInDown.duration(280).easing(enterEasing)}
-      exiting={FadeOut.duration(150)}
+      entering={FadeInDown.duration(durations.enter).easing(enterEasing)}
+      exiting={FadeOut.duration(durations.quick)}
       style={{
         backgroundColor: colors.status.errorLight,
         borderColor: colors.status.errorLight,
         ...shadows.floatingActionButton,
       }}
     >
-      <View className='mt-0.5 h-8 w-8 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.errorLight }}>
-        <AlertCircle color={colors.status.error} size={iconSizes.medium} strokeWidth={2.5} />
+      <View
+        className='mt-0.5 h-8 w-8 items-center justify-center rounded-full'
+        style={{ backgroundColor: colors.status.errorLight }}
+      >
+        <AlertCircle
+          color={colors.status.error}
+          size={iconSizes.medium}
+          strokeWidth={2.5}
+        />
       </View>
       <View className='flex-1'>
-        <Text className='text-base font-medium leading-[22px]' style={{ color: colors.status.errorText }}>
+        <Text
+          className='text-base font-medium leading-[22px]'
+          style={{ color: colors.status.errorText }}
+        >
           {message}
         </Text>
       </View>
@@ -41,7 +51,11 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
         style={{ backgroundColor: 'transparent' }}
         onPress={onDismiss}
       >
-        <X color={colors.status.error} size={iconSizes.medium} strokeWidth={2} />
+        <X
+          color={colors.status.error}
+          size={iconSizes.medium}
+          strokeWidth={2}
+        />
       </AnimatedPressable>
     </Animated.View>
   );

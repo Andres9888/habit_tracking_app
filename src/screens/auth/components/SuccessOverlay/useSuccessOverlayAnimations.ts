@@ -20,7 +20,7 @@ export function useSuccessOverlayAnimations(
   const ringOpacity = useSharedValue(0);
   const textOpacity = useSharedValue(0);
   const textTranslateY = useSharedValue(20);
-  
+
   // Use ref for callback to avoid triggering useEffect re-runs
   const onAnimationCompleteRef = useRef(onAnimationComplete);
   onAnimationCompleteRef.current = onAnimationComplete;
@@ -30,14 +30,14 @@ export function useSuccessOverlayAnimations(
       overlayOpacity.value = withTiming(1, { duration: durations.moderate });
 
       ringScale.value = withDelay(
-        100,
+        durations.instant,
         withSequence(
           withSpring(1.2, springs.celebration),
           withTiming(1.5, { duration: durations.emphasis })
         )
       );
       ringOpacity.value = withDelay(
-        100,
+        durations.instant,
         withSequence(
           withTiming(0.5, { duration: durations.standard }),
           withTiming(0, { duration: durations.emphasis })
@@ -45,14 +45,20 @@ export function useSuccessOverlayAnimations(
       );
 
       checkmarkScale.value = withDelay(
-        200,
+        durations.standard,
         withSpring(1, springs.celebration)
       );
-      checkmarkOpacity.value = withDelay(200, withTiming(1, { duration: durations.standard }));
+      checkmarkOpacity.value = withDelay(
+        durations.standard,
+        withTiming(1, { duration: durations.standard })
+      );
 
-      textOpacity.value = withDelay(400, withTiming(1, { duration: durations.moderate }));
+      textOpacity.value = withDelay(
+        durations.emphasis,
+        withTiming(1, { duration: durations.moderate })
+      );
       textTranslateY.value = withDelay(
-        400,
+        durations.emphasis,
         withSpring(0, springs.gentle)
       );
 
@@ -71,7 +77,16 @@ export function useSuccessOverlayAnimations(
       textOpacity.value = 0;
       textTranslateY.value = 20;
     }
-  }, [visible, overlayOpacity, checkmarkScale, checkmarkOpacity, ringScale, ringOpacity, textOpacity, textTranslateY]);
+  }, [
+    visible,
+    overlayOpacity,
+    checkmarkScale,
+    checkmarkOpacity,
+    ringScale,
+    ringOpacity,
+    textOpacity,
+    textTranslateY,
+  ]);
 
   const overlayStyle = useAnimatedStyle(() => ({
     opacity: overlayOpacity.value,

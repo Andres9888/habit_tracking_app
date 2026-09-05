@@ -3,7 +3,8 @@
  * Simple fade + translate up animation (baseline)
  */
 
-import { withTiming, runOnJS, Easing } from 'react-native-reanimated';
+import { withTiming, Easing } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import type { EntranceAnimationValues } from '../types';
 import { TIMING, ACCENT_TARGET_WIDTH } from '../constants';
 
@@ -40,7 +41,7 @@ export function runFadeUp(
     if (finished) {
       values.isAnimating.value = false;
       if (onAnimationComplete) {
-        runOnJS(onAnimationComplete)();
+        scheduleOnRN(onAnimationComplete);
       }
     }
   });

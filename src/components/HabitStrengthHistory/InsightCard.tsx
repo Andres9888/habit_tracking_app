@@ -7,8 +7,9 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import Animated, { FadeIn, useReducedMotion } from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { durations } from '@/theme/animations';
 
-const FADE_IN_DURATION = 400;
+const FADE_IN_DURATION = durations.emphasis;
 
 export interface InsightCardProps {
   /** Icon component to display */
@@ -58,7 +59,11 @@ export function InsightCard({
         >
           {value}
         </Text>
-        <Text className='text-xs' numberOfLines={1} style={{ color: themeColors.text.secondary }}>
+        <Text
+          className='text-xs'
+          numberOfLines={1}
+          style={{ color: themeColors.text.secondary }}
+        >
           {label}
         </Text>
       </View>

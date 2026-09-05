@@ -7,7 +7,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import type { Habit } from '../../../features/habits/types';
-import { useDetailPressAnimation } from '../../../hooks/useDetailPressAnimation';
+import { usePressAnimation } from '../../../hooks/usePressAnimation';
 import { colors as palette } from '../../../theme/colors';
 import { durations, enterEasing } from '../../../theme/animations';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
@@ -29,7 +29,7 @@ interface GoalTabContentProps {
 export function GoalTabContent({ habit }: GoalTabContentProps) {
   const { colors, isDark } = useThemeColors();
   const [adjustOpen, setAdjustOpen] = useState(false);
-  const { animatedStyle, pressHandlers } = useDetailPressAnimation();
+  const { animatedStyle, pressHandlers } = usePressAnimation();
   const goalDuration = habit.goalDuration ?? 0;
   const hasGoal = goalDuration > 0;
   const currentStreak = habit.currentStreak ?? 0;

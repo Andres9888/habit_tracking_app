@@ -8,6 +8,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius } from '@/theme/spacing';
 import { typography, fontFamilies } from '@/theme/typography';
+import { durations } from '@/theme/animations';
 
 interface EmptyStateProps {
   height: number;
@@ -20,7 +21,7 @@ export function NoDataState({ height }: EmptyStateProps) {
     <Animated.View
       accessible
       accessibilityLabel='Strength timeline chart - No data available yet'
-      entering={FadeIn.duration(300)}
+      entering={FadeIn.duration(durations.moderate)}
       style={{
         alignItems: 'center',
         backgroundColor: colors.gray[50],
@@ -31,7 +32,13 @@ export function NoDataState({ height }: EmptyStateProps) {
       }}
     >
       <Text style={{ fontSize: 28, marginBottom: 6 }}>⚡</Text>
-      <Text style={{ color: colors.text.tertiary, fontFamily: fontFamilies.primary.text, fontSize: 14 }}>
+      <Text
+        style={{
+          color: colors.text.tertiary,
+          fontFamily: fontFamilies.primary.text,
+          fontSize: 14,
+        }}
+      >
         Building your strength history...
       </Text>
     </Animated.View>
@@ -45,7 +52,7 @@ export function BuildingHistoryState({ height }: EmptyStateProps) {
     <Animated.View
       accessible
       accessibilityLabel='Strength timeline chart - Building history'
-      entering={FadeIn.duration(400)}
+      entering={FadeIn.duration(durations.emphasis)}
       style={{
         alignItems: 'center',
         backgroundColor: colors.gray[50],

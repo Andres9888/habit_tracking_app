@@ -96,7 +96,7 @@ function AnalyticsScreenContent() {
       style={[styles.container, { backgroundColor: themeColors.background }]}
     >
       <Animated.View
-        entering={FadeInDown.delay(280)
+        entering={FadeInDown.delay(durations.enter)
           .duration(durations.enter)
           .easing(enterEasing)}
       >
@@ -121,7 +121,7 @@ function AnalyticsScreenContent() {
 
       {hasNoHabits ? (
         <Animated.View
-          entering={FadeInDown.delay(340)
+          entering={FadeInDown.delay(durations.enter + durations.stagger)
             .duration(durations.enter)
             .easing(enterEasing)}
         >
@@ -130,7 +130,7 @@ function AnalyticsScreenContent() {
       ) : (
         <>
           <Animated.View
-            entering={FadeInDown.delay(340)
+            entering={FadeInDown.delay(durations.enter + durations.stagger)
               .duration(durations.enter)
               .easing(enterEasing)}
           >
@@ -142,7 +142,7 @@ function AnalyticsScreenContent() {
           </Animated.View>
 
           <Animated.View
-            entering={FadeInDown.delay(400)
+            entering={FadeInDown.delay(durations.emphasis)
               .duration(durations.enter)
               .easing(enterEasing)}
           >
@@ -155,7 +155,7 @@ function AnalyticsScreenContent() {
           </Animated.View>
 
           <Animated.View
-            entering={FadeInDown.delay(460)
+            entering={FadeInDown.delay(durations.emphasis + durations.stagger)
               .duration(durations.enter)
               .easing(enterEasing)}
           >
@@ -167,7 +167,9 @@ function AnalyticsScreenContent() {
           </Animated.View>
 
           <Animated.View
-            entering={FadeInDown.delay(520)
+            entering={FadeInDown.delay(
+              durations.emphasis + 2 * durations.stagger
+            )
               .duration(durations.enter)
               .easing(enterEasing)}
           >

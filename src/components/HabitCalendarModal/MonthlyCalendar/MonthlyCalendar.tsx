@@ -6,7 +6,7 @@
 
 import { View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { runOnJS } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import {
   format,
   startOfMonth,
@@ -70,8 +70,8 @@ export function MonthlyCalendar({
     .activeOffsetX([-15, 15])
     .failOffsetY([-20, 20])
     .onEnd((event) => {
-      if (event.translationX < -SWIPE_THRESHOLD) runOnJS(goToNextMonth)();
-      else if (event.translationX > SWIPE_THRESHOLD) runOnJS(goToPreviousMonth)();
+      if (event.translationX < -SWIPE_THRESHOLD) scheduleOnRN(goToNextMonth);
+      else if (event.translationX > SWIPE_THRESHOLD) scheduleOnRN(goToPreviousMonth);
     });
 
   return (

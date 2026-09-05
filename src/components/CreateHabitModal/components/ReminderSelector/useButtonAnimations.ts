@@ -11,12 +11,12 @@ import {
   withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 import { CARD_PRESS_SCALE } from '../../../../utils/animations/cardPressAnimation';
 import { Springs } from '../../../../constants/motion';
 
 const SLIDE_UP_DISTANCE = -2;
-const SLIDE_TIMING_MS = 100;
+const SLIDE_TIMING_MS = durations.instant;
 const SLIDE_BOUNCE_SPRING = springs.celebration;
 
 export function useButtonAnimations(reduceMotion: boolean) {
@@ -38,7 +38,7 @@ export function useButtonAnimations(reduceMotion: boolean) {
     // Slide up then bounce back
     slide.value = withSequence(
       withTiming(SLIDE_UP_DISTANCE, { duration: SLIDE_TIMING_MS }),
-      withSpring(0, SLIDE_BOUNCE_SPRING),
+      withSpring(0, SLIDE_BOUNCE_SPRING)
     );
 
     // Scale back to normal simultaneously

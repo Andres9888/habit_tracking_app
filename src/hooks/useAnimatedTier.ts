@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { durations } from '@/theme/animations';
 import {
   Easing,
   type SharedValue,
@@ -20,7 +21,7 @@ export interface AnimatedTier {
   to: MaterialTier;
 }
 
-const TRANSITION_DURATION = 400;
+const TRANSITION_DURATION = durations.emphasis;
 
 /**
  * Drive a 0→1 progress value when `strengthPercent` crosses a tier threshold.

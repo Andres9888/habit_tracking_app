@@ -7,7 +7,7 @@
 import { memo, useCallback, useState } from 'react';
 import { AccessibilityInfo, Keyboard, Text, View } from 'react-native';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
-import { useReduceMotion } from '../../../../hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import STRINGS from '../../../../constants/strings';
 import { BrowseMoreLink } from './BrowseMoreLink';
@@ -27,7 +27,7 @@ function EmojiPickerComponent({
   onBrowse,
 }: EmojiPickerProps) {
   const { triggerSelection } = useHapticFeedback();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const { colors: themeColors } = useThemeColors();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { suggestedEmojis, debouncedHabitName } = useSuggestedEmojis(

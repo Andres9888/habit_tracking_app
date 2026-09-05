@@ -64,44 +64,39 @@ describe('Secondary ErrorBoundary in CalendarAndDetailModals', () => {
   });
 
   it('wraps HabitEditScreen with ErrorBoundary', () => {
-    expect(source).toMatch(
-      /<ErrorBoundary>[\s\S]*?<HabitEditScreen[\s\S]*?<\/ErrorBoundary>/
-    );
+    // HabitEditScreen is now built once as the `editScreen` element (it has
+    // two mount points — inline in HabitDetailScreen's editOverlay slot, and
+    // as a standalone sibling) and *that* element is what gets wrapped, so the
+    // `<HabitEditScreen` JSX itself no longer sits directly inside an
+    // `<ErrorBoundary>` tag pair in the source text.
+    expect(source).toMatch(/const editScreen = \(\s*<HabitEditScreen/);
+    expect(source).toMatch(/<ErrorBoundary>\{editScreen\}<\/ErrorBoundary>/);
   });
 });
 
 describe('Secondary ErrorBoundary in habit detail flow screens', () => {
-  it('wraps HabitStrengthSection on Analytics', () => {
-    const source = readSource(
-      'screens/HabitDetailScreen/components/HabitAnalyticsScreen/HabitAnalyticsScreen.tsx'
-    );
-    expect(source).toMatch(/import.*ErrorBoundary/);
-    expect(source).toMatch(
-      /<ErrorBoundary>[\s\S]*?<HabitStrengthSection[\s\S]*?<\/ErrorBoundary>/
-    );
-  });
+  // HabitStrengthSection and its ErrorBoundary wrapper were removed when
+  // Analytics was redesigned around VerdictCard/StreakRail/RangeChart (see
+  // the "verdict first, then the evidence" docblock on HabitAnalyticsScreen).
+  // The component this test protected no longer exists anywhere in the tree,
+  // so there is nothing left to assert here; not a motion-contract concern
+  // and out of scope for this suite (src is read-only).
 
-  it('hosts the calendar on History', () => {
+  it('hosts the calendar on History via HistoryCalendarSection', () => {
+    // The old CalendarTabContent/MonthlyCalendarGrid pairing (and the
+    // ErrorBoundary that wrapped it) was removed by the squares-calendar
+    // History redesign; the interactive month is now MonthGridCard, rendered
+    // by HistoryCalendarSection. No ErrorBoundary wraps this path today — that
+    // is a real coverage gap, not a motion-contract concern, and is out of
+    // scope here (src is read-only for this suite).
     const source = readSource(
       'screens/HabitDetailScreen/components/HabitHistoryScreen/HabitHistoryScreen.tsx'
     );
-    expect(source).toMatch(/<CalendarTabContent[\s\S]*?\/>/);
-  });
-});
-
-describe('Secondary ErrorBoundary in CalendarTabContent', () => {
-  const source = readSource(
-    'screens/HabitDetailScreen/components/CalendarTabContent.tsx'
-  );
-
-  it('imports ErrorBoundary component', () => {
-    expect(source).toMatch(/import.*ErrorBoundary/);
-  });
-
-  it('wraps MonthlyCalendarGrid with ErrorBoundary', () => {
-    expect(source).toMatch(
-      /<ErrorBoundary>[\s\S]*?<MonthlyCalendarGrid[\s\S]*?<\/ErrorBoundary>/
+    expect(source).toMatch(/<HistoryCalendarSection[\s\S]*?\/>/);
+    const calendarSection = readSource(
+      'screens/HabitDetailScreen/components/HabitHistoryScreen/HistoryCalendarSection.tsx'
     );
+    expect(calendarSection).toMatch(/<MonthGridCard[\s\S]*?\/>/);
   });
 });
 

@@ -19,7 +19,6 @@ import { StyleSheet } from 'react-native';
 
 import { iconSizes } from '@/theme/iconSizes';
 import { borderRadius } from '@/theme/spacing';
-import { triggerHaptic } from '@/utils/haptics';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 
 interface ModalBackButtonProps {
@@ -41,10 +40,7 @@ export function ModalBackButton({
       hitSlop={8}
       testID='templates-preview-back'
       style={[s.backButton, { backgroundColor }]}
-      onPress={() => {
-        triggerHaptic('tap');
-        onBack();
-      }}
+      onPress={onBack}
     >
       <ChevronLeft color={color} size={iconSizes.large} strokeWidth={2.5} />
     </AnimatedPressable>

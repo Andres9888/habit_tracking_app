@@ -3,7 +3,7 @@
  */
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { useDetailPressAnimation } from '../../../hooks/useDetailPressAnimation';
+import { usePressAnimation } from '../../../hooks/usePressAnimation';
 import { useThemeColors, withAlpha } from '../../../theme';
 import { readableHabitAccent } from './goalColorUtils';
 import { buildChipContainerStyle } from './buildChipContainerStyle';
@@ -35,8 +35,7 @@ export function GoalPresetChip({
   variant = 'pill',
 }: GoalPresetChipProps) {
   const { colors } = useThemeColors();
-  const { animatedStyle: pressStyle, pressHandlers } =
-    useDetailPressAnimation();
+  const { animatedStyle: pressStyle, pressHandlers } = usePressAnimation();
   const isGrid = variant === 'grid';
   const fillDefault = isGrid ? colors.gray[50] : colors.card;
   const accent = readableHabitAccent(

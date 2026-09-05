@@ -1,11 +1,11 @@
 /** "˅ SEE THE DIFFERENCE" style caps disclosure toggle. */
-import { Pressable, Text } from 'react-native';
+import { Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { ChevronDown } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 import { useInlineExpand } from '../useInlineExpand';
-import { usePressed } from '../usePressed';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { usePanelTokens } from './panelTokens';
 
 interface Props {
@@ -16,14 +16,12 @@ interface Props {
 
 export function DisclosureLink({ label, open, onToggle }: Props) {
   const t = usePanelTokens();
-  const { pressed, pressProps } = usePressed();
   const { chevronAnimatedStyle } = useInlineExpand(open);
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityLabel={label}
       accessibilityRole='button'
       accessibilityState={{ expanded: open }}
-      {...pressProps}
       style={{
         marginTop: 8,
         alignSelf: 'flex-start',
@@ -33,7 +31,6 @@ export function DisclosureLink({ label, open, onToggle }: Props) {
         minHeight: 36,
         paddingHorizontal: 4,
         borderRadius: 10,
-        opacity: pressed ? 0.7 : 1,
       }}
       onPress={onToggle}
     >
@@ -56,6 +53,6 @@ export function DisclosureLink({ label, open, onToggle }: Props) {
       >
         {label}
       </Text>
-    </Pressable>
+    </AnimatedPressable>
   );
 }

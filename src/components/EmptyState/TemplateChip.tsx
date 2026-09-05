@@ -4,22 +4,13 @@
  */
 
 import React from 'react';
-import { Text, Pressable } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
+import { Text } from 'react-native';
 
-import { springs } from '@/theme/animations';
+import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { QuickStartTemplate } from './types';
 import { styles } from './styles';
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-const SPRING_CONFIG = springs.standard;
 
 interface TemplateChipProps {
   template: QuickStartTemplate;
@@ -29,19 +20,6 @@ interface TemplateChipProps {
 export function TemplateChip({ template, onPress }: TemplateChipProps) {
   const { colors } = useThemeColors();
   const { triggerLightImpact } = useHapticFeedback();
-  const scale = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  const handlePressIn = () => {
-    scale.value = withSpring(0.95, SPRING_CONFIG);
-  };
-
-  const handlePressOut = () => {
-    scale.value = withSpring(1, SPRING_CONFIG);
-  };
 
   const handlePress = () => {
     triggerLightImpact();
@@ -52,13 +30,16 @@ export function TemplateChip({ template, onPress }: TemplateChipProps) {
     <AnimatedPressable
       accessibilityLabel={`Create ${template.name} habit`}
       accessibilityRole='button'
-      style={[styles.templateChip, { backgroundColor: colors.gray[100] }, animatedStyle]}
+      // Chips sit shoulder-to-shoulder in a wrapped row; the default 10pt slop
+      // would overlap neighbours and steal their taps.
+      hitSlop={0}
+      style={[styles.templateChip, { backgroundColor: colors.gray[100] }]}
       onPress={handlePress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
     >
       <Text style={styles.templateEmoji}>{template.emoji}</Text>
-      <Text style={[styles.templateName, { color: colors.text.primary }]}>{template.name}</Text>
+      <Text style={[styles.templateName, { color: colors.text.primary }]}>
+        {template.name}
+      </Text>
     </AnimatedPressable>
   );
 }

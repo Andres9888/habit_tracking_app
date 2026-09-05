@@ -9,14 +9,15 @@
 
 import React, { useEffect, memo } from 'react';
 import { StyleSheet } from 'react-native';
+import { durations } from '@/theme/animations';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
   withDelay,
-  runOnJS,
   Easing,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 interface SuccessShimmerProps {
   /** Whether to show the shimmer */
@@ -41,18 +42,22 @@ function SuccessShimmerComponent({ active, onComplete }: SuccessShimmerProps) {
       opacity.value = 0;
 
       // Fade in quickly, then sweep across
-      opacity.value = withTiming(0.35, { duration: 80 });
+      opacity.value = withTiming(0.35, { duration: durations.tick });
       translateX.value = withDelay(
-        60,
-        withTiming(400, { duration: 400, easing: Easing.out(Easing.cubic) }, (finished) => {
-          'worklet';
-          if (finished) {
-            opacity.value = withTiming(0, { duration: 120 });
-            if (onComplete) {
-              runOnJS(onComplete)();
+        durations.stagger,
+        withTiming(
+          400,
+          { duration: durations.emphasis, easing: Easing.out(Easing.cubic) },
+          (finished) => {
+            'worklet';
+            if (finished) {
+              opacity.value = withTiming(0, { duration: durations.instant });
+              if (onComplete) {
+                scheduleOnRN(onComplete);
+              }
             }
           }
-        })
+        )
       );
     }
   }, [active, translateX, opacity, onComplete]);
@@ -66,7 +71,7 @@ function SuccessShimmerComponent({ active, onComplete }: SuccessShimmerProps) {
 
   return (
     <Animated.View
-      pointerEvents="none"
+      pointerEvents='none'
       style={[styles.shimmer, animatedStyle]}
     />
   );

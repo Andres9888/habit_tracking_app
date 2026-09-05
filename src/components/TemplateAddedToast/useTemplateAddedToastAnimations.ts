@@ -4,10 +4,9 @@
  */
 
 import { useEffect, useCallback, useMemo, useRef } from 'react';
-import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import { useAnimatedStyle, useReducedMotion, useSharedValue } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { ENTER_OFFSET_Y, ENTER_SCALE, EXIT_CALLBACK_DELAY } from './constants';
 import { runToastExit } from './toastMotion';
 import { useToastPanGesture } from './useToastPanGesture';
@@ -36,7 +35,7 @@ export function useTemplateAddedToastAnimations({
     [iconOpacity, iconScale, opacity, scale, translateY]
   );
   const haptic = useHapticFeedback();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const onDismissRef = useRef(onDismiss);
   onDismissRef.current = onDismiss;
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);

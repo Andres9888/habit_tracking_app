@@ -4,9 +4,8 @@
 
 import { useCallback, type ReactElement } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, useReducedMotion } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { durations, enterEasing } from '../../../theme/animations';
 import { spacing } from '../../../theme/spacing';
 import { TemplateReadRow } from '../components/ExploreAllSection/TemplateReadRow';
@@ -24,7 +23,7 @@ interface CatalogFilteredListProps {
 }
 
 export function CatalogFilteredList(p: CatalogFilteredListProps) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
 
   // useCallback: as an inline arrow this changed identity every render, so
   // FlatList treated every cell as changed and re-rendered the visible window.

@@ -1,3 +1,4 @@
+import { durations } from '@/theme/animations';
 /**
  * Constants for StrengthTimelineChart
  */
@@ -11,9 +12,9 @@ export const PADDING_BOTTOM = 24;
 export const GRID_LINE_COUNT = 3; // 0%, 50%, 100% lines
 
 // Animation constants
-export const PATH_ANIMATION_DURATION = 600;
-export const PATH_DRAW_DELAY = 200;
-export const PULSE_DURATION = 1500;
+export const PATH_ANIMATION_DURATION = durations.complex;
+export const PATH_DRAW_DELAY = durations.standard;
+export const PULSE_DURATION = durations.breathing;
 export const DOT_RADIUS = 5;
 export const ESTIMATED_PATH_LENGTH = 1500; // Approximate max path length for animation
 

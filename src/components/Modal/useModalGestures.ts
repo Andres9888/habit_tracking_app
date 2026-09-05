@@ -22,7 +22,7 @@ import {
 } from './Modal.constants';
 
 const SHEET_EXIT = { duration: durations.sheet, easing: sheetEasing };
-const FULL_SCREEN_EXIT = { duration: 350, easing: exitEasing };
+const FULL_SCREEN_EXIT = { duration: durations.sheet, easing: exitEasing };
 
 interface UseModalGesturesParams {
   variant: ModalVariant;

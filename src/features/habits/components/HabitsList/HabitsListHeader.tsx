@@ -9,7 +9,7 @@
  */
 
 import React, { memo } from 'react';
-import { Animated, View } from 'react-native';
+import { View } from 'react-native';
 import ReAnimated, {
   interpolate,
   useAnimatedStyle,
@@ -46,6 +46,11 @@ function HabitsListHeaderComponent(
     ),
   }));
 
+  const calendarWrapperStyle = useAnimatedStyle(() => ({
+    opacity: props.calendarOpacity.value,
+    transform: [{ translateY: props.calendarTranslateY.value }],
+  }));
+
   const { isOffline, shouldShowTimeline } = useHabitsListHeaderComputed({
     justCreatedHabitId: props.justCreatedHabitId,
     totalHabits: props.totalHabits,
@@ -72,12 +77,7 @@ function HabitsListHeaderComponent(
         />
       </View>
       {shouldShowTimeline ? (
-        <Animated.View
-          style={{
-            opacity: props.calendarOpacity,
-            transform: [{ translateY: props.calendarTranslateY }],
-          }}
-        >
+        <ReAnimated.View style={calendarWrapperStyle}>
           <CalendarTimeline
             compact={props.compactView}
             disableFutureDayPress
@@ -97,7 +97,7 @@ function HabitsListHeaderComponent(
             onPreviousWeek={props.onPreviousWeek}
             onUpgrade={props.onUpgradePress}
           />
-        </Animated.View>
+        </ReAnimated.View>
       ) : null}
       <DayCompleteBeat
         isAllDone={isAllDone}

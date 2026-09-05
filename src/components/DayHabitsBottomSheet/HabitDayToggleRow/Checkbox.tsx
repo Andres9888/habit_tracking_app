@@ -1,4 +1,5 @@
-import { Animated, View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
+import Animated, { type SharedValue, useAnimatedStyle } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { colors } from '../../../theme/colors';
@@ -7,7 +8,7 @@ import { useThemeColors } from '@/theme/ThemeContext';
 interface CheckboxProps {
   isCompleted: boolean;
   isLoading: boolean;
-  checkScaleAnim: Animated.Value;
+  checkScaleAnim: SharedValue<number>;
 }
 
 /**
@@ -19,6 +20,11 @@ export function Checkbox({
   checkScaleAnim,
 }: CheckboxProps) {
   const { colors: themeColors, isDark } = useThemeColors();
+
+  const checkStyle = useAnimatedStyle(() => ({
+    opacity: checkScaleAnim.value,
+    transform: [{ scale: checkScaleAnim.value }],
+  }));
 
   if (isLoading) {
     return (
@@ -53,12 +59,7 @@ export function Checkbox({
             },
       ]}
     >
-      <Animated.View
-        style={{
-          opacity: checkScaleAnim,
-          transform: [{ scale: checkScaleAnim }],
-        }}
-      >
+      <Animated.View style={checkStyle}>
         <Check color={colors.text.inverse} size={iconSizes.small} strokeWidth={3} />
       </Animated.View>
     </View>

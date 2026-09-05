@@ -7,15 +7,14 @@
 
 import { memo } from 'react';
 import { Text, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, useReducedMotion } from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { durations, enterEasing } from '@/theme/animations';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { PREMIUM_BENEFITS } from './constants';
 
 function PremiumBenefitsRowComponent() {
   const { colors } = useThemeColors();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
 
   return (
     <View className='gap-4 rounded-3xl border bg-white/90 p-5 shadow-[0px_16px_44px_rgba(120,90,50,0.06)]' style={{ borderColor: colors.status.warningLight }}>

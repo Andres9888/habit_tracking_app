@@ -12,8 +12,8 @@ import {
   useSharedValue,
   withSequence,
   withSpring,
-  runOnJS,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import { CARD_PRESS_SCALE } from '../../../../utils/animations/cardPressAnimation';
 import { springs } from '../../../../theme/animations';
 import { HapticPatterns } from '../../../../utils/haptics';
@@ -72,7 +72,7 @@ export function useBarAnimations() {
       'worklet';
       scale.value = withSpring(FAB_SCALE, SPRING);
       lift.value = withSpring(FAB_LIFT, SPRING);
-      runOnJS(fireTapHaptic)();
+      scheduleOnRN(fireTapHaptic);
     },
     pressOut: () => {
       'worklet';
@@ -89,7 +89,7 @@ export function useBarAnimations() {
       'worklet';
       addScale.value = withSpring(FAB_SCALE, SPRING);
       addLift.value = withSpring(FAB_LIFT, SPRING);
-      runOnJS(fireToggleHaptic)();
+      scheduleOnRN(fireToggleHaptic);
     },
     onAddPressOut: () => {
       'worklet';

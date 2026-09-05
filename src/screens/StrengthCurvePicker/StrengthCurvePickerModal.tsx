@@ -1,10 +1,9 @@
 /** StrengthCurvePickerModal — full-screen picker (V5 Giant Bar Hero). */
 import { Text, useWindowDimensions, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, useReducedMotion } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Modal from '@/components/Modal';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { MechanicStatRow } from './MechanicStatRow';
 import { STRENGTH_CURVE_PICKER_COPY } from './StrengthCurvePicker.copy';
@@ -12,10 +11,11 @@ import { StrengthBarHero } from './StrengthBarHero';
 import { StrengthCurvePickerHeader } from './StrengthCurvePickerHeader';
 import { TierDetailCard } from './TierDetailCard';
 import { TierPickerRow } from './TierPickerRow';
+import { durations } from '@/theme/animations';
 
 const SCALE_BASE = 600;
 const SCALE_MAX = 850;
-const SCALE_RANGE = 0.30;
+const SCALE_RANGE = 0.3;
 
 function computeScale(usableHeight: number): number {
   const t = Math.max(0, Math.min(1, (usableHeight - SCALE_BASE) / (SCALE_MAX - SCALE_BASE)));
@@ -32,7 +32,7 @@ interface Props {
 export function StrengthCurvePickerModal({ visible, selected, onSelect, onClose }: Props) {
   const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const { height: windowHeight } = useWindowDimensions();
   const scale = computeScale(windowHeight - insets.top - insets.bottom - 56);
 
@@ -42,7 +42,7 @@ export function StrengthCurvePickerModal({ visible, selected, onSelect, onClose 
         <StrengthCurvePickerHeader topInset={insets.top} onClose={onClose} />
         <Animated.View
           className='items-center'
-          entering={reduceMotion ? undefined : FadeInDown.duration(280)}
+          entering={reduceMotion ? undefined : FadeInDown.duration(durations.enter)}
           style={{ paddingHorizontal: 20, paddingTop: 12 * scale, paddingBottom: 4 * scale }}
         >
           <Text
@@ -62,7 +62,11 @@ export function StrengthCurvePickerModal({ visible, selected, onSelect, onClose 
         <MechanicStatRow mode={selected} scale={scale} />
         <Animated.View
           className='flex-row items-center justify-center gap-2 px-6'
-          entering={reduceMotion ? undefined : FadeInDown.delay(180).duration(260)}
+          entering={
+            reduceMotion
+              ? undefined
+              : FadeInDown.delay(durations.reveal).duration(durations.enter)
+          }
           style={{ marginTop: 14 * scale, marginBottom: 8 * scale }}
         >
           <View className='h-px flex-1' style={{ backgroundColor: colors.border }} />

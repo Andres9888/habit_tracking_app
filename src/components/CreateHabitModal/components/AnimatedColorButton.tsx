@@ -4,7 +4,8 @@
  */
 
 import { useCallback } from 'react';
-import { Animated, Pressable } from 'react-native';
+import { Pressable } from 'react-native';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { useColorButtonAnimations } from './useColorButtonAnimations';
 
@@ -26,6 +27,9 @@ export function AnimatedColorButton({
   const { handlePressIn, handlePressOut, scale } =
     useColorButtonAnimations(isSelected);
   const { triggerSelection } = useHapticFeedback();
+  const scaleStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
 
   const handlePress = useCallback(() => {
     triggerSelection();
@@ -33,7 +37,7 @@ export function AnimatedColorButton({
   }, [onPress, triggerSelection]);
 
   return (
-    <Animated.View style={{ transform: [{ scale }] }}>
+    <Animated.View style={scaleStyle}>
       <Pressable
         accessibilityLabel={accessibilityLabel}
         accessibilityRole='button'

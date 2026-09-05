@@ -10,6 +10,7 @@
  */
 
 import type { SharedValue } from 'react-native-reanimated';
+import { durations } from '@/theme/animations';
 import {
   Easing,
   withRepeat,
@@ -27,8 +28,11 @@ export function runHighlightGlow(highlightGlow: SharedValue<number>) {
   // Instant on: the ring must be there the frame the card is revealed.
   highlightGlow.value = 1;
   highlightGlow.value = withSequence(
-    withTiming(1, { duration: 1400 }),
-    withTiming(0, { duration: 500, easing: Easing.in(Easing.ease) })
+    withTiming(1, { duration: durations.breathing }),
+    withTiming(0, {
+      duration: durations.complex,
+      easing: Easing.in(Easing.ease),
+    })
   );
 }
 
@@ -36,8 +40,14 @@ export function runHighlightGlow(highlightGlow: SharedValue<number>) {
 export function runIconPulseLoop(iconPulse: SharedValue<number>) {
   iconPulse.value = withRepeat(
     withSequence(
-      withTiming(1.05, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
-      withTiming(1, { duration: 1000, easing: Easing.inOut(Easing.ease) })
+      withTiming(1.05, {
+        duration: durations.loop,
+        easing: Easing.inOut(Easing.ease),
+      }),
+      withTiming(1, {
+        duration: durations.loop,
+        easing: Easing.inOut(Easing.ease),
+      })
     ),
     -1
   );

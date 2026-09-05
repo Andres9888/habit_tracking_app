@@ -1,6 +1,7 @@
 import { Plus } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import { Animated, Pressable } from 'react-native';
+import { Pressable } from 'react-native';
+import Animated, { useAnimatedStyle, interpolate } from 'react-native-reanimated';
 import { colors } from '../../../../theme/colors';
 import { shadows } from '../../../../theme/spacing';
 import { useFocusRing } from '../../../../utils/accessibility';
@@ -33,17 +34,18 @@ export function FloatingActionButton({
     rippleScale,
   });
 
-  const animatedStyle = {
+  const animatedStyle = useAnimatedStyle(() => ({
     transform: [
-      { scale: pressScale },
-      {
-        translateY: bounce.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -6],
-        }),
-      },
+      { scale: pressScale.value },
+      { translateY: interpolate(bounce.value, [0, 1], [0, -6]) },
     ],
-  };
+  }));
+
+  const rippleStyle = useAnimatedStyle(() => ({
+    backgroundColor: RIPPLE_BG,
+    opacity: rippleOpacity.value,
+    transform: [{ scale: rippleScale.value }],
+  }));
 
   return (
     <AnimatedPressable
@@ -59,11 +61,7 @@ export function FloatingActionButton({
       <Animated.View
         className='absolute h-14 w-14 rounded-full'
         pointerEvents='none'
-        style={{
-          backgroundColor: RIPPLE_BG,
-          opacity: rippleOpacity,
-          transform: [{ scale: rippleScale }],
-        }}
+        style={rippleStyle}
       />
       <Plus color={themeColors.text.inverse} size={iconSizes.large} strokeWidth={2.5} />
     </AnimatedPressable>

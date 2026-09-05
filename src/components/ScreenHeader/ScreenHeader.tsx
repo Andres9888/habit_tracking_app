@@ -15,10 +15,8 @@ import { durations, enterEasing } from '../../theme/animations';
 import type { ScreenHeaderProps } from './ScreenHeader.types';
 import { styles } from './ScreenHeader.styles';
 
-const ENTERING = FadeInDown.delay(0)
-  .duration(durations.enter)
-  .easing(enterEasing);
-const SUBTITLE_ENTERING = FadeInDown.delay(50)
+const ENTERING = FadeInDown.duration(durations.enter).easing(enterEasing);
+const SUBTITLE_ENTERING = FadeInDown.delay(durations.micro)
   .duration(durations.enter)
   .easing(enterEasing);
 const ICON_SIZE = 24;
@@ -38,13 +36,18 @@ export function ScreenHeader({
 }: ScreenHeaderProps) {
   const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
+  // Explicit `enableHaptics`: the back/close control has no commit-side haptic,
+  // and the `hapticStyle` here was always deliberate.
   const { animatedStyle, pressHandlers } = usePressAnimation({
-    pressScale: 0.92,
+    enableHaptics: true,
     hapticStyle: 'light',
+    pressScale: 0.92,
   });
   const titleOpacity = useSharedValue(titleVisible ? 1 : 0);
   useEffect(() => {
-    titleOpacity.value = withTiming(titleVisible ? 1 : 0, { duration: 220 });
+    titleOpacity.value = withTiming(titleVisible ? 1 : 0, {
+      duration: durations.transition,
+    });
   }, [titleVisible, titleOpacity]);
   const titleAnimatedStyle = useAnimatedStyle(() => ({
     opacity: titleOpacity.value,

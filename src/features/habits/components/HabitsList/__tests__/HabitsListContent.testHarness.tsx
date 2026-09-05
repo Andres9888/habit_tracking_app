@@ -48,8 +48,8 @@ export function buildProps(
   const state = {
     closeDaySheet: jest.fn(),
     daySheetDate: null,
-    habitRowOpacity: { setValue: jest.fn() },
-    habitRowTranslateY: { setValue: jest.fn() },
+    habitRowOpacity: { value: 1 },
+    habitRowTranslateY: { value: 0 },
     initialEntranceDoneRef: { current: true },
     justCreatedHabitId: overrides.justCreatedHabitId ?? null,
   };

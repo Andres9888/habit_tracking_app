@@ -1,31 +1,40 @@
 import React from 'react';
-import { Animated, Pressable, View, Text } from 'react-native';
+import { Pressable, Text } from 'react-native';
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedStyle,
+  type SharedValue,
+} from 'react-native-reanimated';
 import { Trash2 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { colors } from '@/theme';
-import { useThemeColors } from '../../theme/ThemeContext';
-import { borderRadius } from '../../theme/spacing';
 import { typography, fontWeights, fontFamilies } from '@/theme/typography';
 
 interface DeleteActionProps {
-  dragX: Animated.AnimatedInterpolation<number>;
+  dragX: SharedValue<number>;
   onPress: () => void;
 }
 
 export function DeleteAction({ dragX, onPress }: DeleteActionProps) {
-  const { isDark } = useThemeColors();
-
-  const iconScale = dragX.interpolate({
-    extrapolate: 'clamp',
-    inputRange: [-160, -100, -60, 0],
-    outputRange: [1.1, 1, 0.85, 0.8],
-  });
-
-  const iconOpacity = dragX.interpolate({
-    extrapolate: 'clamp',
-    inputRange: [-160, -80, 0],
-    outputRange: [1, 0.85, 0.6],
-  });
+  const iconStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      dragX.value,
+      [-160, -80, 0],
+      [1, 0.85, 0.6],
+      Extrapolation.CLAMP
+    ),
+    transform: [
+      {
+        scale: interpolate(
+          dragX.value,
+          [-160, -100, -60, 0],
+          [1.1, 1, 0.85, 0.8],
+          Extrapolation.CLAMP
+        ),
+      },
+    ],
+  }));
 
   return (
     <Pressable
@@ -42,12 +51,13 @@ export function DeleteAction({ dragX, onPress }: DeleteActionProps) {
       }}
     >
       <Animated.View
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          opacity: iconOpacity,
-          transform: [{ scale: iconScale }],
-        }}
+        style={[
+          {
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          iconStyle,
+        ]}
       >
         <Trash2 color="white" size={iconSizes.large} strokeWidth={2} />
         <Text

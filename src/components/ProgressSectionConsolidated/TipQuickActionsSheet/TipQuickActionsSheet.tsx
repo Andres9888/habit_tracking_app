@@ -9,7 +9,7 @@ import { View, Text, Pressable } from 'react-native';
 import { X } from 'lucide-react-native';
 import { Modal } from '../../Modal';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import type { TipQuickActionsSheetProps, QuickAction } from './types';
 import { getQuickActionsForTipType } from './getQuickActionsForTipType';
 import { QuickActionItem } from './QuickActionItem';
@@ -28,7 +28,7 @@ export const TipQuickActionsSheet = React.memo(function TipQuickActionsSheet({
 }: TipQuickActionsSheetProps) {
   const styles = useStyles();
   const { colors } = useThemeColors();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const { triggerLightImpact } = useHapticFeedback();
 
   const quickActions = useMemo(

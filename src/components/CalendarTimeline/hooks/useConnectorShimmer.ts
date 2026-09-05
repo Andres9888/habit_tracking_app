@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { durations } from '@/theme/animations';
 import {
   Easing,
   useAnimatedStyle,
@@ -17,7 +18,7 @@ interface UseConnectorShimmerParams {
 
 const SHIMMER_WIDTH = 20;
 const TRAVEL_DISTANCE = 60;
-const STAGGER_MS = 200;
+const STAGGER_MS = durations.standard;
 
 /**
  * Drives a shimmer highlight that sweeps across a connector bar.

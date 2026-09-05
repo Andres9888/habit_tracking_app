@@ -17,7 +17,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { styles } from '../TodaysFocusCard.styles';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
 export interface ConfettiParticleProps {
   angle: number;
@@ -66,16 +66,16 @@ export const ConfettiParticle = React.memo(function ConfettiParticle({
         delay,
         withSequence(
           withSpring(1.3, springs.pop),
-          withTiming(0, { duration: 400, easing: Easing.out(Easing.ease) })
+          withTiming(0, { duration: durations.emphasis, easing: Easing.out(Easing.ease) })
         )
       );
       opacity.value = withDelay(
         delay,
         withSequence(
-          withTiming(1, { duration: 50 }),
+          withTiming(1, { duration: durations.micro }),
           withDelay(
-            250,
-            withTiming(0, { duration: 350, easing: Easing.out(Easing.ease) })
+            durations.transition,
+            withTiming(0, { duration: durations.sheet, easing: Easing.out(Easing.ease) })
           )
         )
       );

@@ -3,8 +3,8 @@
  */
 
 import { useCallback, useState, useEffect } from 'react';
-import { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { usePressAnimation } from '../../hooks/usePressAnimation';
 import { usePremium } from '../../hooks/usePremium';
 import { computeSavings } from './paywall.constants';
 import { usePaywallActions } from './usePaywallActions';
@@ -23,25 +23,16 @@ export function useRevenueCatPaywall(params: Params) {
 
   const annualPackage = packages?.find((p) => p.packageType === 'ANNUAL') ?? null;
   const [selectedPlan, setSelectedPlan] = useState<PlanType>('annual');
-  const buttonScale = useSharedValue(1);
+  const {
+    animatedStyle: buttonAnimatedStyle,
+    pressHandlers: { onPressIn: handlePressIn, onPressOut: handlePressOut },
+  } = usePressAnimation();
 
   useEffect(() => {
     if (!annualPackage && monthlyPackage) setSelectedPlan('monthly');
   }, [annualPackage, monthlyPackage]);
 
   const selectedPackage = selectedPlan === 'annual' ? annualPackage : monthlyPackage;
-
-  const buttonAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: buttonScale.value }],
-  }));
-
-  const handlePressIn = useCallback(() => {
-    buttonScale.value = withTiming(0.97, { duration: 100 });
-  }, [buttonScale]);
-
-  const handlePressOut = useCallback(() => {
-    buttonScale.value = withTiming(1, { duration: 100 });
-  }, [buttonScale]);
 
   const handleSelectPlan = useCallback(
     (plan: PlanType) => {

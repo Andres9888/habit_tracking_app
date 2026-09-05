@@ -15,9 +15,10 @@ import {
 } from 'react-native-reanimated';
 
 import type { DayVisualState } from '../WeeklySummaryStripTypes';
+import { durations } from '@/theme/animations';
 
 /** Animation timing constants */
-const PULSE_DURATION = 1500;
+const PULSE_DURATION = durations.breathing;
 
 interface UsePulseAnimationParams {
   visualState: DayVisualState;

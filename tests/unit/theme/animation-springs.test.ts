@@ -8,28 +8,26 @@ import { springs } from '@/theme/animations';
 import { Springs } from '@/constants/motion';
 
 describe('Canonical spring presets in @/theme/animations', () => {
-  it('has exactly 15 spring presets', () => {
+  it('has exactly 8 spring presets', () => {
     const keys = Object.keys(springs).sort();
     expect(keys).toEqual([
-      'bottomSheet',
-      'bouncy',
       'button',
       'celebration',
       'exit',
       'gentle',
       'gesture',
-      'micro',
       'pop',
-      'pulse',
-      'responsive',
-      'settle',
       'sheet',
-      'snappy',
       'standard',
     ]);
   });
 
-  it('button: damping 18, stiffness 150', () => {
+  it('button is a documented alias of standard (same object)', () => {
+    expect(springs.button).toBe(springs.standard);
+  });
+
+  it('standard/button: damping 18, stiffness 150', () => {
+    expect(springs.standard).toEqual({ damping: 18, stiffness: 150 });
     expect(springs.button).toEqual({ damping: 18, stiffness: 150 });
   });
 
@@ -41,36 +39,21 @@ describe('Canonical spring presets in @/theme/animations', () => {
     expect(springs.gentle).toEqual({ damping: 20, stiffness: 100 });
   });
 
-  it('snappy: damping 18, stiffness 150', () => {
-    expect(springs.snappy).toEqual({ damping: 18, stiffness: 150 });
-  });
-
-  it('bouncy: damping 10, stiffness 180', () => {
-    expect(springs.bouncy).toEqual({ damping: 10, stiffness: 180 });
-  });
-
-  it('pulse: damping 12, stiffness 250', () => {
-    expect(springs.pulse).toEqual({ damping: 12, stiffness: 250 });
-  });
-
-  it('micro: damping 18, stiffness 150', () => {
-    expect(springs.micro).toEqual({ damping: 18, stiffness: 150 });
-  });
-
   it('celebration: damping 12, stiffness 200', () => {
     expect(springs.celebration).toEqual({ damping: 12, stiffness: 200 });
   });
 
+  it('exit: damping 26, mass 1, stiffness 420 (stiffer than sheet)', () => {
+    expect(springs.exit).toEqual({ damping: 26, mass: 1, stiffness: 420 });
+    expect(springs.exit.stiffness).toBeGreaterThan(springs.sheet.stiffness);
+  });
+
+  it('gesture: damping 20, mass 1, stiffness 450', () => {
+    expect(springs.gesture).toEqual({ damping: 20, mass: 1, stiffness: 450 });
+  });
+
   it('pop: damping 8, stiffness 300', () => {
     expect(springs.pop).toEqual({ damping: 8, stiffness: 300 });
-  });
-
-  it('responsive: damping 15, stiffness 300', () => {
-    expect(springs.responsive).toEqual({ damping: 15, stiffness: 300 });
-  });
-
-  it('settle: damping 28, mass 1, stiffness 180', () => {
-    expect(springs.settle).toEqual({ damping: 28, mass: 1, stiffness: 180 });
   });
 });
 
@@ -92,7 +75,7 @@ describe('constants/motion Springs re-exports from theme', () => {
   });
 });
 
-describe('durations and easings still exported', () => {
+describe('durations and easing curves still exported', () => {
   it('durations includes standard timing values', () => {
     const { durations } = require('@/theme/animations');
     expect(durations.standard).toBe(200);
@@ -100,9 +83,15 @@ describe('durations and easings still exported', () => {
     expect(durations.instant).toBe(100);
   });
 
-  it('easings includes standard presets', () => {
-    const { easings } = require('@/theme/animations');
-    expect(easings.standard).toEqual({ duration: 200 });
-    expect(easings.quick).toEqual({ duration: 150 });
+  it('durations includes sheet/backdrop pacing tokens', () => {
+    const { durations } = require('@/theme/animations');
+    expect(durations.sheet).toBe(300);
+    expect(durations.backdrop).toBe(180);
+  });
+
+  it('exports sheetEasing and uiEaseOut curve functions', () => {
+    const { sheetEasing, uiEaseOut } = require('@/theme/animations');
+    expect(typeof sheetEasing).toBe('function');
+    expect(typeof uiEaseOut).toBe('function');
   });
 });

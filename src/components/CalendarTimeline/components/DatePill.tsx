@@ -16,8 +16,9 @@ import { getDatePillColors } from '../theme';
 import { CalendarGlyph } from './CalendarGlyph';
 import { PRESS } from './WeekNavRow.constants';
 import { s } from './WeekNavRow.styles';
+import { durations } from '@/theme/animations';
 
-const CHEVRON_TIMING = { duration: 200 };
+const CHEVRON_TIMING = { duration: durations.standard };
 
 /** Soft green glow while the mini-calendar is open. */
 const OPEN_SHADOW = {

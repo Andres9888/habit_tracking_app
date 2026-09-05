@@ -3,7 +3,7 @@ import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 
 import HabitsApp from '../../features/habits/HabitsApp';
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
-import { enterEasing } from '../../theme/animations';
+import { durations, enterEasing } from '../../theme/animations';
 import type { AuthScreenKey } from './resolveAuthDestination';
 import { BrandedLoadingScreen } from './BrandedLoadingScreen';
 
@@ -18,8 +18,8 @@ const RevenueCatPaywall = lazy(() =>
   }))
 );
 
-const ENTER = FadeInDown.duration(280).easing(enterEasing);
-const EXIT = FadeOut.duration(300);
+const ENTER = FadeInDown.duration(durations.enter).easing(enterEasing);
+const EXIT = FadeOut.duration(durations.moderate);
 
 function ScreenShell({
   children,

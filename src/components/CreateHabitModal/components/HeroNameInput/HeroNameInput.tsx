@@ -5,8 +5,9 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { Animated, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import type { TextInput } from 'react-native';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useHabitNamePlaceholder } from '../../hooks/useHabitNamePlaceholder';
 import { colors } from '@/theme/colors';
 import { useThemeColors } from '@/theme/ThemeContext';
@@ -16,6 +17,7 @@ import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import type { HeroNameInputProps } from './types';
 import { MAX_LENGTH } from './types';
 import { useHeroNameInputAnimations } from './useHeroNameInputAnimations';
+import { ValidationMessage } from './ValidationMessage';
 
 export const HeroNameInput = ({
   autoFocus,
@@ -33,6 +35,11 @@ export const HeroNameInput = ({
 
   const { labelOpacity, validation, validationOpacity, validationTranslateY } =
     useHeroNameInputAnimations(value);
+  const labelStyle = useAnimatedStyle(() => ({ opacity: labelOpacity.value }));
+  const validationStyle = useAnimatedStyle(() => ({
+    opacity: validationOpacity.value,
+    transform: [{ translateY: validationTranslateY.value }],
+  }));
 
   useEffect(() => {
     if (charCount === MAX_LENGTH && previousCount.current < MAX_LENGTH) {
@@ -41,25 +48,11 @@ export const HeroNameInput = ({
     previousCount.current = charCount;
   }, [charCount, triggerWarning]);
 
-  const getValidationColor = () => {
-    switch (validation?.type) {
-      case 'success': {
-        return themeColors.primary[600];
-      }
-      case 'warning': {
-        return '#D97706';
-      }
-      default: {
-        return themeColors.text.secondary;
-      }
-    }
-  };
-
   return (
     <View className='mb-4'>
       <Animated.Text
         className='mb-3 text-xl font-bold'
-        style={{ color: themeColors.text.primary, opacity: labelOpacity }}
+        style={[{ color: themeColors.text.primary }, labelStyle]}
       >
         What habit do you want to build?
       </Animated.Text>
@@ -100,20 +93,7 @@ export const HeroNameInput = ({
       </View>
 
       {validation ? (
-        <Animated.View
-          className='mt-2'
-          style={{
-            opacity: validationOpacity,
-            transform: [{ translateY: validationTranslateY }],
-          }}
-        >
-          <Text
-            className='text-sm font-medium'
-            style={{ color: getValidationColor() }}
-          >
-            {validation.message}
-          </Text>
-        </Animated.View>
+        <ValidationMessage style={validationStyle} validation={validation} />
       ) : null}
     </View>
   );

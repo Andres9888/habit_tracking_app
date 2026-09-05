@@ -11,8 +11,8 @@ interface AchievementsSectionProps {
   achievements: Achievement[];
 }
 
-const STAGGER_DELAY = 60;
-const BASE_DELAY = 660;
+const STAGGER_DELAY = durations.stagger;
+const BASE_DELAY = 11 * durations.stagger;
 
 export function AchievementsSection({
   achievements,
@@ -22,7 +22,9 @@ export function AchievementsSection({
   return (
     <View style={styles.section}>
       <Animated.Text
-        entering={FadeInDown.delay(BASE_DELAY).duration(durations.enter).easing(enterEasing)}
+        entering={FadeInDown.delay(BASE_DELAY)
+          .duration(durations.enter)
+          .easing(enterEasing)}
         style={[styles.sectionTitle, { color: colors.text.primary }]}
       >
         Recent Achievements

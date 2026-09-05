@@ -17,12 +17,13 @@ import {
 import { colors as themeTokens, overlays } from '@/theme/colors';
 import { focusStateGradients } from '@/theme/colors/focusStates';
 import type { FocusState, FocusStateConfig } from '../TodaysFocusCardTypes';
+import { durations } from '@/theme/animations';
 
 /** Animation timing constants */
-export const ENTRANCE_DURATION = 300;
-export const SHIMMER_DURATION = 2500;
-export const NUMBER_COUNT_DURATION = 800;
-export const CONFETTI_DURATION = 700;
+export const ENTRANCE_DURATION = durations.moderate;
+export const SHIMMER_DURATION = durations.drift;
+export const NUMBER_COUNT_DURATION = durations.progress;
+export const CONFETTI_DURATION = durations.complex;
 export const CONFETTI_PARTICLE_COUNT = 16;
 
 /**

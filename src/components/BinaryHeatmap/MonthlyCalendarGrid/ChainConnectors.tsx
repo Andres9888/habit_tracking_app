@@ -10,9 +10,8 @@
 
 import React, { memo, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut, useReducedMotion } from 'react-native-reanimated';
 import { durations, enterEasing, exitEasing } from '@/theme/animations';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { isLinkable } from './chainLinkHelpers';
 import type { DayData } from './types';
 
@@ -30,7 +29,7 @@ export const ChainConnectors = memo(function ChainConnectors({
   completedBg,
   rowWidth,
 }: ChainConnectorsProps) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const [animationsEnabled, setAnimationsEnabled] = useState(false);
 
   useEffect(() => {

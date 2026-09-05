@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { durations } from '@/theme/animations';
 import {
   Easing,
   useAnimatedStyle,
@@ -14,8 +15,8 @@ interface UseSwipeHintParams {
 }
 
 const NUDGE_PX = 6;
-const HALF_CYCLE_MS = 300;
-const INITIAL_DELAY_MS = 600;
+const HALF_CYCLE_MS = durations.moderate;
+const INITIAL_DELAY_MS = durations.complex;
 const EASING = Easing.inOut(Easing.ease);
 
 const nudge = (px: number) =>

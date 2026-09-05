@@ -3,7 +3,7 @@
  */
 
 import { useCallback, useEffect, useRef } from 'react';
-import { Animated } from 'react-native';
+import { useSharedValue, withSequence, withSpring, withTiming } from 'react-native-reanimated';
 import {
   durations,
   enterEasing,
@@ -12,44 +12,34 @@ import {
 } from '@/theme/animations';
 
 export function useColorButtonAnimations(isSelected: boolean) {
-  const scale = useRef(new Animated.Value(1)).current;
+  const scale = useSharedValue(1);
   const wasSelected = useRef(isSelected);
 
   useEffect(() => {
     if (isSelected && !wasSelected.current) {
-      Animated.sequence([
-        Animated.timing(scale, {
+      scale.value = withSequence(
+        withTiming(1.15, {
           duration: durations.instant,
           easing: enterEasing,
-          toValue: 1.15,
-          useNativeDriver: true,
         }),
-        Animated.spring(scale, {
-          ...springs.standard,
-          toValue: 1,
-          useNativeDriver: true,
-        }),
-      ]).start();
+        withSpring(1, springs.standard)
+      );
     }
     wasSelected.current = isSelected;
   }, [isSelected, scale]);
 
   const handlePressIn = useCallback(() => {
-    Animated.timing(scale, {
+    scale.value = withTiming(0.9, {
       duration: durations.instant,
       easing: exitEasing,
-      toValue: 0.9,
-      useNativeDriver: true,
-    }).start();
+    });
   }, [scale]);
 
   const handlePressOut = useCallback(() => {
-    Animated.timing(scale, {
+    scale.value = withTiming(1, {
       duration: durations.quick,
       easing: enterEasing,
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
+    });
   }, [scale]);
 
   return { handlePressIn, handlePressOut, scale };

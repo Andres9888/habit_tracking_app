@@ -9,31 +9,32 @@
 import React, { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  withSpring,
   Easing,
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { Springs } from '../../../constants/motion';
 
 import type { WeeklySummaryStripProps } from '../WeeklySummaryStripTypes';
 import { getTrendDirection } from './WeeklySummaryStripUtils';
 import { CardContent } from './CardContent';
 import { styles } from './WeeklySummaryStripStyles';
+import { durations } from '@/theme/animations';
 
 /** Animation timing constants */
-const ENTRANCE_DURATION = 300;
+const ENTRANCE_DURATION = durations.moderate;
 
 export const WeeklySummaryStrip = React.memo(function WeeklySummaryStrip({
   lastWeekCompleted,
   onTodayPress,
   weekData,
 }: WeeklySummaryStripProps) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const today = useMemo(() => new Date(), []);
 
   const currentWeekCompleted = useMemo(

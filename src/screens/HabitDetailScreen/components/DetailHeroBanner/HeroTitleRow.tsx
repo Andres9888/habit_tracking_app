@@ -3,9 +3,9 @@
  * stores. The plan line is the shortcut into Edit: the pencil is the only
  * affordance, so the row reads as text first and a control second.
  */
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { Pencil } from 'lucide-react-native';
-import { usePressed } from '../../../../components/AdvancedOptions/usePressed';
+import { AnimatedPressable } from '../../../../components/ui/AnimatedPressable';
 import type { Habit } from '../../../../features/habits/types';
 import { fontFamilies, fontWeights } from '../../../../theme/typography';
 import type { InsightPalette } from '../../insightPalette';
@@ -23,8 +23,6 @@ export function HeroTitleRow({
   palette,
   onEditPlan,
 }: HeroTitleRowProps) {
-  const { pressed, pressProps } = usePressed();
-
   return (
     <View style={{ alignItems: 'center', paddingHorizontal: 20 }}>
       <Text
@@ -41,7 +39,7 @@ export function HeroTitleRow({
       >
         {getHabitDisplayName(habit)}
       </Text>
-      <Pressable
+      <AnimatedPressable
         accessibilityHint='Opens Edit'
         accessibilityLabel='Edit plan'
         accessibilityRole='button'
@@ -51,12 +49,10 @@ export function HeroTitleRow({
           gap: 5,
           marginBottom: 2,
           marginTop: 6,
-          opacity: pressed ? 0.6 : 1,
           paddingHorizontal: 4,
           paddingVertical: 2,
         }}
         onPress={onEditPlan}
-        {...pressProps}
       >
         <Text
           numberOfLines={1}
@@ -70,7 +66,7 @@ export function HeroTitleRow({
           {planLabel(habit)}
         </Text>
         <Pencil color={palette.bandMuted} size={12} strokeWidth={2} />
-      </Pressable>
+      </AnimatedPressable>
     </View>
   );
 }

@@ -1,14 +1,14 @@
 /**
  * HabitsListHeader Types — props accepted by the memoised header component.
  *
- * Animated values are passed as `Animated.Value` refs so the header can
+ * Animated values are passed as Reanimated shared values so the header can
  * participate in the parent's staggered entrance sequence without owning
  * the animation lifecycle.
  *
  * Action callbacks (settings, templates, sort, add) have moved to BottomActionBar.
  */
 
-import type { Animated } from 'react-native';
+import type { SharedValue } from 'react-native-reanimated';
 import type { DayCompletionStatus } from '../../../../components/CalendarTimeline';
 
 export interface HabitsListHeaderProps {
@@ -22,10 +22,10 @@ export interface HabitsListHeaderProps {
   justCreatedHabitId: string | null;
   reduceMotionPreference: boolean;
   completionIcon?: 'chain' | 'checkbox';
-  headerOpacity: Animated.Value;
-  headerTranslateY: Animated.Value;
-  calendarOpacity: Animated.Value;
-  calendarTranslateY: Animated.Value;
+  headerOpacity: SharedValue<number>;
+  headerTranslateY: SharedValue<number>;
+  calendarOpacity: SharedValue<number>;
+  calendarTranslateY: SharedValue<number>;
   totalHabits: number;
   onDayPress: (date: Date) => void;
   onJumpToToday: () => void;

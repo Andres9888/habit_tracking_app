@@ -12,6 +12,7 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import { VARIANT_STYLES } from './constants';
 import type { UnsavedChangesAlertProps } from './types';
 import { triggerHaptic } from '@/utils/haptics';
+import { durations } from '@/theme/animations';
 
 export function UnsavedChangesAlert({
   visible,
@@ -29,9 +30,15 @@ export function UnsavedChangesAlert({
   const styles = VARIANT_STYLES[variant];
   const useErrorTheme = 'useErrorTheme' in styles && styles.useErrorTheme;
 
-  const resolvedIconBg = useErrorTheme ? colors.status.errorLight : styles.iconBg;
-  const resolvedIconColor = useErrorTheme ? colors.status.error : styles.iconColor;
-  const resolvedPreviewBg = useErrorTheme ? colors.status.errorLight : undefined;
+  const resolvedIconBg = useErrorTheme
+    ? colors.status.errorLight
+    : styles.iconBg;
+  const resolvedIconColor = useErrorTheme
+    ? colors.status.error
+    : styles.iconColor;
+  const resolvedPreviewBg = useErrorTheme
+    ? colors.status.errorLight
+    : undefined;
   const resolvedPreviewBorder = useErrorTheme ? colors.status.error : undefined;
   const resolvedDiscardBg = useErrorTheme ? colors.status.error : undefined;
 
@@ -61,8 +68,12 @@ export function UnsavedChangesAlert({
       <View className='items-center'>
         <Animated.View
           className='mb-4 rounded-full p-3'
-          entering={FadeIn.delay(100).duration(200)}
-          style={resolvedIconBg ? { backgroundColor: resolvedIconBg } : undefined}
+          entering={FadeIn.delay(durations.instant).duration(
+            durations.standard
+          )}
+          style={
+            resolvedIconBg ? { backgroundColor: resolvedIconBg } : undefined
+          }
         >
           <AlertTriangle color={resolvedIconColor} size={iconSizes.xl} />
         </Animated.View>
@@ -80,14 +91,18 @@ export function UnsavedChangesAlert({
           {message}
         </Text>
 
-        {truncatedPreview ? <View
+        {truncatedPreview ? (
+          <View
             className='mb-4 w-full rounded-lg border p-3'
             style={{
               borderColor: resolvedPreviewBorder ?? colors.border,
               backgroundColor: resolvedPreviewBg ?? colors.background,
             }}
           >
-            <Text className='mb-1 text-xs font-medium' style={{ color: colors.text.tertiary }}>
+            <Text
+              className='mb-1 text-xs font-medium'
+              style={{ color: colors.text.tertiary }}
+            >
               Your unsaved changes:
             </Text>
             <Text
@@ -97,7 +112,8 @@ export function UnsavedChangesAlert({
             >
               "{truncatedPreview}"
             </Text>
-          </View> : null}
+          </View>
+        ) : null}
 
         <View className='mt-2 w-full gap-3'>
           <Pressable
@@ -105,7 +121,11 @@ export function UnsavedChangesAlert({
             accessibilityLabel={discardButtonLabel}
             accessibilityRole='button'
             className='w-full items-center rounded-xl py-3.5 active:opacity-80'
-            style={resolvedDiscardBg ? { backgroundColor: resolvedDiscardBg } : undefined}
+            style={
+              resolvedDiscardBg
+                ? { backgroundColor: resolvedDiscardBg }
+                : undefined
+            }
             onPress={handleDiscard}
           >
             <Text className={`text-base font-semibold ${styles.discardText}`}>
@@ -121,7 +141,10 @@ export function UnsavedChangesAlert({
             style={{ backgroundColor: colors.background }}
             onPress={handleKeepEditing}
           >
-            <Text className='text-base font-semibold' style={{ color: colors.text.primary }}>
+            <Text
+              className='text-base font-semibold'
+              style={{ color: colors.text.primary }}
+            >
               {keepEditingButtonLabel}
             </Text>
           </Pressable>

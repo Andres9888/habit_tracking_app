@@ -11,7 +11,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import { DayBar } from './DayBar';
 import { PatternLegend } from './PatternLegend';
 import { useWeeklyPatternData } from './useWeeklyPatternData';
@@ -25,7 +25,7 @@ export const WeeklyPatternChart = React.memo(function WeeklyPatternChart({
   dayStats,
   onSeeAllPress,
 }: WeeklyPatternChartProps) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const { colors } = useThemeColors();
   const { bestDayIndex, worstDayIndex, maxRate, accessibilitySummary } =
     useWeeklyPatternData(dayStats);

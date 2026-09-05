@@ -14,16 +14,17 @@
 import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
   Easing,
-  runOnJS,
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withTiming,
 } from 'react-native-reanimated';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { scheduleOnRN } from 'react-native-worklets';
 import { colors } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { typography } from '@/theme/typography';
+import { durations } from '@/theme/animations';
 
 export interface FloatingXPTextProps {
   /** XP value to display (e.g., 10, 50, 100) */
@@ -46,24 +47,28 @@ export function FloatingXPText({
   showCoin = false,
 }: FloatingXPTextProps) {
   const { isDark } = useThemeColors();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const translateY = useSharedValue(0);
   const opacity = useSharedValue(1);
 
   useEffect(() => {
     if (reduceMotion) {
       // Skip animation, just show briefly then call complete
-      opacity.value = withTiming(0, { duration: 100 }, (finished) => {
-        if (finished && onComplete) {
-          runOnJS(onComplete)();
+      opacity.value = withTiming(
+        0,
+        { duration: durations.instant },
+        (finished) => {
+          if (finished && onComplete) {
+            scheduleOnRN(onComplete);
+          }
         }
-      });
+      );
       return;
     }
 
     // Animate upward movement
     translateY.value = withTiming(-40, {
-      duration: 800,
+      duration: durations.progress,
       easing: Easing.out(Easing.cubic),
     });
 
@@ -71,12 +76,12 @@ export function FloatingXPText({
     opacity.value = withTiming(
       0,
       {
-        duration: 800,
+        duration: durations.progress,
         easing: Easing.in(Easing.cubic),
       },
       (finished) => {
         if (finished && onComplete) {
-          runOnJS(onComplete)();
+          scheduleOnRN(onComplete);
         }
       }
     );
@@ -115,7 +120,10 @@ export function FloatingXPText({
         <Animated.Text
           style={[
             styles.xpText,
-            isDark && { color: colors.primary[400], textShadowColor: colors.primary[400] },
+            isDark && {
+              color: colors.primary[400],
+              textShadowColor: colors.primary[400],
+            },
           ]}
         >
           +{value} XP

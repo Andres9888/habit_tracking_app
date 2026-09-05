@@ -10,6 +10,7 @@ import DraggableHabit from '../../../components/DraggableHabit';
 import type { Habit, HabitStatus } from '../types';
 import type { UseHabitRenderItemArgs } from './useHabitRenderItem.types';
 import { isOptimisticHabitId } from './optimisticHabitCreationStore';
+import { durations } from '@/theme/animations';
 
 type HabitRenderContentProps = {
   item: Habit;
@@ -127,7 +128,7 @@ function HabitRenderContentComponent({
   // prop update dropped and stay at the pre-animation value — i.e. invisible.
   // Only the drag-dim transition is animated.
   const activeStyle = useAnimatedStyle(() => ({
-    opacity: isActive ? withTiming(0.92, { duration: 150 }) : 1,
+    opacity: isActive ? withTiming(0.92, { duration: durations.quick }) : 1,
     ...(isActive
       ? {
           shadowColor: '#000',

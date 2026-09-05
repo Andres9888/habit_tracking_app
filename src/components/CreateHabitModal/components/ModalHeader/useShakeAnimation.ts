@@ -1,46 +1,31 @@
 /**
  * Shake animation hook for validation errors
  */
-import { useRef, useCallback } from 'react';
-import { Animated } from 'react-native';
+import { useCallback } from 'react';
+import {
+  useSharedValue,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
+import { durations } from '@/theme/animations';
 
 export const useShakeAnimation = (
   triggerWarning: () => void,
   onValidationError?: () => void
 ) => {
-  const shakeValue = useRef(new Animated.Value(0)).current;
+  const shakeValue = useSharedValue(0);
 
   const triggerShake = useCallback(() => {
     triggerWarning();
     onValidationError?.();
 
-    Animated.sequence([
-      Animated.timing(shakeValue, {
-        duration: 50,
-        toValue: 10,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeValue, {
-        duration: 50,
-        toValue: -10,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeValue, {
-        duration: 50,
-        toValue: 8,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeValue, {
-        duration: 50,
-        toValue: -8,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeValue, {
-        duration: 50,
-        toValue: 0,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    shakeValue.value = withSequence(
+      withTiming(10, { duration: durations.micro }),
+      withTiming(-10, { duration: durations.micro }),
+      withTiming(8, { duration: durations.micro }),
+      withTiming(-8, { duration: durations.micro }),
+      withTiming(0, { duration: durations.micro })
+    );
   }, [shakeValue, triggerWarning, onValidationError]);
 
   return { shakeValue, triggerShake };

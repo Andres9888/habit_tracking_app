@@ -15,6 +15,7 @@ import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { colors } from '../../../theme/colors';
 import { styles } from './EmojiPickerSheet.styles';
 import { iconSizes } from '@/theme/iconSizes';
+import { durations } from '@/theme/animations';
 
 interface SearchBarProps {
   value: string;
@@ -37,12 +38,12 @@ export function SearchBar({
 }: SearchBarProps) {
   const handleFocus = useCallback(() => {
     setIsSearchFocused(true);
-    searchFocusAnim.value = withTiming(1, { duration: 200 });
+    searchFocusAnim.value = withTiming(1, { duration: durations.standard });
   }, [searchFocusAnim, setIsSearchFocused]);
 
   const handleBlur = useCallback(() => {
     setIsSearchFocused(false);
-    searchFocusAnim.value = withTiming(0, { duration: 150 });
+    searchFocusAnim.value = withTiming(0, { duration: durations.quick });
   }, [searchFocusAnim, setIsSearchFocused]);
 
   return (
@@ -66,14 +67,16 @@ export function SearchBar({
           onChangeText={onChange}
           onFocus={handleFocus}
         />
-        {value.length > 0 ? <Pressable
+        {value.length > 0 ? (
+          <Pressable
             accessibilityLabel='Clear search'
             accessibilityRole='button'
             style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             onPress={onClear}
           >
             <X color={colors.gray[400]} size={iconSizes.medium} />
-          </Pressable> : null}
+          </Pressable>
+        ) : null}
       </Animated.View>
     </View>
   );

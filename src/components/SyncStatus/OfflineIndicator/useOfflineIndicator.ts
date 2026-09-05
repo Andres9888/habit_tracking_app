@@ -6,6 +6,7 @@
  */
 
 import { useEffect } from 'react';
+import { durations } from '@/theme/animations';
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -13,7 +14,7 @@ import {
   Easing,
 } from 'react-native-reanimated';
 
-const ANIMATION_DURATION = 200;
+const ANIMATION_DURATION = durations.standard;
 
 export interface UseOfflineIndicatorOptions {
   visible: boolean;

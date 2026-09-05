@@ -19,13 +19,14 @@ import { ChartTooltip } from './ChartTooltip';
 import { ChartLegend } from './ChartLegend';
 import { parseDateKeyLocal } from '../../utils/getLocalDateString';
 import type { TrendLineChartProps, TrendData } from './types';
+import { durations } from '@/theme/animations';
 
 export default function TrendLineChart({ data }: TrendLineChartProps) {
   const [selectedPoint, setSelectedPoint] = useState<TrendData | null>(null);
   const animationProgress = useSharedValue(0);
 
   useEffect(() => {
-    animationProgress.value = withTiming(1, { duration: 500 });
+    animationProgress.value = withTiming(1, { duration: durations.complex });
   }, [data, animationProgress]);
 
   useEffect(() => {

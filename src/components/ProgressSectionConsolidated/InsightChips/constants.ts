@@ -1,3 +1,4 @@
+import { durations } from '@/theme/animations';
 /**
  * InsightChips Constants
  *
@@ -5,13 +6,13 @@
  */
 
 /** Stagger delay between chip entrance animations (ms) */
-export const CHIP_STAGGER_DELAY = 50;
+export const CHIP_STAGGER_DELAY = durations.stagger;
 
 /** Duration of chip entrance animation (ms) */
-export const CHIP_ENTRANCE_DURATION = 300;
+export const CHIP_ENTRANCE_DURATION = durations.moderate;
 
 /** Pulse animation cycle duration (ms) */
-export const PULSE_DURATION = 2000;
+export const PULSE_DURATION = durations.drift;
 
 /** Border color mapping - defined at module level to avoid recreation */
 export const BORDER_COLOR_MAP: Record<string, string> = {

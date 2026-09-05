@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import {
   getDayAccessibility,
   getTextColor,
@@ -30,7 +30,7 @@ export function useCalendarDayCellState({
   textColors,
   useSolidCompletedFill,
 }: UseCalendarDayCellStateParams) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const showCompleted = Boolean(
     day?.isCompleted && day?.isCurrentMonth && !day?.isFuture
   );

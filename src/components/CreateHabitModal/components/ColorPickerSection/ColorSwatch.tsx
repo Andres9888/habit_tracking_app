@@ -4,9 +4,10 @@
  * (rings are rendered at real size, never stretched via transform — avoids GPU blur)
  */
 
-import { useCallback, useRef } from 'react';
-import { Animated, View } from 'react-native';
-import { durations } from '@/theme/animations';
+import { useCallback } from 'react';
+import { View } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
+import { durations, springs } from '@/theme/animations';
 import { borderRadius, shadows } from '../../../../theme/spacing';
 import { AnimatedPressable } from '../../../ui';
 
@@ -43,24 +44,18 @@ export const ColorSwatch = ({
   onPressIn,
   onPressOut,
 }: ColorSwatchProps) => {
-  const scale = useRef(new Animated.Value(1)).current;
+  const scale = useSharedValue(1);
+  const scaleStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
 
   const handlePressIn = useCallback(() => {
-    Animated.timing(scale, {
-      duration: durations.instant,
-      toValue: 0.95,
-      useNativeDriver: true,
-    }).start();
+    scale.value = withTiming(0.95, { duration: durations.instant });
     onPressIn();
   }, [scale, onPressIn]);
 
   const handlePressOut = useCallback(() => {
-    Animated.spring(scale, {
-      friction: 8,
-      tension: 200,
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
+    scale.value = withSpring(1, springs.pop);
     onPressOut();
   }, [scale, onPressOut]);
 
@@ -74,11 +69,13 @@ export const ColorSwatch = ({
       }}
     >
       <Animated.View
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          transform: [{ scale }],
-        }}
+        style={[
+          {
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          scaleStyle,
+        ]}
       >
         <View
           style={{

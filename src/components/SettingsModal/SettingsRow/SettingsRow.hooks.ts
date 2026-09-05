@@ -7,6 +7,7 @@ import {
 } from 'react-native-reanimated';
 import { triggerHaptic } from '@/utils/haptics';
 import type { SettingsRowProps } from './SettingsRow.types';
+import { durations } from '@/theme/animations';
 
 export function useSettingsRowPulse(isDark: boolean) {
   const pulseOpacity = useSharedValue(0);
@@ -19,8 +20,8 @@ export function useSettingsRowPulse(isDark: boolean) {
 
   const triggerPulse = () => {
     pulseOpacity.value = withSequence(
-      withTiming(1, { duration: 150 }),
-      withTiming(0, { duration: 250 })
+      withTiming(1, { duration: durations.quick }),
+      withTiming(0, { duration: durations.transition })
     );
   };
 

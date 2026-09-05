@@ -391,6 +391,26 @@ export default tseslint.config(
             'Use .easing(enterEasing) instead of .springify() for entrance animations. See src/theme/animations.ts',
         },
         {
+          // Raw millisecond literals in `withTiming`/`withSpring` configs.
+          // 0 is exempt: it means "no animation", not a magic duration.
+          selector:
+            "CallExpression[callee.name=/^(withTiming|withSpring)$/] > ObjectExpression > Property[key.name='duration'] > Literal[value>0]",
+          message:
+            'Use a `durations.*` token from @/theme/animations instead of a literal ms value.',
+        },
+        {
+          selector: "CallExpression[callee.name='withDelay'] > Literal",
+          message:
+            'Use a `durations.*` token from @/theme/animations instead of a literal ms value.',
+        },
+        {
+          // Layout animations: FadeIn.duration(280) / FadeInDown.delay(60)
+          selector:
+            "CallExpression[callee.property.name=/^(duration|delay)$/] > Literal",
+          message:
+            'Use a `durations.*` token from @/theme/animations instead of a literal ms value.',
+        },
+        {
           selector:
             "JSXAttribute[name.name='className'] Literal[value=/shadow-sm|shadow-md|shadow-lg|shadow-xl|shadow-2xl/]",
           message:

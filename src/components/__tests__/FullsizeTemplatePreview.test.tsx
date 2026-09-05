@@ -469,12 +469,9 @@ describe('FullsizeTemplatePreview', () => {
     });
 
     it('still triggers haptic when reduced motion is enabled', () => {
-      // usePressAnimation reads Reanimated's useReducedMotion, not the local
-      // hooks/useReduceMotion — flip the one the code path actually consults,
-      // otherwise this asserts nothing about reduce motion.
+      // Reduce motion now comes from Reanimated's useReducedMotion everywhere
+      // in this tree, so flipping that one mock covers the whole code path.
       mockReducedMotion = true;
-      const useReduceMotionMock = require('../../hooks/useReduceMotion');
-      useReduceMotionMock.useReduceMotion.mockReturnValue(true);
 
       const template = createMockTemplate();
       const { getByLabelText } = render(
@@ -504,7 +501,6 @@ describe('FullsizeTemplatePreview', () => {
 
       // Reset mocks
       mockReducedMotion = false;
-      useReduceMotionMock.useReduceMotion.mockReturnValue(false);
     });
   });
 

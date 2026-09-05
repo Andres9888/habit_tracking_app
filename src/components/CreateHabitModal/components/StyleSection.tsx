@@ -3,7 +3,7 @@
  */
 
 import { useCallback } from 'react';
-import { Animated, Text, View, Keyboard } from 'react-native';
+import { Text, View, Keyboard } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { AnimatedColorButton } from './AnimatedColorButton';
 import { borderRadius } from '../../../theme/spacing';
@@ -38,7 +38,7 @@ export const StyleSection = ({
   }
 
   return (
-    <Animated.View
+    <View
       className='mb-6 rounded-2xl bg-white p-4'
       pointerEvents={disabled ? 'none' : 'auto'}
       style={{ opacity: disabled ? 0.4 : 1 }}
@@ -74,7 +74,7 @@ export const StyleSection = ({
           </View>
         ))}
       </View>
-    </Animated.View>
+    </View>
   );
 };
 

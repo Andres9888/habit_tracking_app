@@ -26,7 +26,7 @@ export function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
           entering={
             reduceMotion
               ? undefined
-              : FadeInDown.delay(400 + i * 200)
+              : FadeInDown.delay(durations.emphasis + i * durations.standard)
                   .duration(durations.enter)
                   .easing(enterEasing)
           }

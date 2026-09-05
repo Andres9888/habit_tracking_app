@@ -1,50 +1,35 @@
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import { Pressable, Text } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  withSequence,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 
+import { usePressAnimation } from '@/hooks/usePressAnimation';
 import { styles } from './styles';
 import type { EmojiCellProps } from './types';
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const PressableBase = Animated.createAnimatedComponent(Pressable);
 
 /**
- * Memoized emoji cell component with press animation
+ * Memoized emoji cell component with press animation.
+ *
+ * `pressScale` is 0.92 rather than the app default 0.97: these tiles are ~44pt,
+ * and a 3% shrink on something that small is invisible.
  */
 export const EmojiCell = memo(({ emoji, isSelected, onPress }: EmojiCellProps) => {
-  const scale = useSharedValue(1);
-
-  const handlePressIn = useCallback(() => {
-    scale.value = withTiming(0.92, { duration: 50 });
-  }, [scale]);
-
-  const handlePressOut = useCallback(() => {
-    scale.value = withSequence(
-      withTiming(1.05, { duration: 80 }),
-      withTiming(1, { duration: 100 })
-    );
-  }, [scale]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  const { animatedStyle, pressHandlers } = usePressAnimation({
+    pressScale: 0.92,
+  });
 
   return (
-    <AnimatedPressable
+    <PressableBase
       accessibilityLabel={`Select ${emoji} emoji`}
       accessibilityRole='button'
       accessibilityState={{ selected: isSelected }}
       style={[styles.emojiCell, isSelected && styles.emojiCellSelected, animatedStyle]}
       onPress={onPress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
+      {...pressHandlers}
     >
       <Text style={styles.emojiText}>{emoji}</Text>
-    </AnimatedPressable>
+    </PressableBase>
   );
 });
 

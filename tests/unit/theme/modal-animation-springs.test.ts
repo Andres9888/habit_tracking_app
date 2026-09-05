@@ -12,9 +12,9 @@ import {
   FULLSCREEN_ORGANIC_SPRING,
 } from '@/components/Modal/Modal.constants';
 
-describe('New modal spring tokens in @/theme/animations', () => {
-  it('bottomSheet: damping 26, stiffness 300', () => {
-    expect(springs.bottomSheet).toEqual({ damping: 26, stiffness: 300 });
+describe('Modal spring tokens in @/theme/animations', () => {
+  it('sheet: damping 20, stiffness 200', () => {
+    expect(springs.sheet).toEqual({ damping: 20, stiffness: 200 });
   });
 
   it('exit: damping 26, mass 1, stiffness 420', () => {
@@ -31,8 +31,8 @@ describe('New modal spring tokens in @/theme/animations', () => {
 });
 
 describe('Modal.constants references theme springs', () => {
-  it('BOTTOM_SHEET_SPRING_CONFIG uses springs.bottomSheet', () => {
-    expect(BOTTOM_SHEET_SPRING_CONFIG).toBe(springs.bottomSheet);
+  it('BOTTOM_SHEET_SPRING_CONFIG uses springs.sheet (legacy alias, kept for old refs)', () => {
+    expect(BOTTOM_SHEET_SPRING_CONFIG).toBe(springs.sheet);
   });
 
   it('EXIT_SPRING_CONFIG uses springs.exit', () => {
@@ -57,17 +57,15 @@ describe('Modal.constants references theme springs', () => {
 });
 
 describe('Modal spring values match expected animation feel', () => {
-  it('bottomSheet has higher damping than button for stable slide', () => {
-    expect(springs.bottomSheet.damping).toBeGreaterThan(springs.button.damping);
+  it('sheet has higher damping than button/standard for a stable slide', () => {
+    expect(springs.sheet.damping).toBeGreaterThan(springs.button.damping);
   });
 
-  it('exit has higher stiffness than bottomSheet for faster dismiss', () => {
-    expect(springs.exit.stiffness).toBeGreaterThan(
-      springs.bottomSheet.stiffness
-    );
+  it('exit has higher stiffness than sheet for faster dismiss', () => {
+    expect(springs.exit.stiffness).toBeGreaterThan(springs.sheet.stiffness);
   });
 
-  it('gesture has highest stiffness for instant direct-manipulation response', () => {
+  it('gesture has the highest stiffness for instant direct-manipulation response', () => {
     expect(springs.gesture.stiffness).toBeGreaterThan(springs.exit.stiffness);
   });
 });

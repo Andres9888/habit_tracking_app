@@ -53,6 +53,7 @@ jest.mock('react-native-reanimated', () => {
     __esModule: true,
     default: Animated,
     ...Animated,
+    useReducedMotion: jest.fn(() => false),
     useSharedValue: (initialValue: number) => ({ value: initialValue }),
     useAnimatedStyle: () => ({}),
     withTiming: (value: number) => value,
@@ -423,8 +424,8 @@ describe('ActionableTipCard', () => {
 
   describe('Reduced Motion', () => {
     it('respects reduced motion preference', () => {
-      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
-      useReduceMotion.mockReturnValue(true);
+      const { useReducedMotion } = require('react-native-reanimated');
+      useReducedMotion.mockReturnValue(true);
 
       const { getByText } = render(<ActionableTipCard {...defaultProps} />);
       expect(getByText('Complete Tuesday to level up!')).toBeTruthy();

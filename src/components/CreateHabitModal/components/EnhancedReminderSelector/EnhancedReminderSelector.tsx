@@ -14,7 +14,6 @@
  */
 
 import { View } from 'react-native';
-import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 import { TimePickerModal } from '../TimePickerModal';
 import { NextReminderBadge } from '../NextReminderBadge';
 import { DEFAULT_PRESETS } from './constants';
@@ -46,7 +45,6 @@ export function EnhancedReminderSelector(
     showNextReminder = true,
     snapDefaultToPresetOnEnable = false,
   } = props ?? {};
-  const reduceMotion = useReduceMotion();
 
   const {
     showTimePicker,
@@ -79,7 +77,6 @@ export function EnhancedReminderSelector(
                 key={preset.id}
                 isSelected={selectedPreset === preset.id}
                 preset={preset}
-                reduceMotion={reduceMotion}
                 onPress={() => handlePresetSelect(preset)}
               />
             ))}

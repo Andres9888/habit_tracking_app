@@ -28,6 +28,8 @@ export function InsightPill({
 }: InsightPillProps) {
   return (
     <AnimatedPressable
+      // CTA pill; the press tap is its only tactile feedback.
+      animationConfig={{ enableHaptics: true }}
       accessibilityHint={accessibilityHint}
       accessibilityLabel={label}
       accessibilityRole='button'

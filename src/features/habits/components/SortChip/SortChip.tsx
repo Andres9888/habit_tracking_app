@@ -1,13 +1,9 @@
 import { ArrowUpDown, ChevronRight, LayoutList } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { Pressable, Text, View } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  FadeInDown,
-} from 'react-native-reanimated';
-import { durations, enterEasing, springs } from '@/theme/animations';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+import { durations, enterEasing } from '@/theme/animations';
+import { usePressAnimation } from '@/hooks/usePressAnimation';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { HabitSortMode } from '../../types';
@@ -35,7 +31,7 @@ interface SortChipProps {
   reduceMotion?: boolean;
 }
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const PressableBase = Animated.createAnimatedComponent(Pressable);
 
 /**
  * SortChip - Card header style row that shows "My Habits" label with sort control.
@@ -45,36 +41,20 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
  * - Left: List icon + "My Habits" label
  * - Right: Current sort label + chevron
  * - Subtle background (bg-stone-50)
- * - Press animation: scale 0.98
- * - Haptic: light impact on press
+ * - Press animation: scale 0.97 (`usePressAnimation`)
+ * - Haptic: selection on commit
  */
 export function SortChip({
   sortMode,
   onPress,
   reduceMotion = false,
 }: SortChipProps) {
-  const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
+  const { triggerSelection } = useHapticFeedback({});
   const { colors } = useThemeColors();
 
-  // Animated value for button press scale
-  const buttonScale = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: buttonScale.value }],
-  }));
-
-  const handlePressIn = () => {
-    triggerLightImpact();
-    if (!reduceMotion) {
-      buttonScale.value = withSpring(0.98, springs.button);
-    }
-  };
-
-  const handlePressOut = () => {
-    if (!reduceMotion) {
-      buttonScale.value = withSpring(1, springs.button);
-    }
-  };
+  // Haptic fires on commit (`handlePress`), not press-in, so a scroll-cancelled
+  // touch never buzzes.
+  const { animatedStyle, pressHandlers } = usePressAnimation();
 
   const handlePress = () => {
     triggerSelection();
@@ -87,10 +67,14 @@ export function SortChip({
   return (
     <Animated.View
       entering={
-        reduceMotion ? undefined : FadeInDown.delay(100).duration(durations.enter).easing(enterEasing)
+        reduceMotion
+          ? undefined
+          : FadeInDown.delay(durations.instant)
+              .duration(durations.enter)
+              .easing(enterEasing)
       }
     >
-      <AnimatedPressable
+      <PressableBase
         accessibilityHint='Opens sort options'
         accessibilityLabel={accessibilityLabel}
         accessibilityRole='button'
@@ -104,26 +88,43 @@ export function SortChip({
           },
         ]}
         onPress={handlePress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
+        {...pressHandlers}
       >
         {/* Left side: icon + label */}
         <View className='flex-row items-center gap-2'>
-          <LayoutList color={colors.text.secondary} size={iconSizes.medium} strokeWidth={2} />
-          <Text className='text-sm font-semibold' style={{ color: colors.text.primary }}>
+          <LayoutList
+            color={colors.text.secondary}
+            size={iconSizes.medium}
+            strokeWidth={2}
+          />
+          <Text
+            className='text-sm font-semibold'
+            style={{ color: colors.text.primary }}
+          >
             My Habits
           </Text>
         </View>
 
         {/* Right side: sort icon + sort label + chevron */}
         <View className='flex-row items-center gap-1'>
-          <ArrowUpDown color={colors.text.tertiary} size={iconSizes.small} strokeWidth={2} />
-          <Text className='text-sm font-normal' style={{ color: colors.text.tertiary }}>
+          <ArrowUpDown
+            color={colors.text.tertiary}
+            size={iconSizes.small}
+            strokeWidth={2}
+          />
+          <Text
+            className='text-sm font-normal'
+            style={{ color: colors.text.tertiary }}
+          >
             {sortLabel}
           </Text>
-          <ChevronRight color={colors.text.tertiary} size={iconSizes.small} strokeWidth={2} />
+          <ChevronRight
+            color={colors.text.tertiary}
+            size={iconSizes.small}
+            strokeWidth={2}
+          />
         </View>
-      </AnimatedPressable>
+      </PressableBase>
     </Animated.View>
   );
 }

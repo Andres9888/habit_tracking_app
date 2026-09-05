@@ -179,18 +179,21 @@ exports[`QuickPicksRow Snapshots should match snapshot with default unselected s
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -280,18 +283,21 @@ exports[`QuickPicksRow Snapshots should match snapshot with default unselected s
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -381,18 +387,21 @@ exports[`QuickPicksRow Snapshots should match snapshot with default unselected s
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -482,18 +491,21 @@ exports[`QuickPicksRow Snapshots should match snapshot with default unselected s
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -583,18 +595,21 @@ exports[`QuickPicksRow Snapshots should match snapshot with default unselected s
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -820,18 +835,21 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (E
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -921,18 +939,21 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (E
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -1022,18 +1043,21 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (E
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#059669",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#059669",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -1123,18 +1147,21 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (E
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -1224,18 +1251,21 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (E
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -1461,18 +1491,21 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (M
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#059669",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#059669",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -1562,18 +1595,21 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (M
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -1663,18 +1699,21 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (M
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -1764,18 +1803,21 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (M
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -1865,18 +1907,21 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (M
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -2058,18 +2103,21 @@ exports[`QuickPicksRow Snapshots should match snapshot without browse button 1`]
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -2159,18 +2207,21 @@ exports[`QuickPicksRow Snapshots should match snapshot without browse button 1`]
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -2260,18 +2311,21 @@ exports[`QuickPicksRow Snapshots should match snapshot without browse button 1`]
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -2361,18 +2415,21 @@ exports[`QuickPicksRow Snapshots should match snapshot without browse button 1`]
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -2462,18 +2519,21 @@ exports[`QuickPicksRow Snapshots should match snapshot without browse button 1`]
         >
           <View
             className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
-            collapsable={false}
             style={
-              {
-                "borderColor": "#e7e5e4",
-                "borderWidth": 2,
-                "minWidth": 100,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "borderColor": "#e7e5e4",
+                  "borderWidth": 2,
+                  "minWidth": 100,
+                },
+                {
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View

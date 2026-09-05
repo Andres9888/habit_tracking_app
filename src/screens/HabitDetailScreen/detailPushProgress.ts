@@ -11,9 +11,8 @@
  * the modal host.
  */
 
-import { makeMutable, useAnimatedStyle } from 'react-native-reanimated';
+import { makeMutable, useAnimatedStyle, useReducedMotion } from 'react-native-reanimated';
 import { SCREEN_WIDTH } from '@/components/Modal/Modal.constants';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 
 export const detailPushProgress = makeMutable(0);
 
@@ -22,7 +21,7 @@ const HOME_PARALLAX = 0.3;
 
 /** Style for the Home root: slides left under the incoming detail page. */
 export function useHomePushParallax() {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   return useAnimatedStyle(() => ({
     transform: [
       {

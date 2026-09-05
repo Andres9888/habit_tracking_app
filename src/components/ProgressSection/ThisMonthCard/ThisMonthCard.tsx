@@ -19,6 +19,7 @@ import { BarChart3, ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { shadows } from '@/theme/spacing';
+import { durations } from '@/theme/animations';
 
 import type { ThisMonthCardProps } from '../types';
 import { useDayStats } from './useDayStats';
@@ -88,7 +89,7 @@ export function ThisMonthCard({
         {/* Bar Chart */}
         <Animated.View
           className='mb-4 flex-row items-end justify-between px-1'
-          entering={FadeIn.delay(100)}
+          entering={FadeIn.delay(durations.instant)}
         >
           {dayStats.map((day, index) => (
             <DayBar
