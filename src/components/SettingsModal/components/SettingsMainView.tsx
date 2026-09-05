@@ -4,8 +4,8 @@ import { Toast } from '../../Toast';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { useDeferredMount } from '../../../hooks/useDeferredMount';
 import type { HabitSortMode } from '../../../features/habits/types';
-import { getSettingsViewEntering } from './SettingsMainView.animations';
 import { renderSettingsMainViewContent } from './SettingsMainView.renderContent';
+import { useSettingsViewTransition } from './settingsViewTransition';
 import type { SettingsMainViewProps } from './SettingsMainView.types';
 
 export function SettingsMainView(props: SettingsMainViewProps) {
@@ -16,11 +16,7 @@ export function SettingsMainView(props: SettingsMainViewProps) {
     void props.setHabitSortMode(mode);
   };
 
-  const entering = getSettingsViewEntering(
-    props.view,
-    props.viewDirection,
-    reduceMotion
-  );
+  const transitionStyle = useSettingsViewTransition(props.view, reduceMotion);
 
   const backgroundStyle = { backgroundColor: themeColors.background };
   // Keep the skeleton up through the *first* open animation: the heavy section
@@ -34,13 +30,17 @@ export function SettingsMainView(props: SettingsMainViewProps) {
 
   return (
     <View className='flex-1' style={backgroundStyle}>
+      {/* Persistent, never re-keyed: a fresh Animated.View with `entering` froze
+          mid-slide whenever the remounting Settings tree pushed a layout update
+          through the native layout-animation proxy. The slide is a shared value
+          now; only the content below it remounts per view. */}
       <Animated.View
-        key={props.view}
         className='flex-1'
-        entering={entering}
-        style={backgroundStyle}
+        style={[backgroundStyle, transitionStyle]}
       >
-        {content}
+        <View key={props.view} className='flex-1'>
+          {content}
+        </View>
       </Animated.View>
       {/* Rendered above the view switcher so a rejected write is reported even
           if the user has already navigated into a sub-page. */}

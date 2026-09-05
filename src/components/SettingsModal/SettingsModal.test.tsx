@@ -218,6 +218,23 @@ describe('SettingsModal', () => {
     expect(getByText('Restore purchases')).toBeTruthy();
   });
 
+  // The root used to re-key an Animated.View with `entering={SlideInLeft}`;
+  // the remounting tree stranded that layout animation and the root came back
+  // frozen ~30pt to the left. The slide is a shared value now, so navigating
+  // out and back must land on a fully rendered root.
+  it('returns to the settings root when Account is dismissed', async () => {
+    const { getByLabelText, getByText, queryByText } = await renderSettings();
+
+    fireEvent.press(getByLabelText('Account settings'));
+    // 'Free plan' only exists on the Account page — 'Account' is ambiguous.
+    await waitFor(() => expect(getByText('Free plan')).toBeTruthy());
+    expect(queryByText('Appearance')).toBeNull();
+
+    fireEvent.press(getByLabelText('Go back'));
+    await waitFor(() => expect(getByText('Appearance')).toBeTruthy());
+    expect(getByText('Chain Day')).toBeTruthy();
+  });
+
   it('exposes accessible values and expansion state on rows', async () => {
     const { getByLabelText } = await renderSettings({ completionSoundEnabled: true });
 

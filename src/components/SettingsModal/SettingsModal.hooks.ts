@@ -4,6 +4,10 @@ import { api } from '../../../convex/_generated/api';
 import type { SettingsModalSettingsDocument } from './types';
 import { updateSettingsWithFallback } from '../../lib/settings/updateSettingsWithFallback';
 import { createSettingsUpdaters } from './SettingsModal.settingsUpdaters';
+import {
+  parkSettingsView,
+  settingsViewOffset,
+} from './components/settingsViewTransition';
 import { useSettingsLocalPrefs } from './useSettingsLocalPrefs';
 
 interface UseSettingsModalLogicProps {
@@ -32,13 +36,18 @@ export const useSettingsModalLogic = ({
     if (visible) {
       setViewState('settings');
       setViewDirection('none');
+      settingsViewOffset.value = 0;
       setErrorMessage(null);
     }
   }, [visible]);
 
   const setView = useCallback(
     (next: 'settings' | 'archived' | 'account' | 'calendar') => {
-      setViewDirection(next === 'settings' ? 'back' : 'forward');
+      const direction = next === 'settings' ? 'back' : 'forward';
+      // Park before the commit that mounts the page, so the shared value
+      // reaches the UI runtime ahead of the new view's first frame.
+      parkSettingsView(direction);
+      setViewDirection(direction);
       setViewState(next);
     },
     []
