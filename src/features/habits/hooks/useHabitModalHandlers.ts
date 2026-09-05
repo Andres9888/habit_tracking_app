@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit, HabitSettingsUpdate } from '../types';
 import type { HabitModalDeps, HabitModalSetters } from './useHabitModalHandlers.types';
@@ -90,16 +90,32 @@ export function useHabitModalHandlers(
     [deps.removeHabit]
   );
 
-  return {
-    closeCreateHabit,
-    closeEditScreen,
-    confirmPause,
-    onDeleteHabit,
-    onSettingsChange,
-    openCreateHabitScreen,
-    openEditHabit,
-    openHabitCalendar,
-    openHabitDetail,
-    openPauseModal,
-  };
+  // Memoised: every handler above is already stable, so the container object
+  // must be too or the whole modals state object churns on every render.
+  return useMemo(
+    () => ({
+      closeCreateHabit,
+      closeEditScreen,
+      confirmPause,
+      onDeleteHabit,
+      onSettingsChange,
+      openCreateHabitScreen,
+      openEditHabit,
+      openHabitCalendar,
+      openHabitDetail,
+      openPauseModal,
+    }),
+    [
+      closeCreateHabit,
+      closeEditScreen,
+      confirmPause,
+      onDeleteHabit,
+      onSettingsChange,
+      openCreateHabitScreen,
+      openEditHabit,
+      openHabitCalendar,
+      openHabitDetail,
+      openPauseModal,
+    ]
+  );
 }

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { Habit, ShareCardData } from '../types';
 
 interface SecondaryModalSetters {
@@ -53,12 +53,24 @@ export function useSecondaryModalHandlers(
     setters.setShowVisualizationExercise(false);
   }, []);
 
-  return {
-    closeQuickActions,
-    closeShareCard,
-    closeVisualizationExercise,
-    onShareMilestone,
-    openQuickActions,
-    openVisualizationExercise,
-  };
+  // Memoised for the same reason as useHabitModalHandlers: a fresh container
+  // object would defeat the memoisation of the modals state above it.
+  return useMemo(
+    () => ({
+      closeQuickActions,
+      closeShareCard,
+      closeVisualizationExercise,
+      onShareMilestone,
+      openQuickActions,
+      openVisualizationExercise,
+    }),
+    [
+      closeQuickActions,
+      closeShareCard,
+      closeVisualizationExercise,
+      onShareMilestone,
+      openQuickActions,
+      openVisualizationExercise,
+    ]
+  );
 }

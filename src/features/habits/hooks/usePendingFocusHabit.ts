@@ -8,7 +8,7 @@
  * Holding both here means the request survives the mount and always expires.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 
 /**
@@ -152,19 +152,33 @@ export function usePendingFocusHabit(
     // full window instead of inheriting the stale prepare timer.
   }, [request.autoClose, request.id, request.ready]);
 
-  return {
-    clearPendingFocusHabit,
-    commitPendingFocusHabit,
-    createdFocusPending:
-      request.autoCommit && request.id !== null && !request.ready,
-    focusReady: request.ready,
-    focusRekey: rekey,
-    focusRequestAutoClose: request.autoClose,
-    focusRequestKey: request.key,
-    markPendingFocusReady,
-    pendingFocusHabitId: request.id,
-    prepareCreatedHabitFocus,
-    preparePendingFocusHabit,
-    rekeyPendingFocusHabit,
-  };
+  // Memoised so the modals state object above can be memoised in turn: every
+  // callback here is already stable, only `request`/`rekey` move.
+  return useMemo(
+    () => ({
+      clearPendingFocusHabit,
+      commitPendingFocusHabit,
+      createdFocusPending:
+        request.autoCommit && request.id !== null && !request.ready,
+      focusReady: request.ready,
+      focusRekey: rekey,
+      focusRequestAutoClose: request.autoClose,
+      focusRequestKey: request.key,
+      markPendingFocusReady,
+      pendingFocusHabitId: request.id,
+      prepareCreatedHabitFocus,
+      preparePendingFocusHabit,
+      rekeyPendingFocusHabit,
+    }),
+    [
+      clearPendingFocusHabit,
+      commitPendingFocusHabit,
+      markPendingFocusReady,
+      prepareCreatedHabitFocus,
+      preparePendingFocusHabit,
+      rekeyPendingFocusHabit,
+      rekey,
+      request,
+    ]
+  );
 }

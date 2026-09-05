@@ -41,7 +41,9 @@ export function initSentryWithConfig(config: SentryConfig): boolean {
       enableAutoSessionTracking: true,
       enableNativeCrashHandling: true,
       environment: config.environment,
-      integrations: [Sentry.reactNavigationIntegration()],
+      // Stall tracking runs a continuous JS-thread timer loop for the whole
+      // app lifetime; tracing is enabled here for spans, not for stall metrics.
+      enableStallTracking: false,
       normalizeDepth: 5,
       release: config.release,
       sampleRate: config.sampleRate,

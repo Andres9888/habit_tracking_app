@@ -2,7 +2,7 @@
  * Theme System - Chain Day Habit Tracking App
  *
  * Central export for the complete design system integrating colors, typography,
- * spacing, animations, and React Native Paper theme configuration.
+ * spacing, animations, and the MD3-shaped base theme.
  *
  * Based on UX Specification Sections 5.1 (Colors), 5.2 (Typography), 5.3 (Spacing)
  *
@@ -74,9 +74,9 @@
  * </View>
  * ```
  *
- * ### 3. React Native Paper Integration
+ * ### 3. Full Theme Access
  *
- * Use `useAppTheme()` for full theme access (includes Paper + custom tokens):
+ * Use `useAppTheme()` for full theme access (MD3-shaped base + custom tokens):
  *
  * ```tsx
  * import { useAppTheme } from '@/theme';
@@ -218,8 +218,6 @@
  * ```
  */
 
-import { MD3LightTheme, configureFonts } from 'react-native-paper';
-import type { MD3Theme } from 'react-native-paper';
 import { colors } from './colors';
 import { typography, fontFamilies, fontWeights } from './typography';
 import { spacing, borderRadius, shadows, componentSpacing } from './spacing';
@@ -227,132 +225,147 @@ import { durations, easings, springs } from './animations';
 import { iconSizes } from './iconSizes';
 
 /**
- * Custom Font Configuration for React Native Paper
+ * MD3-shaped Font Configuration
  *
- * Maps our typography scale to Paper's MD3 font variants.
- * This allows Paper components (Button, Text, etc.) to use our design system.
+ * Maps our typography scale onto the Material Design 3 font-variant names.
+ *
+ * This used to be produced by `react-native-paper`'s `configureFonts()`, but
+ * Paper was removed from the runtime bundle (see the note on `theme` below).
+ * The config below already covers all 15 MD3 variants, so `configureFonts`
+ * had nothing left to merge in — it is now just a plain object.
  */
-const customFonts = configureFonts({
-  config: {
-    bodyLarge: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 17,
-      fontWeight: fontWeights.regular,
-      letterSpacing: 0,
-      lineHeight: 24,
-    },
-    bodyMedium: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 14,
-      fontWeight: fontWeights.regular,
-      letterSpacing: 0,
-      lineHeight: 20,
-    },
-    bodySmall: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 13,
-      fontWeight: fontWeights.medium,
-      letterSpacing: 0.12,
-      lineHeight: 18,
-    },
-    displayLarge: {
-      fontFamily: fontFamilies.primary.display,
-      fontSize: 34,
-      fontWeight: fontWeights.bold,
-      letterSpacing: -0.85,
-      lineHeight: 41,
-    },
-    displayMedium: {
-      fontFamily: fontFamilies.primary.display,
-      fontSize: 22,
-      fontWeight: fontWeights.bold,
-      letterSpacing: -0.35,
-      lineHeight: 28,
-    },
-    displaySmall: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 22,
-      fontWeight: fontWeights.semibold,
-      letterSpacing: -0.35,
-      lineHeight: 28,
-    },
-    headlineLarge: {
-      fontFamily: fontFamilies.primary.display,
-      fontSize: 22,
-      fontWeight: fontWeights.bold,
-      letterSpacing: -0.35,
-      lineHeight: 28,
-    },
-    headlineMedium: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 22,
-      fontWeight: fontWeights.semibold,
-      letterSpacing: -0.35,
-      lineHeight: 28,
-    },
-    headlineSmall: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 20,
-      fontWeight: fontWeights.semibold,
-      letterSpacing: -0.2,
-      lineHeight: 26,
-    },
-    labelLarge: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 17,
-      fontWeight: fontWeights.semibold,
-      letterSpacing: 0.08,
-      lineHeight: 24,
-    },
-    labelMedium: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 13,
-      fontWeight: fontWeights.medium,
-      letterSpacing: 0.12,
-      lineHeight: 18,
-    },
-    labelSmall: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 10,
-      fontWeight: fontWeights.medium,
-      letterSpacing: 0.1,
-      lineHeight: 12,
-    },
-    titleLarge: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 20,
-      fontWeight: fontWeights.semibold,
-      letterSpacing: -0.2,
-      lineHeight: 26,
-    },
-    titleMedium: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 17,
-      fontWeight: fontWeights.semibold,
-      letterSpacing: 0,
-      lineHeight: 24,
-    },
-    titleSmall: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 14,
-      fontWeight: fontWeights.semibold,
-      letterSpacing: 0,
-      lineHeight: 20,
-    },
+const customFonts = {
+  default: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 14,
+    fontWeight: fontWeights.regular,
+    letterSpacing: 0,
+    lineHeight: 20,
   },
-});
+  bodyLarge: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 17,
+    fontWeight: fontWeights.regular,
+    letterSpacing: 0,
+    lineHeight: 24,
+  },
+  bodyMedium: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 14,
+    fontWeight: fontWeights.regular,
+    letterSpacing: 0,
+    lineHeight: 20,
+  },
+  bodySmall: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 13,
+    fontWeight: fontWeights.medium,
+    letterSpacing: 0.12,
+    lineHeight: 18,
+  },
+  displayLarge: {
+    fontFamily: fontFamilies.primary.display,
+    fontSize: 34,
+    fontWeight: fontWeights.bold,
+    letterSpacing: -0.85,
+    lineHeight: 41,
+  },
+  displayMedium: {
+    fontFamily: fontFamilies.primary.display,
+    fontSize: 22,
+    fontWeight: fontWeights.bold,
+    letterSpacing: -0.35,
+    lineHeight: 28,
+  },
+  displaySmall: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 22,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: -0.35,
+    lineHeight: 28,
+  },
+  headlineLarge: {
+    fontFamily: fontFamilies.primary.display,
+    fontSize: 22,
+    fontWeight: fontWeights.bold,
+    letterSpacing: -0.35,
+    lineHeight: 28,
+  },
+  headlineMedium: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 22,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: -0.35,
+    lineHeight: 28,
+  },
+  headlineSmall: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 20,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: -0.2,
+    lineHeight: 26,
+  },
+  labelLarge: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 17,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: 0.08,
+    lineHeight: 24,
+  },
+  labelMedium: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 13,
+    fontWeight: fontWeights.medium,
+    letterSpacing: 0.12,
+    lineHeight: 18,
+  },
+  labelSmall: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 10,
+    fontWeight: fontWeights.medium,
+    letterSpacing: 0.1,
+    lineHeight: 12,
+  },
+  titleLarge: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 20,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: -0.2,
+    lineHeight: 26,
+  },
+  titleMedium: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 17,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: 0,
+    lineHeight: 24,
+  },
+  titleSmall: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 14,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: 0,
+    lineHeight: 20,
+  },
+};
 
 /**
- * React Native Paper Theme
+ * MD3-shaped Base Theme
  *
- * Extends Material Design 3 light theme with our custom colors and fonts.
- * Paper components automatically use these values.
+ * Keeps the Material Design 3 token *shape* (colors / fonts / roundness) that
+ * this design system was originally authored against, but no longer imports
+ * `react-native-paper` to get it.
+ *
+ * Paper was dropped from the runtime bundle (~262KB of dead weight): the app
+ * renders zero Paper components, and every value below was already overridden
+ * explicitly — `...MD3LightTheme.colors` contributed nothing, since all 33 MD3
+ * color tokens are assigned here. Application code reads only
+ * `theme.custom.*` (see `extendedTheme`); these MD3 fields are retained purely
+ * so the token shape stays stable for existing consumers and tests.
  */
-export const theme: MD3Theme = {
-  ...MD3LightTheme,
+export const theme = {
+  animation: { scale: 1 },
   colors: {
-    ...MD3LightTheme.colors,
-
     // Backdrop
     backdrop: 'rgba(0, 0, 0, 0.6)',
 
@@ -436,15 +449,18 @@ export const theme: MD3Theme = {
 
     tertiaryContainer: colors.primary[400],
   },
+  dark: false,
   fonts: customFonts,
+  isV3: true,
   roundness: borderRadius.medium, // Default: 12pt
+  version: 3,
 };
 
 /**
  * Extended Theme with Custom Design Tokens
  *
  * Adds our custom spacing, shadows, animations, and other tokens
- * that aren't part of React Native Paper's standard theme.
+ * that aren't part of the MD3-shaped base theme.
  */
 export const extendedTheme = {
   ...theme,
@@ -474,7 +490,12 @@ export const extendedTheme = {
 export type AppTheme = typeof extendedTheme;
 
 /**
- * Hook to Access Full Theme (Paper + Custom Tokens)
+ * Hook to Access Full Theme (MD3-shaped base + Custom Tokens)
+ *
+ * Returns the module-level `extendedTheme` directly. There is no theme
+ * provider to read from — `react-native-paper`'s `useTheme()` used to supply
+ * per-tree overrides, but nothing in the app ever passed a theme carrying
+ * `custom` tokens, so the override path was always a no-op.
  *
  * @example
  * ```tsx
@@ -497,102 +518,7 @@ export type AppTheme = typeof extendedTheme;
  * }
  * ```
  */
-import { useTheme } from 'react-native-paper';
-
-const isObject = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null;
-
-const normalizeTokenOverrides = <T>(value: unknown): T | undefined => {
-  if (!isObject(value)) {
-    return undefined;
-  }
-
-  return value as T;
-};
-
-const mergeThemeCustomTokens = (
-  override?: Partial<AppTheme['custom']>
-): AppTheme['custom'] => ({
-  ...extendedTheme.custom,
-  ...normalizeTokenOverrides<Partial<AppTheme['custom']>>(override),
-  animations: {
-    ...extendedTheme.custom.animations,
-    ...normalizeTokenOverrides<AppTheme['custom']['animations']>(
-      override?.animations
-    ),
-  },
-  borderRadius: {
-    ...extendedTheme.custom.borderRadius,
-    ...normalizeTokenOverrides<AppTheme['custom']['borderRadius']>(
-      override?.borderRadius
-    ),
-  },
-  colors: {
-    ...extendedTheme.custom.colors,
-    ...normalizeTokenOverrides<AppTheme['custom']['colors']>(override?.colors),
-  },
-  componentSpacing: {
-    ...extendedTheme.custom.componentSpacing,
-    ...normalizeTokenOverrides<AppTheme['custom']['componentSpacing']>(
-      override?.componentSpacing
-    ),
-  },
-  fontFamilies: {
-    ...extendedTheme.custom.fontFamilies,
-    ...normalizeTokenOverrides<AppTheme['custom']['fontFamilies']>(
-      override?.fontFamilies
-    ),
-  },
-  fontWeights: {
-    ...extendedTheme.custom.fontWeights,
-    ...normalizeTokenOverrides<AppTheme['custom']['fontWeights']>(
-      override?.fontWeights
-    ),
-  },
-  iconSizes: {
-    ...extendedTheme.custom.iconSizes,
-    ...normalizeTokenOverrides<AppTheme['custom']['iconSizes']>(
-      override?.iconSizes
-    ),
-  },
-  shadows: {
-    ...extendedTheme.custom.shadows,
-    ...normalizeTokenOverrides<AppTheme['custom']['shadows']>(
-      override?.shadows
-    ),
-  },
-  spacing: {
-    ...extendedTheme.custom.spacing,
-    ...normalizeTokenOverrides<AppTheme['custom']['spacing']>(
-      override?.spacing
-    ),
-  },
-  typography: {
-    ...extendedTheme.custom.typography,
-    ...normalizeTokenOverrides<AppTheme['custom']['typography']>(
-      override?.typography
-    ),
-  },
-});
-
-export const useAppTheme = (): AppTheme => {
-  try {
-    const currentTheme = useTheme<Partial<AppTheme>>();
-    const hasCustomTheme = isObject(currentTheme?.custom);
-
-    if (!hasCustomTheme) {
-      return extendedTheme;
-    }
-
-    return {
-      ...extendedTheme,
-      ...currentTheme,
-      custom: mergeThemeCustomTokens(currentTheme.custom),
-    };
-  } catch {
-    return extendedTheme;
-  }
-};
+export const useAppTheme = (): AppTheme => extendedTheme;
 
 /**
  * Default Export

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit, HabitSettings, ShareCardData } from '../types';
 import { useHabitModalHandlers } from './useHabitModalHandlers';
@@ -71,8 +72,11 @@ export function useHabitsModalsHandlers(
     }
   );
 
-  return {
-    ...habitHandlers,
-    ...secondaryHandlers,
-  };
+  return useMemo(
+    () => ({
+      ...habitHandlers,
+      ...secondaryHandlers,
+    }),
+    [habitHandlers, secondaryHandlers]
+  );
 }

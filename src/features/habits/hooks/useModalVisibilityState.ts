@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   usePendingFocusHabit,
   type PendingFocusHabitState,
@@ -52,29 +52,47 @@ export function useModalVisibilityState(): ModalVisibilityState {
     setShowTemplatesScreen(false)
   );
 
-  return {
-    ...pendingFocus,
-    isCreateHabitOpen,
-    isHabitCalendarOpen,
-    isHabitDetailOpen,
-    isSettingsOpen,
-    setIsCreateHabitOpen,
-    setIsHabitCalendarOpen,
-    setIsHabitDetailOpen,
-    setIsSettingsOpen,
-    setShowEditScreen,
-    setShowHapticTest,
-    setShowPauseModal,
-    setShowQuickActions,
-    setShowShareCard,
-    setShowTemplatesScreen,
-    setShowVisualizationExercise,
-    showEditScreen,
-    showHapticTest,
-    showPauseModal,
-    showQuickActions,
-    showShareCard,
-    showTemplatesScreen,
-    showVisualizationExercise,
-  };
+  // Memoised so the modals state object built from it can be memoised too.
+  // `useState` setters are stable, so only the flags and `pendingFocus` move.
+  return useMemo(
+    () => ({
+      ...pendingFocus,
+      isCreateHabitOpen,
+      isHabitCalendarOpen,
+      isHabitDetailOpen,
+      isSettingsOpen,
+      setIsCreateHabitOpen,
+      setIsHabitCalendarOpen,
+      setIsHabitDetailOpen,
+      setIsSettingsOpen,
+      setShowEditScreen,
+      setShowHapticTest,
+      setShowPauseModal,
+      setShowQuickActions,
+      setShowShareCard,
+      setShowTemplatesScreen,
+      setShowVisualizationExercise,
+      showEditScreen,
+      showHapticTest,
+      showPauseModal,
+      showQuickActions,
+      showShareCard,
+      showTemplatesScreen,
+      showVisualizationExercise,
+    }),
+    [
+      isCreateHabitOpen,
+      isHabitCalendarOpen,
+      isHabitDetailOpen,
+      isSettingsOpen,
+      pendingFocus,
+      showEditScreen,
+      showHapticTest,
+      showPauseModal,
+      showQuickActions,
+      showShareCard,
+      showTemplatesScreen,
+      showVisualizationExercise,
+    ]
+  );
 }

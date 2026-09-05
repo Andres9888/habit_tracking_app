@@ -8,7 +8,7 @@
  * @see docs/offline-habit-sync.md T011
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit } from '../types';
 import { useHabitMutations } from './useHabitMutations';
@@ -19,6 +19,7 @@ import { useModalVisibilityState } from './useModalVisibilityState';
 import { useHabitSelectionState } from './useHabitSelectionState';
 import { useHabitsSettings } from './useHabitsSettings';
 import { buildModalsStateReturnValue } from './buildModalsStateReturnValue';
+import { useModalsStableHandlers } from './useModalsStableHandlers';
 import { buildModalsSettersArg } from './buildModalsSettersArg';
 import {
   generateDateStrings,
@@ -65,9 +66,23 @@ export function useHabitsModalsState({
   const trackingDates = useMemo(() => generateDateStrings(365), [todayKey]);
   const todayMidnight = useMemo(() => getTodayMidnight(), [todayKey]);
 
+  // The modals' tracking subscription is a ~455-day live query. Only the
+  // calendar modal, the detail screen and quick actions read it, so it stays
+  // skipped until one of them has been opened; the latch (a render-cache ref,
+  // monotonic and idempotent) keeps it warm afterwards so reopening a modal
+  // never re-subscribes. writeLatest:false keeps it off the shared
+  // `habits.getTracking:latest` slot, which the habits list owns.
+  const trackingConsumerOpen =
+    visibility.isHabitCalendarOpen ||
+    visibility.isHabitDetailOpen ||
+    visibility.showQuickActions;
+  const trackingWarmedRef = useRef(false);
+  if (trackingConsumerOpen) trackingWarmedRef.current = true;
+
   const { tracking, getStreak, isCompleted } = useHabitsTracking(
     trackingDates,
-    todayMidnight
+    todayMidnight,
+    { enabled: trackingWarmedRef.current, writeLatest: false }
   );
 
   // Wrap toggle mutation as plain async function
@@ -171,19 +186,52 @@ export function useHabitsModalsState({
     [optimisticToggleHabit]
   );
 
-  return buildModalsStateReturnValue(visibility, selection, handlers, {
-    archivedHabitsCount,
-    celebrationsEnabled,
-    clearMilestone,
-    getStreak,
-    habits,
-    handleArchive,
-    handleToggleHabit,
-    milestone,
-    onChangeCelebrationsEnabled,
-    reduceMotionPreference,
-    settings,
-    showHabitStrengthPercentage,
-    tracking,
-  });
+  const stableHandlers = useModalsStableHandlers(visibility, selection);
+
+  // Memoised: `modals` is spread into BottomActionBar and every HabitsModals
+  // section, all of which are memo()'d. A fresh object here re-rendered all of
+  // them on every Home render. Every input below is itself memoised.
+  return useMemo(
+    () =>
+      buildModalsStateReturnValue(
+        visibility,
+        selection,
+        handlers,
+        stableHandlers,
+        {
+          archivedHabitsCount,
+          celebrationsEnabled,
+          clearMilestone,
+          getStreak,
+          habits,
+          handleArchive,
+          handleToggleHabit,
+          milestone,
+          onChangeCelebrationsEnabled,
+          reduceMotionPreference,
+          settings,
+          showHabitStrengthPercentage,
+          tracking,
+        }
+      ),
+    [
+      archivedHabitsCount,
+      celebrationsEnabled,
+      clearMilestone,
+      getStreak,
+      habits,
+      handleArchive,
+      handleToggleHabit,
+      handlers,
+      milestone,
+      onChangeCelebrationsEnabled,
+      reduceMotionPreference,
+      selection,
+      settings,
+      showHabitStrengthPercentage,
+      stableHandlers,
+      tracking,
+      visibility,
+    ]
+  );
 }

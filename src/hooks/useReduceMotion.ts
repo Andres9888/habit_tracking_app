@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import { Platform } from 'react-native';
 
 interface UseReduceMotionOptions {
@@ -25,6 +25,56 @@ try {
   AccessibilityInfo = null;
 }
 
+// Module-level store. Every habit card mounts ~9 instances of this hook
+// (two haptics hooks plus seven day cells), so a per-instance
+// `isReduceMotionEnabled()` + `reduceMotionChanged` listener meant ~180 bridge
+// calls to mount 20 cards. One read and one listener now serve the whole app;
+// subscribers attach through useSyncExternalStore.
+let systemReduceMotion = false;
+let hasInitialized = false;
+const listeners = new Set<() => void>();
+
+function publish(value: boolean) {
+  if (value === systemReduceMotion) return;
+  systemReduceMotion = value;
+  for (const listener of listeners) listener();
+}
+
+function initialize() {
+  if (hasInitialized) return;
+  hasInitialized = true;
+  if (!isNativePlatform || !AccessibilityInfo) return;
+
+  AccessibilityInfo.isReduceMotionEnabled()
+    .then((value: boolean | null | undefined) => publish(value ?? false))
+    // Silently fail - default to false if unable to read preference
+    .catch(() => publish(false));
+
+  AccessibilityInfo.addEventListener(
+    'reduceMotionChanged',
+    (enabled: boolean | null | undefined) => publish(enabled ?? false)
+  );
+}
+
+function subscribe(listener: () => void) {
+  initialize();
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+function getSnapshot() {
+  return systemReduceMotion;
+}
+
+/** Test-only: drop the shared listener state between cases. */
+export function __resetReduceMotionStoreForTests() {
+  systemReduceMotion = false;
+  hasInitialized = false;
+  listeners.clear();
+}
+
 /**
  * Hook to detect and respond to the system's Reduce Motion accessibility setting.
  * When enabled, animations should be disabled or minimized for user comfort.
@@ -40,46 +90,9 @@ try {
  * ```
  */
 export const useReduceMotion = ({ preference }: UseReduceMotionOptions = {}) => {
-  const [systemReduceMotion, setSystemReduceMotion] = useState(false);
+  const system = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 
-  useEffect(() => {
-    // Only run on native platforms and if AccessibilityInfo is available
-    if (!isNativePlatform || !AccessibilityInfo) {
-      return;
-    }
-
-    let isMounted = true;
-
-    AccessibilityInfo.isReduceMotionEnabled()
-      .then((value: boolean | null | undefined) => {
-        if (isMounted) {
-          setSystemReduceMotion(value ?? false);
-        }
-      })
-      .catch(() => {
-        // Silently fail - default to false if unable to read preference
-        if (isMounted) {
-          setSystemReduceMotion(false);
-        }
-      });
-
-    const subscription = AccessibilityInfo.addEventListener(
-      'reduceMotionChanged',
-      (enabled: boolean | null | undefined) => {
-        if (isMounted) {
-          setSystemReduceMotion(enabled ?? false);
-        }
-      }
-    );
-
-    return () => {
-      isMounted = false;
-      subscription?.remove();
-    };
-  }, []);
-
-  return useMemo(() => Boolean(preference ?? systemReduceMotion), [preference, systemReduceMotion]);
+  return Boolean(preference ?? system);
 };
 
 export default useReduceMotion;
-

@@ -148,9 +148,40 @@ export function HabitsListContent({
     [focusAnchor]
   );
 
+  // `props` and `state` are fresh objects on every render, so depending on
+  // them rebuilt the header element every time. Depend on the fields
+  // renderHabitsListHeader actually reads instead (it ignores `handlers`).
   const listHeaderComponent = useMemo(
     () => renderHabitsListHeader({ handlers, props, state }),
-    [handlers, props, state]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      list.averageStrengthPercent,
+      list.compactView,
+      list.completedToday,
+      list.completionByDay,
+      list.currentStreak,
+      list.habitCompletionIcon,
+      list.habits.length,
+      list.reduceMotionPreference,
+      list.weekDateStrings,
+      props.canNavigateForward,
+      props.isAllSelected,
+      props.isSelectionMode,
+      props.onDeselectAll,
+      props.onJumpToToday,
+      props.onNextWeek,
+      props.onPreviousWeek,
+      props.onSelectAll,
+      props.onUpgradeIntent,
+      props.selectedCount,
+      props.weekDates,
+      state.calendarOpacity,
+      state.calendarTranslateY,
+      state.handleDayPress,
+      state.headerOpacity,
+      state.headerTranslateY,
+      state.justCreatedHabitId,
+    ]
   );
 
   // Mounted cells re-render only when this changes identity. It must carry
@@ -168,6 +199,10 @@ export function HabitsListContent({
   const renderHabitItem = useCallback(
     (p: RenderItemParams<Habit>) =>
       renderHabitRow({
+        // A focus request remounts the whole list (`key` below), unmounting
+        // every row at once. Paying for an exit animation per row there is
+        // pure waste, so the layout animation is dropped while one is pending.
+        exitAnimationEnabled: !focusRequestPending,
         habitRowOpacity: state.habitRowOpacity,
         habitRowTranslateY: state.habitRowTranslateY,
         initialEntranceDoneRef: state.initialEntranceDoneRef,
@@ -178,6 +213,7 @@ export function HabitsListContent({
         renderParams: p,
       }),
     [
+      focusRequestPending,
       state.habitRowOpacity,
       state.habitRowTranslateY,
       state.initialEntranceDoneRef,

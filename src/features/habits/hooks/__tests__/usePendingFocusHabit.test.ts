@@ -8,6 +8,7 @@
 
 import { act, renderHook } from '@testing-library/react-native';
 import { buildModalsStateReturnValue } from '../buildModalsStateReturnValue';
+import { useModalsStableHandlers } from '../useModalsStableHandlers';
 import {
   FOCUS_GIVE_UP_MS,
   usePendingFocusHabit,
@@ -162,18 +163,26 @@ describe('usePendingFocusHabit', () => {
   });
 
   it('exposes the form variant through the builder cast', () => {
-    const { result } = renderHook(() => usePendingFocusHabit());
+    const selection = { setHabitToPause: jest.fn() };
+    const { result } = renderHook(() => {
+      const focus = usePendingFocusHabit();
+      return {
+        focus,
+        stable: useModalsStableHandlers(focus as never, selection as never),
+      };
+    });
     const state = buildModalsStateReturnValue(
-      result.current as never,
+      result.current.focus as never,
       {} as never,
       {} as never,
+      result.current.stable,
       {} as never
     );
     expect(state.prepareCreatedHabitFocus).toBe(
-      result.current.prepareCreatedHabitFocus
+      result.current.focus.prepareCreatedHabitFocus
     );
     expect(state.rekeyPendingFocusHabit).toBe(
-      result.current.rekeyPendingFocusHabit
+      result.current.focus.rekeyPendingFocusHabit
     );
     expect(state.focusRequestKey).toBeNull();
     expect(state.focusRekey).toBeNull();
@@ -188,10 +197,15 @@ describe('usePendingFocusHabit', () => {
 });
 
 function buildWithVisibility(visibility: Record<string, unknown>) {
+  const selection = { setHabitToPause: jest.fn() };
+  const { result } = renderHook(() =>
+    useModalsStableHandlers(visibility as never, selection as never)
+  );
   return buildModalsStateReturnValue(
     visibility as never,
-    { setHabitToPause: jest.fn() } as never,
+    selection as never,
     {} as never,
+    result.current,
     {} as never
   );
 }

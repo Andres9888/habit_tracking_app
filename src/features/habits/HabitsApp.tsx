@@ -7,7 +7,7 @@
 import { View, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -58,10 +58,11 @@ function HabitsAppContent() {
   });
 
   const selection = useSelectionMode(list.habits);
-  const handleExitSelectionMode = () => {
+  const { exitSelectionMode } = selection;
+  const handleExitSelectionMode = useCallback(() => {
     triggerLightImpact();
-    selection.exitSelectionMode();
-  };
+    exitSelectionMode();
+  }, [exitSelectionMode, triggerLightImpact]);
   const selectionActions = useSelectionActions({
     selectedIds: selection.selectedIds,
     habits: list.habits,
@@ -84,15 +85,17 @@ function HabitsAppContent() {
 
   const showSkeleton = list.isHabitsLoading && list.habits.length === 0;
   const showEmptyState = !list.isHabitsLoading && list.habits.length === 0;
-  const handleBatchArchivePress = () => {
-    void selectionActions.handleBatchArchive();
-  };
-  const handleBatchArchiveUndoPress = () => {
-    void selectionActions.handleBatchArchiveUndo();
-  };
-  const handleConfirmBatchDelete = () => {
-    void selectionActions.confirmBatchDelete();
-  };
+  const { confirmBatchDelete, handleBatchArchive, handleBatchArchiveUndo } =
+    selectionActions;
+  const handleBatchArchivePress = useCallback(() => {
+    void handleBatchArchive();
+  }, [handleBatchArchive]);
+  const handleBatchArchiveUndoPress = useCallback(() => {
+    void handleBatchArchiveUndo();
+  }, [handleBatchArchiveUndo]);
+  const handleConfirmBatchDelete = useCallback(() => {
+    void confirmBatchDelete();
+  }, [confirmBatchDelete]);
 
   return (
     <GestureHandlerRootView style={styles.flex1}>

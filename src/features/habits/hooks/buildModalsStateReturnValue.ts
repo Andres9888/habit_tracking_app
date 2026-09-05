@@ -1,7 +1,7 @@
-import type { Id } from '../../../../convex/_generated/dataModel';
 import type { HabitsModalsState } from './types';
 import type { ModalVisibilityState } from './useModalVisibilityState';
 import type { HabitSelectionState } from './useHabitSelectionState';
+import type { ModalsStableHandlers } from './useModalsStableHandlers';
 import type {
   HandlersReturn,
   ExtraState,
@@ -11,9 +11,14 @@ import type {
  * Builds the complete HabitsModalsState return value by combining visibility state,
  * selection state, handlers, and extra state into a unified interface.
  *
+ * Every value here must already be stable (see `useModalsStableHandlers` for
+ * the open/close closures) — the caller memoises the object this returns, and
+ * an inline closure would silently defeat that.
+ *
  * @param visibility - Modal visibility state (open/close flags)
  * @param selection - Currently selected habits for various modals
  * @param handlers - Event handlers for modal interactions
+ * @param stable - Memoised open/close closures over visibility + selection
  * @param extra - Additional state like settings, habits list, tracking functions
  * @returns Complete HabitsModalsState object with all modal-related state and handlers
  */
@@ -21,6 +26,7 @@ export function buildModalsStateReturnValue(
   visibility: ModalVisibilityState,
   selection: HabitSelectionState,
   handlers: HandlersReturn,
+  stable: ModalsStableHandlers,
   extra: ExtraState
 ): HabitsModalsState {
   return {
@@ -71,29 +77,26 @@ export function buildModalsStateReturnValue(
 
     settings: extra.settings,
 
-    // Inline close handlers
-    closeSettings: () => visibility.setIsSettingsOpen(false),
+    // Memoised close handlers
+    closeSettings: stable.closeSettings,
 
     shareCardData: selection.shareCardData,
 
-    closeHabitCalendar: () => visibility.setIsHabitCalendarOpen(false),
+    closeHabitCalendar: stable.closeHabitCalendar,
 
-    closeHabitDetail: () => visibility.setIsHabitDetailOpen(false),
+    closeHabitDetail: stable.closeHabitDetail,
 
     showCreateHabit: visibility.isCreateHabitOpen,
 
-    closeHapticTest: () => visibility.setShowHapticTest(false),
+    closeHapticTest: stable.closeHapticTest,
 
     showEditScreen: visibility.showEditScreen,
 
-    closePauseModal: () => {
-      visibility.setShowPauseModal(false);
-      selection.setHabitToPause(null);
-    },
+    closePauseModal: stable.closePauseModal,
 
     showHabitCalendar: visibility.isHabitCalendarOpen,
 
-    closeTemplatesScreen: () => visibility.setShowTemplatesScreen(false),
+    closeTemplatesScreen: stable.closeTemplatesScreen,
 
     // Focus request raised by the Habit Library's post-add primary action.
     // NOTE: this builder ends in `as unknown as HabitsModalsState`, so tsc
@@ -102,19 +105,11 @@ export function buildModalsStateReturnValue(
     focusReady: visibility.focusReady,
     focusRequestAutoClose: visibility.focusRequestAutoClose,
 
-    // Prepare remounts and converges Home while the toast still covers it.
-    prepareFocusHabitOnHome: (habitId: Id<'habits'>) => {
-      visibility.preparePendingFocusHabit(habitId);
-    },
+    prepareFocusHabitOnHome: stable.prepareFocusHabitOnHome,
 
-    // Commit asks the list to reveal. A ready request skips probe polling;
-    // a cold request keeps the baseline converge-then-close behavior.
-    commitFocusHabitOnHome: (habitId: Id<'habits'>) => {
-      visibility.commitPendingFocusHabit(habitId);
-    },
+    commitFocusHabitOnHome: stable.commitFocusHabitOnHome,
 
-    markFocusHabitReady: (habitId: Id<'habits'>) =>
-      visibility.markPendingFocusReady(habitId),
+    markFocusHabitReady: stable.markFocusHabitReady,
 
     clearPendingFocusHabit: visibility.clearPendingFocusHabit,
 
@@ -149,10 +144,7 @@ export function buildModalsStateReturnValue(
 
     showTemplatesScreen: visibility.showTemplatesScreen,
 
-    openHapticTest: () => {
-      visibility.setIsSettingsOpen(false);
-      visibility.setShowHapticTest(true);
-    },
+    openHapticTest: stable.openHapticTest,
 
     showVisualizationExercise: visibility.showVisualizationExercise,
 
@@ -160,18 +152,14 @@ export function buildModalsStateReturnValue(
     showHabitStrengthPercentage: extra.showHabitStrengthPercentage,
     openQuickActions: handlers.openQuickActions,
     tracking: extra.tracking,
-    // Inline open handlers
-    openSettings: () => visibility.setIsSettingsOpen(true),
+    // Memoised open handlers
+    openSettings: stable.openSettings,
 
-    // Reopening the library cancels any stale focus request.
-    openTemplatesScreen: () => {
-      visibility.clearPendingFocusHabit();
-      visibility.setShowTemplatesScreen(true);
-    },
+    openTemplatesScreen: stable.openTemplatesScreen,
 
     openVisualizationExercise: handlers.openVisualizationExercise,
 
-    setShowHabitStrengthPercentage: () => {},
+    setShowHabitStrengthPercentage: stable.setShowHabitStrengthPercentage,
     toggleHabit: extra.handleToggleHabit,
   } as unknown as HabitsModalsState;
 }

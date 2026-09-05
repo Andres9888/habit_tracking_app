@@ -9,8 +9,10 @@
  * List entrance: staggered FadeInDown on the initial batch only; rows mounted
  * later by FlatList virtualization appear instantly (no entering animation).
  *
- * Exit animation: All rows use Reanimated layout animation (FadeOutRight)
- * so that deletions/archiving feel smooth rather than items vanishing.
+ * Exit animation: rows use a Reanimated layout animation (FadeOutRight) so
+ * deletions/archiving feel smooth rather than items vanishing — except while a
+ * focus request is pending, when the list remounts wholesale and every row
+ * would otherwise run an exit animation nobody sees.
  */
 
 import React, { type MutableRefObject } from 'react';
@@ -29,12 +31,15 @@ interface RenderHabitRowOptions {
   habitRowTranslateY: Animated.Value;
   renderItem: (p: RenderItemParams<Habit>) => React.ReactNode;
   renderParams: RenderItemParams<Habit>;
+  /** Defaults to true; false while the list is about to remount for focus. */
+  exitAnimationEnabled?: boolean;
 }
 
 const EXIT_ANIMATION = FadeOutRight.duration(200).damping(18).stiffness(150);
 
 export function renderHabitRow(opts: RenderHabitRowOptions) {
   const {
+    exitAnimationEnabled = true,
     item,
     justCreatedHabitId,
     onHabitRowLayout,
@@ -56,24 +61,26 @@ export function renderHabitRow(opts: RenderHabitRowOptions) {
     onHabitRowLayout?.(item._id, event.nativeEvent.layout.height);
   };
 
+  const content = renderItem(renderParams);
+
   return (
     <Reanimated.View
       entering={enterAnimation}
-      exiting={EXIT_ANIMATION}
+      exiting={exitAnimationEnabled ? EXIT_ANIMATION : undefined}
       onLayout={handleLayout}
     >
-      <Animated.View
-        style={
-          isNewlyCreated
-            ? {
-                opacity: habitRowOpacity,
-                transform: [{ translateY: habitRowTranslateY }],
-              }
-            : undefined
-        }
-      >
-        {renderItem(renderParams)}
-      </Animated.View>
+      {isNewlyCreated ? (
+        <Animated.View
+          style={{
+            opacity: habitRowOpacity,
+            transform: [{ translateY: habitRowTranslateY }],
+          }}
+        >
+          {content}
+        </Animated.View>
+      ) : (
+        content
+      )}
     </Reanimated.View>
   );
 }

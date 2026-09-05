@@ -1,7 +1,6 @@
 import { ClerkProvider } from '@clerk/clerk-expo';
 import { resourceCache } from '@clerk/clerk-expo/resource-cache';
 import type { PropsWithChildren } from 'react';
-import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ReducedMotionConfig, ReduceMotion } from 'react-native-reanimated';
 
@@ -16,7 +15,6 @@ import {
   LazyProviders,
   SentryUserSync,
 } from '../providers';
-import theme from '../theme';
 import { MissingConfigFallback } from './MissingConfigFallback';
 import { StartupErrorBoundary } from './StartupErrorBoundary';
 
@@ -33,19 +31,17 @@ export function AppProviders({ children }: PropsWithChildren) {
           animations; components override per-instance only to force motion. */}
       <ReducedMotionConfig mode={ReduceMotion.System} />
       <SafeAreaProvider>
-        <PaperProvider theme={theme}>
-          <ClerkProvider
-            __experimental_resourceCache={resourceCache}
-            publishableKey={clerkKey}
-            tokenCache={tokenCache}
-          >
-            <SentryUserSync>
-              <ConvexClerkProvider>
-                <LazyProviders>{children}</LazyProviders>
-              </ConvexClerkProvider>
-            </SentryUserSync>
-          </ClerkProvider>
-        </PaperProvider>
+        <ClerkProvider
+          __experimental_resourceCache={resourceCache}
+          publishableKey={clerkKey}
+          tokenCache={tokenCache}
+        >
+          <SentryUserSync>
+            <ConvexClerkProvider>
+              <LazyProviders>{children}</LazyProviders>
+            </ConvexClerkProvider>
+          </SentryUserSync>
+        </ClerkProvider>
       </SafeAreaProvider>
     </StartupErrorBoundary>
   );
