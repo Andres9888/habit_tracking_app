@@ -37,7 +37,7 @@ export function StreakGoalRow({
     <PanelRow
       accessibilityLabel='Streak goal'
       divided={divided}
-      hint='A target. No penalty if you miss it.'
+      hint='A target. No penalty if missed.'
       hue='streak'
       icon={
         <Target

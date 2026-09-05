@@ -15,7 +15,8 @@ const DEFAULT_BORDER = '#e7e5e4';
 export function useFocusedGreenInputStyle(
   isFocused: boolean,
   hasError: boolean,
-  defaultBorderColor: string = DEFAULT_BORDER
+  defaultBorderColor: string = DEFAULT_BORDER,
+  borderWidth: number = 2
 ) {
   const reduceMotion = useReduceMotion();
   const focusProgress = useSharedValue(0);
@@ -34,13 +35,13 @@ export function useFocusedGreenInputStyle(
         : focusProgress.value > 0.5
           ? FOCUS_GREEN
           : defaultBorderColor,
-      borderWidth: 2,
+      borderWidth,
       elevation: focusProgress.value * 2,
       shadowColor: FOCUS_GREEN,
       shadowOffset: { height: 0, width: 0 },
       shadowOpacity: focusProgress.value * 0.1,
       shadowRadius: focusProgress.value * 3,
     }),
-    [defaultBorderColor, hasError]
+    [borderWidth, defaultBorderColor, hasError]
   );
 }

@@ -1,6 +1,6 @@
 /**
  * Rotating habit-name placeholders for the add-habit flow.
- * Bare examples only — the "Name your new habit" title carries the instruction.
+ * Bare examples only — the "New habit" heading + NAME label carry the instruction.
  */
 
 /**

@@ -1,10 +1,13 @@
 /**
  * NameInputSection - Shared habit-name heading + input for both Add and Edit.
+ * "Balanced" direction: left-aligned heading, caps NAME label, stone field
+ * that only goes green on focus — same label system as the sections below.
  */
 
 import { useState } from 'react';
 import { Text, View } from 'react-native';
-import { spacing } from '@/theme/spacing';
+import { SectionLabel } from '@/components/AdvancedOptions/panel/SectionLabel';
+import { usePanelTokens } from '@/components/AdvancedOptions/panel/panelTokens';
 import { typography } from '@/theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
 import STRINGS from '@/constants/strings';
@@ -30,38 +33,41 @@ export function NameInputSection({
   showNameError = false,
   autoFocus = false,
 }: NameInputSectionProps) {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
+  const t = usePanelTokens();
   const [isFocused, setIsFocused] = useState(false);
   const focusedInputStyle = useFocusedGreenInputStyle(
     isFocused,
     showNameError,
-    colors.border
+    t.panelBorder,
+    1.5
   );
-  // "e.g." prefix + disabled-tier color keep the suggestion from reading as a
-  // typed value (it sat next to "Give your habit a name" looking filled).
+  // "e.g." prefix + the panel's hint colour keep the suggestion from reading
+  // as a typed value.
   const hintText = placeholder ? `e.g. ${placeholder}` : '';
 
   return (
-    <View
-      className='items-center px-6'
-      style={{ marginBottom: spacing['2xl'], marginTop: spacing.xl }}
-    >
+    <View style={{ paddingHorizontal: 24, paddingTop: 24, marginBottom: 24 }}>
       <Text
         accessibilityRole='header'
-        className='mb-6 text-center leading-tight'
-        style={{ ...typography.heading2, color: colors.text.primary }}
+        style={{
+          ...typography.heading2,
+          color: colors.text.primary,
+          marginBottom: 20,
+        }}
       >
         {title}
       </Text>
+      <SectionLabel label='NAME' />
 
       <HabitNameInputField
         autoFocus={autoFocus}
-        backgroundColor={isDark ? colors.card : '#FFFFFF'}
+        backgroundColor={t.chipRestBg}
         borderStyle={focusedInputStyle}
         habitName={habitName}
-        hintColor={colors.gray[300]}
+        hintColor={t.chevron}
         placeholder={hintText}
-        textColor={colors.text.primary}
+        textColor={t.textPrimary}
         onBlur={() => {
           setIsFocused(false);
           onHabitNameBlur?.();

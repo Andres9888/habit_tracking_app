@@ -19,7 +19,7 @@ export const STRINGS = {
     nameLabel: 'Habit name',
     namePlaceholder: DEFAULT_HABIT_NAME_PLACEHOLDER,
     namePrompt: 'Name your habit',
-    nameTitle: 'Name your new habit',
+    nameTitle: 'New habit',
     // V9 additions
     orCreateYourOwn: 'or create your own',
 

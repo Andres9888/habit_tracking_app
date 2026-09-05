@@ -6,7 +6,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 import { createHabitMotion } from '../createHabitMotion';
+import { HABIT_NAME_FIELD_PADDING } from './HabitNameInputField';
 
 interface HabitNamePlaceholderOverlayProps {
   text: string;
@@ -68,8 +70,21 @@ export function HabitNamePlaceholderOverlay({
       ellipsizeMode='tail'
       numberOfLines={1}
       pointerEvents='none'
-      className='absolute inset-0 px-5 py-4 text-center text-2xl font-semibold'
-      style={[animatedStyle, { color: hintColor, lineHeight: 28 }]}
+      className='absolute inset-0'
+      style={[
+        animatedStyle,
+        {
+          color: hintColor,
+          fontFamily: fontFamilies.primary.text,
+          fontSize: 18,
+          fontWeight: fontWeights.semibold,
+          lineHeight: 24,
+          // +2 keeps the hint clear of the native caret at the left padding.
+          paddingLeft: HABIT_NAME_FIELD_PADDING.horizontal + 2,
+          paddingRight: HABIT_NAME_FIELD_PADDING.horizontal,
+          paddingVertical: HABIT_NAME_FIELD_PADDING.vertical,
+        },
+      ]}
     >
       {text}
     </Animated.Text>
