@@ -106,6 +106,7 @@ import type * as streakUtils_updateStreak from "../streakUtils/updateStreak.js";
 import type * as streakUtils from "../streakUtils.js";
 import type * as subscriptions_helpers from "../subscriptions/helpers.js";
 import type * as subscriptions_premiumCheck from "../subscriptions/premiumCheck.js";
+import type * as subscriptions_transfer from "../subscriptions/transfer.js";
 import type * as subscriptions from "../subscriptions.js";
 import type * as templateCategories from "../templateCategories.js";
 import type * as templates_backfillAccentColors from "../templates/backfillAccentColors.js";
@@ -242,6 +243,7 @@ declare const fullApi: ApiFromModules<{
   streakUtils: typeof streakUtils;
   "subscriptions/helpers": typeof subscriptions_helpers;
   "subscriptions/premiumCheck": typeof subscriptions_premiumCheck;
+  "subscriptions/transfer": typeof subscriptions_transfer;
   subscriptions: typeof subscriptions;
   templateCategories: typeof templateCategories;
   "templates/backfillAccentColors": typeof templates_backfillAccentColors;

@@ -8,10 +8,27 @@ import { useCallback, useState } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { PremiumPack } from '../data/premiumPacks';
 
+type PackTemplate = { _id: Id<'templates'>; name: string };
+
+export interface PackPartialFailure {
+  failedCount: number;
+  importedCount: number;
+  /** Re-attempts only the templates that failed. */
+  retry: () => Promise<void>;
+}
+
 interface PackConfirmOptions {
-  allTemplates: { _id: Id<'templates'>; name: string }[] | undefined;
-  importTemplate: (args: { templateId: Id<'templates'> }) => Promise<{ success: boolean }>;
+  allTemplates: PackTemplate[] | undefined;
+  importTemplate: (args: {
+    templateId: Id<'templates'>;
+  }) => Promise<{ success: boolean }>;
   onComplete: (count: number) => void;
+  /**
+   * Called when at least one template in the pack could not be imported
+   * (for example the habit-creation rate limit ran out mid-pack). Without
+   * this the user would see a partial pack with no explanation.
+   */
+  onPartialFailure?: (info: PackPartialFailure) => void;
   setImportedIds: Dispatch<SetStateAction<Set<string>>>;
 }
 
@@ -25,24 +42,43 @@ export function usePackConfirm(o: PackConfirmOptions) {
 
   const handleCancel = useCallback(() => setSelectedPack(null), []);
 
+  const importAll = useCallback(
+    async (templates: PackTemplate[]): Promise<void> => {
+      let count = 0;
+      const failed: PackTemplate[] = [];
+      for (const t of templates) {
+        try {
+          const res = await o.importTemplate({ templateId: t._id });
+          if (res.success) {
+            o.setImportedIds((prev) => new Set(prev).add(t._id));
+            count++;
+          } else {
+            failed.push(t);
+          }
+        } catch {
+          failed.push(t);
+        }
+      }
+      if (count > 0) o.onComplete(count);
+      if (failed.length > 0) {
+        o.onPartialFailure?.({
+          failedCount: failed.length,
+          importedCount: count,
+          retry: () => importAll(failed),
+        });
+      }
+    },
+    [o.importTemplate, o.onComplete, o.onPartialFailure, o.setImportedIds]
+  );
+
   const handleConfirm = useCallback(async () => {
     if (!selectedPack || !o.allTemplates) return;
     const normalize = (s: string) => s.trim().toLowerCase();
     const names = new Set(selectedPack.habits.map((h) => normalize(h.name)));
     const matches = o.allTemplates.filter((t) => names.has(normalize(t.name)));
-    let count = 0;
-    for (const t of matches) {
-      try {
-        const res = await o.importTemplate({ templateId: t._id });
-        if (res.success) {
-          o.setImportedIds((prev) => new Set(prev).add(t._id));
-          count++;
-        }
-      } catch { /* skip failed individual imports */ }
-    }
     setSelectedPack(null);
-    if (count > 0) o.onComplete(count);
-  }, [selectedPack, o.allTemplates, o.importTemplate, o.setImportedIds, o.onComplete]);
+    await importAll(matches);
+  }, [selectedPack, o.allTemplates, importAll]);
 
   return { handleCancel, handleConfirm, handlePackPress, selectedPack };
 }

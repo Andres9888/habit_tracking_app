@@ -8,7 +8,7 @@
 import { mutation, query } from './_generated/server';
 import type { MutationCtx } from './_generated/server';
 import { v } from 'convex/values';
-import { enforceRateLimit } from './lib/rateLimit';
+import { enforceRateLimit, RATE_LIMITS } from './lib/rateLimit';
 
 async function deleteDocuments(
   ctx: MutationCtx,
@@ -125,11 +125,21 @@ export const deleteCurrentUserData = mutation({
       .withIndex('by_user', (q) => q.eq('userId', userId))
       .collect();
     // SR-2026-04-17-09 follow-up: keep GDPR delete complete when the
-    // rate-limits table was added. Purge all per-user throttle rows.
-    const rateLimits = await ctx.db
-      .query('rateLimits')
-      .withIndex('by_user_and_action', (q) => q.eq('userId', userId))
-      .collect();
+    // rate-limits table was added. Purge per-user throttle rows, but keep
+    // windows that are still open: deleting them would let a caller reset
+    // an exhausted budget (e.g. uploads) by deleting and recreating the
+    // account with the same Clerk id. Open windows hold only an opaque id
+    // and a counter, and close on their own within the hour.
+    const now = Date.now();
+    const rateLimits = (
+      await ctx.db
+        .query('rateLimits')
+        .withIndex('by_user_and_action', (q) => q.eq('userId', userId))
+        .collect()
+    ).filter((row) => {
+      const config = RATE_LIMITS[row.action as keyof typeof RATE_LIMITS];
+      return !config || row.windowStartMs + config.windowMs <= now;
+    });
 
     const deletedTemplateUsage = await deleteDocuments(
       ctx,

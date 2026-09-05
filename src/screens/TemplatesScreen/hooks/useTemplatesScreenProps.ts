@@ -52,6 +52,17 @@ export function useTemplatesScreenProps() {
     importTemplate: data.importTemplate,
     onComplete: (count) =>
       state.setSessionImportCount((current) => current + count),
+    onPartialFailure: ({ failedCount, importedCount, retry }) => {
+      const total = failedCount + importedCount;
+      state.setFeedbackHabitId(null);
+      state.setFeedbackVariant(null);
+      state.setToastTemplateData(null);
+      state.setToastOnAction(() => () => void retry());
+      state.setShowToast(true);
+      state.setToastMessage(
+        `Added ${importedCount} of ${total} pack habits. Tap to retry the rest.`
+      );
+    },
     setImportedIds: state.setImportedTemplateIds,
   });
 

@@ -44,6 +44,12 @@ function getWebhookEventTimestamp(
   );
 }
 
+function readIdList(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.filter((id): id is string => typeof id === 'string' && id !== '')
+    : [];
+}
+
 /**
  * Main webhook handler for RevenueCat events
  */
@@ -80,19 +86,44 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
     // malformed payload can't slip past replay protection.
     const eventId: string | undefined = event?.id;
 
-    if (!eventType || !appUserId) {
-      console.error('[RevenueCat] Missing event type or app_user_id');
-      return new Response('Invalid payload', { status: 400 });
-    }
-
     if (!eventId || typeof eventId !== 'string') {
-      console.error('[RevenueCat] Missing event id — required for replay protection');
+      console.error(
+        '[RevenueCat] Missing event id — required for replay protection'
+      );
       return new Response('Invalid payload', { status: 400 });
     }
 
     const eventTimestamp = getWebhookEventTimestamp(event ?? {});
     if (!eventTimestamp) {
       console.error('[RevenueCat] Missing valid webhook event timestamp');
+      return new Response('Invalid payload', { status: 400 });
+    }
+
+    // TRANSFER carries no app_user_id: the entitlement moved between the
+    // `transferred_from` and `transferred_to` app user ids. RevenueCat's
+    // default restore behaviour emits this, so it must be honoured or the old
+    // account keeps server-side premium forever.
+    if (eventType === 'TRANSFER') {
+      const fromClerkIds = readIdList(event.transferred_from);
+      const toClerkIds = readIdList(event.transferred_to);
+      if (fromClerkIds.length === 0 && toClerkIds.length === 0) {
+        console.error('[RevenueCat] TRANSFER without transferred_from/to');
+        return new Response('Invalid payload', { status: 400 });
+      }
+      await ctx.runMutation(internal.subscriptions.transfer.transferPremium, {
+        eventId,
+        eventTimestamp,
+        fromClerkIds,
+        toClerkIds,
+      });
+      return Response.json(
+        { received: true },
+        { headers: { 'Content-Type': 'application/json' }, status: 200 }
+      );
+    }
+
+    if (!eventType || !appUserId) {
+      console.error('[RevenueCat] Missing event type or app_user_id');
       return new Response('Invalid payload', { status: 400 });
     }
 

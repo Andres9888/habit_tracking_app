@@ -8,6 +8,7 @@ import { mutation } from '../_generated/server';
 import type { RemovedHabitPayload } from './removePayload';
 import { buildRemovedHabitPayload } from './removePayload';
 import { findMaxOrderForUser } from './utils';
+import { enforceRateLimit } from '../lib/rateLimit';
 
 const UNDO_RETENTION_MS = 15 * 60 * 1000;
 
@@ -31,6 +32,7 @@ export const remove = mutation({
     if (habit.userId !== identity.subject) {
       throw new Error('Not authorized to delete this habit');
     }
+    await enforceRateLimit(ctx, identity.subject, 'habit.lifecycle');
 
     // Get all related data before deleting
     const trackingEntries = await ctx.db
@@ -93,6 +95,7 @@ export const restore = mutation({
     if (!deletedHabit || deletedHabit.userId !== identity.subject) {
       throw new Error('Deleted habit not found');
     }
+    await enforceRateLimit(ctx, identity.subject, 'habit.lifecycle');
     if (deletedHabit.expiresAt < Date.now()) {
       await ctx.db.delete(args.deletedHabitId);
       throw new Error('Undo window expired');
