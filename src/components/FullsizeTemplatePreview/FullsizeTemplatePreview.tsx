@@ -63,7 +63,6 @@ function FullsizeTemplatePreviewComponent({
     onCustomize,
     onGoToHabit,
     onImport,
-    reducedMotion,
     template: effectiveTemplate,
   });
   const animatedStyles = useAnimatedStyles({

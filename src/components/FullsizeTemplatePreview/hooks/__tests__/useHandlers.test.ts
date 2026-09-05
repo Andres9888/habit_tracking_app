@@ -26,7 +26,6 @@ function setup(overrides: Record<string, unknown> = {}) {
       onClose,
       onCustomize,
       onImport,
-      reducedMotion: true,
       template,
       ...overrides,
     })
