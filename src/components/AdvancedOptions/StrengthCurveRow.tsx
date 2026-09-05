@@ -51,7 +51,7 @@ export function StrengthCurveRow({
       divided={divided}
       hint={
         open
-          ? 'How hard is this habit? Easier habits build faster.'
+          ? 'Easier habits build faster'
           : 'How hard is this habit?'
       }
       hue='curve'

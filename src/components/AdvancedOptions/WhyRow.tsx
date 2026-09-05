@@ -14,7 +14,7 @@ interface Props {
   divided: boolean;
 }
 
-const UNSET_HINT = 'One line you’ll see each time you check in';
+const UNSET_HINT = 'Shown each time you check in';
 
 export function WhyRow({ why, onWhyChange, open, onToggle, divided }: Props) {
   const t = usePanelTokens();

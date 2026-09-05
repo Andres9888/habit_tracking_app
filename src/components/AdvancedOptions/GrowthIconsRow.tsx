@@ -60,7 +60,7 @@ export function GrowthIconsRow({
     <PanelRow
       accessibilityLabel='Growth icons'
       divided={divided}
-      hint='The icon changes as your habit gets stronger'
+      hint='Icon evolves as strength grows'
       hue='growth'
       icon={
         <Text allowFontScaling={false} style={{ fontSize: 16 }}>

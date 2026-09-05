@@ -1,8 +1,14 @@
 /**
- * One-row palette: 10 equal flex cells, one 26px dot each (spec §2).
+ * Colour grid on the same 5-column tracks as the icon grid (spec §2): gap 8,
+ * 48px-tall cells, 36px swatches. Cell width is measured on layout so the
+ * columns line up with the emoji tiles above on every device width.
  */
-import { View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { View, type LayoutChangeEvent } from 'react-native';
 import { ColorDot } from './ColorDot';
+
+const GAP = 8;
+const COLUMNS = 5;
 
 interface ColorRowProps {
   colors: readonly string[];
@@ -14,22 +20,33 @@ export const ColorRow = ({
   colors,
   selectedColor,
   onSelectColor,
-}: ColorRowProps) => (
-  <View
-    style={{
-      alignItems: 'center',
-      flexDirection: 'row',
-      marginHorizontal: -2,
-    }}
-    testID='color-picker-row'
-  >
-    {colors.map((color) => (
-      <ColorDot
-        key={color}
-        color={color}
-        isSelected={selectedColor === color}
-        onSelect={onSelectColor}
-      />
-    ))}
-  </View>
-);
+}: ColorRowProps) => {
+  const [width, setWidth] = useState(0);
+  const handleLayout = useCallback((e: LayoutChangeEvent) => {
+    setWidth(e.nativeEvent.layout.width);
+  }, []);
+  const cell = width > 0 ? (width - GAP * (COLUMNS - 1)) / COLUMNS : 0;
+
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: GAP,
+        opacity: cell > 0 ? 1 : 0,
+      }}
+      testID='color-picker-row'
+      onLayout={handleLayout}
+    >
+      {colors.map((color) => (
+        <ColorDot
+          key={color}
+          cellWidth={cell}
+          color={color}
+          isSelected={selectedColor === color}
+          onSelect={onSelectColor}
+        />
+      ))}
+    </View>
+  );
+};

@@ -20,7 +20,7 @@ NameInputSection (unchanged)
 SectionLabel "ICON"           right: "BROWSE ALL" (primary-700)
 EmojiGrid 5 cols, gap 8, tiles aspect 1:1, last tile = "+" (dashed)
 SectionLabel "COLOR"
-ColorRow 10 cols, 26px dots, selected = 2px primary-500 ring, 2px gap
+ColorGrid 5 cols (same tracks as EmojiGrid), gap 8, cells 48px tall, 36px swatches, selected = existing primary-500 ring with 3px screen-bg gap
 SectionLabel "MORE TO CUSTOMIZE"   right: "Optional" (12/600 text.secondary, not caps)
 PanelCard
   Row: Daily reminder   (trailing = Switch)
@@ -68,7 +68,7 @@ Value chip: pill, padding 4×10, 12/600. **Set** = filled with tile bg + ink. **
 
 ### PanelRow (closed)
 ```
-[Tile 32] gap10 [Title 15/600 ; Hint 12/500 secondary, 1 line, ellipsis] gap10 [Trailing] gap10 [Chevron ›]
+[Tile 32] gap10 [Title 15/600 ; Hint 12/500 secondary, 1 line, nowrap + ellipsis — hints must fit ~175px at 12px] gap10 [Trailing] gap10 [Chevron ›]
 minHeight 60, paddingVertical 12, alignItems center
 ```
 Whole row is one Pressable (`accessibilityRole="button"`, `accessibilityState={{expanded}}`), except the Switch in the reminder row which is its own target. Hit target ≥ 44.
@@ -113,22 +113,22 @@ Row: caps label left, optional action right (same caps style, primary-700 for ac
 - Switch OFF: row closes, time retained in state; hint "Off"; chip hidden.
 
 ### Your why
-- Hint: unset → "One line you’ll see each time you check in"; set → the text, ellipsized.
+- Hint: unset → "Shown each time you check in"; set → the text, ellipsized.
 - Chip: unset "Add" (outlined amber) / set "Set" (filled amber).
 - Open: text field, `#fff` bg, 1.5px border `#E8C9A6` when focused else `panel.border`, radius 14, padding 14, 15/500, placeholder "I want to feel…", counter inside top-right 11/600 tabular (remaining chars, max 140). Autofocus on open. Helper: "SHOWN ABOVE COMPLETE TODAY".
 
 ### Streak goal
-- Hint: "A target to aim for. Missing it costs nothing."
+- Hint: "A target. No penalty if you miss it."
 - Chip: none → "Set" outlined gold; else "{n} days" filled gold.
 - Chips: `— NONE` · `7 DAYS` (suggested dot) · `30 DAYS` · `100 DAYS` · `··· CUSTOM`. Selecting CUSTOM shows a stepper card below: label "Custom target", `−` / value "21 days" / `+` (44px targets), value replaces `···` in the chip. Helper: "SUGGESTED · MOST NEW HABITS STICK AFTER A WEEK".
 
 ### Strength curve
-- Hint closed: "How hard is this habit?"; open: "How hard is this habit? Easier habits build faster."
+- Hint closed: "How hard is this habit?"; open: "Easier habits build faster"
 - Chip: mode name, filled green.
 - Chips: Simple `+10%/DAY` (sprout) · Average `+3%/DAY` (trend, suggested) · Complex `+1%/DAY` (mountain). Helper: "SUGGESTED · MISSES COST LESS ON SLOWER CURVES". Disclosure: "SEE THE DIFFERENCE" → existing compare strip.
 
 ### Growth icons
-- Hint: "The icon changes as your habit gets stronger". Tile shows the theme's first stage emoji.
+- Hint: "Icon evolves as strength grows". Tile shows the theme's first stage emoji.
 - Chip: theme name, filled violet.
 - Open: 5 stage chips (emoji 20px; labels NEW · (blank) · (blank) · YOURS · STRONG; YOURS chip is selected-styled and shows the habit's chosen icon), then theme row: 44px pills (emoji + name), selected = `#EBE4F7` bg + 2px `#6D3AC7` border + violet 12/700 text. Helper: "YOUR HABIT ICON STANDS IN FOR THE FOURTH STAGE".
 

@@ -57,10 +57,10 @@ describe('ColorPickerSection - row variant', () => {
     expect(mockTriggerSelection).toHaveBeenCalled();
   });
 
-  it('keeps a 44pt hit target', () => {
+  it('keeps a 48pt-tall cell (≥ 44pt hit target)', () => {
     const { getByTestId } = render(<ColorPickerSection {...props} />);
     expect(getByTestId('color-swatch-EF4444').props.style).toEqual(
-      expect.objectContaining({ minHeight: 44 })
+      expect.objectContaining({ height: 48 })
     );
   });
 });
