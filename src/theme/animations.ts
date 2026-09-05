@@ -9,6 +9,9 @@
  * - Max 3 simultaneous moving elements per viewport
  * - No decorative loops, idle animations, or novelty motion
  *
+ * This module is the single source of truth for motion tokens. Durations,
+ * easings and spring presets all live here; nothing else may declare its own.
+ *
  * Canonical entrance pattern:
  *   FadeInDown.duration(durations.enter).easing(enterEasing)
  */
@@ -19,28 +22,26 @@ import { Easing } from 'react-native-reanimated';
  * Duration Scale (milliseconds)
  */
 export const durations = {
+  /** Sheet/modal backdrop fade — trails the sheet slide */
+  backdrop: 180,
+
+  /** Breathing animations, glow pulses */
+  breathing: 1500,
+
   /** Confetti, particles */
   celebration: 3000,
 
   /** Multi-step animations, onboarding */
   complex: 600,
 
-  /** Draw attention, complex sequences */
-  emphasis: 400,
-
   /** Floating, drifting motion loops */
   drift: 2000,
 
+  /** Draw attention, complex sequences */
+  emphasis: 400,
+
   /** Screen/card entry */
   enter: 280,
-
-  /**
-   * Bottom-sheet enter/exit. Matches native iOS Modal animationType='slide'
-   * cadence (~360ms) used by Settings and Templates so all modal surfaces
-   * feel paced the same, even though Create/Edit are bottom sheets rather
-   * than full-screen modals.
-   */
-  sheet: 360,
 
   /** Button presses, toggles — immediate feedback */
   instant: 100,
@@ -51,9 +52,6 @@ export const durations = {
   /** Medium emphasis, page transitions */
   moderate: 300,
 
-  /** Breathing animations, glow pulses */
-  breathing: 1500,
-
   /** Progress bar fills, ring animations */
   progress: 800,
 
@@ -63,48 +61,47 @@ export const durations = {
   /** Quick fades, small transitions */
   reveal: 180,
 
-  /** Standard transitions */
-  standard: 200,
-
-  /** Emphasized transitions, exit animations */
-  transition: 220,
+  /**
+   * Bottom-sheet enter/exit. Matches the iOS sheet cadence used by
+   * `NoteSheet` (300ms paired with `sheetEasing`) so every modal surface —
+   * full-screen modal or bottom sheet — is paced the same.
+   */
+  sheet: 300,
 
   /** Stagger delay per item (max 5 items) */
   stagger: 60,
 
+  /** Standard transitions */
+  standard: 200,
+
   /** Toast auto-dismiss */
   toast: 5000,
+
+  /** Emphasized transitions, exit animations */
+  transition: 220,
 } as const;
 
 /**
- * Easing Presets
- */
-export const easings = {
-  buttonPress: { duration: durations.instant },
-  emphasis: { duration: durations.emphasis },
-  quick: { duration: durations.quick },
-  standard: { duration: durations.standard },
-} as const;
-
-/**
- * Spring Presets
+ * Spring Presets — 7 canonical presets plus the `button` alias.
  * All motion encodes hierarchy, state, or spatial relation.
  *
  * Design System Standard: damping 18, stiffness 150
  * This provides a consistent, snappy feel across all micro-interactions.
  */
+const standardSpring = { damping: 18, stiffness: 150 } as const;
+
 export const springs = {
   /** Standard spring for all interactions - consistent feel */
-  standard: { damping: 18, stiffness: 150 },
+  standard: standardSpring,
 
-  /** Bottom sheet enter/exit — higher damping for stable slide */
-  bottomSheet: { damping: 26, stiffness: 300 },
+  /**
+   * Button press/release — documented alias of `standard` (same object).
+   * Kept for one release so semantic press call sites still read clearly.
+   */
+  button: standardSpring,
 
-  /** Bouncy — celebrations only */
-  bouncy: { damping: 10, stiffness: 180 },
-
-  /** Button press/release — alias of standard for semantic clarity */
-  button: { damping: 18, stiffness: 150 },
+  /** Celebration bounce — completion badges, progress pops */
+  celebration: { damping: 12, stiffness: 200 },
 
   /** Fast dismissal — minimal bounce */
   exit: { damping: 26, mass: 1, stiffness: 420 },
@@ -115,29 +112,11 @@ export const springs = {
   /** Direct manipulation snap-back */
   gesture: { damping: 20, mass: 1, stiffness: 450 },
 
-  /** Subtle micro-interactions — alias of standard for semantic clarity */
-  micro: { damping: 18, stiffness: 150 },
-
-  /** Attention pulse / glow */
-  pulse: { damping: 12, stiffness: 250 },
-
-  /** Modal/sheet presentations */
-  sheet: { damping: 20, stiffness: 200 },
-
-  /** Quick response — alias of standard for semantic clarity */
-  snappy: { damping: 18, stiffness: 150 },
-
-  /** Celebration bounce — completion badges, progress pops */
-  celebration: { damping: 12, stiffness: 200 },
-
   /** Explosive pop — confetti scale, fast expansion */
   pop: { damping: 8, stiffness: 300 },
 
-  /** Responsive button — snappy interactive feedback */
-  responsive: { damping: 15, stiffness: 300 },
-
-  /** Heavy settling — high damping for stable modal/sheet transitions */
-  settle: { damping: 28, mass: 1, stiffness: 180 },
+  /** Modal/sheet presentations */
+  sheet: { damping: 20, stiffness: 200 },
 } as const;
 
 /**
@@ -173,6 +152,16 @@ export const exitEasing = (easingApi.in ?? passthrough)(
 export const moveEasing = (easingApi.inOut ?? passthrough)(
   easingApi.cubic ?? identity
 );
+
+const fallbackBezier = (..._points: number[]): EasingFn => identity;
+const bezier =
+  (easingApi as { bezier?: typeof Easing.bezier }).bezier ?? fallbackBezier;
+
+/** iOS sheet curve — pair with `durations.sheet` for slide in/out. */
+export const sheetEasing = bezier(0.32, 0.72, 0, 1);
+
+/** Strong ease-out for UI reveals that must settle without overshoot. */
+export const uiEaseOut = bezier(0.23, 1, 0.32, 1);
 
 export type Duration = keyof typeof durations;
 export type Spring = keyof typeof springs;

@@ -1,14 +1,14 @@
 /**
  * useSwipeDismiss — sheet transition with swipe-to-dismiss.
  *
- * Enter: timing slide-up + backdrop fade-in (durations.sheet / enterEasing).
- *        Uses `durations.sheet` (~360ms) to match the cadence of the native
- *        iOS Modal slide animation used by Settings and Templates — all
- *        modal surfaces feel paced the same, even though Create/Edit are
- *        bottom sheets rather than full-screen modals.
- * Exit: timing slide-down + backdrop fade-out, then onClose.
- * Swipe: gesture tracking with proportional backdrop fade, haptic on threshold;
- *        partial-drag snap-back stays on springs.gesture (small correction).
+ * Enter/Exit: timing slide (durations.sheet / sheetEasing — the iOS sheet
+ *        curve) + backdrop fade (durations.backdrop / enterEasing|exitEasing).
+ *        Matches the cadence of every other bottom sheet in the app (Sort,
+ *        DayHabits, EmojiPicker, QuickActions, Modal) so surfaces feel paced
+ *        the same, even though Create/Edit render as a custom sheet rather
+ *        than the shared `Modal` component.
+ * Swipe: see `useSwipeDismissGesture` — velocity-aware release structured
+ *        like `useNoteSheetGesture`.
  *
  * Why bottom-sheet (not native slide) for Create/Edit: focused secondary tasks
  * benefit from preserving context — you can see the dim habits list behind the
@@ -17,24 +17,23 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 import { Keyboard } from 'react-native';
-import { Gesture } from 'react-native-gesture-handler';
 import {
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { durations, enterEasing, springs } from '@/theme/animations';
-import { HapticPatterns } from '@/utils/haptics/patterns';
+import { scheduleOnRN } from 'react-native-worklets';
+import { durations, enterEasing, exitEasing, sheetEasing } from '@/theme/animations';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
+import { SCREEN_HEIGHT } from '@/components/Modal/Modal.constants';
 import {
-  DISMISS_THRESHOLD,
-  SCREEN_HEIGHT,
-  VELOCITY_THRESHOLD,
-} from '@/components/Modal/Modal.constants';
+  BACKDROP_TARGET,
+  useSwipeDismissGesture,
+} from './useSwipeDismissGesture';
 
-const BACKDROP_TARGET = 0.5;
+const SHEET_TIMING_CONFIG = { duration: durations.sheet, easing: sheetEasing };
+const BACKDROP_IN = { duration: durations.backdrop, easing: enterEasing };
+const BACKDROP_OUT = { duration: durations.backdrop, easing: exitEasing };
 
 interface UseSwipeDismissProps {
   visible: boolean;
@@ -49,10 +48,6 @@ export function useSwipeDismiss({ visible, onClose }: UseSwipeDismissProps) {
   onCloseRef.current = onClose;
   const reduceMotion = useReduceMotion();
 
-  // Sheet and backdrop arrive together on the canonical 280ms cubic ease-out
-  // (design system rule: "Entry motion: fade + translateY, 280ms cubic ease-out,
-  // no springify"). Matches DayHabitsBottomSheet / EmojiPickerV2 — calm, no
-  // overshoot wobble. With reduce-motion enabled, snap directly to final state.
   useEffect(() => {
     if (visible) {
       isClosing.current = false;
@@ -61,14 +56,8 @@ export function useSwipeDismiss({ visible, onClose }: UseSwipeDismissProps) {
         backdropOpacity.value = BACKDROP_TARGET;
         return;
       }
-      translateY.value = withTiming(0, {
-        duration: durations.sheet,
-        easing: enterEasing,
-      });
-      backdropOpacity.value = withTiming(BACKDROP_TARGET, {
-        duration: durations.sheet,
-        easing: enterEasing,
-      });
+      translateY.value = withTiming(0, SHEET_TIMING_CONFIG);
+      backdropOpacity.value = withTiming(BACKDROP_TARGET, BACKDROP_IN);
     }
   }, [visible, reduceMotion]);
 
@@ -82,44 +71,21 @@ export function useSwipeDismiss({ visible, onClose }: UseSwipeDismissProps) {
       onCloseRef.current();
       return;
     }
-    // Backdrop and sheet exit on the same duration so the dim doesn't disappear
-    // before the sheet has finished sliding away.
-    backdropOpacity.value = withTiming(0, {
-      duration: durations.sheet,
-      easing: enterEasing,
-    });
+    backdropOpacity.value = withTiming(0, BACKDROP_OUT);
     translateY.value = withTiming(
       SCREEN_HEIGHT,
-      { duration: durations.sheet, easing: enterEasing },
+      SHEET_TIMING_CONFIG,
       (finished) => {
-        if (finished) runOnJS(onCloseRef.current)();
+        if (finished) scheduleOnRN(onCloseRef.current);
       }
     );
   }, [reduceMotion]);
 
-  const panGesture = Gesture.Pan()
-    .onUpdate((event) => {
-      'worklet';
-      if (event.translationY > 0) {
-        translateY.value = event.translationY;
-        const progress = 1 - event.translationY / SCREEN_HEIGHT;
-        backdropOpacity.value = Math.max(0, progress * BACKDROP_TARGET);
-      }
-    })
-    .onEnd((event) => {
-      'worklet';
-      const shouldDismiss =
-        translateY.value > DISMISS_THRESHOLD ||
-        event.velocityY > VELOCITY_THRESHOLD;
-
-      if (shouldDismiss) {
-        runOnJS(HapticPatterns.tap)();
-        runOnJS(animateOut)();
-      } else {
-        translateY.value = withSpring(0, springs.gesture);
-        backdropOpacity.value = withTiming(BACKDROP_TARGET, { duration: durations.standard });
-      }
-    });
+  const panGesture = useSwipeDismissGesture({
+    backdropOpacity,
+    onDismiss: animateOut,
+    translateY,
+  });
 
   const sheetStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],

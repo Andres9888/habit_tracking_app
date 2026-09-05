@@ -43,7 +43,7 @@ function Particle({ color, endX, endY, onComplete }: ParticleProps) {
     translateX.value = withSpring(endX, springs.standard);
     translateY.value = withSpring(endY, springs.standard);
     scale.value = withSequence(
-      withSpring(1.5, springs.bouncy),
+      withSpring(1.5, springs.celebration),
       withTiming(0, { duration: 300 })
     );
     opacity.value = withTiming(0, { duration: 400 }, () => {

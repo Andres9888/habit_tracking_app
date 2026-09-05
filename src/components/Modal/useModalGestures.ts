@@ -5,13 +5,13 @@
 
 import { Gesture } from 'react-native-gesture-handler';
 import {
-  Easing,
   withSpring,
   withTiming,
-  runOnJS,
   type SharedValue,
 } from 'react-native-reanimated';
-import { durations, enterEasing } from '@/theme/animations';
+import { scheduleOnRN } from 'react-native-worklets';
+import { durations, exitEasing, sheetEasing } from '@/theme/animations';
+import { project, rubberband } from '@/theme/sheetMotion';
 import { HapticPatterns } from '../../utils/haptics/patterns';
 import type { ModalVariant } from './Modal.types';
 import {
@@ -21,11 +21,8 @@ import {
   GESTURE_SPRING_CONFIG,
 } from './Modal.constants';
 
-const SHEET_ENTER = { duration: durations.sheet, easing: enterEasing };
-const SHEET_EXIT = {
-  duration: durations.sheet,
-  easing: Easing.in(Easing.cubic),
-};
+const SHEET_EXIT = { duration: durations.sheet, easing: sheetEasing };
+const FULL_SCREEN_EXIT = { duration: 350, easing: exitEasing };
 
 interface UseModalGesturesParams {
   variant: ModalVariant;
@@ -48,22 +45,29 @@ export function useModalGestures({
   const panGestureBottomSheet = Gesture.Pan()
     .enabled(!disableGestureClose && variant === 'bottomSheet')
     .onUpdate((event) => {
-      if (event.translationY > 0) {
-        translateY.value = event.translationY;
-      }
+      'worklet';
+      translateY.value =
+        event.translationY >= 0
+          ? event.translationY
+          : rubberband(event.translationY, SCREEN_HEIGHT);
     })
     .onEnd((event) => {
-      // Use Math.round on velocity to avoid precision loss error in Reanimated
-      const velocityY = Math.round(event.velocityY);
-      if (
+      'worklet';
+      const projected = translateY.value + project(event.velocityY);
+      const shouldDismiss =
         event.translationY > DISMISS_THRESHOLD ||
-        velocityY > VELOCITY_THRESHOLD
-      ) {
+        projected > DISMISS_THRESHOLD ||
+        event.velocityY > VELOCITY_THRESHOLD;
+
+      if (shouldDismiss) {
         translateY.value = withTiming(SCREEN_HEIGHT, SHEET_EXIT);
-        runOnJS(HapticPatterns.tap)();
-        runOnJS(onClose)();
+        scheduleOnRN(HapticPatterns.tap);
+        scheduleOnRN(onClose);
       } else {
-        translateY.value = withTiming(0, SHEET_ENTER);
+        translateY.value = withSpring(0, {
+          ...GESTURE_SPRING_CONFIG,
+          velocity: event.velocityY,
+        });
       }
     });
 
@@ -71,34 +75,32 @@ export function useModalGestures({
   const panGestureFullScreen = Gesture.Pan()
     .enabled(!disableGestureClose && variant === 'fullScreen')
     .onUpdate((event) => {
-      // Allow downward drag with rubber band effect
-      if (event.translationY > 0) {
-        // Rubber band effect: resistance increases as you drag
-        const resistance = 0.4;
-        fullScreenGestureY.value = event.translationY * resistance;
-      }
+      'worklet';
+      // Rubber band effect: resistance increases as you drag.
+      const resistance = 0.4;
+      fullScreenGestureY.value =
+        event.translationY >= 0 ? event.translationY * resistance : 0;
     })
     .onEnd((event) => {
-      // Use Math.round on velocity to avoid precision loss error in Reanimated
-      const velocityY = Math.round(event.velocityY);
-      if (
+      'worklet';
+      const projected = fullScreenGestureY.value + project(event.velocityY);
+      const shouldDismiss =
         event.translationY > DISMISS_THRESHOLD ||
-        velocityY > VELOCITY_THRESHOLD
-      ) {
+        projected > DISMISS_THRESHOLD ||
+        event.velocityY > VELOCITY_THRESHOLD;
+
+      if (shouldDismiss) {
         // Dismiss — timing-based to match native slide
-        fullScreenProgress.value = withTiming(0, {
-          duration: 350,
-          easing: Easing.in(Easing.cubic),
-        });
-        fullScreenGestureY.value = withTiming(0, {
-          duration: 350,
-          easing: Easing.in(Easing.cubic),
-        });
-        runOnJS(HapticPatterns.tap)();
-        runOnJS(onClose)();
+        fullScreenProgress.value = withTiming(0, FULL_SCREEN_EXIT);
+        fullScreenGestureY.value = withTiming(0, FULL_SCREEN_EXIT);
+        scheduleOnRN(HapticPatterns.tap);
+        scheduleOnRN(onClose);
       } else {
         // Spring back
-        fullScreenGestureY.value = withSpring(0, GESTURE_SPRING_CONFIG);
+        fullScreenGestureY.value = withSpring(0, {
+          ...GESTURE_SPRING_CONFIG,
+          velocity: event.velocityY,
+        });
       }
     });
 

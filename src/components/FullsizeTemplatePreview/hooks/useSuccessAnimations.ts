@@ -44,7 +44,7 @@ export const useSuccessAnimations = ({
           duration: durations.enter,
           easing: enterEasing,
         });
-        checkmarkScale.value = withSpring(1, springs.bouncy);
+        checkmarkScale.value = withSpring(1, springs.celebration);
       }
     } else {
       checkmarkScale.value = 0;

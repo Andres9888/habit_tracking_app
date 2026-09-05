@@ -3,27 +3,25 @@
  * Manages bottom sheet animations and gesture handling
  */
 
-import { useEffect, useCallback } from 'react';
-import { Gesture } from 'react-native-gesture-handler';
+import { useCallback, useEffect } from 'react';
+import { useSharedValue, withTiming } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import {
-  useSharedValue,
-  withSpring,
-  withTiming,
-  runOnJS,
-} from 'react-native-reanimated';
-import { durations, enterEasing, springs } from '@/theme/animations';
+  durations,
+  enterEasing,
+  exitEasing,
+  sheetEasing,
+} from '@/theme/animations';
 import {
   SHEET_HEIGHT_COLLAPSED,
   SHEET_HEIGHT_EXPANDED,
 } from './EmojiPickerSheet.styles';
+import { useEmojiSheetGesture } from './useEmojiSheetGesture';
 import { useSheetStyles } from './useSheetStyles';
 
-const SHEET_TIMING_CONFIG = {
-  duration: durations.sheet,
-  easing: enterEasing,
-};
-const DISMISS_THRESHOLD = 0.25;
-const DISMISS_VELOCITY = 500;
+const SHEET_TIMING_CONFIG = { duration: durations.sheet, easing: sheetEasing };
+const BACKDROP_IN = { duration: durations.backdrop, easing: enterEasing };
+const BACKDROP_OUT = { duration: durations.backdrop, easing: exitEasing };
 
 export function useSheetAnimations(visible: boolean, onClose: () => void) {
   const translateY = useSharedValue(SHEET_HEIGHT_EXPANDED);
@@ -43,17 +41,22 @@ export function useSheetAnimations(visible: boolean, onClose: () => void) {
       sheetHeight.value = SHEET_HEIGHT_COLLAPSED;
       const offset = SHEET_HEIGHT_EXPANDED - SHEET_HEIGHT_COLLAPSED;
       translateY.value = withTiming(offset, SHEET_TIMING_CONFIG);
-      backdropOpacity.value = withTiming(1, { duration: durations.sheet });
+      backdropOpacity.value = withTiming(1, BACKDROP_IN);
     } else {
       translateY.value = withTiming(SHEET_HEIGHT_EXPANDED, SHEET_TIMING_CONFIG);
-      backdropOpacity.value = withTiming(0, { duration: durations.sheet });
+      backdropOpacity.value = withTiming(0, BACKDROP_OUT);
     }
   }, [visible]);
 
   const closeSheet = useCallback(() => {
-    translateY.value = withTiming(SHEET_HEIGHT_EXPANDED, SHEET_TIMING_CONFIG);
-    backdropOpacity.value = withTiming(0, { duration: durations.sheet });
-    setTimeout(onClose, durations.sheet);
+    backdropOpacity.value = withTiming(0, BACKDROP_OUT);
+    translateY.value = withTiming(
+      SHEET_HEIGHT_EXPANDED,
+      SHEET_TIMING_CONFIG,
+      (finished) => {
+        if (finished) scheduleOnRN(onClose);
+      }
+    );
   }, [onClose]);
 
   const expandSheet = useCallback(() => {
@@ -67,23 +70,13 @@ export function useSheetAnimations(visible: boolean, onClose: () => void) {
     translateY.value = withTiming(offset, SHEET_TIMING_CONFIG);
   }, []);
 
-  const gesture = Gesture.Pan()
-    .onStart(() => {
-      context.value = { y: translateY.value };
-    })
-    .onUpdate((event) => {
-      translateY.value = Math.max(context.value.y + event.translationY, 0);
-    })
-    .onEnd((event) => {
-      const velocityY = Math.round(event.velocityY);
-      const threshold = SHEET_HEIGHT_EXPANDED * DISMISS_THRESHOLD;
-      if (translateY.value > threshold || velocityY > DISMISS_VELOCITY) {
-        runOnJS(closeSheet)();
-      } else {
-        const offset = SHEET_HEIGHT_EXPANDED - sheetHeight.value;
-        translateY.value = withSpring(offset, springs.gesture);
-      }
-    });
+  const gesture = useEmojiSheetGesture({
+    context,
+    expandedHeight: SHEET_HEIGHT_EXPANDED,
+    onDismiss: closeSheet,
+    sheetHeight,
+    translateY,
+  });
 
   return {
     ...animatedStyles,

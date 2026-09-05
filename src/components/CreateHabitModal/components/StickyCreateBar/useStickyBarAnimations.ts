@@ -5,7 +5,7 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
-import { Motion } from '../../../../constants/motion';
+import { durations, enterEasing, exitEasing } from '@/theme/animations';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { DEFAULT_BUTTON_COLOR } from './colorUtils';
 
@@ -27,14 +27,14 @@ export function useStickyBarAnimations(
     if (previousColorRef.current !== currentColor) {
       Animated.sequence([
         Animated.timing(colorOpacity, {
-          duration: Motion.duration.fast,
-          easing: Motion.easing.inEase,
+          duration: durations.instant,
+          easing: exitEasing,
           toValue: 0.85,
           useNativeDriver: true,
         }),
         Animated.timing(colorOpacity, {
-          duration: Motion.duration.base,
-          easing: Motion.easing.outEase,
+          duration: durations.quick,
+          easing: enterEasing,
           toValue: 1,
           useNativeDriver: true,
         }),
@@ -52,13 +52,13 @@ export function useStickyBarAnimations(
       Animated.sequence([
         Animated.timing(scale, {
           duration: 100,
-          easing: Motion.easing.outEase,
+          easing: enterEasing,
           toValue: 0.98,
           useNativeDriver: true,
         }),
         Animated.timing(scale, {
           duration: 100,
-          easing: Motion.easing.inEase,
+          easing: exitEasing,
           toValue: 1,
           useNativeDriver: true,
         }),
@@ -69,8 +69,8 @@ export function useStickyBarAnimations(
 
   const handlePressIn = useCallback(() => {
     Animated.timing(scale, {
-      duration: Motion.duration.fast,
-      easing: Motion.easing.inEase,
+      duration: durations.instant,
+      easing: exitEasing,
       toValue: 0.96,
       useNativeDriver: true,
     }).start();
@@ -78,8 +78,8 @@ export function useStickyBarAnimations(
 
   const handlePressOut = useCallback(() => {
     Animated.timing(scale, {
-      duration: Motion.duration.base,
-      easing: Motion.easing.outEase,
+      duration: durations.quick,
+      easing: enterEasing,
       toValue: 1,
       useNativeDriver: true,
     }).start();

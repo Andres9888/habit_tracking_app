@@ -211,7 +211,7 @@
  * ├── darkColors.ts              # Dark & light mode palettes
  * ├── typography.ts              # Font families, weights, text styles
  * ├── spacing.ts                 # Spacing scale, shadows, border radius
- * ├── animations.ts              # Durations, easings, spring presets
+ * ├── animations.ts              # Durations, easing tokens, spring presets
  * ├── iconSizes.ts               # Icon size tokens (10-48px)
  * ├── milestone-colors.ts        # Achievement badge colors
  * └── index.ts                   # Main export (this file)
@@ -221,7 +221,7 @@
 import { colors } from './colors';
 import { typography, fontFamilies, fontWeights } from './typography';
 import { spacing, borderRadius, shadows, componentSpacing } from './spacing';
-import { durations, easings, springs } from './animations';
+import { durations, springs } from './animations';
 import { iconSizes } from './iconSizes';
 
 /**
@@ -467,7 +467,6 @@ export const extendedTheme = {
   custom: {
     animations: {
       durations,
-      easings,
       springs,
     },
     borderRadius,
@@ -536,7 +535,7 @@ export default extendedTheme;
 export { colors, withAlpha } from './colors';
 export { typography } from './typography';
 export { spacing, borderRadius, shadows, componentSpacing } from './spacing';
-export { durations, easings, springs } from './animations';
+export { durations, springs } from './animations';
 export { iconSizes } from './iconSizes';
 export { ThemeColorProvider, useThemeColors } from './ThemeContext';
 export { darkColors, lightColors } from './darkColors';

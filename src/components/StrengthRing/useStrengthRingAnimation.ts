@@ -64,8 +64,8 @@ export function useStrengthRingAnimation({
       emojiScale.value = withDelay(
         150,
         withSequence(
-          withSpring(1.4, springs.bouncy),
-          withSpring(1, springs.bouncy)
+          withSpring(1.4, springs.celebration),
+          withSpring(1, springs.celebration)
         )
       );
     } else {

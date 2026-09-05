@@ -45,7 +45,7 @@ export function runEntranceSequence(values: AnimatedValues) {
   const step2Delay = step1Duration;
   cardScale.value = withDelay(
     step2Delay,
-    withSpring(1, { ...springs.bouncy, mass: 1 })
+    withSpring(1, { ...springs.celebration, mass: 1 })
   );
   cardOpacity.value = withDelay(
     step2Delay,

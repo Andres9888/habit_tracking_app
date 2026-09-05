@@ -2,7 +2,7 @@ import { Plus } from 'lucide-react-native';
 import { memo, useCallback, useRef } from 'react';
 import { Animated, Keyboard, View } from 'react-native';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
-import { Motion } from '../../../../constants/motion';
+import { durations, enterEasing, exitEasing } from '@/theme/animations';
 import { colors } from '../../../../theme/colors/core';
 import { borderRadius } from '../../../../theme/spacing';
 import type { CustomColorButtonProps } from './types';
@@ -26,8 +26,8 @@ const CustomColorButtonComponent = ({ onPress }: CustomColorButtonProps) => {
 
   const handlePressIn = useCallback(() => {
     Animated.timing(scale, {
-      duration: Motion.duration.fast,
-      easing: Motion.easing.inEase,
+      duration: durations.instant,
+      easing: exitEasing,
       toValue: 0.96,
       useNativeDriver: true,
     }).start();
@@ -35,8 +35,8 @@ const CustomColorButtonComponent = ({ onPress }: CustomColorButtonProps) => {
 
   const handlePressOut = useCallback(() => {
     Animated.timing(scale, {
-      duration: Motion.duration.base,
-      easing: Motion.easing.outEase,
+      duration: durations.quick,
+      easing: enterEasing,
       toValue: 1,
       useNativeDriver: true,
     }).start();

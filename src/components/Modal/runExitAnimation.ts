@@ -4,11 +4,13 @@
  */
 
 import { withTiming } from 'react-native-reanimated';
-import { durations } from '@/theme/animations';
+import { durations, sheetEasing } from '@/theme/animations';
 import type { ModalVariant } from './Modal.types';
 import { FULL_SCREEN_ENTER_MS, SCREEN_HEIGHT } from './Modal.constants';
 import type { AnimationValues } from './modalAnimationEffects.types';
 import { fadeOut } from './modalAnimationHelpers';
+
+const SHEET_EXIT = { duration: durations.sheet, easing: sheetEasing };
 
 export function runExitAnimation(
   variant: ModalVariant,
@@ -27,10 +29,10 @@ export function runExitAnimation(
     case 'bottomSheet': {
       backdropOpacityValue.value = useReduced
         ? 0
-        : withTiming(0, fadeOut(durations.sheet));
+        : withTiming(0, fadeOut(durations.backdrop));
       translateY.value = useReduced
         ? SCREEN_HEIGHT
-        : withTiming(SCREEN_HEIGHT, fadeOut(durations.sheet));
+        : withTiming(SCREEN_HEIGHT, SHEET_EXIT);
       break;
     }
     case 'fullScreen': {

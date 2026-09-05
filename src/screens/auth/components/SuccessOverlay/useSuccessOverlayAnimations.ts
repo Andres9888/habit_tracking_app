@@ -32,7 +32,7 @@ export function useSuccessOverlayAnimations(
       ringScale.value = withDelay(
         100,
         withSequence(
-          withSpring(1.2, springs.bouncy),
+          withSpring(1.2, springs.celebration),
           withTiming(1.5, { duration: durations.emphasis })
         )
       );
@@ -46,7 +46,7 @@ export function useSuccessOverlayAnimations(
 
       checkmarkScale.value = withDelay(
         200,
-        withSpring(1, springs.bouncy)
+        withSpring(1, springs.celebration)
       );
       checkmarkOpacity.value = withDelay(200, withTiming(1, { duration: durations.standard }));
 

@@ -25,7 +25,7 @@ export const EXIT_SPRING_CONFIG = springs.exit;
 export const GESTURE_SPRING_CONFIG = springs.gesture;
 
 /** @deprecated Bottom sheets use timing-based slide (durations.sheet). Kept for legacy refs. */
-export const BOTTOM_SHEET_SPRING_CONFIG = springs.bottomSheet;
+export const BOTTOM_SHEET_SPRING_CONFIG = springs.sheet;
 
 /** Gesture thresholds for dismissal */
 export const DISMISS_THRESHOLD = 120;

@@ -1,11 +1,8 @@
-/* eslint-disable max-lines */
 /**
  * Animation Helpers
  *
  * Reusable utilities for common Reanimated animation patterns.
  * Eliminates duplication and provides consistent timing/easing across the app.
- *
- * Note: max-lines disabled - this is a utility library with many small functions
  */
 
 import {
@@ -18,27 +15,6 @@ import {
   Easing,
 } from 'react-native-reanimated';
 import { durations, springs } from '@/theme/animations';
-
-/**
- * Common spring configurations for consistent feel
- * Design system standard: damping: 18, mass: 1, stiffness: 150
- *
- * @deprecated Prefer importing `springs` from `@/theme/animations` directly.
- * These aliases are retained for existing call sites only.
- */
-export const SPRING_CONFIGS = {
-  /** Bouncy playful animation — celebrations only */
-  bouncy: springs.bouncy as WithSpringConfig,
-
-  /** Gentle entrance animation — design system standard */
-  entrance: springs.standard as WithSpringConfig,
-
-  /** Smooth gentle spring — subtle, no overshoot */
-  smooth: springs.gentle as WithSpringConfig,
-
-  /** Snappy interaction feedback — button presses (design system standard) */
-  snappy: springs.standard as WithSpringConfig,
-} as const;
 
 /**
  * Common timing configurations
@@ -95,12 +71,12 @@ export const STAGGER_DELAYS = {
  *
  * @example
  * opacity.value = delayedSpring(1, 200);
- * translateY.value = delayedSpring(0, 200, SPRING_CONFIGS.snappy);
+ * translateY.value = delayedSpring(0, 200, springs.gentle);
  */
 export function delayedSpring(
   toValue: number,
   delay: number = 0,
-  config: WithSpringConfig = SPRING_CONFIGS.entrance
+  config: WithSpringConfig = springs.standard as WithSpringConfig
 ) {
   return withDelay(delay, withSpring(toValue, config));
 }
@@ -177,7 +153,7 @@ export function fadeOut(delay: number = 0, duration: number = 300) {
  */
 export function slideUp(
   delay: number = 0,
-  config: WithSpringConfig = SPRING_CONFIGS.entrance
+  config: WithSpringConfig = springs.standard as WithSpringConfig
 ) {
   return withDelay(delay, withSpring(0, config));
 }
@@ -194,7 +170,7 @@ export function slideUp(
  */
 export function scaleIn(
   delay: number = 0,
-  config: WithSpringConfig = SPRING_CONFIGS.entrance
+  config: WithSpringConfig = springs.standard as WithSpringConfig
 ) {
   return withDelay(delay, withSpring(1, config));
 }

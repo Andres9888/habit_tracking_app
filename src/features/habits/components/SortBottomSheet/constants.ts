@@ -92,8 +92,6 @@ export const WHITE_ICON_COLOR = colors.text.inverse;
 export const DARK_SURFACE_COLOR = colors.dark.surface;
 export const LIGHT_SURFACE_COLOR = colors.gray[50];
 
-// Backdrop animation — matches durations.sheet (360ms) for consistency with
-// other bottom sheets. Backdrop and sheet arrive/leave together.
-export const BACKDROP_FADE_IN_DURATION_MS = 360;
-export const BACKDROP_FADE_OUT_DURATION_MS = 360;
+// Backdrop animation timing lives in theme/animations (durations.backdrop) —
+// no local override, so every sheet fades the same.
 export const BACKDROP_VISIBLE_OPACITY = 0.5;

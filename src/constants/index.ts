@@ -7,7 +7,7 @@
  * - App: Application-wide magic numbers and configuration
  * - Auth: Authentication configuration
  * - HubermanPhases: Daily energy optimization phases
- * - Motion: Animation timing and springs
+ * - Springs: Canonical spring presets re-exported from @/theme/animations
  * - STRINGS: UI text strings
  * - UIValues: UI-related magic numbers (opacity, scale, animation durations)
  */
@@ -89,7 +89,7 @@ export type { HubermanPhase, PhaseInfo } from './hubermanPhases';
 // External URLs
 export { EXTERNAL_URLS } from './urls';
 
-// Motion and strings (default exports)
-export { default as Motion } from './motion';
+// Springs (canonical presets) and strings
+export { Springs } from './motion';
 export { default as STRINGS } from './strings';
 export * from './ui-values';

@@ -42,7 +42,7 @@ export function useCelebrationEffects(
       const timer = setTimeout(() => setShowConfetti(false), CONFETTI_DURATION);
 
       badgeScale.value = withSequence(
-        withSpring(1.4, springs.bouncy),
+        withSpring(1.4, springs.celebration),
         withSpring(1, springs.standard)
       );
       shareButtonOpacity.value = withDelay(

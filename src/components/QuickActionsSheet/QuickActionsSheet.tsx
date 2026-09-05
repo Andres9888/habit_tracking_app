@@ -17,18 +17,19 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
   withTiming,
-  runOnJS,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 import { useThemeColors } from '../../theme/ThemeContext';
 import { shadows } from '../../theme/spacing';
 import type { QuickActionsSheetProps } from './types';
 import { SheetHeader } from './SheetHeader';
 import { ActionsList } from './ActionsList';
-import { durations, enterEasing, springs } from '@/theme/animations';
+import { durations, sheetEasing, springs } from '@/theme/animations';
+import { project, rubberband } from '@/theme/sheetMotion';
 import { triggerHaptic } from '@/utils/haptics';
 
-const SHEET_TIMING_CONFIG = { duration: durations.sheet, easing: enterEasing };
+const SHEET_TIMING_CONFIG = { duration: durations.sheet, easing: sheetEasing };
 
 const DISMISS_THRESHOLD = 100;
 const VELOCITY_THRESHOLD = 500;
@@ -64,20 +65,28 @@ export const QuickActionsSheet = ({
 
   const panGesture = Gesture.Pan()
     .onUpdate((event) => {
-      if (event.translationY > 0) {
-        translateY.value = event.translationY;
-      }
+      'worklet';
+      translateY.value =
+        event.translationY >= 0
+          ? event.translationY
+          : rubberband(event.translationY, SCREEN_HEIGHT);
     })
     .onEnd((event) => {
-      const velocityY = Math.round(event.velocityY);
-      if (
+      'worklet';
+      const projected = translateY.value + project(event.velocityY);
+      const shouldDismiss =
         event.translationY > DISMISS_THRESHOLD ||
-        velocityY > VELOCITY_THRESHOLD
-      ) {
+        projected > DISMISS_THRESHOLD ||
+        event.velocityY > VELOCITY_THRESHOLD;
+
+      if (shouldDismiss) {
         translateY.value = withTiming(SCREEN_HEIGHT, SHEET_TIMING_CONFIG);
-        runOnJS(handleDismiss)();
+        scheduleOnRN(handleDismiss);
       } else {
-        translateY.value = withSpring(0, springs.gesture);
+        translateY.value = withSpring(0, {
+          ...springs.gesture,
+          velocity: event.velocityY,
+        });
       }
     });
 
@@ -106,8 +115,8 @@ export const QuickActionsSheet = ({
     >
       <Animated.View
         className='absolute inset-0 bg-black/50'
-        entering={FadeIn.duration(durations.sheet)}
-        exiting={FadeOut.duration(durations.sheet)}
+        entering={FadeIn.duration(durations.backdrop)}
+        exiting={FadeOut.duration(durations.backdrop)}
       >
         <Pressable
           accessibilityLabel='Close quick actions'
@@ -121,8 +130,8 @@ export const QuickActionsSheet = ({
         <View collapsable={false}>
           <Animated.View
             className='absolute bottom-0 left-0 right-0 rounded-t-3xl'
-            entering={SlideInDown.duration(durations.sheet).easing(enterEasing)}
-            exiting={SlideOutDown.duration(durations.sheet).easing(enterEasing)}
+            entering={SlideInDown.duration(durations.sheet).easing(sheetEasing)}
+            exiting={SlideOutDown.duration(durations.sheet).easing(sheetEasing)}
             style={[{ paddingBottom: insets.bottom + 16, backgroundColor: colors.surface }, sheetAnimatedStyle, shadows.modal]}
           >
             <SheetHeader

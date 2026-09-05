@@ -6,8 +6,7 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { Animated } from 'react-native';
-import { springs } from '@/theme/animations';
-import { Motion } from '../../../../constants/motion';
+import { durations, springs } from '@/theme/animations';
 import type { ValidationResult } from './types';
 
 function getValidationMessage(name: string): ValidationResult | null {
@@ -42,7 +41,7 @@ export function useHeroNameInputAnimations(value: string) {
 
     if (newValidation?.message !== validation?.message) {
       Animated.timing(validationOpacity, {
-        duration: Motion.duration.fast,
+        duration: durations.instant,
         toValue: 0,
         useNativeDriver: true,
       }).start(() => {
@@ -51,7 +50,7 @@ export function useHeroNameInputAnimations(value: string) {
           validationTranslateY.setValue(-10);
           Animated.parallel([
             Animated.timing(validationOpacity, {
-              duration: Motion.duration.base,
+              duration: durations.quick,
               toValue: 1,
               useNativeDriver: true,
             }),

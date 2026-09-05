@@ -41,7 +41,7 @@ export function usePressHandlers({
   };
 
   // Releases on the same spring it pressed with. Previously sprang back on
-  // springs.bouncy, overshooting past 1.0 while every other pressable in the
+  // a bouncy spring, overshooting past 1.0 while every other pressable in the
   // app settles critically damped.
   const handlePressOut = () => {
     cardScale.value = withSpring(1, springs.button);

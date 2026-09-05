@@ -6,7 +6,7 @@
 
 import { useCallback, useRef } from 'react';
 import { Animated, View } from 'react-native';
-import { Motion } from '../../../../constants/motion';
+import { durations } from '@/theme/animations';
 import { borderRadius, shadows } from '../../../../theme/spacing';
 import { AnimatedPressable } from '../../../ui';
 
@@ -47,7 +47,7 @@ export const ColorSwatch = ({
 
   const handlePressIn = useCallback(() => {
     Animated.timing(scale, {
-      duration: Motion.duration.fast,
+      duration: durations.instant,
       toValue: 0.95,
       useNativeDriver: true,
     }).start();

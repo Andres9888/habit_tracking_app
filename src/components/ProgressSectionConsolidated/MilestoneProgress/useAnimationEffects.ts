@@ -89,7 +89,7 @@ export const useAnimationEffects = ({
     }
 
     celebrationScale.value = withSequence(
-      withSpring(1.2, Springs.bouncy),
+      withSpring(1.2, Springs.celebration),
       withTiming(1, { duration: 500 })
     );
 

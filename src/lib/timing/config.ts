@@ -135,20 +135,6 @@ export const TIMEOUTS = {
 } as const;
 
 /**
- * Spring Timing (react-native-reanimated)
- */
-export const SPRING_CONFIGS = {
-  STANDARD: {
-    damping: 10,
-    mass: 1,
-    overshootClamping: false,
-    restDisplacementThreshold: 0.001,
-    restSpeedThreshold: 0.001,
-    stiffness: 100,
-  },
-} as const;
-
-/**
  * Voice Note Durations (in milliseconds)
  */
 export const VOICE_NOTE_DURATIONS = {

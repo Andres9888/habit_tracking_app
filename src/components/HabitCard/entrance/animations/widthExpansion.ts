@@ -46,7 +46,7 @@ export function runWidthExpansion(
     withSpring(
       ACCENT_TARGET_WIDTH,
       {
-        ...springs.bouncy,
+        ...springs.celebration,
         mass: 0.8,
       },
       (finished) => {

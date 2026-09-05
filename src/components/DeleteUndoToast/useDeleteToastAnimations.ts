@@ -53,7 +53,7 @@ export function useDeleteToastAnimations({
   }, []);
 
   const handleDismiss = useCallback(() => {
-    translateY.value = withSpring(100, springs.snappy);
+    translateY.value = withSpring(100, springs.standard);
     opacity.value = withTiming(0, { duration: 200 });
     progressWidth.value = 100;
 
@@ -76,7 +76,7 @@ export function useDeleteToastAnimations({
   useEffect(() => {
     if (visible) {
       progressWidth.value = 100;
-      translateY.value = withSpring(0, springs.snappy);
+      translateY.value = withSpring(0, springs.standard);
       opacity.value = withTiming(1, { duration: 200 });
       progressWidth.value = withTiming(0, {
         duration,
@@ -86,7 +86,7 @@ export function useDeleteToastAnimations({
       const timer = setTimeout(handleConfirm, duration);
       return () => clearTimeout(timer);
     } else {
-      translateY.value = withSpring(100, springs.snappy);
+      translateY.value = withSpring(100, springs.standard);
       opacity.value = withTiming(0, { duration: 200 });
     }
   }, [visible, duration, handleConfirm, translateY, opacity, progressWidth]);
@@ -103,7 +103,7 @@ export function useDeleteToastAnimations({
       if (event.translationY > DISMISS_THRESHOLD || velocityY > 500) {
         runOnJS(handleUndo)();
       } else {
-        translateY.value = withSpring(0, springs.snappy);
+        translateY.value = withSpring(0, springs.standard);
         opacity.value = withTiming(1, { duration: 150 });
       }
     });

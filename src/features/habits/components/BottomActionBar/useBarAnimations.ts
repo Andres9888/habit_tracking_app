@@ -14,15 +14,15 @@ import {
   withSpring,
   runOnJS,
 } from 'react-native-reanimated';
-import { SPRING_CONFIGS } from '../../../../utils/animations/helpers';
 import { CARD_PRESS_SCALE } from '../../../../utils/animations/cardPressAnimation';
+import { springs } from '../../../../theme/animations';
 import { HapticPatterns } from '../../../../utils/haptics';
 
 export type { CelebrationAnimStyles } from './useCelebrationAnimations';
 
 const FAB_SCALE = CARD_PRESS_SCALE;
 const FAB_LIFT = -1;
-const SPRING = SPRING_CONFIGS.snappy;
+const SPRING = springs.standard;
 const RING_PULSE_MIN = 0.97;
 
 const fireTapHaptic = () => HapticPatterns.tap();

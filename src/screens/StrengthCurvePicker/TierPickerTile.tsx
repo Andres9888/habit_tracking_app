@@ -39,10 +39,10 @@ export function TierPickerTile({ mode, tier, style, isSelected, onSelect, scale 
         onSelect(mode);
       }}
       onPressIn={() => {
-        if (!reduceMotion) pressScale.value = withSpring(0.96, springs.responsive);
+        if (!reduceMotion) pressScale.value = withSpring(0.96, springs.standard);
       }}
       onPressOut={() => {
-        if (!reduceMotion) pressScale.value = withSpring(1, springs.responsive);
+        if (!reduceMotion) pressScale.value = withSpring(1, springs.standard);
       }}
     >
       <Animated.View
