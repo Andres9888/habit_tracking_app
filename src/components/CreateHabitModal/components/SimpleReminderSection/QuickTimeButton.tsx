@@ -9,7 +9,7 @@ import { useCallback, useRef } from 'react';
 import { Animated, Pressable, Text } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 
-import { Motion } from '../../../../constants/motion';
+import { durations } from '@/theme/animations';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import type { QuickTimeButtonProps } from './types';
 
@@ -25,7 +25,7 @@ export const QuickTimeButton = ({
 
   const handlePressIn = useCallback(() => {
     Animated.timing(scale, {
-      duration: Motion.duration.fast,
+      duration: durations.instant,
       toValue: 0.95,
       useNativeDriver: true,
     }).start();
@@ -33,7 +33,7 @@ export const QuickTimeButton = ({
 
   const handlePressOut = useCallback(() => {
     Animated.timing(scale, {
-      duration: Motion.duration.base,
+      duration: durations.quick,
       toValue: 1,
       useNativeDriver: true,
     }).start();

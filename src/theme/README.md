@@ -135,7 +135,7 @@ src/theme/
 ├── typography.ts       # Type scale (Literata/DM Sans)
 ├── spacing.ts          # Spacing grid, borderRadius, shadows
 ├── airyScale.ts        # Airy radii/rows scale (SHIP TARGET: full airy)
-├── animations.ts       # Durations, easings, springs
+├── animations.ts       # Durations, easing tokens, springs
 ├── iconSizes.ts        # Icon size tokens
 ├── milestone-colors.ts # Achievement badge colors
 └── settingsColors.ts   # Settings-screen colors

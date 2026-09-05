@@ -33,7 +33,7 @@ export function useProgressAnimations(
     // Emoji scale animation
     emojiScale.value = withDelay(
       300,
-      withSpring(1, springs.bouncy)
+      withSpring(1, springs.celebration)
     );
   }, [clampedStrength, reduceMotion]);
 

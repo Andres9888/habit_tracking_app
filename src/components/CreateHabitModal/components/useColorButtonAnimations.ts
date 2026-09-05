@@ -4,8 +4,12 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
-import { springs } from '@/theme/animations';
-import { Motion } from '../../../constants/motion';
+import {
+  durations,
+  enterEasing,
+  exitEasing,
+  springs,
+} from '@/theme/animations';
 
 export function useColorButtonAnimations(isSelected: boolean) {
   const scale = useRef(new Animated.Value(1)).current;
@@ -15,8 +19,8 @@ export function useColorButtonAnimations(isSelected: boolean) {
     if (isSelected && !wasSelected.current) {
       Animated.sequence([
         Animated.timing(scale, {
-          duration: Motion.duration.fast,
-          easing: Motion.easing.outEase,
+          duration: durations.instant,
+          easing: enterEasing,
           toValue: 1.15,
           useNativeDriver: true,
         }),
@@ -32,8 +36,8 @@ export function useColorButtonAnimations(isSelected: boolean) {
 
   const handlePressIn = useCallback(() => {
     Animated.timing(scale, {
-      duration: Motion.duration.fast,
-      easing: Motion.easing.inEase,
+      duration: durations.instant,
+      easing: exitEasing,
       toValue: 0.9,
       useNativeDriver: true,
     }).start();
@@ -41,8 +45,8 @@ export function useColorButtonAnimations(isSelected: boolean) {
 
   const handlePressOut = useCallback(() => {
     Animated.timing(scale, {
-      duration: Motion.duration.base,
-      easing: Motion.easing.outEase,
+      duration: durations.quick,
+      easing: enterEasing,
       toValue: 1,
       useNativeDriver: true,
     }).start();

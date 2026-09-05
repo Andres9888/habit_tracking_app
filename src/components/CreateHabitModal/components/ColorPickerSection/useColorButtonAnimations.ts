@@ -1,7 +1,6 @@
 import { useCallback, useRef } from 'react';
 import { Animated } from 'react-native';
-import { durations } from '@/theme/animations';
-import { Motion } from '../../../../constants/motion';
+import { durations, enterEasing, exitEasing } from '@/theme/animations';
 
 interface UseColorButtonAnimationsParams {
   reduceMotion: boolean;
@@ -23,13 +22,13 @@ export const useColorButtonAnimations = ({
     Animated.parallel([
       Animated.timing(rippleScale, {
         duration: durations.moderate,
-        easing: Motion.easing.outEase,
+        easing: enterEasing,
         toValue: 2,
         useNativeDriver: true,
       }),
       Animated.timing(rippleOpacity, {
         duration: durations.moderate,
-        easing: Motion.easing.outEase,
+        easing: enterEasing,
         toValue: 0,
         useNativeDriver: true,
       }),
@@ -39,8 +38,8 @@ export const useColorButtonAnimations = ({
   const animatePressIn = useCallback(() => {
     if (reduceMotion) return;
     Animated.timing(scale, {
-      duration: Motion.duration.fast,
-      easing: Motion.easing.inEase,
+      duration: durations.instant,
+      easing: exitEasing,
       toValue: 0.96,
       useNativeDriver: true,
     }).start();
@@ -49,8 +48,8 @@ export const useColorButtonAnimations = ({
   const animatePressOut = useCallback(() => {
     if (reduceMotion) return;
     Animated.timing(scale, {
-      duration: Motion.duration.base,
-      easing: Motion.easing.outEase,
+      duration: durations.quick,
+      easing: enterEasing,
       toValue: 1,
       useNativeDriver: true,
     }).start();

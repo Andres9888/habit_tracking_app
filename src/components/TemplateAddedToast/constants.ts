@@ -41,6 +41,6 @@ export const SPRING_SNAP_BACK = springs.standard;
 export const SPRING_EXIT = springs.exit;
 
 /** Full-screen celebration overlay keeps its celebratory springs. */
-export const SPRING_BOUNCY = springs.bouncy;
-export const SPRING_ICON = springs.bouncy;
+export const SPRING_BOUNCY = springs.celebration;
+export const SPRING_ICON = springs.celebration;
 export const SPRING_CELEBRATION_SETTLE = springs.standard;

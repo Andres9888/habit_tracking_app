@@ -49,7 +49,7 @@ export function runEnterAnimation(
         ? targetOpacity
         : withTiming(targetOpacity, fadeIn(200));
       alertOpacity.value = useReduced ? 1 : withTiming(1, fadeIn(200));
-      scale.value = useReduced ? 1 : withSpring(1, springs.bottomSheet);
+      scale.value = useReduced ? 1 : withSpring(1, springs.sheet);
       break;
     }
   }

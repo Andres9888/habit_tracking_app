@@ -26,9 +26,9 @@ describe('CheckBadge', () => {
     expect(withMotion.toJSON()).toEqual(withoutMotion.toJSON());
   });
 
-  it('uses design-system bouncy spring config', () => {
+  it('uses design-system celebration spring config', () => {
     // Verify the spring config matches the design system
-    expect(springs.bouncy).toEqual({ damping: 10, stiffness: 180 });
+    expect(springs.celebration).toEqual({ damping: 12, stiffness: 200 });
   });
 
   it('renders with reduceMotion=true without animation', () => {
@@ -44,7 +44,7 @@ describe('CheckBadge', () => {
 
   it('withSpring mock returns target value directly', () => {
     // Verify mock behavior: withSpring returns the target
-    const result = withSpring(1, springs.bouncy);
+    const result = withSpring(1, springs.celebration);
     expect(result).toBe(1);
   });
 });

@@ -29,7 +29,7 @@ export function runNewRecordAnimation(
   cardScale: SharedValue<number>
 ) {
   // Badge springs in with a celebratory bounce
-  newRecordScale.value = withSpring(1, springs.bouncy);
+  newRecordScale.value = withSpring(1, springs.celebration);
 
   // Quick opacity fade-in
   newRecordOpacity.value = withTiming(1, { duration: durations.standard });

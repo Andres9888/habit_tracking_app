@@ -57,7 +57,7 @@ export function useHeroAnimations({
     });
     emojiScale.value = withDelay(
       EMOJI_SCALE_DELAY,
-      withSpring(1, springs.bouncy)
+      withSpring(1, springs.celebration)
     );
     progressBarWidth.value = withDelay(
       200,

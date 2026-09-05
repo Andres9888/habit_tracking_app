@@ -28,7 +28,7 @@ export function createPanGesture(
     .onEnd((event) => {
       const snap = reduceMotion
         ? (v: number) => withTiming(v, { duration: 0 })
-        : (v: number) => withSpring(v, springs.snappy);
+        : (v: number) => withSpring(v, springs.standard);
       if (event.translationX < SWIPE_THRESHOLD) {
         translateX.value = snap(ACTION_WIDTH * -2);
         runOnJS(HapticPatterns.tap)();

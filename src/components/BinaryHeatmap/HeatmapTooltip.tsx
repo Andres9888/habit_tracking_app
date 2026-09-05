@@ -38,7 +38,7 @@ export const HeatmapTooltip = memo(function HeatmapTooltip({
       opacity.value = withTiming(1, { duration: animationDuration });
       scale.value = reduceMotion
         ? withTiming(1, { duration: 0 })
-        : withSpring(1, springs.bottomSheet);
+        : withSpring(1, springs.sheet);
     } else {
       opacity.value = withTiming(0, { duration: animationDuration });
       scale.value = withTiming(0.9, { duration: animationDuration });

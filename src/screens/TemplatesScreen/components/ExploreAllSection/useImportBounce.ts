@@ -27,9 +27,9 @@ export function useImportBounce(isImported: boolean) {
     // Skip mount (prev === null) and any non-transition re-run.
     if (prev === null || prev || !isImported) return;
     void triggerHaptic('success');
-    scale.value = withSpring(1.1, springs.responsive);
+    scale.value = withSpring(1.1, springs.standard);
     const timeout = setTimeout(() => {
-      scale.value = withSpring(1, springs.responsive);
+      scale.value = withSpring(1, springs.standard);
     }, 120);
     return () => clearTimeout(timeout);
   }, [isImported, scale]);
