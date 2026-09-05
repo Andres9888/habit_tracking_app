@@ -5,9 +5,9 @@ import {
   useSharedValue,
   withSpring,
   withTiming,
-  runOnJS,
   Easing,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 import { durations, springs } from '../../theme/animations';
 import { DISMISS_THRESHOLD } from './styles';
@@ -101,7 +101,7 @@ export function useDeleteToastAnimations({
     .onEnd((event) => {
       const velocityY = Math.round(event.velocityY);
       if (event.translationY > DISMISS_THRESHOLD || velocityY > 500) {
-        runOnJS(handleUndo)();
+        scheduleOnRN(handleUndo);
       } else {
         translateY.value = withSpring(0, springs.standard);
         opacity.value = withTiming(1, { duration: durations.quick });

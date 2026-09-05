@@ -15,9 +15,9 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   withDelay,
-  runOnJS,
   Easing,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 interface SuccessShimmerProps {
   /** Whether to show the shimmer */
@@ -53,7 +53,7 @@ function SuccessShimmerComponent({ active, onComplete }: SuccessShimmerProps) {
             if (finished) {
               opacity.value = withTiming(0, { duration: durations.instant });
               if (onComplete) {
-                runOnJS(onComplete)();
+                scheduleOnRN(onComplete);
               }
             }
           }

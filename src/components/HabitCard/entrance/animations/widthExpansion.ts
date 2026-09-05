@@ -7,9 +7,9 @@ import {
   withTiming,
   withDelay,
   withSpring,
-  runOnJS,
   Easing,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import { springs } from '@/theme/animations';
 import type { EntranceAnimationValues } from '../types';
 import { TIMING, ACCENT_TARGET_WIDTH } from '../constants';
@@ -53,7 +53,7 @@ export function runWidthExpansion(
         if (finished) {
           values.isAnimating.value = false;
           if (onAnimationComplete) {
-            runOnJS(onAnimationComplete)();
+            scheduleOnRN(onAnimationComplete);
           }
         }
       }

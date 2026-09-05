@@ -9,8 +9,8 @@ import {
   useSharedValue,
   withSpring,
   withTiming,
-  runOnJS,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { durations, springs } from '@/theme/animations';
@@ -94,7 +94,7 @@ export function useToastAnimations({
     .onEnd((event) => {
       const velocityY = Math.round(event.velocityY);
       if (event.translationY > DISMISS_THRESHOLD || velocityY > 500) {
-        runOnJS(handleSwipeDismiss)();
+        scheduleOnRN(handleSwipeDismiss);
       } else {
         translateY.value = withSpring(0, springs.standard);
         opacity.value = withTiming(1, { duration: durations.quick });

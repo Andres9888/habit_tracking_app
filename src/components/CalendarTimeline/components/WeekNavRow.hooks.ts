@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import {
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 import {
   ENTRANCE_DURATION,
@@ -30,7 +30,7 @@ export const useWeekNavRowAnimation = (showToday: boolean) => {
       todayScale.value = withTiming(1, timing);
     } else {
       todayOpacity.value = withTiming(0, EXIT_TIMING, (finished) => {
-        if (finished) runOnJS(setShouldRender)(false);
+        if (finished) scheduleOnRN(setShouldRender, false);
       });
       todayScale.value = withTiming(0.85, EXIT_TIMING);
       todayTranslateX.value = withTiming(SLIDE_OFFSET, EXIT_TIMING);

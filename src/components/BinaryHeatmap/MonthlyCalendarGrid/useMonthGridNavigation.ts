@@ -1,7 +1,7 @@
 /** Month navigation state + swipe gesture for MonthlyCalendarGrid. */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
-import { runOnJS } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import { addMonths, startOfMonth } from 'date-fns';
 import { triggerHaptic } from '@/utils/haptics';
 
@@ -54,8 +54,8 @@ export function useMonthGridNavigation(
           const swipedRight =
             event.translationX >= SWIPE_THRESHOLD ||
             event.velocityX >= VELOCITY_THRESHOLD;
-          if (swipedLeft) runOnJS(shiftMonth)(1);
-          else if (swipedRight) runOnJS(shiftMonth)(-1);
+          if (swipedLeft) scheduleOnRN(shiftMonth, 1);
+          else if (swipedRight) scheduleOnRN(shiftMonth, -1);
         }),
     [shiftMonth]
   );

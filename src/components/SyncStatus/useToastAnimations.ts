@@ -20,8 +20,8 @@ import {
   withDelay,
   withSequence,
   Easing,
-  runOnJS,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import type { ViewStyle } from 'react-native';
 import { durations } from '@/theme/animations';
 
@@ -76,7 +76,7 @@ export function useToastAnimations({
             },
             (finished) => {
               if (finished) {
-                runOnJS(handleHidden)();
+                scheduleOnRN(handleHidden);
               }
             }
           )

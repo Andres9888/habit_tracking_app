@@ -2,11 +2,11 @@ import { useCallback, useEffect, useRef } from 'react';
 import { durations } from '@/theme/animations';
 import {
   Easing,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 interface UseSparkleBurstAnimationProps {
   color: string;
@@ -48,7 +48,7 @@ export function useSparkleBurstAnimation({
       (finished) => {
         'worklet';
         if (finished) {
-          runOnJS(triggerComplete)();
+          scheduleOnRN(triggerComplete);
         }
       }
     );

@@ -11,9 +11,9 @@ import {
   useSharedValue,
   withSpring,
   withTiming,
-  runOnJS,
   Easing,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 import {
   DISMISS_THRESHOLD,
@@ -108,7 +108,7 @@ export function useArchiveUndoToast({
     .onEnd((event) => {
       const velocityY = Math.round(event.velocityY);
       if (event.translationY > DISMISS_THRESHOLD || velocityY > 500) {
-        runOnJS(confirmDismiss)();
+        scheduleOnRN(confirmDismiss);
       } else {
         translateY.value = withSpring(0, springs.standard);
         opacity.value = withTiming(1, { duration: durations.quick });

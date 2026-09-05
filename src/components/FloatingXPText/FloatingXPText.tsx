@@ -15,12 +15,12 @@ import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
   Easing,
-  runOnJS,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import { colors } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { typography } from '@/theme/typography';
@@ -59,7 +59,7 @@ export function FloatingXPText({
         { duration: durations.instant },
         (finished) => {
           if (finished && onComplete) {
-            runOnJS(onComplete)();
+            scheduleOnRN(onComplete);
           }
         }
       );
@@ -81,7 +81,7 @@ export function FloatingXPText({
       },
       (finished) => {
         if (finished && onComplete) {
-          runOnJS(onComplete)();
+          scheduleOnRN(onComplete);
         }
       }
     );

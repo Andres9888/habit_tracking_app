@@ -21,11 +21,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   interpolate,
-  runOnJS,
   useAnimatedStyle,
   useReducedMotion,
   withTiming,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import { durations, enterEasing, moveEasing } from '@/theme/animations';
 import { SCREEN_WIDTH } from '@/components/Modal/Modal.constants';
 import { detailPushProgress as progress } from './detailPushProgress';
@@ -71,7 +71,7 @@ export function useDetailPushTransition(visible: boolean) {
 
     progress.value = withTiming(0, EXIT, (finished?: boolean) => {
       'worklet';
-      if (finished) runOnJS(unmount)();
+      if (finished) scheduleOnRN(unmount);
     });
   }, [visible]);
 

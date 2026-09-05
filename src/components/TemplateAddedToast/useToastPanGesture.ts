@@ -1,6 +1,7 @@
 import { Gesture } from 'react-native-gesture-handler';
 import type { SharedValue } from 'react-native-reanimated';
-import { runOnJS, withSpring, withTiming } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
+import { withSpring, withTiming } from 'react-native-reanimated';
 import { durations } from '@/theme/animations';
 import {
   DISMISS_THRESHOLD,
@@ -32,7 +33,7 @@ export function useToastPanGesture({
         e.translationY > DISMISS_THRESHOLD ||
         e.velocityY > VELOCITY_THRESHOLD
       ) {
-        runOnJS(onSwipeDismiss)();
+        scheduleOnRN(onSwipeDismiss);
       } else {
         translateY.value = withSpring(0, SPRING_SNAP_BACK);
         opacity.value = withTiming(1, { duration: durations.quick });

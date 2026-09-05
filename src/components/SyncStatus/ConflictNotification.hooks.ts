@@ -8,8 +8,8 @@ import {
   useAnimatedStyle,
   withTiming,
   withDelay,
-  runOnJS,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import type { SharedValue } from 'react-native-reanimated';
 import { durations, enterEasing, exitEasing } from '@/theme/animations';
 import type { UseConflictNotificationResult } from './ConflictNotification.types';
@@ -54,7 +54,7 @@ function animateAutoDismiss(
       },
       (finished) => {
         if (finished) {
-          runOnJS(onDismiss)();
+          scheduleOnRN(onDismiss);
         }
       }
     )

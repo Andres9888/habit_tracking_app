@@ -10,8 +10,8 @@ import {
   withSpring,
   withTiming,
   withSequence,
-  runOnJS,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import { durations, springs } from '@/theme/animations';
 import { DISMISS_THRESHOLD } from './constants';
 
@@ -80,7 +80,7 @@ export function useCompletionToastAnimations(
     })
     .onEnd((e) => {
       if (e.translationY > DISMISS_THRESHOLD || e.velocityY > 500) {
-        runOnJS(handleDismiss)();
+        scheduleOnRN(handleDismiss);
       } else {
         translateY.value = withSpring(0, springs.standard);
         opacity.value = withTiming(1, { duration: durations.enter });
