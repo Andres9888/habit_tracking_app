@@ -21,15 +21,6 @@ export interface ModalProps {
   /** Mount children once in a hidden inert host before the modal opens */
   warmMount?: boolean;
 
-  /**
-   * Keep children mounted for the modal's whole lifetime, rendered inline as
-   * an absolutely positioned overlay instead of a native modal. Opening then
-   * only runs the enter animation: no chunk load, no mount, no native
-   * presentation. Closed, the overlay is offscreen, inert and hidden from
-   * assistive tech.
-   */
-  keepMounted?: boolean;
-
   /** Modal variant */
   variant?: ModalVariant;
 

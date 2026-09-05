@@ -5,6 +5,8 @@ import {
 } from './usePendingFocusHabit';
 
 export interface ModalVisibilityState extends PendingFocusHabitState {
+  isSettingsOpen: boolean;
+  setIsSettingsOpen: (v: boolean) => void;
   isCreateHabitOpen: boolean;
   setIsCreateHabitOpen: (v: boolean) => void;
   isHabitCalendarOpen: boolean;
@@ -32,6 +34,7 @@ export interface ModalVisibilityState extends PendingFocusHabitState {
  * Extracted from useHabitsModalsState for decomposition.
  */
 export function useModalVisibilityState(): ModalVisibilityState {
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isCreateHabitOpen, setIsCreateHabitOpen] = useState(false);
   const [isHabitCalendarOpen, setIsHabitCalendarOpen] = useState(false);
   const [isHabitDetailOpen, setIsHabitDetailOpen] = useState(false);
@@ -54,9 +57,11 @@ export function useModalVisibilityState(): ModalVisibilityState {
     isCreateHabitOpen,
     isHabitCalendarOpen,
     isHabitDetailOpen,
+    isSettingsOpen,
     setIsCreateHabitOpen,
     setIsHabitCalendarOpen,
     setIsHabitDetailOpen,
+    setIsSettingsOpen,
     setShowEditScreen,
     setShowHapticTest,
     setShowPauseModal,

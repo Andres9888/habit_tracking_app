@@ -42,8 +42,12 @@ export function useHabitsModalsState({
 }: UseHabitsModalsStateProps): HabitsModalsState {
   const visibility = useModalVisibilityState();
   const selection = useHabitSelectionState();
-  const { settings, celebrationsEnabled, reduceMotionPreference } =
-    useHabitsSettings();
+  const {
+    archivedHabitsCount,
+    settings,
+    celebrationsEnabled,
+    reduceMotionPreference,
+  } = useHabitsSettings(visibility.isSettingsOpen);
 
   const {
     pauseHabit,
@@ -168,6 +172,7 @@ export function useHabitsModalsState({
   );
 
   return buildModalsStateReturnValue(visibility, selection, handlers, {
+    archivedHabitsCount,
     celebrationsEnabled,
     clearMilestone,
     getStreak,

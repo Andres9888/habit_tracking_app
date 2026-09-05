@@ -21,6 +21,9 @@ on:
         default: 'true'
         type: boolean
 
+permissions:
+  contents: read
+
 # Concurrency: cancel previous runs on same branch
 concurrency:
   group: performance-budget-${{ github.ref }}
