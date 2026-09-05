@@ -27,7 +27,6 @@ interface UseHandlersProps {
   onGoToHabit?: (habitId: Id<'habits'>) => void;
   isImporting: boolean;
   isImported: boolean;
-  reducedMotion: boolean;
   onClose: () => void;
   onBack?: () => void;
   onImport: (templateId: Id<'templates'>) => void;
@@ -40,50 +39,41 @@ export const useHandlers = ({
   onGoToHabit,
   isImporting,
   isImported,
-  reducedMotion,
   onClose,
   onBack,
   onImport,
   onCustomize,
 }: UseHandlersProps) => {
+  // Reduce Motion suppresses animation, not haptics — the tactile channel
+  // is what compensates for the removed visual feedback.
   const handleClose = useCallback(() => {
-    if (!reducedMotion) {
-      triggerHaptic('tap');
-    }
+    triggerHaptic('tap');
     onClose();
-  }, [onClose, reducedMotion]);
+  }, [onClose]);
 
   const handleBack = useCallback(() => {
     if (!onBack) return;
-    if (!reducedMotion) {
-      triggerHaptic('tap');
-    }
+    triggerHaptic('tap');
     onBack();
-  }, [onBack, reducedMotion]);
+  }, [onBack]);
 
   const handleImport = useCallback(() => {
     if (!template || isImporting || isImported) return;
-    if (!reducedMotion) {
-      triggerHaptic('toggle');
-    }
+    triggerHaptic('toggle');
     onImport(template._id);
-  }, [template, isImporting, isImported, onImport, reducedMotion]);
+  }, [template, isImporting, isImported, onImport]);
 
   const handleCustomize = useCallback(() => {
     if (!template) return;
-    if (!reducedMotion) {
-      triggerHaptic('tap');
-    }
+    triggerHaptic('tap');
     onCustomize(template);
-  }, [template, onCustomize, reducedMotion]);
+  }, [template, onCustomize]);
 
   const handleGoToHabit = useCallback(() => {
-    if (!reducedMotion) {
-      triggerHaptic('tap');
-    }
+    triggerHaptic('tap');
     if (importedHabitId && onGoToHabit) onGoToHabit(importedHabitId);
     else onClose();
-  }, [importedHabitId, onClose, onGoToHabit, reducedMotion]);
+  }, [importedHabitId, onClose, onGoToHabit]);
 
   const handleDismiss = useCallback(() => {
     if (onBack) {
