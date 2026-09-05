@@ -5,63 +5,11 @@
  */
 import { v } from 'convex/values';
 import { mutation } from '../_generated/server';
+import type { RemovedHabitPayload } from './removePayload';
+import { buildRemovedHabitPayload } from './removePayload';
 import { findMaxOrderForUser } from './utils';
 
 const UNDO_RETENTION_MS = 15 * 60 * 1000;
-
-interface RemovedHabitPayload {
-  habit: {
-    accessibilityAtPause?: number;
-    bestStreak?: number;
-    color?: string;
-    createdAt: number;
-    currentStreak?: number;
-    cueAfterBehavior?: string;
-    cueLocation?: string;
-    cueTime?: string;
-    daysOfWeek?: number[];
-    frequency?: string;
-    goalDuration?: number;
-    goalUnit?: string;
-    growthType?: 'simple' | 'average' | 'complex';
-    icon?: string;
-    iconColor?: string;
-    identity?: string;
-    lastCompletedDate?: string;
-    name: string;
-    notes?: string;
-    paused?: boolean;
-    pausedAt?: number;
-    preferredTime?: string;
-    remindersEnabled?: boolean;
-    resumedAt?: number;
-    reminderSound?: string;
-    reminderTime?: string;
-    strength?: number;
-    strengthAtPause?: number;
-    strengthLevel?: string;
-    tags?: string[];
-    vizFailureBody?: string;
-    vizFailureEmotion?: string;
-    vizFailureMind?: string;
-    vizSuccessBody?: string;
-    vizSuccessEmotion?: string;
-    vizSuccessMind?: string;
-    why?: string;
-    woopObstacle?: string;
-    woopOutcome?: string;
-    woopPlan?: string;
-    woopWish?: string;
-  };
-  tracking: Array<{
-    completed: boolean;
-    date: string;
-  }>;
-  dayNotes: Array<{
-    date: string;
-    note: string;
-  }>;
-}
 
 export const remove = mutation({
   args: {
@@ -112,56 +60,12 @@ export const remove = mutation({
       await ctx.db.delete(dayNote._id);
     }
 
-    const deletedHabitPayload: RemovedHabitPayload = {
-      habit: {
-        accessibilityAtPause: habit.accessibilityAtPause,
-        bestStreak: habit.bestStreak,
-        color: habit.color,
-        createdAt: habit.createdAt,
-        currentStreak: habit.currentStreak,
-        cueAfterBehavior: habit.cueAfterBehavior,
-        cueLocation: habit.cueLocation,
-        cueTime: habit.cueTime,
-        daysOfWeek: habit.daysOfWeek,
-        frequency: habit.frequency,
-        goalDuration: habit.goalDuration,
-        goalUnit: habit.goalUnit,
-        growthType: habit.growthType,
-        icon: habit.icon,
-        iconColor: habit.iconColor,
-        identity: habit.identity,
-        lastCompletedDate: habit.lastCompletedDate,
-        name: habit.name,
-        notes: habit.notes,
-        paused: habit.paused,
-        pausedAt: habit.pausedAt,
-        preferredTime: habit.preferredTime,
-        remindersEnabled: habit.remindersEnabled,
-        resumedAt: habit.resumedAt,
-        reminderSound: habit.reminderSound,
-        reminderTime: habit.reminderTime,
-        strength: habit.strength,
-        strengthAtPause: habit.strengthAtPause,
-        strengthLevel: habit.strengthLevel,
-        tags: habit.tags,
-        vizFailureBody: habit.vizFailureBody,
-        vizFailureEmotion: habit.vizFailureEmotion,
-        vizFailureMind: habit.vizFailureMind,
-        vizSuccessBody: habit.vizSuccessBody,
-        vizSuccessEmotion: habit.vizSuccessEmotion,
-        vizSuccessMind: habit.vizSuccessMind,
-        why: habit.why,
-        woopObstacle: habit.woopObstacle,
-        woopOutcome: habit.woopOutcome,
-        woopPlan: habit.woopPlan,
-        woopWish: habit.woopWish,
-      },
-      tracking: trackingEntries.map((entry) => ({
-        completed: entry.completed,
-        date: entry.date,
-      })),
-      dayNotes: dayNotes.map(({ date, note }) => ({ date, note })),
-    };
+    const deletedHabitPayload: RemovedHabitPayload = buildRemovedHabitPayload(
+      habit,
+      trackingEntries,
+      dayNotes,
+      templateUsageEntries
+    );
 
     const deletedHabitId = await ctx.db.insert('deletedHabits', {
       createdAt: Date.now(),
@@ -228,6 +132,17 @@ export const restore = mutation({
         habitId,
         note: dayNote.note,
         updatedAt: Date.now(),
+        userId: identity.subject,
+      });
+    }
+
+    // habits.get joins templateUsage for the template "why" and start-small
+    // copy. `?? []` keeps payloads written before this field existed working.
+    for (const usage of payload.templateUsage ?? []) {
+      await ctx.db.insert('templateUsage', {
+        habitId,
+        importedAt: usage.importedAt,
+        templateId: usage.templateId,
         userId: identity.subject,
       });
     }
