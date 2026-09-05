@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Animated, Easing } from 'react-native';
+import { Easing, type SharedValue, withSequence, withTiming } from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { FAB, SCALE, OPACITY, RIPPLE_EFFECT } from '../../../../constants';
 
@@ -7,9 +7,9 @@ interface UseFABHandlersProps {
   openCreateHabitScreen: () => void;
   celebrationsEnabled: boolean;
   reduceMotionPreference: boolean;
-  pressScale: Animated.Value;
-  rippleOpacity: Animated.Value;
-  rippleScale: Animated.Value;
+  pressScale: SharedValue<number>;
+  rippleOpacity: SharedValue<number>;
+  rippleScale: SharedValue<number>;
 }
 
 export function useFABHandlers({
@@ -37,37 +37,27 @@ export function useFABHandlers({
       triggerSelection();
     }
 
-    rippleOpacity.setValue(RIPPLE_EFFECT.initialOpacity);
-    rippleScale.setValue(RIPPLE_EFFECT.initialScale);
+    rippleOpacity.value = RIPPLE_EFFECT.initialOpacity;
+    rippleScale.value = RIPPLE_EFFECT.initialScale;
 
-    Animated.parallel([
-      Animated.sequence([
-        Animated.timing(pressScale, {
-          duration: FAB.pressScaleDuration,
-          easing: Easing.out(Easing.quad),
-          toValue: SCALE.pressSmall,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pressScale, {
-          duration: FAB.pressReleaseDuration,
-          easing: Easing.out(Easing.ease),
-          toValue: SCALE.normal,
-          useNativeDriver: true,
-        }),
-      ]),
-      Animated.timing(rippleScale, {
-        duration: FAB.rippleScaleDuration,
-        easing: Easing.out(Easing.cubic),
-        toValue: SCALE.large,
-        useNativeDriver: true,
+    pressScale.value = withSequence(
+      withTiming(SCALE.pressSmall, {
+        duration: FAB.pressScaleDuration,
+        easing: Easing.out(Easing.quad),
       }),
-      Animated.timing(rippleOpacity, {
-        duration: FAB.rippleOpacityDuration,
+      withTiming(SCALE.normal, {
+        duration: FAB.pressReleaseDuration,
         easing: Easing.out(Easing.ease),
-        toValue: OPACITY.transparent,
-        useNativeDriver: true,
-      }),
-    ]).start();
+      })
+    );
+    rippleScale.value = withTiming(SCALE.large, {
+      duration: FAB.rippleScaleDuration,
+      easing: Easing.out(Easing.cubic),
+    });
+    rippleOpacity.value = withTiming(OPACITY.transparent, {
+      duration: FAB.rippleOpacityDuration,
+      easing: Easing.out(Easing.ease),
+    });
 
     openCreateHabitScreen();
   }, [

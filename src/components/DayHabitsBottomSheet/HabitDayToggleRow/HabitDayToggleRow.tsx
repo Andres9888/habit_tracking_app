@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { memo, useCallback, useState } from 'react';
-import { Animated, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { shadows } from '@/theme/spacing';
 
@@ -59,8 +60,12 @@ function HabitDayToggleRowComponent({
 
   const accessibilityLabel = `${displayName}, ${isCompleted ? 'completed' : 'not completed'}`;
 
+  const rowStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scaleAnim.value }],
+  }));
+
   return (
-    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+    <Animated.View style={rowStyle}>
       <Pressable
         accessibilityHint='Double tap to toggle completion'
         accessibilityLabel={accessibilityLabel}

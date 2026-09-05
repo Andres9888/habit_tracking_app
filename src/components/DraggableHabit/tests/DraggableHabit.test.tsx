@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import { Swipeable } from 'react-native-gesture-handler';
+import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import DraggableHabit from '../DraggableHabit';
 import type { Id } from '../../../../convex/_generated/dataModel';
 
@@ -178,8 +178,8 @@ describe('DraggableHabit swipe to archive', () => {
     );
 
     const swipeable = UNSAFE_getByType(Swipeable);
-    const mockProgress = { interpolate: jest.fn() };
-    const mockDragX = { interpolate: jest.fn(() => 0) };
+    const mockProgress = { value: 0 };
+    const mockDragX = { value: 0 };
     const rightActions = swipeable.props.renderRightActions(
       mockProgress,
       mockDragX
@@ -236,8 +236,8 @@ describe('DraggableHabit swipe to archive', () => {
     const swipeable = UNSAFE_getByType(Swipeable);
 
     // Verify renderRightActions returns a valid React element
-    const mockProgress = { interpolate: jest.fn() };
-    const mockDragX = { interpolate: jest.fn(() => 0) };
+    const mockProgress = { value: 0 };
+    const mockDragX = { value: 0 };
     const rightActions = swipeable.props.renderRightActions(
       mockProgress,
       mockDragX
@@ -246,8 +246,7 @@ describe('DraggableHabit swipe to archive', () => {
     // Verify it returns a valid element with expected structure
     expect(rightActions).toBeTruthy();
     expect(rightActions.type).toBeDefined();
-    render(rightActions);
-    expect(mockDragX.interpolate).toHaveBeenCalled();
+    expect(() => render(rightActions)).not.toThrow();
   });
 
   it('does not call onArchive when component renders without swipe', () => {

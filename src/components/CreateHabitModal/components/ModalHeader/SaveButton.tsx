@@ -4,8 +4,8 @@
  * spinner + "Saving…" while a save is in flight.
  */
 import { useMemo } from 'react';
-import { ActivityIndicator, Animated } from 'react-native';
-import ReAnimated from 'react-native-reanimated';
+import { ActivityIndicator } from 'react-native';
+import ReAnimated, { type SharedValue, useAnimatedStyle } from 'react-native-reanimated';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import STRINGS from '../../../../constants/strings';
@@ -18,7 +18,7 @@ interface SaveButtonProps {
   isSaving?: boolean;
   onSave: () => void;
   onInvalidSave: () => void;
-  shakeValue: Animated.Value;
+  shakeValue: SharedValue<number>;
 }
 
 export const SaveButton = ({
@@ -51,9 +51,12 @@ export const SaveButton = ({
       : STRINGS.CREATE_HABIT.createAction;
 
   const handlePress = isSaving ? () => {} : canSave ? onSave : onInvalidSave;
+  const shakeStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: shakeValue.value }],
+  }));
 
   return (
-    <Animated.View style={{ transform: [{ translateX: shakeValue }] }}>
+    <ReAnimated.View style={shakeStyle}>
       <AnimatedPressable
         accessibilityHint={canSave ? '' : 'Enter a habit name first'}
         accessibilityLabel={
@@ -73,6 +76,6 @@ export const SaveButton = ({
           {label}
         </ReAnimated.Text>
       </AnimatedPressable>
-    </Animated.View>
+    </ReAnimated.View>
   );
 };

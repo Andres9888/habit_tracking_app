@@ -14,8 +14,13 @@
  */
 
 import React, { type MutableRefObject } from 'react';
-import { Animated, type LayoutChangeEvent } from 'react-native';
-import Reanimated, { FadeInDown, FadeOutRight } from 'react-native-reanimated';
+import { type LayoutChangeEvent } from 'react-native';
+import Reanimated, {
+  FadeInDown,
+  FadeOutRight,
+  useAnimatedStyle,
+  type SharedValue,
+} from 'react-native-reanimated';
 import type { RenderItemParams } from 'react-native-draggable-flatlist';
 import type { Habit } from '../../types';
 import { durations, enterEasing } from '@/theme/animations';
@@ -25,13 +30,34 @@ interface RenderHabitRowOptions {
   justCreatedHabitId: string | null;
   onHabitRowLayout?: (habitId: string, height: number) => void;
   initialEntranceDoneRef: MutableRefObject<boolean>;
-  habitRowOpacity: Animated.Value;
-  habitRowTranslateY: Animated.Value;
+  habitRowOpacity: SharedValue<number>;
+  habitRowTranslateY: SharedValue<number>;
   renderItem: (p: RenderItemParams<Habit>) => React.ReactNode;
   renderParams: RenderItemParams<Habit>;
 }
 
 const EXIT_ANIMATION = FadeOutRight.duration(200).damping(18).stiffness(150);
+
+/**
+ * Small dedicated component so `useAnimatedStyle` is called from a proper
+ * React component instance rather than the bare `renderHabitRow` helper
+ * (which is invoked imperatively per row and must not call hooks itself).
+ */
+function NewlyCreatedRow({
+  habitRowOpacity,
+  habitRowTranslateY,
+  children,
+}: {
+  habitRowOpacity: SharedValue<number>;
+  habitRowTranslateY: SharedValue<number>;
+  children: React.ReactNode;
+}) {
+  const style = useAnimatedStyle(() => ({
+    opacity: habitRowOpacity.value,
+    transform: [{ translateY: habitRowTranslateY.value }],
+  }));
+  return <Reanimated.View style={style}>{children}</Reanimated.View>;
+}
 
 export function renderHabitRow(opts: RenderHabitRowOptions) {
   const {
@@ -62,18 +88,16 @@ export function renderHabitRow(opts: RenderHabitRowOptions) {
       exiting={EXIT_ANIMATION}
       onLayout={handleLayout}
     >
-      <Animated.View
-        style={
-          isNewlyCreated
-            ? {
-                opacity: habitRowOpacity,
-                transform: [{ translateY: habitRowTranslateY }],
-              }
-            : undefined
-        }
-      >
-        {renderItem(renderParams)}
-      </Animated.View>
+      {isNewlyCreated ? (
+        <NewlyCreatedRow
+          habitRowOpacity={habitRowOpacity}
+          habitRowTranslateY={habitRowTranslateY}
+        >
+          {renderItem(renderParams)}
+        </NewlyCreatedRow>
+      ) : (
+        renderItem(renderParams)
+      )}
     </Reanimated.View>
   );
 }

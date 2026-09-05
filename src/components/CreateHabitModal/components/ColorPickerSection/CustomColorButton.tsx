@@ -1,6 +1,7 @@
 import { Plus } from 'lucide-react-native';
-import { memo, useCallback, useRef } from 'react';
-import { Animated, Keyboard, View } from 'react-native';
+import { memo, useCallback } from 'react';
+import { Keyboard, View } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { durations, enterEasing, exitEasing } from '@/theme/animations';
 import { colors } from '../../../../theme/colors/core';
@@ -15,7 +16,10 @@ import { iconSizes } from '@/theme/iconSizes';
  * V12: Updated to 44px to match larger color swatches
  */
 const CustomColorButtonComponent = ({ onPress }: CustomColorButtonProps) => {
-  const scale = useRef(new Animated.Value(1)).current;
+  const scale = useSharedValue(1);
+  const scaleStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
   const { triggerSelection } = useHapticFeedback();
 
   const handlePress = useCallback(() => {
@@ -25,21 +29,17 @@ const CustomColorButtonComponent = ({ onPress }: CustomColorButtonProps) => {
   }, [onPress, triggerSelection]);
 
   const handlePressIn = useCallback(() => {
-    Animated.timing(scale, {
+    scale.value = withTiming(0.96, {
       duration: durations.instant,
       easing: exitEasing,
-      toValue: 0.96,
-      useNativeDriver: true,
-    }).start();
+    });
   }, [scale]);
 
   const handlePressOut = useCallback(() => {
-    Animated.timing(scale, {
+    scale.value = withTiming(1, {
       duration: durations.quick,
       easing: enterEasing,
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
+    });
   }, [scale]);
 
   return (
@@ -51,7 +51,7 @@ const CustomColorButtonComponent = ({ onPress }: CustomColorButtonProps) => {
         width: 52,
       }}
     >
-      <Animated.View style={{ transform: [{ scale }] }}>
+      <Animated.View style={scaleStyle}>
         <AnimatedPressable
           disableAnimation
           accessibilityLabel='Choose custom color'

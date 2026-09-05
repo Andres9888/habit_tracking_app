@@ -1,47 +1,49 @@
-// TODO: Migrate from legacy Animated API to react-native-reanimated
-// Requires coordinated changes across useFABAnimations, useFABHandlers, and FloatingActionButton
-import { useEffect, useRef } from 'react';
-import { Animated, Easing } from 'react-native';
+import { useEffect } from 'react';
+import {
+  Easing,
+  cancelAnimation,
+  useSharedValue,
+  withDelay,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
 import { FAB, RIPPLE_EFFECT } from '../../../../constants';
 
 export function useFABAnimations(
   celebrationsEnabled: boolean,
   reduceMotionPreference: boolean
 ) {
-  const bounce = useRef(new Animated.Value(0)).current;
-  const pressScale = useRef(new Animated.Value(1)).current;
-  const rippleOpacity = useRef(new Animated.Value(0)).current;
-  const rippleScale = useRef(new Animated.Value(RIPPLE_EFFECT.initialScale)).current;
+  const bounce = useSharedValue(0);
+  const pressScale = useSharedValue<number>(1);
+  const rippleOpacity = useSharedValue<number>(0);
+  const rippleScale = useSharedValue<number>(RIPPLE_EFFECT.initialScale);
 
   useEffect(() => {
     if (!celebrationsEnabled || reduceMotionPreference) {
-      bounce.stopAnimation();
-      bounce.setValue(0);
+      cancelAnimation(bounce);
+      bounce.value = 0;
       return;
     }
 
-    const animation = Animated.loop(
-      Animated.sequence([
-        Animated.timing(bounce, {
+    bounce.value = withRepeat(
+      withSequence(
+        withTiming(1, {
           duration: FAB.bounceInDuration,
           easing: Easing.out(Easing.cubic),
-          toValue: 1,
-          useNativeDriver: true,
         }),
-        Animated.timing(bounce, {
+        withTiming(0, {
           duration: FAB.bounceOutDuration,
           easing: Easing.inOut(Easing.ease),
-          toValue: 0,
-          useNativeDriver: true,
         }),
-        Animated.delay(FAB.initialBounceDelay),
-      ])
+        withDelay(FAB.initialBounceDelay, withTiming(0, { duration: 0 }))
+      ),
+      -1,
+      false
     );
 
-    animation.start();
-
     return () => {
-      animation.stop();
+      cancelAnimation(bounce);
     };
   }, [bounce, celebrationsEnabled, reduceMotionPreference]);
 

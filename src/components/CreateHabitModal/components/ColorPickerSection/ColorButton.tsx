@@ -1,11 +1,6 @@
 import { memo, useCallback } from 'react';
-import {
-  AccessibilityInfo,
-  Animated,
-  Keyboard,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { AccessibilityInfo, Keyboard, StyleSheet, View } from 'react-native';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { borderRadius, shadows } from '../../../../theme/spacing';
 import { getColorName } from '../../constants';
@@ -49,6 +44,14 @@ const ColorButtonComponent = ({
       }
     : undefined;
 
+  const rippleStyle = useAnimatedStyle(() => ({
+    opacity: rippleOpacity.value,
+    transform: [{ scale: rippleScale.value }],
+  }));
+  const scaleStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
   return (
     <View style={{ position: 'relative' }}>
       {/* Ripple effect layer */}
@@ -59,9 +62,8 @@ const ColorButtonComponent = ({
           {
             alignItems: 'center',
             justifyContent: 'center',
-            opacity: rippleOpacity,
-            transform: [{ scale: rippleScale }],
           },
+          rippleStyle,
         ]}
       >
         <View
@@ -83,9 +85,7 @@ const ColorButtonComponent = ({
           width: 52,
         }}
       >
-        <Animated.View
-          style={[{ transform: [{ scale }] }, selectedShadowStyle]}
-        >
+        <Animated.View style={[scaleStyle, selectedShadowStyle]}>
           <ColorSwatch
             color={color}
             colorName={colorName}

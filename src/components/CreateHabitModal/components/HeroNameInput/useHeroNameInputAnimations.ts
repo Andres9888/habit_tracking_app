@@ -4,8 +4,9 @@
  * Handles validation message animations for HeroNameInput.
  */
 
-import { useRef, useState, useEffect } from 'react';
-import { Animated } from 'react-native';
+import { useState, useEffect } from 'react';
+import { useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import { durations, springs } from '@/theme/animations';
 import type { ValidationResult } from './types';
 
@@ -31,37 +32,30 @@ function getValidationMessage(name: string): ValidationResult | null {
 }
 
 export function useHeroNameInputAnimations(value: string) {
-  const labelOpacity = useRef(new Animated.Value(1)).current;
-  const validationOpacity = useRef(new Animated.Value(0)).current;
-  const validationTranslateY = useRef(new Animated.Value(-10)).current;
+  const labelOpacity = useSharedValue(1);
+  const validationOpacity = useSharedValue(0);
+  const validationTranslateY = useSharedValue(-10);
   const [validation, setValidation] = useState<ValidationResult | null>(null);
 
   useEffect(() => {
     const newValidation = getValidationMessage(value);
 
     if (newValidation?.message !== validation?.message) {
-      Animated.timing(validationOpacity, {
-        duration: durations.instant,
-        toValue: 0,
-        useNativeDriver: true,
-      }).start(() => {
-        setValidation(newValidation);
-        if (newValidation) {
-          validationTranslateY.setValue(-10);
-          Animated.parallel([
-            Animated.timing(validationOpacity, {
+      validationOpacity.value = withTiming(
+        0,
+        { duration: durations.instant },
+        (finished) => {
+          if (!finished) return;
+          scheduleOnRN(setValidation, newValidation);
+          if (newValidation) {
+            validationTranslateY.value = -10;
+            validationOpacity.value = withTiming(1, {
               duration: durations.quick,
-              toValue: 1,
-              useNativeDriver: true,
-            }),
-            Animated.spring(validationTranslateY, {
-              ...springs.standard,
-              toValue: 0,
-              useNativeDriver: true,
-            }),
-          ]).start();
+            });
+            validationTranslateY.value = withSpring(0, springs.standard);
+          }
         }
-      });
+      );
     }
   }, [value, validation?.message, validationOpacity, validationTranslateY]);
 

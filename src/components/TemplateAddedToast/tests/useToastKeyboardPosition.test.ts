@@ -60,7 +60,7 @@ describe('useToastKeyboardPosition', () => {
   >;
 
   const readTranslateY = (translateY: unknown): number =>
-    (translateY as { __getValue: () => number }).__getValue();
+    (translateY as { value: number }).value;
 
   beforeEach(() => {
     screen = size(844, 390);

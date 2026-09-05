@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Dimensions, Keyboard, Platform } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Dimensions, Keyboard, Platform } from 'react-native';
+import { useDerivedValue, useSharedValue, type SharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   computeKeyboardOverlap,
@@ -10,7 +11,7 @@ import { useToastKeyboardAnimation } from './useToastKeyboardAnimation';
 
 interface ToastKeyboardPosition {
   bottom: number;
-  translateY: Animated.AnimatedInterpolation<number>;
+  translateY: SharedValue<number>;
 }
 
 /**
@@ -44,7 +45,7 @@ export function useToastKeyboardPosition(): ToastKeyboardPosition {
     initialKeyboardOverlap,
     shouldLiftForKeyboard && Keyboard.isVisible()
   );
-  const clearance = useRef(new Animated.Value(initialClearance)).current;
+  const clearance = useSharedValue(initialClearance);
   useToastKeyboardAnimation({
     clearance,
     enabled: shouldLiftForKeyboard,
@@ -52,9 +53,6 @@ export function useToastKeyboardPosition(): ToastKeyboardPosition {
     insetBottom: insets.bottom,
     screenHeight,
   });
-  const translateY = useMemo(
-    () => Animated.multiply<number>(clearance, -1),
-    [clearance]
-  );
+  const translateY = useDerivedValue(() => clearance.value * -1);
   return { bottom: insets.bottom + TOAST_BOTTOM_GAP, translateY };
 }

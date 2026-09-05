@@ -5,11 +5,12 @@
  * Features press animation and haptic feedback.
  */
 
-import { useCallback, useRef } from 'react';
-import { Animated, Pressable, Text } from 'react-native';
+import { Pressable, Text } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
 
-import { durations } from '@/theme/animations';
+import { springs } from '@/theme/animations';
+import { usePressAnimation } from '@/hooks/usePressAnimation';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import type { QuickTimeButtonProps } from './types';
 
@@ -19,28 +20,16 @@ export const QuickTimeButton = ({
   onPress,
   time,
 }: QuickTimeButtonProps) => {
-  const scale = useRef(new Animated.Value(1)).current;
   const { triggerSelection } = useHapticFeedback();
   const { colors: themeColors } = useThemeColors();
-
-  const handlePressIn = useCallback(() => {
-    Animated.timing(scale, {
-      duration: durations.instant,
-      toValue: 0.95,
-      useNativeDriver: true,
-    }).start();
-  }, [scale]);
-
-  const handlePressOut = useCallback(() => {
-    Animated.timing(scale, {
-      duration: durations.quick,
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
-  }, [scale]);
+  const { animatedStyle, pressHandlers } = usePressAnimation({
+    enableHaptics: false,
+    pressScale: 0.95,
+    springConfig: springs.standard,
+  });
 
   return (
-    <Animated.View style={{ flex: 1, transform: [{ scale }] }}>
+    <Animated.View style={[{ flex: 1 }, animatedStyle]}>
       <Pressable
         accessibilityLabel={`Set reminder to ${label} at ${time}`}
         accessibilityRole='button'
@@ -50,8 +39,7 @@ export const QuickTimeButton = ({
           triggerSelection();
           onPress();
         }}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
+        {...pressHandlers}
       >
         <Text
           className={`text-xs font-semibold ${

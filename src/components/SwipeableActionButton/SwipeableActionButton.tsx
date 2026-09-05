@@ -9,8 +9,10 @@
  */
 
 import React, { useRef } from 'react';
-import { Animated } from 'react-native';
-import { Swipeable } from 'react-native-gesture-handler';
+import Swipeable, {
+  type SwipeableMethods,
+} from 'react-native-gesture-handler/ReanimatedSwipeable';
+import type { SharedValue } from 'react-native-reanimated';
 import { Trash2 } from 'lucide-react-native';
 import { getSwipeColors } from './styles';
 import { SwipeActions } from './SwipeActions';
@@ -31,7 +33,7 @@ export function SwipeableActionButton({
   swipeLabel = 'Delete',
   swipeVariant = 'destructive',
 }: SwipeableActionButtonProps) {
-  const swipeableRef = useRef<Swipeable>(null);
+  const swipeableRef = useRef<SwipeableMethods>(null);
   const isDestructive = variant === 'destructive';
   const isBoost = variant === 'boost';
   const swipeColors = getSwipeColors(swipeVariant);
@@ -42,11 +44,11 @@ export function SwipeableActionButton({
     : `${label}${isDestructive ? '. This is a destructive action.' : ''}${swipeEnabled ? '. Swipe left to reveal action.' : ''}`;
 
   const renderRightActions = (
-    _progress: Animated.AnimatedInterpolation<number>,
-    dragX: Animated.AnimatedInterpolation<number>
+    _progress: SharedValue<number>,
+    translation: SharedValue<number>
   ) => (
     <SwipeActions
-      dragX={dragX}
+      dragX={translation}
       label={label}
       swipeableRef={swipeableRef}
       swipeColors={swipeColors}

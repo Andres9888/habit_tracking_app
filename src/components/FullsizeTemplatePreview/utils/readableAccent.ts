@@ -4,7 +4,7 @@
  * hexes with no guaranteed contrast, unlike our curated design tokens.
  */
 
-import { darkenColor } from '../../CreateHabitModal/components/StickyCreateBar/colorUtils';
+import { darkenColor } from './darkenColor';
 
 const MAX_LUMINANCE = 0.28;
 const MAX_ITERATIONS = 4;

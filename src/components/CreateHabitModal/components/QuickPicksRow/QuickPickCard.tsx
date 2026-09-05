@@ -1,6 +1,9 @@
-import { memo, useCallback, useRef } from 'react';
-import { Animated, Pressable, Text, View } from 'react-native';
+import { memo } from 'react';
+import { Pressable, Text, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { usePressAnimation } from '@/hooks/usePressAnimation';
+import { springs } from '@/theme/animations';
 import { HUBERMAN_PHASES } from '../../../../constants/hubermanPhases';
 import type { QuickPickCardProps } from './types';
 
@@ -9,27 +12,13 @@ const QuickPickCardComponent = ({
   isSelected,
   onPress,
 }: QuickPickCardProps) => {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
   const phaseInfo = HUBERMAN_PHASES[template.timeOfDay];
   const { colors: themeColors } = useThemeColors();
-
-  const handlePressIn = useCallback(() => {
-    Animated.spring(scaleAnim, {
-      friction: 10,
-      tension: 300,
-      toValue: 0.96,
-      useNativeDriver: true,
-    }).start();
-  }, [scaleAnim]);
-
-  const handlePressOut = useCallback(() => {
-    Animated.spring(scaleAnim, {
-      friction: 10,
-      tension: 300,
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
-  }, [scaleAnim]);
+  const { animatedStyle, pressHandlers } = usePressAnimation({
+    enableHaptics: false,
+    pressScale: 0.96,
+    springConfig: springs.standard,
+  });
 
   return (
     <Pressable
@@ -38,8 +27,7 @@ const QuickPickCardComponent = ({
       accessibilityRole='button'
       accessibilityState={{ selected: isSelected }}
       onPress={onPress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
+      {...pressHandlers}
     >
       <Animated.View
         className='mr-3 overflow-hidden rounded-2xl bg-white p-3'
@@ -48,8 +36,8 @@ const QuickPickCardComponent = ({
             borderColor: isSelected ? themeColors.status.success : '#e7e5e4', // #e7e5e4 = stone-200
             borderWidth: 2,
             minWidth: 100,
-            transform: [{ scale: scaleAnim }],
           },
+          animatedStyle,
         ]}
       >
         {/* Emoji with gradient background */}

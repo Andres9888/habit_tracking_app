@@ -3,21 +3,22 @@
  * Now with progressive haptic feedback at swipe thresholds
  */
 
-import React, { useRef, useEffect } from 'react';
-import { Text, Pressable, Animated } from 'react-native';
-import type { Swipeable } from 'react-native-gesture-handler';
+import React from 'react';
+import { Text, Pressable } from 'react-native';
+import Animated, { type SharedValue } from 'react-native-reanimated';
+import type { SwipeableMethods } from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { styles } from './styles';
 import type { SwipeColors } from './types';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
+import { useSwipeActionsAnimation } from './useSwipeActionsAnimation';
 
 interface SwipeActionsProps {
-  dragX: Animated.AnimatedInterpolation<number>;
+  dragX: SharedValue<number>;
   swipeColors: SwipeColors;
   swipeLabel: string;
   label: string;
-  swipeableRef: React.RefObject<Swipeable | null>;
+  swipeableRef: React.RefObject<SwipeableMethods | null>;
   onSwipeAction?: () => void;
   SwipeIcon: React.ComponentType<{
     color: string;
@@ -35,63 +36,10 @@ export function SwipeActions({
   onSwipeAction,
   SwipeIcon,
 }: SwipeActionsProps) {
-  const reduceMotion = useReduceMotion();
-  const threshold50Triggered = useRef(false);
-  const threshold80Triggered = useRef(false);
-
-  // Progressive haptic feedback at swipe thresholds
-  useEffect(() => {
-    if (reduceMotion) return;
-
-    const listenerId = dragX.addListener(({ value }) => {
-      const progress = Math.abs(value) / 120; // 120 is full swipe distance
-
-      // Trigger medium impact at 50%
-      if (progress >= 0.5 && !threshold50Triggered.current) {
-        threshold50Triggered.current = true;
-        triggerHaptic('toggle');
-      } else if (progress < 0.5) {
-        threshold50Triggered.current = false;
-      }
-
-      // Trigger heavy impact at 80%
-      if (progress >= 0.8 && !threshold80Triggered.current) {
-        threshold80Triggered.current = true;
-        triggerHaptic('heavy');
-      } else if (progress < 0.8) {
-        threshold80Triggered.current = false;
-      }
-    });
-
-    return () => {
-      dragX.removeListener(listenerId);
-    };
-  }, [dragX, reduceMotion]);
-
-  const trans = dragX.interpolate({
-    extrapolate: 'clamp',
-    inputRange: [-120, 0],
-    outputRange: [0, 120],
-  });
-
-  // Progressive icon scale based on swipe progress (0.8 → 1.15)
-  const iconScale = dragX.interpolate({
-    extrapolate: 'clamp',
-    inputRange: [-120, -80, -40, 0],
-    outputRange: [1.15, 1.05, 0.9, 0.8],
-  });
-
-  // Progressive opacity for icon (0.6 → 1.0)
-  const iconOpacity = dragX.interpolate({
-    extrapolate: 'clamp',
-    inputRange: [-120, -50, 0],
-    outputRange: [1, 0.85, 0.6],
-  });
+  const { containerStyle, iconStyle } = useSwipeActionsAnimation(dragX);
 
   return (
-    <Animated.View
-      style={[styles.swipeAction, { transform: [{ translateX: trans }] }]}
-    >
+    <Animated.View style={[styles.swipeAction, containerStyle]}>
       <Pressable
         accessibilityLabel={`${swipeLabel} ${label}`}
         accessibilityRole='button'
@@ -105,11 +53,8 @@ export function SwipeActions({
         <Animated.View
           style={[
             styles.swipeIconContainer,
-            {
-              backgroundColor: swipeColors.iconBg,
-              opacity: iconOpacity,
-              transform: [{ scale: iconScale }],
-            },
+            { backgroundColor: swipeColors.iconBg },
+            iconStyle,
           ]}
         >
           <SwipeIcon color={swipeColors.text} size={iconSizes.medium} strokeWidth={2} />
