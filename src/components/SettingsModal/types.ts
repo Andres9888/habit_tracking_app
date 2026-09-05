@@ -37,6 +37,7 @@ export interface SettingsModalProps {
   onClose: () => void;
   visible: boolean;
   warmMount?: boolean;
+  keepMounted?: boolean;
   // Streak reminders
   streakRemindersEnabled?: boolean;
   streakReminderTime?: string;

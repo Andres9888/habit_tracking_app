@@ -26,6 +26,7 @@ export function Modal({
   backdropOpacity = 0.5,
   inline = false,
   warmMount = false,
+  keepMounted = false,
   style,
   respectReduceMotion = true,
   skipAnimation = false,
@@ -100,6 +101,28 @@ export function Modal({
       </ModalContent>
     </>
   );
+
+  if (keepMounted) {
+    return (
+      <View
+        accessibilityElementsHidden={!visible}
+        accessibilityViewIsModal={visible && accessibilityViewIsModal}
+        importantForAccessibility={visible ? 'auto' : 'no-hide-descendants'}
+        pointerEvents={visible ? 'box-none' : 'none'}
+        style={[StyleSheet.absoluteFill, { elevation: 9999, zIndex: 9999 }]}
+      >
+        <View
+          style={[
+            styles.container,
+            variant === 'fullScreen' && styles.containerFullScreen,
+            variant === 'centerAlert' && styles.containerCenterAlert,
+          ]}
+        >
+          {modalBody}
+        </View>
+      </View>
+    );
+  }
 
   if (!shouldRender) {
     return warmMount ? (

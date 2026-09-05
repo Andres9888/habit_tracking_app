@@ -21,7 +21,6 @@ export interface HandlersReturn {
 }
 
 export interface ExtraState {
-  archivedHabitsCount: number;
   celebrationsEnabled: boolean;
   habits: Habit[];
   settings: unknown;

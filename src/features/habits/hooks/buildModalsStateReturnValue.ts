@@ -1,4 +1,5 @@
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { setSettingsOpen } from '../state/settingsOpenStore';
 import type { HabitsModalsState } from './types';
 import type { ModalVisibilityState } from './useModalVisibilityState';
 import type { HabitSelectionState } from './useHabitSelectionState';
@@ -24,7 +25,6 @@ export function buildModalsStateReturnValue(
   extra: ExtraState
 ): HabitsModalsState {
   return {
-    archivedHabitsCount: extra.archivedHabitsCount,
     // State properties
     celebrationsEnabled: extra.celebrationsEnabled,
     // Handlers from extracted hook
@@ -72,7 +72,7 @@ export function buildModalsStateReturnValue(
     settings: extra.settings,
 
     // Inline close handlers
-    closeSettings: () => visibility.setIsSettingsOpen(false),
+    closeSettings: () => setSettingsOpen(false),
 
     shareCardData: selection.shareCardData,
 
@@ -137,8 +137,6 @@ export function buildModalsStateReturnValue(
 
     openCreateHabitScreen: handlers.openCreateHabitScreen,
 
-    showSettings: visibility.isSettingsOpen,
-
     openEditHabit: handlers.openEditHabit,
 
     openHabitCalendar: handlers.openHabitCalendar,
@@ -150,7 +148,7 @@ export function buildModalsStateReturnValue(
     showTemplatesScreen: visibility.showTemplatesScreen,
 
     openHapticTest: () => {
-      visibility.setIsSettingsOpen(false);
+      setSettingsOpen(false);
       visibility.setShowHapticTest(true);
     },
 
@@ -161,7 +159,7 @@ export function buildModalsStateReturnValue(
     openQuickActions: handlers.openQuickActions,
     tracking: extra.tracking,
     // Inline open handlers
-    openSettings: () => visibility.setIsSettingsOpen(true),
+    openSettings: () => setSettingsOpen(true),
 
     // Reopening the library cancels any stale focus request.
     openTemplatesScreen: () => {

@@ -5,12 +5,10 @@ export function getSettingsProps(
   onPremiumUpsell?: () => void
 ) {
   return {
-    archivedHabitsCount: state.archivedHabitsCount,
     closeSettings: state.closeSettings,
     onPremiumUpsell,
     onSettingsChange: state.onSettingsChange,
     settings: state.settings,
-    showSettings: state.showSettings,
   };
 }
 
