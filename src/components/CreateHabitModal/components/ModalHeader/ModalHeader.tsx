@@ -22,8 +22,12 @@ export const ModalHeader = ({
     onValidationError
   );
 
+  // No entrance animation: the full-screen Modal already slides in, and an
+  // entering animation started on a cold-start open inside RN Modal can freeze
+  // mid-flight, leaving Close + Create invisible (5/19 cold opens, Sep 2026).
   return (
     <ScreenHeader
+      animateEntrance={false}
       leftAction='close'
       rightAction={
         <SaveButton

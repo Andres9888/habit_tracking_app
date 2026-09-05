@@ -110,6 +110,20 @@ describe('ScreenHeader', () => {
     expect(queryByLabelText('Go back')).toBeTruthy();
   });
 
+  it('plays the entrance animation by default', () => {
+    const { toJSON } = render(<ScreenHeader title='Page' />);
+    expect(toJSON()?.props.entering).toBeDefined();
+  });
+
+  it('mounts at rest when animateEntrance is false', () => {
+    // Modal headers opt out: an entering animation interrupted mid-flight
+    // (cold-start open inside RN Modal) leaves the header frozen invisible.
+    const { toJSON } = render(
+      <ScreenHeader animateEntrance={false} leftAction='close' title='Page' />
+    );
+    expect(toJSON()?.props.entering).toBeUndefined();
+  });
+
   it('renders subtitle text', () => {
     const { getByText } = render(
       <ScreenHeader

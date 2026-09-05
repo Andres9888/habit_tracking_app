@@ -33,6 +33,7 @@ export function ScreenHeader({
   titleStyle,
   titleNumberOfLines = 1,
   leftActionAccessibilityLabel,
+  animateEntrance = true,
   onBack,
 }: ScreenHeaderProps) {
   const insets = useSafeAreaInsets();
@@ -94,7 +95,7 @@ export function ScreenHeader({
 
   return (
     <Animated.View
-      entering={ENTERING}
+      entering={animateEntrance ? ENTERING : undefined}
       style={[
         styles.container,
         { paddingTop: Math.max(insets.top + 8, 16) },
@@ -133,7 +134,7 @@ export function ScreenHeader({
       )}
       {subtitle ? (
         <Animated.Text
-          entering={SUBTITLE_ENTERING}
+          entering={animateEntrance ? SUBTITLE_ENTERING : undefined}
           style={[styles.subtitle, { color: colors.text.secondary }]}
         >
           {subtitle}
