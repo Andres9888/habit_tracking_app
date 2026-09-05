@@ -32,6 +32,11 @@ try {
 // subscribers attach through useSyncExternalStore.
 let systemReduceMotion = false;
 let hasInitialized = false;
+let subscription: { remove: () => void } | null = null;
+// Bumped by every reset. The async `isReduceMotionEnabled()` read captures the
+// generation it started in, so a promise that settles after a reset is dropped
+// instead of publishing into the fresh store.
+let initGeneration = 0;
 const listeners = new Set<() => void>();
 
 function publish(value: boolean) {
@@ -45,14 +50,22 @@ function initialize() {
   hasInitialized = true;
   if (!isNativePlatform || !AccessibilityInfo) return;
 
-  AccessibilityInfo.isReduceMotionEnabled()
-    .then((value: boolean | null | undefined) => publish(value ?? false))
-    // Silently fail - default to false if unable to read preference
-    .catch(() => publish(false));
+  const generation = initGeneration;
+  const publishIfCurrent = (value: boolean) => {
+    if (generation !== initGeneration) return;
+    publish(value);
+  };
 
-  AccessibilityInfo.addEventListener(
+  AccessibilityInfo.isReduceMotionEnabled()
+    .then((value: boolean | null | undefined) =>
+      publishIfCurrent(value ?? false)
+    )
+    // Silently fail - default to false if unable to read preference
+    .catch(() => publishIfCurrent(false));
+
+  subscription = AccessibilityInfo.addEventListener(
     'reduceMotionChanged',
-    (enabled: boolean | null | undefined) => publish(enabled ?? false)
+    (enabled: boolean | null | undefined) => publishIfCurrent(enabled ?? false)
   );
 }
 
@@ -72,6 +85,11 @@ function getSnapshot() {
 export function __resetReduceMotionStoreForTests() {
   systemReduceMotion = false;
   hasInitialized = false;
+  initGeneration += 1;
+  // Drop the `reduceMotionChanged` listener too, otherwise the next
+  // initialize() double-subscribes.
+  subscription?.remove();
+  subscription = null;
   listeners.clear();
 }
 

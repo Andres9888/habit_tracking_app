@@ -73,8 +73,16 @@ export function useHabitsModalsState({
   // its consumers — the calendar modal, the detail screen, quick actions —
   // opens first, whichever happens first. The latch (a render-cache ref,
   // monotonic and idempotent) keeps it warm afterwards so reopening a modal
-  // never re-subscribes. writeLatest:false keeps it off the shared
-  // `habits.getTracking:latest` slot, which the habits list owns.
+  // never re-subscribes.
+  //
+  // Both tracking instances share the `habits.getTracking:latest` slot —
+  // last writer wins, exactly as before this branch. That sharing is
+  // deliberate: persistence is what makes the long window survive an offline
+  // restart. usePersistCachedQuery only writes to storage on the writeLatest
+  // path, so suppressing it here would leave the ~455-day result in memory
+  // only, and a cold offline launch would fall back to the list's ~90-day
+  // window — older completions would read as missed in the calendar modal
+  // and on the detail screen.
   const trackingConsumerOpen =
     visibility.isHabitCalendarOpen ||
     visibility.isHabitDetailOpen ||
@@ -94,7 +102,7 @@ export function useHabitsModalsState({
   const { tracking, getStreak, isCompleted } = useHabitsTracking(
     trackingDates,
     todayMidnight,
-    { enabled: trackingWarmedRef.current || idleWarmed, writeLatest: false }
+    { enabled: trackingWarmedRef.current || idleWarmed }
   );
 
   // Wrap toggle mutation as plain async function

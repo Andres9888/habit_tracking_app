@@ -3,8 +3,10 @@
  *
  * Wraps the output of `useHabitRenderItem` in an `Animated.View` that applies
  * entrance opacity/translateY animations **only** to the most recently created
- * habit (identified by `justCreatedHabitId`).  All other rows render without
- * the animated wrapper to avoid unnecessary native-driver overhead.
+ * habit (identified by `justCreatedHabitId`).  The wrapper is always rendered —
+ * only its `style` is conditional — so the tree shape stays stable: dropping
+ * the wrapper when the highlight expires would remount the whole card subtree
+ * and reset its gesture and animation state.
  *
  * List entrance: staggered FadeInDown on the initial batch only; rows mounted
  * later by FlatList virtualization appear instantly (no entering animation).
@@ -69,18 +71,18 @@ export function renderHabitRow(opts: RenderHabitRowOptions) {
       exiting={exitAnimationEnabled ? EXIT_ANIMATION : undefined}
       onLayout={handleLayout}
     >
-      {isNewlyCreated ? (
-        <Animated.View
-          style={{
-            opacity: habitRowOpacity,
-            transform: [{ translateY: habitRowTranslateY }],
-          }}
-        >
-          {content}
-        </Animated.View>
-      ) : (
-        content
-      )}
+      <Animated.View
+        style={
+          isNewlyCreated
+            ? {
+                opacity: habitRowOpacity,
+                transform: [{ translateY: habitRowTranslateY }],
+              }
+            : undefined
+        }
+      >
+        {content}
+      </Animated.View>
     </Reanimated.View>
   );
 }

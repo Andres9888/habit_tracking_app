@@ -7,6 +7,15 @@ import type { PauseHabitPayload } from '../../offline/queue';
 import { optimisticStore } from '../store';
 import { useOfflineMutation } from './useOfflineMutation';
 
+// Hoisted to module scope: inline arrows here would give `execute` — and every
+// mutation derived from it — a fresh identity on every render, because
+// useOfflineMutation lists these in its useCallback deps.
+const confirmOptimistic = (operationId: string): void =>
+  optimisticStore.confirm(operationId);
+
+const failOptimistic = (operationId: string, error: Error): void =>
+  optimisticStore.fail(operationId, error);
+
 export function useOfflinePauseHabit() {
   const mutation = useMutation(api.habits.pause);
   const isOnline = useIsOnline();
@@ -27,9 +36,8 @@ export function useOfflinePauseHabit() {
   );
   const execute = useOfflineMutation('pauseHabit', serverMutation, {
     applyOptimistic,
-    confirmOptimistic: (operationId) => optimisticStore.confirm(operationId),
-    failOptimistic: (operationId, error) =>
-      optimisticStore.fail(operationId, error),
+    confirmOptimistic,
+    failOptimistic,
     isOnline,
   });
 

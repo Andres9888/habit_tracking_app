@@ -23,7 +23,7 @@
  * ```
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { getStrengthLevel } from '../../components/HabitStrengthIndicator';
 import type {
   MilestoneAchievement,
@@ -79,7 +79,10 @@ export function useMilestoneDetection(
     previousStrengthRef.current = currentStrength;
   }, [habitId, habitName, currentStrength]);
 
-  const clearMilestone = () => setMilestone(null);
+  // Stable identity: this is threaded through useHabitMilestones into the
+  // memoised `modals` object, so a fresh closure per render would re-render
+  // every memo()'d modal section on every Home render.
+  const clearMilestone = useCallback(() => setMilestone(null), []);
 
   return { clearMilestone, milestone };
 }
