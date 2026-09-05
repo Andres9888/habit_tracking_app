@@ -63,7 +63,8 @@ export function useHabitsModalsState({
 
   const { tracking, getStreak, isCompleted } = useHabitsTracking(
     trackingDates,
-    todayMidnight
+    todayMidnight,
+    habits
   );
 
   // Wrap toggle mutation as plain async function

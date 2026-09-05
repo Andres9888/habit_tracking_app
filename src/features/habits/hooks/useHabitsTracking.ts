@@ -5,10 +5,9 @@ import { useCachedQuery } from '../../../lib/queryCache';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { usePendingToggles } from '../../../lib/optimistic';
 import type { HabitStatus } from '../types';
-import {
-  buildCompletedDatesByHabit,
-  buildStreakByHabit,
-} from './useHabitsTracking.completions';
+import { buildCompletedDatesByHabit } from './useHabitsTracking.completions';
+import type { StreakSourceHabit } from './useResolvedStreaks';
+import { useResolvedStreaks } from './useResolvedStreaks';
 import {
   buildDateStatusCache,
   buildTrackingQueryArgs,
@@ -17,7 +16,15 @@ import {
 } from './useHabitsTracking.helpers';
 import { useTrackingWindow } from './useTrackingWindow';
 
-export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
+// Module-level constant: a fresh [] default would change identity every render
+// and bust the server-streak memo in useResolvedStreaks.
+const NO_HABITS: readonly StreakSourceHabit[] = [];
+
+export function useHabitsTracking(
+  extendedDateStrings: string[],
+  today: Date,
+  habits: readonly StreakSourceHabit[] = NO_HABITS
+) {
   const stableToday = useMemo(
     () => normalizeToday(today),
     [today.getDate(), today.getFullYear(), today.getMonth()]
@@ -52,9 +59,13 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
     previousCompletedDatesRef.current = next;
     return next;
   }, [pendingToggles, tracking]);
-  const streakByHabit = useMemo(
-    () => buildStreakByHabit(completedDatesByHabit, stableToday),
-    [completedDatesByHabit, stableToday]
+  // The client count is truncated by the fetched window and blind to pauses;
+  // useResolvedStreaks falls back to the server streak in exactly those cases.
+  const streakByHabit = useResolvedStreaks(
+    completedDatesByHabit,
+    stableToday,
+    habits,
+    windowStart
   );
   const getStreak = useCallback(
     (habitId: string) => streakByHabit.get(habitId) ?? 0,

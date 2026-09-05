@@ -13,6 +13,78 @@
 import { format, parseISO } from 'date-fns';
 import { STREAK_MAX_LOOKBACK_DAYS } from '@/constants';
 
+/** Result of a current-streak walk: the count plus where the run started. */
+export interface CurrentStreakRun {
+  /**
+   * Earliest date (YYYY-MM-DD) included in the counted run, or undefined when
+   * the streak is 0. Callers use this to detect a run that was truncated by the
+   * edge of a bounded tracking window.
+   */
+  earliestDate?: string;
+  streak: number;
+}
+
+/**
+ * Same calculation as {@link computeCurrentStreakFromDates}, but also reports
+ * the earliest day of the counted run.
+ */
+export const computeCurrentStreakRun = (
+  completedDates: Set<string>,
+  today: Date
+): CurrentStreakRun => {
+  if (!completedDates || completedDates.size === 0) {
+    return { streak: 0 };
+  }
+
+  const todayString = format(new Date(today), 'yyyy-MM-dd');
+
+  // Find the most recent completed date that is not in the future.
+  // Single-pass max (O(n)) avoids materializing + sorting the full Set.
+  let latestCompleted: string | undefined;
+  for (const date of completedDates) {
+    if (date <= todayString && (latestCompleted === undefined || date > latestCompleted)) {
+      latestCompleted = date;
+    }
+  }
+
+  if (!latestCompleted) {
+    return { streak: 0 };
+  }
+
+  // Check that the streak is still active: last completion must be today or
+  // yesterday. This matches the server-side calculateStreakFromHistory which
+  // returns currentStreak=0 when daysSinceLastCompletion > 1.
+  const latestDate = parseISO(latestCompleted);
+  const todayDate = parseISO(todayString);
+  const msDiff = todayDate.getTime() - latestDate.getTime();
+  const daysSinceLastCompletion = Math.round(msDiff / (1000 * 60 * 60 * 24));
+
+  if (daysSinceLastCompletion > 1) {
+    return { streak: 0 };
+  }
+
+  let streak = 0;
+  let earliestDate: string | undefined;
+  const currentDate = parseISO(latestCompleted);
+
+  // Count consecutive days backward from the latest completion
+  // Stop when a gap is found
+  // Safety guard to avoid unexpected infinite loops
+  const maxLookbackDays = STREAK_MAX_LOOKBACK_DAYS;
+  for (let i = 0; i < maxLookbackDays; i++) {
+    const dateString = format(currentDate, 'yyyy-MM-dd');
+    if (completedDates.has(dateString)) {
+      streak += 1;
+      earliestDate = dateString;
+      currentDate.setDate(currentDate.getDate() - 1);
+      continue;
+    }
+    break;
+  }
+
+  return { earliestDate, streak };
+};
+
 /**
  * Compute the current streak from a set of completed dates.
  *
@@ -41,56 +113,6 @@ import { STREAK_MAX_LOOKBACK_DAYS } from '@/constants';
 export const computeCurrentStreakFromDates = (
   completedDates: Set<string>,
   today: Date
-): number => {
-  if (!completedDates || completedDates.size === 0) {
-    return 0;
-  }
-
-  const todayString = format(new Date(today), 'yyyy-MM-dd');
-
-  // Find the most recent completed date that is not in the future.
-  // Single-pass max (O(n)) avoids materializing + sorting the full Set.
-  let latestCompleted: string | undefined;
-  for (const date of completedDates) {
-    if (date <= todayString && (latestCompleted === undefined || date > latestCompleted)) {
-      latestCompleted = date;
-    }
-  }
-
-  if (!latestCompleted) {
-    return 0;
-  }
-
-  // Check that the streak is still active: last completion must be today or
-  // yesterday. This matches the server-side calculateStreakFromHistory which
-  // returns currentStreak=0 when daysSinceLastCompletion > 1.
-  const latestDate = parseISO(latestCompleted);
-  const todayDate = parseISO(todayString);
-  const msDiff = todayDate.getTime() - latestDate.getTime();
-  const daysSinceLastCompletion = Math.round(msDiff / (1000 * 60 * 60 * 24));
-
-  if (daysSinceLastCompletion > 1) {
-    return 0;
-  }
-
-  let streak = 0;
-  const currentDate = parseISO(latestCompleted);
-
-  // Count consecutive days backward from the latest completion
-  // Stop when a gap is found
-  // Safety guard to avoid unexpected infinite loops
-  const maxLookbackDays = STREAK_MAX_LOOKBACK_DAYS;
-  for (let i = 0; i < maxLookbackDays; i++) {
-    const dateString = format(currentDate, 'yyyy-MM-dd');
-    if (completedDates.has(dateString)) {
-      streak += 1;
-      currentDate.setDate(currentDate.getDate() - 1);
-      continue;
-    }
-    break;
-  }
-
-  return streak;
-};
+): number => computeCurrentStreakRun(completedDates, today).streak;
 
 

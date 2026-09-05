@@ -3,11 +3,12 @@
  *
  * Split out of useHabitsTracking.helpers so both stay under the file-length
  * budget. These two functions are deliberately adjacent: the Set identities
- * preserved by buildCompletedDatesByHabit are exactly what buildStreakByHabit
+ * preserved by buildCompletedDatesByHabit are exactly what buildStreakRunByHabit
  * caches on.
  */
 
-import { computeCurrentStreakFromDates } from '../../../utils/streak';
+import type { CurrentStreakRun } from '../../../utils/streak';
+import { computeCurrentStreakRun } from '../../../utils/streak';
 
 type TrackingEntry = { completed: boolean; date: string; habitId: string };
 
@@ -47,7 +48,7 @@ export function buildCompletedDatesByHabit(
 
   // Carry over the previous Set object for any habit whose dates are unchanged.
   // A toggle rebuilds this map for every habit, and the identity of each Set is
-  // what lets buildStreakByHabit below skip the untouched ones.
+  // what lets buildStreakRunByHabit below skip the untouched ones.
   if (previous) {
     for (const [habitId, dates] of completedDatesByHabit) {
       const previousDates = previous.get(habitId);
@@ -65,24 +66,29 @@ export function buildCompletedDatesByHabit(
 // above, plus the day, since "today" moving invalidates every streak.
 const streakCache = new WeakMap<
   Set<string>,
-  { dayKey: number; streak: number }
+  { dayKey: number; run: CurrentStreakRun }
 >();
 
-export function buildStreakByHabit(
+/**
+ * Client-side streak runs per habit. The run carries its earliest counted day
+ * so callers can tell a genuinely-finished streak from one that merely ran out
+ * of tracking data at the edge of the fetched window.
+ */
+export function buildStreakRunByHabit(
   completedDatesByHabit: Map<string, Set<string>>,
   stableToday: Date
 ) {
   const dayKey = stableToday.getTime();
-  const streakByHabit = new Map<string, number>();
+  const runByHabit = new Map<string, CurrentStreakRun>();
   for (const [habitId, completedDates] of completedDatesByHabit) {
     const cached = streakCache.get(completedDates);
     if (cached && cached.dayKey === dayKey) {
-      streakByHabit.set(habitId, cached.streak);
+      runByHabit.set(habitId, cached.run);
       continue;
     }
-    const streak = computeCurrentStreakFromDates(completedDates, stableToday);
-    streakCache.set(completedDates, { dayKey, streak });
-    streakByHabit.set(habitId, streak);
+    const run = computeCurrentStreakRun(completedDates, stableToday);
+    streakCache.set(completedDates, { dayKey, run });
+    runByHabit.set(habitId, run);
   }
-  return streakByHabit;
+  return runByHabit;
 }

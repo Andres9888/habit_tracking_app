@@ -189,9 +189,12 @@ export function useHabitsListState(): HabitsListState {
   const deferredWeekDateStrings = useDeferredValue(
     weekDatesState.weekDateStrings
   );
+  // habitsFromQuery carries the server's pause-aware currentStreak, which the
+  // client walk needs whenever its own count is window-truncated.
   const { getStreak, getHabitStatus, isCompleted } = useHabitsTracking(
     deferredExtendedDateStrings,
-    today
+    today,
+    habitsFromQuery
   );
   const [predictedStrengths, setPredictedStrengths] = useState<
     Map<Habit['_id'], HabitStrengthPrediction>
