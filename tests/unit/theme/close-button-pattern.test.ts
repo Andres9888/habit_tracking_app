@@ -61,11 +61,13 @@ describe('ScreenHeader close icon uses strokeWidth 2.5 and theme text', () => {
     );
 
     it('keeps close and back semantics while removing bespoke controls', () => {
-      expect(detailHeader).toContain("leftAction='close'");
-      expect(flowHeader).toContain("leftAction='back'");
-      expect(flowHeader).toContain('leftActionAccessibilityLabel');
+      expect(detailHeader).toContain("label='Close'");
+      expect(detailHeader).toContain('onPress={onClose}');
+      expect(flowHeader).toContain('FlowBack');
+      expect(flowHeader).toContain('onPress={onBack}');
       expect(detailHeader).not.toContain('BandCloseButton');
-      expect(flowHeader).not.toContain('FlowBack');
+      expect(detailHeader).not.toContain('✕');
+      expect(flowHeader).not.toContain('✕');
     });
 
     it('uses a 44pt slot, 40pt circle, semantic colors and RTL mirroring', () => {
@@ -89,10 +91,20 @@ describe('ScreenHeader close icon uses strokeWidth 2.5 and theme text', () => {
       );
     });
 
-    it('uses the neutral Edit treatment and shared press behavior', () => {
-      expect(detailHeader).toContain("tone='subtle'");
+    it('uses the on-band Edit treatment and shared press behavior', () => {
+      expect(detailHeader).toContain("tone='onBand'");
       expect(screenHeader).toContain('usePressAnimation');
       expect(screenHeader).toContain("hapticStyle: 'light'");
+    });
+
+    it('HeaderButton and FlowBack render through the shared AnimatedPressable primitive', () => {
+      const headerButton = read(
+        'screens/HabitDetailScreen/components/HeaderButton.tsx'
+      );
+      const flowBack = read('screens/HabitDetailScreen/components/FlowBack.tsx');
+      expect(headerButton).toMatch(/from\s+['"].*components\/ui['"]/);
+      expect(headerButton).toContain('AnimatedPressable');
+      expect(flowBack).toContain('AnimatedPressable');
     });
   });
 });

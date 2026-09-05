@@ -33,14 +33,15 @@ describe('useToastButtonAnimation uses springs.button', () => {
   });
 });
 
-describe('EmojiChip uses springs.standard on press-out', () => {
+describe('EmojiChip uses the shared press primitive (springs.standard by default)', () => {
   const source = read(
     'components/CreateHabitModal/components/EmojiPicker/EmojiChip.tsx'
   );
 
-  it('presses to 0.97 and springs back with springs.standard', () => {
-    expect(source).toMatch(/from\s+['"]@\/theme\/animations['"]/);
-    expect(source).toContain('withTiming(0.97, { duration: 50 })');
-    expect(source).toContain('withSpring(1, springs.standard)');
+  it('presses via usePressAnimation instead of a bespoke spring/timing pair', () => {
+    expect(source).toMatch(/from\s+['"]@\/hooks\/usePressAnimation['"]/);
+    expect(source).toContain('usePressAnimation()');
+    expect(source).not.toContain('withTiming(0.97');
+    expect(source).not.toContain('withSpring(1, springs.standard)');
   });
 });
