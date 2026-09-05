@@ -78,7 +78,7 @@ export {
 } from './habitStrength/legacyFormula';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Mutation exports
+// Mutation exports (internal: no client caller, keep off the public API)
 // ─────────────────────────────────────────────────────────────────────────────
 export { updateHabitStrength } from './habitStrength/updateStrength';
 export { recalculateHabitStrength } from './habitStrength/recalculate';

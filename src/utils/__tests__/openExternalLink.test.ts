@@ -1,7 +1,7 @@
 import { Linking } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 
-import { openExternalLink } from '../openExternalLink';
+import { isSafeExternalUrl, openExternalLink } from '../openExternalLink';
 
 jest.mock('expo-web-browser', () => ({
   openBrowserAsync: jest.fn(),
@@ -46,7 +46,9 @@ describe('openExternalLink', () => {
     openBrowserAsync.mockRejectedValue(new Error('unsupported'));
     openURL.mockRejectedValue(new Error('no handler'));
 
-    await expect(openExternalLink('mailto:x@example.com')).resolves.toBeUndefined();
+    await expect(
+      openExternalLink('https://example.com')
+    ).resolves.toBeUndefined();
   });
 
   it('ignores an empty URL', async () => {
@@ -55,4 +57,34 @@ describe('openExternalLink', () => {
     expect(openBrowserAsync).not.toHaveBeenCalled();
     expect(openURL).not.toHaveBeenCalled();
   });
+
+  it.each(['tel:+15555551234', 'file:///etc/passwd', 'habit-tracker://x'])(
+    'refuses to open non-web scheme %s',
+    async (url) => {
+      await openExternalLink(url);
+
+      expect(openBrowserAsync).not.toHaveBeenCalled();
+      expect(openURL).not.toHaveBeenCalled();
+    }
+  );
+});
+
+describe('isSafeExternalUrl', () => {
+  it.each([
+    'https://example.com/paper',
+    'http://youtu.be/abc',
+    ' HTTPS://x.y ',
+  ])('accepts web URL %s', (url) => expect(isSafeExternalUrl(url)).toBe(true));
+
+  it.each([
+    'tel:+15555551234',
+    'sms:5555551234',
+    'file:///etc/passwd',
+    'javascript:alert(1)',
+    'habit-tracker://sso-callback',
+    'app-settings:',
+    '',
+    undefined,
+    null,
+  ])('rejects %s', (url) => expect(isSafeExternalUrl(url)).toBe(false));
 });

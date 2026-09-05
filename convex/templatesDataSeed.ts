@@ -4,7 +4,7 @@
  */
 
 import { v } from 'convex/values';
-import { internalMutation, internalQuery, query } from './_generated/server';
+import { internalMutation, internalQuery } from './_generated/server';
 import type { MutationCtx } from './_generated/server';
 import type { Id } from './_generated/dataModel';
 import { PRUNED_TEMPLATE_NAMES } from './templates/curatedRemovals';
@@ -144,7 +144,7 @@ const pickBestTemplate = <
 /**
  * Query: List all templates, optionally filtered by category
  */
-export const list = query({
+export const list = internalQuery({
   args: {
     category: v.optional(
       v.union(
@@ -185,7 +185,7 @@ export const list = query({
 /**
  * Query: Get a single template by ID
  */
-export const getById = query({
+export const getById = internalQuery({
   args: { id: v.id('templates') },
   handler: async (ctx, args) => {
     return await ctx.db.get(args.id);
@@ -2054,7 +2054,7 @@ export const importTemplate = internalMutation({
 /**
  * Query: Get popular templates (sorted by popularity score)
  */
-export const getPopular = query({
+export const getPopular = internalQuery({
   args: { limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
     const limit = args.limit || 10;
@@ -3781,7 +3781,7 @@ export const seedNewScienceTemplates = internalMutation({
 /**
  * Query: Check if templates exist and return count
  */
-export const getTemplateCount = query({
+export const getTemplateCount = internalQuery({
   args: {},
   handler: async (ctx) => {
     const templates = await ctx.db.query('templates').collect();
@@ -3792,7 +3792,7 @@ export const getTemplateCount = query({
 /**
  * Query: List all template names (for debugging)
  */
-export const listTemplateNames = query({
+export const listTemplateNames = internalQuery({
   args: {},
   handler: async (ctx) => {
     const templates = await ctx.db.query('templates').collect();

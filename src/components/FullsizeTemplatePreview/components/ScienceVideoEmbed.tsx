@@ -8,6 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Play } from 'lucide-react-native';
 
 import { colors } from '@/theme/colors';
+import { isSafeExternalUrl } from '@/utils/openExternalLink';
 import { iconSizes } from '@/theme/iconSizes';
 import { evidenceDetailStyles as s } from '../styles/evidenceDetail.styles';
 import type { Template } from '../../../types/template';
@@ -25,25 +26,26 @@ function extractYouTubeId(url: string): string | null {
 }
 
 export function ScienceVideoEmbed({ template }: ScienceVideoEmbedProps) {
-  if (!template?.youtubeLink) return null;
+  const youtubeLink = template?.youtubeLink;
+  if (!isSafeExternalUrl(youtubeLink)) return null;
 
-  const videoId = extractYouTubeId(template.youtubeLink);
+  const videoId = extractYouTubeId(youtubeLink);
   const thumbnailUri = videoId
     ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
     : null;
 
   return (
     <Pressable
-      accessibilityLabel="Watch the science explained on YouTube"
-      accessibilityRole="link"
+      accessibilityLabel='Watch the science explained on YouTube'
+      accessibilityRole='link'
       style={s.videoCard}
-      onPress={() => void Linking.openURL(template.youtubeLink!)}
+      onPress={() => void Linking.openURL(youtubeLink)}
     >
       <View style={s.videoThumbnail}>
         {thumbnailUri ? (
           <Image
             accessibilityIgnoresInvertColors
-            resizeMode="cover"
+            resizeMode='cover'
             source={{ uri: thumbnailUri }}
             style={s.videoThumbnailImage}
           />
@@ -55,7 +57,11 @@ export function ScienceVideoEmbed({ template }: ScienceVideoEmbedProps) {
           style={s.videoThumbnailOverlay}
         />
         <View style={s.playCircle}>
-          <Play color={colors.gray[900]} fill={colors.gray[900]} size={iconSizes.large} />
+          <Play
+            color={colors.gray[900]}
+            fill={colors.gray[900]}
+            size={iconSizes.large}
+          />
         </View>
       </View>
     </Pressable>

@@ -3,9 +3,9 @@
  * Update habit strength parameters for advanced users
  */
 import { v } from 'convex/values';
-import { mutation } from '../_generated/server';
+import { internalMutation } from '../_generated/server';
 
-export const updateHabitParameters = mutation({
+export const updateHabitParameters = internalMutation({
   args: {
     habitDecayParam: v.optional(v.number()),
     habitGainParam: v.optional(v.number()),
@@ -14,7 +14,9 @@ export const updateHabitParameters = mutation({
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-      throw new Error('Unauthenticated: Must be logged in to update habit parameters');
+      throw new Error(
+        'Unauthenticated: Must be logged in to update habit parameters'
+      );
     }
 
     const habit = await ctx.db.get(args.habitId);

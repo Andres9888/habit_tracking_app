@@ -1,10 +1,10 @@
 // Update Habit Strength Mutation - @deprecated Use tracking.toggleCompletion instead
 import { v } from 'convex/values';
-import { mutation } from '../_generated/server';
+import { internalMutation } from '../_generated/server';
 import { calculateNewStrength } from './momentum';
 import { getStrengthLevel } from './strengthLevel';
 import { predictCompletionProbability } from './legacyFormula';
-export const updateHabitStrength = mutation({
+export const updateHabitStrength = internalMutation({
   args: {
     behaviorPerformed: v.boolean(),
     date: v.string(),

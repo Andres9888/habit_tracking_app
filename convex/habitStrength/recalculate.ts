@@ -3,19 +3,21 @@
  * Recalculate strength for all past tracking data
  */
 import { v } from 'convex/values';
-import { mutation } from '../_generated/server';
+import { internalMutation } from '../_generated/server';
 import { getTrackingCutoffKey } from '../habits/utils';
 import { resolveAlgorithmMode } from './algorithmConfig';
 import { calculateMomentumStrengthSnapshot } from './momentum';
 
-export const recalculateHabitStrength = mutation({
+export const recalculateHabitStrength = internalMutation({
   args: {
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-      throw new Error('Unauthenticated: Must be logged in to recalculate strength');
+      throw new Error(
+        'Unauthenticated: Must be logged in to recalculate strength'
+      );
     }
 
     const habit = await ctx.db.get(args.habitId);

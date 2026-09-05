@@ -12,8 +12,21 @@
 import { Linking } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 
+const SAFE_SCHEME = /^https?:\/\//i;
+
+/**
+ * Only web URLs may leave the app. Template content comes from the server,
+ * so a compromised or mis-edited row must not be able to launch `tel:`,
+ * `sms:`, `file:` or another app's custom scheme.
+ */
+export function isSafeExternalUrl(
+  url: string | null | undefined
+): url is string {
+  return typeof url === 'string' && SAFE_SCHEME.test(url.trim());
+}
+
 export async function openExternalLink(url: string): Promise<void> {
-  if (!url) return;
+  if (!isSafeExternalUrl(url)) return;
   try {
     await WebBrowser.openBrowserAsync(url, {
       presentationStyle: WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET,

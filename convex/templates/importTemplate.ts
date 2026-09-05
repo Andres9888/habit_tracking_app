@@ -12,6 +12,7 @@ import {
   MAX_HABIT_NAME_LENGTH,
 } from '../lib/inputValidation';
 import { progressEmojisValidator } from '../lib/progressEmojisValidator';
+import { enforceRateLimit } from '../lib/rateLimit';
 import { validateDaysOfWeek } from '../habits/validation';
 import { isLegacyImportedWhy, resolveImportedWhy } from './importedWhy';
 
@@ -136,6 +137,9 @@ export const importTemplate = mutation({
 
     // Create habit from template
     const importedWhy = resolveImportedWhy(template);
+    // Same budget as habits.create: this path also inserts a habit.
+    await enforceRateLimit(ctx, userId, 'habit.create');
+
     const habitId = await ctx.db.insert('habits', {
       accessibility: 1,
       accessibilityUpdatedAt: Date.now(),

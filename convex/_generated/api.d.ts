@@ -68,6 +68,7 @@ import type * as habits_recalcStaleArgs from "../habits/recalcStaleArgs.js";
 import type * as habits_recalcStaleHelpers from "../habits/recalcStaleHelpers.js";
 import type * as habits_recalculateStaleStrength from "../habits/recalculateStaleStrength.js";
 import type * as habits_remove from "../habits/remove.js";
+import type * as habits_removePayload from "../habits/removePayload.js";
 import type * as habits_reorder from "../habits/reorder.js";
 import type * as habits_skipPausedDays from "../habits/skipPausedDays.js";
 import type * as habits_stats from "../habits/stats.js";
@@ -203,6 +204,7 @@ declare const fullApi: ApiFromModules<{
   "habits/recalcStaleHelpers": typeof habits_recalcStaleHelpers;
   "habits/recalculateStaleStrength": typeof habits_recalculateStaleStrength;
   "habits/remove": typeof habits_remove;
+  "habits/removePayload": typeof habits_removePayload;
   "habits/reorder": typeof habits_reorder;
   "habits/skipPausedDays": typeof habits_skipPausedDays;
   "habits/stats": typeof habits_stats;
