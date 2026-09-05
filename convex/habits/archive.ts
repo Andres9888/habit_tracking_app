@@ -2,11 +2,8 @@
 /** Habit Archive Mutations — Archive, unarchive, and bulk delete */
 import { v } from 'convex/values';
 import { mutation, query } from '../_generated/server';
-import { hasPremiumAccess } from '../subscriptions/premiumCheck';
 import { fullHabitValidator } from './types';
 import { findMaxOrder } from './utils';
-
-const FREE_HABIT_LIMIT = 3;
 
 function requireAuth(identity: unknown, action: string) {
   if (!identity)
@@ -40,19 +37,12 @@ export const unarchive = mutation({
     if (!habit) throw new Error('Habit not found');
     if (habit.userId !== identity!.subject)
       throw new Error('Not authorized to unarchive this habit');
+    // Read only to place the restored habit at the end of the list.
     const activeHabits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity!.subject))
       .filter((q) => q.neq(q.field('archived'), true))
       .collect();
-    // SEC-005: Free tier limit check on unarchive
-    const nonPausedActive = activeHabits.filter((h) => !h.paused);
-    const isPremiumUser = await hasPremiumAccess(ctx, identity!.subject);
-    if (!isPremiumUser && nonPausedActive.length >= FREE_HABIT_LIMIT) {
-      throw new Error(
-        `Free tier is limited to ${FREE_HABIT_LIMIT} active habits. Upgrade to premium or delete an active habit to restore this one.`
-      );
-    }
     await ctx.db.patch(args.habitId, {
       archived: false,
       archivedAt: undefined,
