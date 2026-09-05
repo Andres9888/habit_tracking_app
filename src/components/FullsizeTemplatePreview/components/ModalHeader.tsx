@@ -71,6 +71,7 @@ export function ModalHeader({
           <View />
         )}
         <ModalCloseButton
+          haptic={false}
           hint='Leaves the habit library and returns to your habits'
           hitSlop={8}
           label='Close and go to my habits'
