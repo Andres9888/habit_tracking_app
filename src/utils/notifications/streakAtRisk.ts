@@ -7,23 +7,29 @@
  */
 
 import * as Notifications from 'expo-notifications';
-import { Platform } from 'react-native';
 
 import { ANDROID_CHANNEL_ID } from './constants';
 import { ensureNotificationPermissions } from './permissions';
+import { cancelStreakAtRiskNotification } from './streakAtRiskCancel';
+import {
+  DEFAULT_REMINDER_HOUR,
+  DEFAULT_REMINDER_MINUTE,
+  buildStreakAtRiskContent,
+  isAndroid,
+  streakAtRiskIdentifier,
+  tomorrowAt,
+  type ScheduleStreakAtRiskParams,
+} from './streakAtRiskContent';
 
-/** Notification identifier prefix for streak-at-risk alerts */
-const STREAK_RISK_PREFIX = 'streak-risk-';
+export {
+  cancelAllStreakAtRiskNotifications,
+  cancelStreakAtRiskNotification,
+} from './streakAtRiskCancel';
+export { STREAK_RISK_PREFIX } from './streakAtRiskContent';
+export type { ScheduleStreakAtRiskParams };
 
-export interface ScheduleStreakAtRiskParams {
-  habitId: string;
-  habitName: string;
-  habitEmoji?: string;
-  currentStreak: number;
-  /** Hour (0-23) to fire the reminder. Default: 20 (8 PM) */
-  hour?: number;
-  /** Minute (0-59). Default: 0 */
-  minute?: number;
+function androidChannel() {
+  return isAndroid() ? { channelId: ANDROID_CHANNEL_ID } : {};
 }
 
 /**
@@ -31,14 +37,14 @@ export interface ScheduleStreakAtRiskParams {
  * Fires at the specified time (default 8 PM) every day.
  * The app should cancel this notification when the habit is completed.
  */
-export async function scheduleStreakAtRiskNotification({
-  habitId,
-  habitName,
-  habitEmoji = '🔥',
-  currentStreak,
-  hour = 20,
-  minute = 0,
-}: ScheduleStreakAtRiskParams): Promise<boolean> {
+export async function scheduleStreakAtRiskNotification(
+  params: ScheduleStreakAtRiskParams
+): Promise<boolean> {
+  const {
+    habitId,
+    hour = DEFAULT_REMINDER_HOUR,
+    minute = DEFAULT_REMINDER_MINUTE,
+  } = params;
   try {
     const hasPermission = await ensureNotificationPermissions();
     if (!hasPermission) return false;
@@ -46,26 +52,11 @@ export async function scheduleStreakAtRiskNotification({
     // Cancel any existing streak-at-risk notification for this habit
     await cancelStreakAtRiskNotification(habitId);
 
-    const streakText =
-      currentStreak >= 7
-        ? `${currentStreak}-day streak`
-        : `${currentStreak} day streak`;
-
     await Notifications.scheduleNotificationAsync({
-      content: {
-        body: `Don't break your ${streakText}! Tap to complete ${habitName} before midnight.`,
-        data: {
-          habitId,
-          type: 'streakAtRisk',
-        },
-        sound: 'default',
-        title: `${habitEmoji} ${habitName} — Streak at risk!`,
-      },
-      identifier: `${STREAK_RISK_PREFIX}${habitId}`,
+      content: buildStreakAtRiskContent(params),
+      identifier: streakAtRiskIdentifier(habitId),
       trigger: {
-        ...(Platform.OS === ['and', 'roid'].join('')
-          ? { channelId: ANDROID_CHANNEL_ID }
-          : {}),
+        ...androidChannel(),
         hour,
         minute,
         type: Notifications.SchedulableTriggerInputTypes.DAILY,
@@ -84,36 +75,42 @@ export async function scheduleStreakAtRiskNotification({
 }
 
 /**
- * Cancel the streak-at-risk notification for a specific habit.
- * Call this when the user completes the habit for today.
+ * Schedule a one-shot streak-at-risk notification for tomorrow.
+ *
+ * Used when the habit is already done today: cancelling the daily repeat would
+ * otherwise leave nothing scheduled, so the reminder only came back if the user
+ * happened to open the app the next day before reminder time. Uses the same
+ * identifier as the daily variant, so the next reschedule replaces it and
+ * cancelStreakAtRiskNotification still clears it.
  */
-export async function cancelStreakAtRiskNotification(
-  habitId: string
-): Promise<void> {
+export async function scheduleStreakAtRiskForTomorrow(
+  params: ScheduleStreakAtRiskParams
+): Promise<boolean> {
+  const {
+    habitId,
+    hour = DEFAULT_REMINDER_HOUR,
+    minute = DEFAULT_REMINDER_MINUTE,
+  } = params;
   try {
-    await Notifications.cancelScheduledNotificationAsync(
-      `${STREAK_RISK_PREFIX}${habitId}`
-    );
-  } catch {
-    // Notification may not exist; that's fine
-  }
-}
+    const hasPermission = await ensureNotificationPermissions();
+    if (!hasPermission) return false;
 
-/**
- * Cancel all streak-at-risk notifications.
- */
-export async function cancelAllStreakAtRiskNotifications(): Promise<void> {
-  try {
-    const scheduled = await Notifications.getAllScheduledNotificationsAsync();
-    const streakRiskNotifications = scheduled.filter((n) =>
-      n.identifier.startsWith(STREAK_RISK_PREFIX)
-    );
-    await Promise.all(
-      streakRiskNotifications.map((n) =>
-        Notifications.cancelScheduledNotificationAsync(n.identifier)
-      )
-    );
+    await cancelStreakAtRiskNotification(habitId);
+
+    await Notifications.scheduleNotificationAsync({
+      content: buildStreakAtRiskContent(params),
+      identifier: streakAtRiskIdentifier(habitId),
+      trigger: {
+        ...androidChannel(),
+        date: tomorrowAt(hour, minute),
+        type: Notifications.SchedulableTriggerInputTypes.DATE,
+      },
+    });
+
+    return true;
   } catch (error) {
-    if (__DEV__ && __DEV__) console.warn('cancelAllStreakAtRiskNotifications failed', error);
+    if (__DEV__)
+      console.warn('scheduleStreakAtRiskForTomorrow failed', { error, habitId });
+    return false;
   }
 }

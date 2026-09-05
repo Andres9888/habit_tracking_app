@@ -1,20 +1,12 @@
-/* eslint-disable max-lines */
 /**
  * useStreakReminders — Smart scheduling of streak-at-risk notifications.
  */
 
 import { useCallback, useEffect, useRef } from 'react';
-import {
-  scheduleStreakAtRiskNotification,
-  cancelStreakAtRiskNotification,
-  cancelAllStreakAtRiskNotifications,
-} from '../../utils/notifications/streakAtRisk';
-import {
-  scheduleStreakFreezeNotification,
-  cancelStreakFreezeNotification,
-} from '../../utils/notifications/streakFreeze';
+import { cancelAllStreakAtRiskNotifications } from '../../utils/notifications/streakAtRisk';
 import type { StreakReminderHabit } from './types';
 import { parseTime } from './streakMessageHelpers';
+import { scheduleHabitStreakReminder } from './scheduleHabitStreakReminder';
 
 interface UseStreakRemindersParams {
   habits: StreakReminderHabit[];
@@ -23,13 +15,24 @@ interface UseStreakRemindersParams {
   isPremium: boolean;
 }
 
+/** Signature of everything that can change what should be scheduled. */
+function habitsKey(habits: StreakReminderHabit[]): string {
+  return habits
+    .map(
+      (h) =>
+        `${h.habitId}:${h.completedToday}:${h.currentStreak}:${h.customReminderTime ?? ''}`
+    )
+    .join('|');
+}
+
 export function useStreakReminders({
   habits,
   enabled,
   reminderTime,
   isPremium,
 }: UseStreakRemindersParams) {
-  const prevHabitsRef = useRef<string>('');
+  const habitsRef = useRef(habits);
+  habitsRef.current = habits;
 
   const rescheduleAll = useCallback(async () => {
     try {
@@ -37,37 +40,9 @@ export function useStreakReminders({
         await cancelAllStreakAtRiskNotifications();
         return;
       }
-      const globalTime = parseTime(reminderTime);
-
-      for (const habit of habits) {
-        if (habit.completedToday || habit.currentStreak === 0) {
-          await cancelStreakAtRiskNotification(habit.habitId);
-          if (isPremium) await cancelStreakFreezeNotification(habit.habitId);
-          continue;
-        }
-        const time =
-          isPremium && habit.customReminderTime
-            ? parseTime(habit.customReminderTime)
-            : globalTime;
-        await scheduleStreakAtRiskNotification({
-          currentStreak: habit.currentStreak,
-          habitEmoji: habit.habitEmoji,
-          habitId: habit.habitId,
-          habitName: habit.habitName,
-          hour: time.hour,
-          minute: time.minute,
-        });
-        if (isPremium && habit.currentStreak >= 3) {
-          const freezeHour = (time.hour + 1) % 24;
-          await scheduleStreakFreezeNotification({
-            currentStreak: habit.currentStreak,
-            habitEmoji: habit.habitEmoji || '🔥',
-            habitId: habit.habitId,
-            habitName: habit.habitName,
-            hour: freezeHour,
-            minute: time.minute,
-          });
-        }
+      const context = { globalTime: parseTime(reminderTime), isPremium };
+      for (const habit of habitsRef.current) {
+        await scheduleHabitStreakReminder(habit, context);
       }
     } catch (error) {
       if (__DEV__) {
@@ -78,21 +53,19 @@ export function useStreakReminders({
       }
       // Non-critical operation - fail silently to avoid breaking the app
     }
-  }, [habits, enabled, reminderTime, isPremium]);
+  }, [enabled, reminderTime, isPremium]);
+
+  // One effect, keyed on the habits signature rather than the array identity.
+  // The previous second effect depended on rescheduleAll, whose identity
+  // changed with `habits`, so every toggle re-ran it and defeated the dedup —
+  // a cancel + reschedule storm across every habit on each tap.
+  const rescheduleRef = useRef(rescheduleAll);
+  rescheduleRef.current = rescheduleAll;
+  const key = habitsKey(habits);
 
   useEffect(() => {
-    const key = habits
-      .map((h) => `${h.habitId}:${h.completedToday}:${h.currentStreak}`)
-      .join('|');
-    if (key !== prevHabitsRef.current) {
-      prevHabitsRef.current = key;
-      void rescheduleAll();
-    }
-  }, [habits, rescheduleAll]);
-
-  useEffect(() => {
-    void rescheduleAll();
-  }, [enabled, reminderTime, rescheduleAll]);
+    void rescheduleRef.current();
+  }, [key, enabled, reminderTime, isPremium]);
 
   return { rescheduleAll };
 }
