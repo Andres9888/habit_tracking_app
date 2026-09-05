@@ -14,7 +14,7 @@ import { memo, useCallback } from 'react';
 import { AccessibilityInfo, Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
-import { useReduceMotion } from '../../../../hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import STRINGS from '../../../../constants/strings';
 import { REMINDER_OPTIONS, REMINDER_OPTION_ORDER } from './constants';
 import { ReminderOptionButton } from './ReminderOptionButton';
@@ -25,7 +25,7 @@ function ReminderSelectorComponent({
   onSelectOption,
 }: ReminderSelectorProps) {
   const { triggerSelection } = useHapticFeedback();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const { colors: themeColors } = useThemeColors();
 
   const handleSelectOption = useCallback(

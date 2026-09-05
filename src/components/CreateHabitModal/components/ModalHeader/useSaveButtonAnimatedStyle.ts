@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 import {
   interpolateColor,
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { createHabitMotion } from '../../createHabitMotion';
 
 export interface SaveButtonPalette {
@@ -24,7 +24,7 @@ export function useSaveButtonAnimatedStyle(
   canSave: boolean,
   palette: SaveButtonPalette
 ) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const progress = useSharedValue(canSave ? 1 : 0);
 
   useEffect(() => {

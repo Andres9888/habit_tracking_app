@@ -6,7 +6,7 @@
 
 import React, { useMemo } from 'react';
 
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import { calculateMilestoneProgress } from '../MilestoneProgressTypes';
 import type { MilestoneProgressProps } from '../MilestoneProgressTypes';
 
@@ -21,7 +21,7 @@ export const MilestoneProgress = React.memo(function MilestoneProgress({
   onMilestoneHit,
   celebratedMilestones = [],
 }: MilestoneProgressProps) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
 
   const milestoneData = useMemo(
     () => calculateMilestoneProgress(currentStreak, celebratedMilestones),

@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import type { LayoutChangeEvent } from 'react-native';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import { useExpandAnimation } from '@/hooks/useExpandAnimation';
 
 interface UseSettingsSectionAccordionProps {
@@ -12,7 +12,7 @@ interface UseSettingsSectionAccordionProps {
 export function useSettingsSectionAccordion({
   isExpanded,
 }: UseSettingsSectionAccordionProps) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const [contentHeight, setContentHeight] = useState(0);
   const [hasContentMeasured, setHasContentMeasured] = useState(false);
 

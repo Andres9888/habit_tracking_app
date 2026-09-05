@@ -53,6 +53,7 @@ jest.mock('react-native-reanimated', () => {
     __esModule: true,
     default: Animated,
     ...Animated,
+    useReducedMotion: jest.fn(() => false),
     useSharedValue: (initialValue: number) => ({ value: initialValue }),
     useAnimatedStyle: () => ({}),
     withTiming: (value: number) => value,
@@ -555,8 +556,8 @@ describe('StreakRecordsAccordion', () => {
 
   describe('Reduced Motion', () => {
     it('respects reduced motion preference', () => {
-      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
-      useReduceMotion.mockReturnValue(true);
+      const { useReducedMotion } = require('react-native-reanimated');
+      useReducedMotion.mockReturnValue(true);
 
       const { getByText } = render(
         <StreakRecordsAccordion {...defaultProps} />
@@ -566,8 +567,8 @@ describe('StreakRecordsAccordion', () => {
     });
 
     it('still toggles when reduced motion is enabled', () => {
-      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
-      useReduceMotion.mockReturnValue(true);
+      const { useReducedMotion } = require('react-native-reanimated');
+      useReducedMotion.mockReturnValue(true);
 
       const { getByRole, queryByText } = render(
         <StreakRecordsAccordion {...defaultProps} />

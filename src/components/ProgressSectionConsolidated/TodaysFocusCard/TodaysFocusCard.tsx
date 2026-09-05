@@ -9,10 +9,9 @@
 
 import React from 'react';
 import { View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { useReducedMotion } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import type { TodaysFocusCardProps } from '../TodaysFocusCardTypes';
 
 import { styles } from './TodaysFocusCard.styles';
@@ -31,7 +30,7 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
   props: TodaysFocusCardProps
 ) {
   const { currentStreak, onMilestoneCelebrated, onShare } = props;
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
 
   const focusStateResult = useFocusState(props);
   const animations = useFocusAnimations(reduceMotion);

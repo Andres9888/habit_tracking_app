@@ -1,10 +1,9 @@
 /** StrengthCurvePickerModal — full-screen picker (V5 Giant Bar Hero). */
 import { Text, useWindowDimensions, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, useReducedMotion } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Modal from '@/components/Modal';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { MechanicStatRow } from './MechanicStatRow';
 import { STRENGTH_CURVE_PICKER_COPY } from './StrengthCurvePicker.copy';
@@ -33,7 +32,7 @@ interface Props {
 export function StrengthCurvePickerModal({ visible, selected, onSelect, onClose }: Props) {
   const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const { height: windowHeight } = useWindowDimensions();
   const scale = computeScale(windowHeight - insets.top - insets.bottom - 56);
 

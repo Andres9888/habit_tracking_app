@@ -6,7 +6,7 @@
 import React, { useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Modal from '../Modal';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import { PreviewContent } from './components';
 import {
   useEntranceAnimations,
@@ -35,7 +35,7 @@ function FullsizeTemplatePreviewComponent({
   isImported = false,
 }: FullsizeTemplatePreviewProps) {
   const insets = useSafeAreaInsets();
-  const reducedMotion = useReduceMotion();
+  const reducedMotion = useReducedMotion();
 
   const shouldRender = useDeferredUnmount({
     duration: durations.enter,

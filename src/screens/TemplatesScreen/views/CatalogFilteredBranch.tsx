@@ -4,9 +4,8 @@
 
 import type { ReactElement } from 'react';
 import { StyleSheet } from 'react-native';
-import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeOut, useReducedMotion } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import {
   durations,
   enterEasing,
@@ -25,7 +24,7 @@ interface CatalogFilteredBranchProps {
 }
 
 export function CatalogFilteredBranch(p: CatalogFilteredBranchProps) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const entering = reduceMotion
     ? undefined
     : FadeInDown.duration(durations.enter).easing(enterEasing);

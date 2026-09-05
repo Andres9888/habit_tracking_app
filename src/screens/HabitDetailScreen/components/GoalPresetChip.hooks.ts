@@ -5,11 +5,11 @@ import { useEffect } from 'react';
 import {
   interpolateColor,
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 import { durations } from '../../../theme/animations';
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
 
 interface ChipPalette {
   borderDefault: string;
@@ -22,7 +22,7 @@ export function useGoalPresetChipAnimation(
   selected: boolean,
   palette: ChipPalette
 ) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const progress = useSharedValue(selected ? 1 : 0);
 
   useEffect(() => {

@@ -4,7 +4,7 @@
  */
 
 import { Text, View } from 'react-native';
-import { useReduceMotion } from '../../../../hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import STRINGS from '../../../../constants/strings';
 import { ColorButton } from './ColorButton';
@@ -18,7 +18,7 @@ export const ColorPickerContent = ({
   onCustomPress,
   hideLabel = false,
 }: ColorPickerSectionProps) => {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const { colors: themeColors } = useThemeColors();
   const row1 = colors.slice(0, 6);
   const row2 = colors.slice(6);

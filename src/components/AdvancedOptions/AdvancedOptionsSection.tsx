@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { triggerHaptic } from '@/utils/haptics';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import { GrowthIconsRow } from './GrowthIconsRow';
 import { PanelCard } from './panel/PanelCard';
 import { SectionLabel } from './panel/SectionLabel';
@@ -34,7 +34,7 @@ export function AdvancedOptionsSection({
   reminder,
 }: AdvancedOptionsSectionProps) {
   const [openRow, setOpenRow] = useState<PanelRowKey | null>(null);
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   useScrollOnExpand(openRow !== null, reduceMotion, onExpand);
   const { userDefaultEmojis, savedCustomEmojis } =
     useAdvancedOptionsSummary(progressEmojis);

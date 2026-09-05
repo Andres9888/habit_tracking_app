@@ -4,8 +4,7 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { cancelAnimation } from 'react-native-reanimated';
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import { cancelAnimation, useReducedMotion } from 'react-native-reanimated';
 import { useEntranceAnimationValues } from './useEntranceAnimationValues';
 import { useEntranceHandlers } from './useEntranceHandlers';
 import { useEntranceStyles } from './useEntranceStyles';
@@ -20,7 +19,7 @@ export function useHabitCardEntrance({
   onAnimationComplete,
   autoTrigger = true,
 }: UseHabitCardEntranceOptions = {}): UseHabitCardEntranceReturn {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const hasTriggered = useRef(false);
 
   // No entrance will play (or it would be instant anyway) — mount visible

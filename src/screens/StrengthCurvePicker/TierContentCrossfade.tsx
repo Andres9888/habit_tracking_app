@@ -1,8 +1,7 @@
 /** Crossfade wrapper — tier text swaps fade instead of popping. */
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
+import Animated, { FadeIn, FadeOut, useReducedMotion } from 'react-native-reanimated';
 import { durations, enterEasing } from '@/theme/animations';
 
 const ENTER = FadeIn.duration(durations.reveal).easing(enterEasing);
@@ -14,7 +13,7 @@ interface Props {
 }
 
 export function TierContentCrossfade({ contentKey, children }: Props) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
 
   if (reduceMotion) {
     return <View style={{ width: '100%' }}>{children}</View>;

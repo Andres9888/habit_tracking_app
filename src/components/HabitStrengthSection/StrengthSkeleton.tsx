@@ -11,12 +11,12 @@ import { View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { shadows } from '@/theme/spacing';
 
-import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import { SkeletonLoader } from '../SkeletonLoader/SkeletonLoader';
 
 export const StrengthSkeleton = React.memo(function StrengthSkeleton() {
   const { colors: themeColors } = useThemeColors();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
 
   return (
     <View

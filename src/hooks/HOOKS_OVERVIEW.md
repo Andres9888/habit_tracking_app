@@ -45,14 +45,22 @@ const { animatedStyle, pressHandlers } = usePressAnimation();
 
 #### `useReduceMotion`
 
-**Purpose**: Detects system-level reduced motion accessibility setting.
+**Purpose**: Detects system-level reduced motion accessibility setting, with an
+optional caller-supplied override.
 
 **Location**: `useReduceMotion.ts` (89 lines)
+
+**Status**: Narrowed. Components read reduced motion from Reanimated's
+`useReducedMotion()` directly — it is already a shared value on the UI thread and
+needs no React state. This hook survives only for the callers that pass a
+`{ preference }` override the system setting cannot express: `useHaptics`,
+`useHapticFeedback`, and `useHabitDayToggleAnimations`. Do not add new callers;
+use `useReducedMotion` from `react-native-reanimated` instead.
 
 **Key Features**:
 
 - Platform-specific implementation (iOS/Native Handset)
-- Optional override for testing
+- Optional `{ preference }` override that wins over the system setting
 - Safe fallback when AccessibilityInfo unavailable
 
 **Dependencies**:

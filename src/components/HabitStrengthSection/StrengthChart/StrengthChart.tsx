@@ -9,7 +9,7 @@ import Svg from 'react-native-svg';
 
 import { useThemeColors } from '@/theme/ThemeContext';
 
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import {
   CHART_HEIGHT,
   CHART_PADDING_BOTTOM,
@@ -38,7 +38,7 @@ export const StrengthChart = React.memo(function StrengthChart({
 }: StrengthChartProps) {
   const [chartWidth, setChartWidth] = useState(300);
   const { colors: themeColors } = useThemeColors();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
 
   const strengthLabel = getStrengthLabel(currentStrength);
   const strengthColors = getStrengthColors(themeColors);

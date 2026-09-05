@@ -8,13 +8,13 @@ import {
   runOnJS,
   useAnimatedStyle,
   useDerivedValue,
+  useReducedMotion,
   useSharedValue,
   withSequence,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
 import { durations, springs } from '../../../theme/animations';
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { triggerHaptic } from '../../../utils/haptics';
 
 /** NaN-guard + round to avoid Reanimated precision errors. */
@@ -32,7 +32,7 @@ export function useStreakGoalAnimation(
   currentStreak: number,
   streakGoal: number
 ) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const progress = useSharedValue(0);
   const streakCount = useSharedValue(0);
   const days = useSharedValue(safeRound(daysRemaining));

@@ -19,12 +19,12 @@ import { useCallback, useEffect, useRef } from 'react';
 import { Keyboard } from 'react-native';
 import {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 import { durations, enterEasing, exitEasing, sheetEasing } from '@/theme/animations';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { SCREEN_HEIGHT } from '@/components/Modal/Modal.constants';
 import {
   BACKDROP_TARGET,
@@ -46,7 +46,7 @@ export function useSwipeDismiss({ visible, onClose }: UseSwipeDismissProps) {
   const isClosing = useRef(false);
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (visible) {

@@ -9,7 +9,7 @@
 import React, { useRef, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import ConfettiCannon from 'react-native-confetti-cannon';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import {
   CONFETTI_COLORS,
   SCREEN_WIDTH,
@@ -22,7 +22,7 @@ export function ConfettiAnimation({
   onComplete,
 }: ConfettiAnimationProps) {
   const confettiRef = useRef<ConfettiCannon>(null);
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (active && confettiRef.current && !reduceMotion) {

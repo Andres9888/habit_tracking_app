@@ -8,16 +8,16 @@ import React, { memo, useEffect } from 'react';
 import { View, Text, Modal, Pressable } from 'react-native';
 import Animated, {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
-  withTiming,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import { durations, springs } from '@/theme/animations';
 
 import type { HeatmapTooltipProps } from './types';
 import { formatTooltipText } from './utils';
 import { TOOLTIP } from './constants';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { styles } from './HeatmapTooltip.styles';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
@@ -30,7 +30,7 @@ export const HeatmapTooltip = memo(function HeatmapTooltip({
 }: HeatmapTooltipProps) {
   const opacity = useSharedValue(0);
   const scale = useSharedValue(0.9);
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const animationDuration = reduceMotion ? 0 : durations.quick;
 
   useEffect(() => {

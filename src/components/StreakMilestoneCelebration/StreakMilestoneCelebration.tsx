@@ -9,7 +9,7 @@
 import { useEffect } from 'react';
 import { View, AccessibilityInfo } from 'react-native';
 import { Modal } from '../Modal';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import { ConfettiAnimation } from './ConfettiAnimation';
 import { BadgeSection } from './BadgeSection';
 import { ContentSection } from './ContentSection';
@@ -27,7 +27,7 @@ export function StreakMilestoneCelebration({
   habitEmoji = '⭐',
   onShare,
 }: StreakMilestoneCelebrationProps) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const animations = useCelebrationAnimations(visible, reduceMotion);
 
   useEffect(() => {

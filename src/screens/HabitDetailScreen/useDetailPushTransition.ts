@@ -23,10 +23,10 @@ import {
   interpolate,
   runOnJS,
   useAnimatedStyle,
+  useReducedMotion,
   withTiming,
 } from 'react-native-reanimated';
 import { durations, enterEasing, moveEasing } from '@/theme/animations';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { SCREEN_WIDTH } from '@/components/Modal/Modal.constants';
 import { detailPushProgress as progress } from './detailPushProgress';
 
@@ -40,7 +40,7 @@ const EXIT = { duration: durations.sheet, easing: moveEasing };
 
 export function useDetailPushTransition(visible: boolean) {
   const [mounted, setMounted] = useState(visible);
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const isFirstRun = useRef(true);
   const visibleRef = useRef(visible);
   const shown = useRef(false);

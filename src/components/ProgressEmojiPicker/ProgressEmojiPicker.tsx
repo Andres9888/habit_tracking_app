@@ -7,9 +7,8 @@
  */
 import { memo, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { useReducedMotion } from 'react-native-reanimated';
 
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 
 import {
   matchPresetId,
@@ -34,7 +33,7 @@ function ProgressEmojiPickerComponent({
   expanded: controlledExpanded,
   onToggleExpanded,
 }: ProgressEmojiPickerProps) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const [internalExpanded, setInternalExpanded] = useState(false);
   const expanded = controlledExpanded ?? internalExpanded;
   const toggleExpanded =

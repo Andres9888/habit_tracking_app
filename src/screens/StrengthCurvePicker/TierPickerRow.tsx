@@ -1,9 +1,8 @@
 /** TierPickerRow — three-column tier picker with staggered entrance + spring press. */
 import { View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, useReducedMotion } from 'react-native-reanimated';
 import { ALGORITHM_ORDER } from '@/components/AlgorithmPicker';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { TIER_COPY } from './StrengthCurvePicker.copy';
 import { MODE_STYLES } from './strengthCurveModeStyles';
 import { TierPickerTile } from './TierPickerTile';
@@ -16,7 +15,7 @@ interface Props {
 }
 
 export function TierPickerRow({ selected, onSelect, scale = 1 }: Props) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   return (
     <View className='mx-4 flex-row' style={{ gap: 10 * scale }}>
       {ALGORITHM_ORDER.map((mode, idx) => (

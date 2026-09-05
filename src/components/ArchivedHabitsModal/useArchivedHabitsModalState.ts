@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
+import { useReducedMotion } from 'react-native-reanimated';
 import { useArchivedHabitsModalLogic } from './ArchivedHabitsModal.hooks';
 import { useArchiveSelection } from './useArchiveSelection';
 import { useArchiveSelectionActions } from './useArchiveSelectionActions';
@@ -8,7 +8,7 @@ import type { Id } from '../../../convex/_generated/dataModel';
 export function useArchivedHabitsModalState() {
   const logic = useArchivedHabitsModalLogic();
   const selection = useArchiveSelection();
-  const reducedMotion = useReduceMotion();
+  const reducedMotion = useReducedMotion();
 
   const archivedHabitIds = useMemo(
     () => logic.archivedHabits.map((h) => h._id) as Id<'habits'>[],

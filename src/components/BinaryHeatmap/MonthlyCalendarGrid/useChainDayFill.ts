@@ -7,11 +7,11 @@ import { useEffect } from 'react';
 import {
   interpolateColor,
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 import { durations, enterEasing, exitEasing } from '@/theme/animations';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 
 export interface ChainDayFillColors {
   baseBg: string;
@@ -26,7 +26,7 @@ export function useChainDayFill(
   todayIncomplete: boolean,
   fillColors: ChainDayFillColors
 ) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const progress = useSharedValue(showCompleted ? 1 : 0);
 
   useEffect(() => {

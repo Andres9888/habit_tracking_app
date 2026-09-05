@@ -9,9 +9,8 @@
  */
 import { LinearGradient } from 'expo-linear-gradient';
 import { View } from 'react-native';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut, useReducedMotion } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { withAlpha } from '../../../theme/colors';
 import { HeroCheckInToggle } from './DetailHeroBanner/HeroCheckInToggle';
 import { durations } from '@/theme/animations';
@@ -34,7 +33,7 @@ export function StickyCheckInBar({
   onPress,
 }: StickyCheckInBarProps) {
   const insets = useSafeAreaInsets();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
 
   return (
     <Animated.View

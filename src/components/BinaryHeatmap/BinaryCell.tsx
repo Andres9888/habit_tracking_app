@@ -8,21 +8,20 @@
  */
 
 import React, { memo } from 'react';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated, { FadeIn, useReducedMotion } from 'react-native-reanimated';
 
 import type { BinaryCellProps } from './types';
 import { getCellState, getBinaryCellAccessibilityLabel } from './utils';
 import { getBackgroundColor } from './BinaryCell.helpers';
 import { ANIMATION, COLORS } from './constants';
 import { styles } from './BinaryCell.styles';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 export const BinaryCell = memo(function BinaryCell({
   day,
   index,
   habitColor,
 }: BinaryCellProps) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const staggerDelay = reduceMotion ? 0 : index * ANIMATION.CELL_STAGGER_DELAY;
   const accessibilityLabel = getBinaryCellAccessibilityLabel(day);
   const fadeInAnimation = reduceMotion

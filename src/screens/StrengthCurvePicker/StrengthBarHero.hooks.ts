@@ -1,8 +1,8 @@
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { useEffect } from 'react';
 import {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withDelay,
   withTiming,
@@ -11,7 +11,7 @@ import { FILL_PERCENT } from './StrengthBarHero.constants';
 import { durations } from '@/theme/animations';
 
 export function useStrengthBarFill(mode: AlgorithmMode) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const fillWidth = useSharedValue(reduceMotion ? FILL_PERCENT : 0);
 
   useEffect(() => {

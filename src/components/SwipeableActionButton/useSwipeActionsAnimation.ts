@@ -6,17 +6,17 @@
 import {
   Extrapolation,
   interpolate,
+  type SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
-  type SharedValue,
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { triggerHaptic } from '@/utils/haptics';
 
 export function useSwipeActionsAnimation(dragX: SharedValue<number>) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const threshold50Triggered = useSharedValue(false);
   const threshold80Triggered = useSharedValue(false);
 

@@ -43,6 +43,7 @@ jest.mock('react-native-reanimated', () => {
     __esModule: true,
     default: Animated,
     ...Animated,
+    useReducedMotion: jest.fn(() => false),
     useSharedValue: (initialValue: number) => ({ value: initialValue }),
     useAnimatedStyle: () => ({}),
     withTiming: (value: number) => value,
@@ -285,8 +286,8 @@ describe('WeeklySummaryStrip', () => {
     });
 
     it('shows sparkle emoji for perfect week', () => {
-      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
-      useReduceMotion.mockReturnValue(false);
+      const { useReducedMotion } = require('react-native-reanimated');
+      useReducedMotion.mockReturnValue(false);
 
       const { UNSAFE_root } = render(
         <WeeklySummaryStrip {...perfectWeekProps} />
@@ -300,8 +301,8 @@ describe('WeeklySummaryStrip', () => {
     });
 
     it('does not show sparkle emoji for non-perfect week', () => {
-      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
-      useReduceMotion.mockReturnValue(false);
+      const { useReducedMotion } = require('react-native-reanimated');
+      useReducedMotion.mockReturnValue(false);
 
       const { UNSAFE_root } = render(<WeeklySummaryStrip {...defaultProps} />);
 
@@ -312,8 +313,8 @@ describe('WeeklySummaryStrip', () => {
     });
 
     it('does not show sparkle with reduced motion enabled', () => {
-      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
-      useReduceMotion.mockReturnValue(true);
+      const { useReducedMotion } = require('react-native-reanimated');
+      useReducedMotion.mockReturnValue(true);
 
       const { UNSAFE_root } = render(
         <WeeklySummaryStrip {...perfectWeekProps} />
@@ -468,8 +469,8 @@ describe('WeeklySummaryStrip', () => {
 
   describe('Reduced Motion', () => {
     it('respects reduced motion preference', () => {
-      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
-      useReduceMotion.mockReturnValue(true);
+      const { useReducedMotion } = require('react-native-reanimated');
+      useReducedMotion.mockReturnValue(true);
 
       const { getByLabelText } = render(
         <WeeklySummaryStrip {...defaultProps} />
@@ -478,8 +479,8 @@ describe('WeeklySummaryStrip', () => {
     });
 
     it('renders correctly with reduced motion enabled', () => {
-      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
-      useReduceMotion.mockReturnValue(true);
+      const { useReducedMotion } = require('react-native-reanimated');
+      useReducedMotion.mockReturnValue(true);
 
       const { getByText } = render(<WeeklySummaryStrip {...defaultProps} />);
       expect(getByText(/This Week/)).toBeTruthy();

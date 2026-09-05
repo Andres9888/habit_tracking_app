@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
 import Animated, {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 import { createHabitMotion } from '../createHabitMotion';
 import { HABIT_NAME_FIELD_PADDING } from './HabitNameInputField';
@@ -22,7 +22,7 @@ export function HabitNamePlaceholderOverlay({
   hintColor,
   visible,
 }: HabitNamePlaceholderOverlayProps) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const progress = useSharedValue(0);
   const hasRevealedText = useRef(false);
 

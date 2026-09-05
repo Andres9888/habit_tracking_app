@@ -4,12 +4,12 @@
 
 import { useEffect, useMemo } from 'react';
 import {
-  useSharedValue,
-  useAnimatedProps,
-  withTiming,
   Easing,
+  useAnimatedProps,
+  useReducedMotion,
+  useSharedValue,
+  withTiming,
 } from 'react-native-reanimated';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
 import type { ProgressEmojiSet } from '../../utils/progressEmojis';
 import { getLevelFromStrength } from './types';
 import { durations } from '@/theme/animations';
@@ -32,7 +32,7 @@ export function useStrengthRingAnimation(
   strength: number,
   emojis?: ProgressEmojiSet
 ) {
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
 
   const clampedStrength = useMemo(
     () => Math.max(0, Math.min(100, strength)),

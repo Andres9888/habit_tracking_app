@@ -7,10 +7,10 @@ import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
 import Animated, {
   Easing,
   useAnimatedProps,
+  useReducedMotion,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { colors as staticColors } from '@/theme';
 import { durations } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
@@ -28,7 +28,7 @@ export const SmallRing = React.memo(function SmallRing({ percent }: SmallRingPro
   const { colors } = useThemeColors();
   const s = useMemo(() => createCompactStyles(colors), [colors]);
   const clamped = Math.max(0, Math.min(100, percent));
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const progress = useSharedValue(reduceMotion ? clamped : 0);
 
   useEffect(() => {

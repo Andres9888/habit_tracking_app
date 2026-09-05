@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, useReducedMotion } from 'react-native-reanimated';
 
 import { useHabitData } from '../../features/habits/hooks/useHabitData';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { ScreenHeader } from '../../components/ScreenHeader';
 import { CharacterScreenSkeleton } from '../../components/SkeletonLoader';
@@ -32,7 +31,7 @@ function CharacterScreenContent({ onBack }: CharacterScreenProps) {
     [habits, tracking]
   );
   const { colors } = useThemeColors();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
 
   // Show the skeleton during the initial Convex fetch; otherwise buildCharacterData([])
   // flashes a fake level-1 "Getting Started" character before real data lands.

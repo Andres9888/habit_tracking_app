@@ -14,13 +14,13 @@
 import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
   Easing,
   runOnJS,
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withTiming,
 } from 'react-native-reanimated';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { colors } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { typography } from '@/theme/typography';
@@ -47,7 +47,7 @@ export function FloatingXPText({
   showCoin = false,
 }: FloatingXPTextProps) {
   const { isDark } = useThemeColors();
-  const reduceMotion = useReduceMotion();
+  const reduceMotion = useReducedMotion();
   const translateY = useSharedValue(0);
   const opacity = useSharedValue(1);
 
