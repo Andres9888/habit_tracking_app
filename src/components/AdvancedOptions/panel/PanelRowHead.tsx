@@ -1,6 +1,6 @@
 /** Row head: hue tile · title/hint · value chip · trailing · chevron. */
 import type { ReactNode } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, useWindowDimensions } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { ChevronDown } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
@@ -8,6 +8,9 @@ import { fontWeights, typography } from '@/theme/typography';
 import type { PanelHue } from './panelTokens';
 import { usePanelTokens } from './panelTokens';
 import { ValueChip } from './ValueChip';
+
+/** Widths below this get a two-line hint (iPhone SE / 13 mini = 375pt). */
+const COMPACT_WIDTH = 390;
 
 export interface PanelRowHeadProps {
   hueTokens: PanelHue;
@@ -35,6 +38,11 @@ export function PanelRowHead({
   chevronStyle,
 }: PanelRowHeadProps) {
   const t = usePanelTokens();
+  const { width } = useWindowDimensions();
+  // Below ~390pt (SE / mini) the chip + chevron leave the hint ~155pt, so a
+  // one-line hint always ellipsizes. Let it wrap once there; the 60pt row
+  // absorbs a second 12pt line without growing.
+  const hintLines = width < COMPACT_WIDTH ? 2 : 1;
   return (
     <View
       style={{
@@ -68,7 +76,7 @@ export function PanelRowHead({
           {title}
         </Text>
         <Text
-          numberOfLines={1}
+          numberOfLines={hintLines}
           style={{
             ...typography.label,
             fontSize: 12,
