@@ -10,14 +10,27 @@ import { CharacterScreenSkeleton } from '../../components/SkeletonLoader';
 import { durations, enterEasing } from '../../theme/animations';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { spacing } from '../../theme/spacing';
-import { AchievementsSection, AttributesSection, CharacterCard, StatsSection } from './components';
-import { buildCharacterData, buildDateRange, type HabitLike, type TrackingLike } from './characterData.helpers';
+import {
+  AchievementsSection,
+  AttributesSection,
+  CharacterCard,
+  StatsSection,
+} from './components';
+import {
+  buildCharacterData,
+  buildDateRange,
+  type HabitLike,
+  type TrackingLike,
+} from './characterData.helpers';
 import type { CharacterScreenProps } from './types';
 
 function CharacterScreenContent({ onBack }: CharacterScreenProps) {
   const dateRange = useMemo(() => buildDateRange(), []);
   const { habits, isHabitsLoading, tracking } = useHabitData(dateRange);
-  const characterData = useMemo(() => buildCharacterData(habits as HabitLike[], tracking as TrackingLike[]), [habits, tracking]);
+  const characterData = useMemo(
+    () => buildCharacterData(habits as HabitLike[], tracking as TrackingLike[]),
+    [habits, tracking]
+  );
   const { colors } = useThemeColors();
   const reduceMotion = useReduceMotion();
 
@@ -32,10 +45,38 @@ function CharacterScreenContent({ onBack }: CharacterScreenProps) {
       <ScrollView style={styles.scroll}>
         <ScreenHeader title='Character' onBack={onBack} />
         <View style={styles.content}>
-          <Animated.View entering={FadeInDown.delay(340).duration(durations.enter).easing(enterEasing)}><CharacterCard data={characterData} /></Animated.View>
-          <Animated.View entering={FadeInDown.delay(400).duration(durations.enter).easing(enterEasing)}><AttributesSection attributes={characterData.attributes} /></Animated.View>
-          <Animated.View entering={FadeInDown.delay(460).duration(durations.enter).easing(enterEasing)}><StatsSection stats={characterData.stats} /></Animated.View>
-          <Animated.View entering={FadeInDown.delay(520).duration(durations.enter).easing(enterEasing)}><AchievementsSection achievements={characterData.recentAchievements} /></Animated.View>
+          <Animated.View
+            entering={FadeInDown.delay(durations.enter + durations.stagger)
+              .duration(durations.enter)
+              .easing(enterEasing)}
+          >
+            <CharacterCard data={characterData} />
+          </Animated.View>
+          <Animated.View
+            entering={FadeInDown.delay(durations.emphasis)
+              .duration(durations.enter)
+              .easing(enterEasing)}
+          >
+            <AttributesSection attributes={characterData.attributes} />
+          </Animated.View>
+          <Animated.View
+            entering={FadeInDown.delay(durations.emphasis + durations.stagger)
+              .duration(durations.enter)
+              .easing(enterEasing)}
+          >
+            <StatsSection stats={characterData.stats} />
+          </Animated.View>
+          <Animated.View
+            entering={FadeInDown.delay(
+              durations.emphasis + 2 * durations.stagger
+            )
+              .duration(durations.enter)
+              .easing(enterEasing)}
+          >
+            <AchievementsSection
+              achievements={characterData.recentAchievements}
+            />
+          </Animated.View>
         </View>
       </ScrollView>
     </View>
@@ -43,7 +84,11 @@ function CharacterScreenContent({ onBack }: CharacterScreenProps) {
 }
 
 export default function CharacterScreen({ onBack }: CharacterScreenProps) {
-  return <ScreenErrorBoundary screenName='Character' onGoBack={onBack}><CharacterScreenContent onBack={onBack} /></ScreenErrorBoundary>;
+  return (
+    <ScreenErrorBoundary screenName='Character' onGoBack={onBack}>
+      <CharacterScreenContent onBack={onBack} />
+    </ScreenErrorBoundary>
+  );
 }
 
 const styles = StyleSheet.create({

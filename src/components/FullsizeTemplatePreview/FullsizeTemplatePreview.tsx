@@ -19,6 +19,7 @@ import {
   useHardwareBack,
 } from './hooks';
 import type { FullsizeTemplatePreviewProps } from './FullsizeTemplatePreview.types';
+import { durations } from '@/theme/animations';
 
 function FullsizeTemplatePreviewComponent({
   template,
@@ -37,7 +38,7 @@ function FullsizeTemplatePreviewComponent({
   const reducedMotion = useReduceMotion();
 
   const shouldRender = useDeferredUnmount({
-    duration: 280,
+    duration: durations.enter,
     reducedMotion,
     visible,
   });

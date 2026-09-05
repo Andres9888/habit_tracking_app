@@ -51,7 +51,7 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
         reduceMotion
           ? undefined
           : FadeInDown.duration(durations.enter)
-              .delay(100)
+              .delay(durations.instant)
               .easing(Easing.out(Easing.cubic))
       }
       style={{
@@ -63,7 +63,12 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
     >
       <View className='p-4'>
         <View className='mb-3 flex-row items-center justify-between'>
-          <Text style={{ ...typography.overline, color: themeColors.text.secondary }}>
+          <Text
+            style={{
+              ...typography.overline,
+              color: themeColors.text.secondary,
+            }}
+          >
             Strength
           </Text>
           <Text

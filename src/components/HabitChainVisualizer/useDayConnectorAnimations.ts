@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { durations } from '@/theme/animations';
 import {
   Easing,
   cancelAnimation,
@@ -21,7 +22,7 @@ export const useDayConnectorAnimations = ({
 
   useEffect(() => {
     opacity.value = withTiming(visible ? 1 : 0, {
-      duration: 250,
+      duration: durations.transition,
       easing: Easing.inOut(Easing.ease),
     });
   }, [visible, opacity]);

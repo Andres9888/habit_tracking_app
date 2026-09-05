@@ -8,6 +8,7 @@ import Animated, {
 
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { durations } from '@/theme/animations';
 
 interface MicroProgressBarProps {
   completed: number;
@@ -15,7 +16,7 @@ interface MicroProgressBarProps {
 }
 
 const BAR_HEIGHT = 3;
-const FILL_DURATION = 600;
+const FILL_DURATION = durations.complex;
 const BORDER_RADIUS = 1.5;
 
 /** Thin progress bar showing weekly completion ratio */

@@ -7,6 +7,7 @@ import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { TIER_COPY } from './StrengthCurvePicker.copy';
 import { MODE_STYLES } from './strengthCurveModeStyles';
 import { TierPickerTile } from './TierPickerTile';
+import { durations } from '@/theme/animations';
 
 interface Props {
   selected: AlgorithmMode;
@@ -17,12 +18,18 @@ interface Props {
 export function TierPickerRow({ selected, onSelect, scale = 1 }: Props) {
   const reduceMotion = useReduceMotion();
   return (
-    <View className='flex-row mx-4' style={{ gap: 10 * scale }}>
+    <View className='mx-4 flex-row' style={{ gap: 10 * scale }}>
       {ALGORITHM_ORDER.map((mode, idx) => (
         <Animated.View
           key={mode}
           className='flex-1'
-          entering={reduceMotion ? undefined : FadeInDown.delay(220 + idx * 70).duration(300)}
+          entering={
+            reduceMotion
+              ? undefined
+              : FadeInDown.delay(
+                  durations.transition + idx * durations.tick
+                ).duration(durations.moderate)
+          }
         >
           <TierPickerTile
             isSelected={mode === selected}

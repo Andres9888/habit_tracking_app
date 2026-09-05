@@ -1,5 +1,11 @@
 /** ImportHeader - Matches EditHeader style (cancel + import button) */
-import { View, Pressable, Text, Keyboard, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Pressable,
+  Text,
+  Keyboard,
+  ActivityIndicator,
+} from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme';
 import { typography } from '@/theme/typography';
@@ -49,7 +55,7 @@ export function ImportHeader({
   return (
     <Animated.View
       className='flex-row items-center justify-between px-4 pb-2'
-      entering={FadeInDown.delay(0).duration(durations.enter).easing(enterEasing)}
+      entering={FadeInDown.duration(durations.enter).easing(enterEasing)}
       style={{ paddingTop }}
     >
       <ModalCloseButton label='Cancel' onClose={handleCancel} />
@@ -57,17 +63,25 @@ export function ImportHeader({
       <PressableBase
         accessibilityLabel={isImporting ? 'Adding habit' : 'Add this habit'}
         accessibilityRole='button'
-        accessibilityState={{ busy: isImporting, disabled: !canImport || isImporting }}
-        className='flex-row items-center justify-center gap-2 rounded-full h-11 px-6'
+        accessibilityState={{
+          busy: isImporting,
+          disabled: !canImport || isImporting,
+        }}
+        className='h-11 flex-row items-center justify-center gap-2 rounded-full px-6'
         disabled={!canImport || isImporting}
         style={[
           animatedStyle,
-          { backgroundColor: canImport && !isImporting ? palette.addBg : disabledBg },
+          {
+            backgroundColor:
+              canImport && !isImporting ? palette.addBg : disabledBg,
+          },
         ]}
         onPress={handleImport}
         {...pressHandlers}
       >
-        {isImporting ? <ActivityIndicator color={palette.addFg} size='small' /> : null}
+        {isImporting ? (
+          <ActivityIndicator color={palette.addFg} size='small' />
+        ) : null}
         <Text
           className='font-semibold'
           style={{

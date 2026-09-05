@@ -2,13 +2,14 @@ import { View, StyleSheet } from 'react-native';
 import { StatCard } from './StatCard';
 import { spacing } from '../../../theme/spacing';
 import type { CharacterStats } from '../types';
+import { durations } from '@/theme/animations';
 
 interface StatsSectionProps {
   stats: CharacterStats;
 }
 
-const STAGGER_DELAY = 60;
-const BASE_DELAY = 480;
+const STAGGER_DELAY = durations.stagger;
+const BASE_DELAY = 8 * durations.stagger;
 
 export function StatsSection({ stats }: StatsSectionProps) {
   return (

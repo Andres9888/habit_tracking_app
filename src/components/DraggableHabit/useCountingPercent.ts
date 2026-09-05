@@ -11,6 +11,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
+import { durations } from '@/theme/animations';
 import {
   useSharedValue,
   useDerivedValue,
@@ -30,7 +31,7 @@ export function useCountingPercent(target: number) {
       animValue.value = target;
     } else {
       animValue.value = withTiming(target, {
-        duration: 500,
+        duration: durations.complex,
         easing: Easing.out(Easing.cubic),
       });
     }

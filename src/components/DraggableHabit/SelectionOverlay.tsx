@@ -7,16 +7,29 @@ import { memo } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { Checkbox } from '../Checkbox';
+import { durations } from '@/theme/animations';
 
 interface SelectionOverlayProps {
   isSelected: boolean;
   onToggle: () => void;
 }
 
-function SelectionOverlayComponent({ isSelected, onToggle }: SelectionOverlayProps) {
+function SelectionOverlayComponent({
+  isSelected,
+  onToggle,
+}: SelectionOverlayProps) {
   return (
-    <Animated.View entering={FadeIn.duration(200)} exiting={FadeOut.duration(150)} style={s.wrap}>
-      <Checkbox checked={isSelected} size="md" variant="primary" onPress={onToggle} />
+    <Animated.View
+      entering={FadeIn.duration(durations.standard)}
+      exiting={FadeOut.duration(durations.quick)}
+      style={s.wrap}
+    >
+      <Checkbox
+        checked={isSelected}
+        size='md'
+        variant='primary'
+        onPress={onToggle}
+      />
     </Animated.View>
   );
 }

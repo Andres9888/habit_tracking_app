@@ -19,7 +19,7 @@ import {
   withTiming,
   Easing as ReanimatedEasing,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
 import { getStrengthLabel } from './strengthUtils';
 import { runLevelUpAnimation, runSubtlePulse } from './animationHelpers';
@@ -63,7 +63,7 @@ export function useStrengthAnimation(
     } else {
       // Decreasing - quick ease out
       progressWidth.value = withTiming(strengthPercent, {
-        duration: 300,
+        duration: durations.moderate,
         easing: ReanimatedEasing.out(ReanimatedEasing.quad),
       });
     }

@@ -6,10 +6,11 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '@/theme/spacing';
 import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 import { iconSizes } from '@/theme/iconSizes';
+import { durations } from '@/theme/animations';
 
-const SECTION_FADE_DURATION = 400;
-const SECTION_SLIDE_DURATION = 400;
-const SECTION_SLIDE_DELAY = 200;
+const SECTION_FADE_DURATION = durations.emphasis;
+const SECTION_SLIDE_DURATION = durations.emphasis;
+const SECTION_SLIDE_DELAY = durations.standard;
 
 interface EmptyStrengthStateProps {
   habitAgeDays: number;

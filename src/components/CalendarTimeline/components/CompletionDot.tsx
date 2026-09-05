@@ -17,7 +17,7 @@ import {
 } from '../CalendarTimeline.styles';
 import type { CompletionDotProps } from '../CalendarTimeline.types';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
 /** Animated completion indicator dot */
 export const CompletionDot: React.FC<CompletionDotProps> = ({
@@ -43,8 +43,14 @@ export const CompletionDot: React.FC<CompletionDotProps> = ({
     if (isToday && status !== 'complete' && status !== 'future') {
       pulse.value = withRepeat(
         withSequence(
-          withTiming(1.15, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
-          withTiming(1, { duration: 1000, easing: Easing.inOut(Easing.ease) })
+          withTiming(1.15, {
+            duration: durations.loop,
+            easing: Easing.inOut(Easing.ease),
+          }),
+          withTiming(1, {
+            duration: durations.loop,
+            easing: Easing.inOut(Easing.ease),
+          })
         ),
         -1,
         false

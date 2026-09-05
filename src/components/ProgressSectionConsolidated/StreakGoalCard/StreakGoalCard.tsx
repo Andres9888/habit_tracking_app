@@ -32,14 +32,15 @@ export const StreakGoalCard = React.memo(function StreakGoalCard({
 
   if (streakGoal <= 0) return null;
 
-  const nextMilestone =
-    milestones.find((m) => m.status === 'current') ?? null;
+  const nextMilestone = milestones.find((m) => m.status === 'current') ?? null;
 
   return (
     <Animated.View
       accessibilityLabel={`Streak goal: ${currentStreak} of ${streakGoal} days, ${daysRemaining} remaining`}
-      accessibilityRole="summary"
-      entering={FadeInDown.duration(durations.enter).delay(150).easing(Easing.out(Easing.cubic))}
+      accessibilityRole='summary'
+      entering={FadeInDown.duration(durations.enter)
+        .delay(durations.quick)
+        .easing(Easing.out(Easing.cubic))}
       style={s.container}
     >
       <CompactHero

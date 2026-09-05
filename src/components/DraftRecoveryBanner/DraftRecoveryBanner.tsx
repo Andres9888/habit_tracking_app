@@ -7,7 +7,7 @@ import { VARIANT_STYLES } from './constants';
 import type { DraftRecoveryBannerProps } from './types';
 import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
-import { enterEasing } from '@/theme/animations';
+import { durations, enterEasing } from '@/theme/animations';
 
 export function DraftRecoveryBanner({
   visible,
@@ -61,8 +61,8 @@ export function DraftRecoveryBanner({
   return (
     <Animated.View
       className={`mx-4 mb-3 rounded-xl border ${styles.border} ${styles.bg} p-3`}
-      entering={FadeInDown.duration(280).easing(enterEasing)}
-      exiting={FadeOut.duration(150)}
+      entering={FadeInDown.duration(durations.enter).easing(enterEasing)}
+      exiting={FadeOut.duration(durations.quick)}
       style={themeStyle ? [themeStyle.bg, themeStyle.border] : undefined}
     >
       <View className='flex-row items-center gap-3'>

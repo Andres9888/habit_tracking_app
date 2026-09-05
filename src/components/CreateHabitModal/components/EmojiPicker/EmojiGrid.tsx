@@ -8,6 +8,7 @@
 import Animated, { FadeOut } from 'react-native-reanimated';
 import { View } from 'react-native';
 import { EmojiChip } from './EmojiChip';
+import { durations } from '@/theme/animations';
 
 interface EmojiGridProps {
   suggestedEmojis: string[];
@@ -30,7 +31,10 @@ export function EmojiGrid({
         style={{ flexDirection: 'row', justifyContent: 'center' }}
       >
         {suggestedEmojis.slice(0, 5).map((emoji) => (
-          <Animated.View key={emoji} exiting={FadeOut.duration(150)}>
+          <Animated.View
+            key={emoji}
+            exiting={FadeOut.duration(durations.quick)}
+          >
             <EmojiChip
               emoji={emoji}
               isSelected={selectedEmoji === emoji}
@@ -47,7 +51,10 @@ export function EmojiGrid({
         style={{ flexDirection: 'row', justifyContent: 'center' }}
       >
         {suggestedEmojis.slice(5, 9).map((emoji) => (
-          <Animated.View key={emoji} exiting={FadeOut.duration(150)}>
+          <Animated.View
+            key={emoji}
+            exiting={FadeOut.duration(durations.quick)}
+          >
             <EmojiChip
               emoji={emoji}
               isSelected={selectedEmoji === emoji}

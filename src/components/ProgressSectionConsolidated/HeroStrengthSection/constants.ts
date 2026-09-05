@@ -1,9 +1,10 @@
+import { durations } from '@/theme/animations';
 /**
  * Constants for HeroStrengthSection
  */
 
-export const RING_ANIMATION_DURATION = 1200;
-export const EMOJI_SCALE_DELAY = 300;
+export const RING_ANIMATION_DURATION = durations.progress;
+export const EMOJI_SCALE_DELAY = durations.moderate;
 
 /** Ring dimensions - defined at module level to avoid recreation */
 export const RING_SIZE = 100;

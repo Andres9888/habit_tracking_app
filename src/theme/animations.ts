@@ -49,6 +49,9 @@ export const durations = {
   /** Spinner rotations, repeating pulse loops */
   loop: 1000,
 
+  /** Sub-perceptual keyframe — shake beats, hairline flashes */
+  micro: 50,
+
   /** Medium emphasis, page transitions */
   moderate: 300,
 
@@ -73,6 +76,9 @@ export const durations = {
 
   /** Standard transitions */
   standard: 200,
+
+  /** Snap accents — the shortest duration that still reads as motion */
+  tick: 80,
 
   /** Toast auto-dismiss */
   toast: 5000,

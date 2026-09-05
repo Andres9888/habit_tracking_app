@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { durations } from '@/theme/animations';
 import {
   Easing,
   useAnimatedStyle,
@@ -10,7 +11,7 @@ import {
 
 const PULSE_MIN = 0.35;
 const PULSE_MAX = 0.85;
-const HALF_CYCLE_MS = 1200;
+const HALF_CYCLE_MS = durations.progress;
 
 /**
  * Breathing opacity animation for ghost connectors.

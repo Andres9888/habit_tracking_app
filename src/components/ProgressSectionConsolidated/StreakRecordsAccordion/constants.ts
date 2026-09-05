@@ -1,9 +1,10 @@
+import { durations } from '@/theme/animations';
 /**
  * Constants for StreakRecordsAccordion
  */
 
 /** Animation duration for expand/collapse (ms) */
-export const ANIMATION_DURATION = 250;
+export const ANIMATION_DURATION = durations.transition;
 
 /** Medal configurations */
 export const MEDALS = ['🥇', '🥈', '🥉'] as const;

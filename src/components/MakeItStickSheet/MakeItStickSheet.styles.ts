@@ -3,6 +3,8 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { FadeIn, FadeInDown } from 'react-native-reanimated';
+import { durations } from '../../theme/animations';
 import { borderRadius, spacing } from '../../theme/spacing';
 import { fontFamilies, typography } from '../../theme/typography';
 
@@ -37,3 +39,8 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export const enterSheet = FadeIn.duration(durations.transition);
+export const enterBody = FadeInDown.delay(durations.instant).duration(
+  durations.enter
+);

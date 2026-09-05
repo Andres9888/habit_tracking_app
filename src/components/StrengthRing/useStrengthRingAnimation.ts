@@ -13,7 +13,7 @@ import {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
 interface UseStrengthRingAnimationOptions {
   strength: number;
@@ -44,25 +44,37 @@ export function useStrengthRingAnimation({
     if (levelChanged) {
       // Phase 1: Fade out + shrink old emoji
       emojiOpacity.value = withTiming(0.3, {
-        duration: 150,
+        duration: durations.quick,
         easing: Easing.out(Easing.ease),
       });
       emojiScale.value = withTiming(0.6, {
-        duration: 150,
+        duration: durations.quick,
         easing: Easing.out(Easing.ease),
       });
       emojiRotation.value = withSequence(
-        withTiming(-8, { duration: 80, easing: Easing.inOut(Easing.ease) }),
-        withTiming(8, { duration: 80, easing: Easing.inOut(Easing.ease) }),
-        withTiming(0, { duration: 60, easing: Easing.out(Easing.ease) })
+        withTiming(-8, {
+          duration: durations.tick,
+          easing: Easing.inOut(Easing.ease),
+        }),
+        withTiming(8, {
+          duration: durations.tick,
+          easing: Easing.inOut(Easing.ease),
+        }),
+        withTiming(0, {
+          duration: durations.tick,
+          easing: Easing.out(Easing.ease),
+        })
       );
       // Phase 2: Fade in + grow new emoji
       emojiOpacity.value = withDelay(
-        150,
-        withTiming(1, { duration: 200, easing: Easing.out(Easing.ease) })
+        durations.quick,
+        withTiming(1, {
+          duration: durations.standard,
+          easing: Easing.out(Easing.ease),
+        })
       );
       emojiScale.value = withDelay(
-        150,
+        durations.quick,
         withSequence(
           withSpring(1.4, springs.celebration),
           withSpring(1, springs.celebration)
@@ -71,7 +83,10 @@ export function useStrengthRingAnimation({
     } else {
       // Regular strength update: subtle pulse
       emojiScale.value = withSequence(
-        withTiming(1.08, { duration: 100, easing: Easing.out(Easing.ease) }),
+        withTiming(1.08, {
+          duration: durations.instant,
+          easing: Easing.out(Easing.ease),
+        }),
         withSpring(1, springs.standard)
       );
     }

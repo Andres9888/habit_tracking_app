@@ -18,6 +18,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SkeletonLoaderProps } from './types';
+import { durations } from '@/theme/animations';
 
 /** Light and dark skeleton color pairs */
 export const SKELETON_COLORS_LIGHT = {
@@ -30,7 +31,7 @@ export const SKELETON_COLORS_DARK = {
   highlight: '#4B5563',
 } as const;
 
-export const SHIMMER_DURATION = 1500;
+export const SHIMMER_DURATION = durations.breathing;
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
@@ -89,11 +90,7 @@ export function SkeletonLoader({
         ]}
         end={{ x: 1, y: 0.5 }}
         start={{ x: 0, y: 0.5 }}
-        style={[
-          StyleSheet.absoluteFill,
-          { width: '200%' },
-          animatedStyle,
-        ]}
+        style={[StyleSheet.absoluteFill, { width: '200%' }, animatedStyle]}
       />
     </View>
   );

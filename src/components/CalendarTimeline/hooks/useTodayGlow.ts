@@ -9,6 +9,7 @@ import {
 } from 'react-native-reanimated';
 
 import { colors as palette } from '../../../theme/colors';
+import { durations } from '@/theme/animations';
 
 interface UseTodayGlowParams {
   isCurrentDay: boolean;
@@ -19,7 +20,7 @@ interface UseTodayGlowParams {
 
 const GLOW_MIN = 0.15;
 const GLOW_MAX = 0.4;
-const HALF_CYCLE_MS = 1500;
+const HALF_CYCLE_MS = durations.breathing;
 const SHADOW_RADIUS = 8;
 
 const SHADOW_COLOR_LIGHT = palette.streak[300];
@@ -56,9 +57,9 @@ export function useTodayGlow({
         withTiming(GLOW_MIN, {
           duration: HALF_CYCLE_MS,
           easing: Easing.inOut(Easing.ease),
-        }),
+        })
       ),
-      -1,
+      -1
     );
   }, [active, shadowOpacity]);
 

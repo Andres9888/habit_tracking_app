@@ -36,7 +36,9 @@ interface RenderHabitRowOptions {
   renderParams: RenderItemParams<Habit>;
 }
 
-const EXIT_ANIMATION = FadeOutRight.duration(200).damping(18).stiffness(150);
+const EXIT_ANIMATION = FadeOutRight.duration(durations.standard)
+  .damping(18)
+  .stiffness(150);
 
 /**
  * Small dedicated component so `useAnimatedStyle` is called from a proper

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { durations } from '@/theme/animations';
 import {
   Easing,
   runOnJS,
@@ -43,7 +44,7 @@ export function useSparkleBurstAnimation({
 
     opacity.value = withTiming(
       0,
-      { duration: 400, easing: Easing.out(Easing.ease) },
+      { duration: durations.emphasis, easing: Easing.out(Easing.ease) },
       (finished) => {
         'worklet';
         if (finished) {
@@ -52,7 +53,7 @@ export function useSparkleBurstAnimation({
       }
     );
     scale.value = withTiming(1.6, {
-      duration: 400,
+      duration: durations.emphasis,
       easing: Easing.out(Easing.cubic),
     });
   }, [isActive, reduceMotion, opacity, scale, triggerComplete]);

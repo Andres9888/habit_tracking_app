@@ -67,7 +67,11 @@ export function SortChip({
   return (
     <Animated.View
       entering={
-        reduceMotion ? undefined : FadeInDown.delay(100).duration(durations.enter).easing(enterEasing)
+        reduceMotion
+          ? undefined
+          : FadeInDown.delay(durations.instant)
+              .duration(durations.enter)
+              .easing(enterEasing)
       }
     >
       <PressableBase
@@ -88,19 +92,37 @@ export function SortChip({
       >
         {/* Left side: icon + label */}
         <View className='flex-row items-center gap-2'>
-          <LayoutList color={colors.text.secondary} size={iconSizes.medium} strokeWidth={2} />
-          <Text className='text-sm font-semibold' style={{ color: colors.text.primary }}>
+          <LayoutList
+            color={colors.text.secondary}
+            size={iconSizes.medium}
+            strokeWidth={2}
+          />
+          <Text
+            className='text-sm font-semibold'
+            style={{ color: colors.text.primary }}
+          >
             My Habits
           </Text>
         </View>
 
         {/* Right side: sort icon + sort label + chevron */}
         <View className='flex-row items-center gap-1'>
-          <ArrowUpDown color={colors.text.tertiary} size={iconSizes.small} strokeWidth={2} />
-          <Text className='text-sm font-normal' style={{ color: colors.text.tertiary }}>
+          <ArrowUpDown
+            color={colors.text.tertiary}
+            size={iconSizes.small}
+            strokeWidth={2}
+          />
+          <Text
+            className='text-sm font-normal'
+            style={{ color: colors.text.tertiary }}
+          >
             {sortLabel}
           </Text>
-          <ChevronRight color={colors.text.tertiary} size={iconSizes.small} strokeWidth={2} />
+          <ChevronRight
+            color={colors.text.tertiary}
+            size={iconSizes.small}
+            strokeWidth={2}
+          />
         </View>
       </PressableBase>
     </Animated.View>

@@ -7,6 +7,7 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import { getColors } from './CalendarTimeline.styles';
+import { durations } from '@/theme/animations';
 import type {
   CompletionStatus,
   DayCompletionStatus,
@@ -52,7 +53,10 @@ export function useTimelineColors(isDark: boolean) {
 }
 
 const SLIDE_OFFSET = 12;
-const TRANSITION_EASING = { duration: 160, easing: Easing.out(Easing.cubic) };
+const TRANSITION_EASING = {
+  duration: durations.quick,
+  easing: Easing.out(Easing.cubic),
+};
 
 /**
  * Slides the day strip in when the displayed week changes. The new week is

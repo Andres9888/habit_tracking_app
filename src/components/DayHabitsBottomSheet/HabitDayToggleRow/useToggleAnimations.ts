@@ -1,6 +1,12 @@
 import { useCallback } from 'react';
-import { Easing, useSharedValue, withSequence, withSpring, withTiming } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import {
+  Easing,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
+import { durations, springs } from '@/theme/animations';
 
 interface UseToggleAnimationsOptions {
   isCompleted: boolean;
@@ -32,7 +38,10 @@ export function useToggleAnimations({
     if (reduceMotion) return;
 
     scaleAnim.value = withSequence(
-      withTiming(0.95, { duration: 50, easing: Easing.out(Easing.quad) }),
+      withTiming(0.95, {
+        duration: durations.micro,
+        easing: Easing.out(Easing.quad),
+      }),
       withSpring(1, springs.pop)
     );
   }, [scaleAnim, reduceMotion]);

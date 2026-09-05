@@ -14,8 +14,8 @@ interface AttributesSectionProps {
   attributes: CharacterAttributes;
 }
 
-const STAGGER_DELAY = 60;
-const BASE_DELAY = 180;
+const STAGGER_DELAY = durations.stagger;
+const BASE_DELAY = durations.reveal;
 
 export function AttributesSection({ attributes }: AttributesSectionProps) {
   const { colors } = useThemeColors();
@@ -23,7 +23,9 @@ export function AttributesSection({ attributes }: AttributesSectionProps) {
   return (
     <View style={styles.section}>
       <Animated.Text
-        entering={FadeInDown.delay(BASE_DELAY).duration(durations.enter).easing(enterEasing)}
+        entering={FadeInDown.delay(BASE_DELAY)
+          .duration(durations.enter)
+          .easing(enterEasing)}
         style={[styles.sectionTitle, { color: colors.text.primary }]}
       >
         Attributes
@@ -32,7 +34,12 @@ export function AttributesSection({ attributes }: AttributesSectionProps) {
         bgGradient={ATTRIBUTE_CONFIGS.vitality.bgGradient}
         delay={BASE_DELAY + STAGGER_DELAY}
         gradientColors={ATTRIBUTE_CONFIGS.vitality.gradientColors}
-        icon={<Heart color={ATTRIBUTE_CONFIGS.vitality.iconColor} size={iconSizes.medium} />}
+        icon={
+          <Heart
+            color={ATTRIBUTE_CONFIGS.vitality.iconColor}
+            size={iconSizes.medium}
+          />
+        }
         maxValue={100}
         name='Vitality'
         value={attributes.vitality}
@@ -42,7 +49,10 @@ export function AttributesSection({ attributes }: AttributesSectionProps) {
         delay={BASE_DELAY + STAGGER_DELAY * 2}
         gradientColors={ATTRIBUTE_CONFIGS.strength.gradientColors}
         icon={
-          <Dumbbell color={ATTRIBUTE_CONFIGS.strength.iconColor} size={iconSizes.medium} />
+          <Dumbbell
+            color={ATTRIBUTE_CONFIGS.strength.iconColor}
+            size={iconSizes.medium}
+          />
         }
         maxValue={100}
         name='Strength'
@@ -52,7 +62,12 @@ export function AttributesSection({ attributes }: AttributesSectionProps) {
         bgGradient={ATTRIBUTE_CONFIGS.wisdom.bgGradient}
         delay={BASE_DELAY + STAGGER_DELAY * 3}
         gradientColors={ATTRIBUTE_CONFIGS.wisdom.gradientColors}
-        icon={<Brain color={ATTRIBUTE_CONFIGS.wisdom.iconColor} size={iconSizes.medium} />}
+        icon={
+          <Brain
+            color={ATTRIBUTE_CONFIGS.wisdom.iconColor}
+            size={iconSizes.medium}
+          />
+        }
         maxValue={100}
         name='Wisdom'
         value={attributes.wisdom}
@@ -61,7 +76,12 @@ export function AttributesSection({ attributes }: AttributesSectionProps) {
         bgGradient={ATTRIBUTE_CONFIGS.energy.bgGradient}
         delay={BASE_DELAY + STAGGER_DELAY * 4}
         gradientColors={ATTRIBUTE_CONFIGS.energy.gradientColors}
-        icon={<Zap color={ATTRIBUTE_CONFIGS.energy.iconColor} size={iconSizes.medium} />}
+        icon={
+          <Zap
+            color={ATTRIBUTE_CONFIGS.energy.iconColor}
+            size={iconSizes.medium}
+          />
+        }
         maxValue={100}
         name='Energy'
         value={attributes.energy}

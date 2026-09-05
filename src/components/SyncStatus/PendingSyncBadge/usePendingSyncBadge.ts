@@ -6,6 +6,7 @@
  */
 
 import { useEffect } from 'react';
+import { durations } from '@/theme/animations';
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -18,7 +19,7 @@ import type {
   UsePendingSyncBadgeResult,
 } from './types';
 
-const ANIMATION_DURATION = 150;
+const ANIMATION_DURATION = durations.quick;
 
 export function usePendingSyncBadge({
   visible,

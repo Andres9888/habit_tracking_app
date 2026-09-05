@@ -7,7 +7,7 @@
 
 import { useReducedMotion } from 'react-native-reanimated';
 import { FadeIn, FadeInUp } from 'react-native-reanimated';
-import { enterEasing } from '@/theme/animations';
+import { durations, enterEasing } from '@/theme/animations';
 
 /**
  * Returns an animation factory that respects the user's reduce-motion preference.
@@ -19,8 +19,8 @@ export function useReducedMotionEntry() {
 
   const entry = (delay: number) =>
     reduceMotion
-      ? FadeIn.duration(300).delay(delay)
-      : FadeInUp.duration(280).delay(delay).easing(enterEasing);
+      ? FadeIn.duration(durations.moderate).delay(delay)
+      : FadeInUp.duration(durations.enter).delay(delay).easing(enterEasing);
 
   return { entry, reduceMotion };
 }

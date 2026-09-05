@@ -6,6 +6,7 @@
  */
 
 import { useEffect } from 'react';
+import { durations } from '@/theme/animations';
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -15,8 +16,8 @@ import {
   Easing,
 } from 'react-native-reanimated';
 
-const ANIMATION_DURATION = 200;
-const SPIN_DURATION = 1000;
+const ANIMATION_DURATION = durations.standard;
+const SPIN_DURATION = durations.loop;
 
 export interface UseSyncingIndicatorOptions {
   visible: boolean;

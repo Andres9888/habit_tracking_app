@@ -24,9 +24,10 @@ import type { WeeklySummaryStripProps } from '../WeeklySummaryStripTypes';
 import { getTrendDirection } from './WeeklySummaryStripUtils';
 import { CardContent } from './CardContent';
 import { styles } from './WeeklySummaryStripStyles';
+import { durations } from '@/theme/animations';
 
 /** Animation timing constants */
-const ENTRANCE_DURATION = 300;
+const ENTRANCE_DURATION = durations.moderate;
 
 export const WeeklySummaryStrip = React.memo(function WeeklySummaryStrip({
   lastWeekCompleted,

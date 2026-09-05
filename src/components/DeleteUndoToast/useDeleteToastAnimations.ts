@@ -9,7 +9,7 @@ import {
   Easing,
 } from 'react-native-reanimated';
 
-import { springs } from '../../theme/animations';
+import { durations, springs } from '../../theme/animations';
 import { DISMISS_THRESHOLD } from './styles';
 
 interface UseDeleteToastAnimationsOptions {
@@ -54,12 +54,12 @@ export function useDeleteToastAnimations({
 
   const handleDismiss = useCallback(() => {
     translateY.value = withSpring(100, springs.standard);
-    opacity.value = withTiming(0, { duration: 200 });
+    opacity.value = withTiming(0, { duration: durations.standard });
     progressWidth.value = 100;
 
     if (onDismissRef.current) {
       if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
-      dismissTimerRef.current = setTimeout(() => onDismissRef.current?.(), 250);
+      dismissTimerRef.current = setTimeout(() => onDismissRef.current?.(), durations.transition);
     }
   }, [translateY, opacity, progressWidth]);
 
@@ -77,7 +77,7 @@ export function useDeleteToastAnimations({
     if (visible) {
       progressWidth.value = 100;
       translateY.value = withSpring(0, springs.standard);
-      opacity.value = withTiming(1, { duration: 200 });
+      opacity.value = withTiming(1, { duration: durations.standard });
       progressWidth.value = withTiming(0, {
         duration,
         easing: Easing.linear,
@@ -87,7 +87,7 @@ export function useDeleteToastAnimations({
       return () => clearTimeout(timer);
     } else {
       translateY.value = withSpring(100, springs.standard);
-      opacity.value = withTiming(0, { duration: 200 });
+      opacity.value = withTiming(0, { duration: durations.standard });
     }
   }, [visible, duration, handleConfirm, translateY, opacity, progressWidth]);
 
@@ -104,7 +104,7 @@ export function useDeleteToastAnimations({
         runOnJS(handleUndo)();
       } else {
         translateY.value = withSpring(0, springs.standard);
-        opacity.value = withTiming(1, { duration: 150 });
+        opacity.value = withTiming(1, { duration: durations.quick });
       }
     });
 

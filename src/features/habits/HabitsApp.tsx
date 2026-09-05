@@ -28,10 +28,10 @@ import { useHabitsAppHandlers } from './useHabitsAppHandlers';
 import { useBottomBarProps } from './useBottomBarProps';
 import { schedulePostLaunchAppPreload } from './postLaunchPreload';
 import { useWarmTemplatesCache } from '../../screens/TemplatesScreen/useWarmTemplatesCache';
-import { enterEasing } from '../../theme/animations';
+import { durations, enterEasing } from '../../theme/animations';
 import { useHomePushParallax } from '../../screens/HabitDetailScreen/detailPushProgress';
 
-const ENTERING = FadeInDown.duration(280).easing(enterEasing);
+const ENTERING = FadeInDown.duration(durations.enter).easing(enterEasing);
 const styles = StyleSheet.create({ flex1: { flex: 1 } });
 
 // eslint-disable-next-line max-lines-per-function

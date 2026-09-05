@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { triggerHaptic } from '@/utils/haptics';
@@ -15,7 +15,7 @@ import { ExpectationCard } from './components/ExpectationCard';
 import { IdentityVote } from './components/IdentityVote';
 import { StickActions } from './components/StickActions';
 import { buildCueOptions, buildRecapLabel } from './MakeItStickSheet.helpers';
-import { styles as s } from './MakeItStickSheet.styles';
+import { enterBody, enterSheet, styles as s } from './MakeItStickSheet.styles';
 import type { MakeItStickSheetProps } from './MakeItStickSheet.types';
 
 export function MakeItStickSheet({
@@ -63,13 +63,13 @@ export function MakeItStickSheet({
 
   return (
     <Animated.View
-      entering={FadeIn.duration(220)}
+      entering={enterSheet}
       style={[s.container, { backgroundColor: colors.background }]}
       testID='make-it-stick-sheet'
     >
       <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}>
         <CelebrationBand topInset={insets.top} />
-        <Animated.View entering={FadeInDown.delay(120).duration(280)}>
+        <Animated.View entering={enterBody}>
           <Text
             numberOfLines={2}
             style={[

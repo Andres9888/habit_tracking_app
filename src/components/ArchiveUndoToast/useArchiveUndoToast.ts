@@ -20,7 +20,7 @@ import {
   DEFAULT_DURATION,
   type ArchiveUndoToastProps,
 } from './types';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
 type UseArchiveUndoToastParams = Omit<ArchiveUndoToastProps, 'habitName'>;
 
@@ -48,7 +48,7 @@ export function useArchiveUndoToast({
 
   const animateOut = useCallback(() => {
     translateY.value = withSpring(100, springs.standard);
-    opacity.value = withTiming(0, { duration: 200 });
+    opacity.value = withTiming(0, { duration: durations.standard });
     progressWidth.value = 100;
   }, [translateY, opacity, progressWidth]);
 
@@ -58,7 +58,7 @@ export function useArchiveUndoToast({
     dismissedRef.current = true;
     animateOut();
     if (onDismissRef.current) {
-      setTimeout(() => onDismissRef.current?.(), 250);
+      setTimeout(() => onDismissRef.current?.(), durations.transition);
     }
   }, [animateOut]);
 
@@ -76,7 +76,7 @@ export function useArchiveUndoToast({
       dismissedRef.current = false;
       progressWidth.value = 100;
       translateY.value = withSpring(0, springs.standard);
-      opacity.value = withTiming(1, { duration: 200 });
+      opacity.value = withTiming(1, { duration: durations.standard });
       progressWidth.value = withTiming(0, {
         duration: duration,
         easing: Easing.linear,
@@ -111,7 +111,7 @@ export function useArchiveUndoToast({
         runOnJS(confirmDismiss)();
       } else {
         translateY.value = withSpring(0, springs.standard);
-        opacity.value = withTiming(1, { duration: 150 });
+        opacity.value = withTiming(1, { duration: durations.quick });
       }
     });
 

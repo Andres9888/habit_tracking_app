@@ -1,7 +1,8 @@
 import type { LevelConfig } from '../types';
+import { durations } from '@/theme/animations';
 
 // Animation constants
-export const RING_ANIMATION_DURATION = 1200;
+export const RING_ANIMATION_DURATION = durations.progress;
 
 // Ring dimensions (88px as per spec)
 export const RING_SIZE = 88;

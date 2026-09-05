@@ -17,10 +17,11 @@ import { useEffect } from 'react';
 import type { SharedValue } from 'react-native-reanimated';
 import { withTiming } from 'react-native-reanimated';
 import { runHighlightGlow } from './highlightAnimations';
+import { durations } from '@/theme/animations';
 
 /** Reduce Motion: how long the static highlight is held before fading. */
 const STATIC_HOLD_MS = 1800;
-const STATIC_FADE_MS = 600;
+const STATIC_FADE_MS = durations.complex;
 
 export interface HighlightAnimationOptions {
   cardScale: SharedValue<number>;

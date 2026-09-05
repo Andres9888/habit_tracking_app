@@ -11,21 +11,28 @@
  */
 
 import { Pressable, Text, View } from 'react-native';
-import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutDown } from 'react-native-reanimated';
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  FadeOut,
+  FadeOutDown,
+} from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import { OPACITY, ANIMATION_DURATION, ANIMATION_VALUES } from '../../../../constants';
+import {
+  OPACITY,
+  ANIMATION_DURATION,
+  ANIMATION_VALUES,
+} from '../../../../constants';
 import { useThemeColors, colors as palette } from '../../../../theme';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { durations } from '@/theme/animations';
 
 interface UpgradePromptProps {
   onClose: () => void;
   onUpgradePress: () => void;
 }
 
-export function UpgradePrompt({
-  onClose,
-  onUpgradePress,
-}: UpgradePromptProps) {
+export function UpgradePrompt({ onClose, onUpgradePress }: UpgradePromptProps) {
   const { colors, isDark } = useThemeColors();
   const { triggerLightImpact } = useHapticFeedback();
 
@@ -39,7 +46,7 @@ export function UpgradePrompt({
       className='absolute inset-0 z-20 items-center justify-end'
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       entering={FadeIn.duration(ANIMATION_DURATION.medium)}
-      exiting={FadeOut.duration(200)}
+      exiting={FadeOut.duration(durations.standard)}
     >
       <Pressable
         accessibilityHint='Tap outside to dismiss'
@@ -53,7 +60,7 @@ export function UpgradePrompt({
         entering={FadeInDown.duration(ANIMATION_DURATION.medium).damping(
           ANIMATION_VALUES.springDamping
         )}
-        exiting={FadeOutDown.duration(220)}
+        exiting={FadeOutDown.duration(durations.transition)}
       >
         <LinearGradient
           className='absolute inset-0 rounded-t-3xl'
@@ -79,8 +86,14 @@ export function UpgradePrompt({
             Track unlimited habits across all areas of your life. Premium
             members build stronger routines and stay consistent 2x longer.
           </Text>
-          <View className='items-center rounded-2xl px-4 py-3' style={{ backgroundColor: colors.status.premiumLight }}>
-            <Text className='text-center text-sm font-semibold' style={{ color: colors.status.premiumText }}>
+          <View
+            className='items-center rounded-2xl px-4 py-3'
+            style={{ backgroundColor: colors.status.premiumLight }}
+          >
+            <Text
+              className='text-center text-sm font-semibold'
+              style={{ color: colors.status.premiumText }}
+            >
               $0 for 7 days · Cancel anytime
             </Text>
           </View>

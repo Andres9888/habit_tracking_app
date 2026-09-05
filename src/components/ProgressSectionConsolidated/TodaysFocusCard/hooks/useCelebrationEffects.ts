@@ -13,7 +13,7 @@ import {
   SharedValue,
 } from 'react-native-reanimated';
 import { triggerHaptic } from '@/utils/haptics';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
 import type { FocusState } from '../../TodaysFocusCardTypes';
 import { CONFETTI_DURATION } from '../TodaysFocusCard.constants';
@@ -46,8 +46,8 @@ export function useCelebrationEffects(
         withSpring(1, springs.standard)
       );
       shareButtonOpacity.value = withDelay(
-        400,
-        withTiming(1, { duration: 300 })
+        durations.emphasis,
+        withTiming(1, { duration: durations.moderate })
       );
 
       return () => clearTimeout(timer);

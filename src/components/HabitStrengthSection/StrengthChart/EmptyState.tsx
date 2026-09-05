@@ -12,6 +12,7 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import { CHART_HEIGHT } from '../constants';
 import { borderRadius } from '@/theme/spacing';
 import { typography, fontFamilies } from '@/theme/typography';
+import { durations } from '@/theme/animations';
 
 /**
  * Displays a message when chart has insufficient data.
@@ -22,7 +23,7 @@ export const EmptyState = React.memo(function EmptyState() {
   return (
     <Animated.View
       accessibilityLabel='No strength history available yet'
-      entering={FadeIn.duration(300)}
+      entering={FadeIn.duration(durations.moderate)}
       style={{
         alignItems: 'center',
         backgroundColor: colors.gray[50],

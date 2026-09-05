@@ -23,6 +23,7 @@ import {
   runOnJS,
 } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
+import { durations } from '@/theme/animations';
 
 export interface UseToastAnimationsOptions {
   visible: boolean;
@@ -35,8 +36,8 @@ export interface UseToastAnimationsResult {
   shouldRender: boolean;
 }
 
-const FADE_IN_DURATION = 200;
-const FADE_OUT_DURATION = 300;
+const FADE_IN_DURATION = durations.standard;
+const FADE_OUT_DURATION = durations.moderate;
 
 export function useToastAnimations({
   visible,

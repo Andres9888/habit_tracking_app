@@ -1,10 +1,11 @@
+import { durations } from '@/theme/animations';
 /**
  * Constants for StrengthComparisonCards
  */
 
 // Animation constants
-export const RING_ANIMATION_DURATION = 1000;
-export const NUMBER_COUNT_UP_DURATION = 800;
+export const RING_ANIMATION_DURATION = durations.progress;
+export const NUMBER_COUNT_UP_DURATION = durations.progress;
 export const RING_SIZE = 56;
 export const RING_STROKE_WIDTH = 4;
 

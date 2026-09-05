@@ -11,16 +11,23 @@ import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '@/theme/spacing';
 import { typography, fontWeights } from '@/theme/typography';
-import { enterEasing } from '@/theme/animations';
+import { durations, enterEasing } from '@/theme/animations';
 
 const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).easing(enterEasing);
+  FadeInUp.duration(durations.enter).delay(delay).easing(enterEasing);
 
 export function EmptyState() {
   const { colors, isDark } = useThemeColors();
 
   return (
-    <View style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 40 }}>
+    <View
+      style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 24,
+        paddingVertical: 40,
+      }}
+    >
       <Animated.View
         entering={anim(0)}
         style={{
@@ -37,7 +44,11 @@ export function EmptyState() {
           width: 64,
         }}
       >
-        <TrendingUp color={isDark ? '#6EE7B7' : '#10b981'} size={iconSizes.xl} strokeWidth={1.5} />
+        <TrendingUp
+          color={isDark ? '#6EE7B7' : '#10b981'}
+          size={iconSizes.xl}
+          strokeWidth={1.5}
+        />
       </Animated.View>
       <Animated.Text
         entering={anim(60)}

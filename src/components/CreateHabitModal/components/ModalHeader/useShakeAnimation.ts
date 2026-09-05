@@ -2,7 +2,12 @@
  * Shake animation hook for validation errors
  */
 import { useCallback } from 'react';
-import { useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
+import {
+  useSharedValue,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
+import { durations } from '@/theme/animations';
 
 export const useShakeAnimation = (
   triggerWarning: () => void,
@@ -15,11 +20,11 @@ export const useShakeAnimation = (
     onValidationError?.();
 
     shakeValue.value = withSequence(
-      withTiming(10, { duration: 50 }),
-      withTiming(-10, { duration: 50 }),
-      withTiming(8, { duration: 50 }),
-      withTiming(-8, { duration: 50 }),
-      withTiming(0, { duration: 50 })
+      withTiming(10, { duration: durations.micro }),
+      withTiming(-10, { duration: durations.micro }),
+      withTiming(8, { duration: durations.micro }),
+      withTiming(-8, { duration: durations.micro }),
+      withTiming(0, { duration: durations.micro })
     );
   }, [shakeValue, triggerWarning, onValidationError]);
 

@@ -36,7 +36,7 @@ export const TIMING_CONFIGS = {
   } as WithTimingConfig,
   /** Slow, deliberate animation */
   slow: {
-    duration: 500,
+    duration: durations.complex,
     easing: Easing.inOut(Easing.ease),
   } as WithTimingConfig,
 } as const;

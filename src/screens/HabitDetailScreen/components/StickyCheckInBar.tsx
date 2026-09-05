@@ -14,6 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { withAlpha } from '../../../theme/colors';
 import { HeroCheckInToggle } from './DetailHeroBanner/HeroCheckInToggle';
+import { durations } from '@/theme/animations';
 
 /** Height of the transparent → surface fade above the solid block. */
 const FADE_HEIGHT = 24;
@@ -38,8 +39,8 @@ export function StickyCheckInBar({
   return (
     <Animated.View
       accessibilityViewIsModal={false}
-      entering={reduceMotion ? undefined : FadeIn.duration(180)}
-      exiting={reduceMotion ? undefined : FadeOut.duration(140)}
+      entering={reduceMotion ? undefined : FadeIn.duration(durations.reveal)}
+      exiting={reduceMotion ? undefined : FadeOut.duration(durations.quick)}
       pointerEvents='box-none'
       style={{ bottom: 0, left: 0, position: 'absolute', right: 0 }}
       testID='sticky-check-in-bar'

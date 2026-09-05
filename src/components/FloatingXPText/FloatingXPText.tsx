@@ -24,6 +24,7 @@ import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { colors } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { typography } from '@/theme/typography';
+import { durations } from '@/theme/animations';
 
 export interface FloatingXPTextProps {
   /** XP value to display (e.g., 10, 50, 100) */
@@ -53,17 +54,21 @@ export function FloatingXPText({
   useEffect(() => {
     if (reduceMotion) {
       // Skip animation, just show briefly then call complete
-      opacity.value = withTiming(0, { duration: 100 }, (finished) => {
-        if (finished && onComplete) {
-          runOnJS(onComplete)();
+      opacity.value = withTiming(
+        0,
+        { duration: durations.instant },
+        (finished) => {
+          if (finished && onComplete) {
+            runOnJS(onComplete)();
+          }
         }
-      });
+      );
       return;
     }
 
     // Animate upward movement
     translateY.value = withTiming(-40, {
-      duration: 800,
+      duration: durations.progress,
       easing: Easing.out(Easing.cubic),
     });
 
@@ -71,7 +76,7 @@ export function FloatingXPText({
     opacity.value = withTiming(
       0,
       {
-        duration: 800,
+        duration: durations.progress,
         easing: Easing.in(Easing.cubic),
       },
       (finished) => {
@@ -115,7 +120,10 @@ export function FloatingXPText({
         <Animated.Text
           style={[
             styles.xpText,
-            isDark && { color: colors.primary[400], textShadowColor: colors.primary[400] },
+            isDark && {
+              color: colors.primary[400],
+              textShadowColor: colors.primary[400],
+            },
           ]}
         >
           +{value} XP

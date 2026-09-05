@@ -8,7 +8,7 @@ import {
   Easing,
 } from 'react-native-reanimated';
 import { RING_ANIMATION_DURATION } from './constants';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
 export function useProgressAnimations(
   clampedStrength: number,
@@ -32,7 +32,7 @@ export function useProgressAnimations(
 
     // Emoji scale animation
     emojiScale.value = withDelay(
-      300,
+      durations.moderate,
       withSpring(1, springs.celebration)
     );
   }, [clampedStrength, reduceMotion]);

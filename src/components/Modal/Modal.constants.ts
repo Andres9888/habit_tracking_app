@@ -4,7 +4,7 @@
  */
 
 import { Dimensions } from 'react-native';
-import { springs } from '../../theme/animations';
+import { durations, springs } from '../../theme/animations';
 
 export const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } =
   Dimensions.get('window');
@@ -32,7 +32,7 @@ export const DISMISS_THRESHOLD = 120;
 export const VELOCITY_THRESHOLD = 800;
 
 /** Full-screen modal slide duration — matches runEnterAnimation / runExitAnimation. */
-export const FULL_SCREEN_ENTER_MS = 350;
+export const FULL_SCREEN_ENTER_MS = durations.sheet;
 
 /**
  * Per-variant exit animation duration (ms). Used to defer unmount until the

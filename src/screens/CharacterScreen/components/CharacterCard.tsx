@@ -12,7 +12,7 @@ export function CharacterCard({ data }: CharacterCardProps) {
 
   return (
     <Animated.View
-      entering={FadeInDown.delay(60)
+      entering={FadeInDown.delay(durations.stagger)
         .duration(durations.enter)
         .easing(enterEasing)}
       style={[

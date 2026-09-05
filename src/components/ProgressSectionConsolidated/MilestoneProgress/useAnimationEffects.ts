@@ -14,6 +14,7 @@ import {
   PULSE_DURATION,
 } from './animation.constants';
 import type { UseAnimationEffectsParams } from './useAnimationEffects.types';
+import { durations } from '@/theme/animations';
 
 export const useAnimationEffects = ({
   animationValues,
@@ -90,7 +91,7 @@ export const useAnimationEffects = ({
 
     celebrationScale.value = withSequence(
       withSpring(1.2, Springs.celebration),
-      withTiming(1, { duration: 500 })
+      withTiming(1, { duration: durations.complex })
     );
 
     if (onMilestoneHit) {

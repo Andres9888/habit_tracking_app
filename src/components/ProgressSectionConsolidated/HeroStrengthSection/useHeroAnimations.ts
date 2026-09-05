@@ -19,7 +19,7 @@ import {
   EMOJI_SCALE_DELAY,
   CIRCUMFERENCE,
 } from './constants';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
 interface UseHeroAnimationsParams {
   clampedStrength: number;
@@ -39,7 +39,8 @@ export function useHeroAnimations({
     void AccessibilityInfo.isReduceMotionEnabled()
       .then(setReduceMotion)
       .catch((error) => {
-        if (__DEV__) console.warn('Error checking reduce motion setting:', error);
+        if (__DEV__)
+          console.warn('Error checking reduce motion setting:', error);
         setReduceMotion(false);
       });
   }, []);
@@ -60,9 +61,9 @@ export function useHeroAnimations({
       withSpring(1, springs.celebration)
     );
     progressBarWidth.value = withDelay(
-      200,
+      durations.standard,
       withTiming(progressPercent, {
-        duration: 800,
+        duration: durations.progress,
         easing: Easing.out(Easing.cubic),
       })
     );

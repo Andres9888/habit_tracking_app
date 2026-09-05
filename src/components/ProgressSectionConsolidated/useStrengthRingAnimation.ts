@@ -12,8 +12,9 @@ import {
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import type { ProgressEmojiSet } from '../../utils/progressEmojis';
 import { getLevelFromStrength } from './types';
+import { durations } from '@/theme/animations';
 
-const RING_ANIMATION_DURATION = 800;
+const RING_ANIMATION_DURATION = durations.progress;
 const RING_SIZE = 56;
 const STROKE_WIDTH = 6;
 const RADIUS = (RING_SIZE - STROKE_WIDTH) / 2;

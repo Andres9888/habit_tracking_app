@@ -15,7 +15,7 @@ import {
   withDelay,
   Easing as ReanimatedEasing,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
 /**
  * Dramatic level-up celebration: fade+shrink → shake left/right → spring back enlarged.
@@ -27,36 +27,36 @@ export function runLevelUpAnimation(
   rotation: { value: number }
 ) {
   opacity.value = withTiming(0.3, {
-    duration: 150,
+    duration: durations.quick,
     easing: ReanimatedEasing.out(ReanimatedEasing.ease),
   });
   scale.value = withTiming(0.6, {
-    duration: 150,
+    duration: durations.quick,
     easing: ReanimatedEasing.out(ReanimatedEasing.ease),
   });
   rotation.value = withSequence(
     withTiming(-8, {
-      duration: 80,
+      duration: durations.tick,
       easing: ReanimatedEasing.inOut(ReanimatedEasing.ease),
     }),
     withTiming(8, {
-      duration: 80,
+      duration: durations.tick,
       easing: ReanimatedEasing.inOut(ReanimatedEasing.ease),
     }),
     withTiming(0, {
-      duration: 60,
+      duration: durations.tick,
       easing: ReanimatedEasing.out(ReanimatedEasing.ease),
     })
   );
   opacity.value = withDelay(
-    150,
+    durations.quick,
     withTiming(1, {
-      duration: 200,
+      duration: durations.standard,
       easing: ReanimatedEasing.out(ReanimatedEasing.ease),
     })
   );
   scale.value = withDelay(
-    150,
+    durations.quick,
     withSequence(
       withSpring(1.4, springs.celebration),
       withSpring(1, springs.celebration)
@@ -68,7 +68,7 @@ export function runLevelUpAnimation(
 export function runSubtlePulse(scale: { value: number }) {
   scale.value = withSequence(
     withTiming(1.08, {
-      duration: 100,
+      duration: durations.instant,
       easing: ReanimatedEasing.out(ReanimatedEasing.ease),
     }),
     withSpring(1, springs.standard)
