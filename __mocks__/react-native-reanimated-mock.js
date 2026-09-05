@@ -64,9 +64,15 @@ module.exports = {
   useAnimatedScrollHandler: () => ({}),
   useAnimatedGestureHandler: () => ({}),
   useReducedMotion: () => false,
-  withTiming: (value) => value,
-  withSpring: (value) => value,
-  withDelay: (delay, value) => value,
+  withTiming: (value, _config, callback) => {
+    if (callback) callback(true);
+    return value;
+  },
+  withSpring: (value, _config, callback) => {
+    if (callback) callback(true);
+    return value;
+  },
+  withDelay: (delay, animation) => animation,
   withRepeat: (value) => value,
   withSequence: (...values) => values[values.length - 1],
   cancelAnimation: () => {},

@@ -95,6 +95,19 @@ jest.mock('react-native-gesture-handler', () => {
   };
 });
 
+// Mock react-native-gesture-handler's ReanimatedSwipeable subpath (separate
+// module resolution from the bare 'react-native-gesture-handler' mock above).
+// Reduced to a passthrough View — component-level tests exercise
+// renderRightActions/renderLeftActions manually rather than via real gestures.
+jest.mock('react-native-gesture-handler/ReanimatedSwipeable', () => {
+  const { View } = require('react-native');
+  return {
+    __esModule: true,
+    default: View,
+    SwipeDirection: { LEFT: 'left', RIGHT: 'right' },
+  };
+});
+
 // Mock @expo/vector-icons
 jest.mock(
   '@expo/vector-icons',
@@ -337,9 +350,15 @@ jest.mock('react-native-reanimated', () => {
       const style = cb();
       return style || {};
     },
-    withTiming: (value) => value,
-    withSpring: (value) => value,
-    withDelay: (delay, value) => value,
+    withTiming: (value, _config, callback) => {
+      callback?.(true);
+      return value;
+    },
+    withSpring: (value, _config, callback) => {
+      callback?.(true);
+      return value;
+    },
+    withDelay: (delay, animation) => animation,
     withRepeat: (value) => value,
     withSequence: (...values) => values[values.length - 1],
     cancelAnimation: jest.fn(),
