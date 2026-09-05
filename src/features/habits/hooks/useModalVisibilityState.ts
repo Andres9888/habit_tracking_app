@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   usePendingFocusHabit,
   type PendingFocusHabitState,
 } from './usePendingFocusHabit';
 
 export interface ModalVisibilityState extends PendingFocusHabitState {
+  isSettingsOpen: boolean;
+  setIsSettingsOpen: (v: boolean) => void;
   isCreateHabitOpen: boolean;
   setIsCreateHabitOpen: (v: boolean) => void;
   isHabitCalendarOpen: boolean;
@@ -32,6 +34,7 @@ export interface ModalVisibilityState extends PendingFocusHabitState {
  * Extracted from useHabitsModalsState for decomposition.
  */
 export function useModalVisibilityState(): ModalVisibilityState {
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isCreateHabitOpen, setIsCreateHabitOpen] = useState(false);
   const [isHabitCalendarOpen, setIsHabitCalendarOpen] = useState(false);
   const [isHabitDetailOpen, setIsHabitDetailOpen] = useState(false);
@@ -49,27 +52,47 @@ export function useModalVisibilityState(): ModalVisibilityState {
     setShowTemplatesScreen(false)
   );
 
-  return {
-    ...pendingFocus,
-    isCreateHabitOpen,
-    isHabitCalendarOpen,
-    isHabitDetailOpen,
-    setIsCreateHabitOpen,
-    setIsHabitCalendarOpen,
-    setIsHabitDetailOpen,
-    setShowEditScreen,
-    setShowHapticTest,
-    setShowPauseModal,
-    setShowQuickActions,
-    setShowShareCard,
-    setShowTemplatesScreen,
-    setShowVisualizationExercise,
-    showEditScreen,
-    showHapticTest,
-    showPauseModal,
-    showQuickActions,
-    showShareCard,
-    showTemplatesScreen,
-    showVisualizationExercise,
-  };
+  // Memoised so the modals state object built from it can be memoised too.
+  // `useState` setters are stable, so only the flags and `pendingFocus` move.
+  return useMemo(
+    () => ({
+      ...pendingFocus,
+      isCreateHabitOpen,
+      isHabitCalendarOpen,
+      isHabitDetailOpen,
+      isSettingsOpen,
+      setIsCreateHabitOpen,
+      setIsHabitCalendarOpen,
+      setIsHabitDetailOpen,
+      setIsSettingsOpen,
+      setShowEditScreen,
+      setShowHapticTest,
+      setShowPauseModal,
+      setShowQuickActions,
+      setShowShareCard,
+      setShowTemplatesScreen,
+      setShowVisualizationExercise,
+      showEditScreen,
+      showHapticTest,
+      showPauseModal,
+      showQuickActions,
+      showShareCard,
+      showTemplatesScreen,
+      showVisualizationExercise,
+    }),
+    [
+      isCreateHabitOpen,
+      isHabitCalendarOpen,
+      isHabitDetailOpen,
+      isSettingsOpen,
+      pendingFocus,
+      showEditScreen,
+      showHapticTest,
+      showPauseModal,
+      showQuickActions,
+      showShareCard,
+      showTemplatesScreen,
+      showVisualizationExercise,
+    ]
+  );
 }

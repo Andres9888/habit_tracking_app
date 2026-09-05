@@ -299,9 +299,10 @@ export function useHabitsListState(): HabitsListState {
     weekDateStrings: deferredWeekDateStrings,
   });
 
-  const archiveState = useHabitsArchive(habits);
+  const { handleArchive } = useHabitsArchive(habits);
   const { handleDelete } = useHabitDelete(habits);
-  const rewardState = useRewardToast(celebrationsEnabled, getStreak);
+  const { dismissRewardToast, notifyWeekCompletion, rewardToast } =
+    useRewardToast(celebrationsEnabled, getStreak);
 
   const openCreateHabitScreen = useCallback(() => {
     // Handled by parent component
@@ -439,41 +440,101 @@ export function useHabitsListState(): HabitsListState {
     []
   );
 
-  return {
-    averageStrengthPercent: headerStats.averageStrengthPercent,
-    canNavigateForward: weekDatesState.canNavigateForward,
-    celebrationsEnabled,
-    compactView,
-    completedToday: headerStats.completedToday,
-    completionByDay: headerStats.completionByDay,
-    completionSoundEnabled,
-    completionSoundType,
-    contentPadding,
-    currentStreak: headerStats.currentStreak,
-    dayShape,
-    habitCompletionIcon,
-    habits,
-    habitSortMode,
-    isHabitsLoading,
-    showGradientFill,
-    showHabitStrengthPercentage,
-    showWeekCompletionBar,
-    userProgressEmojis,
-    weekDates: weekDatesState.weekDates,
-    weekDateStrings: deferredWeekDateStrings,
-    ...archiveState,
-    ...rewardState,
-    getHabitStatus,
-    getStreak,
-    handleDelete,
-    handleDragEnd,
-    handleHabitPress,
-    handleJumpToToday: weekDatesState.handleJumpToToday,
-    handleNextWeek: weekDatesState.handleNextWeek,
-    handlePreviousWeek: weekDatesState.handlePreviousWeek,
-    isPremiumUser,
-    openCreateHabitScreen,
-    reduceMotionPreference,
-    toggleHabit,
-  };
+  const {
+    averageStrengthPercent,
+    completedToday,
+    completionByDay,
+    currentStreak,
+  } = headerStats;
+  const {
+    canNavigateForward,
+    handleJumpToToday,
+    handleNextWeek,
+    handlePreviousWeek,
+    weekDates,
+  } = weekDatesState;
+
+  // Memoised: `useHabitsApp` memoises on this object, and a fresh literal here
+  // meant that memo never hit — every Home render rebuilt the `list` wrapper
+  // and pushed new props through HabitsList.
+  return useMemo(
+    () => ({
+      averageStrengthPercent,
+      canNavigateForward,
+      celebrationsEnabled,
+      compactView,
+      completedToday,
+      completionByDay,
+      completionSoundEnabled,
+      completionSoundType,
+      contentPadding,
+      currentStreak,
+      dayShape,
+      habitCompletionIcon,
+      habits,
+      habitSortMode,
+      isHabitsLoading,
+      showGradientFill,
+      showHabitStrengthPercentage,
+      showWeekCompletionBar,
+      userProgressEmojis,
+      weekDates,
+      weekDateStrings: deferredWeekDateStrings,
+      handleArchive,
+      dismissRewardToast,
+      notifyWeekCompletion,
+      rewardToast,
+      getHabitStatus,
+      getStreak,
+      handleDelete,
+      handleDragEnd,
+      handleHabitPress,
+      handleJumpToToday,
+      handleNextWeek,
+      handlePreviousWeek,
+      isPremiumUser,
+      openCreateHabitScreen,
+      reduceMotionPreference,
+      toggleHabit,
+    }),
+    [
+      averageStrengthPercent,
+      canNavigateForward,
+      celebrationsEnabled,
+      compactView,
+      completedToday,
+      completionByDay,
+      completionSoundEnabled,
+      completionSoundType,
+      contentPadding,
+      currentStreak,
+      dayShape,
+      deferredWeekDateStrings,
+      dismissRewardToast,
+      getHabitStatus,
+      getStreak,
+      habitCompletionIcon,
+      habits,
+      habitSortMode,
+      handleArchive,
+      handleDelete,
+      handleDragEnd,
+      handleHabitPress,
+      handleJumpToToday,
+      handleNextWeek,
+      handlePreviousWeek,
+      isHabitsLoading,
+      isPremiumUser,
+      notifyWeekCompletion,
+      openCreateHabitScreen,
+      reduceMotionPreference,
+      rewardToast,
+      showGradientFill,
+      showHabitStrengthPercentage,
+      showWeekCompletionBar,
+      toggleHabit,
+      userProgressEmojis,
+      weekDates,
+    ]
+  );
 }

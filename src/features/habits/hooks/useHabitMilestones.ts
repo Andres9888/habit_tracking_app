@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { Habit } from '../types';
 import { useMilestoneDetection } from '../../../hooks/useMilestoneDetection';
@@ -43,10 +43,13 @@ export function useHabitMilestones(habits: Habit[], isLoading: boolean) {
     // milestone detected - celebration UI handles display
   }, [milestone]);
 
-  const resetMilestone = () => {
+  // Returned as `clearMilestone`, which is a dependency of the memoised
+  // `modals` object in useHabitsModalsState (and of the handlers built from
+  // it). A fresh closure per render would defeat both memos.
+  const resetMilestone = useCallback(() => {
     clearMilestone();
     setLastUpdatedHabit(null);
-  };
+  }, [clearMilestone]);
 
   return { clearMilestone: resetMilestone, milestone };
 }

@@ -19,7 +19,8 @@ module.exports = function (api) {
     // to their individual icon modules so production bundles include only the
     // icons the app actually uses.
     plugins.push('./scripts/babel/lucide-direct-imports.cjs');
-    plugins.push('react-native-paper/babel');
+    // Same problem, same fix: `date-fns`'s barrel drags all 245 modules in.
+    plugins.push('./scripts/babel/date-fns-direct-imports.cjs');
   }
   // Must be last per Reanimated docs.
   plugins.push('react-native-reanimated/plugin');

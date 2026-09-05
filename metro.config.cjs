@@ -95,6 +95,30 @@ const materialCommunityIconsStubPath = path.join(
   'materialCommunityIconsStub.js'
 );
 
+const stubPath = (fileName) => path.join(__dirname, 'src', 'lib', fileName);
+
+// Web-only code that Metro cannot tree-shake out of native bundles. Each stub
+// documents its own rationale; all of them are bypassed on `platform === 'web'`
+// so the browser build keeps resolving the real implementations.
+const nativeOnlyModuleStubs = new Map([
+  ['@sentry-internal/replay', stubPath('sentryReplayStub.js')],
+  ['@sentry-internal/replay-canvas', stubPath('sentryReplayCanvasStub.js')],
+  ['@sentry-internal/feedback', stubPath('sentryFeedbackStub.js')],
+]);
+
+// `react-native-purchases/dist/purchases.js` requires this relatively, so the
+// origin module has to be checked alongside the specifier.
+const revenueCatBrowserNativeModuleStubPath = stubPath(
+  'revenueCatBrowserNativeModuleStub.js'
+);
+
+const isRevenueCatBrowserNativeModule = (context, moduleName) =>
+  moduleName === './browser/nativeModule' &&
+  typeof context.originModulePath === 'string' &&
+  context.originModulePath.includes(
+    `react-native-purchases${path.sep}dist${path.sep}`
+  );
+
 // Keep existing resolver customizations
 config.resolver.assetExts.push('ttf', 'otf', 'woff', 'woff2', 'wav');
 config.resolver.sourceExts.push('jsx', 'js', 'ts', 'tsx', 'json');
@@ -127,6 +151,20 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
       type: 'sourceFile',
       filePath: materialCommunityIconsStubPath,
     };
+  }
+
+  if (platform !== 'web') {
+    const nativeStub = nativeOnlyModuleStubs.get(moduleName);
+    if (nativeStub) {
+      return { type: 'sourceFile', filePath: nativeStub };
+    }
+
+    if (isRevenueCatBrowserNativeModule(context, moduleName)) {
+      return {
+        type: 'sourceFile',
+        filePath: revenueCatBrowserNativeModuleStubPath,
+      };
+    }
   }
 
   if (typeof defaultResolveRequest === 'function') {

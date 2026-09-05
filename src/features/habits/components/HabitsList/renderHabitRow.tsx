@@ -3,14 +3,18 @@
  *
  * Wraps the output of `useHabitRenderItem` in an `Animated.View` that applies
  * entrance opacity/translateY animations **only** to the most recently created
- * habit (identified by `justCreatedHabitId`).  All other rows render without
- * the animated wrapper to avoid unnecessary native-driver overhead.
+ * habit (identified by `justCreatedHabitId`).  The wrapper is always rendered —
+ * only its `style` is conditional — so the tree shape stays stable: dropping
+ * the wrapper when the highlight expires would remount the whole card subtree
+ * and reset its gesture and animation state.
  *
  * List entrance: staggered FadeInDown on the initial batch only; rows mounted
  * later by FlatList virtualization appear instantly (no entering animation).
  *
- * Exit animation: All rows use Reanimated layout animation (FadeOutRight)
- * so that deletions/archiving feel smooth rather than items vanishing.
+ * Exit animation: rows use a Reanimated layout animation (FadeOutRight) so
+ * deletions/archiving feel smooth rather than items vanishing — except while a
+ * focus request is pending, when the list remounts wholesale and every row
+ * would otherwise run an exit animation nobody sees.
  */
 
 import React, { type MutableRefObject } from 'react';
@@ -29,12 +33,15 @@ interface RenderHabitRowOptions {
   habitRowTranslateY: Animated.Value;
   renderItem: (p: RenderItemParams<Habit>) => React.ReactNode;
   renderParams: RenderItemParams<Habit>;
+  /** Defaults to true; false while the list is about to remount for focus. */
+  exitAnimationEnabled?: boolean;
 }
 
 const EXIT_ANIMATION = FadeOutRight.duration(200).damping(18).stiffness(150);
 
 export function renderHabitRow(opts: RenderHabitRowOptions) {
   const {
+    exitAnimationEnabled = true,
     item,
     justCreatedHabitId,
     onHabitRowLayout,
@@ -56,10 +63,12 @@ export function renderHabitRow(opts: RenderHabitRowOptions) {
     onHabitRowLayout?.(item._id, event.nativeEvent.layout.height);
   };
 
+  const content = renderItem(renderParams);
+
   return (
     <Reanimated.View
       entering={enterAnimation}
-      exiting={EXIT_ANIMATION}
+      exiting={exitAnimationEnabled ? EXIT_ANIMATION : undefined}
       onLayout={handleLayout}
     >
       <Animated.View
@@ -72,7 +81,7 @@ export function renderHabitRow(opts: RenderHabitRowOptions) {
             : undefined
         }
       >
-        {renderItem(renderParams)}
+        {content}
       </Animated.View>
     </Reanimated.View>
   );

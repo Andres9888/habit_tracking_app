@@ -40,10 +40,10 @@ try {
     ],
     {
       cwd: projectRoot,
-      // NODE_ENV must be production *before* Babel loads: the lucide
-      // direct-import rewrite and react-native-paper/babel plugins in
-      // babel.config.cjs are gated on it at config-load time. Without this we
-      // would measure a bundle that is not what ships.
+      // NODE_ENV must be production *before* Babel loads: the lucide and
+      // date-fns direct-import rewrites in babel.config.cjs are gated on it at
+      // config-load time. Without this we would measure a bundle that is not
+      // what ships.
       env: { ...process.env, NODE_ENV: 'production' },
       stdio: 'inherit',
     }

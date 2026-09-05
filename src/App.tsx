@@ -26,12 +26,10 @@ inputDefaults.defaultProps = {
 };
 
 export default function App() {
+  // Mount the providers immediately and gate only the content: Clerk session
+  // restore, the Convex client's auth + socket handshake, and query-cache
+  // hydration all start during the font wait instead of after it.
   const ready = useStartupReady();
-  if (!ready) return null;
 
-  return (
-    <AppProviders>
-      <AuthGate />
-    </AppProviders>
-  );
+  return <AppProviders>{ready ? <AuthGate /> : null}</AppProviders>;
 }

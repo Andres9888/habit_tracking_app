@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { Habit, ShareCardData } from '../types';
 
 export interface HabitSelectionState {
@@ -34,18 +34,30 @@ export function useHabitSelectionState(): HabitSelectionState {
     null
   );
 
-  return {
-    habitDetailInitialTab,
-    habitToEdit,
-    habitToPause,
-    quickActionsHabit,
-    selectedHabit,
-    setHabitDetailInitialTab,
-    setHabitToEdit,
-    setHabitToPause,
-    setQuickActionsHabit,
-    setSelectedHabit,
-    setShareCardData,
-    shareCardData,
-  };
+  // Memoised: the modals state object built on top of this is only stable if
+  // this one is, and `useState` setters already have stable identities.
+  return useMemo(
+    () => ({
+      habitDetailInitialTab,
+      habitToEdit,
+      habitToPause,
+      quickActionsHabit,
+      selectedHabit,
+      setHabitDetailInitialTab,
+      setHabitToEdit,
+      setHabitToPause,
+      setQuickActionsHabit,
+      setSelectedHabit,
+      setShareCardData,
+      shareCardData,
+    }),
+    [
+      habitDetailInitialTab,
+      habitToEdit,
+      habitToPause,
+      quickActionsHabit,
+      selectedHabit,
+      shareCardData,
+    ]
+  );
 }

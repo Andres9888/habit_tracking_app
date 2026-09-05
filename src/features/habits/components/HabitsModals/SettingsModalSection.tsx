@@ -1,7 +1,7 @@
 /* eslint-disable max-lines, max-lines-per-function */
 import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
-import { useConvex, useQuery } from 'convex/react';
+import { useConvex } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { DEFAULT_SETTINGS } from '../../../../../convex/settings/types';
@@ -9,8 +9,6 @@ import { useStreakReminderSettings } from '../../../../hooks/useStreakReminders'
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import { exportData, prepareExportData } from '../../../../utils/exportData';
 import type { SettingsModalSettingsDocument } from '../../../../components/SettingsModal/types';
-import { scheduleWhenIdle } from '../../../../lib/timing/scheduleWhenIdle';
-import { useSettingsOpen } from '../../state/settingsOpenStore';
 import type { SettingsModalSectionProps } from './HabitsModals.types';
 
 type HabitDoc = Doc<'habits'>;
@@ -18,11 +16,6 @@ type HabitDoc = Doc<'habits'>;
 const SettingsModal = lazy(
   () => import('../../../../components/SettingsModal')
 );
-
-// After postLaunchPreload has warmed the chunk (1200ms), before a user is
-// likely to reach for the gear.
-const SETTINGS_IDLE_MOUNT_FALLBACK_MS = 1600;
-const SETTINGS_IDLE_MOUNT_TIMEOUT_MS = 4000;
 
 function mergeUniqueHabits(
   activeHabits: HabitDoc[],
@@ -71,29 +64,20 @@ function getTrackingStartDate(habits: HabitDoc[]): string {
  * Settings modal section - handles app settings + sort sheet
  */
 export function SettingsModalSection({
+  archivedHabitsCount,
   settings,
+  showSettings,
   closeSettings,
   onSettingsChange,
   onPremiumUpsell,
 }: SettingsModalSectionProps) {
-  // Subscribed here, not in Home's state: opening must not re-render the list.
-  const showSettings = useSettingsOpen();
-  const archivedHabitsCount = useQuery(api.habits.listArchivedCount, {}) ?? 0;
   const streakReminders = useStreakReminderSettings();
   const convex = useConvex();
+  const [hasOpened, setHasOpened] = useState(showSettings);
 
-  // Mount the whole settings tree once, hidden, after launch has settled.
-  // From then on `keepMounted` keeps it alive, so a tap only plays the enter
-  // animation: no chunk load, no skeleton, no content commit on the tap.
-  const [idleMounted, setIdleMounted] = useState(false);
-  useEffect(
-    () =>
-      scheduleWhenIdle(() => setIdleMounted(true), {
-        fallbackDelayMs: SETTINGS_IDLE_MOUNT_FALLBACK_MS,
-        timeoutMs: SETTINGS_IDLE_MOUNT_TIMEOUT_MS,
-      }),
-    []
-  );
+  useEffect(() => {
+    if (showSettings) setHasOpened(true);
+  }, [showSettings]);
 
   const runHabitsExport = useCallback(
     async (format: 'csv' | 'json') => {
@@ -162,12 +146,11 @@ export function SettingsModalSection({
     );
   }, [runHabitsExport]);
 
-  if (!showSettings && !idleMounted) return null;
+  if (!showSettings && !hasOpened) return null;
 
   return (
     <Suspense fallback={null}>
       <SettingsModal
-        keepMounted
         archivedHabitsCount={archivedHabitsCount}
         completionSoundEnabled={
           settings?.completionSoundEnabled ??

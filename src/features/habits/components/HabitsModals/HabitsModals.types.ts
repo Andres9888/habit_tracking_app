@@ -11,7 +11,9 @@ export interface HabitsModalsProps {
 
 /** Props for the SettingsModalSection component */
 export interface SettingsModalSectionProps {
+  archivedHabitsCount: number;
   settings: HabitsModalsState['settings'];
+  showSettings: boolean;
   closeSettings: () => void;
   onSettingsChange: HabitsModalsState['onSettingsChange'];
   onPremiumUpsell?: () => void;
