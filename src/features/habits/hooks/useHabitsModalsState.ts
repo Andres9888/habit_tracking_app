@@ -27,6 +27,7 @@ import {
   useSyncAllHabitStates,
 } from './modalsStateHelpers';
 import { getLocalDateString } from '@/utils/getLocalDateString';
+import { scheduleWhenIdle } from '../../../lib/timing/scheduleWhenIdle';
 import { useOptimisticToggleMutation } from '../../../lib/optimistic';
 import { sanitizeSettingsPayload } from '../../../lib/settings/sanitizeSettingsPayload';
 import { updateSettingsWithFallback } from '../../../lib/settings/updateSettingsWithFallback';
@@ -66,9 +67,11 @@ export function useHabitsModalsState({
   const trackingDates = useMemo(() => generateDateStrings(365), [todayKey]);
   const todayMidnight = useMemo(() => getTodayMidnight(), [todayKey]);
 
-  // The modals' tracking subscription is a ~455-day live query. Only the
-  // calendar modal, the detail screen and quick actions read it, so it stays
-  // skipped until one of them has been opened; the latch (a render-cache ref,
+  // The modals' tracking subscription is a ~455-day live query. It never
+  // rides the first-paint path: it stays off until either the home screen has
+  // settled (scheduleWhenIdle fires, or its fallback timer does) or one of
+  // its consumers — the calendar modal, the detail screen, quick actions —
+  // opens first, whichever happens first. The latch (a render-cache ref,
   // monotonic and idempotent) keeps it warm afterwards so reopening a modal
   // never re-subscribes. writeLatest:false keeps it off the shared
   // `habits.getTracking:latest` slot, which the habits list owns.
@@ -79,10 +82,19 @@ export function useHabitsModalsState({
   const trackingWarmedRef = useRef(false);
   if (trackingConsumerOpen) trackingWarmedRef.current = true;
 
+  const [idleWarmed, setIdleWarmed] = useState(false);
+  useEffect(() => {
+    const cancel = scheduleWhenIdle(() => setIdleWarmed(true), {
+      fallbackDelayMs: 1500,
+      timeoutMs: 4000,
+    });
+    return cancel;
+  }, []);
+
   const { tracking, getStreak, isCompleted } = useHabitsTracking(
     trackingDates,
     todayMidnight,
-    { enabled: trackingWarmedRef.current, writeLatest: false }
+    { enabled: trackingWarmedRef.current || idleWarmed, writeLatest: false }
   );
 
   // Wrap toggle mutation as plain async function
