@@ -25,6 +25,8 @@ export interface RateLimitConfig {
 export const RATE_LIMITS = {
   'habit.batch': { limit: 10, windowMs: 60_000 },
   'habit.create': { limit: 20, windowMs: 60_000 },
+  /** remove/restore rewrite a habit's whole history; bound the churn. */
+  'habit.lifecycle': { limit: 30, windowMs: 60_000 },
   'habit.toggle': { limit: 120, windowMs: 60_000 },
   'habit.update': { limit: 60, windowMs: 60_000 },
   'settings.update': { limit: 60, windowMs: 60_000 },

@@ -22,10 +22,13 @@ catalog, and buy one premium tier through RevenueCat.
   public mutation argument. `entitlementWriteGuard.test.ts` enforces this.
 - `enforceRateLimit(ctx, userId, action)` in `convex/lib/rateLimit.ts` with
   the action allowlist `RATE_LIMITS`.
-- HTTP surface is `convex/router.ts`: `/image-upload` (bearer JWT, streamed
-  10 MB cap, magic-byte sniff, internal admission + commit mutations) and the
-  RevenueCat webhook (`t=..,v1=..` HMAC over `ts.body`, 300 s skew, event-id
-  replay table).
+- HTTP surface is `convex/router.ts`. On `main` that is the RevenueCat
+  webhook only (HMAC-SHA256 over the raw body, timing-safe compare, event-id
+  replay table). The `perf-round-sep5` branch adds `/image-upload` (bearer
+  JWT, streamed 10 MB cap, magic-byte sniff, internal admission + commit
+  mutations) and moves the webhook to the `t=..,v1=..` timestamped format
+  with a 300 s skew window. Check which of those has merged before trusting
+  either description.
 - Client tokens live in `expo-secure-store` via `src/lib/appConfig/tokenCache.ts`.
 
 ## Threat model
@@ -43,7 +46,7 @@ public template catalog, which is intentionally readable.
   `convex/habits/pause.ts`.
 - Any write of `hasPremium` outside `convex/subscriptions/helpers.ts`.
 - A mutation that inserts into `habits` without `enforceRateLimit(...,
-  'habit.create')`. `convex/templates/importTemplate.ts` is the second
+'habit.create')`. `convex/templates/importTemplate.ts` is the second
   creation path besides `convex/habits/create.ts`.
 - Exported `mutation`/`query` with no caller in `src/`. Convex publishes every
   export, including barrel re-exports like `convex/habitStrength.ts`, so dead
@@ -63,7 +66,8 @@ public template catalog, which is intentionally readable.
 - `docs/api/assets/*.js`, `docs/design-refs/support.js`, `dist/`,
   `.superdesign/` are generated or reference artifacts.
 - `.env.taskmaster.example`, `.env.example` hold placeholders only.
-- `convex/imageUpload.ts` CORS `*` is intentional: the endpoint requires a
-  bearer token, and the web build runs on a different origin than Convex.
+- `convex/imageUpload.ts` (once merged) uses CORS `*` on purpose: the
+  endpoint requires a bearer token, and the web build runs on a different
+  origin than Convex.
 - Public catalog reads (`templates.queries.list`, `categories.list`) need no
   auth on purpose.

@@ -58,7 +58,16 @@ export const grantPremium = internalMutation({
   },
   handler: async (ctx, args) => {
     const now = Date.now();
-    const status = args.isTrialing ? 'trialing' : 'active';
+    // A delayed purchase event can arrive after the period it describes has
+    // already ended (for example behind an EXPIRATION that found no row).
+    // Record it, but never turn the entitlement on for a past period.
+    const alreadyExpired =
+      args.expiresAt !== undefined && args.expiresAt <= now;
+    const status = alreadyExpired
+      ? 'expired'
+      : args.isTrialing
+        ? 'trialing'
+        : 'active';
     const planType = args.productId?.includes('yearly') ? 'yearly' : 'monthly';
     const existing = await ctx.db
       .query('subscriptions')
@@ -113,7 +122,7 @@ export const grantPremium = internalMutation({
         updatedAt: now,
       });
     }
-    await updateUserSettingsPremium(ctx, args.clerkId, true);
+    await updateUserSettingsPremium(ctx, args.clerkId, !alreadyExpired);
   },
 });
 
@@ -159,6 +168,8 @@ export const revokePremium = internalMutation({
       return;
     }
 
+    const status = eventType === 'CANCELLATION' ? 'cancelled' : 'expired';
+    // eslint-disable-next-line unicorn/prefer-ternary
     if (existing) {
       await ctx.db.patch(existing._id, {
         cancelledAt: eventType === 'CANCELLATION' ? now : existing.cancelledAt,
@@ -166,7 +177,23 @@ export const revokePremium = internalMutation({
         lastWebhookEvent: eventType,
         lastWebhookEventId: eventId,
         lastWebhookEventTimestamp: eventTimestamp,
-        status: eventType === 'CANCELLATION' ? 'cancelled' : 'expired',
+        status,
+        updatedAt: now,
+      });
+    } else {
+      // Tombstone. Without a row carrying this event's timestamp, an older
+      // purchase event delivered later would pass the staleness check and
+      // re-grant premium for a period that has already ended.
+      await ctx.db.insert('subscriptions', {
+        cancelledAt: eventType === 'CANCELLATION' ? now : undefined,
+        clerkId,
+        createdAt: now,
+        lastWebhookAt: now,
+        lastWebhookEvent: eventType,
+        lastWebhookEventId: eventId,
+        lastWebhookEventTimestamp: eventTimestamp,
+        startedAt: now,
+        status,
         updatedAt: now,
       });
     }
