@@ -4,7 +4,6 @@
 
 import { spacing, borderRadius } from '@/theme/spacing';
 import { airy } from '@/theme/airyScale';
-import { streakStyles } from '@/components/HabitCard/HabitCard.streakStyles';
 import { styles } from '@/components/HabitCard/HabitCard.styles';
 
 describe('HabitCard spacing tokens', () => {
@@ -26,12 +25,6 @@ describe('HabitCard spacing tokens', () => {
     expect(styles.warningBadge.borderRadius).toBe(borderRadius.medium);
   });
 
-  it('uses spacing tokens on streak badges', () => {
-    expect(streakStyles.bestStreakBadge.borderRadius).toBe(borderRadius.small);
-    expect(streakStyles.bestStreakBadge.gap).toBe(spacing.xs);
-    expect(streakStyles.rippleOverlay.borderRadius).toBe(borderRadius.xl);
-    expect(streakStyles.streakBadge.borderRadius).toBe(borderRadius.medium);
-    expect(streakStyles.streakRow.gap).toBe(spacing.sm);
-    expect(streakStyles.streakRow.marginTop).toBe(spacing.xs);
-  });
+  // Dropped: streak-badge spacing assertions — their only subject
+  // (HabitCard.streakStyles.ts) was deleted as dead code.
 });

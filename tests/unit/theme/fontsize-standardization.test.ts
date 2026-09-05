@@ -3,7 +3,6 @@
  */
 
 import { typography } from '@/theme/typography';
-import { streakStyles } from '@/components/HabitCard/HabitCard.streakStyles';
 import { styles as toastStyles } from '@/components/Toast/styles';
 import { styles as swipeStyles } from '@/components/SwipeableActionButton/styles';
 import { styles as heatmapToggleStyles } from '@/components/BinaryHeatmap/TimeRangeToggle.styles';
@@ -17,7 +16,6 @@ const STANDARD_SIZES = new Set([10, 13, 14, 17, 20, 22, 34]);
 
 describe('Font size standardization', () => {
   it('maps small chrome to tabBar / caption / bodySmall', () => {
-    expect(streakStyles.bestStreakText.fontSize).toBe(typography.tabBar.fontSize);
     expect(swipeStyles.swipeLabel.fontSize).toBe(typography.tabBar.fontSize);
     expect(heatmapToggleStyles.buttonText.fontSize).toBe(
       typography.tabBar.fontSize
@@ -29,13 +27,9 @@ describe('Font size standardization', () => {
     expect(progressStyles.progressLabelText.fontSize).toBe(
       typography.tabBar.fontSize
     );
-    expect(streakStyles.streakText.fontSize).toBe(typography.caption.fontSize);
     expect(statusStyles.warningText.fontSize).toBe(typography.caption.fontSize);
     expect(progressStyles.milestoneName.fontSize).toBe(
       typography.caption.fontSize
-    );
-    expect(streakStyles.streakFireIcon.fontSize).toBe(
-      typography.bodySmall.fontSize
     );
     expect(statusStyles.checkmarkText.fontSize).toBe(
       typography.bodySmall.fontSize
@@ -66,12 +60,13 @@ describe('Font size standardization', () => {
     expect(typography.heading2.fontSize).toBe(22);
   });
 
-  it('HabitCard streak + Toast sizes stay on the scale', () => {
+  // streakStyles assertions dropped: HabitCard.streakStyles.ts was deleted as dead code.
+  it('Toast sizes stay on the scale', () => {
     const collect = (obj: Record<string, { fontSize?: number }>) =>
       Object.values(obj)
         .map((v) => v?.fontSize)
         .filter((n): n is number => typeof n === 'number');
-    for (const size of [...collect(streakStyles), ...collect(toastStyles)]) {
+    for (const size of collect(toastStyles)) {
       expect(STANDARD_SIZES.has(size)).toBe(true);
     }
   });
