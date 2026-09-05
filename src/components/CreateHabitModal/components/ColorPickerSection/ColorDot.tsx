@@ -1,7 +1,7 @@
 /**
  * Single 26px colour dot for the one-row palette (spec §2).
- * Selected = 2px primary-500 ring with a 2px gap; the ring is always laid out
- * (transparent when unselected) so selecting never shifts the row.
+ * Selected = 2px primary-500 ring with a 2px gap, drawn as an absolute overlay
+ * so ten cells still fit a 327pt row (iPhone SE/mini) without shifting.
  */
 import { memo, useCallback } from 'react';
 import { AccessibilityInfo, Keyboard, Pressable, View } from 'react-native';
@@ -11,6 +11,8 @@ import { getColorName } from '../../constants';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 const DOT = 26;
+/** Ring = dot + 2px gap + 2px stroke each side; overlaid so it never widens the cell. */
+const RING = DOT + 8;
 
 interface ColorDotProps {
   color: string;
@@ -37,30 +39,32 @@ const ColorDotComponent = ({ color, isSelected, onSelect }: ColorDotProps) => {
       accessibilityState={{ selected: isSelected }}
       style={{
         alignItems: 'center',
+        flex: 1,
         justifyContent: 'center',
         minHeight: 44,
-        paddingHorizontal: 2,
       }}
       testID={`color-swatch-${color.replace('#', '')}`}
       onPress={handlePress}
     >
       <View
         style={{
+          backgroundColor: color,
+          borderRadius: borderRadius.full,
+          height: DOT,
+          width: DOT,
+        }}
+      />
+      <View
+        pointerEvents='none'
+        style={{
           borderColor: isSelected ? themeColors.primary[500] : 'transparent',
           borderRadius: borderRadius.full,
           borderWidth: 2,
-          padding: 2,
+          height: RING,
+          position: 'absolute',
+          width: RING,
         }}
-      >
-        <View
-          style={{
-            backgroundColor: color,
-            borderRadius: borderRadius.full,
-            height: DOT,
-            width: DOT,
-          }}
-        />
-      </View>
+      />
     </Pressable>
   );
 };

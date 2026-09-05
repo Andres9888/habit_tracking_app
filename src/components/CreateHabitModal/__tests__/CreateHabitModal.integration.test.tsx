@@ -202,7 +202,7 @@ describe('CreateHabitModal Integration', () => {
     expect(getByText('ICON')).toBeDefined();
     expect(getByText('BROWSE ALL')).toBeDefined();
     expect(getByText('COLOR')).toBeDefined();
-    expect(getByText('Daily Reminder')).toBeDefined();
+    expect(getByText('Daily reminder')).toBeDefined();
   });
 
   it('sends the trimmed why with the create payload', async () => {

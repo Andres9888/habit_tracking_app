@@ -1,5 +1,5 @@
 /**
- * One-row palette: 10 dots spread with space-between (spec §2).
+ * One-row palette: 10 equal flex cells, one 26px dot each (spec §2).
  */
 import { View } from 'react-native';
 import { ColorDot } from './ColorDot';
@@ -19,7 +19,7 @@ export const ColorRow = ({
     style={{
       alignItems: 'center',
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      marginHorizontal: -2,
     }}
     testID='color-picker-row'
   >

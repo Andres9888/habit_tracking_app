@@ -187,7 +187,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
 
     expect(getByText('ICON')).toBeDefined();
     expect(getByText('COLOR')).toBeDefined();
-    expect(getByText('Daily Reminder')).toBeDefined();
+    expect(getByText('Daily reminder')).toBeDefined();
     expect(getByLabelText(STRINGS.CREATE_HABIT.createAction)).toBeDefined();
     expect(queryByLabelText(/Preview:/)).toBeNull();
     expect(queryByText('Your new habit')).toBeNull();

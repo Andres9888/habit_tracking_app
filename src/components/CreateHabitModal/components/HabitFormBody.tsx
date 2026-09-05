@@ -7,7 +7,8 @@ import type { HabitFormBodyProps } from './HabitFormBody.types';
 
 /**
  * Shared habit form body used by both Add (CreateHabitModal) and Edit
- * (HabitEditScreen). Renders name → icon → color → reminder → advanced.
+ * (HabitEditScreen). Renders name → icon → color → "More to customize" panel
+ * (the reminder is row one of that panel).
  * Mode differences (title, placeholder, growth pill) come in as props.
  *
  * NOTE: the two flows feed this body from SEPARATE state hooks — create uses
@@ -82,16 +83,10 @@ const HabitFormBodyComponent = ({
         colors={colors}
         emojiQueryName={committedHabitName}
         isEmojiLocked={isEmojiLocked}
-        reminderEnabled={reminderEnabled}
-        reminderSectionRef={reminderSectionRef}
-        reminderTime={reminderTime}
         selectedColor={selectedColor}
         selectedEmoji={selectedEmoji}
-        snapReminderDefaultToPreset={snapReminderDefaultToPreset}
         onColorSelect={onColorSelect}
         onEmojiSelect={handleEmojiSelect}
-        onReminderTimeChange={onReminderTimeChange}
-        onReminderToggle={onReminderToggle}
       />
 
       <AdvancedOptionsSection
@@ -99,6 +94,14 @@ const HabitFormBodyComponent = ({
         habitIcon={selectedEmoji}
         isNewHabit={isNewHabit}
         progressEmojis={progressEmojis}
+        reminder={{
+          enabled: reminderEnabled,
+          onTimeChange: onReminderTimeChange,
+          onToggle: onReminderToggle,
+          reminderTime,
+          sectionRef: reminderSectionRef,
+          snapDefaultToPresetOnEnable: snapReminderDefaultToPreset,
+        }}
         streakGoal={streakGoal}
         strengthAlgorithm={strengthAlgorithm}
         why={why}

@@ -17,11 +17,6 @@ jest.mock('../../../../hooks/useHapticFeedback', () => ({
   }),
 }));
 
-jest.mock('../EnhancedReminderSelector', () => {
-  const { View } = require('react-native');
-  return { EnhancedReminderSelector: () => <View testID='reminder' /> };
-});
-
 jest.mock('../../../EmojiPickerV2', () => {
   const { View } = require('react-native');
   return {
@@ -36,10 +31,6 @@ const props = {
   isEmojiLocked: false,
   onColorSelect: jest.fn(),
   onEmojiSelect: jest.fn(),
-  onReminderTimeChange: jest.fn(),
-  onReminderToggle: jest.fn(),
-  reminderEnabled: false,
-  reminderTime: new Date('2026-01-01T07:00:00Z'),
   selectedColor: HABIT_COLORS[3],
   selectedEmoji: null,
 };

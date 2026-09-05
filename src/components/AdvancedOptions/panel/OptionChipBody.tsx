@@ -59,19 +59,21 @@ export function OptionChipBody({
       ]}
     >
       {glyph}
-      <Text
-        allowFontScaling={false}
-        numberOfLines={1}
-        style={{
-          ...typography.bodyBold,
-          fontSize: valueSize,
-          lineHeight: valueSize === 17 ? 20 : 18,
-          color: ink,
-          fontVariant: ['tabular-nums'],
-        }}
-      >
-        {value}
-      </Text>
+      {value ? (
+        <Text
+          allowFontScaling={false}
+          numberOfLines={1}
+          style={{
+            ...typography.bodyBold,
+            fontSize: valueSize,
+            lineHeight: valueSize === 17 ? 20 : 18,
+            color: ink,
+            fontVariant: ['tabular-nums'],
+          }}
+        >
+          {value}
+        </Text>
+      ) : null}
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
         {suggested ? (
           <View

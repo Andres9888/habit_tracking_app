@@ -37,7 +37,7 @@ export interface HabitFormBodyProps {
   selectedColor: string;
   onColorSelect: (color: string) => void;
   reminderEnabled: boolean;
-  /** Reminder time as Date object for EnhancedReminderSelector */
+  /** Reminder time as a Date, shown in the panel's Daily reminder row */
   reminderTime: Date;
   onReminderToggle: (enabled: boolean) => void;
   /** Called when reminder time changes (preset or custom selection) */
@@ -62,7 +62,10 @@ export interface HabitFormBodyProps {
   onStreakGoalChange: (days: number) => void;
   /** Called after the Advanced section expands so the parent can scroll it into view. */
   onAdvancedExpand?: () => void;
-  /** Ref attached to the daily reminder container so the parent can measure and scroll to it. */
+  /**
+   * Ref attached to the Daily reminder row (row one of the "More to customize"
+   * panel) so the parent can measure it and scroll it into view on enable.
+   */
   reminderSectionRef?: RefObject<ViewType | null>;
   /** One-line motivation, edited inside the Advanced panel. */
   why?: string;

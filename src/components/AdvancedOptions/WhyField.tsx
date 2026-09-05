@@ -1,6 +1,7 @@
 /** "Your why" input with the remaining-character counter inside its top-right. */
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
+import type { TextInput } from 'react-native';
 import { ThemedTextInput } from '@/components/ui/TextInput';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { fontFamilies, fontWeights, typography } from '@/theme/typography';
@@ -20,14 +21,23 @@ export function WhyField({ value, onChange, autoFocus = false }: Props) {
   const { colors, isDark } = useThemeColors();
   const t = usePanelTokens();
   const [focused, setFocused] = useState(false);
+  const inputRef = useRef<TextInput>(null);
+
+  // The field is always mounted (inside the collapsed body), so a plain
+  // `autoFocus` prop would only fire once. Focus imperatively on each open.
+  useEffect(() => {
+    if (!autoFocus) return;
+    const id = setTimeout(() => inputRef.current?.focus(), 120);
+    return () => clearTimeout(id);
+  }, [autoFocus]);
 
   return (
     <View>
       <ThemedTextInput
+        ref={inputRef}
         blurOnSubmit
         multiline
         accessibilityLabel='Your why'
-        autoFocus={autoFocus}
         maxLength={WHY_MAX_LENGTH}
         placeholder='I want to feel…'
         placeholderTextColor={t.chevron}

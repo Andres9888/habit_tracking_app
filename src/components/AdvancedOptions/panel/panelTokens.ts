@@ -31,6 +31,8 @@ export interface PanelTokens {
   chipSuggestedInk: string;
   /** Caps disclosure/link ink ("SEE THE DIFFERENCE"). */
   linkInk: string;
+  /** Body copy inside the amber permission banner. */
+  bannerText: string;
   dot: string;
   chevron: string;
   textPrimary: string;
@@ -69,6 +71,7 @@ export function usePanelTokens(): PanelTokens {
 
   if (isDark) {
     return {
+      bannerText: DARK_INK.why,
       chevron: colors.text.tertiary,
       chipRestBg: colors.surface,
       chipRestBorder: colors.border,
@@ -88,6 +91,7 @@ export function usePanelTokens(): PanelTokens {
   }
 
   return {
+    bannerText: '#7C3A0B',
     chevron: '#A39D95',
     chipRestBg: '#F8F5F1',
     chipRestBorder: '#DDD8D2',
