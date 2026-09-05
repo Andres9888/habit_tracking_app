@@ -4,13 +4,13 @@
  */
 
 import { withSpring, withTiming } from 'react-native-reanimated';
-import { durations, enterEasing, springs } from '@/theme/animations';
+import { durations, sheetEasing, springs } from '@/theme/animations';
 import type { ModalVariant } from './Modal.types';
 import type { AnimationValues } from './modalAnimationEffects.types';
 import { FULL_SCREEN_ENTER_MS } from './Modal.constants';
 import { fadeIn } from './modalAnimationHelpers';
 
-const SHEET_ENTER = { duration: durations.sheet, easing: enterEasing };
+const SHEET_ENTER = { duration: durations.sheet, easing: sheetEasing };
 
 export function runEnterAnimation(
   variant: ModalVariant,
@@ -31,7 +31,7 @@ export function runEnterAnimation(
     case 'bottomSheet': {
       backdropOpacityValue.value = useReduced
         ? targetOpacity
-        : withTiming(targetOpacity, fadeIn(durations.sheet));
+        : withTiming(targetOpacity, fadeIn(durations.backdrop));
       translateY.value = useReduced ? 0 : withTiming(0, SHEET_ENTER);
       break;
     }

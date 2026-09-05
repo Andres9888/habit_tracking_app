@@ -5,21 +5,27 @@ import {
   useAnimatedStyle,
   withSpring,
   withTiming,
-  runOnJS,
-  Easing,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
-import { durations, enterEasing, springs } from '@/theme/animations';
+import {
+  durations,
+  enterEasing,
+  exitEasing,
+  sheetEasing,
+  springs,
+} from '@/theme/animations';
+import { project, rubberband } from '@/theme/sheetMotion';
 import {
   SCREEN_HEIGHT,
   DISMISS_THRESHOLD,
   VELOCITY_THRESHOLD,
-  BACKDROP_FADE_IN_DURATION,
-  BACKDROP_FADE_OUT_DURATION,
   BACKDROP_OPACITY,
 } from './constants';
 
-const SHEET_TIMING_CONFIG = { duration: durations.sheet, easing: enterEasing };
+const SHEET_TIMING_CONFIG = { duration: durations.sheet, easing: sheetEasing };
+const BACKDROP_IN = { duration: durations.backdrop, easing: enterEasing };
+const BACKDROP_OUT = { duration: durations.backdrop, easing: exitEasing };
 
 interface UseSheetAnimationsOptions {
   visible: boolean;
@@ -46,23 +52,10 @@ export function useSheetAnimations({
     if (visible) {
       backdropOpacity.value = reduceMotion
         ? BACKDROP_OPACITY
-        : withTiming(BACKDROP_OPACITY, {
-            duration: BACKDROP_FADE_IN_DURATION,
-            easing: Easing.out(Easing.cubic),
-          });
-      translateY.value = reduceMotion
-        ? 0
-        : withTiming(0, {
-            duration: BACKDROP_FADE_IN_DURATION,
-            easing: Easing.out(Easing.cubic),
-          });
+        : withTiming(BACKDROP_OPACITY, BACKDROP_IN);
+      translateY.value = reduceMotion ? 0 : withTiming(0, SHEET_TIMING_CONFIG);
     } else {
-      backdropOpacity.value = reduceMotion
-        ? 0
-        : withTiming(0, {
-            duration: BACKDROP_FADE_OUT_DURATION,
-            easing: Easing.in(Easing.cubic),
-          });
+      backdropOpacity.value = reduceMotion ? 0 : withTiming(0, BACKDROP_OUT);
       translateY.value = reduceMotion
         ? SCREEN_HEIGHT
         : withTiming(SCREEN_HEIGHT, SHEET_TIMING_CONFIG);
@@ -72,21 +65,29 @@ export function useSheetAnimations({
   // Pan gesture for drag-to-dismiss
   const panGesture = Gesture.Pan()
     .onUpdate((event) => {
-      if (event.translationY > 0) {
-        translateY.value = event.translationY;
-      }
+      'worklet';
+      translateY.value =
+        event.translationY >= 0
+          ? event.translationY
+          : rubberband(event.translationY, SCREEN_HEIGHT);
     })
     .onEnd((event) => {
-      const velocityY = Math.round(event.velocityY);
-      if (
+      'worklet';
+      const projected = translateY.value + project(event.velocityY);
+      const shouldDismiss =
         event.translationY > DISMISS_THRESHOLD ||
-        velocityY > VELOCITY_THRESHOLD
-      ) {
+        projected > DISMISS_THRESHOLD ||
+        event.velocityY > VELOCITY_THRESHOLD;
+
+      if (shouldDismiss) {
         translateY.value = withTiming(SCREEN_HEIGHT, SHEET_TIMING_CONFIG);
-        runOnJS(triggerLightImpact)();
-        runOnJS(onClose)();
+        scheduleOnRN(triggerLightImpact);
+        scheduleOnRN(onClose);
       } else {
-        translateY.value = withSpring(0, springs.gesture);
+        translateY.value = withSpring(0, {
+          ...springs.gesture,
+          velocity: event.velocityY,
+        });
       }
     });
 

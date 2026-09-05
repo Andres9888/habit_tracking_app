@@ -3,14 +3,14 @@
  * Common animation utilities
  */
 
-import { Easing } from 'react-native-reanimated';
+import { enterEasing, exitEasing } from '@/theme/animations';
 
 export const fadeIn = (duration: number) => ({
   duration,
-  easing: Easing.out(Easing.cubic),
+  easing: enterEasing,
 });
 
 export const fadeOut = (duration: number) => ({
   duration,
-  easing: Easing.in(Easing.cubic),
+  easing: exitEasing,
 });
